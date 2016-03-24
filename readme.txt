@@ -567,6 +567,8 @@ Taking defensive precautions against other plugins in the admin:
 Version 1.6.2.7 is a major bug fix update and is recommended for upgrade to all users. Site files and database should be backed up before updating any plugin.
 1.6.2.7.1 fixes a bug where the list search drops the search when pagination is used
 
+NOTE: This update requires minimum PHP version 5.3
+
 == Using the Plugin ==
 
 * General Description
