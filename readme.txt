@@ -256,17 +256,17 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.6.2.7 =
 bug fixes:
-field/groups deletions in some translated versions
-email sending with multi-page signup forms
-showing time with timestamps in the admin
-otherselect when more than on per form
-dynamic fields getting re-set in record edit form
-strict search setting 
+* field/groups deletions in some translated versions
+* email sending with multi-page signup forms
+* showing time with timestamps in the admin
+* otherselect when more than on per form
+* dynamic fields getting re-set in record edit form
+* strict search setting 
 
 new:
-added "multi-dropdown" form element
-several efficiency optimizations, wider use of data caches
-allow use of "simple" multi-field frontend searches
+* added "multi-dropdown" form element
+* several efficiency optimizations, wider use of data caches
+* allow use of "simple" multi-field frontend searches
 
 = 1.6.2.5 =
 fixed issue where remote search controls weren't targeting the correct list instance
