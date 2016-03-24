@@ -4,7 +4,7 @@ Donate link: http://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 4.2.2
-Stable tag: 1.6.2.5
+Stable tag: 1.6.2
 License: GPLv2
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -254,8 +254,19 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.6.2.6 =
-fixed problem with multipage signup forms not sending correct notifications
+= 1.6.2.7 =
+bug fixes:
+field/groups deletions in some translated versions
+email sending with multi-page signup forms
+showing time with timestamps in the admin
+otherselect when more than on per form
+dynamic fields getting re-set in record edit form
+strict search setting 
+
+new:
+added "multi-dropdown" form element
+several efficiency optimizations, wider use of data caches
+allow use of "simple" multi-field frontend searches
 
 = 1.6.2.5 =
 fixed issue where remote search controls weren't targeting the correct list instance
@@ -549,9 +560,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.6.2.6 =
-
-Version 1.6.2.6 is a bug fix update addressing a problem with multi page signup forms. Don't bother updating if you're not experiencing this issue.
+= 1.6.2.7 =
+Version 1.6.2.7 is a major bug fix update and is recommended for upgrade to all users. Site files and database should be backed up before updating any plugin.
 
 == Using the Plugin ==
 

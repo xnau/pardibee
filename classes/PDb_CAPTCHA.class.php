@@ -10,12 +10,16 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 if ( ! defined( 'ABSPATH' ) ) die;
 class PDb_CAPTCHA {
+  /**
+   * @var life of the captcha key in seconds
+   */
+  static $key_life = DAY_IN_SECONDS;
   /**
    * @var string name of the element
    */
@@ -68,10 +72,13 @@ class PDb_CAPTCHA {
    * @var string display HTML for the captcha
    */
   var $HTML;
-  
-  function __construct($element)
+  /**
+   * 
+   * @param PDb_Form_element $element
+   */
+  function __construct( $element )
   {
-    $this->_setup($element);
+    $this->_setup( $element );
     $this->key = $this->get_key();
     $this->_set_types();
     $this->_set_type();
@@ -142,6 +149,7 @@ class PDb_CAPTCHA {
    * @return null
    */
   protected function math_capcha() {
+    
     if (is_array($this->value)) {
       $this->value = $this->value[1];
     }
@@ -187,12 +195,9 @@ class PDb_CAPTCHA {
         'group' => true,
         )
             );
-    try {
-      $regex_value = call_user_func($operators[$o], $a, $b );
-    } catch (Exception $e) {
-      error_log(Participants_Db::$plugin_title . ' bcmath function could not be called: using alternative method. ' );
+    
       $regex_value = $this->compute($o, $a, $b);
-    }
+    
     $this->validation = '#^' . $regex_value . '$#';
     $this->captcha_params = array('a' => $a, 'o' => $o, 'b' => $b);
   }
@@ -217,9 +222,10 @@ class PDb_CAPTCHA {
   /**
    * grabs the element values and adds them to the current object
    * 
+   * @param PDb_Form_element $element
    * @return null
    */
-  protected function _setup($element) {
+  protected function _setup( $element ) {
     foreach(array_keys(get_class_vars(__CLASS__)) as $name) {
       if (isset($element->{$name})) {
         $this->{$name} = $element->{$name};
@@ -235,7 +241,7 @@ class PDb_CAPTCHA {
    */
   public static function get_key() {
     if (!$key = get_transient(Participants_Db::$prefix . 'captcha_key')) {
-      set_transient(Participants_Db::$prefix . 'captcha_key', self::generate_key(), (60 * 60 * 24));
+      set_transient(Participants_Db::$prefix . 'captcha_key', self::generate_key(), self::$key_life);
     }
     $key = get_transient(Participants_Db::$prefix . 'captcha_key');
     //error_log(__METHOD__.' get new key: '.$key);
@@ -295,4 +301,5 @@ class PDb_CAPTCHA {
     }
     return $key;
   }
+  
 }

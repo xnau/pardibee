@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( ! defined( 'ABSPATH' ) ) die;
@@ -18,6 +18,54 @@ class PDb_Base {
    * @var bool
    */
   public static $shortcode_present = false;
+  /**
+   * finds the WP installation root
+   * 
+   * this uses constants, so it's not filterable, but the constants (if customized) 
+   * are defined in the config file, so should be accurate for a particular installation
+   * 
+   * this works by finding the common path to both ABSPATH and WP_CONTENT_DIR which 
+   * we can assume is the base install path of WP, even if the WP application is in 
+   * another directory and/or the content directory is in a different place
+   * 
+   * @return string
+   */
+  public static function app_base_path() {
+    $content_path = explode('/', WP_CONTENT_DIR);
+    $wp_app_path = explode('/', ABSPATH);
+    $end = min(array(count($content_path), count($wp_app_path)));
+    $i = 0;
+    $common = array();
+    while ($content_path[$i] === $wp_app_path[$i] and $i < $end) {
+      $common[] = $content_path[$i];
+      $i++;
+    }
+    return trailingslashit(implode('/', $common));
+  }
+  /**
+   * finds the WP base URL
+   * 
+   * this can be different from the home url if wordpress is in a different directory (http://site.com/wordpress/)
+   * 
+   * this is to accomodate alternate setups
+   * 
+   * @return string
+   */
+  public static function app_base_url() {
+    $scheme = parse_url(site_url(), PHP_URL_SCHEME) . '://';
+    $content_path = explode( '/', str_replace( $scheme, '', content_url() ) );
+    $wp_app_path = explode('/', str_replace( $scheme, '', site_url() ) );
+    
+    
+    $end = min(array(count($content_path), count($wp_app_path)));
+    $i = 0;
+    $common = array();
+    while ($content_path[$i] === $wp_app_path[$i] and $i < $end) {
+      $common[] = $content_path[$i];
+      $i++;
+    }
+    return $scheme . trailingslashit(implode('/', $common));
+  }
   /**
    * parses a list shortcode filter string into an array
    * 
@@ -131,7 +179,7 @@ class PDb_Base {
     global $wpdb;
     $values = array();
     $where = array();
-    $columns = strpos($columns,',') !== false ? explode(',',  str_replace(' ', '', $columns)) : (array)$columns;
+    $columns = !is_array($columns) ? explode(',', str_replace(' ', '', $columns)) : (array)$columns;
     foreach($columns as $column) {
       if (isset($submission[$column])) {
         $values[] = $submission[$column];
@@ -140,7 +188,7 @@ class PDb_Base {
         $where[] = ' (r.' . $column . ' IS NULL OR r.' . $column . ' = "")';
       }
     }
-    $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode(', ', $where);
+    $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode(' AND ', $where);
     $match = $wpdb->get_var($wpdb->prepare($sql, $values));
     $matched_id = is_numeric($match) ? (int)$match : false;
     /**
@@ -251,6 +299,7 @@ class PDb_Base {
 
     return maybe_unserialize($string);
   }
+
   /**
    * adds the URL conjunction to a GET string
    *
@@ -428,17 +477,65 @@ class PDb_Base {
    * timestamps are usually handled by the plugin automatically, but when records 
    * are being imported via CSV, they should be imported
    * 
-   * @var string $timestamp a timestamp value, could be unix timestamp or text date
+   * @param string $timestamp a timestamp value, could be unix timestamp or text date
+   * @param object $column the current column
    * @return bool|string if the timestamp is valid, a MySQL timestamp is returns; 
    *                     bool false otherwise
    */
-  public static function import_timestamp($timestamp) {
+  public static function import_timestamp($timestamp, $column = '') {
     
-    $post_date = $timestamp !== null ? Participants_Db::parse_date($timestamp) : false;
-    $new_value = $post_date !== false ? date('Y-m-d H:i:s', $post_date) : false;
+    $post_date = empty( $timestamp ) ? false : Participants_Db::parse_date($timestamp, $column);
+    $new_value = $post_date !== false ? self::format_date($post_date, null, 'Y-m-d H:i:s') : false;
     
     return $new_value;
+  }
+
+  /**
+   * re-asserts the timezone to PHP according to the WordPress timezone setting
+   */
+  public static function reassert_timezone() {
+    date_default_timezone_set( get_option( 'timezone_string' ) );
+  }
+  
+  /**
+   * returns an internationalized date string from a UNIX timestamp
+   * 
+   * @param int $timestamp a UNIX timestamp or any date 
+   * @param bool $time if true, adds the time of day to the format
+   * @param string $format a regular PHP date format string (optional)
+   * @return string a formatted date or input string if invalid
+   */
+  public static function format_date($timestamp = false, $time = false, $format = false) {
     
+    $timestamp = $timestamp === false ? time() : $timestamp;
+    
+    // if it's not a timestamp, we attempt to convert it to one
+    if (!Participants_Db::is_valid_timestamp($timestamp)) $timestamp = Participants_Db::parse_date($timestamp);
+
+    if (Participants_Db::is_valid_timestamp($timestamp)) {
+      
+      if ($format === false ) {
+      
+        /**
+         * @version 1.6.2.6 stopped using the input date format here because it's for inputs only
+         */
+        //$format = Participants_Db::plugin_setting_is_true('strict_dates') ? Participants_Db::plugin_setting('input_date_format') : Participants_Db::$date_format;
+        $format = Participants_Db::$date_format;
+
+        if ($time) {
+          $format .= ' ' . get_option('time_format');
+        }
+        
+      }
+      // re-assert the timezone in case PHP has dropped it
+      self::reassert_timezone();
+      return date_i18n( $format, $timestamp );
+    
+    } else {
+      // not a timestamp: return unchanged
+      return $timestamp;
+    }
+  
   }
 
   /**
@@ -470,7 +567,7 @@ class PDb_Base {
     
     $role = $role === 'admin' ? 'plugin_admin_capability' : 'record_edit_capability';
     
-    return current_user_can(self::plugin_capability(self::plugin_setting($role), $context));
+    return current_user_can(self::plugin_capability($role, $context));
   }
   
   /**
@@ -630,6 +727,34 @@ class PDb_Base {
     }
     return true;
   }
+
+  /**
+   * supplies an image/file upload location
+   * 
+   * relative to WP root
+   * 
+   * @return string realtive path to the plugin files location
+   */
+  public static function files_location() {
+    return Participants_Db::set_filter('files_location', Participants_Db::plugin_setting('image_upload_location'));
+  }
+  /**
+   * supplies the absolute path to the files location
+   * 
+   * @return string
+   */
+  public static function files_path() {
+    return trailingslashit(PDb_Image::concatenate_directory_path( self::app_base_path(), Participants_Db::files_location()));
+  }
+  /**
+   * supplies the absolute path to the files location
+   * 
+   * @return string
+   */
+  public static function files_uri() {
+    //return trailingslashit(site_url(Participants_Db::files_location()));
+    return self::app_base_url() . trailingslashit( ltrim( Participants_Db::files_location(), DIRECTORY_SEPARATOR ) );
+  }
   /**
    * deletes a file
    * 
@@ -641,7 +766,7 @@ class PDb_Base {
   public static function delete_file($filename)
   {
     $current_dir = getcwd(); // save the cirrent dir
-    chdir(PDb_Path::files_path()); // set the plugin uploads dir
+    chdir(self::files_path()); // set the plugin uploads dir
     $result = unlink(basename($filename)); // delete the file
     chdir($current_dir); // change back to the previous directory
     return $result;
@@ -870,7 +995,7 @@ class PDb_Base {
   }
 
 /**
-   * gets the timezone
+   * gets the PHP timezone setting
    * 
    * @return string
    */
@@ -1009,6 +1134,7 @@ class PDb_Base {
         'submit' => FILTER_SANITIZE_STRING,
         'action' => FILTER_SANITIZE_STRING,
         'instance_index' => FILTER_VALIDATE_INT,
+        'target_instance' => FILTER_VALIDATE_INT,
         'pagelink' => FILTER_SANITIZE_STRING,
         'sortstring' => FILTER_SANITIZE_STRING,
         'orderstring' => FILTER_SANITIZE_STRING,
@@ -1029,12 +1155,21 @@ class PDb_Base {
    * @return array altered headers array
    */
   public static function control_caching($headers) {
-    $form_status = Participants_Db::$session->get('form_status');
 //    $headers['X-xnau-plugin'] = $headers['X-xnau-plugin'] . ' ' . Participants_Db::$plugin_title . '-' . Participants_Db::$plugin_version;
-    if ($form_status === 'multipage') {
+    if (self::is_multipage_form()) {
       $headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store';
     }
     return $headers;
+  }
+  
+  /**
+   * determines if the current form status is a kind of multipage
+   * 
+   * @return bool true if the form is part of a multipage form
+   */
+  public static function is_multipage_form() {
+  	$form_status = Participants_Db::$session->get('form_status');
+  	return stripos($form_status, 'multipage') !== false;
   }
   
   /**

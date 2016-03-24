@@ -135,6 +135,10 @@ abstract class xnau_Image_Handler {
    */
   function __construct($config) {
 
+    $this->set_image_directory();
+
+    $this->set_default_image();
+    
     $this->image_file = isset($config['filename']) ? $config['filename'] : '';
     $this->link = isset($config['link']) ? $config['link'] : '';
     $this->classname = isset($config['classname']) ? $config['classname'] : 'image-field-wrap';
@@ -142,12 +146,7 @@ abstract class xnau_Image_Handler {
     $this->relstring = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
     $this->module = isset($config['module']) ? $config['module'] : '';
 
-    $this->set_image_directory();
-
-    $this->set_default_image();
-
     $this->_file_setup();
-    
     $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
 
   }
@@ -317,7 +316,7 @@ abstract class xnau_Image_Handler {
    */
   protected function _testfile($filename) {
     
-//    error_log(__METHOD__.' testing:'.$filename.' getting:'.($this->_file_exists($filename)?'yes':'no'));
+    //error_log(__METHOD__.' testing:'.$filename.' getting:'.($this->_file_exists($filename)?'yes':'no'));
 
     if ($this->_file_exists($filename)) {
       
@@ -332,7 +331,7 @@ abstract class xnau_Image_Handler {
    *
    * this is needed because on some systems file_exists() gives a false negative
    *
-   * @param string $filepath a full system filepath to an image file
+   * @param string $filepath a full system filepath to an image file or just a file name
    * @return bool true if the file exists
    *
    */

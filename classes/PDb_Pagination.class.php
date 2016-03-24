@@ -215,8 +215,10 @@ class PDb_Pagination {
    */
   function setLink($url, $add_variables)
   {
-    if (!empty($add_variables))
+    $conj = '';
+    if (!empty($add_variables)) {
       $conj = false !== strpos($url, '?') ? '&amp;' : '?';
+    }
     $this->link = $url . $conj . $add_variables;
   }
 
@@ -321,7 +323,7 @@ class PDb_Pagination {
     $totalPages += $perPage > 0 ? ($totalItems % $perPage != 0 ? 1 : 0) : 0;
 
     if ($totalPages <= 1) {
-      return null;
+      return '';
     } elseif ($totalPages > 5) {
       $this->first_last = true;
     }

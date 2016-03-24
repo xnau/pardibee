@@ -199,7 +199,7 @@ class PDb_Manage_Fields {
                       // add the hidden fields
                       foreach (array('id'/* ,'name' */) as $attribute_column) {
 
-                        $value = Participants_Db::prepare_value($database_row[$attribute_column]);
+                        $value = Participants_Db::array_to_string_notation($database_row[$attribute_column]);
 
                         $element_atts = array_merge($this->get_edit_field_type($attribute_column), array(
                             'name' => 'row_' . $database_row['id'] . '[' . $attribute_column . ']',
@@ -226,19 +226,31 @@ class PDb_Manage_Fields {
 
                       if ($internal_group && in_array($attribute_column, array('order')))
                         continue;
-
-                      // preserve backslashes in regex expressions
+                      
+                      // fix old validation method name from 'email' to 'email-regex'
                       if ($attribute_column == 'validation') {
                         if ($database_row['name'] == 'email' && $database_row[$attribute_column] == 'email')
                           $database_row[$attribute_column] = 'email-regex';
                       }
+                      // convert arrays to string notation
+                      $value = Participants_Db::array_to_string_notation($database_row[$attribute_column]);
 
-                      $value = Participants_Db::prepare_value($database_row[$attribute_column]);
+                      switch ($attribute_column) {
+                        case 'title':
+                        case 'description':
+                          $value = $this->prep_value($value, true); // leave html entities intact
+                          break;
+                        case 'validation':
+                          break;
+                        default:
+                          $value = $this->prep_value($value, false); // decode entities
+                      }
 
                       $element_atts = array_merge($edit_field_type, array(
                           'name' => 'row_' . $database_row['id'] . '[' . $attribute_column . ']',
-                          'value' => $this->prep_value($value, in_array($attribute_column, array('title', 'description'))),
+                          'value' => $value,
                       ));
+                      
                       ?>
                       <td class="<?php echo $attribute_column ?>"><?php PDb_FormElement::print_element($element_atts) ?></td>
                     <?php
@@ -483,12 +495,14 @@ class PDb_Manage_Fields {
       // process form submission
       $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
 
+      $result = true;
+
       switch ($action) {
 
         case 'reorder_fields':
           unset($_POST['action'], $_POST['submit-button']);
           foreach ($_POST as $key => $value) {
-            $wpdb->update(
+            $result = $wpdb->update(
                     Participants_Db::$fields_table, 
                     array('order' => filter_var($value, FILTER_VALIDATE_INT)), 
                     array('id' => filter_var(str_replace('row_', '', $key), FILTER_VALIDATE_INT))
@@ -499,7 +513,7 @@ class PDb_Manage_Fields {
         case 'reorder_groups':
           unset($_POST['action'], $_POST['submit-button']);
           foreach ($_POST as $key => $value) {
-            $wpdb->update(
+            $result = $wpdb->update(
                     Participants_Db::$groups_table, 
                     array('order' => filter_var($value, FILTER_VALIDATE_INT)), 
                     array('name' => filter_var(str_replace('order_', '', $key), FILTER_SANITIZE_STRING))
@@ -541,7 +555,7 @@ class PDb_Manage_Fields {
                 $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . ' WHERE `field` = "%s"';
                 $field_info = $wpdb->get_results($wpdb->prepare($sql, $row['name']));
                 $new_type = PDb_FormElement::get_datatype($row['form_element']);
-                $current_type = current($field_info)->Type;
+                $current_type = is_object(current($field_info)) ? current($field_info)->Type : false;
                 if ($new_type != $current_type and !($new_type == 'tinytext' and $current_type == 'text')) {
 
                   $sql = "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql($row['name']) . "` " . $new_type;
@@ -566,7 +580,7 @@ class PDb_Manage_Fields {
               // remove the fields we won't be updating
               unset($row['status'], $row['id'], $row['name']);
 
-              $wpdb->update(Participants_Db::$fields_table, $row, array('id' => $id));
+              $result = $wpdb->update(Participants_Db::$fields_table, $row, array('id' => $id));
             }
           }
 
@@ -586,7 +600,7 @@ class PDb_Manage_Fields {
             // make sure name is legal
             //$row['name'] = $this->make_name( $row['name'] );
 
-            $wpdb->update(Participants_Db::$groups_table, $row, array('name' => stripslashes_deep($name)));
+            $result = $wpdb->update(Participants_Db::$groups_table, $row, array('name' => stripslashes_deep($name)));
           }
           break;
 
@@ -621,8 +635,7 @@ class PDb_Manage_Fields {
             break;
           }
           $result = Participants_Db::add_blank_field($atts);
-          if (false === $result)
-            Participants_Db::set_admin_message( $this->parse_db_error($wpdb->last_error, $action), 'error');
+          
           break;
 
         // add a new blank field
@@ -637,13 +650,11 @@ class PDb_Manage_Fields {
               'order' => $_POST['group_order'],
           );
 
-          $wpdb->insert(Participants_Db::$groups_table, $atts);
+          $result = $wpdb->insert(Participants_Db::$groups_table, $atts);
 
-          if ($wpdb->last_error)
-            Participants_Db::set_admin_message( $this->parse_db_error($wpdb->last_error, $action), 'error');
           break;
 
-        case 'delete_field':
+        case 'delete_' . $this->i18n['field']:
 
           global $wpdb;
           $wpdb->hide_errors();
@@ -655,7 +666,7 @@ class PDb_Manage_Fields {
 
           break;
 
-        case 'delete_group':
+        case 'delete_' . $this->i18n['group']:
 
           global $wpdb;
           //$wpdb->hide_errors();
@@ -666,13 +677,19 @@ class PDb_Manage_Fields {
             $result = $wpdb->query($wpdb->prepare('DELETE FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"', $_POST['delete']));
 
           break;
-
-        default:
-          $action = '';
       }
-      if (!empty($action) && empty(Participants_Db::$admin_message)) {
+
+      if ( $result === false ) {
+        if ($wpdb->last_error) {
+          Participants_Db::set_admin_message( $this->parse_db_error($wpdb->last_error, $action), 'error');
+        } elseif ( empty( Participants_Db::$admin_message ) ) {
+          Participants_Db::set_admin_message( __('There was an error; the settings were not saved.','participants-database'), 'error');
+      }
+      } elseif ( is_int($result) ) {
         Participants_Db::set_admin_message(__('Your information has been updated','participants-database'), 'updated');
       }
+      
+      
     }
 
     /**
@@ -770,7 +787,6 @@ class PDb_Manage_Fields {
      */
     function prep_value($value, $single_encode = false)
     {
-
       if ($single_encode)
         return trim(stripslashes($value));
       else

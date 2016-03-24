@@ -44,6 +44,8 @@ class PDb_Record extends PDb_Shortcode {
     // run the parent class initialization to set up the parent methods 
     parent::__construct($shortcode_atts, $add_atts);
 
+    add_filter('pdb-before_field_added_to_iterator', array( $this, 'alter_field' ) );
+
     $this->_setup_multipage();
 
     // set the action URI for the form
@@ -147,6 +149,19 @@ class PDb_Record extends PDb_Shortcode {
   }
 
   /**
+   * alters a password field to prevent (hopefully!) autocomplete
+   */
+  public function alter_field( $field ) {
+    
+    switch ( $field->form_element ) {
+      case 'password':
+        $field->attributes['autocomplete'] = 'off';
+        break;
+    }
+    return $field;
+  }
+
+  /**
    * prints a 'save changes' label according to the plugin setting
    */
   private function print_save_changes_label() {
@@ -179,11 +194,12 @@ class PDb_Record extends PDb_Shortcode {
   protected function _set_submission_page()
   {
 
-    $form_status = 'normal';
+    $form_status = $this->get_form_status();
+    
     if (!empty($this->shortcode_atts['action'])) {
       $this->submission_page = Participants_Db::find_permalink($this->shortcode_atts['action']);
-      if ($this->submission_page !== false) {
-        $form_status = 'multipage';
+      if ($this->submission_page !== false && $form_status === 'normal') {
+        $form_status = 'multipage-update';
       }
     }
     if (!$this->submission_page) {

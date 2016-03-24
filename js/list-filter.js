@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 0.9
+ * version: 1.0
  * 
  * xnau webdesign xnau.com
  * 
@@ -125,7 +125,7 @@ PDbListFilter = (function ($) {
     }
   };
   var post_submission = function (button) {
-    var target_instance = $('.pdb-list.pdb-instance-' + submission.instance_index);
+    var target_instance = $('.pdb-list.pdb-instance-' + submission.target_instance);
     var container = target_instance.length ? target_instance : $('.pdb-list').first();
     var pagination = container.find('.pdb-pagination');
     var buttonParent = button.parent('fieldset, div');
@@ -138,6 +138,10 @@ PDbListFilter = (function ($) {
         buttonParent.append(spinner);
       },
       success : function (html, status) {
+        if (/^failed/.test(html)) {
+          // if the call fails, submit synchronously to reset form
+          filterform.append('<input type="hidden" name="submit_button" value="'+submission.submit+'" /> ').submit();
+        }
         var newContent = $(html);
         var replacePagination = newContent.find('.pdb-pagination');
         var replaceContent = newContent.find('.list-container').length ? newContent.find('.list-container') : newContent;
@@ -154,6 +158,8 @@ PDbListFilter = (function ($) {
           } else {
             container.find('.list-container').after(replacePagination);
           }
+        } else {
+          pagination.remove();
         }
         spinner.remove();
       },

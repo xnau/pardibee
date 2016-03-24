@@ -254,10 +254,14 @@ class PDb_List extends PDb_Shortcode {
     // the list query object can be modified at this point to add a custom search
     do_action(Participants_Db::$prefix . 'list_query_object', $this->list_query);
 
-    // allow the query to be altered before the records are retrieved
+    /*
+     * allow the query to be altered before the records are retrieved
+     * 
+     * pdb-list_query
+     */
     $list_query = Participants_Db::set_filter('list_query',$this->list_query->get_list_query());
     
-    if (WP_DEBUG) error_log(__METHOD__.' list query: '. $this->list_query->get_list_query());
+    if (WP_DEBUG) error_log(__METHOD__.' list query: '. $list_query );
 
     // get the $wpdb object
     global $wpdb;
@@ -268,14 +272,14 @@ class PDb_List extends PDb_Shortcode {
     $this->_set_list_limit();
     
     // set up the pagination object
-    $pagination_defaults = array(
+    $pagination_defaults = Participants_Db::set_filter('pagination_configuration', array(
         'link' => $this->prepare_page_link( $this->shortcode_atts['filtering'] ? filter_input(INPUT_POST, 'pagelink') : $_SERVER['REQUEST_URI'] ),
         'page' => $this->current_page,
         'size' => $this->page_list_limit,
         'total_records' => $this->num_records,
         'filtering' => $this->shortcode_atts['filtering'],
         'add_variables' => 'instance=' . $this->instance_index . '#' . $this->list_anchor,
-    );
+    ) );
     // instantiate the pagination object
     $this->pagination = new PDb_Pagination($pagination_defaults);
     /*
@@ -540,6 +544,9 @@ class PDb_List extends PDb_Shortcode {
     
     static $multifield_count = 0;
     $value = $this->list_query->current_filter('search_field');
+    if ( empty( $value ) && isset( $_POST['search_field'] ) ) {
+      $value = filter_input( INPUT_POST, 'search_field', FILTER_SANITIZE_STRING );
+    }
     if ($multi) {
       $values = $this->list_query->current_filter('search_fields');
       $value = isset($values[$multifield_count]) ? $values[$multifield_count] : '';
@@ -612,7 +619,7 @@ class PDb_List extends PDb_Shortcode {
 
     $output = array();
 
-    $output[] = '<input name="operator" type="hidden" class="search-item" value="LIKE" />';
+    $output[] = '<input name="operator" type="hidden" class="search-item" value="' . ( Participants_Db::plugin_setting_is_true('strict_search') ? '=' : 'LIKE' ) . '" />';
     $output[] = '<input id="participant_search_term" type="text" name="value" class="search-item" value="' . esc_attr($search_term) . '">';
     $output[] = $this->search_submit_buttons();
 
@@ -702,7 +709,7 @@ class PDb_List extends PDb_Shortcode {
    */
   public function print_list_count($wrap_tag = false, $print = true) {
     
-    $display_count_shortcode = ($this->shortcode_atts['display_count'] == '1' or $this->shortcode_atts['display_count'] == 'true');
+    $display_count_shortcode = ($this->shortcode_atts['display_count'] != '0');
     
     if ($display_count_shortcode) {
       if (!$wrap_tag) $wrap_tag = '<caption>';
@@ -714,10 +721,11 @@ class PDb_List extends PDb_Shortcode {
         $tags = array_reverse($tags);
         $wrap_tag_close = '</' . implode('></', $tags) . '>';
       }
+      $per_page = $this->shortcode_atts['list_limit'] == '-1' ? $this->num_records : $this->shortcode_atts['list_limit'];
       $output = $wrap_tag . sprintf(
               Participants_Db::plugin_setting('count_template'),
               $this->num_records, // total number of records found
-              $this->shortcode_atts['list_limit'], // number of records to show each page
+              $per_page, // number of records to show each page
               (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) + ($this->num_records > 1 ? 1 : 0), // starting record number
               ($this->num_records - (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) > $this->shortcode_atts['list_limit'] ? 
                       $this->pagination->page * $this->shortcode_atts['list_limit'] : 
@@ -837,14 +845,12 @@ class PDb_List extends PDb_Shortcode {
    */
   public function show_date($value, $format = false, $print = true) {
 
-    $time = Participants_Db::is_valid_timestamp($value) ? $value : Participants_Db::parse_date($value);
-
-    $dateformat = $format ? $format : Participants_Db::$date_format;
+    $date = Participants_Db::format_date($value);
 
     if ($print)
-      echo date_i18n($dateformat, $time);
+      echo $date;
     else
-      return date_i18n($dateformat, $time);
+      return $date;
   }
 
   /**
@@ -1138,14 +1144,13 @@ class PDb_List extends PDb_Shortcode {
     $limit = filter_input(
             INPUT_POST, 
             'list_limit', 
-            FILTER_VALIDATE_INT, 
-            array(
-                'options' => array(
-                    'min_range' => 1, 
-                    'default' => $this->shortcode_atts['list_limit']
-                )
-            )
+            FILTER_VALIDATE_INT
     );
+    
+    if (is_null($limit) || $limit === 0) {
+      $limit = $this->shortcode_atts['list_limit'];
+    }
+    
     if ($limit < 1 || $limit > $this->num_records) {
       $this->page_list_limit = $this->num_records;
     } else {

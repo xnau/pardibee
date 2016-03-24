@@ -49,7 +49,7 @@ class PDb_Init
     /**
      * set up database, defaults
      */
-    public function on_activate()
+    public static function on_activate()
     {
         new PDb_Init( 'activate' );
     }
@@ -57,7 +57,7 @@ class PDb_Init
     /**
      * 
      */
-    public function on_deactivate()
+    public static function on_deactivate()
     {
         new PDb_Init( 'deactivate' );
     }
@@ -65,7 +65,7 @@ class PDb_Init
     /**
      * remove all plugin settings and database tables
      */
-    public function on_uninstall()
+    public static function on_uninstall()
     {
         new PDb_Init( 'uninstall' );
     }

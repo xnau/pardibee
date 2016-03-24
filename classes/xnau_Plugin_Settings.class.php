@@ -105,6 +105,9 @@ class xnau_Plugin_Settings {
 	 */
   public function initialize() {
 		
+
+    // define the individual settings
+    $this->_define_settings();
 		// register the individual settings
     if (function_exists('add_settings_field')) {
 		$this->_register_options();

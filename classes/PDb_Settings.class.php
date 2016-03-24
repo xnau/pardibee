@@ -54,12 +54,9 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     $this->submit_button = __('Save Plugin Settings', 'participants-database');
 
-    // define the individual settings
-    $this->_define_settings();
-
     // now that the settings have been defined, finish setting
     // up the plugin settings
-    $this->initialize();
+    //$this->initialize();
   }
 
   /**
@@ -82,7 +79,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
    *
    * @return null
    */
-  private function _define_settings() {
+  protected function _define_settings() {
 
     /******************************************************
      *
@@ -329,7 +326,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'dropdown',
             'help_text' => __('when a signup is submitted or CSV record is imported, this field is checked for a duplicate', 'participants-database'),
-            'options' => array_merge(self::_get_identifier_columns(), array('Record ID' => 'id')),
+            'options' => self::_get_identifier_columns(),
             'value' => 'email',
         )
     );
@@ -964,6 +961,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    Participants_Db::reassert_timezone();
     $this->plugin_settings[] = array(
         'name' => 'strict_dates',
         'title' => __('Strict Date Format', 'participants-database'),
@@ -1041,6 +1039,18 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'help_text' => __('uncheck this if PHP sessions are not working.', 'participants-database'),
             'value' => 1,
             'options' => array(1, 0),
+        ),
+    );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'cookie_name',
+        'title' => __('Cookie Name', 'participants-database'),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'text-line',
+            'help_text' => __('Change the name of the cookie for compatibility with some web hosting setups.', 'participants-database'),
+            'value' => 'pdb_wp_session',
         ),
     );
     
@@ -1180,14 +1190,21 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
   private function _get_pagelist($with_none = false, $with_blank = false) {
 
-    $pagelist = array();
+    $key = ($with_none ? '1' : '0') . ($with_blank ? '1' : '0');
+    $pagelist = wp_cache_get($key, 'get_pagelist');
+    
+    if ( $pagelist === false ) {
     
     if ($with_blank) $pagelist['null_select'] = '';
 
     if ($with_none)
       $pagelist[__('Same Page', 'participants-database')] = 'none';
 
-    $pages = get_posts(array('post_type' => 'page', 'posts_per_page' => -1));
+      $pages = wp_cache_get( 'pagelist_posts' );
+      if ($pages === false) {
+        $pages = get_posts( array( 'post_type' => 'page', 'posts_per_page' => -1 ) );
+        wp_cache_set( 'pagelist_posts', $pages );
+      }
 
     foreach ($pages as $page) {
       $pagelist[Participants_Db::set_filter('translate_string', $page->post_title)] = $page->ID;
@@ -1206,6 +1223,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
       }
      */
+      wp_cache_set($key, $pagelist, 'get_pagelist');
+    }
 
     return $pagelist;
   }
@@ -1244,8 +1263,13 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     $columnlist = $null ? array() : array('null_select' => false);
 
-    $sql = 'SELECT v.name, v.title FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name AND v.form_element NOT IN ("rich-text","checkbox","radio","dropdown","date","dropdown-other","multi-checkbox","select-other","multi-select-other","link","image-upload","file-upload","hidden","password","captcha","placeholder","timestamp"   
-) ORDER BY g.order, v.order';
+    $sql = '
+SELECT v.name, v.title 
+FROM ' . Participants_Db::$fields_table . ' v 
+  INNER JOIN ' . Participants_Db::$groups_table . ' g 
+    ON v.group = g.name 
+    WHERE v.form_element NOT IN ("rich-text","checkbox","radio","dropdown","date","dropdown-other","multi-checkbox","select-other","multi-select-other","link","image-upload","file-upload","password","captcha","timestamp") 
+ORDER BY g.order, v.order';
 
     $columns = $wpdb->get_results($sql, OBJECT_K);
 
@@ -1455,11 +1479,17 @@ class PDb_Settings extends xnau_Plugin_Settings {
             $settings[$name] = '';
           break;
         case 'list_limit':
+          if (intval($value) < -1) {
+            add_settings_error( $name, $name, sprintf(__('Only numeric values can be used for the "%s" setting.', 'participants-database'), $this->get_option_title($name)), 'error' );
+            $settings[$name] = $this->get_default_value($name);
+          }
+          break;
         case 'image_upload_limit':
           if (intval($value) < 1) {
             add_settings_error( $name, $name, sprintf(__('Only numeric values can be used for the "%s" setting.', 'participants-database'), $this->get_option_title($name)), 'error' );
             $settings[$name] = $this->get_default_value($name);
           }
+          break;
       }
     }
     return $settings;

@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -137,7 +137,8 @@ class PDb_Update_Notices {
   public function plugin_update_info($false, $action, $arg)
   {
     
-    if ($arg->slug !== Participants_Db::PLUGIN_NAME) return false;
+    // if the data is not available, return a false
+    if ( ! is_object( $arg ) || ! property_exists( $arg, 'slug' ) || $arg->slug !== Participants_Db::PLUGIN_NAME ) return false;
 
     $plugin_data = get_plugin_data($this->plugin_file_path);
     $response = $this->response();
@@ -201,8 +202,13 @@ The database is made up of fields, and each field may be one of several types th
   private function set_version_values($update_info = false) {
     $update_info = $update_info ? $update_info : get_site_transient('update_plugins');
     $plugin_check_path = plugin_basename($this->plugin_file_path);
-    self::$latest_version = isset($update_info->response[$plugin_check_path]) ? $update_info->response[$plugin_check_path]->new_version : $update_info->no_update[$plugin_check_path]->new_version;
-    self::$current_version = isset($update_transient->checked[$plugin_check_path]) ?  $update_transient->checked[$plugin_check_path] : Participants_Db::$plugin_version;
+    if (is_object($update_info)) {
+      $response = @$update_info->response[$plugin_check_path];
+      $no_update = @$update_info->no_update[$plugin_check_path];
+      $checked = @$update_info->checked[$plugin_check_path];
+      self::$latest_version = is_object($response) ? $response->new_version : ( is_object($no_update) ? $no_update->new_version : Participants_Db::$plugin_version );
+      self::$current_version = is_object($checked) ?  $checked : Participants_Db::$plugin_version;
+    }
   }
   /**
    * super simple markdown to HTML converter

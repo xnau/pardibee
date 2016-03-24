@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    FormElement class, Shortcode class
  * 
@@ -67,17 +67,23 @@ class PDb_Session {
 
 		if( $this->use_php_sessions ) {
 
-			if( ! session_id() )
-				add_action( 'init', 'session_start', -2 );
+			if( ! session_id() ) {
+				session_start();
+      }
 
 		} else {
 
 			// Use WP_Session (default)
       require_once plugin_dir_path(__FILE__) . 'wp-session.inc.php';
 
-			if ( ! defined( 'WP_SESSION_COOKIE' ) )
-				define( 'WP_SESSION_COOKIE', Participants_Db::$prefix . 'wp_session' );
-				
+			if ( ! defined( 'WP_SESSION_COOKIE' ) ) {
+        /**
+         * @version 1.6.2.6
+         * 
+         * for compatibility with servers using varnish cache
+         */
+				define( 'WP_SESSION_COOKIE', apply_filters( 'pdb-cookie_name', Participants_Db::plugin_setting('cookie_name', 'pdb_wp_session') ) );
+      }
 		}
 
 			add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
@@ -130,12 +136,18 @@ class PDb_Session {
    * 
 	 * @param string $key Session key
    * @param string|array|bool $default the value to return if none is found in the session
-	 * @return string Session variable or $default value
+	 * @return array Session variable or $default value
 	 */
 	public function getArray( $key, $default = false ) {
+    
 		$key = sanitize_key( $key );
     $array_object = isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
-		return is_object( $array_object ) ? $array_object->toArray() : $default;
+    switch ($this->use_php_sessions) {
+      case true:
+        return is_array($array_object) ? $array_object : $default;
+      case false:
+        is_object( $array_object ) ? $array_object->toArray() : $default;
+    }
 	}
 
 	/**
@@ -185,13 +197,26 @@ class PDb_Session {
   /**
    * clears a session variable
    * 
-   * @param string $name the name of the variable to get
+   * @param string $name the name of the variable to delete
    * @return null
    */
   public function clear($name) {
+    //error_log(__METHOD__.' clearing: '.$name);
     
-    unset($this->session[sanitize_key( $name )]);
+		$key = sanitize_key( $name );
+		
+		unset($this->session[ $key ]);
 
+		if( $this->use_php_sessions )
+			$_SESSION[$this->session_name] = $this->session;
+    
+	}
+  /**
+   * displays all session object values
+   * 
+   */
+  public function value_dump() {
+    return print_r($this,1);
 	}
   /**
    * merges two arrays recursively

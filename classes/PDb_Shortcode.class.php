@@ -181,6 +181,8 @@ abstract class PDb_Shortcode {
 
     $this->prefix = Participants_Db::$prefix;
 
+    $module = isset($subclass_shortcode_defaults['module']) ? $subclass_shortcode_defaults['module'] : 'unknown';
+
     global $post;
 
     $this->shortcode_defaults = array(
@@ -191,13 +193,13 @@ abstract class PDb_Shortcode {
         'groups' => '',
         'action' => '',
         'instance_index' => $this->instance_index,
-        'target_instance' => '1', // if no target instance is specified, assume it's the first instance
+        'target_instance' => ($module == 'search' ? '1' : $this->instance_index), // if no target instance is specified, assume it's the first instance
         'target_page' => '',
         'record_id' => false,
         'filtering' => 0, // this is set to '1' if we're coming here from an AJAX call
         'autocomplete' => 'off',
         'submit_button' => Participants_Db::plugin_setting('signup_button_text'),
-        'post_id' => $post->ID,
+        'post_id' => is_object( $post ) ? $post->ID : '',
     );
     
     // error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
@@ -508,7 +510,7 @@ abstract class PDb_Shortcode {
   public function have_records() {
 
     // for the total shortcode, we don't use the list limit, so set it to the maximum number
-    if ($this->shortcode_atts['list_limit'] === -1) {
+    if ($this->shortcode_atts['list_limit'] == '-1') {
       $this->shortcode_atts['list_limit'] = $this->num_records;
     }
 
@@ -816,17 +818,17 @@ abstract class PDb_Shortcode {
    */
   protected function _set_field_value($field) {
 
+    
     /*
      * get the value from the record; if it is empty, use the default value if the 
      * "persistent" flag is set.
      */
     $record_value = isset($this->participant_values[$field->name]) ? $this->participant_values[$field->name] : '';
-
-    $value = $this->_empty($record_value) ? ($this->_empty($field->default) ? '' : $field->default) : $record_value;
-    // replace it with the new value if provided, escaping the input
-    if (in_array($this->module, array('record','signup','retrieve')) && isset($_POST[$field->name])) {
-
-      $value = $this->_esc_submitted_value($_POST[$field->name]);
+    $value = $record_value;
+    $default_value = $this->_empty($field->default) ? '' : $field->default;
+    // replace it with the submitted value if provided, escaping the input
+    if (in_array($this->module, array('record','signup','retrieve')) ) {
+      $value = isset($_POST[$field->name]) ? $this->_esc_submitted_value($_POST[$field->name]) : $value;
     }
 
     /*
@@ -836,14 +838,14 @@ abstract class PDb_Shortcode {
       $this->display_as_readonly($field);
     }
     if ($field->form_element === 'hidden') {
-
-      /*
-       * use the dynamic value if no value has been set
-       */
       if (in_array($this->module, array('signup', 'record', 'retrieve'))) {
-        if (Participants_Db::is_dynamic_value($field->default)) {
-          $value = $this->get_dynamic_value($field->default);
-        }
+        /**
+       * use the dynamic value if no value has been set
+         * 
+         * @version 1.6.2.6 only set this if the value is empty
+       */
+        $dynamic_value = Participants_Db::is_dynamic_value( $field->default ) ? $this->get_dynamic_value( $field->default ) : $field->default;
+        $value = $this->_empty($record_value) ? $dynamic_value : $record_value;
         /*
          * add to the display columns if not already present so it will be processed 
          * in the form submission
@@ -1086,7 +1088,14 @@ abstract class PDb_Shortcode {
     
     $uri_components = parse_url($_SERVER['REQUEST_URI']);
 
-    echo '<form method="post" enctype="multipart/form-data"  autocomplete="' . $this->shortcode_atts['autocomplete'] . '" action="' . $_SERVER['REQUEST_URI'] . '" >';
+    /*
+     * @ver 1.6.2.6
+     * add filter 'pdb-{module}_form_action_attribute'
+     */
+    printf( '<form method="post" enctype="multipart/form-data"  autocomplete="%s" action="%s" >', 
+            $this->shortcode_atts['autocomplete'],
+            Participants_Db::set_filter( $this->module . '_form_action_attribute', $_SERVER['REQUEST_URI'] ) 
+            );
     $default_hidden_fields = array(
         'action' => $this->module,
         'subsource' => Participants_Db::PLUGIN_NAME,
@@ -1139,7 +1148,6 @@ abstract class PDb_Shortcode {
       $this->fields[$column->name] = clone $column;
       $this->fields[$column->name]->module = $this->module;
     }
-    
   }
 
   /**
@@ -1157,45 +1165,6 @@ abstract class PDb_Shortcode {
   protected function _proc_tags($text) {
     
     return Participants_Db::replace_tags($text, $this->participant_values, $this->fields);
-
-    /*
-    if (empty($values)) {
-
-      foreach ($this->fields as $column) {
-
-        $tags[] = '[' . $column->name . ']';
-
-        $column->value = $this->participant_values[$column->name];
-
-        $values[] = PDb_FormElement::get_field_value_display($column, false);
-      }
-    }
-
-    // add some extra tags
-    foreach (array('id', 'private_id') as $v) {
-
-      $tags[] = '[' . $v . ']';
-      $values[] = $this->participant_values[$v];
-    }
-    $tags[] = '[record_link]';
-    $values[] = $this->registration_page;
-
-    $tags[] = '[admin_record_link]';
-    $values[] = Participants_Db::get_admin_record_link($this->participant_values['id']);
-
-    $placeholders = array();
-
-    for ($i = 1; $i <= count($tags); $i++) {
-
-      $placeholders[] = '%' . $i . '$s';
-    }
-
-    // replace the tags with variables
-    $pattern = str_replace($tags, $placeholders, $text);
-
-    // replace the variables with strings
-    return vsprintf($pattern, $values);
-     */
   }
 
   
@@ -1267,7 +1236,6 @@ abstract class PDb_Shortcode {
   public function get_form_status() {
     return Participants_Db::$session->get('form_status', 'normal');
   }
-
   /**
    * sets up the shortcode atts session save
    * 

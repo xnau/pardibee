@@ -287,7 +287,7 @@ class xnau_FormValidation {
          * legacy databases. We test for that by looking for a field named 'email' 
          * in the incoming values.
          */
-        case ( $field->validation == 'email-regex' || ($field->validation ==  'email' && $field->name ==  'email') ) :
+        case ( $field->validation == 'email-regex' || ( $field->validation == 'email' && $field->name == 'email' ) ) :
 
           $regex = '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i';
           break;

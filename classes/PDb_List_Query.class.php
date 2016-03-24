@@ -87,7 +87,11 @@ class PDb_List_Query {
   /**
    * holds the instance index value of the instantiating list instance
    */
-  private $list_instance;
+  private $instance_index;
+  /**
+   * the current module
+   */
+  private $module;
   /**
    * @var object the instantiating List class instance
    */
@@ -107,7 +111,8 @@ class PDb_List_Query {
    */
   function __construct(PDb_List $List)
   {
-    $this->list_instance = $List->instance_index;
+    $this->instance_index = $List->instance_index;
+    $this->module = $List->module;
     $this->i18n = $List->i18n;
     $this->_reset_filters();
     $this->set_sort($List->shortcode_atts['orderby'], $List->shortcode_atts['order']);
@@ -120,9 +125,10 @@ class PDb_List_Query {
      * 
      * now, we process the GET and POST arrays to arrive at the final query structure 
      * 
-     * a working GET request must contain these three values to return a search result:
+     * a working GET request must contain these two values to return a search result:
      *    search_field - the name of the field to search in
      *    value - the search string, can be empty depending on settings
+     * an operator value is optional:
      *    operator - one of the valid operators: ~,!,ne,eq,lt,gt
      * you cannot perform a search and specify a page number in the same GET request, 
      * the page number will get that page of the last query
@@ -143,7 +149,7 @@ class PDb_List_Query {
     
     if (!empty($this->get_input[Participants_Db::$list_page])) {
       $this->_restore_query_session();
-    } elseif (filter_input(INPUT_POST, 'action') === 'pdb_list_filter' && $this->is_search_result) {
+    } elseif ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' && $this->is_search_result() ) {
       $this->_save_query_session();
     }
   }
@@ -174,7 +180,8 @@ class PDb_List_Query {
    * @return string|bool key string for the type of error or false if no error
    */
   public function get_search_error() {
-    if ( $this->is_search_result() && $this->post_input['submit'] === 'search' ) {
+    
+    if ( /* $this->is_search_result() && */ $this->post_input['submit'] === 'search' ) {
       if (empty($this->post_input['search_field'])) {
         $this->is_search_result(false);
         return 'search';
@@ -311,7 +318,7 @@ class PDb_List_Query {
       /*
        * fill in some assumed defaults in case an abbreviated get string is used
        */
-      if (empty($this->get_input['operator'])) {
+      if ( empty( $this->get_input['operator'] ) || $this->get_input['operator'] === 'like' ) {
         $this->get_input['operator'] = 'LIKE';
       }
       if (empty($this->get_input['target_instance'])) {
@@ -336,6 +343,12 @@ class PDb_List_Query {
       if (isset($_POST['search_field']) && is_array($_POST['search_field'])) {
         // process a multi search
         $this->post_input = filter_input_array(INPUT_POST, self::multi_search_input_filter());
+        $search_fields = array();
+        foreach ( $_POST['search_field'] as $index => $value ) {
+          foreach( array( 'search_field', 'operator', 'value', 'logic' ) as $fieldname ) {
+            $this->post_input[$fieldname][$index] = filter_var( $_POST[$fieldname][$index], FILTER_SANITIZE_STRING );
+          }
+        }
       } else {
         $this->post_input = filter_input_array(INPUT_POST, self::single_search_input_filter());
         if ($this->post_input['search_field'] === 'none' ) {
@@ -366,25 +379,29 @@ class PDb_List_Query {
    * @param array $input from GET or POST array
    * @return null
    */
-  private function  _add_filter_from_input($input) {
+  private function _add_filter_from_input($input)
+  {
     
+    //error_log(__METHOD__.' input: '.print_r($input,1));
+    
+    $set_logic = Participants_Db::plugin_setting_is_true('strict_search') ? 'AND' : 'OR';
+
     $this->_reset_filters();
-    if ($input['target_instance'] == $this->list_instance) { 
+    if ($input['target_instance'] == $this->instance_index) { 
       if (empty($input['sortstring'])) {
         $input['sortstring'] = $input['sortBy'];
         $input['orderstring'] = $input['ascdesc'];
       }
       if (is_array($input['search_field'])) {
-        for ($i = 0;$i < count($input['search_field']);$i++) {
-          $search_field = $input['search_field'][$i];
-          $this->_remove_field_filters($search_field);
-          $this->_add_single_statement($search_field, $input['operator'][$i], $input['value'][$i]);
+        foreach ( $input['search_field'] as $i => $search_field ) { // for ($i = 0; $i < count($input['search_field']); $i++) {
+          if ( strlen( $input['value'][$i] ) === 0 ) continue;
+          $logic = isset($input['logic'][$i]) ? $input['logic'][$i] : $set_logic;
+          $this->_add_search_field_filter($input['search_field'][$i], $input['operator'][$i], $input['value'][$i], $logic);
         }
         $this->is_search_result = true;
       } elseif (!empty($input['search_field'])) {
-        $this->_remove_field_filters($input['search_field']);
-        $this->_add_single_statement($input['search_field'], $input['operator'], $input['value']);
-        $this->is_search_result = true;
+        $logic = isset($input['logic']) ? $input['logic'] : $set_logic;
+        $this->_add_search_field_filter($input['search_field'], $input['operator'], $input['value'], $logic);
       } elseif ($input['submit'] !== 'clear' && empty($input['value'])) {
         // we set this to true even for empty searches
         $this->is_search_result = true;
@@ -395,6 +412,21 @@ class PDb_List_Query {
       $this->_save_query_session();
     }
   }
+
+  /**
+   * adds the field filter
+   * 
+   * @param string  $search_field
+   * @param string $operator
+   * @param string $value
+   * @param string $logic
+   */
+  private function _add_search_field_filter( $search_field, $operator, $value, $logic ) {
+    $logic = $logic ? ( strtoupper( $logic ) === 'OR' ? 'OR' : 'AND' ) : 'AND';
+    $this->_remove_field_filters( $search_field );
+    $this->_add_single_statement( $search_field, $operator, $value, $logic );
+    $this->is_search_result = true;
+  }
   /**
    * provides the mysql where clause
    * 
@@ -404,7 +436,7 @@ class PDb_List_Query {
    */
   private function _where_clause() {
     
-    $this->_set_up_clauses();
+    $this->_count_clauses();
     $query = '';
     if ($this->suppress && !$this->is_search_result) {
       $query .= ' WHERE p.id = "0"';
@@ -418,32 +450,48 @@ class PDb_List_Query {
    * 
    * @return string
    */
-  private function _build_where_clause() {
-    
-    
+  private function _build_where_clause()
+  {
+    $this->_reindex_subclauses();
     $subquery = '';
     $inparens = false;
     $clause_sequence = $this->_build_clause_sequence();
-    //error_log(__METHOD__.' '.print_r($clause_sequence,1));
+    
+    /**
+     * if $parens_logic is true, "or" statements will be parenthesized
+     * if false, 'and' statements will be parenthesized
+     * 
+     * @filter pdb-list_query_parens_logic
+     * @version 1.6.2.6
+     */
+    $parens_logic = Participants_Db::set_filter('list_query_parens_logic', TRUE);
     /*
      * each element in the where_clauses property array is an array of statements 
      * acting on a single field; The key is the name of the field.
      */
     foreach ($clause_sequence as $clause) {
+      
       $last_clause = $clause->index() === count($clause_sequence) - 1;
       /*
        * each element in the field clauses array is a PDb_List_Query_Filter object 
        * representing a statment acting on a particular field
        */
-      if ($clause->is_or() && !$inparens) {
+      if ($clause->is_or() === $parens_logic && !$inparens) {
         $subquery .= '(';
           $inparens = true;
         }
+
         $subquery .= $clause->statement();
+
+      
+      if ( !$parens_logic && $inparens && $clause->is_or() ) {
+        $subquery .= ')';
+        $inparens = false;
+      }
       if ($clause->is_or() && !$last_clause) {
         $subquery .= ' OR ';
         }
-      if ($inparens && (!$clause->is_or() || $last_clause)) {
+      if ($parens_logic && $inparens && ( ! $clause->is_or() || $last_clause)) {
         $subquery .= ')';
             $inparens = false;
           }
@@ -453,6 +501,7 @@ class PDb_List_Query {
     }
     return $subquery;
   }
+
   /**
    * takes the where_clauses property and builds a sequence of clauses for processing
    * 
@@ -527,7 +576,45 @@ class PDb_List_Query {
    * @param string $column
    */
   private function _remove_field_filters($column) {
-    unset($this->subclauses[$column]);
+    if ( isset( $this->subclauses[$column] ) ) {
+      /*
+       * @version 1.6.2.6
+       * we don't remove indices so that new clauses will always be placed at the end of the queue
+       */
+      //$this->decrement_clause_index(count($this->subclauses[$column]));
+			unset($this->subclauses[$column]);
+		}
+  }
+  /**
+   * increment clause index
+   * 
+   * @param int $amount to increment
+   */
+  private function increment_clause_index($amount = 1) {
+    $this->clause_index = $this->clause_index + $amount;
+  }
+  /**
+   * increment clause index
+   * 
+   * @param int $amount to decrement
+   */
+  private function decrement_clause_index($amount = 1) {
+    $this->clause_index = max(array($this->clause_index - $amount, 0));
+  }
+  /**
+   * reindexes the subclauses by shifting all the values down so the index begins with zero
+   * 
+   * @return null 
+   */
+  private function _reindex_subclauses() {
+    $diff = $this->clause_count - $this->clause_index;
+    //if ( $diff === 0 ) return;
+    foreach ( $this->subclauses as $clauses ) {
+      foreach ( $clauses as $clause ) {
+        $index = $clause->index() + $diff;
+        $clause->index( $index );
+      }
+    }
   }
   /**
    * sets the is search value
@@ -603,13 +690,10 @@ class PDb_List_Query {
     if (!empty($filter_string)) {
 
       $statements = preg_split('/([&|])/', html_entity_decode($filter_string), -1, PREG_SPLIT_DELIM_CAPTURE);
-      $logic = 'AND';
         
       for ($i = 0;$i < count($statements);$i = $i + 2) {
           
-        if (isset($statements[$i+1])) {
-          $logic = $statements[$i+1] === '|' ? 'OR' : 'AND';
-          }
+        $logic = isset($statements[$i+1]) && $statements[$i+1] === '|' ? 'OR' : 'AND';
           
         $this->_add_statement_from_filter_string($statements[$i], $logic);
         
@@ -665,25 +749,36 @@ class PDb_List_Query {
       return false;
     }
 
-    /*
-     * if the column is not valid skip this statement
+    $search_term = Participants_Db::set_filter('raw_search_term', trim(urldecode($search_term)));
+    
+    /**
+     * if the search term is empty and it's not allowed in settings and not a shortcode 
+     * filter, don't add the filter
+     * 
+     * @version 1.6.2.6
      */
-    if (!Participants_Db::is_column($column))
+    if ( $shortcode === false && strlen($search_term) === 0 && ! Participants_Db::plugin_setting_is_true('empty_search', false) ) {
       return false;
-
+    }
+    
     $field_atts = Participants_Db::get_column($column);
+    if ( ! is_object( $field_atts ) ) {
+      /*
+       * if the column is not valid skip this statement
+       */
+      return false;
+    }
     
     $filter = new PDb_List_Query_Filter(array(
         'field' => $column,
         'logic' => $logic,
         'shortcode' => $shortcode,
-        'term' => trim(urldecode($search_term)),
+        'term' => $search_term,
         'index' => $this->clause_index,
             )
     );
 
-    // increment the index value
-    $this->clause_index++;
+    $this->increment_clause_index();
 
     $statement = false;
 
@@ -760,7 +855,7 @@ class PDb_List_Query {
            * serialized array), we must prepare a special statement to search 
            * for the double quotes surrounding the value in the serialization
            */
-          if (in_array($field_atts->form_element, array('multi-checkbox', 'multi-select-other', 'link', 'array'))) {
+          if (in_array($field_atts->form_element, array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown'))) {
             $delimiter = array('\'%"', '"%\'');
             $operator = 'LIKE';
             /* 
@@ -805,7 +900,7 @@ class PDb_List_Query {
    * 
    * @return null
    */
-  private function _set_up_clauses() {
+  private function _count_clauses() {
     $count = 0;
     foreach($this->subclauses as $field) {
       if (is_array($field)) {
@@ -929,7 +1024,7 @@ class PDb_List_Query {
    * @return string
    */
   private function query_session_name($index = '') {
-    return self::$query_session . empty($index) ? $this->list_instance : $index;
+    return self::$query_session . empty($index) ? $this->instance_index : $index;
   }
   /**
    * prepares a submission input array for use as a filter configuration

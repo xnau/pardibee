@@ -199,10 +199,10 @@ class PDb_List_Query_Filter {
    * in the user search, the * and ? are stand-ins for the MySQL wildcards % and _
    * 
    * @param string $term the term to test
-   * @return bool true if wildcard characters are present
+   * @return bool true if wildcards are allowed and wildcard characters are present
    */
   public function wildcard_present() {
-    return strpos($this->term, '*') !== false || strpos($this->term, '?') !== false;
+    return ! Participants_Db::plugin_setting_is_true('strict_search', false) && ( strpos($this->term, '*') !== false || strpos($this->term, '?') !== false );
   }
   /**
    * is the term defined?
@@ -213,11 +213,13 @@ class PDb_List_Query_Filter {
     return is_string($this->term) && trim($this->term) !== '';
   }
   /**
-   * supplies the current index
+   * set/get the current index
    * 
-   * @return int the index
+   * @param int $set index value, if not supplied, returns the current value
+   * @return int the index after the set value is added
    */
-  public function index() {
+  public function index( $set = false ) {
+    $this->index = $set === false ? $this->index : $set;
     return $this->index;
   }
   /**

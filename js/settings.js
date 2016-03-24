@@ -3,7 +3,7 @@
  * 
  * sets up the tab functionality on the plugin settings page
  * 
- * @version 0.2
+ * @version 0.3
  * 
  */
 PDbSettings = (function ($) {
@@ -38,8 +38,8 @@ PDbSettings = (function ($) {
   }
   return {
     init : function () {
-      var wrapped = $(".participants_db.wrap .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">"),
-              wrapclass = $('.participants_db.wrap').attr('class');
+      var wrapped = $(".participants_db.wrap .ui-tabs>h2, .participants_db.wrap .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">");
+      var wrapclass = $('.participants_db.wrap').attr('class');
       wrapped.each(function () {
         $(this).parent().append($(this).parent().nextUntil("div.ui-tabs-panel"));
       });

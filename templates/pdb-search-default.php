@@ -6,7 +6,7 @@
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?>">
-
+  <?php echo $this->search_error_style ?>
   <div class="pdb-searchform">
 
     <?php 

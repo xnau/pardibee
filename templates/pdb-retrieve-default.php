@@ -3,11 +3,11 @@
  * default template to display private link retrieval form
  *
  */
-$mode = isset($_POST['action']) && $_POST['action'] == 'success' ? 'success' : 'request';
+$mode = isset( $_POST['action'] ) && $_POST['action'] == 'success' ? 'success' : 'request';
  ?>
 <div class="wrap <?php echo $this->wrap_class .  'mode-' . $mode ?> " >
   
-  <h4><?php _e('Request your Private Link','participants-database') ?></h4>
+  <h4><?php _e( 'Request your Private Link', 'participants-database' ) ?></h4>
 
   <?php // output any validation errors
   $this->print_errors(); ?>

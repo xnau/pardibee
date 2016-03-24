@@ -23,7 +23,6 @@
 
   <?php // output any validation errors
   $this->print_errors(); ?>
-
   <?php $this->print_form_head(); // this must be included before any fields are output. hidden fields may be added here as an array argument to the function ?>
 
     <table class="form-table pdb-signup">

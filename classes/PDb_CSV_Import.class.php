@@ -15,12 +15,28 @@
  */
 if ( ! defined( 'ABSPATH' ) ) die;
 class PDb_CSV_Import extends xnau_CSV_Import {
+  /**
+   * @var string name of the duplicate record match field
+   * 
+   */
+  private $match_field;
+  /**
+   * @var int the current dulicate record preference
+   */
+  private $match_preference;
   
+  /**
+   * 
+   * @param string $file_field_name
+   */
   function __construct( $file_field_name ) {
     
     $this->i10n_context = Participants_Db::PLUGIN_NAME;
     
     $this->_set_column_array();
+    
+    $this->match_field = filter_input(INPUT_POST, 'match_field', FILTER_SANITIZE_STRING);
+    $this->match_preference = filter_input(INPUT_POST, 'match_preference', FILTER_SANITIZE_NUMBER_INT);
     
     parent::__construct( $file_field_name );
     
@@ -40,14 +56,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
         
     
   }
-  /**
-   * sets up the root path for the uploaded file
-   *
-   * defaults to the WP root
-   */
-  protected function _set_root_path() {
-    $this->root_path = PDb_Path::app_base_path();
-  }
+  
   /**
    * takes a raw title row from the CSV and sets the column names array with it
    * if the imported row is different from the plugin's defined CSV columns
@@ -68,17 +77,13 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       $this->column_count = count($this->column_names);
     }
   }
-  /**
-   * sets the uploads directory path
-   * 
-   * @return bool true if the directory is located
-   */
+  
   function _set_upload_dir() {
 
-    $this->upload_directory = PDb_Path::files_location();
+    $this->upload_directory = Participants_Db::files_location();
   
     // check for the target directory; attept to create if it doesn't exist
-    return is_dir( $this->root_path.$this->upload_directory ) ? true : PDb_Path::_make_uploads_dir( $this->upload_directory ) ;
+    return is_dir( $this->root_path.$this->upload_directory ) ? true : Participants_Db::_make_uploads_dir( $this->upload_directory ) ;
     
   }
   
@@ -96,6 +101,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     
     $post['csv_file_upload'] = 'true';
     $post['subsource'] = Participants_Db::PLUGIN_NAME;
+    $post['match_field'] = $this->match_field;
+    $post['match_preference'] = $this->match_preference;
     
     // add the record data to the database
 		$id = Participants_Db::process_form( $post, 'insert' );

@@ -203,7 +203,7 @@ class PDb_FormElement extends xnau_FormElement {
             $field->link = false;
             $return = $field->value;
           } else {
-            $field->link = PDb_Path::files_uri() . $field->value;
+            $field->link = Participants_Db::files_uri() . $field->value;
              $return = self::make_link($field);
           }
           break;
@@ -219,11 +219,8 @@ class PDb_FormElement extends xnau_FormElement {
         $return = '';
         if (self::is_empty($field->value) === false) {
           $date = Participants_Db::parse_date($field->value, $field);
-          $format = Participants_Db::$date_format;
-          if (Participants_Db::plugin_setting_is_true('show_time') and $field->form_element === 'timestamp') {
-            $format .= ' ' . get_option('time_format');
-          }
-          $return = date_i18n($format, $date);
+          
+          $return = self::format_date($date, Participants_Db::plugin_setting_is_true('show_time') and $field->form_element === 'timestamp');
         } else {
           $return = '';
         }
@@ -232,6 +229,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       case 'multi-checkbox' :
       case 'multi-select-other' :
+      case 'multi-dropdown':
         
         /*
          * these elements are stored as serialized arrays of values, the data is displayed 
@@ -311,12 +309,14 @@ class PDb_FormElement extends xnau_FormElement {
       
       case 'hidden':
         
-        if ($field->value === $field->default) {
+        if ( Participants_Db::is_dynamic_value( $field->default ) && $field->value === $field->default ) {
+          // this is to prevent the dynamic value key from getting printed
           $field->value = '';
-        } elseif (!Participants_Db::is_dynamic_value($field->default)) {
+        } elseif ( ! Participants_Db::is_dynamic_value( $field->default ) && strlen( $field->value ) === 0 ) {
+          // show the default value if it's not a dynamic field value and there is no set value
         	$field->value = $field->default;
         }
-      
+        // don't break here so we can assign the return value
       default :
 
         $return = $html ? self::make_link($field) : $field->value;
@@ -365,6 +365,17 @@ class PDb_FormElement extends xnau_FormElement {
     
     else parent::_rich_text_field();
     
+  }
+
+
+  /**
+   * builds a captcha element
+   * 
+   */
+  protected function _captcha() {
+    
+    $captcha = new PDb_CAPTCHA($this);
+    $this->_addline($captcha->get_html());
   }
 
   /**
@@ -507,23 +518,8 @@ class PDb_FormElement extends xnau_FormElement {
    * @return string a formatted date or input string if invalid
    */
   public static function format_date($timestamp, $time = false) {
-    // if it's not a timestamp, we attempt to convert it to one
-    if (!Participants_Db::is_valid_timestamp($timestamp)) $timestamp = Participants_Db::parse_date($timestamp);
 
-    if (Participants_Db::is_valid_timestamp($timestamp)) {
-      
-      $format = Participants_Db::plugin_setting_is_true('strict_dates') ? Participants_Db::plugin_setting('input_date_format') : Participants_Db::$date_format;
-      
-      if ($time) {
-        $format .= ' ' . get_option('time_format');
-      }
-      
-      return date_i18n( $format, $timestamp );
-    
-    } else {
-      // not a timestamp: return unchanged
-      return $timestamp;
-    }
+    return Participants_Db::format_date($timestamp, $time);
   
   }
  
@@ -581,9 +577,9 @@ class PDb_FormElement extends xnau_FormElement {
       $options_array = maybe_unserialize(Participants_Db::$fields[$fieldname]->values);
     if (is_array($options_array)) {
       foreach ($options_array as $option_title => $option_value) {
-        if (!is_string($option_title) or $option_title == 'other') {
+          if (!is_string($option_title) or $option_title === 'other') {
           // we use the stored value
-        } elseif ($option_value == $value) {
+          } elseif ($option_value === $value) {
           // grab the option title
             return Participants_Db::set_filter('translate_string', stripslashes($option_title));
         }
@@ -596,6 +592,9 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * gets the value that corresponds to a value title
    * 
+   * @version 1.6.2.6 checks for the "title" in the values so that a value doesn't 
+   *                  get treated as though it were a title
+   * 
    * @param string $title the title of the value
    * @param string $fieldname the name of the field
    * @return string the value that matches the title given
@@ -604,24 +603,32 @@ class PDb_FormElement extends xnau_FormElement {
     $value = $title;
     if (isset(Participants_Db::$fields[$fieldname])) {
       $options_array = maybe_unserialize(Participants_Db::$fields[$fieldname]->values);
-      if (is_array($options_array)) {
-        if (isset($options_array[$title])) {
+      if (is_array($options_array) && array_search( $title, $options_array ) === false ) {
+        if ( isset( $options_array[$title] ) ) {
         $value = $options_array[$title];
         } else {
           /*
-           * we still haven't located the corresponding value, maybe we're looking for a 
-           * partial match to the title
+           * we still haven't located the corresponding value, maybe we're looking for 
+           * a match within the title
            * 
-           * this is also necessary when titles are tagged with translations: the search 
+           * this is necessary when titles are tagged with translations: the search 
            * can take place in multiple languages, and a match will still happen
            * 
-           * TODO: this only gets the first partial match to the title, ideally, this would 
-           * open up the query to all partial matches, but that is going to require a fundamental 
-           * change to how we are processing search terms that refer to value titles and 
-           * not stored values
+           * we're expecting a title with translations to look like this:
+           * [en:]English[de:]Deutsch[es:]Espanol[:]
+           * 
+           * we use a regex to pick out the titles and attempt a match
+           * 
            */
+          /**
+           * @version 1.6.2.6
+           * 
+           * added filter: pdb-value_title_match_pattern
+           */
+          $title_pattern = Participants_Db::set_filter('value_title_match_pattern', '/.*?\]([^[]+?)\[[^]]*/');
           foreach ($options_array as $key => $option) {
-            if (stripos($key, $title) !== false) {
+            preg_match_all( $title_pattern, $key, $matches );
+            if ( is_array( $matches[1] ) && in_array( $title, $matches[1] ) ) {
               $value = $option;
               break;
             }
@@ -660,6 +667,7 @@ class PDb_FormElement extends xnau_FormElement {
          'date'               => __('Date Field', 'participants-database'), 
          'dropdown-other'     => __('Dropdown/Other', 'participants-database'), 
          'multi-checkbox'     => __('Multiselect Checkbox', 'participants-database'), 
+         'multi-dropdown'     => __('Multiselect Dropdown', 'participants-database'), 
          'select-other'       => __('Radio Buttons/Other', 'participants-database'), 
          'multi-select-other' => __('Multiselect/Other', 'participants-database'), 
          'link'               => __('Link Field', 'participants-database'), 
@@ -694,6 +702,8 @@ class PDb_FormElement extends xnau_FormElement {
               'dropdown',
               'checkbox',
               'radio',
+              'placeholder',
+              'hidden',
               )
             );
    return Participants_Db::set_filter('field_is_linkable', $linkable, $field->form_element);

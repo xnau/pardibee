@@ -83,7 +83,7 @@ class PDb_FormValidation extends xnau_FormValidation {
     /*
      * if there is no validation method defined, exit here
      */
-    if (empty($field->validation) || $field->validation === NULL || $field->validation == 'no' || $field->validation === FALSE) {
+    if (empty($field->validation) || $field->validation === NULL || $field->validation === 'no' || $field->validation === FALSE) {
       return;
     }
     
@@ -108,6 +108,8 @@ class PDb_FormValidation extends xnau_FormValidation {
           $field->validation = 'yes';
           if ($this->is_empty($field->value)) {
             $field->error_type = 'empty';
+          } else {
+            $field->error_type = 'valid';
           }
           break;
           
@@ -115,16 +117,23 @@ class PDb_FormValidation extends xnau_FormValidation {
           // a "link" field only needs the first element to be filled in
           if ($this->is_empty($field->value[0])) {
             $field->error_type = 'empty';
+          } elseif ( ! filter_var( $field->value[0], FILTER_VALIDATE_URL ) ) {
+            $field->error_type = 'invalid';
+          } else {
+            $field->error_type = 'valid';
           }
           break;
         default:
-          if ($this->is_empty($field->value)) {
-            $field->error_type = 'empty';
+          /*
+           * chack all the simple validation fields
+           */
+          if ($field->validation === 'yes') {
+            if ( $this->is_empty( $field->value ) ) {
+            	$field->error_type = 'empty';
+            } else {
+              $field->error_type = 'valid';
           }
-      }
-      // if the field validation is 'yes' we're done
-      if ($field->error_type === false && $field->validation == 'yes') {
-        $field->error_type = 'valid';
+      	}
       }
     }
     /*
@@ -134,6 +143,7 @@ class PDb_FormValidation extends xnau_FormValidation {
 
       $regex = '';
       $test_value = false;
+      
       switch (true) {
 
         /*
@@ -144,7 +154,7 @@ class PDb_FormValidation extends xnau_FormValidation {
          */
         case ( $field->validation == 'email-regex' || ($field->validation ==  'email' && $field->name ==  'email') ) :
 
-          $regex = '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i';
+          $regex = Participants_Db::set_filter('email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i' );
           break;
 
         case ( 'captcha' == strtolower($field->validation) ) :
@@ -155,13 +165,13 @@ class PDb_FormValidation extends xnau_FormValidation {
           list($info, $value) = (isset($this->post_array[$field->name][1]) ? $this->post_array[$field->name] : array($this->post_array[$field->name][0], $field->value));
           $info = json_decode(urldecode($info));
 
-          /* 
-           * if we don't have a regex, assume it's a plugin CAPTCHA and decode it's validation regex
-           */
-          if (empty($regex))
-            $regex = $this->xcrypt($info->nonce, PDb_CAPTCHA::get_key());
+            $regex = $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() );
           
-          //error_log(__METHOD__.' $info:'.print_r($info,1).' $field->value:'.$field->value.' regex:'.$regex);
+          if (!self::is_regex( $regex )) {
+            $field->error_type = 'invalid';
+          }
+          
+          //error_log(__METHOD__.' validate CAPTCHA $info:'.print_r($info,1).' $field->value:'.$field->value.' regex:'.$regex);
 
           break;
 
@@ -185,7 +195,7 @@ class PDb_FormValidation extends xnau_FormValidation {
         
         if ($field->value != $test_value) $field->error_type = 'nonmatching';
         
-      } elseif ($regex !== false) {
+      } elseif ( $regex !== false && self::is_regex( $regex ) ) {
         
         $test_result = preg_match($regex, $field->value);
         
@@ -193,22 +203,22 @@ class PDb_FormValidation extends xnau_FormValidation {
         $field->error_type = $field->validation == 'captcha' ? 'captcha' : 'invalid';
         } elseif ($test_result === false) {
           error_log(__METHOD__.' captcha regex error with regex: "' . $regex . '"');
+        } elseif ( $test_result === 1 ) {
+          $field->error_type = 'valid';
         }
         
       }
     }
 
-    if ($field->error_type) {
-      if ($field->error_type != 'valid') $this->_add_error($name, $field->error_type, false);
-      $valid = $field->error_type;
-    } else {
-      $valid = 'valid';
+    if ($field->error_type && $field->error_type !== 'valid' ) {
+      $this->_add_error($name, $field->error_type, false);
     }
     /*
      * the result of a captcha validation are stored in a session variable
      */
-    if (strtolower($validation) === 'captcha' || $field->form_element == 'captcha')
-      Participants_Db::$session->set('captcha_result', $valid);
+    if (strtolower($field->validation) === 'captcha' || $field->form_element === 'captcha') {
+      Participants_Db::$session->set('captcha_result', $field->error_type);
+    }
 
     if (false) {
       error_log(__METHOD__ . '
@@ -231,7 +241,7 @@ class PDb_FormValidation extends xnau_FormValidation {
   {
 
     // check for errors
-    if (!$this->errors_exist())
+    if ( !$this->errors_exist() )
       return array();
 
     $output = '';
@@ -240,18 +250,33 @@ class PDb_FormValidation extends xnau_FormValidation {
 
     foreach ($this->errors as $field => $error) {
 
-      if ($field !== '') {
+      if ( $field !== '' ) {
       
         $field_atts = clone Participants_Db::$fields[$field];
 
-      $this->error_CSS[] = '[class*="'. Participants_Db::$prefix . '"] [name="' . $field_atts->name . '"]';
+        switch ($field_atts->form_element) {
+          case 'captcha':
+          case 'link':
+            $field_selector = '[name="' . $field_atts->name . '[]"]';
+            break;
+          case 'multi-checkbox':
+          case 'radio':
+          case 'checkbox':
+          case 'multi-select-other':
+            $field_selector = '[for="pdb-' . $field_atts->name . '"]';
+            break;
+          default:
+            $field_selector = '[name="' . $field_atts->name . '"]';
+        }
 
-      if (isset($this->error_messages[$error])) {
-        $error_messages[] = $error == 'nonmatching' ? sprintf($this->error_messages[$error], $field_atts->title, Participants_Db::column_title($field_atts->validation)) : sprintf($this->error_messages[$error], $field_atts->title);
+        $this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
+
+        if ( isset( $this->error_messages[$error] ) ) {
+          $error_messages[] = $error == 'nonmatching' ? sprintf( $this->error_messages[$error], $field_atts->title, Participants_Db::column_title( $field_atts->validation ) ) : sprintf( $this->error_messages[$error], $field_atts->title );
         $this->error_class = Participants_Db::$prefix . 'error';
       } else {
         $error_messages[] = $error;
-        $this->error_class = empty($field) ? Participants_Db::$prefix . 'message' : Participants_Db::$prefix . 'error';
+          $this->error_class = empty( $field ) ? Participants_Db::$prefix . 'message' : Participants_Db::$prefix . 'error';
       }
 
       } else {

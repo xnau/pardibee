@@ -16,7 +16,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.7
+ * @version    Release: 1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if (!defined('ABSPATH'))
@@ -139,7 +139,6 @@ class PDb_List_Admin {
 
     self::$sortables = Participants_Db::get_field_list(false, false, 'alpha');
 //    self::$sortables = Participants_Db::get_sortables(false, 'alpha');
-
     // set up the basic values
     self::$default_filter = array(
         'search' => array(
@@ -485,7 +484,7 @@ class PDb_List_Admin {
             
         $stored_date = "DATE(p." . esc_sql($filter_set['search_field']) . ")";
             
-              if ($value2 !== false and !empty($value2)) {
+        if ($value2 !== false and ! empty($value2)) {
                 
           self::$list_query .= " " . $stored_date . " > DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql($value) . " second) AND " . $stored_date . " < DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql($value2) . " second)";
               } else {
@@ -512,7 +511,7 @@ class PDb_List_Admin {
               
         $stored_date = "CAST(p." . esc_sql($filter_set['search_field']) . " AS SIGNED)";
             
-              if ($value2 !== false and !empty($value2)) {
+        if ($value2 !== false and ! empty($value2)) {
                 
           self::$list_query .= " " . $stored_date . " > CAST(" . esc_sql($value) . " AS SIGNED) AND " . $stored_date . " < CAST(" . esc_sql($value2) . "  AS SIGNED)";
           } else {
@@ -819,14 +818,9 @@ class PDb_List_Admin {
 
                     if (!empty($value[$column->name])) {
 
-                      $format = Participants_Db::$date_format;
-                                if (Participants_Db::plugin_setting_is_true('show_time') and $column->form_element == 'timestamp') {
-                        // replace spaces with &nbsp; so the time value stays together on a broken line
-                        $format .= ' ' . str_replace(' ', '&\\nb\\sp;', get_option('time_format'));
-                      }
-                                $time = Participants_Db::is_valid_timestamp($value[$column->name]) ? (int) $value[$column->name] : Participants_Db::parse_date($value[$column->name], $column->name, $column->form_element == 'date');
-                      $display_value = $value[$column->name] == '0000-00-00 00:00:00' ? '' : date_i18n($format, $time);
-                      //$display_value = date_i18n($format, $time);
+                $time = Participants_Db::is_valid_timestamp($value[$column->name]) ? (int) $value[$column->name] : Participants_Db::parse_date($value[$column->name], $column->name, false);
+          
+                $display_value = $value[$column->name] == '0000-00-00 00:00:00' ? '' : PDb_FormElement::format_date($time, Participants_Db::plugin_setting_is_true('show_time') and $column->form_element == 'timestamp');
                               } else {
                       $display_value = '';
                               }
@@ -932,15 +926,13 @@ class PDb_List_Admin {
               ?>
 
       <div class="postbox">
-        <h3><?php _e('Export CSV', 'participants-database') ?></h3>
         <div class="inside">
+          <h3><?php _e('Export CSV', 'participants-database') ?></h3>
         <form method="post" class="csv-export">
           <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
           <input type="hidden" name="action" value="output CSV" />
           <input type="hidden" name="CSV type" value="participant list" />
-          <input type="hidden" name="query" value="<?php echo rawurlencode(self::$list_query) ?>" />
           <?php
-          $date_string = str_replace(array('/', '#', '.', '\\', ', ', ',', ' '), '-', date_i18n(Participants_Db::$date_format));
                 $suggested_filename = $base_filename . self::filename_datestamp() . '.csv';
           $namelength = round(strlen($suggested_filename) * 0.9);
           ?>
@@ -1200,7 +1192,7 @@ class PDb_List_Admin {
    */
   public static function filename_datestamp()
   {
-    return '-' . str_replace(array('/', '#', '.', '\\', ', ', ',', ' '), '-', date_i18n(Participants_Db::$date_format));
+      return '-' . str_replace(array('/', '#', '.', '\\', ', ', ',', ' '), '-', Participants_Db::format_date(false, false, Participants_Db::$date_format));
   } 
 
   /**

@@ -64,7 +64,7 @@ var PDbOtherSelect = (function ($) {
   };
   var otherfield_update = function (field) {
     var thisGroup = field.closest(groupClass);
-    var thisName = thisGroup.data(nameData) + (field.PDb_is_checkbox() ? '[other]' : '');
+    var thisName = thisGroup.data(nameData).replace("[]", '') + (field.PDb_is_checkbox() ? '[other]' : '');
     var otherfield = thisGroup.find('.otherfield');
     cache_other_value(otherfield);
     if (field.is(':checked') && field.hasClass('otherselect')) {
@@ -79,8 +79,8 @@ var PDbOtherSelect = (function ($) {
     var thisGroup = field.closest(groupClass);
     var thisName = thisGroup.data(nameData);
     if (field.is(':focus')) {
-      field.attr('name', thisName.replace("[]", '') + (field.PDb_is_checkbox() ? '[other]' : ''));
-      thisGroup.find('.otherselect').attr('checked', true);
+      field.prop('name', thisName.replace("[]", '') + (field.PDb_is_checkbox() ? '[other]' : ''));
+      thisGroup.find('.otherselect').prop('checked', true);
       field.focus();
     }
     return true;

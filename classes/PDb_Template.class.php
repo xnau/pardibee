@@ -161,6 +161,17 @@ class PDb_Template {
   }
   
   /**
+   * prints a field help text
+   * 
+   * @param string $name
+   */
+  public function print_help_text($name) {
+    
+    echo $this->get_field_prop($name, 'help_text');
+      
+  }
+  
+  /**
    * prints a field property
    * 
    * @param string $name the fields name
@@ -294,8 +305,10 @@ class PDb_Template {
    * @return bool true if field value is non-empty
    */
   public function has_content($name) {
-    
   	$value = $this->fields->{$name}->value;
+    if (is_array( $value ) ) {
+      $value = implode('', array_values( $value ) );
+    }
     return strlen($value) !== 0;
   }
   /**
