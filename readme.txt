@@ -113,6 +113,10 @@ Please note that several of these translations are out of date. If your language
 
 The latest POT file is always available [here.](http://plugins.svn.wordpress.org/participants-database/trunk/participants-database.pot)
 
+= Key Image Credit =
+
+Sala_macchina_del_Cineca_1971 By Tukulti65 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=47436569
+
 == Installation ==
 
 1. Download the zip file, and unzip it on your computer.
