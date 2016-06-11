@@ -118,10 +118,7 @@ fieldset.widefat.inline-controls label {
 
 .radio > label {
   display: inline-block;
-  margin: 0 10px 0;
-}
-.radio > label:first-of-type {
-  margin-left: 0;
+  margin: 0 15px 15px 0;
 }
 
 /* HORIZ SCROLL */

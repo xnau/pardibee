@@ -203,10 +203,10 @@ The database is made up of fields, and each field may be one of several types th
     $update_info = $update_info ? $update_info : get_site_transient('update_plugins');
     $plugin_check_path = plugin_basename($this->plugin_file_path);
     if (is_object($update_info)) {
-      $response = @$update_info->response[$plugin_check_path];
-      $no_update = @$update_info->no_update[$plugin_check_path];
-      $checked = @$update_info->checked[$plugin_check_path];
-      self::$latest_version = is_object($response) ? $response->new_version : ( is_object($no_update) ? $no_update->new_version : Participants_Db::$plugin_version );
+      $response = isset($update_info->response[$plugin_check_path]) ? $update_info->response[$plugin_check_path] : '';
+      $no_update = isset($update_info->no_update[$plugin_check_path]) ? $update_info->no_update[$plugin_check_path] : Participants_Db::$plugin_version;
+      $checked = isset($update_info->checked[$plugin_check_path]) ? $update_info->checked[$plugin_check_path] : '';
+      self::$latest_version = is_object($response) ? $response->new_version : ( is_object($no_update) ? $no_update->new_version : $no_update );
       self::$current_version = is_object($checked) ?  $checked : Participants_Db::$plugin_version;
     }
   }

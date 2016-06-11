@@ -127,6 +127,7 @@ class PDb_List extends PDb_Shortcode {
         'orderby' => Participants_Db::plugin_setting('list_default_sort'),
         'order' => Participants_Db::plugin_setting('list_default_sort_order'),
         'fields' => '',
+        'search_fields' => '',
         'single_record_link' =>'',
         'display_count' => Participants_Db::plugin_setting('show_count'),
         'template' => 'default',
@@ -259,7 +260,7 @@ class PDb_List extends PDb_Shortcode {
      * 
      * pdb-list_query
      */
-    $list_query = Participants_Db::set_filter('list_query',$this->list_query->get_list_query());
+    $list_query = Participants_Db::apply_filters('list_query',$this->list_query->get_list_query());
     
     if (WP_DEBUG) error_log(__METHOD__.' list query: '. $list_query );
 
@@ -272,7 +273,7 @@ class PDb_List extends PDb_Shortcode {
     $this->_set_list_limit();
     
     // set up the pagination object
-    $pagination_defaults = Participants_Db::set_filter('pagination_configuration', array(
+    $pagination_defaults = Participants_Db::apply_filters('pagination_configuration', array(
         'link' => $this->prepare_page_link( $this->shortcode_atts['filtering'] ? filter_input(INPUT_POST, 'pagelink') : $_SERVER['REQUEST_URI'] ),
         'page' => $this->current_page,
         'size' => $this->page_list_limit,
@@ -368,9 +369,15 @@ class PDb_List extends PDb_Shortcode {
   {
     $input = false;
     $this->current_page = 1;
-    if (filter_input(INPUT_GET, 'instance', FILTER_VALIDATE_INT) === $this->instance_index) {
+    /*
+     * paginating using the pgae number in as a GET var doesn't require the instance number
+     */
+    if ( filter_input(INPUT_GET, $this->list_page, FILTER_VALIDATE_INT) !== false ) {
       $input = INPUT_GET;
     }
+    /*
+     * paginating using the POST array does require the correct instance index value
+     */
     if (isset($_POST[$this->list_page]) && filter_input(INPUT_POST, 'instance_index', FILTER_VALIDATE_INT) == $this->instance_index) {
       $input = INPUT_POST;
     }
@@ -554,7 +561,7 @@ class PDb_List extends PDb_Shortcode {
 
     $all_string = false === $all ? '(' . __('select', 'participants-database') . ')' : $all;
 
-    $search_columns = $this->searchable_columns($columns);
+    $search_columns = $this->searchable_columns(  self::field_list( $columns ? $columns : $this->shortcode_atts['search_fields'] ));
 
     if (count($search_columns) > 1) {
     $element = array(
@@ -594,7 +601,7 @@ class PDb_List extends PDb_Shortcode {
   function searchable_columns($columns = false) {
     
     $return = array();
-    $search_columns = is_array($columns) ? $columns : $this->display_columns;
+    $search_columns = is_array($columns) && ! empty( $columns ) ? $columns : $this->display_columns;
     foreach ($search_columns as $col) {
       $column = $this->get_column_atts($col);
       if ($column) $return[$column->title] = $column->name;
@@ -623,10 +630,16 @@ class PDb_List extends PDb_Shortcode {
     $output[] = '<input id="participant_search_term" type="text" name="value" class="search-item" value="' . esc_attr($search_term) . '">';
     $output[] = $this->search_submit_buttons();
 
+    /**
+     * @version 1.6.3
+     * @filter pdb-search_control_html
+     */
+    $html = Participants_Db::apply_filters('search_control_html', $this->output_HTML($output));
+
     if ($print)
-      echo $this->output_HTML($output);
+      echo $html;
     else
-      return $this->output_HTML($output);
+      return $html;
   }
   /**
    * supplies a search form submit and clear button with optional button text strings
@@ -845,7 +858,7 @@ class PDb_List extends PDb_Shortcode {
    */
   public function show_date($value, $format = false, $print = true) {
 
-    $date = Participants_Db::format_date($value);
+    $date = PDb_Date_Display::get_date($value, __METHOD__);
 
     if ($print)
       echo $date;

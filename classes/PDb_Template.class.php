@@ -130,7 +130,7 @@ class PDb_Template {
    * @return mixed the value
    */
   public function get_value($name) {
-  	return $this->_value($name);
+  	return maybe_unserialize( $this->_value( $name ) );
   }
   
   
@@ -256,7 +256,7 @@ class PDb_Template {
    */
   public function get_edit_link($page = '') {
     $edit_page = empty($page) ? $this->edit_page : Participants_Db::find_permalink($page);
-    return $this->cat_url_var($edit_page, 'pid', $this->_value('private_id'));
+    return $this->cat_url_var($edit_page, Participants_Db::$record_query, $this->_value('private_id'));
   }
   
   /**
@@ -266,7 +266,7 @@ class PDb_Template {
    */
   public function get_detail_link($page = '') {
     $detail_page = empty($page) ? $this->detail_page : Participants_Db::find_permalink($page);
-    return $this->cat_url_var($detail_page, 'pdb', $this->_value('id'));
+    return Participants_Db::apply_filters('single_record_url', $this->cat_url_var( $detail_page, Participants_Db::$single_query, $this->_value('id') ), $this->_value('id') );
   }
   
   /**
@@ -393,7 +393,11 @@ class PDb_Template {
         return isset($this->record->values[$name]) ? $this->record->values[$name] : '';
       case 'PDb_Single':
       default:
-        return isset($this->values[$name]) ? $this->values[$name] : '';
+        /**
+         * @version 1.6.3 modified to get the currently submitted value
+         */
+        return isset($this->fields->{$name}->value) && strlen( $this->fields->{$name}->value ) > 0 ? $this->values[$name] : '';
+       // return isset($this->values[$name]) ? $this->values[$name] : '';
     }
   }
   /**
@@ -462,8 +466,8 @@ class PDb_Template {
     $this->set_detail_page();
     $this->module = $this->shortcode_object->module;
     $this->id = $this->values['id'];
-    $this->edit_link = $this->cat_url_var($this->edit_page, 'pid', $this->values['private_id']);
-    $this->detail_link = $this->cat_url_var($this->detail_page, 'pdb', $this->id);
+    $this->edit_link = $this->cat_url_var($this->edit_page, Participants_Db::$record_query, $this->values['private_id']);
+    $this->detail_link = $this->cat_url_var($this->detail_page, Participants_Db::$single_query, $this->id);
     $this->fields = new stdClass();
     $this->groups = array();
     switch ($this->base_type) {
@@ -490,7 +494,7 @@ class PDb_Template {
         foreach($this->shortcode_object->fields as $name => $field) {
           $this->fields->{$name} = $field;
           $this->fields->{$name}->module = $this->shortcode_object->module;
-          $this->fields->{$name}->value = $this->values[$name];
+          //$this->fields->{$name}->value = $this->values[$name];
           }
         foreach($this->record as $name => $group) {
           $this->groups[$name] = $this_group = new stdClass();
@@ -500,6 +504,7 @@ class PDb_Template {
           $this_group->fields = array();
           foreach ($group->fields as $group_field) {
           	$this_group->fields[] = $group_field->name;
+            $this->fields->{$group_field->name}->value = $group_field->value;
           }
           reset($group->fields);
         }

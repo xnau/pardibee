@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) die;
     /*
      * determine the ID of the record to show
      *
-     * 'pdb' is a generic $_GET variable that indexes the record according to
+     * Participants_Db::$single_query is a generic $_GET variable that indexes the record according to
      * the 'term' value, which defaults to 'id'
      *
      */
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) die;
       $id = $this->shortcode_atts['record_id'];
     } else $id = 0;
 		// override the shortcode att if the value is in the URI
-    $get_pdb = filter_input(INPUT_GET, 'pdb', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
+    $get_pdb = filter_input(INPUT_GET, Participants_Db::$single_query, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
     if (!empty($get_pdb)) {
       $id = $get_pdb;
     }

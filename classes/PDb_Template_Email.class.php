@@ -11,12 +11,13 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 if (!defined('ABSPATH')) exit;
 class PDb_Template_Email extends xnau_Template_Email {
+
   /**
    * sets up the class
    * 
@@ -26,62 +27,108 @@ class PDb_Template_Email extends xnau_Template_Email {
    *                'subject' => $email_subject
    *                        'template'  => $email_template
    *                        'context'   => $context
-   * @param int|array $data if an integer, gets the PDB record with that ID, is 
+   * @param int|array $data if an integer, gets the PDB record with that ID, if 
    *                        array, uses it as the data source; must be associative 
    *                        array with fields labeled
    */
   function __construct($config, $data)
   {
     $this->prefix = Participants_Db::$prefix;
-    parent::__construct($config, $data);
+    $this->context = isset( $config['context'] ) ? $config['context'] : '';
+    if ( !isset( $config['from'] ) || empty( $config['from'] ) ) {
+      $config['from'] = self::email_from_name();
+    }
+    $this->setup_data($data);
+    parent::__construct( $config, $this->data );
   }
   /**
-   * maps a sets of values to "tags"in a template, replacing the tags with the values
+   * sends a templated email
    * 
-   * @param string $text the tag-containing template string
-   * @param array  $data array of record values: $name => $value
+   * this function allows for the simple sending of an email using a static function
    * 
-   * @return string template with all matching tags replaced with values
+   * @param array $config array of values to use in the email
+   *                'to'        => $email_to
+   *                'from'      => $email_from
+   *                'subject'   => $email_subject
+   *                'template'  => $email_template
+   *                'context'   => $context
+   * @param int|array $data if an integer, gets the PDB record with that ID, is 
+   *                        array, uses it as the data source; must be associative 
+   *                        array with fields labeled
    */
-  private function replace_tags($text, array$data) {
+  public static function send( $config, $data )
+  {
+    $instance = new self( $config, $data );
+    return $instance->send_email();
+  }
 
-    $values = $tags = array();
+  /**
+   * sends the email
+   * 
+   * @return bool true if successful
+   */
+  protected function send_email()
+  {
+    return $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text($this->email_subject, $this->data), PDb_Tag_Template::replaced_rich_text($this->email_template, $this->data) );
+  }
 
-    foreach ($data as $name => $value) {
-
-      $tags[] = '[' . $name . ']';
-
-      $values[] = $value;
-    }
+  /**
+   * adds pdb email tag data fields
+   */
+  private function add_email_data()
+  {
 
     // add the "record_link" tag
-    if (isset($data['private_id'])) {
-      $tags[] = '[record_link]';
-      $values[] = Participants_Db::get_record_link($data['private_id']);
+    if (isset($this->data['private_id'])) {
+      $this->data['record_link'] = Participants_Db::get_record_link($this->data['private_id']);
+    }
+
+    // add the admin record link tag
+    if ( isset( $this->data['id'] ) && is_numeric( $this->data['id'] ) ) {
+      // add the admin record link tag
+      $this->data['admin_record_link'] = Participants_Db::get_admin_record_link( $this->data['id'] );
     }
 
     // add the date tag
-    $tags[] = '[date]';
-    $values[] = Participants_Db::format_date();
+    $this->data['date'] = PDb_Date_Display::get_date( null, __METHOD__);
 
     // add the time tag
-    $tags[] = '[time]';
-    $values[] =  Participants_Db::format_date(false, false, get_option('time_format')); 
+    $this->data['time'] = PDb_Date_Display::get_date_with_format( null, get_option('time_format'), __METHOD__ ); 
 
-    $placeholders = array();
+//    error_log(__METHOD__.' tag map: '.print_r($this->data,1));
 
-    for ($i = 1; $i <= count($tags); $i++) {
+    /**
+     * @version 1.6.3
+     * @filter pdb-template_email_tag_map
+     */
+    $this->data = Participants_Db::apply_filters('template_email_tag_map', $this->data, $this->context );
+  }
 
-      $placeholders[] = '%' . $i . '$s';
+  /**
+   * supplies an email header
+   * 
+   * @filter pdb-template_email_header
+   * 
+   * @return string
+   */
+  protected function email_header()
+  {
+    return Participants_Db::apply_filters( 'email_headers', 'X-Source: ' . Participants_Db::PLUGIN_NAME . "\n" . 'Content-Type: text/html; charset="' . get_option( 'blog_charset' ) . '"' . "\n", $this->context );
     }
 
-    // replace the tags with variables
-    $pattern = str_replace($tags, $placeholders, $text);
-
-    // replace the variables with strings
-    return vsprintf($pattern, $values);
-    
+  /**
+   * provides an email "from" string
+   * 
+   * @filter pdb-email_from_name
+   * 
+   * @param string $context identifies the context
+   * @return string
+   */
+  public static function email_from_name( $context = '' )
+  {
+    return Participants_Db::apply_filters( 'email_from_name', Participants_Db::plugin_setting( 'receipt_from_name' ) . " <" . Participants_Db::plugin_setting( 'receipt_from_address' ) . ">", $context );
   }
+
   /**
    * sets up the data source
    * 

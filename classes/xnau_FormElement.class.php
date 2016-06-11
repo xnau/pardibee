@@ -363,6 +363,10 @@ abstract class xnau_FormElement {
           $this->_captcha();
           break;
 
+        case 'numeric':
+          $this->_numeric();
+          break;
+
         default:
 
       endswitch;
@@ -568,6 +572,18 @@ abstract class xnau_FormElement {
     $this->_addline( $this->_input_tag() );
     
   }
+  /**
+   * builds a input text element
+   */
+  protected function _numeric() {
+    
+    if (is_array($this->value)) {
+      $this->value = current($this->value);
+    }
+    
+    $this->_addline( $this->_input_tag('number') );
+    
+  }
   
   /**
    * builds a date field
@@ -678,7 +694,7 @@ abstract class xnau_FormElement {
       $this->_addline( $this->_input_tag( 'checkbox', $checked_value, 'checked' ), 1 );
       
       if ( false !== $title ) {
-        $this->_addline( Participants_Db::set_filter('translate_string', $title), 1 );
+        $this->_addline( Participants_Db::apply_filters('translate_string', $title), 1 );
         $this->_addline( '</label>', -1 );
       }
       
@@ -1097,8 +1113,6 @@ abstract class xnau_FormElement {
        
     foreach ($this->_make_assoc($this->options) as $option_key => $option_value) {
       
-      $option_key = Participants_Db::set_filter('translate_string', stripslashes($option_key));
-      
       if (($option_value === false or $option_value === 'false' or $option_value === 'optgroup') and !empty($option_key)) {
         if ($optgroup) {
           $this->_addline('</fieldset>');
@@ -1184,7 +1198,7 @@ abstract class xnau_FormElement {
       } elseif($value === 'other') {
         $otherlabel = $title;
       } elseif (strlen($value) > 0) {
-        $this->_addline('<option value="' . $value . '" ' . $this->_set_selected($value, $this->value, 'selected') . ' >' . Participants_Db::set_filter('translate_string', stripslashes($title)) . '</option>', -1);
+        $this->_addline('<option value="' . $value . '" ' . $this->_set_selected($value, $this->value, 'selected') . ' >' . Participants_Db::apply_filters('translate_string', stripslashes($title)) . '</option>', -1);
       }
     }
     // add the "other" option
@@ -1623,12 +1637,15 @@ abstract class xnau_FormElement {
   /**
    * returns a MYSQL datatype appropriate to the form element type
    * 
-   * @param string $element the name of the element type
+   * @param string|array $element the (string) form element type or (array) field definition array
    * @return string the name of the MySQL datatype
    */
   public static function get_datatype($element) {
 
-    switch ($element) {
+    $form_element = is_array( $element ) ? $element['form_element'] : $element;
+    $values = isset( $element['values'] ) ? maybe_unserialize( $element['values'] ) : false;
+
+    switch ($form_element) {
       
       case 'timestamp':
         $datatype = 'TIMESTAMP';
@@ -1636,6 +1653,16 @@ abstract class xnau_FormElement {
       
       case 'date':
         $datatype = 'BIGINT';
+        break;
+      
+      case 'numeric':
+        $datatype = 'BIGINT';
+        /*
+         * we need to change the input element to include the step="any" attribute to implement floats
+         */
+//        if ( $values && stripos( current( $values ), 'float' ) !== false ) {
+//          $datatype = 'FLOAT';
+//        }
         break;
       
       case 'text-line':

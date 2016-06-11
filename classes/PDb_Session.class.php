@@ -86,7 +86,9 @@ class PDb_Session {
       }
 		}
 
-			add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
+    //add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
+    $this->init();
+    
 	}
 
 
@@ -234,9 +236,9 @@ class PDb_Session {
     $b = (array)$b;
     $c = $b;
       foreach ($a as $k => $v) {
-        if (isset($b[$k])) {
-          if (is_array($v) && is_array($b[$k])) {
-            $c[$k] = self::deep_merge($v, $b[$k]);
+      if ( isset( $b[$k] ) ) {
+        if ( is_array( $v ) && is_array( $b[$k] ) ) {
+          $c[$k] = self::deep_merge( $v, $b[$k] );
           }
         } else {
           $c[$k] = $v;

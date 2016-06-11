@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( ! defined( 'ABSPATH' ) ) die;
@@ -20,7 +20,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
   function __construct() {
 
-    $this->WP_setting = Participants_Db::$participants_db_options;
+    $this->setup_plugin_options();
 
     /*
      * define the settings sections
@@ -50,13 +50,32 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
 
     // run the parent class initialization to finish setting up the class 
-    parent::__construct(__CLASS__, $this->WP_setting, $this->sections);
+    parent::__construct(__CLASS__);
 
     $this->submit_button = __('Save Plugin Settings', 'participants-database');
 
     // now that the settings have been defined, finish setting
     // up the plugin settings
     //$this->initialize();
+  }
+
+  /**
+   * sets up the plugin options array
+   */
+  private function setup_plugin_options()
+  {
+    $this->WP_setting = Participants_Db::$participants_db_options;
+
+    $default_options = get_option( Participants_Db::$default_options );
+
+    if ( !is_array( $default_options ) ) {
+
+      $default_options = $this->get_default_options();
+
+      add_option( Participants_Db::$default_options, $default_options, '', false );
+    }
+
+    Participants_Db::$plugin_options = array_merge( $default_options, (array) get_option( $this->WP_setting ) );
   }
 
   /**
@@ -94,7 +113,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array(
             'type' => 'text',
             'help_text' => __("This defines where the uploaded files will go, relative to the WordPress root. The default location is '/wp-content/uploads/participants-database'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated.", 'participants-database'),
-            'value' => Participants_Db::$uploads_path,
+            'value' => 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/',
         )
     );
 
@@ -326,7 +345,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'dropdown',
             'help_text' => __('when a signup is submitted or CSV record is imported, this field is checked for a duplicate', 'participants-database'),
-            'options' => self::_get_identifier_columns(),
+            'options' => self::_get_identifier_columns(false),
             'value' => 'email',
         )
     );
@@ -913,7 +932,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __('Use WordPress&#39; auto formatting on rich text fields.', 'participants-database'),
+            'help_text' => __('Use WordPress&#39; "the_content" filter on rich text fields. This applies "auto paragraphs" and allows the use of shortcodes in rich text fields and HTML emails.', 'participants-database'),
             'value' => 1,
             'options' => array(1, 0),
         ),
@@ -944,7 +963,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'dropdown',
             'help_text' => __('this field is the primary email address for the record', 'participants-database'),
             'value' => 'email',
-            'options' => self::_get_identifier_columns(),
+            'options' => self::_get_identifier_columns(false),
         ),
     );
 
@@ -961,7 +980,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
-    Participants_Db::reassert_timezone();
+    PDb_Date_Display::reassert_timezone();
     $this->plugin_settings[] = array(
         'name' => 'strict_dates',
         'title' => __('Strict Date Format', 'participants-database'),
@@ -971,7 +990,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'checkbox',
             'help_text' => sprintf(
                     __('This forces date inputs to be interpreted strictly according to the "Input Date Format" setting. You should tell your users what format you are expecting them to use. This also applies to date values used in [pdb_list] shortcode filters. The date with your current setting looks like this: <strong>%s</strong> %s', 'participants-database'), 
-                    strftime(Participants_Db::translate_date_format(Participants_Db::plugin_setting('input_date_format', get_option('date_format')), 'strftime')), 
+                    strftime( xnau_Date_Format_String::to_strftime( Participants_Db::plugin_setting( 'input_date_format', get_option( 'date_format' ) ) ) ),
                     (function_exists('date_create') ? '' : '<strong>(' . __('Your current PHP installation does not support this setting.', 'participants-database') . ' )</strong>')
                     ),
             'value' => 0,
@@ -1186,28 +1205,35 @@ class PDb_Settings extends xnau_Plugin_Settings {
               ),
         )
     );
+    
+    
+    
   }
 
-  private function _get_pagelist($with_none = false, $with_blank = false) {
+  private function _get_pagelist( $with_none = false, $with_blank = false )
+  {
+
 
     $key = ($with_none ? '1' : '0') . ($with_blank ? '1' : '0');
-    $pagelist = wp_cache_get($key, 'get_pagelist');
+    $pagelist = wp_cache_get( $key, 'get_pagelist' );
     
     if ( $pagelist === false ) {
     
-    if ($with_blank) $pagelist['null_select'] = '';
+      if ( $with_blank )
+        $pagelist['null_select'] = '';
 
-    if ($with_none)
-      $pagelist[__('Same Page', 'participants-database')] = 'none';
+      if ( $with_none )
+        $pagelist[__( 'Same Page', 'participants-database' )] = 'none';
 
       $pages = wp_cache_get( 'pagelist_posts' );
-      if ($pages === false) {
+      
+      if ( $pages === false ) {
         $pages = get_posts( array( 'post_type' => 'page', 'posts_per_page' => -1 ) );
         wp_cache_set( 'pagelist_posts', $pages );
       }
 
     foreach ($pages as $page) {
-      $pagelist[Participants_Db::set_filter('translate_string', $page->post_title)] = $page->ID;
+        $pagelist[Participants_Db::apply_filters( 'translate_string', $page->post_title )] = $page->ID;
     }
 
     /*
@@ -1223,7 +1249,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
       }
      */
-      wp_cache_set($key, $pagelist, 'get_pagelist');
+      wp_cache_set( $key, $pagelist, 'get_pagelist' );
     }
 
     return $pagelist;
@@ -1261,14 +1287,14 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     global $wpdb;
 
-    $columnlist = $null ? array() : array('null_select' => false);
+      $columnlist = $null ? array() : array( 'null_select' => false );
 
     $sql = '
 SELECT v.name, v.title 
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
-    WHERE v.form_element NOT IN ("rich-text","checkbox","radio","dropdown","date","dropdown-other","multi-checkbox","select-other","multi-select-other","link","image-upload","file-upload","password","captcha","timestamp") 
+      WHERE v.form_element NOT IN ("rich-text","checkbox","radio","dropdown","date","dropdown-other","multi-checkbox","select-other","multi-select-other","link","image-upload","file-upload","password","captcha","timestamp") AND v.group <> "internal"
 ORDER BY g.order, v.order';
 
     $columns = $wpdb->get_results($sql, OBJECT_K);
@@ -1327,6 +1353,9 @@ ORDER BY g.order, v.order';
         'null_select' => false,
         );
     global $wp_roles;
+    if ( ! is_object( $wp_roles ) ) {
+      return $role_select;
+    }
     $roles = $wp_roles->roles;
     //error_log(__METHOD__.' roles:'.print_r($roles,1));
     $caps = array();

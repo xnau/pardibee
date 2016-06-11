@@ -30,6 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) die;
 abstract class xnau_Image_Handler {
 
   /**
+   * @var string name of the cache group
+   */
+  const group = 'xnau_image_handler';
+  /**
    * true if the image file has been located and verified
    * 
    * @var bool
@@ -261,7 +265,7 @@ abstract class xnau_Image_Handler {
          * directory as defined in the plugin settings
          */
         $status = 'basename';
-        $this->_testfile($this->concatenate_directory_path( $this->image_directory, basename($this->image_file), false ));
+        $this->set_up_file_props($this->concatenate_directory_path( $this->image_directory, basename($this->image_file), false ));
   
         // if we still have no valid image, drop in the default
         if (!$this->file_exists) {
@@ -314,7 +318,7 @@ abstract class xnau_Image_Handler {
    *
    * sets the file_exists flag to true if the file exists
    */
-  protected function _testfile($filename) {
+  protected function set_up_file_props($filename) {
     
     //error_log(__METHOD__.' testing:'.$filename.' getting:'.($this->_file_exists($filename)?'yes':'no'));
 
@@ -449,36 +453,53 @@ abstract class xnau_Image_Handler {
    * 
    * sets $file_exists to true if found
    */
-  function test_absolute_path_image($src) {
+  public function test_absolute_path_image($src) {
     
-    if ($this->test_url_validity($src) and false !== @getimagesize($src)) {
+    if ($this->test_url_validity($src) and false !== self::getimagesize($src)) {
       return $this->file_exists = true;
     }
   }
   
   /**
-   * test an absolute path for validity; must have both the http protocol and a filename
+   * test an absolute path for validity; looks for http, https, or no protocol, must end in a file name
    *
    * @param string $url the path to test
    * @return bool
    */
   public function test_url_validity($url) {
-    return 0 !== preg_match("#^https?://.+/.+\..{2,4}$#",$url);
+    return 0 !== preg_match("#^(https?:|)//.+/.+\..{2,4}$#",$url);
   }
 
   /**
    * sets the dimension properties
    *
    */
-  private function _set_dimensions() {
+  protected function _set_dimensions() {
 
-    $getimagesize = @getimagesize($this->image_uri);
+    $getimagesize = self::getimagesize($this->image_uri);
 
     if (false !== $getimagesize) {
 
       $this->width = $getimagesize[0];
       $this->height = $getimagesize[1];
     }
+  }
+
+  
+  /**
+   * performs a php getimagesize using a cache
+   * 
+   * @param string $uri the image uri
+   * @return array
+   */
+  public static function getimagesize( $uri )
+  {
+    $result = wp_cache_get($uri, self::group);
+    if ( $result === false ) {
+      $result = @getimagesize($uri);
+      wp_cache_set($uri, $result, self::group);
+    }
+    return $result;
   }
 
   /**

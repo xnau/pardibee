@@ -141,8 +141,8 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
                      'value' => $match_preference,
                      'options' => array(
                           __( 'Create a new record with the submission', 'participants-database' ) => 0,
-                          __( 'Overwrite matching record with new data', 'participants-database' ) => 1,
-                          __( 'Show a validation error message', 'participants-database' ) => 2,
+                          __( 'Update matching record with new data', 'participants-database' ) => 1,
+                          __( "Don't import the record", 'participants-database' ) => 2,
                         'null_select' => false,
                       )
                  );
@@ -158,7 +158,7 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
                 'type' => 'dropdown',
                 'name' => 'match_field',
                 'value' => $match_field,
-                      'options' => array_merge( PDb_Settings::_get_identifier_columns(), array( 'Record ID' => 'id' ) ),
+                      'options' => array_merge( PDb_Settings::_get_identifier_columns(false), array( 'Record ID' => 'id' ) ),
             );
                   PDb_FormElement::print_element( $parameters );
              ?>
@@ -216,8 +216,8 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
       run : function () {
         prefs = $('#match-preferences');
         matchfield = prefs.find('.match-field');
-        $('#match_preference_select').change(set_pref);
-        $('#match_field_select').change(set_match_field);
+        $('#pdb-match_preference').change(set_pref);
+        $('#pdb-match_field').change(set_match_field);
       }
     }
   }(jQuery));

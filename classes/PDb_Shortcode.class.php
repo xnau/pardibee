@@ -176,8 +176,16 @@ abstract class PDb_Shortcode {
     // set the global shortcode flag and trigger the action on the first instantiation of this class
     $this->plugin_shortcode_action();
 
-    Participants_Db::include_stylesheets();
-    Participants_Db::add_scripts();
+    if ( has_action( 'wp_enqueue_scripts', array( 'Participants_Db', 'include_assets' ) ) === false ) {
+      /*
+       *  if the assets have not been enqueued, do that now
+       * 
+       * this might be necssary if the shortcode was invoked in another context 
+       * besides being in the content, where it would be detected
+       * 
+       */
+      Participants_Db::include_assets();
+    }
 
     $this->prefix = Participants_Db::$prefix;
 
@@ -319,7 +327,7 @@ abstract class PDb_Shortcode {
     /**
      * @version 1.6 'pdb-template_select' filter added
      */
-    $template = Participants_Db::set_filter('template_select', $custom_template_file);
+    $template = Participants_Db::apply_filters('template_select', $custom_template_file);
 
     if (!file_exists($template)) {
       $template = get_stylesheet_directory() . '/templates/' . $custom_template_file;
@@ -592,7 +600,7 @@ abstract class PDb_Shortcode {
              * @version 1.6 'pdb-before_field_added_to_iterator' filter
              * @param $field object
              */
-            $this->record->$group_name->fields->{$field->name} = Participants_Db::set_filter('before_field_added_to_iterator', $field);
+            $this->record->$group_name->fields->{$field->name} = Participants_Db::apply_filters('before_field_added_to_iterator', $field);
           }
           }
           }
@@ -877,8 +885,7 @@ abstract class PDb_Shortcode {
             Participants_Db::is_single_record_link($field) &&
             isset($this->participant_values['id'])
     ) {
-      $url = get_permalink(Participants_Db::plugin_setting('single_record_page'));
-      $link = Participants_Db::add_uri_conjunction($url) . 'pdb=' . $this->participant_values['id'];
+      $link = Participants_Db::single_record_url( $this->participant_values['id'] );
     }
 
     $field->link = $link;
@@ -899,20 +906,7 @@ abstract class PDb_Shortcode {
     $this->display_columns = array();
 
     if (isset($this->shortcode_atts['fields'])) {
-
-      $raw_list = explode(',', str_replace(array("'", '"', ' ', "\r", "\n"), '', $this->shortcode_atts['fields']));
-
-      if (is_array($raw_list)) :
-
-        foreach ($raw_list as $column) {
-
-          if (Participants_Db::is_column($column)) {
-
-            $this->display_columns[] = $column;
-          }
-        }
-
-      endif;
+      $this->display_columns = self::field_list($this->shortcode_atts['fields']);
     }
 
     /*
@@ -921,6 +915,30 @@ abstract class PDb_Shortcode {
     if (count($this->display_columns) == 0) {
       $this->_set_shortcode_display_columns();
     }
+  }
+
+  /**
+   * parses a field list into a validated array of fieldnames
+   * 
+   * @param string|array $list comma-separated list of names
+   * @return array
+   */
+  public static function field_list( $list )
+  {
+    $field_list = array();
+    $raw_list = is_array( $list ) ? $list : explode( ',', str_replace( array( "'", '"', ' ', "\r", "\n" ), '', $list ) );
+
+    if ( is_array( $raw_list ) ) {
+
+        foreach ($raw_list as $column) {
+
+        if ( Participants_Db::is_column( $column ) ) {
+
+          $field_list[] = $column;
+        }
+    }
+    }
+    return $field_list;
   }
 
   /**
@@ -1094,7 +1112,7 @@ abstract class PDb_Shortcode {
      */
     printf( '<form method="post" enctype="multipart/form-data"  autocomplete="%s" action="%s" >', 
             $this->shortcode_atts['autocomplete'],
-            Participants_Db::set_filter( $this->module . '_form_action_attribute', $_SERVER['REQUEST_URI'] ) 
+            Participants_Db::apply_filters( $this->module . '_form_action_attribute', $_SERVER['REQUEST_URI'] ) 
             );
     $default_hidden_fields = array(
         'action' => $this->module,
@@ -1149,25 +1167,6 @@ abstract class PDb_Shortcode {
       $this->fields[$column->name]->module = $this->module;
     }
   }
-
-  /**
-   * replace the tags in text messages
-   *
-   * a tag contains the column name for the value to use: [column_name]
-   *
-   * also processes the [record_link] tag
-   *
-   * @param string $text   the unprocessed text with tags
-   *
-   * @return string the text with the replacements made
-   *
-   */
-  protected function _proc_tags($text) {
-    
-    return Participants_Db::replace_tags($text, $this->participant_values, $this->fields);
-  }
-
-  
 
   /**
    * prints the submit button

@@ -194,8 +194,7 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function output_single_record_link($template = false) {
 
     $template = $template ? $template : '<a class="single-record-link" href="%1$s" title="%2$s" >%2$s</a>';
-    $url = get_permalink(Participants_Db::$plugin_options['single_record_page']);
-    $url = Participants_Db::add_uri_conjunction($url) . 'pdb=' . $this->record_id;
+    $url = Participants_Db::single_record_url( $this->record_id );
 
     return sprintf($template, $url, (empty($this->value) ? $this->default : $this->value));
   }

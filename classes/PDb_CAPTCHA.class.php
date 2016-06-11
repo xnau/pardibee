@@ -126,7 +126,7 @@ class PDb_CAPTCHA {
      * filled with the HTML of the custom captcha element. The validation of the 
      * response should be included as a regex string in PDb_CAPTCHA::validation
      */
-    Participants_Db::set_filter('captcha_setup', $this);
+    Participants_Db::apply_filters('captcha_setup', $this);
     
     if (empty($this->HTML)) {
       switch ($this->captcha_type) {

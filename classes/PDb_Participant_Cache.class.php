@@ -70,7 +70,7 @@ class PDb_Participant_Cache {
      * 
      * filter 'pdb-get_participant_cache_size' sets the number or records to cache in each group
      */
-    $this->cache_size = Participants_Db::set_filter( 'get_participant_cache_size', 100 );
+    $this->cache_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
     $this->cache_key = (int) ( $this->id / $this->cache_size );
     
     $this->setup_staleness();
@@ -213,7 +213,7 @@ class PDb_Participant_Cache {
     
     //error_log(__METHOD__.' data: '.print_r($this->data,1));
 
-    wp_cache_set( $this->cache_key, $this->data, self::group, Participants_Db::set_filter( 'participant_cache_time', 0) );
+    wp_cache_set( $this->cache_key, $this->data, self::group, Participants_Db::apply_filters( 'participant_cache_time', 0) );
     
     $this->set_fresh();
   }

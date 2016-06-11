@@ -90,14 +90,21 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   /**
    * applies conditioning and escaping to the incoming value, also allows for a filter callback
    * 
-   * @param type $value
+   * @param string|int $value
+   * @param string $column name of the column
    * @return string
    */
-  function process_value($value) {
-    return Participants_Db::set_filter('csv_import_value', esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure)));
+  function process_value( $value, $column = '' ) {
+    return Participants_Db::apply_filters( 'csv_import_value', esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure)), $column );
   }
   
   function store_record( $post ) {
+    
+    /**
+     * @version 1.6.3
+     * @filter pdb-before_csv_store_record
+     */
+    $post = Participants_Db::apply_filters('before_csv_store_record', $post);
     
     $post['csv_file_upload'] = 'true';
     $post['subsource'] = Participants_Db::PLUGIN_NAME;

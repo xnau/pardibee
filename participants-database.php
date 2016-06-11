@@ -4,7 +4,7 @@
  * Plugin URI: http://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.6.2.7
+ * Version: 1.6.3
  * Author URI: http://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -46,12 +46,26 @@ spl_autoload_register( 'PDb_class_loader' );
 class Participants_Db extends PDb_Base {
 
   /**
+   * @var string sets the min PHP version level required
+   */
+  const min_php_version = '5.3';
+
+  /**
    *
    * unique slug for the plugin; this is same as the plugin directory name
    * 
    * @var string unique slug for the plugin
    */
   const PLUGIN_NAME = 'participants-database';
+
+  /**
+   * @var string name of the single record query var
+   */
+  public static $single_query;
+  /**
+   * @var string name of the record edit query var
+   */
+  public static $record_query;
 
   /**
    *  display title
@@ -134,12 +148,6 @@ class Participants_Db extends PDb_Base {
   public static $plugin_path;
 
   /**
-   * absolute path to the uploads directory
-   * @var string 
-   */
-  public static $uploads_path;
-
-  /**
    * a general-use prefix to set a namespace
    *
    * @var string
@@ -213,13 +221,6 @@ class Participants_Db extends PDb_Base {
   public static $i18n = array();
 
   /**
-   * the date format; defaults to the WP global setting, but can be changed within the plugin
-   *
-   * @var string
-   */
-  public static $date_format;
-
-  /**
    * the last method used to parse a date
    * 
    * @var string
@@ -284,28 +285,9 @@ class Participants_Db extends PDb_Base {
     self::$default_options = self::$prefix . 'default_options';
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
-    // this is relative to the WP install
-    self::$uploads_path = 'wp-content/uploads/' . self::PLUGIN_NAME . '/';
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
-
-    /*
-     * set up data source names
-     * 
-     * these can be modified later with a filter hook
-     */
-    global $wpdb;
-    $table_basename = $wpdb->prefix . str_replace( '-', '_', self::PLUGIN_NAME );
-    self::$participants_table = $table_basename;
-    self::$fields_table = $table_basename . '_fields';
-    self::$groups_table = $table_basename . '_groups';
-    self::$participants_db_options = self::PLUGIN_NAME . '_options';
-
-    // load options if available...fill these in later if we don't get them here
-    self::$plugin_options = get_option( self::$participants_db_options );
-
-    self::$session = new PDb_Session();
 
     // install/deactivate and uninstall methods are handled by the PDB_Init class
     register_activation_hook( __FILE__, array( 'PDb_Init', 'on_activate' ) );
@@ -316,18 +298,43 @@ class Participants_Db extends PDb_Base {
     add_filter( 'plugin_row_meta', array( __CLASS__, 'add_plugin_meta_links' ), 10, 2 );
 
     // set the WP hooks to finish setting up the plugin
-    add_action( 'init', array( __CLASS__, 'init' ) );
+    add_action( 'plugins_loaded', array( __CLASS__, 'setup_source_names' ), 1 );
+    add_action( 'plugins_loaded', array( __CLASS__, 'init' ) );
+    add_action( 'wp', array( __CLASS__, 'check_for_shortcode' ), 1 );
     add_action( 'wp', array( __CLASS__, 'remove_rel_link' ) );
-    add_action( 'wp', array( __CLASS__, 'reset_shortcode_session' ) );
+    
     add_filter( 'admin_body_class', array( __CLASS__, 'add_admin_body_class' ) );
     add_filter( 'body_class', array( __CLASS__, 'add_body_class' ) );
     add_action( 'admin_menu', array( __CLASS__, 'plugin_menu' ) );
     add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
     add_action( 'admin_init', array( __CLASS__, 'reg_page_setting_fix' ) );
-    add_action( 'wp_enqueue_scripts', array( __CLASS__, 'include_scripts' ) );
+    add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ), 1 );
+    
+    add_action( 'wp_loaded', array( __CLASS__, 'process_page_request' ) ); // wp
+    //
     add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_includes' ) );
+    // this is only fired if there is a plugin shortcode on the page
+    add_action( 'pdb-shortcode_present', array( __CLASS__, 'add_shortcode_includes' ) );
+
     add_filter( 'wp_headers', array( __CLASS__, 'control_caching' ) );
+    /**
+     * @since 1.6.3
+     * added global constant to enable multilingual content of the type that qtranslate-x 
+     * employs, where all translations are in the same content and get filtered by 
+     * the chosen locale value
+     * 
+     * we needed to do this because the callback is somewhat expensive and most installs 
+     * are not multilingual
+     * 
+     * the PDB_MULTILINGUAL constant must be set to 1 or true to enable the multilingual 
+     * filter
+     * 
+     * the pdb-translate_string filter can be used in other ways: all display strings 
+     * are passed through it
+     */
+    if ( defined('PDB_MULTILINGUAL') && (bool) PDB_MULTILINGUAL === true ) {
     add_filter( self::$prefix . 'translate_string', array( __CLASS__, 'string_static_translation' ), 20 );
+    }
 
     // handles ajax request from list filter
     add_action( 'wp_ajax_pdb_list_filter', array( __CLASS__, 'pdb_list_filter' ) );
@@ -351,6 +358,38 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
+   * sets up the database and options source names
+   * 
+   * fired early on the 'plugins_loaded' hook
+   */
+  public static function setup_source_names()
+  {
+    /*
+     * these can be modified later with a filter hook
+     * 
+     * this allows things like multilingual field definitions or possibly even multiple databases
+     * 
+     * this must be in a plugin, a theme functions file will be too late!
+     */
+    global $wpdb;
+    $table_basename = $wpdb->prefix . str_replace( '-', '_', self::PLUGIN_NAME );
+    self::$participants_table = self::apply_filters( 'select_database_table', $table_basename );
+    self::$fields_table = self::apply_filters( 'select_database_table', $table_basename . '_fields' );
+    self::$groups_table = self::apply_filters( 'select_database_table', $table_basename . '_groups' );
+    
+    // also filter the name of the settings to use
+    self::$participants_db_options = self::apply_filters( 'select_database_table', self::PLUGIN_NAME . '_options' );
+    
+    /**
+     * @version 1.6.3
+     * @filter pdb-single_query
+     * @filter pdb-record_query
+     */
+    self::$single_query = self::apply_filters( 'single_query', 'pdb' );
+    self::$record_query = self::apply_filters( 'record_query', 'pid' );
+  }
+
+  /**
    * runs any admin-only initializations
    */
   public static function admin_init()
@@ -363,39 +402,21 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * performs a fix for some older versions of the plugin; does nothing with current plugins
-   */
-  public static function reg_page_setting_fix()
-  {
-    // if the setting was made in previous versions and is a slug, convert it to a post ID
-    $regpage = isset( self::$plugin_options['registration_page'] ) ? self::$plugin_options['registration_page'] : '';
-    if ( !empty( $regpage ) && !is_numeric( $regpage ) ) {
-
-      self::$plugin_options['registration_page'] = self::get_id_by_slug( $regpage );
-
-      update_option( self::$participants_db_options, self::$plugin_options );
-    }
-  }
-
-  /**
-   * initializes the plugin in the WP environment, fired on the 'init' hook
+   * initializes the plugin in the WP environment, fired on the 'plugins_loaded' hook
    * 
    * @return null
    */
   public static function init()
   {
-    // set the table names
-    global $wpdb;
     /*
-     * this filter allows a plugin to determine which db tables to use
-     * 
-     * this allows things like multilingual field definitions or possibly even multiple databases
+     * instantiate the settings class; this only sets up the settings definitions, 
+     * the WP Settings API may not be available at this point, so we register the 
+     * settings UI on the 'admin_menu' hook
      */
-    self::$participants_table = self::set_filter( 'select_database_table', self::$participants_table );
-    self::$fields_table = self::set_filter( 'select_database_table', self::$fields_table );
-    self::$groups_table = self::set_filter( 'select_database_table', self::$groups_table );
-    // also filter the name of the settings to use
-    self::$participants_db_options = self::set_filter( 'select_database_table', self::$participants_db_options );
+    self::$Settings = new PDb_Settings();
+    
+    // start sessions management
+    self::$session = new PDb_Session();
     /*
      * set up the base reference object arrays
      * 
@@ -411,7 +432,7 @@ class Participants_Db extends PDb_Base {
     /**
      * @version 1.6 filter pdb-private_id_length
      */
-    self::$private_id_length = self::set_filter( 'private_id_length', self::$private_id_length );
+    self::$private_id_length = self::apply_filters( 'private_id_length', self::$private_id_length );
 
     /*
      * checks for the need to update the DB
@@ -421,27 +442,35 @@ class Participants_Db extends PDb_Base {
     if ( false === get_option( self::$db_version_option ) || get_option( self::$db_version_option ) != self::$db_version )
       PDb_Init::on_update();
 
-    /*
-     * instantiate the settings class; this only sets up the settings definitions, 
-     * the WP Settings API may not be available at this point, so we register the 
-     * settings on the 'admin_menu' hook
+    if ( self::plugin_setting_is_true( 'html_email' ) ) {
+      $type = 'text/html; charset="' . get_option( 'blog_charset' ) . '"';
+    } else {
+      $type = 'text/plain; charset=us-ascii';
+    }
+    $email_headers = "From: " . self::$plugin_options['receipt_from_name'] . " <" . self::$plugin_options['receipt_from_address'] . ">\n" .
+            "Content-Type: " . $type . "\n";
+
+    self::$email_headers = self::apply_filters( 'email_headers', $email_headers );
+
+    /**
+     * sets up the rich text filtering
      */
-    self::$Settings = new PDb_Settings();
+    add_filter( 'pdb-rich_text_auto_formatting', array( __CLASS__, 'rich_text_filter' ), 10, 2 );
 
-    // get the plugin options array
-    if ( !is_array( self::$plugin_options ) ) {
-
-      $default_options = get_option( self::$default_options );
-
-      if ( !is_array( $default_options ) ) {
-
-        $default_options = self::$Settings->get_default_options();
-
-        add_option( self::$default_options, $default_options, '', false );
+    /**
+     * any plugins that require Participants Database settings/database should use this hook
+     * 
+     * @version 1.6.3
+     * @action participants-database_initialized
+     */
+    do_action( self::PLUGIN_NAME . '_initialized' );
       }
 
-      self::$plugin_options = array_merge( $default_options, (array) get_option( self::$participants_db_options ) );
-    }
+  /**
+   * registers all scripts and stylesheets
+   */
+  public static function register_assets()
+  {
     /*
      * normally, the custom CSS is written to a static css file, but on some systems, 
      * that doesn't work, so the fallback is to load the dynamic CSS file
@@ -452,36 +481,7 @@ class Participants_Db extends PDb_Base {
       $custom_css_file = 'custom_css.php';
     }
 
-    /*
-     * set the plugin date display format; uses the blog setting, which is localized
-     * 
-     * since version 1.5.5 we have not used the "strict date format" becuase that 
-     * is for input purposes only. This format is used to display dates.
-     * 
-     * this property can be changed in a template if desired
-     */
-    self::$date_format = get_option( 'date_format' );
-
-    if ( self::plugin_setting_is_true( 'html_email' ) ) {
-      $type = 'text/html; charset="' . get_option( 'blog_charset' ) . '"';
-    } else {
-      $type = 'text/plain; charset=us-ascii';
-    }
-    $email_headers = "From: " . self::$plugin_options['receipt_from_name'] . " <" . self::$plugin_options['receipt_from_address'] . ">\n" .
-            "Content-Type: " . $type . "\n";
-
-    self::$email_headers = self::set_filter( 'email_headers', $email_headers );
-
-    // this processes form submits before any output so that redirects can be used
-    self::process_page_request();
-
-//    if (!is_object(self::$Settings)) {
-//      self::$Settings = new PDb_Settings();
-//    }
-//    self::$Settings->initialize();
-
     $option_version = self::$Settings->option_version();
-
     /*
      * register frontend scripts and stylesheets
      */
@@ -492,123 +492,21 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'list-filter', plugins_url( 'js/list-filter.js', __FILE__ ), array( 'jquery' ) );
     wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array( 'jquery' ) );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array( 'jquery' ) );
-
-
-    /*
-     * register admin scripts and stylesheets
-     */
-    wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/jquery_cookie.js', __FILE__ ) );
-    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie' ), false, true );
-    wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie' ), false, true );
-    wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie' ), false, true );
-    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array( 'jquery' ) );
-    wp_register_script( 'jq-doublescroll', plugins_url( 'js/jquery.doubleScroll.js', __FILE__ ), array( 'jquery', 'jquery-ui-widget' ) );
-    wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery', 'jq-doublescroll' ) );
-    wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array( 'jquery' ) );
-    wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array( 'jquery' ) );
-    wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array( 'jquery' ) );
-    //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
-    //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
-
-    wp_register_style( 'pdb-utility', plugins_url( '/css/xnau-utility.css', __FILE__ ) );
-    wp_register_style( 'pdb-global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, false );
-    wp_register_style( 'pdb-frontend', plugins_url( '/css/participants-database.css', __FILE__ ) );
-    wp_register_style( 'pdb-admin', plugins_url( '/css/PDb-admin.css', __FILE__ ) );
   }
 
   /**
-   * sets up the plugin admin menus
+   * checks the current page for a plugin shortcode and fires an action if found
    * 
-   * @return null
+   * this function is fired on the 'wp' action
+   * 
+   * action fired is: pdb-shortcode_present
    */
-  public static function plugin_menu()
+  public static function check_for_shortcode()
   {
-    global $pagenow;
-    if ( ($pagenow == 'admin.php' && filter_input( INPUT_GET, 'page' ) === 'participants-database_settings_page') || $pagenow == 'options.php' ) {
-      /*
-       * intialize the plugin settings for the plugin settings pages
-       */
-      self::$Settings->initialize();
+    global $post;
+    if ( preg_match( '/\[pdb_/', $post->post_content ) > 0 ) {
+      do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
-
-    /*
-     * this allows the possibility of a child class handling the admin list display
-     */
-    $list_admin_classname = self::set_filter( 'admin_list_classname', 'PDb_List_Admin' );
-
-    // define the plugin admin menu pages
-    add_menu_page(
-            self::$plugin_title, 
-            self::$plugin_title, 
-            self::plugin_capability( 'record_edit_capability', 'main admin menu' ), 
-            self::PLUGIN_NAME, 
-            null
-    );
-
-    add_submenu_page(
-            self::PLUGIN_NAME,					
-            __( 'List Participants', 'participants-database' ),					
-            __( 'List Participants', 'participants-database' ), 
-            self::plugin_capability( 'record_edit_capability', 'list participants' ), 
-            self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
-            array( $list_admin_classname, 'initialize' )
-    );
-    /**
-     * this registers the edit participant page without adding it as a menu item
-     */
-    add_submenu_page(
-            null, 
-            null, 
-            null, 
-            self::plugin_capability( 'record_edit_capability', 'edit participant' ), 
-            self::$plugin_page . '-edit_participant', 
-            array( __CLASS__, 'include_admin_file' )
-    );
-
-    add_submenu_page(
-            self::PLUGIN_NAME, 
-            __( 'Add Participant', 'participants-database' ), 
-            __( 'Add Participant', 'participants-database' ), 
-            self::plugin_capability( 'record_edit_capability', 'add participant' ), 
-            self::$plugin_page . '-add_participant', 
-            array( __CLASS__, 'include_admin_file' )
-    );
-
-    add_submenu_page(
-            self::PLUGIN_NAME, 
-            __( 'Manage Database Fields', 'participants-database' ), 
-            __( 'Manage Database Fields', 'participants-database' ), 
-            self::plugin_capability( 'plugin_admin_capability', 'manage fields' ), 
-            self::$plugin_page . '-manage_fields', 
-            array( __CLASS__, 'include_admin_file' )
-    );
-
-    add_submenu_page(
-            self::PLUGIN_NAME, 
-            __( 'Import CSV File', 'participants-database' ), 
-            __( 'Import CSV File', 'participants-database' ), 
-            self::plugin_capability( 'plugin_admin_capability', 'upload csv' ), 
-            self::$plugin_page . '-upload_csv', 
-            array( __CLASS__, 'include_admin_file' )
-    );
-
-    add_submenu_page(
-            self::PLUGIN_NAME, 
-            __( 'Settings', 'participants-database' ), 
-            __( 'Settings', 'participants-database' ), 
-            self::plugin_capability( 'plugin_admin_capability', 'plugin settings' ), 
-            self::$plugin_page . '_settings_page', 
-            array( self::$Settings, 'show_settings_form' )
-    );
-
-    add_submenu_page(
-            self::PLUGIN_NAME, 
-            __( 'Setup Guide', 'participants-database' ), 
-            __( 'Setup Guide', 'participants-database' ), 
-            self::plugin_capability( 'plugin_admin_capability', 'setup guide' ), 
-            self::$plugin_page . '-setup_guide', 
-            array( __CLASS__, 'include_admin_file' )
-    );
   }
 
   /**
@@ -622,17 +520,31 @@ class Participants_Db extends PDb_Base {
   public static function admin_includes( $hook )
   {
 
+    /*
+     * register admin scripts and stylesheets
+     */
+    wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/jquery_cookie.js', __FILE__ ) );
+    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie' ), false, true );
+    wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie' ), false, true );
+    wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie' ), false, true );
+    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array( 'jquery' ) );
+    wp_register_script( 'jq-doublescroll', plugins_url( 'js/jquery.doubleScroll.js', __FILE__ ), array( 'jquery', 'jquery-ui-widget' ) );
+    wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery', 'jq-doublescroll' ) );
+    wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array( 'jquery' ) );
+    wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array( 'jquery', 'jquery-ui-dialog' ) );
+    wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array( 'jquery' ) );
+    //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
+    //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
+
+    wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ) );
+    wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, false );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ) );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ) );
+
     if ( false !== stripos( $hook, 'participants-database' ) ) {
-      wp_enqueue_script( 'jquery' );
-      wp_enqueue_script( 'jquery-ui-core' );
-      wp_enqueue_script( 'jquery-ui-tabs' );
-      wp_enqueue_script( 'jquery-ui-sortable' );
-      wp_enqueue_script( 'jquery-ui-dialog' );
-      wp_enqueue_script( self::$prefix . 'cookie' );
       wp_enqueue_script( self::$prefix . 'jq-placeholder' );
       wp_enqueue_script( self::$prefix . 'admin' );
       wp_enqueue_script( self::$prefix . 'otherselect' );
-      wp_enqueue_script( 'jq-doublescroll' );
     }
 
     if ( false !== stripos( $hook, 'participants-database-list_participants' ) ) {
@@ -676,15 +588,26 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * register all frontend JS and CSS
+   * adds the enqueueing callback for scripts and stylesheets on the frontend
    * 
-   * fired on WP hook 'wp_enqueue_scripts' the actual enqueueing happens in the PDb_Shortcode class
+   * this is triggered by the 'pdb-shortcode_present' hook
+   */
+  public static function add_shortcode_includes()
+  {
+    add_action( 'wp_enqueue_scripts', array( __CLASS__, 'include_assets' ), 100 );
+  }
+
+  /**
+   * include frontend JS and CSS
+   * 
+   * fired on WP hook 'wp_enqueue_scripts' 
    * 
    * @return null
    */
-  public static function include_scripts()
+  public static function include_assets()
   {
-    
+    self::include_stylesheets();
+    self::add_scripts();
   }
 
   /**
@@ -735,6 +658,19 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
+   * provides an URL for a single record
+   * 
+   * @param int $id the record id
+   * @return  string  the URL
+   */
+  public static function single_record_url( $id ) 
+  {
+    $url = get_permalink(self::$plugin_options['single_record_page']);
+    $url = self::add_uri_conjunction($url) . self::$single_query . '=' . $id;
+    return self::apply_filters('single_record_url', $url, $id );
+  }
+
+  /**
    * shows the frontend edit screen called by the [pdb_record] shortcode
    *
    *
@@ -751,10 +687,10 @@ class Participants_Db extends PDb_Base {
   {
     $record_id = false;
     // get the pid from the get string if given (for backwards compatibility)
-    $get_pid = filter_input( INPUT_GET, 'pid', FILTER_SANITIZE_STRING );
+    $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
 
     if ( empty( $get_pid ) ) {
-      $get_pid = filter_input( INPUT_POST, 'pid', FILTER_SANITIZE_STRING );
+      $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
     }
     if ( !empty( $get_pid ) ) {
       $record_id = self::get_participant_id( $get_pid );
@@ -825,7 +761,7 @@ class Participants_Db extends PDb_Base {
      * 'pdb-shortcode_call_{$tag}' filter allows the shortcode atrributes to be 
      * altered before instantiating the shortcode object
      */
-    $shortcode_parameters = self::set_filter( 'shortcode_call_' . $tag, $params );
+    $shortcode_parameters = self::apply_filters( 'shortcode_call_' . $tag, $params );
 
     switch ( $tag ) {
       case 'pdb_record':
@@ -1486,7 +1422,7 @@ class Participants_Db extends PDb_Base {
        * the $record_match status variable is made available to a filter so a custom 
        * record matching method can be implemented
        */
-      $record_match = self::set_filter( 'incoming_record_match', $record_match, $post );
+      $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post );
 
       if ( $record_match ) {
         /*
@@ -1494,7 +1430,7 @@ class Participants_Db extends PDb_Base {
          */
         switch ( $duplicate_record_preference ) {
 
-          case '1':
+          case '1': // update matching
 
             // record with same field value exists...get the id and update the existing record
             if ( 'id' == strtolower( $match_field ) )
@@ -1516,7 +1452,7 @@ class Participants_Db extends PDb_Base {
 
             break;
 
-          case '2':
+          case '2': // error/skip
 
             /*
              * version 1.6.2.6 we removed check for multipage form so this validation 
@@ -1527,7 +1463,7 @@ class Participants_Db extends PDb_Base {
               self::$validation_errors = new PDb_FormValidation();
             }
             self::$validation_errors->add_error( $match_field, 'duplicate' );
-            $action = 'skip';
+            // $action = 'skip';
             // go on validating the rest of the form
             break;
         }
@@ -1566,9 +1502,9 @@ class Participants_Db extends PDb_Base {
 
       case 'insert':
         $sql = 'INSERT INTO ' . self::$participants_table . ' SET ';
-        if ( self::import_timestamp( isset( $post['date_recorded'] ) ? $post['date_recorded'] : '' ) === false )
+        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) )
           $sql .= ' `date_recorded` = NOW(), ';
-        if ( self::import_timestamp( isset( $post['date_updated'] ) ? $post['date_updated'] : '' ) === false )
+        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) )
           $sql .= ' `date_updated` = NOW(), ';
         $where = '';
         break;
@@ -1623,10 +1559,11 @@ class Participants_Db extends PDb_Base {
           // remove the value from the post array if it is already set in the sql
           if ( isset( $post[$column->name] ) && strpos( $sql, $column->name ) !== false ) {
             unset( $post[$column->name] );
+            $new_value = false;
             break;
           }
 
-          $new_value = self::import_timestamp( $post[$column->name] );
+          $new_value = PDb_Date_Display::get_mysql_timestamp( isset( $post[$column->name] ) ? $post[$column->name] : '', __METHOD__ );
 
           break;
 
@@ -1729,8 +1666,7 @@ class Participants_Db extends PDb_Base {
             case 'date':
 
               if ( $post[$column->name] !== '' ) {
-                $date = self::parse_date( $post[$column->name], $column, true );
-                $new_value = $date ? $date : false;
+                $new_value = PDb_Date_Parse::timestamp( $post[$column->name], array(), __METHOD__ . ' date field value' );
               } else {
                 $new_value = null;
               }
@@ -1763,10 +1699,7 @@ class Participants_Db extends PDb_Base {
 
             default:
 
-              if ( !self::current_user_has_plugin_role( 'admin', 'readonly access' ) && $column->readonly != '0' ) {
-                // this prevents unauthorized users from saving readonly field data
-                $new_value = false;
-              } elseif ( is_array( $post[$column->name] ) ) {
+              if ( is_array( $post[$column->name] ) ) {
 
                 $new_value = self::_prepare_array_mysql( $post[$column->name] );
               } else {
@@ -1775,6 +1708,12 @@ class Participants_Db extends PDb_Base {
               }
           } // switch column_atts->form_element
       }  // swtich column_atts->name 
+
+      // check for user/readonly field status and disable saving field data for unauthorized users
+      if ( !self::current_user_has_plugin_role( 'editor', 'readonly access' ) && $column->readonly != '0' ) {
+        // this prevents unauthorized users from saving readonly field data
+        $new_value = false;
+      }
 
       /*
        * add the column and value to the sql; if it is bool false, skip it entirely. 
@@ -1946,7 +1885,7 @@ class Participants_Db extends PDb_Base {
 //    if ( is_object( $current_user ) ) $default_record['by'] = $current_user->display_name;
 //    $default_record['when'] = date_i18n(self::$date_format);
     $default_record['private_id'] = self::generate_pid();
-    self::reassert_timezone();
+    PDb_Date_Display::reassert_timezone();
     $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
     /*
      * @version 1.6 stop setting date_updated on new record
@@ -1976,7 +1915,7 @@ class Participants_Db extends PDb_Base {
     if ( false === $id )
       return self::get_default_record();
 
-    if ( self::set_filter( 'use_participant_caching', true ) ) {
+    if ( self::apply_filters( 'use_participant_caching', true ) ) {
       return PDb_Participant_Cache::get_participant( $id );
     } else {
       return self::_get_participant( $id );
@@ -2277,7 +2216,7 @@ class Participants_Db extends PDb_Base {
 
     global $wpdb;
 
-    $datatype = PDb_FormElement::get_datatype( $atts['form_element'] );
+    $datatype = PDb_FormElement::get_datatype( $atts );
 
     $sql = 'ALTER TABLE `' . self::$participants_table . '` ADD `' . $atts['name'] . '` ' . $datatype . ' NULL';
 
@@ -2311,13 +2250,14 @@ class Participants_Db extends PDb_Base {
      * $post_input is used for control functions, not for the dataset
      */
     $post_input = filter_input_array( INPUT_POST, $post_sanitize );
+    
     // only process POST arrays from this plugin's pages
     if ( empty( $post_input['subsource'] ) or $post_input['subsource'] != self::PLUGIN_NAME or empty( $post_input['action'] ) )
       return;
 
     // add a filter to check the submission before anything is done with it
     $check = true;
-    self::set_filter( 'check_submission', $check );
+    self::apply_filters( 'check_submission', $check );
     if ( $check === false )
       return;
 
@@ -2372,7 +2312,7 @@ class Participants_Db extends PDb_Base {
          * filter: pdb-before_submit_update
          * filter: pdb-before_submit_add
          */
-        $post_data = self::set_filter( 'before_submit_' . ($post_input['action'] === 'insert' ? 'add' : 'update'), $_POST );
+        $post_data = self::apply_filters( 'before_submit_' . ($post_input['action'] === 'insert' ? 'add' : 'update'), $_POST );
 
         if ( isset( $_POST['id'] ) ) {
           $id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
@@ -2416,8 +2356,13 @@ class Participants_Db extends PDb_Base {
 
           if ( self::$plugin_options['send_record_update_notify_email'] && !self::is_multipage_form() ) {
 
-            $sent = wp_mail(
-                    self::$plugin_options['email_signup_notify_addresses'], self::proc_tags( self::$plugin_options['record_update_email_subject'], $participant_id, 'all' ), self::proc_tags( self::$plugin_options['record_update_email_body'], $participant_id, 'all' ), self::$email_headers
+            PDb_Template_Email::send(array(
+                'to' => self::plugin_setting('email_signup_notify_addresses'),
+                'subject' => self::plugin_setting('record_update_email_subject'),
+                'template' => self::plugin_setting('record_update_email_body'),
+                'context' => 'record update notify',
+                ),
+              $participant_id
             );
           }
           /*
@@ -2472,6 +2417,8 @@ class Participants_Db extends PDb_Base {
       case 'output CSV':
 
         $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'editor' : 'admin';
+        
+        
         if ( !Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' ) ) {
           die();
         }
@@ -2581,7 +2528,7 @@ class Participants_Db extends PDb_Base {
          * 
          * filter: pdb-before_submit_signup
          */
-        $post_data = self::set_filter( 'before_submit_signup', $_POST );
+        $post_data = self::apply_filters( 'before_submit_signup', $_POST );
 
 
 
@@ -2631,7 +2578,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function nonce_check( $nonce, $context )
   {
-    return self::set_filter( 'nonce_verify', wp_verify_nonce( $nonce, self::nonce_key( $context ) ), $context );
+    return self::apply_filters( 'nonce_verify', wp_verify_nonce( $nonce, self::nonce_key( $context ) ), $context );
   }
 
   /**
@@ -2645,7 +2592,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function nonce_key( $context )
   {
-    return self::set_filter( 'nonce_key', self::$prefix . $context );
+    return self::apply_filters( 'nonce_key', self::$prefix . $context );
   }
 
   /**
@@ -2659,7 +2606,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function nonce( $context )
   {
-    return self::set_filter( 'nonce', wp_create_nonce( self::nonce_key( $context ) ) );
+    return self::apply_filters( 'nonce', wp_create_nonce( self::nonce_key( $context ) ) );
   }
 
   /**
@@ -2709,33 +2656,39 @@ class Participants_Db extends PDb_Base {
     } else {
       $participant_values = self::get_participant( $match_id );
     }
+    // prepare an object for the filter to use
     $retrieve_link_email = new stdClass();
-    $retrieve_link_email->body_template = self::set_filter( 'translate_string', self::plugin_setting( 'retrieve_link_email_body' ) );
-    $retrieve_link_email->subject = self::set_filter( 'translate_string', self::plugin_setting( 'retrieve_link_email_subject' ) );
+    $retrieve_link_email->body_template = self::plugin_setting( 'retrieve_link_email_body' );
+    $retrieve_link_email->subject = self::plugin_setting( 'retrieve_link_email_subject' );
     $retrieve_link_email->recipient = $participant_values[self::plugin_setting( 'primary_email_address_field', 'email' )];
     /**
      * @version 1.6
      * 
      * filter pdb-before_send_retrieve_link_email
      */
-    self::set_filter( 'before_send_retrieve_link_email', $retrieve_link_email );
+    self::apply_filters( 'before_send_retrieve_link_email', $retrieve_link_email );
     if ( !empty( $retrieve_link_email->recipient ) ) {
-      $body = self::proc_tags( $retrieve_link_email->body_template, $match_id );
-      $sent = wp_mail(
-              $retrieve_link_email->recipient, self::proc_tags( $retrieve_link_email->subject, $match_id ), (self::plugin_setting( 'html_email' ) ? self::process_rich_text( $body ) : $body ), self::$email_headers
+      PDb_Template_Email::send(array(
+          'to' => $retrieve_link_email->recipient,
+          'subject' => $retrieve_link_email->subject,
+          'template' => $retrieve_link_email->body_template,
+          'context' => 'retrieve link email',
+          ),
+        $match_id
       );
-
-      if ( false === $sent )
-        error_log( __METHOD__ . ' sending returned false' );
     } else {
       error_log( __METHOD__ . ' primary email address field undefined' );
     }
 
     if ( self::plugin_setting_is_true( 'send_retrieve_link_notify_email' ) ) {
 
-      $body = self::proc_tags( self::plugin_setting( 'retrieve_link_notify_body' ), $match_id );
-      $sent = wp_mail(
-              self::plugin_setting( 'email_signup_notify_addresses' ), self::proc_tags( self::plugin_setting( 'retrieve_link_notify_subject' ), $match_id, 'all' ), (self::plugin_setting( 'html_email' ) ? self::process_rich_text( $body ) : $body ), self::$email_headers
+      PDb_Template_Email::send(array(
+          'to' => self::plugin_setting( 'email_signup_notify_addresses' ),
+          'subject' => self::plugin_setting( 'retrieve_link_notify_subject' ),
+          'template' => self::plugin_setting( 'retrieve_link_notify_body' ),
+          'context' => 'retrieve link notification',
+          ),
+        $match_id
       );
     }
 
@@ -2747,14 +2700,29 @@ class Participants_Db extends PDb_Base {
   /**
    * processes a rich text string
    * 
-   * runs it through wpautop if selected in the settings
+   * runs it through the WP the_content filter if selected in the settings
    * 
    * @param string $input
+   * @param string  $context  a context-identifying string
    * @return string
    */
-  public static function process_rich_text( $string )
+  public static function process_rich_text( $string, $context = '' )
   {
-    return Participants_Db::$plugin_options['enable_wpautop'] ? apply_filters( 'the_content', $string ) : $string; // wpautop($string)
+    $filtered_string = self::apply_filters('rich_text_auto_formatting', $string, $context );
+    return Participants_Db::$plugin_options['enable_wpautop'] ? $filtered_string : $string; // wpautop($string)
+  }
+  
+  /**
+   * applies the rict text filter
+   * 
+   * this can be overridden; the filter is set in self::init()
+   * 
+   * @param string  $string
+   * @return string
+   */
+  public static function rich_text_filter( $string )
+  {
+    return apply_filters( 'the_content', $string );
   }
 
   /**
@@ -2833,7 +2801,7 @@ class Participants_Db extends PDb_Base {
 
           if ( !empty( $value ) && is_numeric( $value ) ) {
 
-            $value = self::format_date( $value );
+            $value = PDb_Date_Display::get_date( $value, __METHOD__ );
           }
           break;
 
@@ -2872,7 +2840,7 @@ class Participants_Db extends PDb_Base {
        * decode HTML entities and convert line breaks to <br>, then pass to a filter 
        * for processing beforebeing added to the output array
        */
-      $output_value = Participants_Db::set_filter( 'csv_export_value', html_entity_decode( str_replace( array( "\n", "\r" ), '<br />', stripslashes( $value ) ), ENT_QUOTES, "UTF-8" ), $column );
+      $output_value = Participants_Db::apply_filters( 'csv_export_value', html_entity_decode( str_replace( array( "\n", "\r" ), '<br />', stripslashes( $value ) ), ENT_QUOTES, "UTF-8" ), $column );
       $output[$key] = $output_value;
 
       $column = next( $columns );
@@ -2910,7 +2878,11 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_loading_spinner()
   {
-    return '<span class="ajax-loading"><img src="' . plugins_url( 'ui/ajax-loader.gif', __FILE__ ) . '" /></span>';
+    /**
+     * @version 1.6.3
+     * @filter pdb-loading_spinner_html
+     */
+    return self::apply_filters('loading_spinner_html', '<span class="ajax-loading"><img src="' . plugins_url( 'ui/ajax-loader.gif', __FILE__ ) . '" /></span>' );
   }
 
   /**
@@ -2979,7 +2951,7 @@ class Participants_Db extends PDb_Base {
        * we perform a validity check on the image files, this also makes sure only 
        * images are uploaded in image upload fields
        */
-      $fileinfo = getimagesize( $file['tmp_name'] );
+      $fileinfo = PDb_Image::getimagesize( $file['tmp_name'] );
       $valid_image = in_array( $fileinfo[2], array( IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WBMP ) );
 
       if ( !$valid_image ) {
@@ -3068,7 +3040,11 @@ class Participants_Db extends PDb_Base {
       return '';
     }
 
-    return self::add_uri_conjunction( $registration_page ) . 'pid=' . $PID;
+    /**
+     * @version 1.6.3
+     * @filter pdb-record_edit_page
+     */
+    return self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID;
   }
 
   /**
@@ -3099,82 +3075,6 @@ class Participants_Db extends PDb_Base {
     $page = get_page_by_path( $page_slug );
 
     return is_object( $page ) ? $page->ID : false;
-  }
-
-  /**
-   * replace the tags in text messages
-   *
-   * returns the text with the values replacing the tags
-   * all tags use the column name as the key string 
-   * also includes and processes the [record_link]  and [date] tags
-   *
-   * @param  string  $text           the text containing tags to be replaced with 
-   *                                 values from the db
-   * @param  int     $participant_id the record id to use
-   * @param  string  $mode           the column subset to use
-   * @return string                  text with the tags replaced by the data
-   */
-  public static function proc_tags( $text, $participant_id, $mode = 'frontend' )
-  {
-
-    return self::replace_tags( $text, self::get_participant( $participant_id ), self::get_column_atts( $mode ) );
-  }
-
-  /**
-   * maps a sets of values to "tags"in a template, replacing the tags with the values
-   * 
-   * @param string $text the tag-containing template string
-   * @param array  $data array of record values: $name => $value
-   * @param array  $columns array of field objects
-   * 
-   * @return string template with all matching tags replaced with values
-   */
-  public static function replace_tags( $text, array$data, array$columns )
-  {
-
-    $values = $tags = array();
-
-    foreach ($columns as $column) {
-
-      $column->value = isset( $data[$column->name] ) ? $data[$column->name] : '';
-
-      $tags[] = '[' . $column->name . ']';
-
-      $values[] = PDb_FormElement::get_field_value_display( $column, false );
-    }
-
-    // add the "record_link" tag
-    if ( isset( $data['private_id'] ) ) {
-      $tags[] = '[record_link]';
-      $values[] = Participants_Db::get_record_link( $data['private_id'] );
-    }
-
-    // add the date tag
-    $tags[] = '[date]';
-    $values[] = Participants_Db::format_date();
-
-    // add the time tag
-    $tags[] = '[time]';
-    $values[] = Participants_Db::format_date( false, false, get_option( 'time_format' ) );
-
-    if ( isset( $data['id'] ) && is_numeric( $data['id'] ) ) {
-      // add the admin record link tag
-      $tags[] = '[admin_record_link]';
-      $values[] = self::get_admin_record_link( $data['id'] );
-    }
-
-    $placeholders = array();
-
-    for ($i = 1; $i <= count( $tags ); $i++) {
-
-      $placeholders[] = '%' . $i . '$s';
-    }
-
-    // replace the tags with variables
-    $pattern = str_replace( $tags, $placeholders, $text );
-
-    // replace the variables with strings
-    return vsprintf( $pattern, $values );
   }
 
   /**
@@ -3270,243 +3170,6 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * parses a date string into UNIX timestamp
-   *
-   * if "strict dates" is set, this function uses the DateTime or IntlDateFormatter 
-   * class to parse the string according to a specific format. If it is not, we 
-   * use the conventional strtotime() function, with the enhancement that if the 
-   * non-American style format is used with slashes "d/m/Y" the string is prepared 
-   * so strtotime can parse it correctly  
-   *
-   * @param string $string      the string to parse
-   * @param object $column      the column object; used to identify the field for
-   *                            user feedback
-   * @param bool   $zero_time   if set, zero the time portion of the date so it 
-   *                            won't interfere with date comparisons
-   * @return int|bool UNIX timestamp or false if parse fails
-   */
-  public static function parse_date( $string = false, $column = '', $zero_time = false )
-  {
-
-    if ( false === $string || strlen( $string ) === 0 )
-      return false;
-
-    $string = Participants_Db::set_filter( 'parse_date', $string, $column );
-
-    // is it already a timestamp?
-    if ( self::is_valid_timestamp( $string ) ) {
-      //if (WP_DEBUG and is_object($column)) error_log(__METHOD__.' tried to parse timestamp from '. $column->name);
-      return $string;
-    }
-
-    $date = false;
-    // if it is a default zero timestamp, treat it as "no date"
-    if ( $string === '0000-00-00 00:00:00' )
-      return false;
-
-    /*
-     * we have two options to parse a date string into a timestamp: the 
-     * IntlDateFormatter class or the DateTime class. The IntlDateFormatter 
-     * class can parse localized text dates, but it seems commonly unavailable, 
-     * at least on English-speaking servers. The DateTime class is widely 
-     * available, but can't parse non-English text dates. It can parse numeric 
-     * date representations, so if the intl module is not available, we try to 
-     * use DateTime. If that is not available, we use strtotime with the added trick 
-     * of swapping the date/month if they are slashes so slashed European notation 
-     * can be correctly parsed
-     */
-    self::$date_mode = 'none';
-    $errors = false;
-    $the_Date = false;
-    /*
-     * determines whether to apply "strict dates" which is not applied to timestamp fields
-     * 
-     * strict dates is only used with date parsing methods that use a defined format to parse the date: IntlDateFormatter, DateTime, strptime
-     */
-    $applying_strict_dates = self::plugin_setting_is_true( 'strict_dates', false ) && ( is_object( $column ) && $column->form_element !== 'timestamp' );
-    // test for MySQL-format timestamp
-    $is_MySQL_timestamp = (preg_match( '#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#', $string ) === 1) ? true : false;
-
-    //error_log(__METHOD__.' column object? '.(is_object($column)?'yes':'no'). ' form element: '.$column->form_element.' strict dates? '.($strict_dates?'yes':'no').' timestamp? '.($is_MySQL_timestamp?'yes':'no'));
-
-    /**
-     * @version 1.6
-     * Most of the time, the default PHP timezone is the current setting, but 
-     * experience has shown it's necessary to reset it for the conversion to make 
-     * sure. We also must assume that the database server and PHP server are on 
-     * the same TZ.
-     * 
-     * @version 1.6.2.6
-     * we set it to the WordPress timezone setting so that the user has more direct control over the timezone setting
-     * 
-     */
-    self::reassert_timezone();
-    setlocale( LC_ALL, get_locale() );
-
-    if ( $applying_strict_dates and ! $is_MySQL_timestamp ) {
-
-
-//    	error_log(__METHOD__.' intl? '.(class_exists('IntlDateFormatter')?'yes':'no').' datetime? '.(class_exists('DateTime')?'yes':'no'));
-
-      if ( class_exists( 'IntlDateFormatter' ) ) {
-
-        self::$date_mode = 'Intl';
-
-        $format = $is_MySQL_timestamp ? 'yyyy-MM-dd HH:mm:ss' : Participants_Db::get_ICU_date_format( self::$plugin_options['input_date_format'] );
-
-        $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, NULL, NULL, $format );
-        $DateFormat->setLenient( false ); // we want it strict
-        $timestamp = $DateFormat->parse( $string );
-
-        if ( $DateFormat->getErrorCode() !== 0 ) {
-          $errors = array( 'code' => $DateFormat->getErrorCode(), 'error' => $DateFormat->getErrorMessage() );
-        }
-
-        if ( !$errors ) {
-          $the_Date = new DateTime();
-          $the_Date->setTimestamp( $timestamp );
-        } elseif ( WP_DEBUG ) {
-          error_log( __METHOD__ . ' IntlDateFormatter error: format string: ' . Participants_Db::get_ICU_date_format( self::$plugin_options['input_date_format'] ) . ' timestamp: ' . $timestamp . ' formatter error: ' . $DateFormat->getErrorMessage() );
-        }
-      }
-
-      if ( !$the_Date && class_exists( 'DateTime' ) ) {
-
-        self::$date_mode = 'DateTime';
-
-        $format = $is_MySQL_timestamp ? 'Y-m-d G:i:s' : self::$plugin_options['input_date_format'];
-
-        $the_Date = DateTime::createFromFormat( $format, $string );
-      }
-
-      if ( is_object( $the_Date ) ) {
-        $errors = $the_Date->getLastErrors();
-        if ( $errors['warning_count'] === 0 && $errors['error_count'] === 0 ) {
-          $errors = false;
-        }
-      }
-
-      if ( is_array( $errors ) && !empty( $string ) ) {
-
-        $the_Date = false;
-        if ( is_object( self::$validation_errors ) and is_object( $column ) ) {
-
-          self::$validation_errors->add_error( $column->name, sprintf( __( 'The date for "%s" was invalid. Please input the date with the exact format shown', 'participants-database' ), $column->title ) );
-        }
-
-        if ( WP_DEBUG )
-          error_log( __METHOD__ . ' DateTime parse error: ' . implode( ', ', $errors ) );
-      }
-
-      /*
-       * if we have a valid date, convert to timestamp
-       */
-      if ( $the_Date ) {
-        /*
-         * zero the time so date equality comparisons can be made
-         */
-        if ( $zero_time )
-          $the_Date->setTime( 0, 0 );
-        $date = $the_Date->format( 'U' );
-      }
-    }
-
-    /*
-     * if we haven't got a timestamp, parse the date the regular way
-     */
-    if ( $date === false or ! self::is_valid_timestamp( $date ) ) {
-
-      $date = false; // no valid date yet
-
-      if ( is_object( $column ) && $column->form_element === 'timestamp' ) {
-        if ( $zero_time ) {
-          /*
-           * we need to zero the time, we first try to do it using the DateTime class
-           */
-          $the_Date = new DateTime( $string );
-          if ( is_object( $the_Date ) ) {
-            $the_Date->setTime( 0, 0 );
-            $string = $the_Date->format( self::$date_format );
-          } else {
-            /*
-             * remove the time portion of the timestamp
-             */
-            $string = preg_replace( '# [0-9]{2}:[0-9]{2}:[0-9]{2}$#', '', $string );
-            $string .= ' 00:00 -0';
-          }
-        }
-      }
-      /*
-       * @version 1.6
-       * added strptime method for locaized dates
-       * 
-       * this only works for known formats...so timestamps and when "strict dates" is enabled
-       */
-      if ( function_exists( 'strptime' ) && ($applying_strict_dates || $is_MySQL_timestamp) ) {
-        self::$date_mode = 'strptime';
-        if ( $is_MySQL_timestamp ) {
-          $format = '%Y-%m-%d %H:%M:%S';
-        } else {
-          $format_setting = Participants_Db::plugin_setting_is_set( 'input_date_format' ) ? Participants_Db::plugin_setting( 'input_date_format' ) : Participants_Db::$date_format;
-          $format = Participants_Db::translate_date_format( $format_setting, 'strftime' );
-        }
-
-        $date_array = strptime( $string, $format );
-        $date = mktime(
-                $date_array['tm_hour'], $date_array['tm_min'], $date_array['tm_sec'], $date_array['tm_mon'] + 1, $date_array['tm_mday'], $date_array['tm_year'] + 1900
-        );
-      }
-      if ( $date === false ) {
-        self::$date_mode = 'strtotime';
-        $date = strtotime( self::date_order_fix( $string ) );
-      }
-    }
-    return $date;
-  }
-
-  /**
-   * inverts the month and date figures so that strtotime can work on European date strings
-   * 
-   * this only kicks in if the month/day numeric date order is detected in the general date settings
-   * 
-   * @param string $string the date string as written
-   * 
-   * @return string
-   */
-  public static function date_order_fix( $string )
-  {
-    // first check if it's a numeric date divided by dashes, dots or slashes
-    preg_match( '/([.\/-])/', $string, $matches );
-    $divider = empty( $matches ) ? false : $matches[1];
-    if ( $divider ) {
-      // now check the order to see if it's a European day/month/year type numeric date
-      $date_parts = explode( $divider, self::$date_format );
-      $day_index = array_search( 'd', $date_parts ) !== false ? array_search( 'd', $date_parts ) : array_search( 'j', $date_parts );
-      $month_index = array_search( 'm', $date_parts ) !== false ? array_search( 'm', $date_parts ) : array_search( 'n', $date_parts );
-      if ( $day_index !== false && $month_index !== false && $day_index < $month_index ) {
-        // yes, it's a European-style date
-        self::$date_mode .= 'european';
-        return self::reorder_date_string( $string, $divider );
-      }
-    }
-    return $string;
-  }
-
-  /**
-   * re-orders the date string so it can be parsed by strtotime
-   * 
-   * @param string the date string
-   * @params string the divider string
-   * 
-   * @return string the reordered string
-   */
-  public static function reorder_date_string( $string, $divider )
-  {
-    list($day, $month, $year) = explode( $divider, $string );
-    return sprintf( "%s$divider%s$divider%s", $month, $day, $year );
-  }
-
-  /**
    * shows a validation error message
    * 
    * @param string $error the message to show
@@ -3595,6 +3258,63 @@ class Participants_Db extends PDb_Base {
     <div class="icon32" id="icon-users"></div><h2><?php echo $text ?></h2>
     <?php
     self::admin_message();
+  }
+
+  /**
+   * sets up the plugin admin menus
+   * 
+   * @return null
+   */
+  public static function plugin_menu()
+  {
+    global $pagenow;
+    if ( ($pagenow == 'admin.php' && filter_input( INPUT_GET, 'page' ) === 'participants-database_settings_page') || $pagenow == 'options.php' ) {
+      /*
+       * intialize the plugin settings for the plugin settings pages
+       */
+      self::$Settings->initialize();
+    }
+
+    /*
+     * this allows the possibility of a child class handling the admin list display
+     */
+    $list_admin_classname = self::apply_filters( 'admin_list_classname', 'PDb_List_Admin' );
+
+    // define the plugin admin menu pages
+    add_menu_page(
+            self::$plugin_title, self::$plugin_title, self::plugin_capability( 'record_edit_capability', 'main admin menu' ), self::PLUGIN_NAME, null
+    );
+
+    add_submenu_page(
+            self::PLUGIN_NAME, __( 'List Participants', 'participants-database' ), __( 'List Participants', 'participants-database' ), self::plugin_capability( 'record_edit_capability', 'list participants' ), self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
+            array( $list_admin_classname, 'initialize' )
+    );
+    /**
+     * this registers the edit participant page without adding it as a menu item
+     */
+    add_submenu_page(
+            null, null, null, self::plugin_capability( 'record_edit_capability', 'edit participant' ), self::$plugin_page . '-edit_participant', array( __CLASS__, 'include_admin_file' )
+    );
+
+    add_submenu_page(
+            self::PLUGIN_NAME, __( 'Add Participant', 'participants-database' ), __( 'Add Participant', 'participants-database' ), self::plugin_capability( 'record_edit_capability', 'add participant' ), self::$plugin_page . '-add_participant', array( __CLASS__, 'include_admin_file' )
+    );
+
+    add_submenu_page(
+            self::PLUGIN_NAME, __( 'Manage Database Fields', 'participants-database' ), __( 'Manage Database Fields', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'manage fields' ), self::$plugin_page . '-manage_fields', array( __CLASS__, 'include_admin_file' )
+    );
+
+    add_submenu_page(
+            self::PLUGIN_NAME, __( 'Import CSV File', 'participants-database' ), __( 'Import CSV File', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'upload csv' ), self::$plugin_page . '-upload_csv', array( __CLASS__, 'include_admin_file' )
+    );
+
+    add_submenu_page(
+            self::PLUGIN_NAME, __( 'Settings', 'participants-database' ), __( 'Settings', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'plugin settings' ), self::$plugin_page . '_settings_page', array( self::$Settings, 'show_settings_form' )
+    );
+
+    add_submenu_page(
+            self::PLUGIN_NAME, __( 'Setup Guide', 'participants-database' ), __( 'Setup Guide', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'setup guide' ), self::$plugin_page . '-setup_guide', array( __CLASS__, 'include_admin_file' )
+    );
   }
 
   /**
@@ -3699,4 +3419,28 @@ function PDb_class_loader( $class )
   }
 }
 
-Participants_Db::initialize();
+/**
+ * PHP version checks and notices before initializing the plugin
+ */
+if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
+  Participants_Db::initialize();
+} else {
+  add_action( 'admin_notices', 'PDb_PHP_Version_Notice' );
+
+  function PDb_PHP_Version_Notice()
+  {
+    echo '<div class="error"><p>' . sprintf( __( 'Participants Database requires PHP version %s to function properly. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version ) . '</p></div>';
+    if ( isset( $_GET['activate'] ) ) {
+      unset( $_GET['activate'] );
+    }
+  }
+
+  add_action( 'admin_init', 'PDb__deactivate_self' );
+
+  function PDb__deactivate_self()
+  {
+    deactivate_plugins( plugin_basename( __FILE__ ) );
+  }
+
+  return;
+}

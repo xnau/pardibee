@@ -46,7 +46,7 @@ class xnau_FormValidation {
     $this->errors = array();
     
     // set the error messages
-    $this->error_messages = array('invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier');
+    $this->error_messages = array('invalid' => '', 'empty' => '', 'nonmatching' => '', 'duplicate' => '', 'captcha' => '', 'identifier' => '');
 
     $this->error_style = 'border: 1px solid red';
 
@@ -68,11 +68,10 @@ class xnau_FormValidation {
    */
   public function validate($value, $column_atts, $post = false)
   {
-
-    $this->_validate_field($value, $column_atts->name, $column_atts->validation, $column_atts->form_element);
-
     if ($post)
       $this->post_array = $post;
+
+    $this->_validate_field($value, $column_atts->name, $column_atts->validation, $column_atts->form_element);
   }
 
   /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form Validation Class
  *
@@ -14,10 +15,10 @@
  * @version    1.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
-if ( ! defined( 'ABSPATH' ) ) die;
-class PDb_FormValidation extends xnau_FormValidation {
-  
+if ( !defined( 'ABSPATH' ) )
+  die;
 
+class PDb_FormValidation extends xnau_FormValidation {
   /*
    * instantiates the form validation object
    * this is meant to be instantiated once per form submission
@@ -32,8 +33,8 @@ class PDb_FormValidation extends xnau_FormValidation {
      * get our error messages from the plugin options
      * 
      */
-    foreach (array('invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier') as $error_type) {
-      $this->error_messages[$error_type] = Participants_Db::plugin_setting($error_type . '_field_message');
+    foreach (array( 'invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier' ) as $error_type) {
+      $this->error_messages[$error_type] = Participants_Db::plugin_setting( $error_type . '_field_message' );
     }
     /*
      * this filter provides an opportunity to add or modify validation error messages
@@ -41,11 +42,10 @@ class PDb_FormValidation extends xnau_FormValidation {
      * for example, if there is a custom validation that generates an error type of 
      * "custom" an error message with a key of "custom" will be shown if it fails.
      */
-    $this->error_messages = Participants_Db::set_filter('validation_error_messages', $this->error_messages);
+    $this->error_messages = Participants_Db::apply_filters( 'validation_error_messages', $this->error_messages );
 
-    $this->error_style = Participants_Db::plugin_setting('field_error_style');
+    $this->error_style = Participants_Db::plugin_setting( 'field_error_style' );
   }
-  
 
   /**
    * validates a single field submitted to the main database
@@ -59,14 +59,12 @@ class PDb_FormValidation extends xnau_FormValidation {
    *                             'no', 'yes', 'email', 'other' (for regex or match
    *                             another field value)
    * @param string $form_element the form element type of the field
-   * @return NULL
+   * @return mixed field value
    */
-  protected function _validate_field($value, $name, $validation = NULL, $form_element = false)
+  protected function _validate_field( $value, $name, $validation = NULL, $form_element = false )
   {
-
-    $error_type = false;
-
-    $field = (object) compact('value', 'name', 'validation', 'form_element', 'error_type');
+    //$field = (object) compact( 'value', 'name', 'validation', 'form_element', 'error_type' );
+    $field = new PDb_Validating_Field( $value, $name, $validation, $form_element );
 
     /*
      * this filter sends the $field object through a filter to allow a custom 
@@ -78,16 +76,16 @@ class PDb_FormValidation extends xnau_FormValidation {
      * by the filter callback, no further processing will be applied.
      * 
      */
-    Participants_Db::set_filter('before_validate_field', $field);
-    
+    Participants_Db::apply_filters( 'before_validate_field', $field );
+
     /*
      * if there is no validation method defined, exit here
      */
-    if (empty($field->validation) || $field->validation === NULL || $field->validation === 'no' || $field->validation === FALSE) {
+    if ( !$field->is_validated() ) {
       return;
     }
-    
-    
+
+
     /*
      * if the validation method is set and the field has not already been
      * validated (error_type == false) we test the submitted field for empty using
@@ -95,87 +93,84 @@ class PDb_FormValidation extends xnau_FormValidation {
      * 
      * a field that has any validation method and is empty will validate as empty first
      */
-    if ($field->error_type === false) {
+    if ( $field->has_not_been_validated() ) {
       // we can validate each form element differently here if needed
-      switch ($field->form_element) {
+      switch ( $field->form_element ) {
         case 'file-upload':
         case 'image-upload':
-          
+
           /*
            * only "required" validation is allowed on this. Restricting file types 
            * is done in the "values" field or in the settings
            */
           $field->validation = 'yes';
-          if ($this->is_empty($field->value)) {
-            $field->error_type = 'empty';
+          if ( $this->is_empty( $field->value ) ) {
+            $field->validation_state_is( 'empty' );
           } else {
-            $field->error_type = 'valid';
+            $field->validation_state_is( 'valid' );
           }
           break;
-          
+
         case 'link':
           // a "link" field only needs the first element to be filled in
-          if ($this->is_empty($field->value[0])) {
-            $field->error_type = 'empty';
-          } elseif ( ! filter_var( $field->value[0], FILTER_VALIDATE_URL ) ) {
-            $field->error_type = 'invalid';
+          if ( $this->is_empty( $field->value[0] ) ) {
+            $field->validation_state_is( 'empty' );
+          } elseif ( !filter_var( $field->value[0], FILTER_VALIDATE_URL ) ) {
+            $field->validation_state_is( 'invalid' );
           } else {
-            $field->error_type = 'valid';
+            $field->validation_state_is( 'valid' );
           }
           break;
         default:
           /*
-           * chack all the simple validation fields
+           * check all the validated fields for empty first
            */
-          if ($field->validation === 'yes') {
-            if ( $this->is_empty( $field->value ) ) {
-            	$field->error_type = 'empty';
-            } else {
-              $field->error_type = 'valid';
+          if ( $this->is_empty( $field->value ) ) {
+            $field->validation_state_is( 'empty' );
+          } elseif ( $field->validation === 'yes' ) {
+            $field->validation_state_is( 'valid' );
           }
-      	}
       }
     }
+
     /*
      * if the field has still not been validated, we process it with the remaining validation methods
      */
-    if ($field->error_type === false) {
+    if ( $field->has_not_been_validated() ) {
 
       $regex = '';
       $test_value = false;
-      
-      switch (true) {
 
-        /*
-         * the validation method key for an email address was formerly 'email' This 
-         * has been changed to 'email-regex' but will still come in as 'email' from 
-         * legacy databases. We test for that by looking for a field named 'email' 
-         * in the incoming values.
-         */
-        case ( $field->validation == 'email-regex' || ($field->validation ==  'email' && $field->name ==  'email') ) :
+      switch ( true ) {
 
-          $regex = Participants_Db::set_filter('email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i' );
+        case ( $field->is_email() ) :
+
+          $regex = Participants_Db::apply_filters( 'email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i' );
           break;
 
-        case ( 'captcha' == strtolower($field->validation) ) :
+        case ( 'captcha' == strtolower( $field->validation ) ) :
 
-          $field->value = isset($field->value[1]) ? $field->value[1] : '';
+          $field->value = isset( $field->value[1] ) ? $field->value[1] : '';
 
           // grab the value and the validation key
-          list($info, $value) = (isset($this->post_array[$field->name][1]) ? $this->post_array[$field->name] : array($this->post_array[$field->name][0], $field->value));
-          $info = json_decode(urldecode($info));
+          list($info, $v) = (isset( $this->post_array[$field->name][1] ) ? $this->post_array[$field->name] : array( $this->post_array[$field->name][0], $field->value ));
+          $info = json_decode( urldecode( $info ) );
 
-            $regex = $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() );
-          
-          if (!self::is_regex( $regex )) {
-            $field->error_type = 'invalid';
+          /**
+           * @since 1.6.3
+           * @filter pdb-captcha_validation
+           */
+          $regex = Participants_Db::apply_filters( 'captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
+
+          if ( !self::is_regex( $regex ) ) {
+            $field->validation_state_is( 'invalid' );
           }
-          
+
           //error_log(__METHOD__.' validate CAPTCHA $info:'.print_r($info,1).' $field->value:'.$field->value.' regex:'.$regex);
 
           break;
 
-        case ( self::is_regex($field->validation) ) :
+        case ( self::is_regex( $field->validation ) ) :
 
           $regex = $field->validation;
           break;
@@ -183,55 +178,57 @@ class PDb_FormValidation extends xnau_FormValidation {
         /*
          * if it's not a regex, test to see if it's a valid field name for a match test
          */
-        case ( isset($this->post_array[strtolower($field->validation)]) ) :
+        case ( isset( $this->post_array[strtolower( $field->validation )] ) ) :
 
-          $test_value = $this->post_array[strtolower($field->validation)];
+          $test_value = $this->post_array[strtolower( $field->validation )];
           break;
 
         default:
       }
 
-      if ($test_value !== false) {
-        
-        if ($field->value != $test_value) $field->error_type = 'nonmatching';
-        
-      } elseif ( $regex !== false && self::is_regex( $regex ) ) {
-        
-        $test_result = preg_match($regex, $field->value);
-        
-        if ($test_result === 0) {
-        $field->error_type = $field->validation == 'captcha' ? 'captcha' : 'invalid';
-        } elseif ($test_result === false) {
-          error_log(__METHOD__.' captcha regex error with regex: "' . $regex . '"');
-        } elseif ( $test_result === 1 ) {
-          $field->error_type = 'valid';
+      if ( $test_value !== false ) {
+
+        if ( $field->value != $test_value ) {
+          $field->validation_state_is( 'nonmatching' );
         }
-        
+      } elseif ( $regex !== false && self::is_regex( $regex ) ) {
+
+        $test_result = preg_match( $regex, $field->value );
+
+        if ( $test_result === 0 ) {
+          $field->error_type = $field->validation == 'captcha' ? 'captcha' : 'invalid';
+        } elseif ( $test_result === false ) {
+          error_log( __METHOD__ . ' captcha regex error with regex: "' . $regex . '"' );
+        } elseif ( $test_result === 1 ) {
+          $field->validation_state_is( 'valid' );
+        }
       }
     }
 
-    if ($field->error_type && $field->error_type !== 'valid' ) {
-      $this->_add_error($name, $field->error_type, false);
+    if ( $field->is_not_valid() ) {
+      $this->_add_error( $name, $field->error_type, false );
     }
     /*
      * the result of a captcha validation are stored in a session variable
      */
-    if (strtolower($field->validation) === 'captcha' || $field->form_element === 'captcha') {
-      Participants_Db::$session->set('captcha_result', $field->error_type);
+    if ( $field->is_captcha() || $field->form_element === 'captcha' ) {
+      Participants_Db::$session->set( 'captcha_result', $field->error_type );
     }
 
-    if (false) {
-      error_log(__METHOD__ . '
+    if ( false ) {
+      error_log( __METHOD__ . '
   field: ' . $name . '
   element: ' . $field->form_element . '
-  value: ' . (is_array($field->value) ? print_r($field->value, 1) : $field->value) . '
-  validation: ' . (is_bool($field->validation) ? ($field->validation ? 'true' : 'false') : $field->validation) . '
-  submitted? ' . ($this->not_submitted($name) ? 'no' : 'yes') . '
-  empty? ' . ($this->is_empty($field->value) ? 'yes' : 'no') . '
-  error type: ' . $field->error_type);
+  value: ' . (is_array( $field->value ) ? print_r( $field->value, 1 ) : $field->value) . '
+  validation: ' . (is_bool( $field->validation ) ? ($field->validation ? 'true' : 'false') : $field->validation) . '
+  submitted? ' . ($this->not_submitted( $name ) ? 'no' : 'yes') . '
+  empty? ' . ($this->is_empty( $field->value ) ? 'yes' : 'no') . '
+  error type: ' . $field->error_type );
     }
+
+    return $field->value;
   }
-  
+
   /**
    * prepares the error messages and CSS for a main database submission
    *
@@ -251,10 +248,10 @@ class PDb_FormValidation extends xnau_FormValidation {
     foreach ($this->errors as $field => $error) {
 
       if ( $field !== '' ) {
-      
+
         $field_atts = clone Participants_Db::$fields[$field];
 
-        switch ($field_atts->form_element) {
+        switch ( $field_atts->form_element ) {
           case 'captcha':
           case 'link':
             $field_selector = '[name="' . $field_atts->name . '[]"]';
@@ -272,22 +269,21 @@ class PDb_FormValidation extends xnau_FormValidation {
         $this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
 
         if ( isset( $this->error_messages[$error] ) ) {
-          $error_messages[] = $error == 'nonmatching' ? sprintf( $this->error_messages[$error], $field_atts->title, Participants_Db::column_title( $field_atts->validation ) ) : sprintf( $this->error_messages[$error], $field_atts->title );
-        $this->error_class = Participants_Db::$prefix . 'error';
-      } else {
-        $error_messages[] = $error;
+          $error_messages[] = $error == 'nonmatching' ? sprintf( $this->error_messages[$error], $field_atts->title, Participants_Db::column_title( $field_atts->validation ) ) : sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error] ), $field_atts->title );
+          $this->error_class = Participants_Db::$prefix . 'error';
+        } else {
+          $error_messages[] = $error;
           $this->error_class = empty( $field ) ? Participants_Db::$prefix . 'message' : Participants_Db::$prefix . 'error';
-      }
-
+        }
       } else {
         $error_messages[] = $error;
         $this->error_class = Participants_Db::$prefix . 'message';
       }
-
     } // $this->errors 
 
     return $error_messages;
   }
+
   /**
    * encodes or decodes a string using a simple XOR algorithm
    * 
@@ -295,15 +291,160 @@ class PDb_FormValidation extends xnau_FormValidation {
    * @param string $key the key to use
    * @return string
    */
-  public static function xcrypt($string, $key)
+  public static function xcrypt( $string, $key )
   {
 
-    for ($i = 0; $i < strlen($string); $i++) {
-      $pos = $i % strlen($key);
-      $replace = ord($string[$i]) ^ ord($key[$pos]);
-      $string[$i] = chr($replace);
+    for ($i = 0; $i < strlen( $string ); $i++) {
+      $pos = $i % strlen( $key );
+      $replace = ord( $string[$i] ) ^ ord( $key[$pos] );
+      $string[$i] = chr( $replace );
     }
 
     return $string;
   }
+
+}
+
+/**
+ * assists in the validation of a single field
+ * 
+ * $field = (object) compact('value', 'name', 'validation', 'form_element', 'error_type');
+ */
+class PDb_Validating_Field {
+
+  /**
+   * @var mixed the submitted values
+   */
+  private $value;
+
+  /**
+   *
+   * @var string name of the field 
+   */
+  private $name;
+
+  /**
+   *
+   * @var string name of the validation type to apply
+   */
+  private $validation;
+
+  /**
+   * @var string name of the form element
+   */
+  private $form_element;
+
+  /**
+   * @var string|bool current validated state
+   */
+  private $error_type;
+
+  /**
+   * set it up
+   */
+  public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false )
+  {
+    foreach (get_object_vars( $this ) as $prop => $val) {
+      $this->{$prop} = $$prop;
+    }
+  }
+
+  /**
+   * determines of the field needs to be validated
+   * 
+   * @return bool
+   */
+  public function is_validated()
+  {
+    return !( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
+  }
+
+  /**
+   * determines of the field has been validated
+   * 
+   * @return bool
+   */
+  public function has_not_been_validated()
+  {
+    return $this->error_type === false;
+  }
+
+  /**
+   * determines if the field is email validated
+   * 
+   * @return bool
+   */
+  public function is_email()
+  {
+    /*
+     * the validation method key for an email address was formerly 'email' This 
+     * has been changed to 'email-regex' but will still come in as 'email' from 
+     * legacy databases. We test for that by looking for a field named 'email' 
+     * in the incoming values.
+     */
+    return $this->validation == 'email-regex' || ($this->validation == 'email' && $this->name == 'email');
+  }
+
+  /**
+   * determines if the field is a captcha
+   * 
+   * @return bool
+   */
+  public function is_captcha()
+  {
+    return strtolower( $this->validation ) == 'captcha';
+  }
+
+  /**
+   * determines if the field is regex-validated
+   * 
+   * @return bool
+   */
+  public function is_regex()
+  {
+    return PDb_FormValidation::is_regex( $this->validation );
+  }
+
+  /**
+   * sets the error state
+   * 
+   * @param string $state the error state string
+   */
+  public function validation_state_is( $state )
+  {
+    $this->error_type = $state;
+  }
+
+  /**
+   * tells of the field has not passed validation
+   * 
+   * @return bool true if the field has failed validation
+   */
+  public function is_not_valid()
+  {
+    return $this->error_type !== 'valid';
+  }
+
+  /**
+   * sets the property value
+   * 
+   * @param string $name property name
+   * @param mixed $value
+   */
+  public function __set( $name, $value )
+  {
+    $this->{$name} = $value;
+  }
+
+  /**
+   * provides a property value
+   * 
+   * @param string $name
+   * @return mixed
+   */
+  public function __get( $name )
+  {
+    return $this->{$name};
+  }
+
 }

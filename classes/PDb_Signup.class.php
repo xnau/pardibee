@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.9
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -339,16 +339,26 @@ class PDb_Signup extends PDb_Shortcode {
     
     if (Participants_Db::plugin_setting_is_true('show_retrieve_link')) {
       $retrieve_link = Participants_Db::plugin_setting('link_retrieval_page') !== 'none' ? get_permalink(Participants_Db::plugin_setting('link_retrieval_page')) : $_SERVER['REQUEST_URI'];
-      echo $open_tag . '<a href="' . Participants_Db::add_uri_conjunction($retrieve_link) . 'm=r">' . Participants_Db::set_filter('translate_string', $linktext) . '</a>' . $close_tag;
+      echo $open_tag . '<a href="' . Participants_Db::add_uri_conjunction($retrieve_link) . 'm=r">' . Participants_Db::apply_filters('translate_string', $linktext) . '</a>' . $close_tag;
     }
   }
 
   /**
    * prints a thank you note
+   * 
+   * @param string $template an optional override template to use
+   * @return string
    */
-  private function get_thanks_message() {
+  private function get_thanks_message( $template = '' ) 
+  {
+    $data = $this->participant_values;
+    $template = empty( $template ) ? $this->thanks_message : $template;
 
-    $this->output = empty($this->participant_values) ? '' : $this->_proc_tags($this->thanks_message);
+    // add the "record_link" tag
+    if (isset($data['private_id'])) {
+      $data['record_link'] = Participants_Db::get_record_link($data['private_id']);
+    }
+    $this->output = empty($this->participant_values) ? '' : PDb_Tag_Template::replaced_rich_text( $template, $data );
     unset($_POST);
     return $this->output;
   }
@@ -419,11 +429,12 @@ class PDb_Signup extends PDb_Shortcode {
      * 
      * @return string template
      */
-    $this->_mail(
-            $this->recipient, 
-            $this->_proc_tags(Participants_Db::set_filter('receipt_email_subject', $this->receipt_subject, $this->participant_values)), 
-            Participants_Db::process_rich_text($this->_proc_tags(Participants_Db::set_filter('receipt_email_template', $this->receipt_body, $this->participant_values)))
-    );
+   PDb_Template_Email::send(array(
+       'to' => $this->recipient,
+       'subject' => Participants_Db::apply_filters('receipt_email_subject', $this->receipt_subject, $this->participant_values),
+       'template' => Participants_Db::apply_filters('receipt_email_template', $this->receipt_body, $this->participant_values),
+       'context' => __METHOD__,
+       ), $this->participant_values);
   }
 
   /**
@@ -431,9 +442,12 @@ class PDb_Signup extends PDb_Shortcode {
    */
   private function _do_notify() {
 
-    $this->_mail(
-            $this->notify_recipients, $this->_proc_tags($this->notify_subject), Participants_Db::process_rich_text($this->_proc_tags($this->notify_body))
-    );
+   PDb_Template_Email::send(array(
+       'to' => $this->notify_recipients,
+       'subject' => $this->notify_subject,
+       'template' => $this->notify_body,
+       'context' => __METHOD__,
+       ), $this->participant_values);
   }
 
   /**
@@ -441,43 +455,12 @@ class PDb_Signup extends PDb_Shortcode {
    */
   private function _do_update_notify() {
 
-    $this->_mail(
-            $this->notify_recipients, 
-            $this->_proc_tags(Participants_Db::$plugin_options['record_update_email_subject']), 
-            Participants_Db::process_rich_text($this->_proc_tags(Participants_Db::$plugin_options['record_update_email_body']))
-    );
-  }
-
-  /**
-   * sends a mesage through the WP mail handler function
-   *
-   * @todo these email functions should be handled by an email class
-   *
-   * @param string $recipients comma-separated list of email addresses
-   * @param string $subject    the subject of the email
-   * @param string $body       the body of the email
-   *
-   */
-  private function _mail($recipients, $subject, $body) {
-
-    if (WP_DEBUG) error_log(__METHOD__.'
-      
-header:'.$this->email_header.'
-to:'.$recipients.' 
-subj.:'.$subject.' 
-message:
-'.$body 
-            );
-
-    $this->current_body = $body;
-
-    if (Participants_Db::plugin_setting('html_email'))
-      add_action('phpmailer_init', array($this, 'set_alt_body'));
-
-    $sent = wp_mail($recipients, $subject, $body, $this->email_header);
-
-    if (false === $sent)
-      error_log(__METHOD__ . ' sending failed for: ' . $recipients);
+   PDb_Template_Email::send(array(
+       'to' => $this->notify_recipients,
+       'subject' => $this->notify_subject,
+       'template' => $this->notify_body,
+       'context' => __METHOD__,
+       ), $this->participant_values);
   }
 
   /**

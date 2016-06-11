@@ -9,6 +9,8 @@
  * plugins requiring a more complex settings scheme, such as multiple pages. It
  * will work well with Javascript tabs, however.
  *
+ * @version 1.1
+ *
  * @depends xnau_FormElement class
  */
 if ( ! defined( 'ABSPATH' ) ) die;
@@ -64,22 +66,25 @@ class xnau_Plugin_Settings {
    *
    * @param string $class    the classname of the extending subclass (required)
    * @param string $label    a unique string label for the set of settings for
-   *                         the plugin (required)
+   *                         the plugin
    * @param array  $sections an array of name/title pairs defining the settings
    *                         sections (optional)
    */
-  public function __construct( $class = false, $label = false, $sections = false ) {
+  public function __construct( $class = false, $label = false, $sections = false )
+  {
 
-    if ( false === $class ) die( __CLASS__.' class must be instantiated by a plugin-specific subclass' );
-    if ( false === $label ) die( 'you must supply a settings label string');
+    if ( false === $class )
+      die( __CLASS__ . ' class must be instantiated by a plugin-specific subclass' );
 
     $this->plugin_class = $class;
 
+    if ( $label !== false ) {
     $this->WP_setting = $label;
+    }
 
-    $this->settings_page = $this->WP_setting.'_settings_page';
+    $this->settings_page = $this->WP_setting . '_settings_page';
 
-    $this->option_version_location = Participants_Db::$prefix.'option_version';
+    $this->option_version_location = Participants_Db::$prefix . 'option_version';
 
     // set up the HTML for the built-in display functions
     // these are generic settings to be modified by the subclass
@@ -89,7 +94,9 @@ class xnau_Plugin_Settings {
     $this->submit_button = 'Save Settings';
 
     // define a default settings section so that setting up sections is optional
-    $this->sections = false === $sections ? array( 'main' => 'General Settings' ) : (array) $sections;
+    if ( $sections !== false ) {
+      $this->sections = empty( $sections ) ? array( 'main' => 'General Settings' ) : (array) $sections;
+    }
 
     // register the plugin setting with WP
     // this will store an array of all the individual settings for the plugin
@@ -103,13 +110,14 @@ class xnau_Plugin_Settings {
 	/**
 	 * registers the individual plugin options
 	 */
-  public function initialize() {
-		
+  public function initialize()
+  {
 
     // define the individual settings
     $this->_define_settings();
+
 		// register the individual settings
-    if (function_exists('add_settings_field')) {
+    if ( function_exists( 'add_settings_field' ) ) {
 		$this->_register_options();
       // register the sections
       $this->_register_sections();
@@ -128,20 +136,21 @@ class xnau_Plugin_Settings {
    * @param string  $value value to use
    * @param bool    $overwrite if true, overwrite the value, false to write vlaue only if not present
    */
-  public function update_option( $option_name, $value, $overwrite = true ) {
+  public function update_option( $option_name, $value, $overwrite = true )
+  {
 
-    if ( ! isset( $option_name ) ) return false;
+    if ( !isset( $option_name ) )
+      return false;
 
     $options = get_option( $this->WP_setting );
 
-    if ( false === $overwrite && isset( $options[ $option_name ] ) ) {
+    if ( false === $overwrite && isset( $options[$option_name] ) ) {
       return true;
     } else {
-      $options[ $option_name ] = $value;
+      $options[$option_name] = $value;
     }
 
     return update_option( $this->WP_setting, $options );
-
   }
 
   /**
@@ -154,35 +163,46 @@ class xnau_Plugin_Settings {
 	 * @param string $option_name
 	 * @return the value of the option or false
 	 */
-  public function get_option( $option_name ) {
+  public function get_option( $option_name )
+  {
 
     $options = get_option( $this->WP_setting );
 
     //error_log( __METHOD__.' options='.print_r( $options, true ) );
 
-    return isset( $options[ $option_name ] ) ? $options[ $option_name ] : false;
-
+    return isset( $options[$option_name] ) ? $options[$option_name] : false;
   }
 
   /**
    * provides the current options version number
    */
-  public function option_version() {
-    return get_option($this->option_version_location, '0.0');
+  public function option_version()
+  {
+    return get_option( $this->option_version_location, '0.0' );
   }
 
-  protected function increment_option_version() {
+  protected function increment_option_version()
+  {
     
 //    error_log(__METHOD__.' incrementing version');
     
-    $version = get_option($this->option_version_location, '0.0');
+    $version = get_option( $this->option_version_location, '0.0' );
     
-    update_option($this->option_version_location, floatval($version) + 0.1);
+    update_option( $this->option_version_location, floatval( $version ) + 0.1 );
   }
 
   /*******************
    * METHODS CALLED BY PLUGIN SUBCLASS
    */
+
+  
+
+  /**
+   * defines the individual settings for the plugin
+   *
+   * @return null
+   */
+  protected function _define_settings() {}
 
   /**
    * registers the options
@@ -197,9 +217,10 @@ class xnau_Plugin_Settings {
    *
    * @return null
    */
-  private function _register_options() {
+  private function _register_options()
+  {
 
-    foreach ( $this->plugin_settings as $setting_params ) {
+    foreach ($this->plugin_settings as $setting_params) {
 
       $this->_register_option(
                               $setting_params['name'],
@@ -220,13 +241,13 @@ class xnau_Plugin_Settings {
    *
    * @return null
    */
-  protected function show_settings_form() {
+  protected function show_settings_form()
+  {
     
     settings_errors();
     ?>
       <form action="options.php" method="post">
         <?php
-
         settings_fields( $this->WP_setting );
 
         do_settings_sections( $this->settings_page );
@@ -239,11 +260,9 @@ class xnau_Plugin_Settings {
                       );
 
         printf( $this->submit_wrap, PDb_FormElement::get_element( $args ) );
-
         ?>
       </form>
     <?php
-
   }
 
   /**
@@ -255,15 +274,14 @@ class xnau_Plugin_Settings {
    *                submit_class
    *                submit_button
    */
-  public function define_settings_display( $display_settings ) {
+    public function define_settings_display( $display_settings )
+    {
   
-    foreach( array( 'help_text_wrap', 'submit_wrap', 'submit_class', 'submit_button' ) as $setting ) {
+      foreach (array( 'help_text_wrap', 'submit_wrap', 'submit_class', 'submit_button' ) as $setting) {
 
-      if ( isset( $display_settings[ $setting ] ) )
-        $this->$setting = $display_settings[ $setting ];
-
+        if ( isset( $display_settings[$setting] ) )
+          $this->$setting = $display_settings[$setting];
     }
-
   }
 
   /**
@@ -272,9 +290,10 @@ class xnau_Plugin_Settings {
    * @param string $name name of the setting default to get
    * @return unknown the default value
    */
-  public function get_default_value($name) {
-    foreach($this->plugin_settings as $setting) {
-      if ($setting['name'] == $name and isset($setting['options']['value'])) {
+    public function get_default_value( $name )
+    {
+      foreach ($this->plugin_settings as $setting) {
+        if ( $setting['name'] == $name and isset( $setting['options']['value'] ) ) {
         return $setting['options']['value'];
       }
     }
@@ -287,9 +306,10 @@ class xnau_Plugin_Settings {
    * @param string $name name of the setting
    * @return string|null the title if defined
    */
-  public function get_option_title($name) {
-    foreach($this->plugin_settings as $setting) {
-      if ($setting['name'] == $name) {
+    public function get_option_title( $name )
+    {
+      foreach ($this->plugin_settings as $setting) {
+        if ( $setting['name'] == $name ) {
         return $setting['title'];
       }
     }
@@ -301,14 +321,14 @@ class xnau_Plugin_Settings {
    * 
    * @return array of all defined option names
    */
-  public function get_option_names() {
+    public function get_option_names()
+    {
     
     $names = array();
-    foreach($this->plugin_settings as $setting) {
+      foreach ($this->plugin_settings as $setting) {
       $names[] = $setting['name'];
     }
     return $names;
-    
   }
 
   /********************
@@ -320,12 +340,12 @@ class xnau_Plugin_Settings {
    *
    * the plugin subclass will supply any validation if needed
    */
-  public function validate( $input ) {
+    public function validate( $input )
+    {
 
     $this->increment_option_version();
 
     return $input;
-
   }
 
    /**
@@ -342,13 +362,15 @@ class xnau_Plugin_Settings {
    *    attributes - any additional attributes to add
    *    class - a CSS class name to add
    */
-  public function print_settings_field( $input ) {
+    public function print_settings_field( $input )
+    {
     
     //error_log(__METHOD__.' name:'.$input['name'].' type:'.$input['type'].' title:'.$input['title']);
 
-    if ( ! isset( $input['name'] ) ) return NULL;
+      if ( !isset( $input['name'] ) )
+        return NULL;
     
-    if ($input['type'] == 'header') {
+      if ( $input['type'] == 'header' ) {
       //echo '<h3>' . $input['title'] . '</h3>';
     } else {
 
@@ -361,19 +383,17 @@ class xnau_Plugin_Settings {
         ) );
 
       // supply the value of the field from the saved option or the default as defined in the settings init
-      $args['value'] = isset( $options[ $input['name'] ] ) ? $options[ $input['name'] ] : $args['value'];
+        $args['value'] = isset( $options[$input['name']] ) ? $options[$input['name']] : $args['value'];
 
-      $args['name'] = $this->WP_setting.'['.$input['name'].']';
+        $args['name'] = $this->WP_setting . '[' . $input['name'] . ']';
 
       PDb_FormElement::print_element( $args );
 
-      if ( ! empty( $args['help_text'] ) ) {
+        if ( !empty( $args['help_text'] ) ) {
 
         printf( $this->help_text_wrap, trim( $args['help_text'] ) );
-
       }
     }
-
   }
 	
 	/**
@@ -381,7 +401,8 @@ class xnau_Plugin_Settings {
 	 *
 	 * note: the header is displayed by WP; this is only what would go under that
 	 */
-	public function options_section( $section ) {
+    public function options_section( $section )
+    {
 	
 	}
 
@@ -393,17 +414,14 @@ class xnau_Plugin_Settings {
    * registers settings sections with the WP Settings API
    *
    */
-  private function _register_sections() {
+    private function _register_sections()
+    {
 
-    foreach ( $this->sections as $name => $title ) {
+      foreach ($this->sections as $name => $title) {
 
       add_settings_section(
-        $this->WP_setting.'_'.$name,
-        $title,
-        array( $this, 'options_section' ),
-        $this->settings_page
+                $this->WP_setting . '_' . $name, $title, array( $this, 'options_section' ), $this->settings_page
       );
-
     }
 
   }
@@ -419,24 +437,21 @@ class xnau_Plugin_Settings {
    *                  help_text any explanatory text to include
    *                  value a default value for the setting
    */
-   private function _register_option( $name, $title, $group, $options ) {
+    private function _register_option( $name, $title, $group, $options )
+    {
 
-    if ( ! isset( $options['type'] ) ) $options['type'] = 'text';
+      if ( !isset( $options['type'] ) )
+        $options['type'] = 'text';
     $options['name'] = $name;
     $options['title'] = $title;
 
     add_settings_field(
-        $name,
-        $title,
-        array( $this, 'print_settings_field' ),
-        $this->settings_page,
-        $this->WP_setting.'_'.$group,
-        $options
+              $name, $title, array( $this, 'print_settings_field' ), $this->settings_page, $this->WP_setting . '_' . $group, $options
         );
 
     // drop in the default value (if any)
-    if ( isset( $options['value'] ) ) self::update_option( $name, $options['value'], false );
+      if ( isset( $options['value'] ) )
+        self::update_option( $name, $options['value'], false );
+    }
 
    }
-
-}

@@ -8,16 +8,20 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.9
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  */
-if ( ! defined( 'ABSPATH' ) ) die;
+if ( !defined( 'ABSPATH' ) )
+  die;
+
 class PDb_Base {
+
   /**
    * set if a shortcode is called on a page
    * @var bool
    */
   public static $shortcode_present = false;
+
   /**
    * finds the WP installation root
    * 
@@ -30,18 +34,20 @@ class PDb_Base {
    * 
    * @return string
    */
-  public static function app_base_path() {
-    $content_path = explode('/', WP_CONTENT_DIR);
-    $wp_app_path = explode('/', ABSPATH);
-    $end = min(array(count($content_path), count($wp_app_path)));
+  public static function app_base_path()
+  {
+    $content_path = explode( '/', WP_CONTENT_DIR );
+    $wp_app_path = explode( '/', ABSPATH );
+    $end = min( array( count( $content_path ), count( $wp_app_path ) ) );
     $i = 0;
     $common = array();
-    while ($content_path[$i] === $wp_app_path[$i] and $i < $end) {
+    while ( $content_path[$i] === $wp_app_path[$i] and $i < $end ) {
       $common[] = $content_path[$i];
       $i++;
     }
-    return trailingslashit(implode('/', $common));
+    return trailingslashit( implode( '/', $common ) );
   }
+
   /**
    * finds the WP base URL
    * 
@@ -51,21 +57,23 @@ class PDb_Base {
    * 
    * @return string
    */
-  public static function app_base_url() {
-    $scheme = parse_url(site_url(), PHP_URL_SCHEME) . '://';
+  public static function app_base_url()
+  {
+    $scheme = parse_url( site_url(), PHP_URL_SCHEME ) . '://';
     $content_path = explode( '/', str_replace( $scheme, '', content_url() ) );
-    $wp_app_path = explode('/', str_replace( $scheme, '', site_url() ) );
-    
-    
-    $end = min(array(count($content_path), count($wp_app_path)));
+    $wp_app_path = explode( '/', str_replace( $scheme, '', site_url() ) );
+
+
+    $end = min( array( count( $content_path ), count( $wp_app_path ) ) );
     $i = 0;
     $common = array();
-    while ($content_path[$i] === $wp_app_path[$i] and $i < $end) {
+    while ( $i < $end and $content_path[$i] === $wp_app_path[$i] ) {
       $common[] = $content_path[$i];
       $i++;
     }
-    return $scheme . trailingslashit(implode('/', $common));
+    return $scheme . trailingslashit( implode( '/', $common ) );
   }
+
   /**
    * parses a list shortcode filter string into an array
    * 
@@ -81,27 +89,32 @@ class PDb_Base {
    * @param string $filter the filter string
    * @return array the string parsed into an array of statement arrays
    */
-  public static function parse_filter_string($filter) {
+  public static function parse_filter_string( $filter )
+  {
     $return = array();
-    $statements = preg_split('/(&|\|)/', html_entity_decode($filter), null, PREG_SPLIT_DELIM_CAPTURE);
-    foreach($statements as $s) {
-      $statement = self::_filter_statement($s);
-      if ($statement) $return[] = $statement;
+    $statements = preg_split( '/(&|\|)/', html_entity_decode( $filter ), null, PREG_SPLIT_DELIM_CAPTURE );
+    foreach ($statements as $s) {
+      $statement = self::_filter_statement( $s );
+      if ( $statement )
+        $return[] = $statement;
     }
     return $return;
   }
+
   /**
    * builds a filter string from an array of filter statement objects or arrays
    * 
    * @param array $filter_array
    */
-  public static function build_filter_string($filter_array) {
+  public static function build_filter_string( $filter_array )
+  {
     $filter_string = '';
-    foreach($filter_array as $statement) {
+    foreach ($filter_array as $statement) {
       $filter_string .= $statement['column'] . $statement['operator'] . $statement['search_term'] . $statement['relation'];
     }
-    return rtrim($filter_string,'&|');
+    return rtrim( $filter_string, '&|' );
   }
+
   /**
    * merges two filter statement arrays
    * 
@@ -113,16 +126,18 @@ class PDb_Base {
    * @param array $array2 the overriding array
    * @return array the combined array
    */
-  public static function merge_filter_arrays($array1, $array2) {
+  public static function merge_filter_arrays( $array1, $array2 )
+  {
     $return = array();
-    foreach($array1 as $statement) {
-      $index = self::search_array_column($array2, $statement['column']);
-      if ($index === false) {
+    foreach ($array1 as $statement) {
+      $index = self::search_array_column( $array2, $statement['column'] );
+      if ( $index === false ) {
         $return[] = $statement;
       }
     }
-    return array_merge($return, $array2);
+    return array_merge( $return, $array2 );
   }
+
   /**
    * searches for a matching column in an array
    * 
@@ -134,37 +149,41 @@ class PDb_Base {
    * @param string the key of the element to search in
    * @return mixed the int index of the matching array or bool false if no match
    */
-  private static function search_array_column($array, $term, $key = 'column') {
-    for($i = 0;$i < count($array);$i++) {
-      if ($array[$i][$key] == $term) return $i;
+  private static function search_array_column( $array, $term, $key = 'column' )
+  {
+    for ($i = 0; $i < count( $array ); $i++) {
+      if ( $array[$i][$key] == $term )
+        return $i;
     }
     return false;
   }
+
   /**
    * supplies an object comprised of the componenets of a filter statement
    * 
    * @param type $statement
    * @return array
    */
-  private static function _filter_statement($statement,$relation = '&') {
-    
-    $operator = preg_match('#^([^\2]+)(\>|\<|=|!|~)(.*)$#', $statement, $matches);
+  private static function _filter_statement( $statement, $relation = '&' )
+  {
 
-    if ($operator === 0)
+    $operator = preg_match( '#^([^\2]+)(\>|\<|=|!|~)(.*)$#', $statement, $matches );
+
+    if ( $operator === 0 )
       return false; // no valid operator; skip to the next statement
-    
+
     list( $string, $column, $operator, $search_term ) = $matches;
-    
+
     $return = array();
-    
+
     // get the parts
-    $return = compact('column', 'operator', 'search_term');
-    
+    $return = compact( 'column', 'operator', 'search_term' );
+
     $return['relation'] = $relation;
-    
+
     return $return;
   }
-  
+
   /**
    * determines if an incoming set of data matches an existing record
    * 
@@ -175,22 +194,23 @@ class PDb_Base {
    * @return int|bool record ID if the incoming data matches an existing record, 
    *                  bool false if no match
    */
-  public static function find_record_match($columns, $submission) {
+  public static function find_record_match( $columns, $submission )
+  {
     global $wpdb;
     $values = array();
     $where = array();
-    $columns = !is_array($columns) ? explode(',', str_replace(' ', '', $columns)) : (array)$columns;
-    foreach($columns as $column) {
-      if (isset($submission[$column])) {
+    $columns = !is_array( $columns ) ? explode( ',', str_replace( ' ', '', $columns ) ) : (array) $columns;
+    foreach ($columns as $column) {
+      if ( isset( $submission[$column] ) ) {
         $values[] = $submission[$column];
         $where[] = ' r.' . $column . ' = %s';
       } else {
         $where[] = ' (r.' . $column . ' IS NULL OR r.' . $column . ' = "")';
       }
     }
-    $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode(' AND ', $where);
-    $match = $wpdb->get_var($wpdb->prepare($sql, $values));
-    $matched_id = is_numeric($match) ? (int)$match : false;
+    $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode( ' AND ', $where );
+    $match = $wpdb->get_var( $wpdb->prepare( $sql, $values ) );
+    $matched_id = is_numeric( $match ) ? (int) $match : false;
     /**
      * @version 1.6
      * 
@@ -202,9 +222,9 @@ class PDb_Base {
      * 
      * @return int|bool the found record ID
      */
-    return self::set_filter('find_record_match', $matched_id, $columns, $submission);
+    return self::apply_filters( 'find_record_match', $matched_id, $columns, $submission );
   }
-  
+
   /**
    * provides a permalink given a page name, path or ID
    * 
@@ -215,23 +235,25 @@ class PDb_Base {
    * @global object $wpdb
    * @return string|bool the permalink or false if it fails
    */
-  public static function find_permalink($page) {
+  public static function find_permalink( $page )
+  {
     $permalink = false;
     $id = false;
-    if (filter_var($page, FILTER_VALIDATE_URL)) {
+    if ( filter_var( $page, FILTER_VALIDATE_URL ) ) {
       $permalink = $page;
-    } elseif (preg_match('#^[0-9]+$#', $page)) {
+    } elseif ( preg_match( '#^[0-9]+$#', $page ) ) {
       $id = $page;
-    } elseif ($post = get_page_by_path($page)) {
+    } elseif ( $post = get_page_by_path( $page ) ) {
       $id = $post->ID;
     } else {
       global $wpdb;
-      $id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p WHERE p.post_name = '%s' AND p.post_status = 'publish'", trim($page, '/ ') ) );
+      $id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p WHERE p.post_name = '%s' AND p.post_status = 'publish'", trim( $page, '/ ' ) ) );
     }
-    if ($id) $permalink = get_permalink($id);
+    if ( $id )
+      $permalink = get_permalink( $id );
     return $permalink;
   }
-  
+
   /**
    * determines if the field is the designated single record field
    * 
@@ -240,12 +262,13 @@ class PDb_Base {
    * @param object $field
    * @return bool
    */
-  public static function is_single_record_link($field) {
-    $name = is_object($field) ? $field->name : $field;
-    $page = Participants_Db::plugin_setting('single_record_page');
-    return $name === Participants_Db::plugin_setting('single_record_link_field') && !empty($page);
+  public static function is_single_record_link( $field )
+  {
+    $name = is_object( $field ) ? $field->name : $field;
+    $page = Participants_Db::plugin_setting( 'single_record_page' );
+    return $name === Participants_Db::plugin_setting( 'single_record_link_field' ) && !empty( $page );
   }
-  
+
   /*
    * prepares an array for storage in the database
    *
@@ -253,11 +276,11 @@ class PDb_Base {
    * @return string prepped array in serialized form or empty if no data
    */
 
-  public static function _prepare_array_mysql($array)
+  public static function _prepare_array_mysql( $array )
   {
 
-    if (!is_array($array))
-      return Participants_Db::_prepare_string_mysql($array);
+    if ( !is_array( $array ) )
+      return Participants_Db::_prepare_string_mysql( $array );
 
     $prepped_array = array();
 
@@ -265,12 +288,12 @@ class PDb_Base {
 
     foreach ($array as $key => $value) {
 
-      if ($value !== '')
+      if ( $value !== '' )
         $empty = false;
-      $prepped_array[$key] = Participants_Db::_prepare_string_mysql((string)$value);
+      $prepped_array[$key] = Participants_Db::_prepare_string_mysql( (string) $value );
     }
 
-    return $empty ? '' : serialize($prepped_array);
+    return $empty ? '' : serialize( $prepped_array );
   }
 
   /**
@@ -281,10 +304,10 @@ class PDb_Base {
    * 
    * @param string $string the string to prepare
    */
-  public static function _prepare_string_mysql($string)
+  public static function _prepare_string_mysql( $string )
   {
-    
-    return stripslashes($string);
+
+    return stripslashes( $string );
   }
 
   /**
@@ -294,10 +317,10 @@ class PDb_Base {
    *                       a serialization
    * @return array or string if not a serialization
    */
-  public static function unserialize_array($string)
+  public static function unserialize_array( $string )
   {
 
-    return maybe_unserialize($string);
+    return maybe_unserialize( $string );
   }
 
   /**
@@ -307,11 +330,12 @@ class PDb_Base {
    *
    * @return string the URL with the conjunction character appended
    */
-  public static function add_uri_conjunction($URI)
+  public static function add_uri_conjunction( $URI )
   {
 
-    return $URI . ( false !== strpos($URI, '?') ? '&' : '?');
+    return $URI . ( false !== strpos( $URI, '?' ) ? '&' : '?');
   }
+
   /**
    * returns a path to the defined image location
    *
@@ -322,11 +346,12 @@ class PDb_Base {
    * @return the file url if valid; if the file can't be found returns the
    *         supplied filename
    */
-  public static function get_image_uri($filename) {
+  public static function get_image_uri( $filename )
+  {
 
-    if (!file_exists($filename)) {
+    if ( !file_exists( $filename ) ) {
 
-      $filename = self::files_uri() . basename($filename);
+      $filename = self::files_uri() . basename( $filename );
     }
 
     return $filename;
@@ -347,19 +372,21 @@ class PDb_Base {
    *                      database or in the $_POST array
    *
    */
-  public static function get_dynamic_value($value) {
+  public static function get_dynamic_value( $value )
+  {
 
     // this value serves as a key for the dynamic value to get
-    $dynamic_key = html_entity_decode($value);
+    $dynamic_key = html_entity_decode( $value );
     /**
      * @version 1.6 added 'pdb-dynamic_value' filter
      */
-    $dynamic_value = Participants_Db::set_filter('dynamic_value', '', $dynamic_key);
+    $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
     // return the value if it was set in the filter
-    if (!empty($dynamic_value)) return $dynamic_value;
+    if ( !empty( $dynamic_value ) )
+      return $dynamic_value;
 
-    if (strpos($dynamic_key, '->') > 0) {
-      
+    if ( strpos( $dynamic_key, '->' ) > 0 ) {
+
       /*
        * here, we can get values from one of several WP objects
        * 
@@ -367,43 +394,43 @@ class PDb_Base {
        */
       global $post, $current_user;
 
-      list( $object, $property ) = explode('->', $dynamic_key);
+      list( $object, $property ) = explode( '->', $dynamic_key );
 
-      $object = ltrim($object, '$');
+      $object = ltrim( $object, '$' );
 
-      if (is_object($$object) && isset($$object->$property)) {
+      if ( is_object( $$object ) && isset( $$object->$property ) ) {
 
         $dynamic_value = $$object->$property;
       }
-    } elseif (strpos($dynamic_key, ':') > 0) {
-      
+    } elseif ( strpos( $dynamic_key, ':' ) > 0 ) {
+
       /*
        * here, we are attempting to access a value from a PHP superglobal
        */
 
-      list( $global, $name ) = explode(':', $dynamic_key);
-      
+      list( $global, $name ) = explode( ':', $dynamic_key );
+
       /*
        * if the value refers to an array element by including [index_name] or 
        * ['index_name'] we extract the indices
        */
       $indexes = array();
-      if (strpos($name, '[') !== false) {
-        $count = preg_match("#^([^]]+)(?:\['?([^]']+)'?\])?(?:\['?([^]']+)'?\])?$#", stripslashes($name), $matches);
-        $match = array_shift($matches); // discarded
-        $name = array_shift($matches);
-        $indexes = count($matches) > 0 ? $matches : array();
+      if ( strpos( $name, '[' ) !== false ) {
+        $count = preg_match( "#^([^]]+)(?:\['?([^]']+)'?\])?(?:\['?([^]']+)'?\])?$#", stripslashes( $name ), $matches );
+        $match = array_shift( $matches ); // discarded
+        $name = array_shift( $matches );
+        $indexes = count( $matches ) > 0 ? $matches : array();
       }
 
       // clean this up in case someone puts $_SERVER instead of just SERVER
-      $global = preg_replace('#^[$_]{1,2}#', '', $global);
+      $global = preg_replace( '#^[$_]{1,2}#', '', $global );
 
       /*
        * for some reason getting the superglobal array directly with the string
        * is unreliable, but this bascially works as a whitelist, so that's
        * probably not a bad idea.
        */
-      switch (strtoupper($global)) {
+      switch ( strtoupper( $global ) ) {
 
         case 'SERVER':
           $global = $_SERVER;
@@ -430,25 +457,25 @@ class PDb_Base {
        * to two dimensions only. the only way that I know of to do this open-ended 
        * is to use eval, which I won't do
        */
-      if (isset($global[$name])) {
-        if (is_string($global[$name])) {
+      if ( isset( $global[$name] ) ) {
+        if ( is_string( $global[$name] ) ) {
           $dynamic_value = $global[$name];
-        } elseif (is_array($global[$name]) || is_object($global[$name])) {
-        
-          $array = is_object($global[$name]) ? get_object_vars($global[$name]) : $global[$name];
-	        switch (count($indexes)) {
-		        case 1:
-		              $dynamic_value = isset($array[$indexes[0]]) ? $array[$indexes[0]] : '';
-		          break;
-		        case 2:
-		              $dynamic_value = isset($array[$indexes[0]][$indexes[1]]) ? $array[$indexes[0]][$indexes[1]] : '';
-		          break;
-		        default:
-		            // if we don't have an index, grab the first value
-		              $dynamic_value = is_array($array) ? current($array) : '';
-	        }
-	      }
-	    }
+        } elseif ( is_array( $global[$name] ) || is_object( $global[$name] ) ) {
+
+          $array = is_object( $global[$name] ) ? get_object_vars( $global[$name] ) : $global[$name];
+          switch ( count( $indexes ) ) {
+            case 1:
+              $dynamic_value = isset( $array[$indexes[0]] ) ? $array[$indexes[0]] : '';
+              break;
+            case 2:
+              $dynamic_value = isset( $array[$indexes[0]][$indexes[1]] ) ? $array[$indexes[0]][$indexes[1]] : '';
+              break;
+            default:
+              // if we don't have an index, grab the first value
+              $dynamic_value = is_array( $array ) ? current( $array ) : '';
+          }
+        }
+      }
     }
 
     /*
@@ -457,85 +484,19 @@ class PDb_Base {
      * be object or array anyway, so if a number is represented as a string, it's 
      * not a big deal.
      */
-    return filter_var($dynamic_value, FILTER_SANITIZE_STRING);
+    return filter_var( $dynamic_value, FILTER_SANITIZE_STRING );
   }
-  
+
   /**
    * determines if the field default value string is a dynamic value
    * 
    * @param string $value the value to test
    * @return bool true if the value is to be parsed as dynamic
    */
-  public static function is_dynamic_value($value) {
-    $test_value = html_entity_decode($value);
-  	return strpos($test_value, '->') > 0 || strpos($test_value, ':') > 0;
-  }
-
-  /**
-   * processes an incoming timestamp
-   * 
-   * timestamps are usually handled by the plugin automatically, but when records 
-   * are being imported via CSV, they should be imported
-   * 
-   * @param string $timestamp a timestamp value, could be unix timestamp or text date
-   * @param object $column the current column
-   * @return bool|string if the timestamp is valid, a MySQL timestamp is returns; 
-   *                     bool false otherwise
-   */
-  public static function import_timestamp($timestamp, $column = '') {
-    
-    $post_date = empty( $timestamp ) ? false : Participants_Db::parse_date($timestamp, $column);
-    $new_value = $post_date !== false ? self::format_date($post_date, null, 'Y-m-d H:i:s') : false;
-    
-    return $new_value;
-  }
-
-  /**
-   * re-asserts the timezone to PHP according to the WordPress timezone setting
-   */
-  public static function reassert_timezone() {
-    date_default_timezone_set( get_option( 'timezone_string' ) );
-  }
-  
-  /**
-   * returns an internationalized date string from a UNIX timestamp
-   * 
-   * @param int $timestamp a UNIX timestamp or any date 
-   * @param bool $time if true, adds the time of day to the format
-   * @param string $format a regular PHP date format string (optional)
-   * @return string a formatted date or input string if invalid
-   */
-  public static function format_date($timestamp = false, $time = false, $format = false) {
-    
-    $timestamp = $timestamp === false ? time() : $timestamp;
-    
-    // if it's not a timestamp, we attempt to convert it to one
-    if (!Participants_Db::is_valid_timestamp($timestamp)) $timestamp = Participants_Db::parse_date($timestamp);
-
-    if (Participants_Db::is_valid_timestamp($timestamp)) {
-      
-      if ($format === false ) {
-      
-        /**
-         * @version 1.6.2.6 stopped using the input date format here because it's for inputs only
-         */
-        //$format = Participants_Db::plugin_setting_is_true('strict_dates') ? Participants_Db::plugin_setting('input_date_format') : Participants_Db::$date_format;
-        $format = Participants_Db::$date_format;
-
-        if ($time) {
-          $format .= ' ' . get_option('time_format');
-        }
-        
-      }
-      // re-assert the timezone in case PHP has dropped it
-      self::reassert_timezone();
-      return date_i18n( $format, $timestamp );
-    
-    } else {
-      // not a timestamp: return unchanged
-      return $timestamp;
-    }
-  
+  public static function is_dynamic_value( $value )
+  {
+    $test_value = html_entity_decode( $value );
+    return strpos( $test_value, '->' ) > 0 || strpos( $test_value, ':' ) > 0;
   }
 
   /**
@@ -544,13 +505,13 @@ class PDb_Base {
    * @param string $name group name
    * @return object the group parameters as a stdClass object
    */
-  public static function get_group($name) {
+  public static function get_group( $name )
+  {
     global $wpdb;
-    $sql = 'SELECT * FROM ' . Participants_Db::$groups_table  . ' WHERE `name` = "%s"';
-    return current($wpdb->get_results($wpdb->prepare($sql, $name)));
+    $sql = 'SELECT * FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"';
+    return current( $wpdb->get_results( $wpdb->prepare( $sql, $name ) ) );
   }
-  
-  
+
   /**
    * check the current users plugin role
    * 
@@ -563,13 +524,14 @@ class PDb_Base {
    * 
    * @return bool true if current user has the role tested
    */
-  public static function current_user_has_plugin_role($role = 'editor', $context = '') {
-    
+  public static function current_user_has_plugin_role( $role = 'editor', $context = '' )
+  {
+
     $role = $role === 'admin' ? 'plugin_admin_capability' : 'record_edit_capability';
-    
-    return current_user_can(self::plugin_capability($role, $context));
+
+    return current_user_can( self::plugin_capability( $role, $context ) );
   }
-  
+
   /**
    * checks a plugin permission level and passes it through a filter
    * 
@@ -585,11 +547,12 @@ class PDb_Base {
    * 
    * @return string the name of the WP capability to use
    */
-  public static function plugin_capability ($cap, $context = '') {
-    
+  public static function plugin_capability( $cap, $context = '' )
+  {
+
     $capability = 'read'; // assume the lowest cap
-    if (in_array($cap, array('plugin_admin_capability','record_edit_capability'))) {
-      $capability = self::set_filter('access_capability', self::plugin_setting($cap), $context);
+    if ( in_array( $cap, array( 'plugin_admin_capability', 'record_edit_capability' ) ) ) {
+      $capability = self::apply_filters( 'access_capability', self::plugin_setting( $cap ), $context );
     }
     return $capability;
   }
@@ -606,15 +569,15 @@ class PDb_Base {
    * 
    * @return null
    */
-  public static function load_plugin_textdomain($path, $textdomain = '') {
-    
-    $textdomain = empty($textdomain) ? Participants_Db::PLUGIN_NAME : $textdomain;
+  public static function load_plugin_textdomain( $path, $textdomain = '' )
+  {
+
+    $textdomain = empty( $textdomain ) ? Participants_Db::PLUGIN_NAME : $textdomain;
     // The "plugin_locale" filter is also used in load_plugin_textdomain()
-    $locale = apply_filters('plugin_locale', get_locale(), $textdomain);
+    $locale = apply_filters( 'plugin_locale', get_locale(), $textdomain );
 
-    load_textdomain( $textdomain, WP_LANG_DIR.'/' . Participants_Db::PLUGIN_NAME . '/' . $textdomain . '-' . $locale . '.mo' );
-    load_plugin_textdomain( $textdomain, false, dirname(plugin_basename($path)).'/languages/');
-
+    load_textdomain( $textdomain, WP_LANG_DIR . '/' . Participants_Db::PLUGIN_NAME . '/' . $textdomain . '-' . $locale . '.mo' );
+    load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages/' );
   }
 
   /**
@@ -626,10 +589,12 @@ class PDb_Base {
    * 
    * @return string
    */
-  public static function string_static_translation($string) {
-    return __($string);
+  public static function string_static_translation( $string )
+  {
+
+    return is_string( $string ) && !is_numeric( $string ) ? __( $string ) : $string;
   }
-  
+
   /**
    * creates a translated key string of the format title (name) where "name" is untranslated
    * 
@@ -638,12 +603,14 @@ class PDb_Base {
    * 
    * @return string the translated title with the untranslated name added (if supplied)
    */
-  public static function title_key($title, $name = '') {
-    if (empty($name)) {
-      return Participants_Db::set_filter('translate_string', $title);
+  public static function title_key( $title, $name = '' )
+  {
+    if ( empty( $name ) ) {
+      return Participants_Db::apply_filters( 'translate_string', $title );
     }
-    return sprintf('%s (%s)', Participants_Db::set_filter('translate_string', $title), $name);
+    return sprintf( '%s (%s)', Participants_Db::apply_filters( 'translate_string', $title ), $name );
   }
+
   /**
    * provides a plugin setting
    * 
@@ -651,11 +618,12 @@ class PDb_Base {
    * @param string|int|float $default a default value
    * @return string the plugin setting value or provided default
    */
-  public static function plugin_setting($name, $default = false) {
-    $setting = isset(Participants_Db::$plugin_options[$name]) ? Participants_Db::$plugin_options[$name] : $default;
-    return $setting;
+  public static function plugin_setting( $name, $default = false )
+  {
+    $setting = isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default;
+    return Participants_Db::apply_filters( 'translate_string', $setting );
   }
-  
+
   /**
    * checks a plugin setting for a saved value
    * 
@@ -664,9 +632,11 @@ class PDb_Base {
    * @param string $name setting name
    * @return bool false true if the setting has been saved by the user
    */
-  public static function plugin_setting_is_set($name) {
-    return isset(Participants_Db::$plugin_options[$name]) && strlen(Participants_Db::plugin_setting($name)) > 0;
+  public static function plugin_setting_is_set( $name )
+  {
+    return isset( Participants_Db::$plugin_options[$name] ) && strlen( Participants_Db::plugin_setting( $name ) ) > 0;
   }
+
   /**
    * provides a boolean plugin setting value
    * 
@@ -674,14 +644,16 @@ class PDb_Base {
    * @param bool the default value
    * @return bool the setting value
    */
-  public static function plugin_setting_is_true($name, $default = false) {
-    
-    if (isset(Participants_Db::$plugin_options[$name])) {
-      return filter_var(Participants_Db::plugin_setting($name), FILTER_VALIDATE_BOOLEAN);
+  public static function plugin_setting_is_true( $name, $default = false )
+  {
+
+    if ( isset( Participants_Db::$plugin_options[$name] ) ) {
+      return filter_var( Participants_Db::plugin_setting( $name ), FILTER_VALIDATE_BOOLEAN );
     } else {
       return (bool) $default;
     }
   }
+
   /**
    * sets up an API filter
    * 
@@ -696,15 +668,31 @@ class PDb_Base {
    * @param unknown $var2 extra variable
    * @return unknown the filtered or unfiltered term
    */
-  public static function set_filter($slug, $term, $var1 = NULL, $var2 = NULL)
+  public static function set_filter( $slug, $term, $var1 = NULL, $var2 = NULL )
   {
-    if (strpos($slug, Participants_Db::$prefix) !== 0) {
-			$slug = Participants_Db::$prefix . $slug;
+    if ( strpos( $slug, Participants_Db::$prefix ) !== 0 ) {
+      $slug = Participants_Db::$prefix . $slug;
     }
-    if (!has_filter($slug)) {
+    if ( !has_filter( $slug ) ) {
       return $term;
     }
-    return apply_filters($slug, $term, $var1, $var2);
+    return apply_filters( $slug, $term, $var1, $var2 );
+  }
+
+  /**
+   * sets up an API filter
+   * 
+   * alias for Participants_Db::set_filter()
+   * 
+   * @param string $slug the base slug of the plugin API filter
+   * @param unknown $term the term to filter
+   * @param unknown $var1 extra variable
+   * @param unknown $var2 extra variable
+   * @return unknown the filtered or unfiltered term
+   */
+  public static function apply_filters( $slug, $term, $var1 = NULL, $var2 = NULL )
+  {
+    return self::set_filter( $slug, $term, $var1, $var2 );
   }
 
   /**
@@ -713,17 +701,18 @@ class PDb_Base {
    * @return bool true if the css file can be written to
    * 
    */
-  protected static function _set_custom_css() {
+  protected static function _set_custom_css()
+  {
     $css_file = Participants_Db::$plugin_path . '/css/PDb-custom.css';
-    if (!is_writable($css_file)) {
+    if ( !is_writable( $css_file ) ) {
       return false;
     }
-    $file_contents = file_get_contents($css_file);
-    $custom_css = Participants_Db::plugin_setting('custom_css');
-    if ($file_contents === $custom_css) {
+    $file_contents = file_get_contents( $css_file );
+    $custom_css = Participants_Db::plugin_setting( 'custom_css' );
+    if ( $file_contents === $custom_css ) {
       // error_log(__METHOD__.' CSS settings are unchanged; do nothing');
     } else {
-      file_put_contents($css_file, $custom_css);
+      file_put_contents( $css_file, $custom_css );
     }
     return true;
   }
@@ -735,26 +724,32 @@ class PDb_Base {
    * 
    * @return string realtive path to the plugin files location
    */
-  public static function files_location() {
-    return Participants_Db::set_filter('files_location', Participants_Db::plugin_setting('image_upload_location'));
+  public static function files_location()
+  {
+    return Participants_Db::apply_filters( 'files_location', Participants_Db::plugin_setting( 'image_upload_location', 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' ) );
   }
+
   /**
    * supplies the absolute path to the files location
    * 
    * @return string
    */
-  public static function files_path() {
-    return trailingslashit(PDb_Image::concatenate_directory_path( self::app_base_path(), Participants_Db::files_location()));
+  public static function files_path()
+  {
+    return trailingslashit( PDb_Image::concatenate_directory_path( self::app_base_path(), Participants_Db::files_location() ) );
   }
+
   /**
    * supplies the absolute path to the files location
    * 
    * @return string
    */
-  public static function files_uri() {
+  public static function files_uri()
+  {
     //return trailingslashit(site_url(Participants_Db::files_location()));
     return self::app_base_url() . trailingslashit( ltrim( Participants_Db::files_location(), DIRECTORY_SEPARATOR ) );
   }
+
   /**
    * deletes a file
    * 
@@ -763,22 +758,22 @@ class PDb_Base {
    * @param string $filename
    * @return bool success
    */
-  public static function delete_file($filename)
+  public static function delete_file( $filename )
   {
     $current_dir = getcwd(); // save the cirrent dir
-    chdir(self::files_path()); // set the plugin uploads dir
-    $result = unlink(basename($filename)); // delete the file
-    chdir($current_dir); // change back to the previous directory
+    chdir( self::files_path() ); // set the plugin uploads dir
+    $result = unlink( basename( $filename ) ); // delete the file
+    chdir( $current_dir ); // change back to the previous directory
     return $result;
   }
 
   /**
    * makes a title legal to use in anchor tag
    */
-  public static function make_anchor($title)
+  public static function make_anchor( $title )
   {
 
-    return str_replace(' ', '', preg_replace('#^[0-9]*#', '', strtolower($title)));
+    return str_replace( ' ', '', preg_replace( '#^[0-9]*#', '', strtolower( $title ) ) );
   }
 
   /**
@@ -786,14 +781,33 @@ class PDb_Base {
    * 
    * @return bool true if the form should be validated 
    */
-  public static function is_form_validated() {
-    
-    if (is_admin()) {
-      return self::current_user_has_plugin_role('admin', 'forms not validated') === false;
+  public static function is_form_validated()
+  {
+
+    if ( is_admin() ) {
+      return self::current_user_has_plugin_role( 'admin', 'forms not validated' ) === false;
     } else {
       return true;
     }
-    
+  }
+
+  /**
+   * replace the tags in text messages
+   * 
+   * provided for backward compatibility
+   *
+   * returns the text with the values replacing the tags
+   * all tags use the column name as the key string
+   *
+   * @param  string  $text           the text containing tags to be replaced with 
+   *                                 values from the db
+   * @param  int     $participant_id the record id to use
+   * @param  string  $mode           unused
+   * @return string                  text with the tags replaced by the data
+   */
+  public static function proc_tags( $text, $participant_id, $mode = '' )
+  {
+    return PDb_Tag_Template::replaced_text( $text, $participant_id );
   }
 
   /**
@@ -806,17 +820,16 @@ class PDb_Base {
    * @param array $override the array to merge
    * @return array
    */
-  public static function array_merge2($array, $override)
+  public static function array_merge2( $array, $override )
   {
     $x = array();
     foreach ($array as $k => $v) {
-      if (isset($override[$k])) {
-        if (is_array($v)) {
-          $v = Participants_Db::array_merge2($v, (array) $override[$k]);
-        }
-        else
+      if ( isset( $override[$k] ) ) {
+        if ( is_array( $v ) ) {
+          $v = Participants_Db::array_merge2( $v, (array) $override[$k] );
+        } else
           $v = $override[$k];
-        unset($override[$k]);
+        unset( $override[$k] );
       }
       $x[$k] = $v;
     }
@@ -830,9 +843,9 @@ class PDb_Base {
    * @param mixed $timestamp the string to test
    * @return bool true if valid timestamp
    */
-  public static function is_valid_timestamp($timestamp)
+  public static function is_valid_timestamp( $timestamp )
   {
-    return is_int($timestamp) or ((string) (int) $timestamp === $timestamp);
+    return is_int( $timestamp ) or ( (string) (int) $timestamp === $timestamp);
   }
 
   /**
@@ -842,127 +855,9 @@ class PDb_Base {
   function php_version()
   {
 
-    $numbers = explode('.', phpversion());
+    $numbers = explode( '.', phpversion() );
 
     return (float) ( $numbers[0] + ( $numbers[1] / 10 ) );
-  }
-
-  /**
-   * Convert a date format to a strftime format 
-   * 
-   * Timezone conversion is done for unix. Windows users must exchange %z and %Z. 
-   * 
-   * Unsupported date formats : S, n, t, L, B, G, u, e, I, P, Z, c, r 
-   * Unsupported strftime formats : %U, %W, %C, %g, %r, %R, %T, %X, %c, %D, %F, %x 
-   * 
-   * Props: http://php.net/manual/en/function.strftime.php#96424
-   * 
-   * @param string $dateFormat a date format 
-   * @return string 
-   */
-  public static function dateFormatToStrftime($dateFormat)
-  {
-
-    $caracs = array(
-        // Day - no strf eq : S 
-        'd' => '%d', 'D' => '%a', 'j' => '%e', 'l' => '%A', 'N' => '%u', 'w' => '%w', 'z' => '%j',
-        // Week - no date eq : %U, %W 
-        'W' => '%V',
-        // Month - no strf eq : n, t 
-        'F' => '%B', 'm' => '%m', 'M' => '%b',
-        // Year - no strf eq : L; no date eq : %C, %g 
-        'o' => '%G', 'Y' => '%Y', 'y' => '%y',
-        // Time - no strf eq : B, G, u; no date eq : %r, %R, %T, %X 
-        'a' => '%P', 'A' => '%p', 'g' => '%l', 'h' => '%I', 'H' => '%H', 'i' => '%M', 's' => '%S',
-        // Timezone - no strf eq : e, I, P, Z 
-        'O' => '%z', 'T' => '%Z',
-        // Full Date / Time - no strf eq : c, r; no date eq : %c, %D, %F, %x  
-        'U' => '%s'
-    );
-
-    return strtr((string) $dateFormat, $caracs);
-  }
-
-  /**
-   * translates date format strings from PHP to other formats
-   *
-   * @param string $dateformat the PHP-style date format string
-   * @param string $format_type selected the format type to translate to: 'ICU', 'jQuery', 'strftime'
-   * @return string the translated format string
-   */
-  static function translate_date_format($dateformat, $format_type)
-  {
-
-    // these are the PHP date codes
-    $pattern = array(
-        //day
-        'd', //day of the month
-        'j', //1 or 2 digit day of month
-        'l', //full name of the day of the week
-        'D', // abbreviated day of the week
-        'z', //day of the year
-        //month
-        'F', //Month name full
-        'M', //Month name short
-        'n', //numeric month no leading zeros
-        'm', //numeric month leading zeros
-        //year
-        'Y', //full numeric year
-        'y'  //numeric year: 2 digit
-    );
-    switch ($format_type) {
-      case 'strftime':
-        return self::dateFormatToStrftime($dateformat);
-        break;
-      case 'ICU':
-        $replace = array(
-            'dd', 'd', 'EEEE', 'EEEE', 'D',
-            'MMMM', 'MMM', 'M', 'MM',
-            'yyyy', 'yy'
-        );
-        break;
-      case 'jQuery':
-        $replace = array(
-            'dd', 'd', 'DD', 'D', 'o',
-            'MM', 'M', 'm', 'mm',
-            'yy', 'y'
-        );
-        break;
-    }
-    $i = 1;
-    foreach ($pattern as $p) {
-      $dateformat = str_replace($p, '%' . $i . '$s', $dateformat);
-      $i++;
-    }
-    return vsprintf($dateformat, $replace);
-  }
-
-  /**
-   * translates a PHP date() format string to an ICU format string
-   * 
-   * @param string $PHP_date_format the date format string
-   *
-   */
-  static function get_ICU_date_format($PHP_date_format = '')
-  {
-
-    $dateformat = empty($PHP_date_format) ? Participants_Db::$date_format : $PHP_date_format;
-
-    return Participants_Db::translate_date_format($dateformat, 'ICU');
-  }
-
-  /**
-   * translates a PHP date() format string to a jQuery format string
-   * 
-   * @param string $PHP_date_format the date format string
-   *
-   */
-  static function get_jqueryUI_date_format($PHP_date_format = '')
-  {
-
-    $dateformat = empty($PHP_date_format) ? Participants_Db::$date_format : $PHP_date_format;
-
-    return Participants_Db::translate_date_format($dateformat, 'jQuery');
   }
 
   /**
@@ -971,13 +866,13 @@ class PDb_Base {
    * @param string $message the message to be dislayed
    * @param string $type the type of message: 'updated' (yellow) or 'error' (red)
    */
-  public static function set_admin_message($message, $type = 'error')
+  public static function set_admin_message( $message, $type = 'error' )
   {
-    if (is_admin()) {
-			Participants_Db::$session->set('admin_message', array($message, $type));
-			Participants_Db::$admin_message = $message;
-			Participants_Db::$admin_message_type = $type;
-		}
+    if ( is_admin() ) {
+      Participants_Db::$session->set( 'admin_message', array( $message, $type ) );
+      Participants_Db::$admin_message = $message;
+      Participants_Db::$admin_message_type = $type;
+    }
   }
 
   /**
@@ -985,75 +880,81 @@ class PDb_Base {
    */
   public static function admin_message()
   {
-    if (Participants_Db::$session->get('admin_message')) {
-      list(Participants_Db::$admin_message, Participants_Db::$admin_message_type) = Participants_Db::$session->get('admin_message');
-      if (!empty(Participants_Db::$admin_message)) {
-        printf('<div class="%s"><p>%s</p></div>', Participants_Db::$admin_message_type, Participants_Db::$admin_message);
-        Participants_Db::$session->clear('admin_message');
+    if ( Participants_Db::$session->get( 'admin_message' ) ) {
+      list(Participants_Db::$admin_message, Participants_Db::$admin_message_type) = Participants_Db::$session->get( 'admin_message' );
+      if ( !empty( Participants_Db::$admin_message ) ) {
+        printf( '<div class="%s"><p>%s</p></div>', Participants_Db::$admin_message_type, Participants_Db::$admin_message );
+        Participants_Db::$session->clear( 'admin_message' );
       }
     }
   }
 
-/**
+  /**
    * gets the PHP timezone setting
    * 
    * @return string
    */
-  public static function get_timezone() {
-    $php_timezone = ini_get('date.timezone');
-    return empty($php_timezone) ? 'UTC' : $php_timezone;
-  } 
+  public static function get_timezone()
+  {
+    $php_timezone = ini_get( 'date.timezone' );
+    return empty( $php_timezone ) ? 'UTC' : $php_timezone;
+  }
 
-/**
- * collect a list of all the plugin shortcodes present in the content
- *
- * @param string $content the content to test
- * @param string $tag
- * @return array of plugin shortcode tags
- */
-  public static function get_plugin_shortcodes($content = '', $tag = '[pdb_') {
-    
+  /**
+   * collect a list of all the plugin shortcodes present in the content
+   *
+   * @param string $content the content to test
+   * @param string $tag
+   * @return array of plugin shortcode tags
+   */
+  public static function get_plugin_shortcodes( $content = '', $tag = '[pdb_' )
+  {
+
     $shortcodes = array();
     // get all shortcodes
-    preg_match_all('/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER);
+    preg_match_all( '/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER );
     // if no shortcodes, return empty array
-    if (empty($matches)) return array();
+    if ( empty( $matches ) )
+      return array();
     // check each one for a plugin shortcode
     foreach ($matches as $shortcode) {
-      if (false !== strpos($shortcode[0], $tag)) {
-      $shortcodes[] = $shortcode[2] . '-shortcode';
-    }
+      if ( false !== strpos( $shortcode[0], $tag ) ) {
+        $shortcodes[] = $shortcode[2] . '-shortcode';
+      }
     }
     return $shortcodes;
   }
-/**
- * check a string for a shortcode
- *
- * modeled on the WP function of the same name
- * 
- * what's different here is that it will return true on a partial match so it can 
- * be used to detect any of the plugin's shortcode. Generally, we just check for 
- * the common prefix
- *
- * @param string $content the content to test
- * @param string $tag
- * @return boolean
- */
-  public static function has_shortcode($content = '', $tag = '[pdb_') {
-    
+
+  /**
+   * check a string for a shortcode
+   *
+   * modeled on the WP function of the same name
+   * 
+   * what's different here is that it will return true on a partial match so it can 
+   * be used to detect any of the plugin's shortcode. Generally, we just check for 
+   * the common prefix
+   *
+   * @param string $content the content to test
+   * @param string $tag
+   * @return boolean
+   */
+  public static function has_shortcode( $content = '', $tag = '[pdb_' )
+  {
+
     // get all shortcodes
-    preg_match_all('/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER);
+    preg_match_all( '/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER );
     // none found
-    if (empty($matches))
+    if ( empty( $matches ) )
       return false;
     // check each one for a plugin shortcode
     foreach ($matches as $shortcode) {
-      if (false !== strpos($shortcode[0], $tag)) {
+      if ( false !== strpos( $shortcode[0], $tag ) ) {
         return true;
       }
     }
     return false;
   }
+
   /**
    * sets the shortcode present flag if a plugin shortcode is found in the post
    * 
@@ -1062,17 +963,20 @@ class PDb_Base {
    * @global object $post
    * @return array $posts
    */
-  public static function remove_rel_link() {
+  public static function remove_rel_link()
+  {
+
     global $post;
     /*
      * this is needed to prevent Firefox prefetching the next page and firing the damn shortcode
      * 
      * as per: http://www.ebrueggeman.com/blog/wordpress-relnext-and-firefox-prefetching
      */
-    if (is_object($post) && $post->post_type === 'page') {
-      remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
+    if ( is_object( $post ) && $post->post_type === 'page' ) {
+      remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head' );
     }
   }
+
   /**
    * provides an array of field indices corresponding, given a list of field names
    * 
@@ -1082,16 +986,22 @@ class PDb_Base {
    * @param bool  $indices if true returns array of indices, if false returns array of fieldnames
    * @return array an array of integers
    */
-  public static function get_field_indices($fieldnames, $indices = true) {
+  public static function get_field_indices( $fieldnames, $indices = true )
+  {
     global $wpdb;
     $sql = 'SELECT f.' . ($indices ? 'id' : 'name') . ' FROM ' . Participants_Db::$fields_table . ' f ';
     $sql .= 'WHERE f.' . ($indices ? 'name' : 'id') . ' ';
-    if (count($fieldnames) > 1) {
-      $sql .= 'IN ("' . implode('","',$fieldnames) . '") ORDER BY FIELD(f.name, "' . implode('","',$fieldnames) . '")';
+    if ( count( $fieldnames ) > 1 && count( $fieldnames ) < 100 ) {
+      $sql .= 'IN ("' . implode( '","', $fieldnames );
+      if ( count( $fieldnames ) < 100 ) {
+        $sql .= '") ORDER BY FIELD(f.name, "' . implode( '","', $fieldnames ) . '")';
+      } else {
+        '") ORDER BY f.' . ($indices ? 'id' : 'name') . ' ASC';
+      }
     } else {
-      $sql .= '= "' . current($fieldnames) . '"';
+      $sql .= '= "' . current( $fieldnames ) . '"';
     }
-    return $wpdb->get_col($sql);
+    return $wpdb->get_col( $sql );
   }
 
   /**
@@ -1101,19 +1011,22 @@ class PDb_Base {
    * @return array of field names
    * 
    */
-  public static function get_indexed_names($ids) {
-    return self::get_field_indices($ids, false);
+  public static function get_indexed_names( $ids )
+  {
+    return self::get_field_indices( $ids, false );
   }
+
   /**
    * gets a list of column names from a dot-separated string of ids
    * 
    * @param string $ids the string of ids
    * @return array of field names
    */
-  public static function get_shortcode_columns($ids) {
-    return self::get_field_indices(explode('.',$ids), false);
+  public static function get_shortcode_columns( $ids )
+  {
+    return self::get_field_indices( explode( '.', $ids ), false );
   }
-  
+
   /**
    * provides a filter array for a search submission
    * 
@@ -1122,13 +1035,14 @@ class PDb_Base {
    * @param bool $multi if true, filter a multi-field search submission
    * @return array of filter parameters
    */
-  public static function search_post_filter($multi = false) {
+  public static function search_post_filter( $multi = false )
+  {
     $array_filter = array(
-            'filter' => FILTER_SANITIZE_STRING,
-            'flags' => FILTER_FORCE_ARRAY
-        );
+        'filter' => FILTER_SANITIZE_STRING,
+        'flags' => FILTER_FORCE_ARRAY
+    );
     $multi_validation = $multi ? $array_filter : FILTER_SANITIZE_STRING;
-    return array (
+    return array(
         'filterNonce' => FILTER_SANITIZE_STRING,
         'postID' => FILTER_VALIDATE_INT,
         'submit' => FILTER_SANITIZE_STRING,
@@ -1144,74 +1058,92 @@ class PDb_Base {
         'logic' => $multi_validation,
         'sortBy' => FILTER_SANITIZE_STRING,
         'ascdesc' => FILTER_SANITIZE_STRING,
-        'listpage' => FILTER_VALIDATE_INT,
-     );
+        Participants_Db::$list_page => FILTER_VALIDATE_INT,
+    );
   }
-  
+
   /**
    * attempts to prevent browser back-button caching in the middle of a multipage form
    * 
    * @param array $headers array of http headers
    * @return array altered headers array
    */
-  public static function control_caching($headers) {
+  public static function control_caching( $headers )
+  {
 //    $headers['X-xnau-plugin'] = $headers['X-xnau-plugin'] . ' ' . Participants_Db::$plugin_title . '-' . Participants_Db::$plugin_version;
-    if (self::is_multipage_form()) {
+    if ( self::is_multipage_form() ) {
       $headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store';
     }
     return $headers;
   }
-  
+
+  /**
+   * clears the shortcode session for the current page
+   * 
+   * 
+   * shortcode sessions are used to provide asynchronous functions with the current 
+   * shortcode attributes
+   */
+  public static function reset_shortcode_session()
+  {
+    global $post;
+    if ( is_object( $post ) ) {
+      $current_session = Participants_Db::$session->getArray( 'shortcode_atts' );
+      /*
+       * clear the current page's session
+       */
+      $current_session[$post->ID] = array();
+      Participants_Db::$session->set( 'shortcode_atts', $current_session );
+    }
+  }
+
   /**
    * determines if the current form status is a kind of multipage
    * 
    * @return bool true if the form is part of a multipage form
    */
-  public static function is_multipage_form() {
-  	$form_status = Participants_Db::$session->get('form_status');
-  	return stripos($form_status, 'multipage') !== false;
+  public static function is_multipage_form()
+  {
+    $form_status = Participants_Db::$session->get( 'form_status' );
+    return stripos( $form_status, 'multipage' ) !== false;
   }
-  
-  /**
-   * clears the shortcode session for the current page
-   * 
-   * TODO: unused method
-   * 
-   * shortcode sessions are used to provide asynchronous functions with the current 
-   * shortcode attributes
-   */
-  public static function reset_shortcode_session() {
-    global $post;
-    if (is_object($post)) {
-			$current_session = Participants_Db::$session->get('shortcode_atts');
-			/*
-			 * clear the current page's session
-			 */
-			$current_session[$post->ID] = array();
-			Participants_Db::$session->set('shortcode_atts', $current_session);
-		}
-  }
+
   /**
    * Remove slashes from strings, arrays and objects
    * 
    * @param    mixed   input data
    * @return   mixed   cleaned input data
    */
-  public static function deep_stripslashes($input)
+  public static function deep_stripslashes( $input )
   {
-    if (is_array($input)) {
-      $input = array_map(array(__CLASS__,'deep_stripslashes'), $input);
-    } elseif (is_object($input)) {
-      $vars = get_object_vars($input);
+    if ( is_array( $input ) ) {
+      $input = array_map( array( __CLASS__, 'deep_stripslashes' ), $input );
+    } elseif ( is_object( $input ) ) {
+      $vars = get_object_vars( $input );
       foreach ($vars as $k => $v) {
-        $input->{$k} = deep_stripslashes($v);
+        $input->{$k} = deep_stripslashes( $v );
       }
     } else {
-      $input = stripslashes($input);
+      $input = stripslashes( $input );
     }
     return $input;
   }
-  
+
+  /**
+   * performs a fix for some older versions of the plugin; does nothing with current plugins
+   */
+  public static function reg_page_setting_fix()
+  {
+    // if the setting was made in previous versions and is a slug, convert it to a post ID
+    $regpage = isset( Participants_Db::$plugin_options['registration_page'] ) ? Participants_Db::$plugin_options['registration_page'] : '';
+    if ( !empty( $regpage ) && !is_numeric( $regpage ) ) {
+
+      Participants_Db::$plugin_options['registration_page'] = self::get_id_by_slug( $regpage );
+
+      update_option( Participants_Db::$participants_db_options, Participants_Db::$plugin_options );
+    }
+  }
+
   /**
    * encodes or decodes a string using a simple XOR algorithm
    * 
@@ -1219,15 +1151,15 @@ class PDb_Base {
    * @param string $key the key to use
    * @return string
    */
-  public static function xcrypt($string, $key = false)
+  public static function xcrypt( $string, $key = false )
   {
-    if ($key === false) {
+    if ( $key === false ) {
       $key = self::get_key();
     }
     $text = $string;
     $output = '';
-    for ($i = 0; $i < strlen($text);) {
-      for ($j = 0; ($j < strlen($key) && $i < strlen($text)); $j++, $i++) {
+    for ($i = 0; $i < strlen( $text );) {
+      for ($j = 0; ($j < strlen( $key ) && $i < strlen( $text )); $j++, $i++) {
         $output .= $text{$i} ^ $key{$j};
       }
     }
@@ -1241,30 +1173,34 @@ class PDb_Base {
    * 
    * @return null
    */
-  public static function get_key() {
-    if (!$key = get_transient(Participants_Db::$prefix . 'captcha_key')) {
-      set_transient(Participants_Db::$prefix . 'captcha_key', self::generate_key(), (60 * 60 * 24));
+  public static function get_key()
+  {
+    if ( !$key = get_transient( Participants_Db::$prefix . 'captcha_key' ) ) {
+      set_transient( Participants_Db::$prefix . 'captcha_key', self::generate_key(), (60 * 60 * 24 ) );
     }
-    $key = get_transient(Participants_Db::$prefix . 'captcha_key');
+    $key = get_transient( Participants_Db::$prefix . 'captcha_key' );
     //error_log(__METHOD__.' get new key: '.$key);
     return $key;
   }
+
   /**
    * returns a random alphanumeric key
    * 
    * @param int $length number of characters in the random string
    * @return string the randomly-generated alphanumeric key
    */
-  private static function generate_key($length = 8) {
-    
+  private static function generate_key( $length = 8 )
+  {
+
     $alphanum = self::get_alpha_set();
     $key = '';
-    while ($length > 0) {
-      $key .= $alphanum[array_rand($alphanum)];
+    while ( $length > 0 ) {
+      $key .= $alphanum[array_rand( $alphanum )];
       $length--;
     }
     return $key;
   }
+
   /**
    * supplies an alphanumeric character set for encoding
    * 
@@ -1272,9 +1208,11 @@ class PDb_Base {
    * 
    * @return array of valid characters
    */
-  private static function get_alpha_set() {
-    return str_split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.{}[]_-=+!@#$%^&*()~`');
+  private static function get_alpha_set()
+  {
+    return str_split( 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.{}[]_-=+!@#$%^&*()~`' );
   }
+
   /**
    * decodes the pdb_data_keys value
    * 
@@ -1284,10 +1222,11 @@ class PDb_Base {
    * 
    * @return array of column names
    */
-  public static function get_data_key_columns($datakey) {
-    
-    return self::get_indexed_names( explode('.', $datakey));
+  public static function get_data_key_columns( $datakey )
+  {
+
+    return self::get_indexed_names( explode( '.', $datakey ) );
 //    return self::get_indexed_names( explode('.', self::xcrypt($datakey)));
   }
-  
+
 }

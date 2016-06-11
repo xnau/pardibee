@@ -72,8 +72,9 @@ class PDb_Init
 
     private function _activate()
     {
-
       global $wpdb;
+
+      Participants_Db::setup_source_names();
 
       // fresh install: install the tables if they don't exist
     if ($wpdb->get_var('show tables like "' . Participants_Db::$participants_table . '"') != Participants_Db::$participants_table) {
@@ -85,6 +86,12 @@ class PDb_Init
 
   private function _deactivate()
   {
+    /*
+     * this gives users with a session buildup issue a way to delete them
+     * 
+     * that bug was fixed, though, so maybe not much call for it
+     */
+    self::delete_user_sessions();
 
     error_log(Participants_Db::PLUGIN_NAME . ' plugin deactivated');
   }
@@ -117,6 +124,25 @@ class PDb_Init
     }
 
     error_log(Participants_Db::PLUGIN_NAME . ' plugin uninstalled');
+  }
+
+  /**
+   * deletes all sessions created by the WP_Session class
+   * 
+   * this could potentially interfere with another plugin that might use WP_Sessions, 
+   * but they're meant to be temporary, so it would only result in some minor disruption
+   * 
+   * @global object $wpdb
+   */
+  public static function delete_user_sessions()
+  {
+    global $wpdb;
+    // clear session transients
+    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE ( `option_name` LIKE "_wp_session_%" AND `option_name` NOT LIKE "_wp_session_expires_%" )';
+    $transients = $wpdb->get_col($sql);
+    foreach ($transients as $name) {
+      delete_option($name);
+    }
   }
 
   /**

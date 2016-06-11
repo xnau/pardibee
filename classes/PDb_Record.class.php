@@ -109,7 +109,7 @@ class PDb_Record extends PDb_Shortcode {
     $hidden = array(
         'action' => 'update',
         'id' => $this->participant_id,
-        'pid' => $this->participant_values['private_id'],
+        Participants_Db::$record_query => $this->participant_values['private_id'],
     );
 
     $this->_print_form_head($hidden);

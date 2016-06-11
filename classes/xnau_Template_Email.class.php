@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -22,29 +22,29 @@ class xnau_Template_Email {
   /**
    * @var string holds the "to" email field
    */
-  private $email_to;
+  protected $email_to;
 
   /**
    * @var string holds the "from" email field
    */
-  private $email_from;
+  protected $email_from;
 
   /**
    * @var string holds the email subject
    */
-  private $email_subject;
+  protected $email_subject;
 
   /**
    * @var string holds the raw email body template
    */
-  private $email_template;
+  protected $email_template;
 
   /**
    * @var string a context identification string
    * 
    * this is used to help filter callbacks
    */
-  private $context = '';
+  protected $context = '';
 
   /**
    * @var string a prefix for filter slugs
@@ -54,7 +54,7 @@ class xnau_Template_Email {
   /**
    * @var array and associative array of values for use by the template
    */
-  private $data;
+  protected $data;
 
   /**
    * instantiates the class instance
@@ -70,7 +70,7 @@ class xnau_Template_Email {
   function __construct( $config, $data )
   {
     $this->setup_email_configuration( $config );
-    $this->data = $this->setup_data( $data );
+    $this->data = $data;
   }
 
   /**
@@ -78,9 +78,9 @@ class xnau_Template_Email {
    * 
    * @return bool true if successful
    */
-  public function send_email()
+  protected function send_email()
   {
-    return $this->_mail( $this->email_to, $this->replace_tags( $this->email_subject, $this->data ), $this->process_template() );
+    return $this->_mail( $this->email_to, $this->replace_tags( $this->email_subject, $this->data ), $this->replace_tags( $this->email_template, $this->data ) );
   }
 
   /**
@@ -105,18 +105,6 @@ class xnau_Template_Email {
   }
 
   /**
-   * processes the placeholder tags in the template
-   * 
-   * @return string the processed template
-   */
-  private function process_template()
-  {
-    if ( preg_match( '/\[.+\]/', $this->email_template ) > 0 ) {
-      return $this->replace_tags( $this->email_template, $this->data );
-    }
-  }
-  
-  /**
    * sends a mesage through the WP mail handler function
    *
    * @param string $recipients comma-separated list of email addresses
@@ -125,15 +113,16 @@ class xnau_Template_Email {
    *
    * @return bool success
    */
-  private function _mail( $recipients, $subject, $body )
+  protected function _mail( $recipients, $subject, $body )
   {
 
     if ( WP_DEBUG )
       error_log( __METHOD__ . '
       
-header:' . $this->email_header() . '
-to:' . $recipients . ' 
-subj.:' . $subject . ' 
+context: '. $this->context . '
+header: ' . $this->email_header() . '
+to: ' . $recipients . ' 
+subj.: ' . $subject . ' 
 message:
 ' . $body
             );
@@ -141,16 +130,18 @@ message:
     $sent = wp_mail( $recipients, $subject, $body, $this->email_header() );
 
     if ( false === $sent )
-      error_log( __METHOD__ . ' sending failed for: ' . $recipients );
+      error_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
     return $sent;
   }
 
   /**
    * supplies an email header
    * 
+   * @filter pdb-template_email_header
+   * 
    * @return string
    */
-  private function email_header()
+  protected function email_header()
   {
     return apply_filters( $this->prefix . 'template_email_header', 'From: ' . $this->email_from . "\n" . 'Content-Type: text/html; charset="' . get_option( 'blog_charset' ) . '"' . "\n", $this->context );
   }
@@ -163,7 +154,7 @@ message:
    * 
    * @return string template with all matching tags replaced with values
    */
-  private function replace_tags( $text, array$data )
+  protected function replace_tags( $text, array$data )
   {
 
     $values = $tags = array();
@@ -196,28 +187,12 @@ message:
    * 
    * @return null
    */
-  private function setup_email_configuration( $config )
+  protected function setup_email_configuration( $config )
   {
-    $this->context = isset( $config['context'] ) ? $config['context'] : '';
     $this->email_to = apply_filters( $this->prefix . 'email_to',  $config['to'], $this->context );
     $this->email_from = apply_filters( $this->prefix . 'email_from',  $config['from'], $this->context );
     $this->email_subject = apply_filters( $this->prefix . 'email_subject',  $config['subject'], $this->context );
     $this->email_template = apply_filters( $this->prefix . 'email_template',  $config['template'], $this->context );
-  }
-
-  /**
-   * sets up the data source
-   * 
-   * @param array|int $data
-   * 
-   * @return array
-   */
-  private function setup_data( $data )
-  {
-    if ( is_array( $data ) ) {
-      return $data;
-    }
-    return array();
   }
 
 }

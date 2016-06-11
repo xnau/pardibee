@@ -237,6 +237,9 @@ input.otherfield[type=text] {
 .pdb-searchform .radio-group {
   display: inline-block;
 }
+.ajax-loading {
+    display: inline-block;
+}
 
 /* pagination */
 .pdb-list .pagination,
