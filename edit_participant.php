@@ -113,7 +113,9 @@ if ( $participant_values ) :
             } elseif ( in_array( $column->name, $readonly_columns ) or $column->form_element == 'timestamp' ) {
               $attributes['class'] = 'readonly-field';
               if (
-                      !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ) || ( $column->name === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ) ) {
+                      ! Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ) 
+                      || ( $column->name === 'private_id' && Participants_Db::apply_filters('private_id_is_read_only', true ) ) ) 
+              {
                 $attributes['readonly'] = 'readonly';
               }
               $add_title = sprintf( $fieldnote_pattern, __( 'read only', 'participants-database' ) );

@@ -132,7 +132,7 @@ this is a more detailed template showing how the parts of the display can be cus
      * 
      * the tag wrapping the count statment can be supplied in the function argument, example here
      */
-		$this->print_list_count('<caption class="list-display-count">'); 
+		$this->print_list_count('<caption class="list-display-count %s">'); 
     ?>
 
     <?php if ( $record_count > 0 ) : ?>

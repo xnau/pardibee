@@ -215,6 +215,9 @@ input.otherfield[type=text] {
 .pdb-list table caption {
   margin: 1em 0;
 }
+.list-count-zero {
+  display: none;
+}
 .pdb-list fieldset {
   border: none;
 }

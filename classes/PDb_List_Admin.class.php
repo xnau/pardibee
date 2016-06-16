@@ -484,23 +484,28 @@ class PDb_List_Admin {
         list($value, $value2) = explode( 'to', $filter_set['value'] );
       }
 
-      $value = PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $field_atts->form_element );    // Participants_Db::parse_date( $value, $field_atts, false );
+      $value = PDb_Date_Parse::timestamp($value, array(), __METHOD__ . ' ' . $field_atts->form_element);
       if ( $value2 )
-        $value2 = PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $field_atts->form_element ); //Participants_Db::parse_date( $value2, $field_atts, $field_atts->form_element == 'date' );
+        $value2 = PDb_Date_Parse::timestamp($value2, array(), __METHOD__ . ' ' . $field_atts->form_element);
 
       if ( $value !== false ) {
 
         $stored_date = "DATE(p." . esc_sql( $filter_set['search_field'] ) . ")";
 
-        if ( $value2 !== false and ! empty( $value2 ) ) {
+        if ( $value2 !== false ) {
 
-          self::$list_query .= " " . $stored_date . " > DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value ) . " second) AND " . $stored_date . " < DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value2 ) . " second)";
+          //self::$list_query .= " " . $stored_date . " > DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value ) . " second) AND " . $stored_date . " < DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value2 ) . " second)";
+          
+          self::$list_query .= ' ' . $stored_date . ' >= DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) AND ' . $stored_date . ' <= DATE(FROM_UNIXTIME(' . esc_sql( $value2 ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW())))';
+          
+
         } else {
 
           if ( $operator == 'LIKE' )
             $operator = '=';
 
-          self::$list_query .= " " . $stored_date . " " . $operator . " DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value ) . " second) ";
+          //self::$list_query .= " " . $stored_date . " " . $operator . " DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value ) . " second) ";
+          self::$list_query .= ' ' . $stored_date . ' ' . $operator . ' DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
         }
       }
     } elseif ( $field_atts->form_element == 'date' ) {
@@ -511,9 +516,9 @@ class PDb_List_Admin {
         list($value, $value2) = explode( 'to', $filter_set['value'] );
       }
 
-      $value = PDb_Date_Parse::timestamp( $value, array( 'zero_time' => $operator === '=' ), __METHOD__ . ' ' . $field_atts->form_element ); //Participants_Db::parse_date( $value, $field_atts, true );
+      $value = PDb_Date_Parse::timestamp($value, array('zero_time' => $operator === '='), __METHOD__ . ' ' . $field_atts->form_element); //Participants_Db::parse_date( $value, $field_atts, true );
       if ( $value2 )
-        $value2 = PDb_Date_Parse::timestamp( $value, array( 'zero_time' => $operator === '=' ), __METHOD__ . ' ' . $field_atts->form_element ); //Participants_Db::parse_date( $value2, $field_atts, $field_atts->form_element == 'date' );
+        $value2 = PDb_Date_Parse::timestamp($value, array('zero_time' => $operator === '='), __METHOD__ . ' ' . $field_atts->form_element); //Participants_Db::parse_date( $value2, $field_atts, $field_atts->form_element == 'date' );
 
       if ( $value !== false ) {
 

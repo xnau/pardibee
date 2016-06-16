@@ -136,13 +136,16 @@ class PDb_Template_Email extends xnau_Template_Email {
    * 
    * @return array
    */
-  private function setup_data($data = false) {
+  protected function setup_data( $data = false )
+  {
     if (is_array($data)) {
-      return $data;
+      $this->data = $data;
+    } elseif (is_numeric($data) && $record = Participants_Db::get_participant($data)) {
+      $this->data = $record;
+    } else {
+      $this->data = array();
     }
-    if (is_numeric($data) && $record = Participants_Db::get_participant($data)) {
-      return $record;
-    }
-    return array();
+    $this->add_email_data();
   }
+
 }

@@ -725,8 +725,9 @@ class PDb_List extends PDb_Shortcode {
     $display_count_shortcode = ($this->shortcode_atts['display_count'] != '0');
     
     if ($display_count_shortcode) {
-      if (!$wrap_tag) $wrap_tag = '<caption>';
+      if (!$wrap_tag) $wrap_tag = '<caption class="%s" >';
       $wrap_tag_close = '';
+      $css_class = $this->num_records == '0' ? 'pdb-list-count list-count-zero' : 'pdb-list-count';
       // create the close tag by reversing the order of the open tags
       $tag_count = preg_match_all('#<([^ >]*)#',$wrap_tag,$matches);
       if ($tag_count) {
@@ -735,7 +736,7 @@ class PDb_List extends PDb_Shortcode {
         $wrap_tag_close = '</' . implode('></', $tags) . '>';
       }
       $per_page = $this->shortcode_atts['list_limit'] == '-1' ? $this->num_records : $this->shortcode_atts['list_limit'];
-      $output = $wrap_tag . sprintf(
+      $output = sprintf( $wrap_tag, $css_class ) . sprintf(
               Participants_Db::plugin_setting('count_template'),
               $this->num_records, // total number of records found
               $per_page, // number of records to show each page

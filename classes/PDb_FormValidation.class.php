@@ -56,7 +56,7 @@ class PDb_FormValidation extends xnau_FormValidation {
    * @param string $value        the submitted value of the field
    * @param string $name         the name of the field
    * @param string $validation   validation method to use: can be NULL (or absent),
-   *                             'no', 'yes', 'email', 'other' (for regex or match
+   *                             'no', 'yes', 'email-regex', 'other' (for regex or match
    *                             another field value)
    * @param string $form_element the form element type of the field
    * @return mixed field value
@@ -81,7 +81,7 @@ class PDb_FormValidation extends xnau_FormValidation {
     /*
      * if there is no validation method defined, exit here
      */
-    if ( !$field->is_validated() ) {
+    if ( ! $field->is_validated() ) {
       return;
     }
 
@@ -160,7 +160,7 @@ class PDb_FormValidation extends xnau_FormValidation {
            * @since 1.6.3
            * @filter pdb-captcha_validation
            */
-          $regex = Participants_Db::apply_filters( 'captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
+          $regex = Participants_Db::apply_filters('captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
 
           if ( !self::is_regex( $regex ) ) {
             $field->validation_state_is( 'invalid' );
@@ -356,7 +356,7 @@ class PDb_Validating_Field {
    */
   public function is_validated()
   {
-    return !( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
+    return ! ( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
   }
 
   /**

@@ -253,7 +253,11 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function print_element() {
 
-    $this->field_class = ( $this->validation != 'no' ? "required-field required" : '' ) . ( in_array($this->form_element, array('text-line', 'date', 'timestamp')) ? ' regular-text' : '' );
+    $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array($this->form_element, array('text-line', 'date', 'timestamp')) ? ' regular-text' : '' );
+    
+    if ( in_array( $this->validation, array( 'yes', 'email-regex' ) ) ) {
+      $this->attributes['required'] = true;
+    }
 
     if ($this->readonly && !in_array($this->form_element, array('captcha'))) {
 

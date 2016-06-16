@@ -105,7 +105,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public $attribution;
 
     /**
-     * URL for the aux plugin updater
+     * @var string  URL for the aux plugin updater
      */
     const update_url = 'https://xnau.com/xnau-updates/';
 
