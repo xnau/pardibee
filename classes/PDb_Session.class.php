@@ -144,11 +144,12 @@ class PDb_Session {
     
 		$key = sanitize_key( $key );
     $array_object = isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
+    
     switch ($this->use_php_sessions) {
       case true:
         return is_array($array_object) ? $array_object : $default;
       case false:
-        is_object( $array_object ) ? $array_object->toArray() : $default;
+        return is_object( $array_object ) ? $array_object->toArray() : $default;
     }
 	}
 

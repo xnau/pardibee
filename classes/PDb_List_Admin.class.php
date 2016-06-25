@@ -323,6 +323,12 @@ class PDb_List_Admin {
         case self::$i18n['delete_checked']:
 
           $selected_ids = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+          /**
+           * @version 1.6.3
+           * @filter  'pdb-before_admin_delete_record'
+           * @param array $selected_ids list of ids to delete
+           */
+          $selected_ids = Participants_Db::apply_filters('before_admin_delete_record', $selected_ids);
           if ( $selected_ids ) {
             $count = count( $selected_ids );
 

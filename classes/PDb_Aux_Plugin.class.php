@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    3.9
+ * @version    4.0
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -63,8 +63,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public $aux_plugin_shortname;
 
     /**
-     * slug of the aux plugin settings page
-     * @var string
+     * 
+     * @var string slug of the aux plugin settings page
      */
     public $settings_page;
 
@@ -75,14 +75,19 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public $aux_plugin_settings;
 
     /**
-     * holds the plugin's options
-     * @var array
+     * 
+     * @var array holds the plugin's options
      */
     public $plugin_options;
 
     /**
-     * holds the plugin info fields as parsed from the main plugin file header
-     * @var array
+     * @var array of settings section definitions
+     */
+    public $settings_sections;
+
+    /**
+     * 
+     * @var array holds the plugin info fields as parsed from the main plugin file header
      */
     public $plugin_data;
 
@@ -111,8 +116,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
     /**
      * 
-     * this is typically instantiated in the child class with: 
-     * parent::__construct(__CLASS__, __FILE__);
+     * this is typically instantiated in the aux plugin with: 
+     * parent::__construct( __CLASS__, $path_to_initial_script );
      * 
      * @param string $subclass name of the instantiating subclass
      * @param string $plugin_file absolute path
@@ -129,6 +134,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
       add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
       add_action( 'admin_init', array( $this, 'settings_api_init' ) );
+      add_action( 'admin_enqueue_scripts', array( $this, 'enqueues' ), 1 );
       add_action( 'plugins_loaded', array( $this, 'set_plugin_options' ), 1 );
       add_action( 'init', array( $this, 'load_textdomain' ), 1 );
       add_action( 'init', array( $this, 'initialize_updater' ), 50 );
@@ -138,6 +144,13 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       PucFactory::buildUpdateChecker(
               self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name, $plugin_file, $this->aux_plugin_name
       );
+    }
+
+    /**
+     * enqueues any resources needed in the admin
+     */
+    public function enqueues()
+    {
     }
 
     /**
@@ -197,7 +210,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function set_plugin_options()
     {
-      $this->plugin_data = get_plugin_data( $this->plugin_path );
+      $this->plugin_data = function_exists( 'get_plugin_data' ) ? get_plugin_data( $this->plugin_path ) : array();
       $this->set_attribution();
       $this->register_option_for_translations();
       /*
@@ -268,13 +281,13 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public function settings_api_init()
     {
       register_setting( $this->aux_plugin_name . '_settings', $this->settings_name() );
-      $sections = array(
+      $this->settings_sections = array(
           array(
               'title' => __( 'General Settings', 'participants-database' ),
               'slug' => $this->aux_plugin_shortname . '_setting_section',
           )
       );
-      $this->_add_settings_sections( $sections );
+      $this->_add_settings_sections();
     }
 
     /**
@@ -310,19 +323,47 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * 
      * @return string HTML
      */
-    private function settings_page_header()
+    protected function settings_page_header()
     {
       return;
     }
 
     /**
+     * renders a tabs control for a tabbed interface
+     */
+    protected function print_settings_tab_control ()
+    { 
+      if ( count( $this->settings_sections ) > 1 ) : 
+      ?>
+        <ul class="ui-tabs-nav">
+          <?php
+          foreach ($this->settings_sections as $section)
+            printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $section['slug'] ), $section['title'] );
+          ?>
+        </ul>
+      <?php
+      endif;
+    }
+
+    /**
+     * registers the settings sections
+     * 
+     * @version 1.6.3 added $settings_sections property; making the parameter optional
      * 
      * @param array $sections
      */
-    public function _add_settings_sections( $sections )
+    public function _add_settings_sections( $sections = false )
     {
-
-      foreach ($sections as $section) {
+      if ( $sections ) {
+        $this->settings_sections = $sections;
+      }
+      // enqueue the settings tabs script of there is more than one section
+      if ( count( $this->settings_sections ) > 1 ) {
+        add_action('admin_enqueue_scripts', function() { 
+          wp_enqueue_script( Participants_Db::$prefix . 'aux_plugin_settings_tabs' );
+        }, 50 );
+      }
+      foreach ($this->settings_sections as $section) {
         // Add the section to reading settings so we can add our
         // fields to it
         add_settings_section(
@@ -376,7 +417,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public function render_settings_page()
     {
       ?>
-      <div class="wrap pdb-admin-settings" >
+      <div class="wrap pdb-admin-settings participants_db" >
 
       <?php Participants_Db::admin_page_heading() ?>  
         <h2><?php echo $this->aux_plugin_title ?></h2>
@@ -406,7 +447,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
          */
         public function setting_section_callback_function( $section )
         {
-          
+          printf ( '<a name="%s"></a>', $section['id'] );
         }
 
         /**

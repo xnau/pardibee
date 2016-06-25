@@ -166,7 +166,7 @@ class PDb_List_Query {
 //    error_log(__METHOD__.' post: '.print_r($_POST,1));
 //    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
 
-    if ( !empty( $this->get_input[Participants_Db::$list_page] ) ) {
+    if ( $this->requested_page() ) {
       $this->_restore_query_session();
     } elseif ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' && $this->is_search_result() ) {
       $this->_save_query_session();
@@ -342,6 +342,24 @@ class PDb_List_Query {
         }
       }
     }
+  }
+
+  /**
+   * provides the list page value from the current request
+   * 
+   * 
+   * @return int|bool page number, bool false if there is n page number in the current request  
+   */
+  private function requested_page()
+  {
+    $page_number = filter_input(INPUT_GET, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+    if ( ! $page_number ) {
+      $page_number = filter_input(INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+    }
+    if ( ! $page_number ) {
+      return false;
+    }
+    return $page_number;
   }
 
   /**
@@ -1290,13 +1308,29 @@ class PDb_List_Query {
         'submit-button' => FILTER_SANITIZE_STRING,
         'ascdesc' => FILTER_SANITIZE_STRING,
         'sortBy' => FILTER_SANITIZE_STRING,
-        Participants_Db::$list_page => FILTER_VALIDATE_INT,
-        'target_instance' => FILTER_VALIDATE_INT,
+        Participants_Db::$list_page => array( 
+            'filter' => FILTER_VALIDATE_INT, 
+            'options' => array( 
+                'min_range' => 1 
+                ) 
+            ),
+        'target_instance' => array( 
+            'filter' => FILTER_VALIDATE_INT, 
+            'options' => array( 
+                'min_range' => 1 
+                ) 
+            ),
     );
   }
 
   /**
    * sanitizes the search_field value
+   * 
+   * this uses a regex to filter out all illegal mysql column name characters
+   * 
+   * if the data comes in from an AJAX request, it will be url-encoded, so we decode it first
+   * 
+   * this won't remove all malicious sequences, we rely on $wpdb->prepare for the final layer of protection
    * 
    * @param string $field the name of a field
    * @return string the sanitized value

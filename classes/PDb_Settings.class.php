@@ -1287,7 +1287,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     global $wpdb;
 
-      $columnlist = $null ? array() : array( 'null_select' => false );
+      $columnlist = $null ? array(  'null_select' => '' ) : array( 'null_select' => false );
 
     $sql = '
 SELECT v.name, v.title 

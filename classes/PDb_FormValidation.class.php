@@ -160,7 +160,7 @@ class PDb_FormValidation extends xnau_FormValidation {
            * @since 1.6.3
            * @filter pdb-captcha_validation
            */
-          $regex = Participants_Db::apply_filters('captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
+          $regex = Participants_Db::apply_filters( 'captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
 
           if ( !self::is_regex( $regex ) ) {
             $field->validation_state_is( 'invalid' );
@@ -282,6 +282,23 @@ class PDb_FormValidation extends xnau_FormValidation {
     } // $this->errors 
 
     return $error_messages;
+  }
+
+  public function get_error_CSS()
+  {
+    /**
+     * @version 1.6.3
+     * 
+     * @filter 'pdb-error_css'
+     * @param string  $CSS    the error CSS
+     * @param array   $errors the current errors array
+     */
+    $error_css = Participants_Db::apply_filters('error_css', empty( $this->error_CSS ) ? '' : implode( ",\r", $this->error_CSS ) . '{ ' . $this->error_style . ' }', $this->errors );
+    if ( !empty( $error_css ) ) {
+      return sprintf('<style type="text/css">%s</style>', $error_css );
+    } else {
+      return '';
+    }
   }
 
   /**

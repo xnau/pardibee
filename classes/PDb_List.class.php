@@ -437,10 +437,6 @@ class PDb_List extends PDb_Shortcode {
    */
   public function show_search_sort_form() {
 
-    if (Participants_Db::$search_set === true) return;
-    
-    Participants_Db::$search_set = true;
-
     $output = array();
 
     if ($this->_sort_filter_mode() != 'none' && !$this->shortcode_atts['filtering']) {

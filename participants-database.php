@@ -4,7 +4,7 @@
  * Plugin URI: http://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.6.3 b1
+ * Version: 1.6.3 b2
  * Author URI: http://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -239,12 +239,6 @@ class Participants_Db extends PDb_Base {
   public static $list_page = 'listpage';
 
   /**
-   * set when a list search form is shown to prevent more than one form appearing on a page
-   * @var bool
-   */
-  public static $search_set = false;
-
-  /**
    * holds the WP session object
    * 
    * @var object
@@ -453,11 +447,6 @@ class Participants_Db extends PDb_Base {
     self::$email_headers = self::apply_filters( 'email_headers', $email_headers );
 
     /**
-     * sets up the rich text filtering
-     */
-    add_filter( 'pdb-rich_text_auto_formatting', array( __CLASS__, 'rich_text_filter' ), 10, 2 );
-
-    /**
      * any plugins that require Participants Database settings/database should use this hook
      * 
      * @version 1.6.3
@@ -532,6 +521,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery', 'jq-doublescroll' ) );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array( 'jquery' ) );
     wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array( 'jquery', 'jquery-ui-dialog' ) );
+    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'cookie' ) );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array( 'jquery' ) );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
@@ -1421,6 +1411,9 @@ class Participants_Db extends PDb_Base {
        * @version 1.6
        * the $record_match status variable is made available to a filter so a custom 
        * record matching method can be implemented
+       * 
+       * @param bool  $record_match true if a matching record has been found
+       * @param array $post         the submitted post data  
        */
       $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post );
 
@@ -2708,8 +2701,14 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_rich_text( $string, $context = '' )
   {
+    /**
+     * @version 1.6.3
+     * @filter  'pdb-rich_text_auto_formatting'
+     * @param string  $string   the raw rich text
+     * @param string  $context  a context identifier for the filter
+     */
     $filtered_string = self::apply_filters('rich_text_auto_formatting', $string, $context );
-    return Participants_Db::$plugin_options['enable_wpautop'] ? $filtered_string : $string; // wpautop($string)
+    return Participants_Db::$plugin_options['enable_wpautop'] ? self::rich_text_filter( $string ) : $filtered_string; // wpautop($string)
   }
   
   /**
@@ -3093,8 +3092,15 @@ class Participants_Db extends PDb_Base {
 
     self::$instance_index = empty( $postinput['target_instance'] ) ? $postinput['instance_index'] : $postinput['target_instance'];
 
-    if ( !self::nonce_check( $postinput['filterNonce'], PDb_List::$list_filter_nonce_key ) )
-      die( 'failed nonce check' );
+    /**
+     * @version 1.6.3
+     * we don't check nonces for list search/sort/pagination requests as these are 
+     * generally made by not-logged-in users so there is no point in checking a 
+     * nonce for them, it also can break AJAX functionality if page caching is in 
+     * use
+     */
+//    if ( !self::nonce_check( $postinput['filterNonce'], PDb_List::$list_filter_nonce_key ) )
+//      die( 'failed nonce check' );
 
     global $post;
 
@@ -3425,22 +3431,15 @@ function PDb_class_loader( $class )
 if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
   Participants_Db::initialize();
 } else {
-  add_action( 'admin_notices', 'PDb_PHP_Version_Notice' );
 
-  function PDb_PHP_Version_Notice()
-  {
-    echo '<div class="error"><p>' . sprintf( __( 'Participants Database requires PHP version %s to function properly. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version ) . '</p></div>';
+  add_action( 'admin_notices', function () {
+    echo '<div class="error"><p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database requires PHP version %s to function properly, you have PHP version %s. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version, PHP_VERSION ) . '</p></div>';
     if ( isset( $_GET['activate'] ) ) {
       unset( $_GET['activate'] );
     }
-  }
+  } );
 
-  add_action( 'admin_init', 'PDb__deactivate_self' );
-
-  function PDb__deactivate_self()
-  {
-    deactivate_plugins( plugin_basename( __FILE__ ) );
-  }
+  add_action( 'admin_init', function () { deactivate_plugins( plugin_basename( __FILE__ ) ); } );
 
   return;
 }

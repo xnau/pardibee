@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -187,14 +187,47 @@ class PDb_Base {
   /**
    * determines if an incoming set of data matches an existing record
    * 
-   * @param array|string $columns column name, comma-separated series, or array of 
-   *                              column names to check for matching data
-   * @param array $submission the incoming data to test: name => value (could be an unsanitized POST array)
-   * @global object $wpdb
+   * @param array|string  $columns    column name, comma-separated series, or array 
+   *                                  of column names to check for matching data
+   * @param array         $submission the incoming data to test: name => value 
+   *                                  (could be an unsanitized POST array)
+   * 
    * @return int|bool record ID if the incoming data matches an existing record, 
    *                  bool false if no match
    */
   public static function find_record_match( $columns, $submission )
+  {
+    $matched_id = self::record_match_id($columns, $submission);
+    /**
+     * @version 1.6
+     * 
+     * filter pdb-find_record_match
+     * 
+     * a callback on the filter can easily use the PDb_Base::record_match_id() 
+     * method to find a match
+     * 
+     * @param int|bool  $matched_id the id found using the standard method, bool 
+     *                              false if no match was found
+     * @param string    $matched_id column name or names used to find the match
+     * @param array     $submission the un-sanitized $_POST array
+     * 
+     * @return int|bool the found record ID
+     */
+    return self::apply_filters( 'find_record_match', $matched_id, $columns, $submission );
+  }
+
+  /**
+   * determines if an incoming set of data matches an existing record
+   * 
+   * @param array|string  $columns    column name, comma-separated series, or array 
+   *                                  of column names to check for matching data
+   * @param array         $submission the incoming data to test: name => value 
+   *                                  (could be an unsanitized POST array)
+   * @global object $wpdb
+   * @return int|bool record ID if the incoming data matches an existing record, 
+   *                  bool false if no match
+   */
+  public static function record_match_id( $columns, $submission )
   {
     global $wpdb;
     $values = array();
@@ -210,19 +243,8 @@ class PDb_Base {
     }
     $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode( ' AND ', $where );
     $match = $wpdb->get_var( $wpdb->prepare( $sql, $values ) );
-    $matched_id = is_numeric( $match ) ? (int) $match : false;
-    /**
-     * @version 1.6
-     * 
-     * filter pdb-find_record_match
-     * 
-     * @param int|bool the id found using the standard method, bool false if no match was found
-     * @param string $matched_id column name or names used to find the match
-     * @param array $submission the un-sanitized $_POST array
-     * 
-     * @return int|bool the found record ID
-     */
-    return self::apply_filters( 'find_record_match', $matched_id, $columns, $submission );
+    
+    return is_numeric( $match ) ? (int) $match : false;
   }
 
   /**

@@ -1025,8 +1025,9 @@ abstract class xnau_FormElement {
     $this->_addline($this->_input_tag('file'));
 
     // add the delete checkbox if there is a file defined
-    if (!empty($this->value))
+      if (!empty($this->value)) {
       $this->_addline('<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile">' . __('delete', 'participants-database') . '</label></span>');
+    	}
     }
     
     $this->_addline('</div>');
