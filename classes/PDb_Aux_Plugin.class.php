@@ -139,7 +139,14 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       add_action( 'init', array( $this, 'load_textdomain' ), 1 );
       add_action( 'init', array( $this, 'initialize_updater' ), 50 );
 
-      // include the aux plugin update class
+      /**
+       * include the aux plugin update class
+       * 
+       * this sets up a check to the xnau plugin packages, and looks for a zip 
+       * archive matching the name $this->aux_plugin_name
+       * 
+       * @version 1.6.3
+       */
       require_once plugin_dir_path( __FILE__ ) . 'aux-plugin-update/plugin-update-checker.php';
       PucFactory::buildUpdateChecker(
               self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name, $plugin_file, $this->aux_plugin_name

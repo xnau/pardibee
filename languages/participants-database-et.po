@@ -1,0 +1,2411 @@
+# Copyright (C) 2016 Participants Database
+# This file is distributed under the same license as the Participants Database package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Participants Database 1.6.2.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/participants-"
+"database\n"
+"POT-Creation-Date: 2016-05-18 13:45+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-05-31 14:31+0300\n"
+"Language-Team: xnau webdesign <support@xnau.com>\n"
+"X-Generator: Poedit 1.8.7\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: et\n"
+
+#: classes/PDb_Aux_Plugin.class.php:243
+msgctxt "displays the name and version of the plugin"
+msgid "%s version %s"
+msgstr "%s versioon %s"
+
+#: classes/PDb_Aux_Plugin.class.php:244
+msgctxt "displays the plugin author name"
+msgid "Authored by %s"
+msgstr "Plugina autor %s"
+
+#: classes/PDb_Aux_Plugin.class.php:262 classes/PDb_Settings.class.php:29
+msgid "General Settings"
+msgstr "Üldised seaded"
+
+#: classes/PDb_CSV_Import.class.php:72
+msgid "New columns imported from the CSV file."
+msgstr "CSV failist imporditud uued tulbad"
+
+#: classes/PDb_FormElement.class.php:410
+#: classes/PDb_Manage_Fields.class.php:331
+#: classes/xnau_FormElement.class.php:1013
+msgid "delete"
+msgstr "kustuta"
+
+#: classes/PDb_FormElement.class.php:661
+msgid "Text-line"
+msgstr "tekstirida"
+
+#: classes/PDb_FormElement.class.php:662
+msgid "Text Area"
+msgstr "Teksti ala"
+
+#: classes/PDb_FormElement.class.php:663
+msgid "Rich Text"
+msgstr "rikastekst"
+
+#: classes/PDb_FormElement.class.php:664
+msgid "Checkbox"
+msgstr "Valikkast"
+
+#: classes/PDb_FormElement.class.php:665
+msgid "Radio Buttons"
+msgstr "Raadionupud"
+
+#: classes/PDb_FormElement.class.php:666
+msgid "Dropdown List"
+msgstr "Nimekiri rippmenüüs"
+
+#: classes/PDb_FormElement.class.php:667
+msgid "Date Field"
+msgstr "Kuupäev"
+
+#: classes/PDb_FormElement.class.php:668
+msgid "Dropdown/Other"
+msgstr "Rippmenüü/muu"
+
+#: classes/PDb_FormElement.class.php:669
+msgid "Multiselect Checkbox"
+msgstr "Mitme valikuga kastid"
+
+#: classes/PDb_FormElement.class.php:670
+msgid "Multiselect Dropdown"
+msgstr "Mitme valikuga rippmenüü"
+
+#: classes/PDb_FormElement.class.php:671
+msgid "Radio Buttons/Other"
+msgstr "Raadionupud/muu"
+
+#: classes/PDb_FormElement.class.php:672
+msgid "Multiselect/Other"
+msgstr "Mitu valikut/muu"
+
+#: classes/PDb_FormElement.class.php:673
+msgid "Link Field"
+msgstr "Lingi väli"
+
+#: classes/PDb_FormElement.class.php:674
+msgid "Image Upload Field"
+msgstr "Pildi väli"
+
+#: classes/PDb_FormElement.class.php:675
+msgid "File Upload Field"
+msgstr "Faili väli"
+
+#: classes/PDb_FormElement.class.php:676
+msgid "Hidden Field"
+msgstr "Varjatud väli"
+
+#: classes/PDb_FormElement.class.php:677
+msgid "Password Field"
+msgstr "Parooli väli"
+
+#: classes/PDb_FormElement.class.php:678
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+#: classes/PDb_FormElement.class.php:679
+msgid "Placeholder"
+msgstr "Kohatäide"
+
+#: classes/PDb_Init.class.php:777
+msgid "Participant Info"
+msgstr "Osaleja andmed"
+
+#: classes/PDb_Init.class.php:778
+msgid "Personal Info"
+msgstr "Personaalsed andmed"
+
+#: classes/PDb_Init.class.php:779
+msgid "Administrative Info"
+msgstr "Haldamise andmed"
+
+#: classes/PDb_Init.class.php:780
+msgid "Record Info"
+msgstr "Kirje andmed"
+
+#: classes/PDb_List.class.php:444 templates/pdb-list-bootstrap.php:35
+#: templates/pdb-list-detailed.php:31 templates/pdb-list-responsive.php:17
+#: templates/pdb-search-default.php:22
+msgid "Please select a column to search in."
+msgstr "Palun vali rippmenüüst tunnus, mille seast otsida."
+
+#: classes/PDb_List.class.php:445 templates/pdb-list-bootstrap.php:36
+#: templates/pdb-list-detailed.php:32 templates/pdb-list-responsive.php:18
+#: templates/pdb-search-default.php:23
+msgid "Please type in something to search for."
+msgstr "Palun sisesta otsimiseks otsisõna."
+
+#: classes/PDb_List.class.php:453 templates/pdb-list-bootstrap.php:46
+#: templates/pdb-list-detailed.php:47 templates/pdb-list-responsive.php:26
+#: templates/pdb-search-default.php:35
+msgid "Search"
+msgstr "Otsing"
+
+#: classes/PDb_List.class.php:468 classes/PDb_List_Admin.class.php:660
+#: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:95
+#: templates/pdb-list-responsive.php:46 templates/pdb-search-default.php:63
+msgid "Sort by"
+msgstr "Sorteeri"
+
+#: classes/PDb_List.class.php:555
+msgid "select"
+msgstr "vali"
+
+#: classes/PDb_List.class.php:686 classes/PDb_List_Admin.class.php:675
+#: classes/PDb_Settings.class.php:721 classes/PDb_Settings.class.php:1084
+msgid "Ascending"
+msgstr "Kasvav"
+
+#: classes/PDb_List.class.php:687 classes/PDb_List_Admin.class.php:676
+#: classes/PDb_Settings.class.php:721 classes/PDb_Settings.class.php:1084
+msgid "Descending"
+msgstr "Kahanev"
+
+#. translators: the following 5 strings are used in logic matching, please test
+#. after translating in case special characters cause problems
+#: classes/PDb_List.class.php:1190 classes/PDb_List_Admin.class.php:1206
+msgctxt "submit button label"
+msgid "Delete Checked"
+msgstr "Kustuta valitud"
+
+#: classes/PDb_List.class.php:1191 classes/PDb_List_Admin.class.php:1207
+msgctxt "submit button label"
+msgid "Change"
+msgstr "Muuda"
+
+#: classes/PDb_List.class.php:1192 classes/PDb_List_Admin.class.php:1208
+msgctxt "submit button label"
+msgid "Sort"
+msgstr "Sorteeri"
+
+#: classes/PDb_List.class.php:1193 classes/PDb_List_Admin.class.php:1209
+msgctxt "submit button label"
+msgid "Filter"
+msgstr "Filtreeri"
+
+#: classes/PDb_List.class.php:1194 classes/PDb_List_Admin.class.php:1210
+msgctxt "submit button label"
+msgid "Clear"
+msgstr "Tühjenda"
+
+#: classes/PDb_List.class.php:1195 classes/PDb_List_Admin.class.php:1211
+msgctxt "search button label"
+msgid "Search"
+msgstr "Otsi"
+
+#: classes/PDb_List_Admin.class.php:121
+msgid "Do you really want to delete the selected record?"
+msgstr "Kas soovid kustutada valitud kirje?"
+
+#: classes/PDb_List_Admin.class.php:122
+msgid "Do you really want to delete the selected records?"
+msgstr "Kas soovid kustutada valitud kirjed?"
+
+#: classes/PDb_List_Admin.class.php:324
+msgid "Record delete successful."
+msgstr "Kirje kustutamine õnnestus."
+
+#: classes/PDb_List_Admin.class.php:560 participants-database.php:515
+#: participants-database.php:516
+msgid "List Participants"
+msgstr "Osalejate kirjed"
+
+#: classes/PDb_List_Admin.class.php:598
+msgid "Show only records with"
+msgstr "Näita kirjed, mis sisaldavad"
+
+#: classes/PDb_List_Admin.class.php:609
+msgctxt ""
+"joins two search terms, such as in \"Show only records with last name that "
+"is Smith\""
+msgid "that"
+msgstr "mis"
+
+#: classes/PDb_List_Admin.class.php:616
+msgid "is"
+msgstr "on"
+
+#: classes/PDb_List_Admin.class.php:617
+msgid "is not"
+msgstr "ei ole"
+
+#: classes/PDb_List_Admin.class.php:618
+msgid "contains"
+msgstr "sisaldab"
+
+#: classes/PDb_List_Admin.class.php:619
+msgid "doesn&#39;t contain"
+msgstr "ei sisalda"
+
+#: classes/PDb_List_Admin.class.php:620
+msgid "is greater than"
+msgstr "on suurem kui"
+
+#: classes/PDb_List_Admin.class.php:621
+msgid "is less than"
+msgstr "on väiksem kui"
+
+#: classes/PDb_List_Admin.class.php:635
+msgid "and"
+msgstr "ja"
+
+#: classes/PDb_List_Admin.class.php:636
+msgid "or"
+msgstr "kui"
+
+#: classes/PDb_List_Admin.class.php:655
+msgid "Number of filters to use: "
+msgstr "Filtrite arv:"
+
+#: classes/PDb_List_Admin.class.php:687
+msgid "%s record found, sorted by: %s."
+msgid_plural "%s records found, sorted by: %s."
+msgstr[0] "Leiti %s kirje, %s alusel sorteeritud."
+msgstr[1] "Leiti %s kirjet, %s alusel sorteeritud."
+
+#: classes/PDb_List_Admin.class.php:730
+msgid "Show %s items per page."
+msgstr "Näita %s kirjet lehe kohta."
+
+#: classes/PDb_List_Admin.class.php:789
+msgid "Edit"
+msgstr "Muuda"
+
+#: classes/PDb_List_Admin.class.php:904
+msgid "No records found"
+msgstr "Kirjeid ei leitud"
+
+#: classes/PDb_List_Admin.class.php:929
+msgid "Export CSV"
+msgstr "Ekspordi CSV vormingusse"
+
+#: classes/PDb_List_Admin.class.php:940
+msgid "File Name"
+msgstr "Faili nimi"
+
+#: classes/PDb_List_Admin.class.php:942
+msgid "Download CSV for this list"
+msgstr "Laadi alla selle nimekirja kohta CSV"
+
+#: classes/PDb_List_Admin.class.php:943
+msgid "Include field titles"
+msgstr "Arvesta väljade pealkirjasid"
+
+#: classes/PDb_List_Admin.class.php:946
+msgid ""
+"This will download the whole list of participants that match your search "
+"terms, and in the order specified by the sort. The export will include "
+"records on all list pages. The fields included in the export are defined in "
+"the \"CSV\" column on the Manage Database Fields page."
+msgstr ""
+"Kogu otsisõnadele vastava osalejate nimekirja allalaadimine sorteerimise "
+"järjekorras. Eksportimine sisaldab kirjeid kõikidelt nimekirja lehtedelt. "
+"Ekspordis sisalduvaid väljasid kuvatakse \"CSV\" tulbas Muuda andmebaasi "
+"väljasid lehel."
+
+#: classes/PDb_Manage_Fields.class.php:82 participants-database.php:544
+#: participants-database.php:545
+msgid "Manage Database Fields"
+msgstr "Muuda andmebaasi väljasid"
+
+#: classes/PDb_Manage_Fields.class.php:84
+#: classes/PDb_Manage_Fields.class.php:92
+msgid "Field Groups"
+msgstr "Väljade rühmad"
+
+#: classes/PDb_Manage_Fields.class.php:93
+msgid "Help"
+msgstr "Abi"
+
+#: classes/PDb_Manage_Fields.class.php:188
+msgid "No fields in this group"
+msgstr "Sellel rühmal pole väljasid määratud"
+
+#: classes/PDb_Manage_Fields.class.php:218
+#: classes/PDb_Manage_Fields.class.php:916
+msgid "field"
+msgstr "väli"
+
+#: classes/PDb_Manage_Fields.class.php:299
+msgid "Edit / Add / Remove Field Groups"
+msgstr "Muuda/Lisa/Eemalda välja rühmasid"
+
+#: classes/PDb_Manage_Fields.class.php:330
+msgid "fields"
+msgstr "väljad"
+
+#: classes/PDb_Manage_Fields.class.php:353
+#: classes/PDb_Manage_Fields.class.php:915
+msgid "group"
+msgstr "rühm"
+
+#: classes/PDb_Manage_Fields.class.php:626
+msgid "Cannot add a field with that name"
+msgstr "Selle nimega välja ei saa lisada"
+
+#: classes/PDb_Manage_Fields.class.php:626
+msgid "This name is reserved; please choose another. Reserved names are"
+msgstr "See nimetus on reserveeritud; palun vali teine. Reserveeritud nimed on"
+
+#: classes/PDb_Manage_Fields.class.php:633
+msgid "The name cannot begin with a number"
+msgstr "Nimetus ei saa alata numbriga"
+
+#: classes/PDb_Manage_Fields.class.php:633
+msgid "Please choose another."
+msgstr "Palun vali mõni muu."
+
+#: classes/PDb_Manage_Fields.class.php:686
+msgid "There was an error; the settings were not saved."
+msgstr "Vea tõttu ei saanud seadeid salvestada."
+
+#: classes/PDb_Manage_Fields.class.php:689 classes/PDb_Settings.class.php:554
+msgid "Your information has been updated"
+msgstr "Sinu andmed on uuendatud"
+
+#: classes/PDb_Manage_Fields.class.php:826
+msgid ""
+"The %1$s was not added. There is already a %1$s with that name, please "
+"choose another."
+msgstr "%1$s ei lisatud. Juba on üks samanimeline %1$s."
+
+#: classes/PDb_Manage_Fields.class.php:880
+msgid "Not Required"
+msgstr "Pole nõutud"
+
+#: classes/PDb_Manage_Fields.class.php:881
+msgid "Required"
+msgstr "Kohustuslik"
+
+#: classes/PDb_Manage_Fields.class.php:882
+msgid "Email"
+msgstr "E-posti aadress"
+
+#. translators: these strings are used in logic matching, please test after
+#. translating in case special characters cause problems
+#: classes/PDb_Manage_Fields.class.php:911
+msgid "Update Fields"
+msgstr "Uuenda väljasid"
+
+#: classes/PDb_Manage_Fields.class.php:912
+msgid "Update Groups"
+msgstr "Uuenda rühmasid"
+
+#: classes/PDb_Manage_Fields.class.php:913
+msgid "Add Field"
+msgstr "Lisa väli"
+
+#: classes/PDb_Manage_Fields.class.php:914
+msgid "Add Group"
+msgstr "Lisa rühm"
+
+#: classes/PDb_Manage_Fields.class.php:917
+msgid "new field title"
+msgstr "uus välja nimetus"
+
+#: classes/PDb_Manage_Fields.class.php:918
+msgid "new group title"
+msgstr "uus rühma pealkiri"
+
+#: classes/PDb_Manage_Fields.class.php:919
+msgctxt "column name"
+msgid "Fields"
+msgstr "Väljad"
+
+#: classes/PDb_Manage_Fields.class.php:920
+msgctxt "column name"
+msgid "Group"
+msgstr "Rühm"
+
+#: classes/PDb_Manage_Fields.class.php:921
+msgctxt "column name"
+msgid "Order"
+msgstr "Järjestus"
+
+#: classes/PDb_Manage_Fields.class.php:922
+msgctxt "column name"
+msgid "Name"
+msgstr "Nimetus"
+
+#: classes/PDb_Manage_Fields.class.php:923
+msgctxt "column name"
+msgid "Title"
+msgstr "Pealkiri"
+
+#: classes/PDb_Manage_Fields.class.php:924
+msgctxt "column name"
+msgid "Default"
+msgstr "Vaikimisi"
+
+#: classes/PDb_Manage_Fields.class.php:925
+msgctxt "column name"
+msgid "Help Text"
+msgstr "Abistav tekst"
+
+#: classes/PDb_Manage_Fields.class.php:926
+msgctxt "column name"
+msgid "Form Element"
+msgstr "Vormi element"
+
+#: classes/PDb_Manage_Fields.class.php:927
+msgctxt "column name"
+msgid "Values"
+msgstr "Väärtused"
+
+#: classes/PDb_Manage_Fields.class.php:928
+msgctxt "column name"
+msgid "Validation"
+msgstr "Valideerimine"
+
+#: classes/PDb_Manage_Fields.class.php:929
+msgctxt "column name"
+msgid "Display Column"
+msgstr "Näita tulpa"
+
+#: classes/PDb_Manage_Fields.class.php:930
+msgctxt "column name"
+msgid "Admin Column"
+msgstr "Haldamise tulp"
+
+#: classes/PDb_Manage_Fields.class.php:931
+msgctxt "column name"
+msgid "Sortable"
+msgstr "Sorteeritav"
+
+#: classes/PDb_Manage_Fields.class.php:932
+msgctxt "column name, acronym for \"comma separated values\""
+msgid "CSV"
+msgstr "CSV"
+
+#: classes/PDb_Manage_Fields.class.php:933
+msgctxt "column name"
+msgid "Persistent"
+msgstr "Järjepidev"
+
+#: classes/PDb_Manage_Fields.class.php:934
+msgctxt "column name"
+msgid "Signup"
+msgstr "Registreerimine"
+
+#: classes/PDb_Manage_Fields.class.php:935
+msgctxt "column name"
+msgid "Read Only"
+msgstr "Ainult lugemiseks"
+
+#: classes/PDb_Manage_Fields.class.php:936
+msgctxt "column name"
+msgid "Admin"
+msgstr "Haldus"
+
+#: classes/PDb_Manage_Fields.class.php:937
+msgctxt "column name"
+msgid "Delete"
+msgstr "Kustuta"
+
+#: classes/PDb_Manage_Fields.class.php:938
+msgctxt "column name"
+msgid "Display"
+msgstr "Kuva"
+
+#: classes/PDb_Manage_Fields.class.php:939
+msgctxt "column name"
+msgid "Description"
+msgstr "Kirjeldus"
+
+#: classes/PDb_Pagination.class.php:366
+msgid "First"
+msgstr "Esimene"
+
+#: classes/PDb_Pagination.class.php:377 participants-database.php:3435
+msgid "Previous"
+msgstr "Eelmine"
+
+#: classes/PDb_Pagination.class.php:396 participants-database.php:3434
+msgid "Next"
+msgstr "Järgmine"
+
+#: classes/PDb_Pagination.class.php:409
+msgid "Last"
+msgstr "Viimane"
+
+#: classes/PDb_Record.class.php:147
+msgid "back"
+msgstr "tagasi"
+
+#: classes/PDb_Settings.class.php:30
+msgid "Signup Form Settings"
+msgstr "Registreerimise vormi seaded"
+
+#: classes/PDb_Settings.class.php:31
+msgid "Record Form Settings"
+msgstr "Kirje vormi seaded"
+
+#: classes/PDb_Settings.class.php:32
+msgid "List Display Settings"
+msgstr "Nimekirja kuva seaded"
+
+#: classes/PDb_Settings.class.php:33
+msgid "Resend Link Settings"
+msgstr "Saada lingi seaded uuesti"
+
+#: classes/PDb_Settings.class.php:34
+msgid "Advanced Settings"
+msgstr "Täpsemad seaded"
+
+#: classes/PDb_Settings.class.php:35
+msgid "Admin Settings"
+msgstr "Haldamise seaded"
+
+#: classes/PDb_Settings.class.php:36
+msgid "Custom CSS"
+msgstr "Kohandatud CSS"
+
+#: classes/PDb_Settings.class.php:40
+msgid ""
+"Settings for the [pdb_record] shortcode, which is used to show a user-"
+"editable form on the website."
+msgstr ""
+"[pdb_record] lühikoodi seaded. Koodi kasutatakse veebilehel kasutaja poolt "
+"muudetava vormi näitamiseks."
+
+#: classes/PDb_Settings.class.php:41
+msgid ""
+"Settings for the [pdb_list] shortcode, which is used to show a list of "
+"records from the database."
+msgstr ""
+"[pdb_list] lühikoodi seaded. Koodi kasutatakse andmebaasi kirjete nimekirja "
+"näitamiseks."
+
+#: classes/PDb_Settings.class.php:42
+msgid ""
+"Settings for the [pdb_signup] shortcode, which is used to show a signup or "
+"registration form on the website."
+msgstr ""
+"[pdb_signup] lühikoodi seaded. Koodi kasutatakse registreerimise või "
+"liitumise vormi kuvamiseks."
+
+#: classes/PDb_Settings.class.php:43
+msgid "Settings for the lost private link resend function."
+msgstr "Seaded kadunud privaatse lingi taassaatmiseks."
+
+#: classes/PDb_Settings.class.php:44
+msgid "Settings for special configurations."
+msgstr "Seaded erilisteks konfiguratsioonideks."
+
+#: classes/PDb_Settings.class.php:45
+msgid "Settings for the plugin backend."
+msgstr "Seaded plugina backendi jaoks."
+
+#: classes/PDb_Settings.class.php:46
+msgid ""
+"User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try "
+"this tutorial to help you get started: <a href=\"http://www.ostraining.com/"
+"blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress "
+"Themes.</a></p>"
+msgstr ""
+"Kasutajapoolsed CSS reeglid plugina kujunduse muutmiseks.</h4><p>Kui CSS on "
+"sinu jaoks midagi uut, siis tutvu juhendiga: <a href=\"http://www.ostraining."
+"com/blog/wordpress/firebug-wordpress-css/\">Kasuta WordPressi kujunduste "
+"muutmiseks Firebug'i</a></p>"
+
+#: classes/PDb_Settings.class.php:55
+msgid "Save Plugin Settings"
+msgstr "Salvesta plugin"
+
+#: classes/PDb_Settings.class.php:92
+msgid "File Upload Location"
+msgstr "Faili üleslaadimise asukoht"
+
+#: classes/PDb_Settings.class.php:96
+msgid ""
+"This defines where the uploaded files will go, relative to the WordPress "
+"root. The default location is '/wp-content/uploads/participants-"
+"database'<br />Don't put it in the plugin folder, the images and files could "
+"get deleted when the plugin is updated."
+msgstr ""
+"See määrab selle, kuhu üleslaaditud failid lähevad. Vaikimisi asukoht on '/"
+"wp-content/uploads/participants-database'<br />Ära lisa faile plugina "
+"kausta, pildid ja failid võidakse uuendamisel kustutada."
+
+#: classes/PDb_Settings.class.php:103
+msgid "File Upload Limit"
+msgstr "Faili üleslaadimise limiit"
+
+#: classes/PDb_Settings.class.php:107
+msgid "the maximum allowed file size (in kilobytes) for an uploaded file"
+msgstr "maksimaalne lubatud failisuurus (kilobaitides)"
+
+#: classes/PDb_Settings.class.php:114
+msgid "Allowed File Types"
+msgstr "Lubatud faili tüübid"
+
+#: classes/PDb_Settings.class.php:118
+msgid ""
+"list of allowed file types by file extension. Please be aware that there are "
+"security risks in allowing file uploads."
+msgstr ""
+"nimekiri lubatud failitüüpe laiendi järgi. Arvestage, et faili "
+"üleslaadimisega kaasnevad turvariskid."
+
+#: classes/PDb_Settings.class.php:125
+msgid "Default Image"
+msgstr "Vaikimisi pilt"
+
+#: classes/PDb_Settings.class.php:129
+msgid ""
+"Path (relative to WP root) of an image file to show if no image has been "
+"defined for an image field. Leave blank for no default image."
+msgstr ""
+"Teekond pildifailini, mida näidata, kui ühtegi faili pole üles laaditud. "
+"Jäta tühjaks, kui ei soovi vaikimisi pilti."
+
+#: classes/PDb_Settings.class.php:136
+msgid "Link Image to Fullsize"
+msgstr "Lingi pilt täissuurusele"
+
+#: classes/PDb_Settings.class.php:141
+msgid ""
+"place a link to the full-size image on images. This link will work with most "
+"\"lightbox\" plugins."
+msgstr ""
+"tee pildid linkideks, mis viitavad täissuuruses fotole. See link töötab "
+"enamus \"lightbox\" pluginatega."
+
+#: classes/PDb_Settings.class.php:149
+msgid "Allow File Delete"
+msgstr "Luba faili kustutamine"
+
+#: classes/PDb_Settings.class.php:154
+msgid ""
+"if checked, allows uploaded files and images to be deleted from storage when "
+"deleted from a record by a user"
+msgstr ""
+"lubab üleslaaditud faile ja pilte hoidlast kustutada, kui kasutaja need "
+"kirjest kustutas"
+
+#: classes/PDb_Settings.class.php:162
+msgid "Make Links Clickable"
+msgstr "Tee lingid klikitavaks"
+
+#: classes/PDb_Settings.class.php:167
+msgid ""
+"if a \"text-line\" field looks like a link (begins with \"http\" or is an "
+"email address) make it clickable"
+msgstr ""
+"kui tekstiväli näeb välja nagu link (algab \"http\"-ga või on e-posti "
+"aadress), siis on see lingitav"
+
+#: classes/PDb_Settings.class.php:175
+msgid "Protect Email Addresses"
+msgstr "Kaitse e-posti aadresse"
+
+#: classes/PDb_Settings.class.php:180
+msgid "protect email addresses in text-line fields with Javascript"
+msgstr "kaitse e-posti aadresse tekstiväljadel Javascriptiga"
+
+#: classes/PDb_Settings.class.php:188
+msgid "Missing Field Error Message"
+msgstr "Puuduva välja veateade"
+
+#: classes/PDb_Settings.class.php:192
+msgid ""
+"the message shown when a field is required, but left empty (the %s is "
+"replaced by the name of the field)"
+msgstr ""
+"sõnum, mida näitakse nõutud täitmata väljadel (%s asendatakse välja nimega)"
+
+#: classes/PDb_Settings.class.php:193
+msgid "The %s field is required."
+msgstr "%s väli on nõutud."
+
+#: classes/PDb_Settings.class.php:199
+msgid "Invalid Field Error Message"
+msgstr "Puuduliku välja veateade"
+
+#: classes/PDb_Settings.class.php:203
+msgid ""
+"the message shown when a field's value does not pass the validation test"
+msgstr ""
+"kui välja väärtus ei läbi valideerimise testi, siis näidatakse seda sõnumit"
+
+#: classes/PDb_Settings.class.php:204
+msgid "The %s field appears to be incorrect."
+msgstr "%s väli on ebakorrektne"
+
+#: classes/PDb_Settings.class.php:210
+msgid "Non-Matching Field Error Message"
+msgstr "Mitte kattuva välja veateade"
+
+#: classes/PDb_Settings.class.php:214
+msgid ""
+"the message shown when a field's value does match the value of another "
+"field. The first %s will show the name of the field, the second will show "
+"the name of the field it must match."
+msgstr ""
+"kui välja väärtus ei sobitu teise välja väärtusega. Esimene %s näitab välja "
+"nime, teine näitab selle välja nime, millega see peab kattuma."
+
+#: classes/PDb_Settings.class.php:215
+msgid "The %s field must match the %s field."
+msgstr "%s väli peab sobima %s väljaga."
+
+#: classes/PDb_Settings.class.php:222
+msgid "Failed CAPTCHA Message"
+msgstr "Ebaõnnestunud CAPTCHA sõnum"
+
+#: classes/PDb_Settings.class.php:226
+msgid "the message shown when the CAPTCHA (verify human) test failed"
+msgstr "sõnum, mida näidatakse, kui CAPTCHA test ei õnnestunud"
+
+#: classes/PDb_Settings.class.php:227
+msgid "Pleast try the %s question again."
+msgstr "Palun proovi %s  küsimust uuesti."
+
+#: classes/PDb_Settings.class.php:233
+msgid "Field Error Style"
+msgstr "Välja vea stiil"
+
+#: classes/PDb_Settings.class.php:237
+msgid ""
+"the CSS style applied to an input or text field that is missing or has not "
+"passed validation. This must be a valid CSS rule"
+msgstr ""
+"CSS stiil, mis on lisatud sisendile või tekstiväljale, mis puudub või ei ole "
+"valideeritud. See peab olema korrektne CSS reegel"
+
+#: classes/PDb_Settings.class.php:244
+msgid "Mark Required Fields"
+msgstr "Märgista nõutud väljad"
+
+#: classes/PDb_Settings.class.php:249
+msgid "mark the title of required fields?"
+msgstr "kas märgistada nõutud välja pealkiri?"
+
+#: classes/PDb_Settings.class.php:257
+msgid "Required Field Marker"
+msgstr "Nõutud välja tähis"
+
+#: classes/PDb_Settings.class.php:261
+msgid ""
+"html added to field title for required fields if selected above (the %s is "
+"replaced by the title of the field)"
+msgstr ""
+"välja pealkirjale lisatud html, kui on ülalpool valitud (%s asendatakse "
+"välja pealkirjaga)"
+
+#: classes/PDb_Settings.class.php:286
+msgid "Signup Button Text"
+msgstr "Liitumise nupu tekst"
+
+#: classes/PDb_Settings.class.php:290
+msgid "text shown on the button to sign up"
+msgstr "registreerimise nupu tekst"
+
+#: classes/PDb_Settings.class.php:291
+msgctxt "the text on a button to submit a signup form"
+msgid "Sign Up"
+msgstr "Registreeri"
+
+#: classes/PDb_Settings.class.php:297
+msgid "Signup Thanks Page"
+msgstr "Registreerimise tänuleht"
+
+#: classes/PDb_Settings.class.php:301
+msgid ""
+"after they register, send them to this page for a thank you message. This "
+"page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
+"have to do that if you have them go back to the same page. You can also use "
+"a Post ID for posts and custom post types."
+msgstr ""
+"pärast registreerimist saada neid sellele lehele tänusõnumi juurde. See leht "
+"on see, kuhu lisad [pdb_signup_thanks] lühikoodi, kuid sa ei pea seda "
+"tegema, kui viid neid tagasi samale lehel. Sa saad kasutada ka postituse ID-"
+"d postituste ja kohandatud postituste jaoks."
+
+#: classes/PDb_Settings.class.php:310
+msgid "Show Field Groups"
+msgstr "Näita väljade rühmasid"
+
+#: classes/PDb_Settings.class.php:315
+msgid "Show groups and group descriptions in the signup form."
+msgstr "Näita rühmasid ja rühmade kirjeldusi registreerimisvormil."
+
+#: classes/PDb_Settings.class.php:323 upload_csv.php:156
+msgid "Duplicate Record Check Field"
+msgstr "Kattuvate kirjete määramise väli"
+
+#: classes/PDb_Settings.class.php:328
+msgid ""
+"when a signup is submitted or CSV record is imported, this field is checked "
+"for a duplicate"
+msgstr ""
+"see väli on kattumiseks kontrollitud, kui registreerimine on kinnitatud või "
+"CSV kiri on importitud"
+
+#: classes/PDb_Settings.class.php:335 upload_csv.php:137
+msgid "Duplicate Record Preference"
+msgstr "Dubleeri kirje eelistus"
+
+#: classes/PDb_Settings.class.php:340
+msgid ""
+"when the submission matches the Duplicate Record Check Field of an existing "
+"record. This also applies to importing records from a CSV file."
+msgstr ""
+"kui avaldus kattub eksisteeriva kirje kontrollväljaga. See kehtib ka CSV "
+"impordi puhul."
+
+#: classes/PDb_Settings.class.php:343 upload_csv.php:143
+msgid "Create a new record with the submission"
+msgstr "Loo kinnitamisega uus kirje"
+
+#: classes/PDb_Settings.class.php:344 upload_csv.php:144
+msgid "Overwrite matching record with new data"
+msgstr "Kirjuta üle kattuvad kirje andmed uute andmetega."
+
+#: classes/PDb_Settings.class.php:345 upload_csv.php:145
+msgid "Show a validation error message"
+msgstr "Näita valideerimisel veateadet"
+
+#: classes/PDb_Settings.class.php:353
+msgid "Duplicate Record Error Message"
+msgstr "Kattuva kirje veateade"
+
+#: classes/PDb_Settings.class.php:357
+msgid ""
+"If \"Show a validation error message\" is selected above, this message will "
+"be shown if a signup is made with a \"check field\" that matches an existing "
+"record."
+msgstr ""
+"Kui \"näita valideerimisel veateadet\" on valitud, siis see sõnum kuvatakse."
+
+#: classes/PDb_Settings.class.php:358
+msgid "A record with that %s already exists. Please choose another."
+msgstr "Selle %s kirje juba eksisteerib. Palun vali teine."
+
+#: classes/PDb_Settings.class.php:364
+msgid "Send Signup Response Email"
+msgstr "Saada registreerimise vastuse e-kiri"
+
+#: classes/PDb_Settings.class.php:368
+msgid "Send a receipt email to people who sign up"
+msgstr "Saada kinnitav e-kiri registreerijatele"
+
+#: classes/PDb_Settings.class.php:376
+msgid "Signup Email From Address"
+msgstr "Registreerimise e-kirja saatja aadress"
+
+#: classes/PDb_Settings.class.php:380
+msgid ""
+"the \"From\" address on signup receipt emails. If the recipient hits \"reply"
+"\", their reply will go to this address. It is a good idea to use an email "
+"address from the same domain as this website."
+msgstr ""
+"Saatja aadress kinnitavatel e-kirjadel. Kui vastuvõtja märgib \"vasta\", "
+"siis nende vastus saadetakse sellele aadressile. Parim on kasutada e-posti "
+"aadressi, mis on sama domeeniga kui veebileht."
+
+#: classes/PDb_Settings.class.php:387
+msgid "Signup Email From Name"
+msgstr "Registreerimise e-kirja saatja nimi"
+
+#: classes/PDb_Settings.class.php:391
+msgid "the \"From\" name on signup receipt emails."
+msgstr "Saatja nimi registreerimise e-kirjas"
+
+#: classes/PDb_Settings.class.php:398
+msgid "Signup Response Email Subject"
+msgstr "Registreerimise vastuse teema"
+
+#: classes/PDb_Settings.class.php:402
+msgid ""
+"subject line for the signup response email; placeholder tags can be used "
+"(see below)"
+msgstr ""
+"registreerimise vastuse teema rida; kasutada võib kohatäite silte (vaata "
+"allpool)"
+
+#: classes/PDb_Settings.class.php:403
+msgid "You've just signed up on %s"
+msgstr "Oled just registreerinud %s lehel"
+
+#: classes/PDb_Settings.class.php:409
+msgid "Signup Response Email"
+msgstr "Registreerimise vastuse e-kiri"
+
+#: classes/PDb_Settings.class.php:413
+msgid ""
+"Body of the email a visitor gets when they sign up. It includes a link "
+"([record_link]) back to their record so they can fill it out. Can include "
+"HTML, placeholders:[first_name],[last_name],[email],[record_link]. You can "
+"only use placeholders for fields that are present in the signup form, "
+"including hidden fields."
+msgstr ""
+"Külastaja registreerimisel vastusena saadetava e-kirja tekst. It includes a "
+"link ([record_link]) back to their record so they can fill it out. Can "
+"include HTML, placeholders:[first_name],[last_name],[email],[record_link]. "
+"You can only use placeholders for fields that are present in the signup "
+"form, including hidden fields."
+
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:415
+msgid ""
+"<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete "
+"your registration with additional information or update your information by "
+"visiting this private link at any time: <a href="
+"\"[record_link]\">[record_link]</a>.</p>"
+msgstr ""
+"<p>Aitäh [first_name], et registreerisid ennast %s.</p><p>Sa saad täiendada "
+"oma registreerimist lisainformatsiooniga või uuendada oma infot külastades "
+"privaatset linki: <a href=\"[record_link]\">[record_link]</a>.</p>"
+
+#: classes/PDb_Settings.class.php:421
+msgid "Signup Thanks Message"
+msgstr "Registreerimise tänu sõnum"
+
+#: classes/PDb_Settings.class.php:425
+msgid ""
+"Note to display on the web page after someone has submitted a signup form. "
+"Can include HTML and placeholders (see above)"
+msgstr ""
+"Teade, mida kuvatakse veebilehel, kui keegi on kinnitanud registreerimise. "
+"Võib sisaldada HTML-i ja kohatäiteid (vaata ülal)"
+
+#: classes/PDb_Settings.class.php:426
+msgid ""
+"<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
+"acknowledgement shortly. You may complete your registration with additional "
+"information or update your information by visiting the link provided in the "
+"email.</p>"
+msgstr ""
+"<p>Aitäh, [first_name] registreerimise eest!</p><p>Saad peagi e-posti teel "
+"teavituse. Võid täiendada oma registreerimist lisainformatsiooniga või "
+"uuendada oma informatsiooni külastades e-kirjas toodud linki.</p>"
+
+#: classes/PDb_Settings.class.php:432
+msgid "Send Signup Notification Email"
+msgstr "Saada registreerimist teavitav e-kiri"
+
+#: classes/PDb_Settings.class.php:437
+msgid "Send an email notification that a signup has occurred."
+msgstr "Saada registreerimisel teade e-posti teel"
+
+#: classes/PDb_Settings.class.php:446
+msgid "Signup Notification Recipients"
+msgstr "Registreerimise teavituse saajad"
+
+#: classes/PDb_Settings.class.php:450
+msgid "comma-separated list of email addresses to send signup notifications to"
+msgstr ""
+"komaga eraldatud nimekiri e-posti aadressidest, mis saavad registreerimisel "
+"teateid"
+
+#: classes/PDb_Settings.class.php:457
+msgid "Signup Notification Email Subject"
+msgstr "Registreerimise teavituse teema."
+
+#: classes/PDb_Settings.class.php:461 classes/PDb_Settings.class.php:847
+msgid ""
+"subject of the notification email; placeholder tags can be used (see above)"
+msgstr "teavituse teema; võib kasutada kohatäite silte (vaata ülalt)"
+
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:463
+msgid "New signup on %s"
+msgstr "Uus registreerimine %s"
+
+#: classes/PDb_Settings.class.php:469
+msgid "Signup Notification Email"
+msgstr "Registreerimise teate e-kiri"
+
+#: classes/PDb_Settings.class.php:473
+msgid ""
+"notification email body. The [admin_record_link] tag will supply the URL for "
+"editing the record in the admin."
+msgstr ""
+"teavitava e-kirja tekst. [admin_record_link] silt tõmbab URL-i, mis viib "
+"kirje redaktorisse."
+
+#: classes/PDb_Settings.class.php:474
+msgid ""
+"<p>A new signup has been submitted</p><ul><li>Name: [first_name] "
+"[last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a "
+"href=\"[admin_record_link]\">[admin_record_link]</a></p>"
+msgstr ""
+"<p>Edastatud on uus registreerimine</p><ul><li>Nimi: [first_name] "
+"[last_name]</li><li>E-posti aadress: [email]</li></ul><p>Muuda seda uut "
+"kirjet siin: <a href=\"[admin_record_link]\">[admin_record_link]</a></p>"
+
+#: classes/PDb_Settings.class.php:499
+msgid "Participant Record Page"
+msgstr "Üksikkirje leht"
+
+#: classes/PDb_Settings.class.php:504
+msgid ""
+"The page where your participant record ([pdb_record] shortcode) is "
+"displayed. You can use a Post ID for posts and custom post types."
+msgstr ""
+"Leht, kus kuvatakse ühte kirjet ([pdb_record] shortcode). Sa võid kasutada "
+"postituse ID-d postituste jaoks."
+
+#: classes/PDb_Settings.class.php:512
+msgid "Show Group Descriptions"
+msgstr "Näita rühma kirjeldusi"
+
+#: classes/PDb_Settings.class.php:517
+msgid "Show the group description under each group title in the record form."
+msgstr "Näita kirje vormil rühma kirjeldust iga rühma pealkirjas."
+
+#: classes/PDb_Settings.class.php:525
+msgid "Save Changes Label"
+msgstr "Muutuste salvestamise silt"
+
+#: classes/PDb_Settings.class.php:530
+msgid "label for the save changes button on the record form"
+msgstr "kirje vormi \"salvesta muutused\" nupu nimetus"
+
+#: classes/PDb_Settings.class.php:531
+msgid "Save Your Changes"
+msgstr "Salvesta muutused"
+
+#: classes/PDb_Settings.class.php:537
+msgid "Save Button Text"
+msgstr "Salvestamise nupu tekst"
+
+#: classes/PDb_Settings.class.php:542
+msgid "text on the \"save\" button"
+msgstr "tekst salvestamise nupul"
+
+#: classes/PDb_Settings.class.php:543
+msgctxt "a label for a button to save a form"
+msgid "Save"
+msgstr "Salvesta"
+
+#: classes/PDb_Settings.class.php:549
+msgid "Record Updated Message"
+msgstr "Kirje uuendamise teade"
+
+#: classes/PDb_Settings.class.php:553
+msgid "the message shown when a record form has been successfully submitted"
+msgstr "sõnum, mida näidatakse, kui kirje vorm on edukalt sisestatud"
+
+#: classes/PDb_Settings.class.php:560
+msgid "Record Not Found Error Message"
+msgstr "Leidmata kirje teade"
+
+#: classes/PDb_Settings.class.php:564
+msgid ""
+"message to show if the record page was accessed without a valid identifier. "
+"Leave this empty if you want nothing at all to show."
+msgstr ""
+"sõnum, mida näidatakse, kui kirje lehele liiguti valideeritud "
+"identifikaatorita. Jäta see tühjaks, kui sa ei taha, et midagi näitaks."
+
+#: classes/PDb_Settings.class.php:565
+msgid "No record was found."
+msgstr "Ühtegi kirjet ei leitud."
+
+#: classes/PDb_Settings.class.php:571
+msgid "Use Template for No Record Message"
+msgstr "Kasuta leidmata kirje teate jaoks malli."
+
+#: classes/PDb_Settings.class.php:576
+msgid ""
+"If checked, use the record template to show the \"Record Not Found\" "
+"message. If unchecked, the message is shown without using the template."
+msgstr ""
+"Kui valitud, siis kasuta kirje malli \"kirjet ei leitud\" sõnumi kuvamiseks. "
+"Vastasel juhul sõnumit kuvatakse mallita."
+
+#: classes/PDb_Settings.class.php:584
+msgid "Send Record Form Update Notification Email"
+msgstr "Saada kirje vormi uuendamise teate e-kiri."
+
+#: classes/PDb_Settings.class.php:589
+msgid ""
+"Send an email notification that a record has been updated. These will be "
+"sent to the email addresses listed in the \"Signup Notification Recipients\" "
+"setting."
+msgstr ""
+"Saada kirje uuendamise kohta teade. Need saadetakse \"registreerimise "
+"teadete saajate\" seadetes määratutele."
+
+#: classes/PDb_Settings.class.php:597
+msgid "Record Update Email Subject"
+msgstr "Kirje uuendamise e-kirja teema."
+
+#: classes/PDb_Settings.class.php:601
+msgid ""
+"subject line for the record update notification email; placeholders can be "
+"used."
+msgstr "kirje uuendamise teate teemarida; kasutada võib kohatäiteid."
+
+#: classes/PDb_Settings.class.php:602
+msgid "A record has just been updated on %s"
+msgstr "%s uuendati kirjet"
+
+#: classes/PDb_Settings.class.php:608
+msgid "Record Update Notification Email"
+msgstr "Kirje uuendamise teavitus"
+
+#. translators: [date] and [admin_record_link] must not be translated, they
+#. must be used literally. The rest of the words enclosed in brackets can be
+#. defined by the user, they are used here only as examples.
+#: classes/PDb_Settings.class.php:613
+msgid ""
+"Body of the the email sent when a user updates their record. Any field from "
+"the form can be included by using a replacement code of the form: "
+"[field_name]. For instance: [last_name],[address],[email] etc. (The field "
+"name is under the \"name\" column on the \"Manage Database Fields\" page.)  "
+"Also available is [date] which will show the date and time of the update and "
+"[admin_record_link] tag for a link to edit the record in the admin."
+msgstr "E-kirja tekst, mis saadetakse, kui kasutaja uuendab oma kirjet. "
+
+#: classes/PDb_Settings.class.php:614
+msgid ""
+"<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
+"[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
+"li><li>Phone: [phone]</li><li>Email: [email]</li></ul><p>Edit this record <a "
+"href=\"[admin_record_link]\">here.</a></p>"
+msgstr ""
+"<p>Järgnev kirje uuendatud [date]:</p><ul><li>Nimi [first_name] [last_name]</"
+"li><li>Aadress: [address]</li><li>[city], [state], [country]</"
+"li><li>Telefon: [phone]</li><li>E-posti aadress: [email]</li></ul><p>Muuda "
+"seda kirjet <a href=\"[admin_record_link]\">siin.</a></p>"
+
+#: classes/PDb_Settings.class.php:627
+msgid "Records per Page"
+msgstr "Kirjed ühel lehel"
+
+#: classes/PDb_Settings.class.php:631
+msgid "the number of records to show on each page"
+msgstr "kirjete arv, mida näidatakse igal lehel"
+
+#: classes/PDb_Settings.class.php:639
+msgid "Single Record Link Field"
+msgstr "Üksiku kirje lingi väli"
+
+#: classes/PDb_Settings.class.php:644
+msgid ""
+"select the field on which to put a link to the [pdb_single] shortcode. Leave "
+"blank or set to \"none\" for no link."
+msgstr ""
+"vali väli, kuhu asetada link [pdb_single] lühikoodile. Jäta tühjaks või "
+"määra \"tühi.\""
+
+#: classes/PDb_Settings.class.php:651
+msgid "Single Record Page"
+msgstr "Üksikkirje leht"
+
+#: classes/PDb_Settings.class.php:657
+msgid ""
+"this is the page where the [pdb_single] shortcode is located. If you want to "
+"assign a post or custom post type, select \"Post ID\" and enter the post ID "
+"in the \"other\" box."
+msgstr ""
+"siin lehel on [pdb_single] lühikood. Kui soovid, et see oleks seotud "
+"postitusega, siis vali \"Postituse ID\" ja sisesta postituse ID \"muu\" "
+"kasti."
+
+#: classes/PDb_Settings.class.php:664
+msgid "No Records Message"
+msgstr "Mitte ühtegi kirjet ei leitud teade"
+
+#: classes/PDb_Settings.class.php:668
+msgid "Message shown when no records are found."
+msgstr "Sõnum, mida kuvatakse, kui ühtegi kirjet ei leitud."
+
+#: classes/PDb_Settings.class.php:669
+msgid "No Records Found"
+msgstr "Kirjeid ei leitud"
+
+#: classes/PDb_Settings.class.php:674
+msgid "Show Count"
+msgstr "Näita loendust"
+
+#: classes/PDb_Settings.class.php:679
+msgid "Show the list count on list displays. Can also be set in the shortcode."
+msgstr "Näita nimekirja loendust kuvas. Saab määrata lühikoodis."
+
+#: classes/PDb_Settings.class.php:687
+msgid "List Count Template"
+msgstr "Nimekirja loenduse mall"
+
+#: classes/PDb_Settings.class.php:691
+msgid ""
+"template for displaying the list count. %1$s - total number of records "
+"found, %2$s - number of records shown per page, %3$s - starting record "
+"number, %4$s - ending record number, %5$s - the current page number"
+msgstr ""
+"mall nimekirja loenduse näitamiseks. %1$s - leitud kirjete koguarv, %2$s - "
+"kirjete arv ühel lehel, %3$s - esimeste kirjete arv,  %4$s - viimaste "
+"kirjete arv, %5$s - arv praegusel leheküljel"
+
+#: classes/PDb_Settings.class.php:692
+msgid "Total Records Found: %1$s, showing %2$s per page"
+msgstr "Kirjete koguarv: %1$s, näitan %2$s lehe kohta"
+
+#: classes/PDb_Settings.class.php:702
+msgid "List Default Sort"
+msgstr "Nimekirja vaikimise sorteerimine"
+
+#: classes/PDb_Settings.class.php:708
+msgid ""
+"The record list shown by the list shortcode will be sorted by this field by "
+"default. (Field must be checked \"sortable.\")"
+msgstr ""
+"Nimekirja sorteerimise alus. (Väli peab olema märgitud \"sorteeritavaks.\")"
+
+#: classes/PDb_Settings.class.php:715
+msgid "List Default Sort Order"
+msgstr "Nimekirja vaikimisi sorteerimise järjestus"
+
+#: classes/PDb_Settings.class.php:719
+msgid "Sets the default order of the records shown by the list shortcode."
+msgstr "Määrab nimekirja vaikimisi sorteerimise aluse."
+
+#: classes/PDb_Settings.class.php:728
+msgid "Allow Empty Search"
+msgstr "Luba tühi otsing"
+
+#: classes/PDb_Settings.class.php:733
+msgid ""
+"This allows frontend searches to find records with missing or blank data."
+msgstr ""
+"See seadistus lubab frontend otsingutel leida kirjeid, millel puudub sisu."
+
+#: classes/PDb_Settings.class.php:747
+msgid "Enable Lost Private Link"
+msgstr "Luba kadunud privaatne link"
+
+#: classes/PDb_Settings.class.php:752
+msgid ""
+"Show a link on the signup form allowing users to have their private link "
+"emailed to them."
+msgstr "Näita linki"
+
+#: classes/PDb_Settings.class.php:760
+msgid "Lost Private Link Text"
+msgstr "Kadunud privaatse lingi tekst"
+
+#: classes/PDb_Settings.class.php:764
+msgid "clickable text shown in the signup form"
+msgstr "klikitav tekst registreerimise vormis"
+
+#: classes/PDb_Settings.class.php:765 templates/pdb-signup-bootstrap.php:53
+msgid "Forget your private link? Click here to have it emailed to you."
+msgstr "Unustasid oma privaatse lingi? Vajuta siia, et see sulle saadetakse."
+
+#: classes/PDb_Settings.class.php:770
+msgid "Lost Private Link Page"
+msgstr "Kadunud privaatse lingi leht"
+
+#: classes/PDb_Settings.class.php:775
+msgid "send people to this page to request their private link."
+msgstr "saada inimesed privaatse lingi küsimiseks sellele lehele"
+
+#: classes/PDb_Settings.class.php:784
+msgid "Lost Private Link ID Field"
+msgstr "Kaotatud privaatse lingi ID väli"
+
+#: classes/PDb_Settings.class.php:788
+msgid ""
+"The field used to identify the user&#39;s account. This must be a unique "
+"identifier for the record"
+msgstr ""
+"Väli, millega tehakse kindlaks kasutajakonto. See peab olema kirje unikaalne "
+"identifikaator."
+
+#: classes/PDb_Settings.class.php:796
+msgid "ID Field Help Text"
+msgstr "ID välja abitekst"
+
+#: classes/PDb_Settings.class.php:800
+msgid "help text for the record identification field"
+msgstr "abitekst kirje identifitseerimie väljale"
+
+#: classes/PDb_Settings.class.php:801
+msgid "Type in your %s, your private link will be emailed to you."
+msgstr "Sisesta oma %s ning privaatne link saadetakse sulle e-posti teel."
+
+#: classes/PDb_Settings.class.php:807
+msgid "Lost Private Link Email Subject"
+msgstr "Kaotatud privaatse lingi e-kirja teema"
+
+#: classes/PDb_Settings.class.php:811
+msgid "subject line for the lost private link email"
+msgstr "kaotatud privaatse lingi e-kirja teemarida"
+
+#: classes/PDb_Settings.class.php:812
+msgid "Here is your private link on %s"
+msgstr "Siin on sinu privaatne link %s"
+
+#: classes/PDb_Settings.class.php:818
+msgid "Lost Private Link Email"
+msgstr "Kadunud privaatse lingi e-kiri"
+
+#: classes/PDb_Settings.class.php:822
+msgid "Body of the email sent when a lost private link is requested."
+msgstr "Kadunud privaatse lingi e-kirja tekst."
+
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:824
+msgid "Here is the private link you requested from %s:"
+msgstr "Siin on privaatne link, mille tellisite %s lehelt:"
+
+#: classes/PDb_Settings.class.php:830
+msgid "Send Lost Private Link Notification Email"
+msgstr "Saada kadunud privaatse lingi teade e-postiga"
+
+#: classes/PDb_Settings.class.php:835
+msgid ""
+"Send an email notification that a lost private link has been requested. This "
+"email will go to the \"Signup Notification Recipients.\""
+msgstr ""
+"Saada e-kirjaga teavitus, et kadunud privaatset linki soovitakse uuesti. See "
+"e-kiri saadetakse neile, kes on määratud registreerimise teadete saajatena."
+
+#: classes/PDb_Settings.class.php:843
+msgid "Lost Private Link Notification Email Subject"
+msgstr "Kadunud privaatse lingi teate teema"
+
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:849
+msgid "A Lost Private Link has been requested on %s"
+msgstr "Kadunud privaatset linki küsitakse %s lehel"
+
+#: classes/PDb_Settings.class.php:855
+msgid "Lost Private Link Notification Email"
+msgstr "Kadunud privaatse lingi teade e-kirjana"
+
+#: classes/PDb_Settings.class.php:859
+msgid "notification email body"
+msgstr "teavitava e-kirja tekst"
+
+#: classes/PDb_Settings.class.php:860
+msgid ""
+"<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
+"[last_name]</li><li>Email: [email]</li></ul>"
+msgstr ""
+"<p>Kaotatud privaatset linki soovitakse:</p><ul><li>Nimi: [first_name] "
+"[last_name]</li><li>-posti aadress: [email]</li></ul>"
+
+#: classes/PDb_Settings.class.php:866
+msgid "Retrieve Private Link Error Message"
+msgstr "Saada privaatse lingi veateade"
+
+#: classes/PDb_Settings.class.php:870
+msgid ""
+"Message shown when a record matching the retrieve link idenifier cannot be "
+"found"
+msgstr ""
+"Sõnum, mida näidatakse, kui juurdepääsu lingiga kattuvat kirjet ei leitud."
+
+#: classes/PDb_Settings.class.php:871
+msgid "A record matching that %s cannot be found."
+msgstr "%s kattuvat kirjet ei leitud."
+
+#: classes/PDb_Settings.class.php:885
+msgid "Use the Plugin CSS"
+msgstr "Kasuta plugina CSS-i"
+
+#: classes/PDb_Settings.class.php:890
+msgid "use the plugin's CSS to style the output of shortcodes"
+msgstr "kasuta plugina CSS-i lühikoodide kuvamiseks"
+
+#: classes/PDb_Settings.class.php:898
+msgid "Use Rich Text Editor"
+msgstr "Kasuta visuaalredaktorit"
+
+#: classes/PDb_Settings.class.php:903
+msgid ""
+"enable the rich text editor on \"rich-text\" fields for front-end users. If "
+"deselected, \"rich-text\" fields will appear as text-area fields. This does "
+"not affect admin users, who always have the use of the rich-text editor."
+msgstr ""
+"luba visuaalredaktor \"rich-text\" väljadel front-end kasutajatele. Kui ei "
+"ole valitud, siis \"rich-text\" väljad kuvatakse nagu tekstiala väljad. See "
+"ei mõjuta admin kasutajaid, kellel on alati võimalik visuaalredaktorit "
+"kasutada."
+
+#: classes/PDb_Settings.class.php:911
+msgid "Use WordPress Auto Formatting"
+msgstr "Kasuta WordPressi automaatset vormindust"
+
+#: classes/PDb_Settings.class.php:916
+msgid "Use WordPress&#39; auto formatting on rich text fields."
+msgstr "Kasuta RTF-is WordPressi automaatset vormindust."
+
+#: classes/PDb_Settings.class.php:927
+msgid "Remove Line Breaks"
+msgstr "Eemalda reavahed."
+
+#: classes/PDb_Settings.class.php:932
+msgid "Remove line breaks from all plugin shortcode ouput."
+msgstr "Eemalda reavahed kõigist plugina lühikoodi väljunditest."
+
+#: classes/PDb_Settings.class.php:940
+msgid "Primary Email Address Field"
+msgstr "Peamine e-posti aadressi väli"
+
+#: classes/PDb_Settings.class.php:945
+msgid "this field is the primary email address for the record"
+msgstr "see väli on kirje peamine e-posti aadress"
+
+#: classes/PDb_Settings.class.php:953
+msgid "Send HTML Email"
+msgstr "Saada HTML e-kirja"
+
+#: classes/PDb_Settings.class.php:958
+msgid ""
+"use rich text in plugin emails? If you turn this off, be sure to remove all "
+"HTML tags from the email body settings for the plugin."
+msgstr ""
+"Kas kasutada rich text'i formaati plugina e-kirjades? Kui see on "
+"väljalülitatud, tuleb eemaldada HTML tagid e-kirja teksti seadetes."
+
+#: classes/PDb_Settings.class.php:966
+msgid "Strict Date Format"
+msgstr "Range kuupäeva vorming"
+
+#: classes/PDb_Settings.class.php:972
+msgid ""
+"This forces date inputs to be interpreted strictly according to the \"Input "
+"Date Format\" setting. You should tell your users what format you are "
+"expecting them to use. This also applies to date values used in [pdb_list] "
+"shortcode filters. The date with your current setting looks like this: "
+"<strong>%s</strong> %s"
+msgstr ""
+"See seadistus sunnib tõlgendama sisendeid rangelt \"kuupäevavormingu\" "
+"seadete põhjal. Peaksid teavitama oma kasutajaid, missugust vormingut neilt "
+"ootad. See kehtib ka kuupäeva väärtustele, mida kasutatakse  [pdb_list] "
+"lühikoodi filtrites. Praeguse seadistusega näeb kuupäev välja nii: <strong>"
+"%s</strong> %s"
+
+#: classes/PDb_Settings.class.php:974
+msgid "Your current PHP installation does not support this setting."
+msgstr "Su praegune PHP installatsioon ei toeta sellist seadistust."
+
+#: classes/PDb_Settings.class.php:983
+msgid "Input Date Format"
+msgstr "Sisestatud kuupäeva formaat"
+
+#: classes/PDb_Settings.class.php:988
+msgid ""
+"date formatting string for all plugin date inputs when \"Strict Date Format"
+"\" is enabled. You should use this for all localized (non-American English) "
+"date formats."
+msgstr ""
+"kuupäeva formaadi muutmise string kõigile pluginas esinevatele kuupäevadele, "
+"kui range kuupäeva vorming on lubatud. Seda peaks kasutama kõigi "
+"lokaliseeritud kuupäevavormingute jaoks."
+
+#: classes/PDb_Settings.class.php:995
+msgid "Show Timestamp Time"
+msgstr "Näita ajatempli aega"
+
+#: classes/PDb_Settings.class.php:1000
+msgid "Show time with timestamp dates"
+msgstr "Näita aega ajatempli kuupäevadega"
+
+#: classes/PDb_Settings.class.php:1008
+msgid "Strict User Searching"
+msgstr "Range kasutajapoolne otsing"
+
+#: classes/PDb_Settings.class.php:1013
+msgid ""
+"When checked, the frontend list search must match the whole field exactly. "
+"If unchecked, the search will match if the search term is found in part of "
+"the field. Searches are not case-sensitive either way."
+msgstr ""
+"Kui see on märgitud, siis frontendi otsing peab täielikult kattuma vastega. "
+"Kui ei ole märgitud, siis otsitakse sõna välja sisu seest. Mõlemal juhul ei "
+"ole otsing suurtähe suhtes tundlik."
+
+#: classes/PDb_Settings.class.php:1020
+msgid "Enable AJAX Search Functionality"
+msgstr "Luba AJAX otsingu funktsionaalsus."
+
+#: classes/PDb_Settings.class.php:1025
+msgid ""
+"This enables list search results that are updated without reloading the "
+"page. It requires Javascript, but search will still work if Javascript is "
+"disabled in the user's browser."
+msgstr ""
+"See seadistus lubab otsitulemustel ennast uuendada lehte uuesti laadimata. "
+"See vajab Javascripti, kuid otsing toimib ka siis, kui Javascript on "
+"kasutaja brauseris aktiveerimata."
+
+#: classes/PDb_Settings.class.php:1033
+msgid "Use PHP Sessions"
+msgstr "Kasuta PHP sessioone"
+
+#: classes/PDb_Settings.class.php:1038
+msgid "uncheck this if PHP sessions are not working."
+msgstr "kui PHP sessioonid ei tööta, siis ära märgi seda"
+
+#: classes/PDb_Settings.class.php:1046
+msgid "Cookie Name"
+msgstr "Küpsise nimi"
+
+#: classes/PDb_Settings.class.php:1051
+msgid ""
+"Change the name of the cookie for compatibility with some web hosting setups."
+msgstr "Muuda küpsise nime"
+
+#: classes/PDb_Settings.class.php:1065
+msgid "Admin List Default Sort"
+msgstr "Vaikimisi halduse nimekirja sorteerimine"
+
+#: classes/PDb_Settings.class.php:1071
+msgid ""
+"The record list shown in the admin section will be sorted by this field by "
+"default. (Field must be checked \"sortable.\")"
+msgstr ""
+"Haldamise moodulis olevate kirjete nimekirja sorteerimise alus. (Väli peab "
+"olema märgitud \"sorteeritavaks.\")"
+
+#: classes/PDb_Settings.class.php:1078
+msgid "Admin List Default Sort Order"
+msgstr "Vaikimisi halduse nimekirja sorteerimise alus"
+
+#: classes/PDb_Settings.class.php:1082
+msgid "Sets the default order of the record list in the admin."
+msgstr "Seadistab vaikimisi kirjete nimekirja järjekorra adminis."
+
+#: classes/PDb_Settings.class.php:1090
+msgid "Show Image Thumbnails in Admin List"
+msgstr "Näita pisipilte halduse nimekirjas"
+
+#: classes/PDb_Settings.class.php:1105
+msgid "Plugin Admin Horizontal Scrolling"
+msgstr "Plugina halduses horisontaalne kerimine"
+
+#: classes/PDb_Settings.class.php:1110
+msgid "use horizontal scrolling on list and fields management screens"
+msgstr "kasuta nimekirja ja väljade muutmise kuvas horisontaalset kerimist"
+
+#: classes/PDb_Settings.class.php:1118
+msgid "Record Edit Access Level"
+msgstr "Kirje muutmise ligipääsu tase"
+
+#: classes/PDb_Settings.class.php:1122
+msgid "sets the user access level for adding, editing and listing records."
+msgstr ""
+"määrab kasutaja ligipääsu taseme kirjete lisamiseks, muutmiseks ja "
+"järjestamiseks"
+
+#: classes/PDb_Settings.class.php:1130
+msgid "Plugin Admin Access Level"
+msgstr "Plugina haldamise ligipääsu tase"
+
+#: classes/PDb_Settings.class.php:1134
+msgid ""
+"sets the user access level for fields management, plugin settings, deleting "
+"records and CSV operations."
+msgstr ""
+"määrab kasutaja ligipääsu taseme väljade muutmiseks, plugina seadeteks, "
+"kirjete kustutamiseks ja CSV operatsioonideks."
+
+#: classes/PDb_Settings.class.php:1142
+msgid "Editor can Export CSV Files"
+msgstr "Toimetaja saab eksportida CSV faile."
+
+#: classes/PDb_Settings.class.php:1146
+msgid "If checked, users with the plugin editor role can export a CSV."
+msgstr "Selle märkimisel saavad toimetaja rolliga kasutajad CSV-d eksportida."
+
+#: classes/PDb_Settings.class.php:1160
+msgid "Custom Plugin Stylesheet"
+msgstr "Kohandatud plugina stiil."
+
+#: classes/PDb_Settings.class.php:1165
+msgid ""
+"use this to add your own styles or override styles applied to the output of "
+"all plugin shortcodes"
+msgstr ""
+"kasuta seda võimalust oma stiilide lisamiseks või kirjuta üle kõikide "
+"lühikoodide stiilid"
+
+#: classes/PDb_Settings.class.php:1175
+msgid "Plugin Print Stylesheet"
+msgstr "Plugina printimise laaditabel"
+
+#: classes/PDb_Settings.class.php:1180
+msgid "use this to format the printed output of all plugin shortcodes"
+msgstr "kasuta seda formaati printimisel kõigi plugina lühikoodide puhul"
+
+#: classes/PDb_Settings.class.php:1200
+msgid "Same Page"
+msgstr "Sama leht"
+
+#: classes/PDb_Settings.class.php:1233
+msgid "None"
+msgstr "Mitte ükski"
+
+#: classes/PDb_Settings.class.php:1322
+msgid "Contributor"
+msgstr "Kaastöötaja"
+
+#: classes/PDb_Settings.class.php:1323
+msgid "Author"
+msgstr "Autor"
+
+#: classes/PDb_Settings.class.php:1324
+msgid "Editor"
+msgstr "Muutja"
+
+#: classes/PDb_Settings.class.php:1325
+msgid "Admin"
+msgstr "Admin"
+
+#: classes/PDb_Settings.class.php:1391 participants-database.php:562
+#: participants-database.php:563 participants-database.php:3545
+msgid "Settings"
+msgstr "Seaded"
+
+#: classes/PDb_Settings.class.php:1482 classes/PDb_Settings.class.php:1488
+msgid "Only numeric values can be used for the \"%s\" setting."
+msgstr "\"%s\" seadistuse jaoks saab kasutada ainult numbrilist väärtust"
+
+#: classes/PDb_Shortcode.class.php:253
+msgctxt "message to show if the plugin cannot find the template"
+msgid ""
+"<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is "
+"correct and the template file is in the correct location."
+msgstr ""
+"<%1$s>%2$s malli ei leitud.</%1$s> Palun vaata, et nimi on korrektne ja "
+"malli failid on õiges asukohas."
+
+#: classes/PDb_Shortcode.class.php:1204
+msgid "next"
+msgstr "järgmine"
+
+#: classes/xnau_CSV_Import.class.php:91
+msgid "The file %s has been uploaded."
+msgstr "%s fail on üleslaaditud"
+
+#: classes/xnau_CSV_Import.class.php:97
+msgid "%s record added"
+msgid_plural "%s records added"
+msgstr[0] "%s kirje lisatud"
+msgstr[1] "%s kirjeid lisatud"
+
+#: classes/xnau_CSV_Import.class.php:101
+msgid "%s matching record updated"
+msgid_plural "%s matching records updated"
+msgstr[0] "%s sobiv kirje uuendatud"
+msgstr[1] "%s sobivat kirjet uuendatud"
+
+#: classes/xnau_CSV_Import.class.php:106
+msgid "%s duplicate record skipped"
+msgid_plural "%s duplicate records skipped"
+msgstr[0] "%s kattuv kirje jäeti vahele"
+msgstr[1] "%s kattuvat kirjet jäeti vahele"
+
+#: classes/xnau_CSV_Import.class.php:110
+msgid "Zero records imported"
+msgstr "Mitte ühtegi kirjet ei imporditud"
+
+#: classes/xnau_CSV_Import.class.php:115
+msgid ""
+"There was an error uploading the file. This could be a problem with "
+"permissions on the uploads directory."
+msgstr ""
+"Faili üleslaadimisel esines viga. Probleem võib olla üleslaadimiste "
+"kataloogi õigustega."
+
+#: classes/xnau_CSV_Import.class.php:115 classes/xnau_CSV_Import.class.php:121
+msgid "Destination"
+msgstr "Sihtkoht"
+
+#: classes/xnau_CSV_Import.class.php:121
+msgid ""
+"Target directory does not exist and could not be created. Try creating it "
+"manually."
+msgstr ""
+"Sihtkataloog ei eksisteeri ning ei suudetud luua. Proovi luua see käsitsi."
+
+#. translators: the %s will be the name of the file
+#: classes/xnau_CSV_Import.class.php:175
+msgid "Error occured while trying to add the data to the database"
+msgstr "Andmete sisestamisel andmebaasi esines viga"
+
+#: classes/xnau_CSV_Import.class.php:175
+msgid ""
+"Input file does not exist or path is incorrect.<br />Attempted to load: %s"
+msgstr ""
+"Sisendfail ei eksisteeri või teekond on ebakorrektne.<br />Proovis laadida: "
+"%s"
+
+#: classes/xnau_CSV_Import.class.php:225
+msgid ""
+"The number of items in line %s is incorrect.<br />There are %s and there "
+"should be %s."
+msgstr "Kirjete arv %s on vale.<br />%s asemel peaks olema %s."
+
+#: classes/xnau_CSV_Import.class.php:234
+msgid "Number of values does not match number of columns"
+msgstr "Väärtuste arv, mis ei sobitu tulpade arvuga."
+
+#: classes/xnau_FormElement.class.php:239
+msgctxt "indicates a write-in choice"
+msgid "other"
+msgstr "muu"
+
+#: classes/xnau_FormElement.class.php:240
+msgctxt "indicates the text to be clicked to go to another web page"
+msgid "Link Text"
+msgstr "Lingi tekst"
+
+#: edit_participant.php:20
+msgid "Add New Participant Record"
+msgstr "Lisa uus kirje"
+
+#: edit_participant.php:25
+msgid "Edit Existing Participant Record"
+msgstr "Lisa olemasolev kirje"
+
+#: edit_participant.php:84
+msgctxt "abbreviation for \"identification\""
+msgid "ID"
+msgstr "ID"
+
+#: edit_participant.php:84
+msgctxt "indicates a new record is being entered"
+msgid "(new record)"
+msgstr "(uus kirje)"
+
+#: edit_participant.php:109
+msgid "hidden"
+msgstr "varjatud"
+
+#: edit_participant.php:115
+msgid "read only"
+msgstr "ainult lugemiseks"
+
+#: edit_participant.php:226
+msgid "Save the Record"
+msgstr "salvesta kirje"
+
+#: edit_participant.php:240
+msgid ""
+"<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
+"strong> save record and continue with same record<br><strong>Next:</strong> "
+"save record and then start a new one"
+msgstr ""
+"<strong>Kinnita:</strong> salvesta kirje ja mine nimekirja "
+"tagasi<br><strong>Lisa:</strong> salvesta kirje ja jätka "
+"samas<br><strong>Järgmine:</strong> salvesta kirje ja alusta uuega"
+
+#: edit_participant.php:243
+msgid "<strong>Previous:</strong> save and move to previous record"
+msgstr "<strong>Eelmine:</strong> salvesta ja liigu eelmisele kirjele"
+
+#: manage_fields_help.php:4
+msgid "Manage Fields Help"
+msgstr "Väljade muutmise abi"
+
+#: manage_fields_help.php:5
+msgid ""
+"Please visit the %sParticipants Database help pages%s for up-to-date "
+"information on using this plugin."
+msgstr ""
+"Palun külasta värskeima pluginaga seotud info saamiseks %sParticipants "
+"Database help pages%s"
+
+#: manage_fields_help.php:6
+msgid "Defining Database Fields"
+msgstr "Andmebaasi väljade määramine."
+
+#: manage_fields_help.php:7
+msgid ""
+"The database stores information about people. On this page, you can "
+"determine what pieces of information are stored and how they are presented "
+"and interacted with. Take a look at the \"Add Participant\" page to see how "
+"the form is presented. You will be able to see your changes to how the "
+"fields are set up by checking this page."
+msgstr ""
+"Andmebaas säilitab inimeste kohta informatsiooni. Sellel lehel saad määrata, "
+"missugune informatsioon on säilitatud, kuidas seda esitletakse ning kuidas "
+"seda saab kasutada. Vaata \"lisa kirje\" lehte, et näha, kuidas vorm on "
+"kuvatud."
+
+#: manage_fields_help.php:8
+msgid ""
+"<strong>Important:</strong> Some of the changes you can make here will "
+"affect existing records in the database. It is best to set up your database "
+"before you begin adding records, but it is possible to add fields to the "
+"database at any time. Any records that were entered before the new field was "
+"added will have no value for the field. This can be filled in by then "
+"editing the record."
+msgstr ""
+"<strong>Tähtis:</strong> Mõned tehtavad muudatused mõjutavad olemasolevaid "
+"andmebaasi kirjeid. Parim viis on seadistada andmebaas enne kirjete "
+"lisamist, kuid on võimalik lisada uusi väljasid igal ajal. Kirjel, mis oli "
+"enne uue välja lisamist juba olemas, ei ole vastavat väärtust. Seda saab "
+"täita kirje muutmisel."
+
+#: manage_fields_help.php:9
+msgid "Delete"
+msgstr "Kustuta"
+
+#: manage_fields_help.php:10
+msgid ""
+"Click on the red \"X\" to delete a field. If there are existing records with "
+"this data field, that information will not be deleted from the database, but "
+"you will no longer be able to display or edit it."
+msgstr ""
+"Vajuta välja kustutamiseks punasele \"X\"-ile. Kui selle täidetud väljaga on "
+"eksisteerivaid kirjeid, siis neid andmeid ei kustutata andmebaasist, küll "
+"aga ei ole võimalik seda enam näha või muuta."
+
+#: manage_fields_help.php:11
+msgid "Order"
+msgstr "Järjestus"
+
+#: manage_fields_help.php:12
+msgid ""
+"Click and drag to reorder the fields. You do not need to click on \"Update\" "
+"for the change to take effect."
+msgstr ""
+"Kliki ja vea väljade järjetamiseks. Uuendamise nupule ei pea vajutama, et "
+"muutused toimiksid."
+
+#: manage_fields_help.php:13
+msgid "Title"
+msgstr "Pealkiri"
+
+#: manage_fields_help.php:14
+msgid ""
+"This is the display title for your field. You can change it at any time, it "
+"won&#39;t affect the field in any way other than to change how it is labeled "
+"in forms.<p>"
+msgstr ""
+"See on välja pealkirjana kuvatav teade. Sa saad seda alati muuta, see ei "
+"mõjuta välja muul moel, kui ainult seda, mida vormides näidatakse.<p>"
+
+#: manage_fields_help.php:15
+msgid "Default"
+msgstr "Vaikimisi"
+
+#: manage_fields_help.php:16
+msgid "If you wish to pre-load a field with a value, you can put it here."
+msgstr ""
+"Kui sa soovid eellaadida väärtusega välja, siis saad selle siin sisestada."
+
+#: manage_fields_help.php:17
+msgid "Group"
+msgstr "Rühm"
+
+#: manage_fields_help.php:18
+msgid ""
+"The database fields are organized into groups, and you can select which "
+"group the database field belongs to here. You can edit the groups under the "
+"\"Field Groups\" tab."
+msgstr ""
+"Andmebaasi väljad on organiseeritud rühmadesse ja sa saad selekteerida, "
+"missugusse rühma andmebaasi väli kuulub. Saad rühmasid muuta \"Väljade "
+"rühmade\" vahelehel."
+
+#: manage_fields_help.php:19
+msgid "Help Text"
+msgstr "Abitekst"
+
+#: manage_fields_help.php:20
+msgid ""
+"When a form is displayed, sometimes it is a good idea to explain something "
+"about the information you want in a field. Any text you put in here will be "
+"displayed next to the field. HTML is allowed, but be careful with that, you "
+"can break things!"
+msgstr "Lisa vormi väljadele selgitav tekst"
+
+#: manage_fields_help.php:21
+msgid "Form Element"
+msgstr "Vormi element"
+
+#: manage_fields_help.php:22
+msgid ""
+"If your piece of information is a simple line of text (like a name), it "
+"should be presented in the form as a text field. If a longer piece of text "
+"is called for, a text-field would be a better choice, and so forth. This is "
+"where you can determine what kind of form element this particular piece of "
+"information will be preseted with."
+msgstr ""
+"Kui andmebaasis olev info on lihtne tekst (nagu nimi), siis see peaks olema "
+"tekstiväli. Kui tekst on pikem, siis teist tüüpi tekstiväli jne. Siin saad "
+"määrata, missugune vormi element esitab seda konkreetset infot."
+
+#: manage_fields_help.php:23
+msgid ""
+"Under the multiple-choice dropdown are the form elements you can choose "
+"from. It is really best to avoid changing this once you have begun adding "
+"records to the database using this field&hellip;unpredictable things can "
+"happen, and although you won&#39;t lose any data, it can make a mess! That "
+"said, it <em>is</em> possible to change between similar elements, like text/"
+"text-field or select/dropdown or select-other/dropdown-other. Be warned, "
+"it&#39;s safest to set this up before you start getting data for the field."
+msgstr ""
+"Under the multiple-choice dropdown are the form elements you can choose "
+"from. It is really best to avoid changing this once you have begun adding "
+"records to the database using this field&hellip;unpredictable things can "
+"happen, and although you won&#39;t lose any data, it can make a mess! That "
+"said, it <em>is</em> possible to change between similar elements, like text/"
+"text-field or select/dropdown or select-other/dropdown-other. Be warned, "
+"it&#39;s safest to set this up before you start getting data for the field."
+
+#: manage_fields_help.php:24
+msgid "Values"
+msgstr "Väärtused"
+
+#: manage_fields_help.php:25
+msgid ""
+"For form elements that have multiple choices, you need to define those "
+"choices here. Type in a comma-separated list of the options you want to "
+"present."
+msgstr ""
+"Siin määra valikud vormi elementide jaoks, millel on mitu valikut. Sisesta "
+"komaga eristatud nimekiri võimalustest, mida tahad esitleda."
+
+#: manage_fields_help.php:26
+msgid ""
+"Don&#39;t try to have a comma in one of your options, though! It&#39;s "
+"posiible to break things by trying to include other (mostly non-text and "
+"punctuation) characters, so test things, and if you get erratic behavior in "
+"the form, you may have characters here that are messing things up. Most "
+"international language characters should be fine, just type them in. Don&#39;"
+"t try to use HTML entities or codes, it just won&#39;t work."
+msgstr ""
+"Ära ürita lisada mõnesse valikusse koma, sest mittetekstilised märgid ning "
+"kirjavahemärgid võivad väljundit lõhkuda. Kui vorm ei tööta korralikult, "
+"siis võivad mõned erilised kirjamärgid seda põhjustada. Enamus "
+"rahvusvahelisi kirjamärke töötavad. HTML koodi pole mõtet vormides kasutada, "
+"see ei tööta."
+
+#: manage_fields_help.php:27
+msgid "Validation"
+msgstr "Valideerimine"
+
+#: manage_fields_help.php:28
+msgid ""
+"If you wish certain fields to be required or have a specific kind of "
+"content, you can set that here. \"Not Required\" means you don&#39;t care if "
+"the field is filled in or not. \"Required\" simply means the field must have "
+"something in it. \"match/regex\" gives you some advanced options for "
+"validating a field. To match the field to the value of another field, put "
+"the name of that field in the box. You can also use a regex to validate the "
+"field, but it is for advanced users, so if you don&#39;t know what a regex "
+"is, get some help before trying to use this feature."
+msgstr ""
+"Siin määratakse kohustuslikud väljad. \"Pole nõutud\" tähendab, et see pole "
+"oluline, et väli oleks täidetud. \"Kohustuslik\" tähendab seda, et väljale "
+"peab olema vähemalt midagi sisestatud. \"Regulaaravaldis\" annab sulle mõned "
+"lisavõimalused välja valideerimiseks. Selleks, et viia kokku ühe välja "
+"väärtus teisega, kirjuta viimase välja nimi kasti. Regulaaravaldist saab "
+"kasutada ka välja valideerimiseks, kuid võimalus on mõeldud neile, kes "
+"oskavad regulaaravaldistega töötada. Selleks on vaja lisainfot või abi."
+
+#: manage_fields_help.php:29
+msgid "Admin Column"
+msgstr "Haldamise tulp"
+
+#: manage_fields_help.php:30
+msgid ""
+"This only affects the \"List Participants\" page of the plugin. On that "
+"page, the database records are listed. Since it would be impractical to "
+"include every field as a column in this list, you can select which fields "
+"are shown here. \"0\" means don&#39;t display it, a number sets the order in "
+"which the column will appear. You have to make sure the numbers make sense, "
+"if you have multiple items with the same number (other than 0), only the "
+"last one with the number will appear."
+msgstr ""
+"See mõjutab ainult \"osalejate nimekirja\" lehte. Sellel lehel on andmebaasi "
+"kirjed reastatud. Siin saab määrata, missugusi väljasid avalikult nimekirjas "
+"näiatakse. \"0\" tähendab, et välja ei kuvata. Number määrab tulpade "
+"kuvamise järjekorra. Numbrid peavad olema loogilised, kui on mitu sama "
+"numbriga sisu, siis näitab ta ainult viimast."
+
+#: manage_fields_help.php:31
+msgid "Display Column"
+msgstr "Näita tulpa"
+
+#: manage_fields_help.php:32
+msgid ""
+"When using the [pdb_list] shortcode to display the list of records, this "
+"column determines whether the column will be shown and in what order."
+msgstr ""
+"Kasutades [pdb_list] lühikoodi nimekirja kuvamiseks, siis see tulp määrab, "
+"missugune tulp ja mis järjekorras on lehel näidatud."
+
+#: manage_fields_help.php:33
+msgid "Switches"
+msgstr "Lülitid"
+
+#: manage_fields_help.php:34
+msgid ""
+"<strong>Sortable</strong> means the list presented on the \"List Participants"
+"\" page can be sorted by this field. Of course, it must have a non-zero "
+"value in \"Column\" to be seen at all."
+msgstr ""
+"<strong>Sorteeritav</strong> tähendab seda, et kirjete nimekirja lehte saab "
+"sorteerida selle välja alusel. Selle jaoks peab olema tulbas nullist erinev "
+"väärtus."
+
+#: manage_fields_help.php:35
+msgid ""
+"<strong>CSV</strong> means the field is one that can be imported or exported "
+"with a CSV file. If you are using CSV files to bring in records, you should "
+"set these switches based on which fields you are planning to import. When "
+"exporting a CSV, this switch determines whether the field will be exported."
+"<p>"
+msgstr ""
+"<strong>CSV</strong> tähendab, et välja saab importida või eksportida CSV "
+"failiga. If you are using CSV files to bring in records, you should set "
+"these switches based on which fields you are planning to import. When "
+"exporting a CSV, this switch determines whether the field will be exported."
+"<p>"
+
+#: manage_fields_help.php:36
+msgid ""
+"<strong>Persistent</strong> is a convenience feature helpful when you are "
+"manually entering a series of records in the admin. If set, it means the "
+"field will carry over to the next blank entry. For instance, if a group of "
+"records from the same city are being entered, set the \"city\" field to be "
+"persistent, then once a city value has been entered in the first record of "
+"the series, the next blank record will have this city pre-filled."
+msgstr ""
+"<strong>Püsiv väli</strong> on tööd lihtsustav võimalus, mis aitab adminis "
+"käsitsi paljude kirjete sisestamisel. Kui see on määratud, siis välja sisu "
+"kandub edasi järgmisele tühjale kirjele. Näiteks, kui teatud kirjete rühmal "
+"peaks olema sisestatud sama linn, siis seadista \"linna\" väli püsivaks ja "
+"automaatselt täituvad ka teiste tühjade kirjete väljad."
+
+#: manage_fields_help.php:37
+msgid ""
+"Persistent fields will also use their set default value in record edit forms "
+"where no value has been set in the record being edited"
+msgstr ""
+"Püsivad väljad kasutavad kirje muutmise vormis määratud vaikeväärtust, kui "
+"pole kirjesse ühtegi väärtust sisestatud"
+
+#: manage_fields_help.php:38
+msgid ""
+"<strong>Signup</strong> selects this field for use in the brief signup form "
+"that is presented with the [pdb_signup] shortcode."
+msgstr ""
+"<strong>Registreerimine</strong> määrab selle välja lühikesel "
+"registreerimisvormil kasutamiseks ([pdb_signup] lühikood)."
+
+#: manage_fields_help.php:39
+msgid ""
+"<strong>Readonly</strong> means that plugin users can see the value of the "
+"field, but cannot edit it. The field will be editable in the admin."
+msgstr ""
+"<strong>Ainult lugemiseks</strong>tähendab seda, et plugina kasutajad näevad "
+"välja väärtust, kuid ei saa seda muuta. Väli on muudetav ainult admini "
+"vaates."
+
+#. Plugin Name of the plugin/theme
+#: participants-database.php:370
+msgid "Participants Database"
+msgstr "Kirjete andmebaas"
+
+#: participants-database.php:535 participants-database.php:536
+msgid "Add Participant"
+msgstr "Lisa kirje"
+
+#: participants-database.php:553 participants-database.php:554
+#: upload_csv.php:40
+msgid "Import CSV File"
+msgstr "Impordi CSV fail"
+
+#: participants-database.php:571 participants-database.php:572
+msgid "Setup Guide"
+msgstr "Juhised"
+
+#. translators: don't translate the words in brackets {}
+#: participants-database.php:624
+msgid "You must remove all fields from the {name} group before deleting it."
+msgstr "Sa pead eemaldama enne kustutamist kõik väljad {name} rühmast."
+
+#. translators: don't translate the words in brackets {}
+#: participants-database.php:626
+msgid "Delete the \"{name}\" {thing}?"
+msgstr "Kustuta \"{name}\" {thing}?"
+
+#: participants-database.php:627
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "Muudatused ei salvestu, kui sulged selle lehe."
+
+#: participants-database.php:2863
+msgid ""
+"There is something wrong with the file you tried to upload. Try another."
+msgstr "Üleslaaditavas failis on viga. Proovi teist faili."
+
+#: participants-database.php:2879 participants-database.php:2907
+msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
+msgstr "\"%s\" võid ainult üles laadida pildifaile nagu JPEG, GIF või PNG."
+
+#: participants-database.php:2881
+msgid "The file selected for \"%s\" must be one of these types: %s. "
+msgstr "Selekteeritud fail \"%s\" peab olema üks nendest tüüpidest: %s. "
+
+#: participants-database.php:2914
+msgid ""
+"The file you tried to upload is too large. The file must be smaller than %sK."
+msgstr ""
+"Fail, mida üritasid üles laadida, on liiga suur. Fail peab olema väiksem kui "
+"%sK."
+
+#: participants-database.php:2921
+msgid "The file could not be saved."
+msgstr "Faili ei saanud salvestada."
+
+#: participants-database.php:2966
+msgid "The uploads directory (%s) could not be created."
+msgstr "Üleslaadimiste kataloogi (%s) ei õnnestunud luua."
+
+#: participants-database.php:3304
+msgid ""
+"The date for \"%s\" was invalid. Please input the date with the exact format "
+"shown"
+msgstr "\"%s\" kuupäev oli vale. Palun sisesta kuupäev näidatud formaadis."
+
+#: participants-database.php:3432 templates/pdb-retrieve-bootstrap.php:69
+#: templates/pdb-retrieve-default.php:60
+msgid "Submit"
+msgstr "Kinnita"
+
+#: participants-database.php:3433
+msgid "Apply"
+msgstr "Lisa"
+
+#: participants-database.php:3436
+msgid "The record has been updated."
+msgstr "Kirje on uuendatud."
+
+#: participants-database.php:3437
+msgid "The new record has been added."
+msgstr "Uus kirje on lisatud."
+
+#: participants-database.php:3438
+msgid "No record was added on query: %s"
+msgstr "Päringul ei lisatud ühtegi kirjet: %s"
+
+#: participants-database.php:3439
+msgid "Database Error: %2$s on query: %1$s"
+msgstr "Andmebaasi viga: %2$s päringul %1$s"
+
+#: participants-database.php:3506
+msgid "WordPress Plugin"
+msgstr "WordPressi plugin"
+
+#: participants-database.php:3507
+msgid ""
+"Helping organizations manage their volunteers, members and participants."
+msgstr ""
+"Aidata organisatsioonidel korraldada oma vabatahtlike, liikmete ja osalejate "
+"nimekirjasid."
+
+#: participants-database.php:3510
+msgid "Developed by"
+msgstr "Arendus"
+
+#: participants-database.php:3511
+msgid ""
+"Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
+msgstr ""
+"Kas on soovitusi või kriitikat pluginat kohta? Võtke ühendust: e-posti "
+"aadress"
+
+#: participants-database.php:3514
+msgid ""
+"Please consider contributing to the continued support and development of "
+"this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin "
+"a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s "
+"Thanks!"
+msgstr ""
+"Palun mõtle sellele, et toetada plugina järjepidevat tuge ning arendust "
+"külastades %1$sthis plugin&#39;s page,%3$s andes pluginale %2$srating%3$s "
+"või arvustus või poetades midagi %1$stip jar.%3$s Aitäh!"
+
+#: participants-database.php:3565
+msgid "Submit a rating or review"
+msgstr "Lisa hinnang või arvustus"
+
+#: participants-database.php:3566
+msgid "Free tech support and continued development relies on your support:"
+msgstr "Tasuta tugi ja jätkuv arendus sõltub Sinu toetusest:"
+
+#: participants-database.php:3566
+msgid "contribute"
+msgstr "tee kaastööd"
+
+#: templates/pdb-retrieve-bootstrap.php:10
+#: templates/pdb-retrieve-default.php:10
+msgid "Request your Private Link"
+msgstr "Küsi oma privaatset linki."
+
+#: templates/pdb-retrieve-bootstrap.php:19
+#: templates/pdb-retrieve-default.php:17
+msgid "Success: your private link has been emailed to you."
+msgstr "Sinu privaatne link on e-posti aadressile saadetud."
+
+#: upload_csv.php:60
+msgid "Prepare a spreadsheet file with the correct format:"
+msgstr "Valmista arvutustabel korrektses formaadis:"
+
+#: upload_csv.php:62
+msgid ""
+"To properly import your membership data, the columns in your spreadsheet "
+"must match exactly the columns in the database. Currently, the CSV export "
+"columns are as follows:"
+msgstr ""
+"Tulbad arvutustabelites peaks klappima täpselt andmebaasi tulpadega. CSV "
+"ekspordi tulbad on sellised:"
+
+#: upload_csv.php:77
+msgid ""
+"This means your spreadsheet needs to have %s columns, and the heading in "
+"each of those columns needs to match exactly the names above. If there is no "
+"data for a particular column, you can include it and leave it blank, or "
+"leave it out entirely. The order of the columns doesn&#39;t matter."
+msgstr ""
+"See tähendab, et su arvutustabelis peab olema %s tulpa ja pealkiri igas "
+"tulbas peab sobituma täpselt ülalolevate nimetustega. Kui konkreetse tulba "
+"kohta ei ole andmeid, siis saad selle lisada ja jätta tühjaks või jätta "
+"täiesti välja. Tulpade järjestus ei ole oluline."
+
+#: upload_csv.php:78
+msgid ""
+"If the imported CSV file has a different column set, that column set will be "
+"imported and used. If a column name does not match a defined column in the "
+"database, the data from that column will be discarded"
+msgstr ""
+"Kui imporditud CSV failil on määratud erinev tulp, siis imporditakse see ja "
+"võetakse kasutusele. Kui tulpa nimi ei sobi kokku admebaasis oleva välkaga, "
+"siis selle tulba andmeid eiratakse."
+
+#: upload_csv.php:79
+msgid "Get Blank CSV File"
+msgstr "Võta tühi CSV fail."
+
+#: upload_csv.php:79
+msgid ""
+"You can download this file, then open it in Open Office, Excel or Google "
+"Docs."
+msgstr ""
+"Saad allalaaditud faili avada Open Office'is, Excelis või Google Docs'is."
+
+#: upload_csv.php:84
+msgid "Export the .csv file"
+msgstr "Ekspordi .csv fail"
+
+#: upload_csv.php:86
+msgid ""
+"When you have your spreadsheet properly set up and filled with data, export "
+"it as any of the following: \"comma-delimited csv\", or just \"csv\". Save "
+"it to your computer then upload it here."
+msgstr ""
+"Kui arvutustabel on korrektselt vormistatud ja andmetega täidetud, ekspordi "
+"see järgnevalt: \"csv-na.\" Salvesta see oma arvutisse ja laadi siia üles."
+
+#: upload_csv.php:87
+msgid ""
+"Exported CSV files should be comma-delimited and enclosed with double-quotes "
+"(\"). Encoding should be \"UTF-8.\""
+msgstr ""
+"Eksporditud CSV failid peaksid olema komaga eritstautd ning suletud "
+"ülakomadega (\"). Kodeering peaks olema \"UTF-8.\""
+
+#: upload_csv.php:91
+msgid "Upload the .csv file"
+msgstr "Laadi üles .csv fail"
+
+#: upload_csv.php:99
+msgid "Enclosure character"
+msgstr "Lisamärk"
+
+#: upload_csv.php:105 upload_csv.php:121
+msgid "Auto"
+msgstr "Automaatne"
+
+#: upload_csv.php:115
+msgid "Delimiter character"
+msgstr "Eraldav märk"
+
+#: upload_csv.php:124
+msgid "tab"
+msgstr "vaheleht"
+
+#: upload_csv.php:168
+msgid ""
+"<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" "
+"setting, imported records are checked against existing records by the field "
+"set in the \"Duplicate Record Check Field\" setting. If a record matching an "
+"existing record is imported, one of three things can happen, based on the "
+"\"Duplicate Record Preference\" setting:"
+msgstr ""
+"<strong>Märkus:</strong>Olenevalt \"kattuvate kirjete eelistustest\" "
+"kontrollitakse imporditud kirjeid \"kattuvate kirjete määramise välja\" "
+"alusel. Kui importimisel kattub kirje olemasolevaga, siis juhtub üks "
+"järgnevast kolmest võimalusest:"
+
+#: upload_csv.php:169
+msgid "Current Setting"
+msgstr "Praegune seadistus"
+
+#: upload_csv.php:172
+msgid ""
+"%sCreate New%s adds all imported records as new records without checking for "
+"a match."
+msgstr ""
+"%sCreate New%s lisab kattumist kontrollimata kõik imporditud kirjed uute "
+"kirjetena."
+
+#: upload_csv.php:173
+msgid ""
+"%sOverwrite%s an existing record with a matching %s will be updated with the "
+"data from the imported record. Blank or missing fields will not overwrite "
+"existing data."
+msgstr ""
+"%sOverwrite%s kirjutab üle olemasoleva kattuva %s imporditud andmetega. "
+"Tühjad või puuduvad väljad ei kirjuta üle olemasolevaid andmeid."
+
+#: upload_csv.php:174
+msgid ""
+"%sDon&#39;t Import%s does not import the new record if it matches the %s of "
+"an existing one."
+msgstr "%sDon&#39;t Import%s ei impordi kirjet, kui see kattub olemasoleva %s"
+
+#: upload_csv.php:183
+msgid "Choose .csv file to import:"
+msgstr "Vali importimiseks .csv fail:"
+
+#: upload_csv.php:184
+msgid "Upload File"
+msgstr "Laadi fail üles"
+
+#. Plugin URI of the plugin/theme
+msgid "http://xnau.com/wordpress-plugins/participants-database"
+msgstr "http://xnau.com/wordpress-plugins/participants-database"
+
+#. Description of the plugin/theme
+msgid "Plugin for managing a database of participants, members or volunteers"
+msgstr "Plugin osalejate, liikmete ja vabatahtlike andmebaaside haldamiseks."
+
+#. Author of the plugin/theme
+msgid "Roland Barker, xnau webdesign"
+msgstr "Roland Barker, xnau webdesign"
+
+#. Author URI of the plugin/theme
+msgid "http://xnau.com"
+msgstr "http://xnau.com"

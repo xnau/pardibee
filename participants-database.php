@@ -327,7 +327,7 @@ class Participants_Db extends PDb_Base {
      * are passed through it
      */
     if ( defined('PDB_MULTILINGUAL') && (bool) PDB_MULTILINGUAL === true ) {
-    add_filter( self::$prefix . 'translate_string', array( __CLASS__, 'string_static_translation' ), 20 );
+      add_filter( self::$prefix . 'translate_string', array( __CLASS__, 'string_static_translation' ), 20 );
     }
 
     // handles ajax request from list filter

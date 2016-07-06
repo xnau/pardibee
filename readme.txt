@@ -107,6 +107,8 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Danish: Bo Hejberg Nielsen
 
+* Estonian: Laura Vunk
+
 If you are multi-lingual and feel like contributing a translation, please contact me at: support@xnau.com.
 
 Please note that several of these translations are out of date. If your language is in this list and you'd like to help me provide the latest translation, please contact me.
