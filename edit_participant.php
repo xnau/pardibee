@@ -8,12 +8,11 @@
  */
 if ( !defined( 'ABSPATH' ) )
   die;
-if ( !Participants_Db::current_user_has_plugin_role() )
+
+$participant_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ), 'flags' => FILTER_NULL_ON_FAILURE ) );
+
+if ( ! Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id === false ? 'admin add ' : 'admin edit ' ) . 'record' ) ) {
   exit;
-$input_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
-if ( !isset( $participant_id ) ) {
-  // if there is no id in the request, use the default record
-  $participant_id = empty( $input_id ) ? false : $input_id;
 }
 
 if ( false === $participant_id ) {

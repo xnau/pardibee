@@ -815,7 +815,7 @@ class PDb_List_Query {
   private function _add_statement_from_filter_string( $statement, $logic = 'AND' )
   {
 
-    $operator = preg_match( '#^([^\2]+)(!=|\>|\<|=|!|~)(.*)$#U', $statement, $matches );
+    $operator = preg_match( '#^(.+)(>=|<=|!=|!|>|<|=|!|~)(.*)$#U', $statement, $matches );
 
     if ( $operator === 0 )
       return false; // no valid operator; skip to the next statement
