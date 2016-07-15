@@ -448,6 +448,8 @@ abstract class xnau_FormElement {
           } elseif (isset($field->module) and $field->module == 'signup') {
             $image->display_mode = $image->image_defined ? 'both' : 'none';
             $image->link = false;
+          } elseif (isset($field->module) and $field->module == 'record') {
+            $image->display_mode = 'filename';
           }
           $image->set_image_wrap();
           $return = $image->get_image_html();
@@ -1022,9 +1024,9 @@ abstract class xnau_FormElement {
     $this->_addline($this->print_hidden_fields(array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value)));
 
     if (!isset($this->attributes['readonly'])) {
-    $this->_addline($this->_input_tag('file'));
+      $this->_addline($this->_input_tag('file'));
 
-    // add the delete checkbox if there is a file defined
+      // add the delete checkbox if there is a file defined
       if (!empty($this->value)) {
       $this->_addline('<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile">' . __('delete', 'participants-database') . '</label></span>');
     	}

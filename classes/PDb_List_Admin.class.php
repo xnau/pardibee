@@ -816,9 +816,9 @@ class PDb_List_Admin {
                               case 'image-upload':
 
                                 $image_params = array(
-                                    'filename' => basename( $value[$column->name] ),
+                                    'filename' => $value[$column->name],
                                     'link' => '',
-                                    'mode' => (Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename'),
+                                    'mode' => Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename',
                                 );
 
                                 if ( Participants_Db::is_single_record_link( $column ) ) {
@@ -826,6 +826,7 @@ class PDb_List_Admin {
                                 }
                                 // this is to display the image as a linked thumbnail
                                 $image = new PDb_Image( $image_params );
+                                
                                 $display_value = $image->get_image_html();
 
                                 break;

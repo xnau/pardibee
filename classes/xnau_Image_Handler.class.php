@@ -26,81 +26,98 @@
  *   watermarking
  *   
  */
-if ( ! defined( 'ABSPATH' ) ) die;
+if (!defined('ABSPATH'))
+  die;
+
 abstract class xnau_Image_Handler {
 
   /**
    * @var string name of the cache group
    */
   const group = 'xnau_image_handler';
+
   /**
    * true if the image file has been located and verified
    * 
    * @var bool
    */
   var $file_exists = false;
+
   /**
    * the the image defined and not a default image?
    *
    * @var bool true if the image file is defined and is not a default image
    */
   var $image_defined = false;
+
   /**
    * holds the image filename
    * 
    * @var string
    */
   var $image_file;
+
   /**
    * holds the URI to the image
    * @var string
    */
   var $image_uri;
+
   /**
    * holds the pixel width of the image
    * @var int
    */
   var $width = 0;
+
   /**
    * holds the pixel height of the image
    * @var int
    */
   var $height = 0;
+
   /**
    * the CSS classname for the image
    * @var string
    */
   var $classname;
+
   /**
    * the image wrap HTML
    * @var array first element is open tag, second is close tag
    */
   var $image_wrap;
+
   /**
    *
    * @var string holds the path to the default image
    */
   var $default_image = false;
+
   /**
    * @var string the path to the image directory
    */
   var $image_directory;
+
   /**
    * @var string the URL for the image directory
    */
   var $image_directory_uri;
+
   /**
    * @var string class name for an undefined image
    */
   var $emptyclass = 'no-image';
+
   /**
    * @var string class name for a default image
    */
   var $defaultclass = 'default-image';
+
   /**
    * @var string the "rel" attribute of the image
    */
   var $relstring;
+
   /**
    * determines the display mode for the returned HTML:
    *    image - shows the image (default)
@@ -119,6 +136,7 @@ abstract class xnau_Image_Handler {
    * @var mixed
    */
   var $link;
+
   /**
    * the calling module
    * 
@@ -137,22 +155,24 @@ abstract class xnau_Image_Handler {
    *                     'mode' => display mode: as an image or a filename or both
    *                     'module' => calling module
    */
-  function __construct($config) {
+  function __construct($config)
+  {
 
     $this->set_image_directory();
 
+    $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
+
     $this->set_default_image();
-    
+
     $this->image_file = isset($config['filename']) ? $config['filename'] : '';
     $this->link = isset($config['link']) ? $config['link'] : '';
     $this->classname = isset($config['classname']) ? $config['classname'] : 'image-field-wrap';
-    $this->display_mode = isset($config['mode']) ? $config['mode'] : 'image';
     $this->relstring = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
     $this->module = isset($config['module']) ? $config['module'] : '';
 
     $this->_file_setup();
-    $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
 
+    $this->set_display_mode(isset($config['mode']) ? $config['mode'] : '');
   }
 
   /**
@@ -171,39 +191,35 @@ abstract class xnau_Image_Handler {
    * 
    * @return string HTML
    */
-  public function get_image_html() {
+  public function get_image_html()
+  {
 
-    if ($this->file_exists) {
-      switch ($this->display_mode) {
-        case 'both':
-          $pattern = '%1$s<img src="%2$s" /><span class="image-filename">%4$s</span>%3$s';
-          break;
-        case 'filename':
-          $pattern = '%1$s%4$s%3$s';
-          break;
-        case 'none':
-          $pattern = '';
-          break;
-        case 'image':
-        default:
-          $pattern = '%1$s<img src="%2$s" />%3$s';
-      }
-    } else {
-      $pattern = '%1$s%2$s%3$s';
-      if ($this->in_admin()) $this->image_uri = $this->image_file;
+    switch ($this->display_mode) {
+      case 'both':
+        $pattern = '%1$s<img src="%2$s" /><span class="image-filename">%4$s</span>%3$s';
+        break;
+      case 'filename':
+        $pattern = '%1$s%4$s%3$s';
+        break;
+      case 'none':
+        $pattern = '';
+        break;
+      case 'image':
+      default:
+        $pattern = '%1$s<img src="%2$s" />%3$s';
     }
 
-    return sprintf($pattern,
+    return sprintf($pattern, 
             sprintf($this->image_wrap[0], 
-                    $this->classname, 
+                    $this->wrap_class(), 
                     $this->link, 
-                    basename($this->image_uri),
+                    basename($this->image_uri), 
                     $this->relstring
-                    ), 
+            ), 
             $this->image_uri, 
-            $this->image_wrap[1],
+            $this->image_wrap[1], 
             $this->image_file
-            );
+          );
   }
 
   /**
@@ -211,7 +227,8 @@ abstract class xnau_Image_Handler {
    *
    * @return string the image filename
    */
-  public function get_image_file() {
+  public function get_image_file()
+  {
 
     return $this->image_file;
   }
@@ -230,6 +247,40 @@ abstract class xnau_Image_Handler {
   abstract function set_default_image($image = false);
 
   /**
+   * sets the display mode
+   * 
+   * @param string  $mode the default mode to use
+   * @return null
+   */
+  protected function set_display_mode($mode = '')
+  {
+    if ($this->file_exists) {
+      if (!empty($mode)) {
+        $this->display_mode = $mode;
+      } elseif (is_admin()) {
+        $this->display_mode = 'filename';
+      } else {
+        $this->display_mode = 'image';
+      }
+    } elseif (!empty($this->default_image) && !is_admin()) {
+      $this->display_mode = 'image';
+    } else {
+      $this->display_mode = 'none';
+    }
+  }
+  
+  /**
+   * provides a wrap cvlass name
+   * 
+   * @param string $class a classname string to add
+   * @return string
+   */
+  protected function wrap_class( $class = '')
+  {
+    return $this->classname . ' ' . $class . ' ' . 'display-mode-' . $this->display_mode;
+  }
+
+  /**
    * process the filename to test it's validity, set it's path and find its properties
    *
    * sets the path to the file, sets dimensions, sets file_exists flag, sets the HTML 
@@ -237,27 +288,30 @@ abstract class xnau_Image_Handler {
    * 
    * @param unknown $filename if set, string image file name, possibly including a path
    */
-  protected function _file_setup() {
+  protected function _file_setup()
+  {
 
     $status = 'untested';
-    
+
     switch (true) {
-      
+
       case (empty($this->image_file)):
-        
-        if (!$this->in_admin()) $status = $this->_showing_default_image();
-        else $status = 'admin';
+
+        if (!$this->in_admin())
+          $status = $this->_showing_default_image();
+        else
+          $status = 'admin';
         break;
-      
+
       case ($this->test_absolute_path_image($this->image_file)) :
         $status = 'absolute';
         $this->image_uri = $this->image_file;
-        $this->image_file = basename($this->image_file);
+        //$this->image_file = basename($this->image_file);
         $this->file_exists = true;
         $this->image_defined = true;
         $this->_set_dimensions();
         break;
-      
+
       default:
 
         /*
@@ -265,23 +319,23 @@ abstract class xnau_Image_Handler {
          * directory as defined in the plugin settings
          */
         $status = 'basename';
-        $this->set_up_file_props($this->concatenate_directory_path( $this->image_directory, basename($this->image_file), false ));
-  
+        $this->set_up_file_props();
+
         // if we still have no valid image, drop in the default
         if (!$this->file_exists) {
-         if (!$this->in_admin()) $status = $this->_showing_default_image($this->image_file);
-         else $status = 'file-notfound';
+          if (!$this->in_admin())
+            $status = $this->_showing_default_image($this->image_file);
+          else
+            $status = 'file-notfound';
         } else {
-         $this->image_defined = true;
-         $this->_set_dimensions();
+          $this->image_defined = true;
+          $this->_set_dimensions();
         }
-        
-      
     }
-    
+
     $this->classname .= ' ' . $status;
   }
-  
+
   /**
    * sets up the image display if no image file is found
    *
@@ -289,43 +343,47 @@ abstract class xnau_Image_Handler {
    *                         of showing what the db contains
    * @return string status
    */
-  protected function _showing_default_image($filename = false){
-        
-        if (!empty($this->default_image)) {
+  protected function _showing_default_image($filename = false)
+  {
 
-          if ($filename) $this->image_file = basename($filename);
-          else $this->image_file = '';
-          $this->image_uri = $this->default_image;
-          $this->_set_dimensions();
-          $status = $this->defaultclass;
-          $this->file_exists = true;
-          
-        } else {
-          
-          $this->image_uri = '';
-          $this->image_file = '';
-          $status = $this->emptyclass;
-        }
-        
-        return $status;
-    
+    if (!empty($this->default_image)) {
+
+      if ($filename) {
+        $this->image_file = basename($filename);
+      }
+      $this->image_uri = $this->default_image;
+      $this->_set_dimensions();
+      $status = $this->defaultclass;
+      $this->file_exists = true;
+    } else {
+
+      $this->image_uri = '';
+      $this->display_mode = 'none';
+      //$this->image_file = '';
+      $status = $this->emptyclass;
+    }
+
+    return $status;
   }
 
   /**
    * tests a file and sets properties if extant
    *
-   * @param string $filename a path to a file, relative to the WP root
+   * @param string $filename name of the file, could be relative path
    *
    * sets the file_exists flag to true if the file exists
    */
-  protected function set_up_file_props($filename) {
-    
+  protected function set_up_file_props($filename = '')
+  {
+
+    $filename = empty($filename) ? $this->image_file : $filename;
+
     //error_log(__METHOD__.' testing:'.$filename.' getting:'.($this->_file_exists($filename)?'yes':'no'));
 
-    if ($this->_file_exists($filename)) {
-      
-      $this->image_file = basename($filename);
-      $this->image_uri = $this->image_directory_uri.$this->image_file;
+    $filepath = $this->concatenate_directory_path($this->image_directory, $filename, false);
+
+    if ($this->_file_exists($filepath)) {
+      $this->image_uri = $this->image_directory_uri . $this->image_file;
       $this->file_exists = true;
     }
   }
@@ -339,14 +397,16 @@ abstract class xnau_Image_Handler {
    * @return bool true if the file exists
    *
    */
-  protected function _file_exists($filepath) {
-      
+  protected function _file_exists($filepath)
+  {
+
     //error_log(__METHOD__.' checking path:'.$filepath.' is_file:'.(is_file($filepath)?'yes':'no'));
-    
-    if (empty($filepath)) return false;
+
+    if (empty($filepath))
+      return false;
 
     // first use the standard function
-    if (is_file($filepath)){
+    if (is_file($filepath)) {
       return true;
     }
 
@@ -361,7 +421,6 @@ abstract class xnau_Image_Handler {
 //
 //      return $this->url_exists($this->concatenate_directory_path($this->image_directory_uri,basename($filepath),false));
 //    }
-
     // we give up, can't find the file
     return false;
   }
@@ -375,20 +434,22 @@ abstract class xnau_Image_Handler {
    * @param string $url the absolute url of the file to test
    * @return bool
    */
-  function url_exists($url) {
-    
+  function url_exists($url)
+  {
+
     $code = $this->get_http_response_code($url);
-    
+
     return $code == 200;
   }
-  
+
   /**
    * gets an HTTP response header
    * 
    * @param string $url the URI to test
    * @return int the final http response code
    */
-  function get_http_response_code($url) {
+  function get_http_response_code($url)
+  {
     $options['http'] = array(
         'method' => "HEAD",
         'ignore_errors' => 1,
@@ -397,18 +458,20 @@ abstract class xnau_Image_Handler {
     $context = stream_context_create($options);
     $body = file_get_contents($url, NULL, $context);
     $responses = $this->parse_http_response_header($http_response_header);
-    
+
     $last = array_pop($responses);
-    
+
     return $last['status']['code']; // last status code
   }
+
   /**
    * parse_http_response_header
    *
    * @param array $headers as in $http_response_header
    * @return array status and headers grouped by response, last first
    */
-  function parse_http_response_header(array $headers) {
+  function parse_http_response_header(array $headers)
+  {
     $responses = array();
     $buffer = NULL;
     foreach ($headers as $header) {
@@ -445,7 +508,7 @@ abstract class xnau_Image_Handler {
 
     return $responses;
   }
-  
+
   /**
    * tests an image at an absolute address
    * 
@@ -453,28 +516,31 @@ abstract class xnau_Image_Handler {
    * 
    * sets $file_exists to true if found
    */
-  public function test_absolute_path_image($src) {
-    
+  public function test_absolute_path_image($src)
+  {
+
     if ($this->test_url_validity($src) and false !== self::getimagesize($src)) {
       return $this->file_exists = true;
     }
   }
-  
+
   /**
    * test an absolute path for validity; looks for http, https, or no protocol, must end in a file name
    *
    * @param string $url the path to test
    * @return bool
    */
-  public function test_url_validity($url) {
-    return 0 !== preg_match("#^(https?:|)//.+/.+\..{2,4}$#",$url);
+  public function test_url_validity($url)
+  {
+    return 0 !== preg_match("#^(https?:|)//.+/.+\..{2,4}$#", $url);
   }
 
   /**
    * sets the dimension properties
    *
    */
-  protected function _set_dimensions() {
+  protected function _set_dimensions()
+  {
 
     $getimagesize = self::getimagesize($this->image_uri);
 
@@ -485,17 +551,16 @@ abstract class xnau_Image_Handler {
     }
   }
 
-  
   /**
    * performs a php getimagesize using a cache
    * 
    * @param string $uri the image uri
    * @return array
    */
-  public static function getimagesize( $uri )
+  public static function getimagesize($uri)
   {
     $result = wp_cache_get($uri, self::group);
-    if ( $result === false ) {
+    if ($result === false) {
       $result = @getimagesize($uri);
       wp_cache_set($uri, $result, self::group);
     }
@@ -508,14 +573,16 @@ abstract class xnau_Image_Handler {
    * @param array $wrap_tags  the HTML to place before and after the image tag; 
    * %s is replaced with the classname
    */
-  public function set_image_wrap($wrap_tags = array()) {
+  public function set_image_wrap($wrap_tags = array())
+  {
 
     if (!empty($wrap_tags)) {
       $this->image_wrap = array(
           $wrap_tags[0],
           $wrap_tags[1],
-          );
-    } else $this->_set_image_wrap (); 
+      );
+    } else
+      $this->_set_image_wrap();
   }
 
   /**
@@ -523,24 +590,27 @@ abstract class xnau_Image_Handler {
    * 
    * @return null
    */
-  protected function _set_image_wrap() {
+  protected function _set_image_wrap()
+  {
 
     $this->image_wrap = array(
         '<span class="%s">',
         '</span>'
     );
   }
-  
+
   /**
    * adds a final slash to a directory name if there is none
    * 
    * @param string $path the path to test for an end slash
    * @return string the $path with a slash at the end
    */
-  public function end_slash( $path ) {
-    
-    return rtrim($path,'/').'/';
+  public function end_slash($path)
+  {
+
+    return rtrim($path, '/') . '/';
   }
+
   /**
    * makes sure there is one and only one slash between directory names in a
    * concatenated path, and it ends in a slash
@@ -549,19 +619,22 @@ abstract class xnau_Image_Handler {
    * @param string $path2    second part of the path
    * @param bool   $endslash determines whether to end the path with a slash or not
    */
-  public static function concatenate_directory_path( $path1, $path2, $endslash = true ) {
-    
-    return rtrim( $path1, '/' ) . '/' . ltrim( rtrim( $path2, '/' ), '/' ) . ( $endslash ? '/' : '' );
+  public static function concatenate_directory_path($path1, $path2, $endslash = true)
+  {
+
+    return rtrim($path1, '/') . '/' . ltrim(rtrim($path2, '/'), '/') . ( $endslash ? '/' : '' );
   }
+
   /**
    * indicates whether the user is in the admin section, taking into account that
    * AJAX requests look like they are in the admin, but they're not
    *
    * @return bool
    */
-  public function in_admin() {
-    
-    return is_admin() && ! defined('DOING_AJAX');
+  public function in_admin()
+  {
+
+    return is_admin() && !defined('DOING_AJAX');
   }
 
 }
