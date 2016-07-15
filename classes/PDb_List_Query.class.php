@@ -348,7 +348,7 @@ class PDb_List_Query {
    * provides the list page value from the current request
    * 
    * 
-   * @return int|bool page number, bool false if there is n page number in the current request  
+   * @return int|bool page number, bool false if there is no page number in the current request  
    */
   private function requested_page()
   {

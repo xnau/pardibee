@@ -387,6 +387,12 @@ input.otherfield[type=text] {
 .image-field-wrap {
   display: inline-block;
 }
+.image-field-wrap.display-mode-filename,
+.image-field-wrap.display-mode-both,
+.pdb-admin-edit-participant .image-field-wrap {
+  display: block;
+  margin: 0 10px 10px 0;
+}
 .image-field-wrap.empty {
   height: auto;
 }

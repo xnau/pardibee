@@ -61,7 +61,7 @@ class PDb_FormElement extends xnau_FormElement {
     return $Element->_output();
   }
 
-  /*********************
+  /*   * *******************
    * PUBLIC METHODS
    */
 
@@ -103,9 +103,9 @@ class PDb_FormElement extends xnau_FormElement {
 
     $output = array();
 
-    $atts = array( 'type' => 'hidden' );
+    $atts = array('type' => 'hidden');
 
-    foreach ($fields as $k => $v) {
+    foreach ( $fields as $k => $v ) {
 
       $atts['name'] = $k;
       $atts['value'] = $v;
@@ -179,21 +179,32 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'image-upload' :
 
+          $module = isset( $field->module ) ? $field->module : '';
+          switch ($module) {
+            case 'single':
+            case 'list':
+              $display_mode = 'image';
+              break;
+            case 'signup':
+            case 'admin-edit':
+            case 'record':
+              $display_mode = 'both';
+              break;
+            default :
+              $display_mode = 'none';
+          }
+
           $image = new PDb_Image( array(
               'filename' => $field->value,
               'link' => isset( $field->link ) ? $field->link : false,
-              'mode' => 'both',
               'module' => $field->module,
-                  ) );
+              'mode' => $display_mode,
+          ) );
 
           if ( $html ) {
-            if ( isset( $field->module ) and in_array( $field->module, array( 'single', 'list' ) ) ) {
-              $image->display_mode = 'image';
-            } elseif ( isset( $field->module ) and in_array( $field->module, array( 'signup' ) ) ) {
-              $image->display_mode = $image->image_defined ? 'both' : 'none';
-              $image->link = false;
-            }
+
             $image->set_image_wrap();
+
             $return = $image->get_image_html();
           } elseif ( $image->file_exists ) {
             $return = $image->get_image_file();
@@ -372,7 +383,7 @@ class PDb_FormElement extends xnau_FormElement {
 
     $optgroup = false;
 
-    foreach ($this->_make_assoc( $this->options ) as $option_key => $option_value) {
+    foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
       $option_key = Participants_Db::apply_filters( 'translate_string', stripslashes( $option_key ) );
 
@@ -429,10 +440,10 @@ class PDb_FormElement extends xnau_FormElement {
     if ( !is_array( $multivalues ) )
       return self::get_value_title( $field->value, $field->name );
     // remove empty elements and convert to string for display
-    $multivalues = array_filter( (array) $multivalues, array( __CLASS__, 'is_displayable' ) );
+    $multivalues = array_filter( (array) $multivalues, array(__CLASS__, 'is_displayable') );
 
     $titles = array();
-    foreach ($multivalues as $value) {
+    foreach ( $multivalues as $value ) {
       $titles[] = self::get_value_title( $value, $field->name );
     }
     return implode( ', ', $titles );
@@ -487,7 +498,7 @@ class PDb_FormElement extends xnau_FormElement {
     else
       $max_size = ( ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
 
-    $this->_addline( $this->print_hidden_fields( array( 'MAX_FILE_SIZE' => $max_size, $this->name => $this->value ) ) );
+    $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value) ) );
 
     if ( !isset( $this->attributes['readonly'] ) ) {
 
@@ -593,7 +604,7 @@ class PDb_FormElement extends xnau_FormElement {
     // default template for links
     $linktemplate = $template === false ? '<a href="%1$s" >%2$s</a>' : $template;
 
-    $linktext = empty( $linktext ) ? str_replace( array( 'http://', 'https://' ), '', $URI ) : $linktext;
+    $linktext = empty( $linktext ) ? str_replace( array('http://', 'https://'), '', $URI ) : $linktext;
 
     //construct the link
     return sprintf( $linktemplate, $URI, esc_html( $linktext ) );
@@ -619,7 +630,7 @@ class PDb_FormElement extends xnau_FormElement {
     $return = array();
     if ( is_array( $options_array ) ) {
       $i = 0;
-      foreach ($options_array as $index => $option_value) {
+      foreach ( $options_array as $index => $option_value ) {
         if ( !is_string( $index ) or $index == 'other' ) {
           // we use the stored value
           $return[$option_value] = $option_value;
@@ -652,7 +663,7 @@ class PDb_FormElement extends xnau_FormElement {
     if ( isset( Participants_Db::$fields[$fieldname] ) ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
       if ( is_array( $options_array ) ) {
-        foreach ($options_array as $option_title => $option_value) {
+        foreach ( $options_array as $option_title => $option_value ) {
           if ( !is_string( $option_title ) or $option_title === 'other' ) {
             // we use the stored value
           } elseif ( $option_value === $value ) {
@@ -703,7 +714,7 @@ class PDb_FormElement extends xnau_FormElement {
            * added filter: pdb-value_title_match_pattern
            */
           $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', '/.*?\]([^[]+?)\[[^]]*/' );
-          foreach ($options_array as $key => $option) {
+          foreach ( $options_array as $key => $option ) {
             preg_match_all( $title_pattern, $key, $matches );
             if ( is_array( $matches[1] ) && in_array( $title, $matches[1] ) ) {
               $value = $option;
