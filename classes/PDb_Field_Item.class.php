@@ -166,6 +166,17 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function has_content() {
     return ! $this->is_empty();
   }
+  
+  /**
+   * handles supplying property values
+   * 
+   * @param string  $name of the property
+   * @retrun  mixed the property value or empty string if no value defined
+   */
+  public function __get( $name )
+  {
+    return isset( $this->{$name} ) ? $this->{$name} : '';
+  }
 	
 	/**
 	 * is this the single record link?

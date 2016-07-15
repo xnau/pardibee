@@ -153,6 +153,10 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_field_value_display( $field, $html = true )
   {
+    
+    if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
+      $field = new PDb_Field_Item( $field );
+    }
 
     $return = '';
 
@@ -179,8 +183,7 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'image-upload' :
 
-          $module = isset( $field->module ) ? $field->module : '';
-          switch ($module) {
+          switch ($field->module) {
             case 'single':
             case 'list':
               $display_mode = 'image';
@@ -196,7 +199,7 @@ class PDb_FormElement extends xnau_FormElement {
 
           $image = new PDb_Image( array(
               'filename' => $field->value,
-              'link' => isset( $field->link ) ? $field->link : false,
+              'link' => $field->link,
               'module' => $field->module,
               'mode' => $display_mode,
           ) );
