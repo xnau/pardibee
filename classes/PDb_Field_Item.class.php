@@ -266,9 +266,14 @@ class PDb_Field_Item extends PDb_Template_Item {
 
     $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array($this->form_element, array('text-line', 'date', 'timestamp')) ? ' regular-text' : '' );
     
-    if ( in_array( $this->validation, array( 'yes', 'email-regex' ) ) ) {
-      $this->attributes['required'] = true;
-    }
+    /**
+     * @filter pdb-before_display_form_input
+     * 
+     * allows a callback to alter the field object before displaying a form input element
+     * 
+     * @param PDb_Form_Element this instance
+     */
+    Participants_Db::apply_filters('before_display_form_input', $this);
 
     if ($this->readonly && !in_array($this->form_element, array('captcha'))) {
 
