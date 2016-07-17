@@ -34,7 +34,7 @@ class PDb_Tag_Template {
    * sets up the class
    * 
    * @param string $template the template containing replacement tags
-   * @param array|int $data associative array of data to draw fomr, or an integer record ID
+   * @param array|int $data associative array of data to draw from, or an integer record ID
    */
   private function __construct( $template, $data )
   {
@@ -163,6 +163,34 @@ class PDb_Tag_Template {
     } else {
       $this->data = array();
     }
+    $this->stringify_data_array();
+  }
+  
+  /**
+   * prepares the data array values for inclusion in the text
+   * 
+   * mostly converting serializations and arrays into a string format
+   * 
+   */
+  protected function stringify_data_array()
+  {
+    foreach ( $this->data as &$value ) {
+      $value = $this->stringify_array( $value );
+    }
+  }
+  /**
+   * converts an array or serialized array to a string
+   * 
+   * @param string|array could be string, serialized array, or array
+   * @return string
+   */
+  protected function stringify_array( $array )
+  {
+    $value = maybe_unserialize($array);
+    if ( !is_array( $value ) ) {
+      return $value;
+    }
+    return implode( Participants_Db::apply_filters('stringify_array_glue', ', '), $value );
   }
 
 }
