@@ -29,7 +29,20 @@ class PDb_Live_Notification {
    * @var string name of the content
    */
   private $name;
+
+  /**
+   * @var array defines the post IDs to use for the named content
+   */
+  static $post_index = array(
+      'greeting' => 2047,
+      'latest' => 2050
+  );
   
+  /**
+   * @var int the base cache lifetime
+   */
+  private $cache_life = DAY_IN_SECONDS;
+
   /**
    * sets up the instance
    * 
@@ -40,6 +53,27 @@ class PDb_Live_Notification {
     $this->name = $name;
   }
 
+  /**
+   * updates the transient
+   * 
+   * this is called by the WP cron on a daily basis. The cache lasts for one day 
+   * for each content type and we will only refresh the cache for one type at a time. 
+   * This is so that we don't try to do too much on the cron, so each day one of 
+   * the notifications will be refreshed.
+   *
+   */
+  public static function update_content_cache()
+  {
+    foreach ( array_keys( self::$post_index ) as $name ) {
+      $notification = new self( $name );
+      if ( $notification->refresh_cached_response() ) {
+        /*
+         * we are refreshing the cache by calling in to xnau.com for fresh content
+         */
+        break; // we only do this once, so break out of the foreach loop
+      }
+    }
+  }
 
   /**
    * supplies the greeting content
@@ -51,6 +85,7 @@ class PDb_Live_Notification {
     $notification = new self( 'greeting' );
     return $notification->get_response_body();
   }
+
   /**
    * supplies the latest news content
    * 
@@ -65,36 +100,50 @@ class PDb_Live_Notification {
   /**
    * loads the named response body
    * 
-   * gets the response body from a transient unless it has expired
+   * gets the response body from a transient unless it has expired in which case 
+   * it gets it from xnau.com
    * 
-   * the transient expires after a week, so new content will only be gotten once 
-   * a week by any one user
-   * 
-   * @return string the JSON response
+   * @return string the response body
    */
   private function get_response_body()
   {
     $response = get_transient( $this->transient_name() );
-    if ( !$response ) {
-      $response = $this->get_reponse();
-      $this->store_response($response);
+    if ( ! $response ) {
+      $this->refresh_cached_response();
+      $response = get_transient( $this->transient_name() );
     }
     return $response;
   }
-  
+
+  /**
+   * refreshes the response cache
+   * 
+   * @return bool true if the cache was stale and needed to be refreshed
+   */
+  private function refresh_cached_response()
+  {
+    $cache_is_stale = false;
+    $response = get_transient( $this->transient_name() );
+    if ( !$response ) {
+      $this->store_response( $this->get_response() );
+      $cache_is_stale = true;
+    }
+    return $cache_is_stale;
+  }
+
   /**
    * gets the response
    * 
    * @return string string content; empty string if the endpoint doesn't exist
    */
-  private function get_reponse()
+  private function get_response()
   {
     if ( $this->named_endpoint() ) {
       return wp_remote_retrieve_body( wp_remote_get( $this->endpoint() ) );
     }
     return '';
   }
-  
+
   /**
    * sets the transient
    * 
@@ -102,8 +151,8 @@ class PDb_Live_Notification {
    */
   private function store_response( $response )
   {
-    if ( ! empty( $response ) ) {
-      set_transient( $this->transient_name(), $response, WEEK_IN_SECONDS );
+    if ( !empty( $response ) ) {
+      set_transient( $this->transient_name(), $response, count( self::$post_index ) * $this->cache_life );
     }
   }
 
@@ -116,6 +165,7 @@ class PDb_Live_Notification {
   {
     return self::cache_name . $this->name;
   }
+
   /**
    * supplies the endpoint url
    * 
@@ -135,10 +185,7 @@ class PDb_Live_Notification {
    */
   private function named_endpoint()
   {
-    $post_index = array(
-        'greeting' => 2047,
-        'latest' => 2050
-    );
-    return isset( $post_index[$this->name] ) ? $post_index[$this->name] : false;
+    return isset( $this->post_index[$this->name] ) ? $this->post_index[$this->name] : '';
   }
+
 }
