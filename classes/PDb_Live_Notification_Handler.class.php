@@ -44,7 +44,7 @@ class PDb_Live_Notification_Handler {
   public static function greeting()
   {
     $notification = new PDb_Live_Notification( 'greeting' );
-    return $notification->get_response_body();
+    return $notification->content();
   }
 
   /**
@@ -55,7 +55,7 @@ class PDb_Live_Notification_Handler {
   public static function latest_news()
   {
     $notification = new PDb_Live_Notification( 'latest' );
-    return $notification->get_response_body();
+    return $notification->content();
   }
 
   /**
