@@ -135,26 +135,31 @@ fieldset.widefat.inline-controls label {
 }
 
 /*** FOOTER ***/
-#PDb_footer {
+.pdb-footer {
   display: inline-block;
-  background-color: rgba(245, 156, 0, 0.1);
-  border-color: rgba(245, 156, 0, 0.4);
   padding:7px;
   width:auto;
   overflow:auto;
 }
-#PDb_footer .glyph-link {    
+.pdb-footer.padded {
+  padding: 0px 15px;
+}
+#PDb_footer {
+  background-color: rgba(245, 156, 0, 0.1);
+  border-color: rgba(245, 156, 0, 0.4);
+}
+.pdb-footer .glyph-link {    
   display: block;
   float: left;
   font-size: 36px;
   height: 36px;
   overflow: hidden;
 } 
-#PDb_footer .icon-xnau-glyph {
+.pdb-footer .icon-xnau-glyph {
   margin-right: 0.5ex;
   background-color: #ffffff;
 }
-#PDb_footer .section {
+.pdb-footer .section {
   width:280px;
   float:left;
   margin:0 18px;
