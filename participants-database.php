@@ -3347,6 +3347,11 @@ class Participants_Db extends PDb_Base {
 //    var_dump($greeting);
 //    error_log(__METHOD__.' greeting: '.  ob_get_clean());
     ?>
+    <?php if ( $greeting && self::apply_filters('show_live_notfications', true ) ) : ?>
+    <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
+      <?php echo wpautop( $greeting ); ?>
+    </div>
+    <?php endif;?>
     <div id="PDb_footer" class="pdb-footer widefat redfade postbox">
       <div class="section">
         <h4><?php echo 'Participants Database ', self::$plugin_version ?><br /><?php _e( 'WordPress Plugin', 'participants-database' ) ?></h4>
@@ -3360,12 +3365,7 @@ class Participants_Db extends PDb_Base {
         <p><?php printf( __( 'Please consider contributing to the continued support and development of this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s Thanks!', 'participants-database' ), '<a href="http://xnau.com/wordpress-plugins/participants-database#donation-link">', '<a href="http://wordpress.org/extend/plugins/participants-database/">', '</a>' ) ?></p>
       </div>
     </div>
-    <?php if ( $greeting ) : ?>
-      <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
-      <?php echo wpautop( $greeting ); ?>
-      </div>
-      <?php
-    endif;
+    <?php
   }
 
   /**
