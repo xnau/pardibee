@@ -1416,6 +1416,7 @@ ORDER BY g.order, v.order';
    * @return null
    */
   public function show_settings_form() {
+    $news = PDb_Live_Notification_Handler::latest_news();
     ?>
     <div class="wrap participants_db settings-class">
       <?php Participants_Db::admin_page_heading(Participants_Db::$plugin_title . ' ' . __('Settings', 'participants-database')) ?>
@@ -1434,6 +1435,11 @@ ORDER BY g.order, v.order';
               printf('<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor($id), $title);
             ?>
           </ul>
+          <?php if ( $news ) : ?>
+          <div class="pdb-news-panel">
+            <?php echo wpautop( $news ); ?>
+          </div>
+          <?php endif ?>
           <?php
           settings_fields($this->WP_setting);
 
