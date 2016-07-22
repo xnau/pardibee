@@ -80,10 +80,14 @@ class PDb_Field_Item extends PDb_Template_Item {
   
   /**
    * 
-   * @param array $field the field attributes
+   * @param array|string $field the field attributes or field name
    * @param mixed $id the id of the source record if available
    */
   public function __construct( $field, $id = false ) {
+    
+    if ( is_string( $field ) ) {
+      $field = (object) array( 'name' => $field );
+    }
     
     parent::__construct( $field );
     
