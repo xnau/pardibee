@@ -146,7 +146,7 @@ class PDb_FormElement extends xnau_FormElement {
    * 
    * this supplants the function Participants_Db::prep_field_for_display
    * 
-   * @param object $field a Field_Item object
+   * @param object $field a Field_Item object or similar
    * @param bool   $html  if true, retuns the value wrapped in HTML, false returns 
    *                      the formatted value alone
    * @return string the object's current value, formatted
