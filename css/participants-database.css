@@ -56,7 +56,7 @@
 .edit-participant input,
 .link-element label {
   margin: 0 2px 0 0;
-/*  vertical-align: middle;*/
+  /*  vertical-align: middle;*/
 }
 .participants_db .inline-controls input[type='checkbox'],
 .participants_db .inline-controls input[type='radio'] {
@@ -104,11 +104,11 @@ div.mce-panel {
   background: none repeat scroll 0 0 #f5f5f5;
 }
 .file-delete {
-	display: inline;
+  display: inline;
   white-space: nowrap;
 }
 .file-delete input[type=checkbox] {
-	float:none;
+  float:none;
 }
 .pdb-upload input[type=file] {
   float:none;
@@ -160,10 +160,10 @@ div.mce-panel {
 }
 .file-delete label {
   background-color: #FFBBBB;
-   padding: 3px 5px;
-   border-radius: 3px;
-   border: 1px solid #DFDFDF;
-   float:none;
+  padding: 3px 5px;
+  border-radius: 3px;
+  border: 1px solid #DFDFDF;
+  float:none;
 }
 .selectother {
   display: inline-block;
@@ -188,15 +188,15 @@ div.mce-panel {
   margin-top: 0;
 }
 .inline-controls .checkbox-group, .inline-controls .radio-group {
-    display: inline-block;
+  display: inline-block;
 }
 input.otherfield[type=text] {
 }
 .dropdown-other select {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 .dropdown-other input[name=temp] {
-/*  display:none;*/
+  /*  display:none;*/
 }
 /* LIST */
 
@@ -204,7 +204,7 @@ input.otherfield[type=text] {
 .wp-list-table td,
 .form-table th, 
 .form-table td {
-/*  line-height: 1.1;*/
+  /*  line-height: 1.1;*/
   vertical-align: middle;
 }
 .pdb-list .wp-list-table th,
@@ -241,7 +241,7 @@ input.otherfield[type=text] {
   display: inline-block;
 }
 .ajax-loading {
-    display: inline-block;
+  display: inline-block;
 }
 
 /* pagination */
@@ -256,7 +256,8 @@ input.otherfield[type=text] {
 }
 .pdb-list .pagination li,
 .pdb-pagination li {
-    margin: 0;
+  display: inline;
+  margin: 0;
   list-style-type: none;
 }
 .pdb-list .pagination li>span,
@@ -273,21 +274,24 @@ input.otherfield[type=text] {
   background-color: #FAFAFA;
 }
 .pdb-list .pagination li.disabled span,
-.pdb-pagination li.disabled span,
-.pdb-list .pagination li.currentpage span,
-.pdb-pagination li.currentpage span {
+.pdb-pagination li.disabled span {
   background-color: #F3F3F3;
   color: #777777;
 }
-.pdb-list .pagination li:first-of-type span,
-.pdb-pagination li:first-of-type span,
+.pdb-list .pagination li.currentpage span, 
+.pdb-pagination li.currentpage span {
+  background-color: rgba(204, 204, 204, 1);
+  color: #fff;
+}
+.pdb-list .pagination li:first-of-type > span,
+.pdb-pagination li:first-of-type > span,
 .pdb-list .pagination li:first-of-type a,
 .pdb-pagination li:first-of-type a  {
   margin-left:0;
   border-left-color: rgba(204, 204, 204, 1);
 }
-.pdb-list .pagination li:last-of-type span,
-.pdb-pagination  li:last-of-type span,
+.pdb-list .pagination li:last-of-type > span,
+.pdb-pagination  li:last-of-type > span,
 .pdb-list .pagination li:last-of-type a,
 .pdb-pagination li:last-of-type a  {
   margin-right:0;
@@ -337,6 +341,7 @@ input.otherfield[type=text] {
 .has-dashicons .pagination .glyphicon.glyphicon-first-page,
 .has-dashicons .pagination .glyphicon.glyphicon-last-page {
   letter-spacing: -0.5em;
+  padding-right: 9px;
 }
 .has-dashicons .pagination .glyphicon.glyphicon-first-page:after {
   content: "\f341\f341";
@@ -353,17 +358,17 @@ input.otherfield[type=text] {
 
 /* SINGLE */
 .pdb-single dl {
-	overflow: auto;
+  overflow: auto;
 }
 .pdb-single dd {
   overflow:auto;
   margin: 0 0 1.625em 0.8em;
 }
 .pdb-single dt {
-	float: left;
-	font-weight: bold;
-	width: 140px;
-	margin: 0 10px 1.625em 0;
+  float: left;
+  font-weight: bold;
+  width: 140px;
+  margin: 0 10px 1.625em 0;
 }
 .pdb-single .image-field-wrap img {
   height: 3em;
