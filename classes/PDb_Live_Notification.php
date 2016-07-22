@@ -10,7 +10,7 @@
  * @license    GPL2
  * @version    0.1
  * @link       http://xnau.com/wordpress-plugins/
- * @depends    
+ * @depends    PDB_Live_Notification_Handler
  */
 
 class PDb_Live_Notification {
@@ -31,19 +31,6 @@ class PDb_Live_Notification {
   private $name;
 
   /**
-   * @var array defines the post IDs to use for the named content
-   */
-  static $post_index = array(
-      'greeting' => 2047,
-      'latest' => 2050
-  );
-  
-  /**
-   * @var int the base cache lifetime
-   */
-  private $cache_life = DAY_IN_SECONDS;
-
-  /**
    * sets up the instance
    * 
    * @param string $name name of the content to access
@@ -54,50 +41,6 @@ class PDb_Live_Notification {
   }
 
   /**
-   * updates the transient
-   * 
-   * this is called by the WP cron on a daily basis. The cache lasts for one day 
-   * for each content type and we will only refresh the cache for one type at a time. 
-   * This is so that we don't try to do too much on the cron, so each day one of 
-   * the notifications will be refreshed.
-   *
-   */
-  public static function update_content_cache()
-  {
-    foreach ( array_keys( self::$post_index ) as $name ) {
-      $notification = new self( $name );
-      if ( $notification->refresh_cached_response() ) {
-        /*
-         * we are refreshing the cache by calling in to xnau.com for fresh content
-         */
-        break; // we only do this once, so break out of the foreach loop
-      }
-    }
-  }
-
-  /**
-   * supplies the greeting content
-   * 
-   * @return string content HTML
-   */
-  public static function greeting()
-  {
-    $notification = new self( 'greeting' );
-    return $notification->get_response_body();
-  }
-
-  /**
-   * supplies the latest news content
-   * 
-   * @return string content HTML
-   */
-  public static function latest_news()
-  {
-    $notification = new self( 'latest' );
-    return $notification->get_response_body();
-  }
-
-  /**
    * loads the named response body
    * 
    * gets the response body from a transient unless it has expired in which case 
@@ -105,7 +48,7 @@ class PDb_Live_Notification {
    * 
    * @return string the response body
    */
-  private function get_response_body()
+  public function get_response_body()
   {
     $response = get_transient( $this->transient_name() );
     if ( ! $response ) {
@@ -152,7 +95,7 @@ class PDb_Live_Notification {
   private function store_response( $response )
   {
     if ( !empty( $response ) ) {
-      set_transient( $this->transient_name(), $response, count( self::$post_index ) * $this->cache_life );
+      set_transient( $this->transient_name(), $response, PDb_Live_Notification_Handler::cache_lifetime() );
     }
   }
 
@@ -185,7 +128,7 @@ class PDb_Live_Notification {
    */
   private function named_endpoint()
   {
-    return isset( $this->post_index[$this->name] ) ? $this->post_index[$this->name] : '';
+    return PDb_Live_Notification_Handler::named_endpoint( $this->name );
   }
 
 }
