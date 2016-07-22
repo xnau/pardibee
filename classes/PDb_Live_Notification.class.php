@@ -1,7 +1,7 @@
 <?php
 
 /*
- * provides a way to show xnau.com notifications on plugin admin pages
+ * models a remote notification channel
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
@@ -70,7 +70,7 @@ class PDb_Live_Notification {
    */
   public function get_response_body()
   {
-    $response = get_transient( $this->transient_name() );
+    $response = Participants_Db::apply_filters( 'live_notification_cache_enable', true ) ? get_transient( $this->transient_name() ) : $this->get_response();
     if ( ! $response ) {
       $this->refresh_cached_response();
       $response = get_transient( $this->transient_name() );
@@ -91,20 +91,23 @@ class PDb_Live_Notification {
       $this->store_response( $this->get_response() );
       $cache_is_stale = true;
     }
+    error_log(__METHOD__.' getting response from ' . ($cache_is_stale ? 'xnau.com' : 'cache: ' . $this->transient_name() ) );
     return $cache_is_stale;
   }
 
   /**
    * gets the response
    * 
-   * @return string string content; empty string if the endpoint doesn't exist
+   * @return string json-encoded response; empty string if the endpoint doesn't exist
    */
   private function get_response()
   {
+    $response = '';
     if ( $this->named_endpoint() ) {
-      return wp_remote_retrieve_body( wp_remote_get( $this->endpoint() ) );
+      $response = wp_remote_retrieve_body( wp_remote_get( $this->endpoint() ) );
+      error_log(__METHOD__.' response: '. $response );
     }
-    return '';
+    return $response;
   }
 
   /**
