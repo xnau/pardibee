@@ -163,34 +163,23 @@ class PDb_Tag_Template {
     } else {
       $this->data = array();
     }
-    $this->stringify_data_array();
+    $this->prepare_display_values();
   }
   
   /**
    * prepares the data array values for inclusion in the text
    * 
-   * mostly converting serializations and arrays into a string format
+   * we use the PDb_Field_Item class to generate display strings for the various 
+   * field types
+   * 
+   * @depends PDb_Field_Item
    * 
    */
-  protected function stringify_data_array()
+  protected function prepare_display_values()
   {
-    foreach ( $this->data as &$value ) {
-      $value = $this->stringify_array( $value );
+    foreach ( $this->data as $fieldname => &$value ) {
+      $field = new PDb_Field_Item( array( 'name' => $fieldname, 'value' => $value ) );
+      $value = $field->get_value();
     }
   }
-  /**
-   * converts an array or serialized array to a string
-   * 
-   * @param string|array could be string, serialized array, or array
-   * @return string
-   */
-  protected function stringify_array( $array )
-  {
-    $value = maybe_unserialize($array);
-    if ( !is_array( $value ) ) {
-      return $value;
-    }
-    return implode( Participants_Db::apply_filters('stringify_array_glue', ', '), $value );
-  }
-
 }
