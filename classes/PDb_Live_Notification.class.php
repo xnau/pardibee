@@ -35,9 +35,29 @@ class PDb_Live_Notification {
    * 
    * @param string $name name of the content to access
    */
-  private function __construct( $name )
+  public function __construct( $name )
   {
     $this->name = $name;
+  }
+  
+  /**
+   * supplies the notification content
+   * 
+   * @return string
+   */
+  public function content()
+  {
+    return $this->get_response_body()->content->rendered;
+  }
+  
+  /**
+   * supplies the notification content
+   * 
+   * @return string
+   */
+  public function title()
+  {
+    return $this->get_response_body()->title->rendered;
   }
 
   /**
@@ -55,7 +75,7 @@ class PDb_Live_Notification {
       $this->refresh_cached_response();
       $response = get_transient( $this->transient_name() );
     }
-    return $response;
+    return json_decode( $response );
   }
 
   /**
