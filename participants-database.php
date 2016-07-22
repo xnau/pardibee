@@ -3348,12 +3348,14 @@ class Participants_Db extends PDb_Base {
   public static function plugin_footer()
   {
     $greeting = PDb_Live_Notification_Handler::greeting();
-    //    ob_start();
-//    var_dump($greeting);
-//    error_log(__METHOD__.' greeting: '.  ob_get_clean());
+    /**
+     * @version 1.6.3
+     * @filter pdb-show_live_notifications
+     * 
+     */
     ?>
-    <?php if ( $greeting && self::apply_filters('show_live_notfications', true ) ) : ?>
-    <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
+    <?php if ( $greeting && self::apply_filters('show_live_notifications', true ) ) : ?>
+    <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
       <?php echo wpautop( $greeting ); ?>
     </div>
     <?php endif;?>
@@ -3370,7 +3372,12 @@ class Participants_Db extends PDb_Base {
         <p><?php printf( __( 'Please consider contributing to the continued support and development of this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s Thanks!', 'participants-database' ), '<a href="http://xnau.com/wordpress-plugins/participants-database#donation-link">', '<a href="http://wordpress.org/extend/plugins/participants-database/">', '</a>' ) ?></p>
       </div>
     </div>
-    <?php
+    <?php if ( $greeting ) : ?>
+      <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
+      <?php echo wpautop( $greeting ); ?>
+      </div>
+      <?php
+    endif;
   }
 
   /**
