@@ -151,14 +151,14 @@ class PDb_Template_Item {
    */
   protected function assign_props( $item, $class = __CLASS__ ) {
     
-    $class_properties = get_class_vars( $class );
+    $class_properties = array_keys( get_class_vars( $class ) );
       
     if (isset(Participants_Db::$fields[$item->name]) && is_object(Participants_Db::$fields[$item->name])) {
       $field = clone Participants_Db::$fields[$item->name];
     }
     
     // grab and assign the class properties from the provided object
-    foreach( $class_properties as $property => $value ) {
+    foreach( $class_properties as $property ) {
       
       if ( isset( $item->$property ) ) {
         
