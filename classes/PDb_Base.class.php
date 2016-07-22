@@ -869,6 +869,22 @@ class PDb_Base {
   {
     return is_int( $timestamp ) or ( (string) (int) $timestamp === $timestamp);
   }
+  
+  
+
+  /**
+   * translates a PHP date() format string to a jQuery format string
+   * 
+   * @param string $PHP_date_format the date format string
+   *
+   */
+  static function get_jqueryUI_date_format($PHP_date_format = '')
+  {
+
+    $dateformat = empty($PHP_date_format) ? Participants_Db::$date_format : $PHP_date_format;
+
+    return xnau_Date_Format_String::to_jQuery( $dateformat );
+  }
 
   /**
    * returns the PHP version as a float
