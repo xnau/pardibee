@@ -141,13 +141,12 @@ fieldset.widefat.inline-controls label {
 /*** FOOTER ***/
 .pdb-footer {
   display: inline-block;
-  margin-right: 20px;
   padding:7px;
   width:auto;
   overflow:auto;
 }
 .pdb-footer.padded {
-  padding: 0px;
+  padding: 0px 15px;
 }
 #PDb_footer {
   background-color: rgba(245, 156, 0, 0.1);
