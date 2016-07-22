@@ -411,6 +411,10 @@ class Participants_Db extends PDb_Base {
     
     // start sessions management
     self::$session = new PDb_Session();
+    
+    // initialize the Live Notifications
+    new PDb_Live_Notification_Handler;
+    
     /*
      * set up the base reference object arrays
      * 

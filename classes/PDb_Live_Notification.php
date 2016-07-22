@@ -128,7 +128,7 @@ class PDb_Live_Notification {
    */
   private function named_endpoint()
   {
-    return PDb_Live_Notification_Handler::named_endpoint( $this->name );
+    return PDb_Live_Notification_Handler::content_id( $this->name );
   }
 
 }
