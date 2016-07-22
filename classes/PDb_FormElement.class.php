@@ -449,7 +449,7 @@ class PDb_FormElement extends xnau_FormElement {
     foreach ( $multivalues as $value ) {
       $titles[] = self::get_value_title( $value, $field->name );
     }
-    return implode( ', ', $titles );
+    return implode( Participants_Db::apply_filters('stringify_array_glue', ', '), $titles );
   }
 
   /*   * *********************** 
