@@ -3372,12 +3372,7 @@ class Participants_Db extends PDb_Base {
         <p><?php printf( __( 'Please consider contributing to the continued support and development of this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s Thanks!', 'participants-database' ), '<a href="http://xnau.com/wordpress-plugins/participants-database#donation-link">', '<a href="http://wordpress.org/extend/plugins/participants-database/">', '</a>' ) ?></p>
       </div>
     </div>
-    <?php if ( $greeting ) : ?>
-      <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
-      <?php echo wpautop( $greeting ); ?>
-      </div>
-      <?php
-    endif;
+    <?php
   }
 
   /**
