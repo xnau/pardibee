@@ -188,6 +188,7 @@ aside.attribution {
   min-width: 300px;
   float: right;
   margin-top: 3em;
+  margin-right: 7px;
 }
 .wrap.has-news-panel {
   float:left;
@@ -203,10 +204,18 @@ aside.attribution {
 .top_notification_banner {
   border-bottom: 4px solid rgb(101, 98, 35);
   background-color: rgb(181, 85, 1);
+  padding-bottom: 3px;
+}
+.pdb-news-panel .top_notification_banner {
+  border-bottom: 4px solid rgb(101, 98, 35);
+  background-color: rgb(181, 85, 1);
   padding-bottom: 10px;
 }
 
 .pdb-live-notification.postbox {
+  color: #564023;
+}
+.pdb-news-panel.postbox {
   color: #564023;
   border-bottom: 5px solid rgb(181, 85, 1);
 }
