@@ -221,10 +221,11 @@ class PDb_FormElement extends xnau_FormElement {
 
           if ( $html && $field->value !== $field->default ) {
 
+            $return = '';
             if ( $field->module == 'signup' ) {
               $field->link = false;
               $return = $field->value;
-            } else {
+            } elseif ( ! empty( $field->value ) ) {
               $field->link = Participants_Db::files_uri() . $field->value;
               if ( $field->default ) {
                 $field->value = $field->default;
