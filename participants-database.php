@@ -533,7 +533,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ) );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, false );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ) );
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ) );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), false, '1.4' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       wp_enqueue_script( self::$prefix . 'jq-placeholder' );
