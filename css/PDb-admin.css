@@ -2,7 +2,7 @@
 
 /* Participants DB Admin CSS */
 .has-dashicons .glyphicon {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 /*** PARTICIPANT LIST ***/
@@ -32,9 +32,9 @@ body[class*='participants-database']  .widefat tr:nth-child(even) {
 }
 .manage-fields.widefat td,
 .manage-fields.widefat th {
-    padding: 8px 5px;
-    position: relative;
-    z-index: 1;
+  padding: 8px 5px;
+  position: relative;
+  z-index: 1;
 }
 .participants_db option[value='none'],
 .participants_db option[value='other'] {
@@ -102,8 +102,8 @@ fieldset.widefat.inline-controls label {
   padding-right: 15px;
 }
 .wp-core-ui .button, .wp-core-ui .button-primary, .wp-core-ui .button-secondary {
-    height: auto;
-    line-height: 24px;
+  height: auto;
+  line-height: 24px;
 }
 .pdb-searchform .filter-count {
   display: inline-block;
@@ -137,12 +137,13 @@ fieldset.widefat.inline-controls label {
 /*** FOOTER ***/
 .pdb-footer {
   display: inline-block;
+  margin-right: 20px;
   padding:7px;
   width:auto;
   overflow:auto;
 }
 .pdb-footer.padded {
-  padding: 0px 15px;
+  padding: 0px;
 }
 #PDb_footer {
   background-color: rgba(245, 156, 0, 0.1);
@@ -180,8 +181,37 @@ aside.attribution {
   margin-top: 4em;
 }
 
+/*** NEWS PANEL ***/
+.pdb-news-panel {
+  width: 30%;
+  max-width: 400px;
+  min-width: 300px;
+  float: right;
+  margin-top: 3em;
+}
+.wrap.has-news-panel {
+  float:left;
+  width: 66%;
+}
+.pdb-live-notification.postbox h3, 
+.pdb-live-notification.postbox p, 
+.pdb-live-notification.postbox h2, 
+.pdb-live-notification.postbox h4 {
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.top_notification_banner {
+  border-bottom: 4px solid rgb(101, 98, 35);
+  background-color: rgb(181, 85, 1);
+  padding-bottom: 10px;
+}
 
+.pdb-live-notification.postbox {
+  color: #564023;
+  border-bottom: 5px solid rgb(181, 85, 1);
+}
 
+/*** ***/
 .admin-edit-participant .fieldnote {
   color: #AAAAAA;
   font-style: italic;
@@ -202,13 +232,13 @@ input.focused[readonly] {
   border: 1px solid #999;
 }
 body[class*='participants-database'] a.delete {
-/*  display:block;
-  width:12px;
-  height:26px;
-  background:url('../ui/delete.png') no-repeat center center;*/
+  /*  display:block;
+    width:12px;
+    height:26px;
+    background:url('../ui/delete.png') no-repeat center center;*/
 }
 body[class*='participants-database'] .form-table {
-/*  margin-bottom:4em;*/
+  /*  margin-bottom:4em;*/
 }
 #manage_main_fields .glyphicon {
   font-size: 140%;
@@ -252,8 +282,8 @@ body[class*='participants-database'] .form-table {
 }
 .participants_db .wp-editor-wrap + .helptext, 
 .participants_db textarea + .helptext {
-    display: inline-block;
-    margin: 30px 0px 0px 0px;
+  display: inline-block;
+  margin: 30px 0px 0px 0px;
 }
 textarea,
 select,
@@ -337,7 +367,7 @@ body[class*='participants-database'] .text-block li {
 #delete_button.armed {
   border: 1px solid rgba(204, 0, 0, 0.5);
   color: #000;
-/*  box-shadow: 0 0 13px rgba(204, 0, 0, 0.3) inset;*/
+  /*  box-shadow: 0 0 13px rgba(204, 0, 0, 0.3) inset;*/
 }
 #delete_button.armed:hover {
   box-shadow: 0 0 2px rgba(204, 0, 0, 0.1) inset;
@@ -353,7 +383,7 @@ body[class*='participants-database'] .text-block li {
   margin-top: -10px;
 }
 .edit-participant textarea, .participants_db textarea, .edit-participant select, .participants_db select, .participants_db input, .edit-participant input, .link-element label {
-/*  vertical-align: top;*/
+  /*  vertical-align: top;*/
 }
 [class*="participants-database"] .wp-editor-wrap {
   max-width: 600px;
@@ -450,20 +480,20 @@ th.validation, th.title, th.default, th.group, th.name {
   padding: 5px 0 0 0;
 }
 .manage-fields th.vertical-title span {
-/*  writing-mode:vertical-rl;*/
+  /*  writing-mode:vertical-rl;*/
   transform: rotate(90deg);
   transform-origin: left bottom;
-  
+
   -moz-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
-  
+
   -moz-transform-origin: left bottom;
   -webkit-transform-origin: left bottom;
   -o-transform-origin: left bottom;
   -ms-transform-origin: left bottom;
-  
+
   display: inline-block;
   height: auto;
   left: 0.6em;
@@ -481,7 +511,7 @@ th.validation, th.title, th.default, th.group, th.name {
   top: -1em;
 }
 .manage-fields th.admin_column span, .manage-fields th.display_column span {
-/*  left:18px;*/
+  /*  left:18px;*/
 }
 .manage-fields input, 
 .manage-fields textarea {
@@ -548,11 +578,11 @@ a.dragger {
   font-size: 18px;
 }
 .mirror {
-    display:block; 
-    -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
-    -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
-    -o-transform: matrix(-1, 0, 0, 1, 0, 0);
-    transform: matrix(-1, 0, 0, 1, 0, 0);
+  display:block; 
+  -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+  -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+  -o-transform: matrix(-1, 0, 0, 1, 0, 0);
+  transform: matrix(-1, 0, 0, 1, 0, 0);
 }
 #message {
   font-size: 16px;
@@ -648,7 +678,7 @@ a.dragger {
 }
 .participants_db .ui-tabs-nav .ui-state-default a {
   background-color: rgba(0,0,0,0.1);
- text-shadow: none;
+  text-shadow: none;
   padding-bottom: 9px;
 }
 .participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active a {
@@ -685,7 +715,7 @@ a.dragger {
 .participants_db .ui-tabs-nav li a:hover {
   color: #000000;
   background-color: #F3F3F3;
-  
+
 }
 .participants_db .ui-tabs-nav li.ui-tabs-selected a, 
 .participants_db .ui-tabs-nav li.ui-state-active a,
@@ -702,7 +732,7 @@ a.dragger {
   padding: 0;
 }
 .settings-class.participants_db .ui-tabs-panel {
-  max-width: 60em;
+  max-width: 56em;
 }
 .participants_db .ui-tabs-panel h3 {
   font: italic normal normal 24px/29px Georgia, "Times New Roman", "Bitstream Charter", Times, serif;

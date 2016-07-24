@@ -3342,7 +3342,7 @@ class Participants_Db extends PDb_Base {
      */
     ?>
     <?php if ( $greeting && self::apply_filters('show_live_notifications', true ) ) : ?>
-    <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
+    <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
       <?php echo wpautop( $greeting ); ?>
     </div>
     <?php endif;?>

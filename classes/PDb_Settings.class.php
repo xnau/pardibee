@@ -1417,56 +1417,47 @@ ORDER BY g.order, v.order';
    */
   public function show_settings_form()
   {
+    $submit_button_args = array(
+        'type' => 'submit',
+        'class' => $this->submit_class,
+        'value' => $this->submit_button,
+        'name' => 'submit',
+    );
     $news = PDb_Live_Notification_Handler::latest_news();
+    $has_news_class = $news ? 'has-news-panel' : '';
     ?>
-    <div class="wrap participants_db settings-class">
+    <div class="wrap participants_db settings-class <?= $has_news_class ?>">
       <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . __( 'Settings', 'participants-database' ) ) ?>
-    <?php settings_errors(); ?>
+      <?php settings_errors(); ?>
       <form action="options.php" method="post" >
         <div class="ui-tabs">
-          <?php /* ?>
-            <h2 class="nav-tab-wrapper">
-            <?php foreach ($this->sections as $id => $title)
-            printf('<a class="nav-tab" href="#%s">%s</a>', Participants_Db::make_anchor($id), $title);
-            ?>
-            </h2>
-            <?php */ ?>
           <ul class="ui-tabs-nav">
             <?php
             foreach ( $this->sections as $id => $title )
               printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $id ), $title );
             ?>
           </ul>
-          <?php /**
-           * @version 1.6.3
-           * @filter pdb-show_live_notifications
-           * 
-           */ ?>
-            <?php if ( $news && Participants_Db::apply_filters( 'show_live_notifications', true ) ) : ?>
-            <div class="pdb-news-panel">
-            <?php echo wpautop( $news ); ?>
-            </div>
-          <?php endif ?>
           <?php
           settings_fields( $this->WP_setting );
 
           do_settings_sections( $this->settings_page );
           ?>
         </div>
+          <?php printf( '<p class="submit">%s</p>', PDb_FormElement::get_element( $submit_button_args ) ); ?>
 
-        <?php
-        $args = array(
-            'type' => 'submit',
-            'class' => $this->submit_class,
-            'value' => $this->submit_button,
-            'name' => 'submit',
-        );
-
-        printf( $this->submit_wrap, PDb_FormElement::get_element( $args ) );
-        ?>
       </form>
 
     </div>
+      <?php /**
+       * @version 1.6.3
+       * @filter pdb-show_live_notifications
+       * 
+       */ ?>
+      <?php if ( $news && Participants_Db::apply_filters( 'show_live_notifications', true ) ) : ?>
+        <div class="pdb-news-panel pdb-live-notification postbox">
+          <?php echo wpautop( $news ); ?>
+        </div>
+      <?php endif ?>
     <?php
   }
 
