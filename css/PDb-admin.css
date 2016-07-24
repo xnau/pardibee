@@ -185,7 +185,7 @@ aside.attribution {
   margin-top: 4em;
 }
 
-/*** NEWS PANEL ***/
+/*** LIVE NOTIFICATIONS ***/
 .pdb-news-panel {
   width: 30%;
   max-width: 400px;
@@ -285,10 +285,8 @@ body[class*='participants-database'] .form-table {
 .participants_db textarea+.helptext {
   width:390px;
 }
-.participants_db input[type='text']+.helptext,
-.participants_db input[type='checkbox']+.helptext,
-.participants_db select+.helptext {
-  /*  float:left;*/
+.participants_db input[type='text']+.helptext {
+  float:left;
 }
 .participants_db .wp-editor-wrap {
   float:left;
