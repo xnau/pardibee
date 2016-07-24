@@ -323,8 +323,8 @@ input.otherfield[type=text] {
   vertical-align: -0.15em;
 }
 .wp-admin .pdb-list .pagination .glyphicon {
-  vertical-align: top;
-  font-size: 12px;
+  vertical-align: -0.1em;
+  font-size: 13px;
 }
 .pagination .glyphicon.glyphicon-first-page:after {
   content: "❬❬";
