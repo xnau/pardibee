@@ -270,6 +270,25 @@ You can define a "captcha" form element which will show a simple math question f
 * all display strings are passed though a gettext call, but only if the global PDB_MULTILINGUAL is set to true
 * plugin cleans up it's own transients and options
 * alternate directory structures are now supported automatically
+* improved messaging on setting up upload preferences
+* enforced minimum PHP version 5.3
+* single and record query var names are now user-alterable
+* the translation filter is only invoked when a global PDB_MULTILINGUAL is set to true
+* improved date parsing
+* fully implemented template email class
+* aux plugin update support
+* list shortcode filter values can use & | reserved characters
+* added support for 'search_fields' list shortcode attribute
+* new numeric field tyoe
+* image data caching for better performance 
+* add "required" attribute to required fields
+* added API filter to rich text processor
+* API filter for multiple field matches on new records
+* API filter pdb-captcha_validation
+* API filter pdb-before_admin_delete_record triggered on record delete
+* added 'pdb-initialized' hook for use by aux plugins
+* replaced use of get_currentuserinfo()
+* now deletes user sessions on uninstall and deactivation
 
 = 1.6.2.8 =
 * fixes broken AJAX search on some systems
@@ -586,8 +605,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.2 =
-Version 1.2 is a major release with several large-scale changes to the core code.
+= 1.7 =
+Version 1.7 is a major release with several large-scale changes to the core code.
 
 NOTE: This update requires minimum PHP version 5.3
 
