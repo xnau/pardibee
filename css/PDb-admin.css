@@ -204,6 +204,7 @@ aside.attribution {
 .pdb-live-notification.postbox h4 {
   margin-right: 20px;
   margin-left: 20px;
+  line-height: 1.3;
 }
 .top_notification_banner {
   border-bottom: 4px solid rgb(101, 98, 35);
@@ -214,6 +215,9 @@ aside.attribution {
   border-bottom: 4px solid rgb(101, 98, 35);
   background-color: rgb(181, 85, 1);
   padding-bottom: 10px;
+}
+#PDb_greeting {
+  max-width: 650px;
 }
 
 .pdb-live-notification.postbox {
