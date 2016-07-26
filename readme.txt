@@ -1,9 +1,9 @@
 === Participants Database ===
 Contributors: xnau
-Donate link: http://xnau.com/wordpress-plugins/participants-database
+Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 4.5
+Tested up to: 4.5.3
 Stable tag: 1.6.2.8
 License: GPLv2
 
@@ -259,6 +259,17 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7 =
+* adds numeric field type
+* adds support for add-on plugins
+* refactoring and standardization of email-related code
+* refactoring of all date-related code
+* Further adjustments to time rendering to compensate for difference between server and local time
+* added pdb-shortcode_present hook, several other useful hooks and filters
+* all display strings are passed though a gettext call, but only if the global PDB_MULTILINGUAL is set to true
+* plugin cleans up it's own transients and options
+* alternate directory structures are now supported automatically
 
 = 1.6.2.8 =
 * fixes broken AJAX search on some systems
@@ -575,8 +586,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.6.2.8 =
-Version 1.6.2.8 is a minor bug fix
+= 1.2 =
+Version 1.2 is a major release with several large-scale changes to the core code.
 
 NOTE: This update requires minimum PHP version 5.3
 
