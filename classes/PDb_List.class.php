@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( ! defined( 'ABSPATH' ) ) die;
@@ -56,7 +56,7 @@ class PDb_List extends PDb_Shortcode {
    *
    * @var string holds the url to the single record page
    */
-  public $single_record_url = false;
+  public $single_record_page = false;
   /**
    *
    * @var array holds the list of sortable columns
@@ -237,7 +237,7 @@ class PDb_List extends PDb_Shortcode {
     $record_count = $this->num_records;
     $records = $this->records;
     $fields = $this->display_columns;
-    $single_record_link = $this->single_record_url;
+    $single_record_link = $this->single_record_page;
     $records_per_page = $this->shortcode_atts['list_limit'];
     $filtering = $this->shortcode_atts['filtering'];
 
@@ -839,7 +839,7 @@ class PDb_List extends PDb_Shortcode {
     return (
             Participants_Db::is_single_record_link($column)
             &&
-            false !== $this->single_record_url
+            false !== $this->single_record_page
             &&
             !in_array($this->get_field_type($column), array('rich-text', 'link'))
             );
@@ -1102,7 +1102,20 @@ class PDb_List extends PDb_Shortcode {
       $page_id = Participants_Db::plugin_setting('single_record_page', false);
     }
     
-    $this->single_record_url = get_permalink($page_id);
+    error_log(__METHOD__.' id: '.$page_id);
+    
+    // supply our page to the main script
+    add_filter( 'pdb-single_record_page', array( $this, 'single_record_page') );
+    $this->single_record_page = get_permalink($page_id);
+  }
+  /**
+   * supplies the single record page URL
+   * 
+   * @return string the URL (without the record id)
+   */
+  public function single_record_page()
+  {
+    return $this->single_record_page;
   }
   /**
    * sets the record edit url

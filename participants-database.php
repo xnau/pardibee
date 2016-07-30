@@ -4,7 +4,7 @@
  * Plugin URI: http://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7
+ * Version: 1.7.0.1
  * Author URI: http://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -659,9 +659,13 @@ class Participants_Db extends PDb_Base {
    */
   public static function single_record_url( $id ) 
   {
-    $url = get_permalink(self::$plugin_options['single_record_page']);
-    $url = self::add_uri_conjunction($url) . self::$single_query . '=' . $id;
-    return self::apply_filters('single_record_url', $url, $id );
+    /**
+     * @version 1.7
+     * @filter  pdb-single_record_page sets the base page url of the single record page
+     */
+    $page = self::apply_filters('single_record_page', get_permalink( self::$plugin_options['single_record_page'] ) );
+    $page = self::add_uri_conjunction($page) . self::$single_query . '=' . $id;
+    return self::apply_filters('single_record_url', $page, $id );
   }
 
   /**
@@ -1499,10 +1503,13 @@ class Participants_Db extends PDb_Base {
 
       case 'insert':
         $sql = 'INSERT INTO ' . self::$participants_table . ' SET ';
-        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) )
+        
+        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) ) {
           $sql .= ' `date_recorded` = NOW(), ';
-        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) )
+        }
+        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) {
           $sql .= ' `date_updated` = NOW(), ';
+        }
         $where = '';
         break;
 
@@ -1551,15 +1558,20 @@ class Participants_Db extends PDb_Base {
 
         case 'date_recorded':
         case 'date_updated':
-        case 'last_accessed':
+        /*case 'last_accessed':*/
 
-          // remove the value from the post array if it is already set in the sql
-          if ( isset( $post[$column->name] ) && strpos( $sql, $column->name ) !== false ) {
+          /*
+           *  remove the value from the post array if it is already set in the sql
+           * 
+           * we dont check if its empty any more because timestamps are empty, but 
+           * should be removed if they're already in the query
+           */
+          if ( /* isset( $post[$column->name] ) && */ strpos( $sql, $column->name ) !== false ) {
             unset( $post[$column->name] );
             $new_value = false;
             break;
           }
-
+          
           $new_value = PDb_Date_Display::get_mysql_timestamp( isset( $post[$column->name] ) ? $post[$column->name] : '', __METHOD__ );
 
           break;

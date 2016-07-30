@@ -260,6 +260,12 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.1 =
+* fixed data-offset bug in admin list #1289
+* fixed CSV timestamp import bug #1292
+* fixed non-working single_record_link attribute in list shortcode #1291
+* fixed bug in template class that made stored values unavailable in some contexts #1287
+
 = 1.7 =
 * adds numeric field type
 * adds support for add-on plugins

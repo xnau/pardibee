@@ -394,10 +394,9 @@ class PDb_Template {
       case 'PDb_Single':
       default:
         /**
-         * @version 1.6.3 modified to get the currently submitted value
+         * @version 1.7 modified to get the currently submitted value if available
          */
-        return isset($this->fields->{$name}->value) && strlen( $this->fields->{$name}->value ) > 0 ? $this->values[$name] : '';
-       // return isset($this->values[$name]) ? $this->values[$name] : '';
+        return isset($this->fields->{$name}->value) && strlen( $this->fields->{$name}->value ) > 0 ? $this->fields->{$name}->value : $this->values[$name];
     }
   }
   /**

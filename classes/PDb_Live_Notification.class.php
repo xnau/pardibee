@@ -105,7 +105,8 @@ class PDb_Live_Notification {
   private function remote_content_is_available()
   {
     $response = wp_remote_head( $this->endpoint() );
-    if ( is_wp_error($response) || empty( $this->named_endpoint() ) ) {
+    $final_endpoint = $this->named_endpoint();
+    if ( is_wp_error($response) || empty( $final_endpoint ) ) {
       return false;
     }
     /*

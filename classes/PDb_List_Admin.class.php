@@ -808,7 +808,7 @@ class PDb_List_Admin {
                           <?php
                           foreach ( self::$display_columns as $column ) {
 
-                            $field = new PDb_Field_Item( (object) array_merge( array('value' => $value[$column->name], 'record_id' => $value['id']), (array) $column ) );
+                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id']) ) );
 
                             // this is where we place form-element-specific text transformations for display
                             switch ( $column->form_element ) {
