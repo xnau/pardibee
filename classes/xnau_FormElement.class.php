@@ -575,7 +575,7 @@ abstract class xnau_FormElement {
     
   }
   /**
-   * builds a input text element
+   * builds a numeric input element
    */
   protected function _numeric() {
     
