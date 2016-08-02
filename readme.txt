@@ -261,8 +261,8 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.0.2 =
-* Fixed issue where default email headers were used instead of the plugin settings
-* fixed bug where the CSS error maker for a match field wasn't cleared when the field value is a match
+* Fixed issue where default email headers were used instead of the plugin settings #1296
+* fixed bug where the CSS error maker for a match field wasn't cleared when the field value is a match #1293
 
 = 1.7.0.1 =
 * fixed data-offset bug in admin list #1289
