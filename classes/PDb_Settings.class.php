@@ -1437,6 +1437,11 @@ ORDER BY g.order, v.order';
               printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $id ), $title );
             ?>
           </ul>
+          <?php if ( $news ) : ?>
+          <div class="pdb-news-panel">
+            <?php echo wpautop( $news ); ?>
+          </div>
+          <?php endif ?>
           <?php
           settings_fields( $this->WP_setting );
 
