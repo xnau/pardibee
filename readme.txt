@@ -260,6 +260,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.2 =
+* Fixed issue where default email headers were used instead of the plugin settings
+* fixed bug where the CSS error maker for a match field wasn't cleared when the field value is a match
+
 = 1.7.0.1 =
 * fixed data-offset bug in admin list #1289
 * fixed CSV timestamp import bug #1292
@@ -607,10 +611,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7 =
-Version 1.7 is a major release with several large-scale changes to the core code.
-
-NOTE: This update requires minimum PHP version 5.3
+= 1.7.0.2 =
+Version 1.7.0.2 is a minor bugfix release for all users
 
 == Using the Plugin ==
 
