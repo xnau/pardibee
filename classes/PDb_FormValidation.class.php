@@ -187,9 +187,10 @@ class PDb_FormValidation extends xnau_FormValidation {
       }
 
       if ( $test_value !== false ) {
-
-        if ( $field->value != $test_value ) {
+        if ( $field->value !== $test_value ) {
           $field->validation_state_is( 'nonmatching' );
+        } else {
+          $field->validation_state_is( 'valid' );
         }
       } elseif ( $regex !== false && self::is_regex( $regex ) ) {
 
@@ -244,6 +245,8 @@ class PDb_FormValidation extends xnau_FormValidation {
     $output = '';
     $error_messages = array();
     $this->error_CSS = array();
+    
+    error_log(__METHOD__.' errors: '.print_r($this->errors,1));
 
     foreach ($this->errors as $field => $error) {
 
