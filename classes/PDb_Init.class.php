@@ -94,8 +94,6 @@ class PDb_Init {
      */
     self::delete_user_sessions();
     
-    PDb_Live_Notification_Handler::deschedule_cron();
-
     error_log( Participants_Db::PLUGIN_NAME . ' plugin deactivated' );
   }
 
