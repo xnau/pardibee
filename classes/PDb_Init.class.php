@@ -93,7 +93,7 @@ class PDb_Init {
      * that bug was fixed, though, so maybe not much call for it
      */
     self::delete_user_sessions();
-
+    
     error_log( Participants_Db::PLUGIN_NAME . ' plugin deactivated' );
   }
 

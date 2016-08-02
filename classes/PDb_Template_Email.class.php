@@ -15,7 +15,9 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
-if (!defined('ABSPATH')) exit;
+if ( !defined( 'ABSPATH' ) )
+  exit;
+
 class PDb_Template_Email extends xnau_Template_Email {
 
   /**
@@ -31,16 +33,17 @@ class PDb_Template_Email extends xnau_Template_Email {
    *                        array, uses it as the data source; must be associative 
    *                        array with fields labeled
    */
-  function __construct($config, $data)
+  function __construct( $config, $data )
   {
     $this->prefix = Participants_Db::$prefix;
     $this->context = isset( $config['context'] ) ? $config['context'] : '';
     if ( !isset( $config['from'] ) || empty( $config['from'] ) ) {
       $config['from'] = self::email_from_name();
     }
-    $this->setup_data($data);
+    $this->setup_data( $data );
     parent::__construct( $config, $this->data );
   }
+
   /**
    * sends a templated email
    * 
@@ -69,7 +72,7 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   protected function send_email()
   {
-    return $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text($this->email_subject, $this->data), PDb_Tag_Template::replaced_rich_text($this->email_template, $this->data) );
+    return $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text( $this->email_subject, $this->data ), PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) );
   }
 
   /**
@@ -79,8 +82,8 @@ class PDb_Template_Email extends xnau_Template_Email {
   {
 
     // add the "record_link" tag
-    if (isset($this->data['private_id'])) {
-      $this->data['record_link'] = Participants_Db::get_record_link($this->data['private_id']);
+    if ( isset( $this->data['private_id'] ) ) {
+      $this->data['record_link'] = Participants_Db::get_record_link( $this->data['private_id'] );
     }
 
     // add the admin record link tag
@@ -90,10 +93,10 @@ class PDb_Template_Email extends xnau_Template_Email {
     }
 
     // add the date tag
-    $this->data['date'] = PDb_Date_Display::get_date( null, __METHOD__);
+    $this->data['date'] = PDb_Date_Display::get_date( null, __METHOD__ );
 
     // add the time tag
-    $this->data['time'] = PDb_Date_Display::get_date_with_format( null, get_option('time_format'), __METHOD__ ); 
+    $this->data['time'] = PDb_Date_Display::get_date_with_format( null, get_option( 'time_format' ), __METHOD__ );
 
 //    error_log(__METHOD__.' tag map: '.print_r($this->data,1));
 
@@ -101,7 +104,7 @@ class PDb_Template_Email extends xnau_Template_Email {
      * @version 1.6.3
      * @filter pdb-template_email_tag_map
      */
-    $this->data = Participants_Db::apply_filters('template_email_tag_map', $this->data, $this->context );
+    $this->data = Participants_Db::apply_filters( 'template_email_tag_map', $this->data, $this->context );
   }
 
   /**
@@ -113,8 +116,12 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   protected function email_header()
   {
-    return Participants_Db::apply_filters( 'email_headers', 'X-Source: ' . Participants_Db::PLUGIN_NAME . "\n" . 'Content-Type: text/html; charset="' . get_option( 'blog_charset' ) . '"' . "\n", $this->context );
-    }
+    /*
+     * the main script has already built an email header that consists of the From 
+     * and the Content-Type lines
+     */
+    return Participants_Db::apply_filters( 'template_email_header', Participants_Db::$email_headers . "\n" . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
+  }
 
   /**
    * provides an email "from" string
@@ -138,9 +145,9 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   protected function setup_data( $data = false )
   {
-    if (is_array($data)) {
+    if ( is_array( $data ) ) {
       $this->data = $data;
-    } elseif (is_numeric($data) && $record = Participants_Db::get_participant($data)) {
+    } elseif ( is_numeric( $data ) && $record = Participants_Db::get_participant( $data ) ) {
       $this->data = $record;
     } else {
       $this->data = array();

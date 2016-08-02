@@ -190,6 +190,7 @@ class PDb_FormValidation extends xnau_FormValidation {
         if ( $field->value !== $test_value ) {
           $field->validation_state_is( 'nonmatching' );
         } else {
+          // set the state to valid because it matches
           $field->validation_state_is( 'valid' );
         }
       } elseif ( $regex !== false && self::is_regex( $regex ) ) {
