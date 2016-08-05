@@ -260,6 +260,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.4 =
+* bugfix restores missing settings submit button
+
 = 1.7.0.3 =
 * fixed issue where the private ID was not saved if the user wasn't logged in #1303
 * added setting to suppress scroll anchors (fragments) in pagination links #1298
