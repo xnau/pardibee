@@ -620,8 +620,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.3 =
-Version 1.7.0.3 is an important bugfix release for all users
+= 1.7.0.4 =
+Version 1.7.0.4 is an important bugfix release for all users
 
 == Using the Plugin ==
 
