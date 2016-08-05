@@ -1431,8 +1431,16 @@ ORDER BY g.order, v.order';
    *
    * @return null
    */
-  public function show_settings_form() {
+  public function show_settings_form()
+  {
+    $submit_button_args = array(
+        'type' => 'submit',
+        'class' => $this->submit_class,
+        'value' => $this->submit_button,
+        'name' => 'submit',
+    );
     $news = PDb_Live_Notification_Handler::latest_news();
+    $has_news_class = $news ? 'has-news-panel' : '';
     ?>
     <div class="wrap participants_db settings-class <?= $has_news_class ?>">
       <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . __( 'Settings', 'participants-database' ) ) ?>
