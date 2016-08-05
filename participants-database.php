@@ -4,7 +4,7 @@
  * Plugin URI: http://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.0.2
+ * Version: 1.7.0.3
  * Author URI: http://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -1548,6 +1548,13 @@ class Participants_Db extends PDb_Base {
       if ( is_object( self::$validation_errors ) ) {
         self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post );
       }
+
+      // check for user/readonly field status and disable saving field data for unauthorized users
+      if ( !self::current_user_has_plugin_role( 'editor', 'readonly access' ) && $column->readonly != '0' && $column->form_element !== 'hidden' ) {
+        // this prevents unauthorized users from saving readonly field data
+        $post[$column->name] = '';
+      }
+      
       $new_value = false;
       // we can process individual submit values here
       switch ( $column->name ) {
@@ -1717,11 +1724,6 @@ class Participants_Db extends PDb_Base {
               }
           } // switch column_atts->form_element
       }  // swtich column_atts->name 
-      // check for user/readonly field status and disable saving field data for unauthorized users
-      if ( !self::current_user_has_plugin_role( 'editor', 'readonly access' ) && $column->readonly != '0' ) {
-        // this prevents unauthorized users from saving readonly field data
-        $new_value = false;
-      }
 
       /*
        * add the column and value to the sql; if it is bool false, skip it entirely. 
@@ -1772,7 +1774,7 @@ class Participants_Db extends PDb_Base {
     $sql .= $where;
 
     if ( WP_DEBUG )
-      error_log( __METHOD__ . ' storing record sql=' . $sql . ' values:' . print_r( $new_values, true ) );
+      error_log( __METHOD__ . ' storing record: ' . $wpdb->prepare( $sql, $new_values ) );
 
     $result = $wpdb->query( $wpdb->prepare( $sql, $new_values ) );
 
