@@ -3348,12 +3348,14 @@ class Participants_Db extends PDb_Base {
   public static function plugin_footer()
   {
     $greeting = PDb_Live_Notification_Handler::greeting();
-    //    ob_start();
-//    var_dump($greeting);
-//    error_log(__METHOD__.' greeting: '.  ob_get_clean());
+    /**
+     * @version 1.6.3
+     * @filter pdb-show_live_notifications
+     * 
+     */
     ?>
-    <?php if ( $greeting && self::apply_filters('show_live_notfications', true ) ) : ?>
-    <div id="PDb_greeting" class="pdb-footer padded widefat postbox">
+    <?php if ( $greeting && self::apply_filters('show_live_notifications', true ) ) : ?>
+    <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
       <?php echo wpautop( $greeting ); ?>
     </div>
     <?php endif;?>
