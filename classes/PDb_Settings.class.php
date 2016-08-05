@@ -942,7 +942,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
-    /*
+    /**
      * @version 1.6
      */
     $this->plugin_settings[] = array(
@@ -954,6 +954,23 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'checkbox',
             'help_text' => __( 'Remove line breaks from all plugin shortcode ouput.', 'participants-database' ),
             'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
+
+    /**
+     * @version 1.7.0.3
+     */
+    $this->plugin_settings[] = array(
+        'name' => 'use_pagination_scroll_anchor',
+        'title' => __( 'Use Pagination Scroll Anchors', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'Uncheck this if your theme prevents pagination links with scroll anchors from working.', 'participants-database' ),
+            'value' => 1,
             'options' => array(1, 0),
         ),
     );
@@ -1281,7 +1298,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
    */
   public static function _get_identifier_columns( $null = true )
   {
-
     $columnlist = wp_cache_get( 'id_columns' );
 
     if ( $columnlist === false ) {
@@ -1295,7 +1311,7 @@ SELECT v.name, v.title
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
-      WHERE v.form_element NOT IN ("rich-text","checkbox","radio","dropdown","date","dropdown-other","multi-checkbox","select-other","multi-select-other","link","image-upload","file-upload","password","captcha","timestamp") AND v.group <> "internal"
+      WHERE v.form_element IN ("text-line","radio","dropdown","select-other","hidden") AND v.group <> "internal"
 ORDER BY g.order, v.order';
 
       $columns = $wpdb->get_results( $sql, OBJECT_K );
@@ -1415,16 +1431,8 @@ ORDER BY g.order, v.order';
    *
    * @return null
    */
-  public function show_settings_form()
-  {
-    $submit_button_args = array(
-        'type' => 'submit',
-        'class' => $this->submit_class,
-        'value' => $this->submit_button,
-        'name' => 'submit',
-    );
+  public function show_settings_form() {
     $news = PDb_Live_Notification_Handler::latest_news();
-    $has_news_class = $news ? 'has-news-panel' : '';
     ?>
     <div class="wrap participants_db settings-class <?= $has_news_class ?>">
       <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . __( 'Settings', 'participants-database' ) ) ?>
@@ -1443,21 +1451,21 @@ ORDER BY g.order, v.order';
           do_settings_sections( $this->settings_page );
           ?>
         </div>
-          <?php printf( '<p class="submit">%s</p>', PDb_FormElement::get_element( $submit_button_args ) ); ?>
+        <?php printf( '<p class="submit">%s</p>', PDb_FormElement::get_element( $submit_button_args ) ); ?>
 
       </form>
 
     </div>
-      <?php /**
-       * @version 1.6.3
-       * @filter pdb-show_live_notifications
-       * 
-       */ ?>
-      <?php if ( $news && Participants_Db::apply_filters( 'show_live_notifications', true ) ) : ?>
-        <div class="pdb-news-panel pdb-live-notification postbox">
-          <?php echo wpautop( $news ); ?>
-        </div>
-      <?php endif ?>
+    <?php /**
+     * @version 1.6.3
+     * @filter pdb-show_live_notifications
+     * 
+     */ ?>
+    <?php if ( $news && Participants_Db::apply_filters( 'show_live_notifications', true ) ) : ?>
+      <div class="pdb-news-panel pdb-live-notification postbox">
+        <?php echo wpautop( $news ); ?>
+      </div>
+    <?php endif ?>
     <?php
   }
 

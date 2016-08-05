@@ -260,6 +260,12 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.3 =
+* fixed issue where the private ID was not saved if the user wasn't logged in #1303
+* added setting to suppress scroll anchors (fragments) in pagination links #1298
+* fixed list query error with multiple search terms #1302
+* allow dropdowns and other single-value fields to be used as the primary email address #1301
+
 = 1.7.0.2 =
 * Fixed issue where default email headers were used instead of the plugin settings #1296
 * fixed bug where the CSS error maker for a match field wasn't cleared when the field value is a match #1293
@@ -611,8 +617,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.2 =
-Version 1.7.0.2 is a minor bugfix release for all users
+= 1.7.0.3 =
+Version 1.7.0.3 is an important bugfix release for all users
 
 == Using the Plugin ==
 
