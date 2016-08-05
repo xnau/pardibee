@@ -23,7 +23,7 @@ class PDb_Live_Notification {
   /**
    * @var string  base name of the transient
    */
-  const cache = 'live_notification_';
+  const cache_name = 'live_notification_';
 
   /**
    * @var string name of the content
@@ -114,7 +114,7 @@ class PDb_Live_Notification {
    */
   private function transient_name()
   {
-    return self::cache . $this->name;
+    return self::cache_name . $this->name;
   }
   /**
    * supplies the endpoint url
