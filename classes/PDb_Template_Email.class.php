@@ -120,7 +120,17 @@ class PDb_Template_Email extends xnau_Template_Email {
      * the main script has already built an email header that consists of the From 
      * and the Content-Type lines
      */
-    return Participants_Db::apply_filters( 'template_email_header', Participants_Db::$email_headers . "\n" . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
+    return Participants_Db::apply_filters( 'template_email_header', Participants_Db::$email_headers . "\n" . 'Return-Path:' . $this->return_path() . "\n" . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
+  }
+  
+  /**
+   * provides the return-path address
+   * 
+   * @return string
+   */
+  protected function return_path()
+  {
+    return Participants_Db::apply_filters('return_path_email_header', '<' . Participants_Db::plugin_setting( 'receipt_from_address' ) . '>' );
   }
 
   /**
