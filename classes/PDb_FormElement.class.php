@@ -182,9 +182,7 @@ class PDb_FormElement extends xnau_FormElement {
       switch ( $field->form_element ) :
 
         case 'image-upload' :
-          
-          $module = isset( $field->module ) ? $field->module : '';
-          switch ($module) {
+          switch ($field->module) {
             case 'single':
             case 'list':
               $display_mode = 'image';
@@ -200,7 +198,7 @@ class PDb_FormElement extends xnau_FormElement {
 
           $image = new PDb_Image( array(
               'filename' => $field->value,
-              'link' => isset( $field->link ) ? $field->link : false,
+              'link' => $field->link,
               'module' => $field->module,
               'mode' => $display_mode,
           ) );

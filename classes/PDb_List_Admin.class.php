@@ -664,7 +664,7 @@ class PDb_List_Admin {
                           ?>
 
                         </fieldset>
-                      <?php endfor ?>
+    <?php endfor ?>
                       <fieldset class="widefat inline-controls">
                         <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n['filter'] ?>">
                         <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n['clear'] ?>">
@@ -745,7 +745,7 @@ class PDb_List_Admin {
                               )
                       ?>
                       <?php printf( __( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
-                      <?php PDb_FormElement::print_element( array('type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n['change']) ) ?>
+    <?php PDb_FormElement::print_element( array('type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n['change']) ) ?>
 
                     </fieldset>
                   </td></tr></tbody></table>
@@ -761,10 +761,10 @@ class PDb_List_Admin {
           {
             $hscroll = Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
             ?>
-            <?php if ( $hscroll ) : ?>
+    <?php if ( $hscroll ) : ?>
               <div class="pdb-horiz-scroll-scroller">
                 <div class="pdb-horiz-scroll-width" style="width: <?php echo count( self::$display_columns ) * 10 ?>em">
-                <?php endif ?>
+                  <?php endif ?>
                 <table class="wp-list-table widefat fixed pages pdb-list stuffbox" cellspacing="0" >
                   <?php
                   $PID_pattern = '<td><a href="%2$s">%1$s</a></td>';
@@ -777,7 +777,7 @@ class PDb_List_Admin {
                       ?>
                       <thead>
                         <tr>
-                          <?php self::_print_header_row() ?>
+        <?php self::_print_header_row() ?>
                         </tr>
                       </thead>
                       <?php
@@ -787,7 +787,7 @@ class PDb_List_Admin {
                       ?>
                       <tfoot>
                         <tr>
-                          <?php self::_print_header_row() ?>
+        <?php self::_print_header_row() ?>
                         </tr>
                       </tfoot>
                     <?php endif; // table footer row 
@@ -798,17 +798,17 @@ class PDb_List_Admin {
                       foreach ( self::$participants as $value ) {
                         ?>
                         <tr>
-                          <?php // print delete check   ?>
+                            <?php // print delete check    ?>
                           <td>
                             <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
                               <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value['id'] ?>" />
-                            <?php endif ?>
+        <?php endif ?>
                             <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="glyphicon glyphicon-edit"></span></a>
                           </td>
                           <?php
                           foreach ( self::$display_columns as $column ) {
 
-                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id']) ) );
+                            $field = new PDb_Field_Item( (object) array_merge( array('value' => $value[$column->name], 'record_id' => $value['id']), (array) $column ) );
 
                             // this is where we place form-element-specific text transformations for display
                             switch ( $column->form_element ) {
@@ -820,7 +820,6 @@ class PDb_List_Admin {
                                     'link' => '',
                                     'mode' => Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename',
                                 );
-
                                 if ( Participants_Db::is_single_record_link( $column ) ) {
                                   $image_params['link'] = Participants_Db::single_record_url( $value['id'] );
                                 }
@@ -830,14 +829,12 @@ class PDb_List_Admin {
                                 $display_value = $image->get_image_html();
 
                                 break;
-
                               case 'date':
                               case 'timestamp':
 
                                 $column->value = $value[$column->name];
                                 $display_value = PDb_FormElement::get_field_value_display( $field, false );
                                 break;
-
                               case 'multi-select-other':
                               case 'multi-checkbox':
                                 // multi selects are displayed as comma separated lists
@@ -883,7 +880,6 @@ class PDb_List_Admin {
                                 }
 
                                 break;
-
                               case 'hidden':
                                 $display_value = $value[$column->name] === '' ? '' : esc_html( $value[$column->name] );
                                 break;
@@ -901,7 +897,7 @@ class PDb_List_Admin {
                           }
                           ?>
                         </tr>
-                      <?php } ?>
+      <?php } ?>
                     </tbody>
 
                   <?php else : // if there are no records to show; do this
@@ -915,10 +911,10 @@ class PDb_List_Admin {
                   endif; // participants array
                   ?>
                 </table>
-                <?php if ( $hscroll ) : ?>
+    <?php if ( $hscroll ) : ?>
                 </div>
               </div>
-            <?php endif ?>
+          <?php endif ?>
           </form>
           <?php
         }
@@ -944,13 +940,13 @@ class PDb_List_Admin {
                 $namelength = round( strlen( $suggested_filename ) * 0.9 );
                 ?>
                 <fieldset class="inline-controls">
-                  <?php _e( 'File Name', 'participants-database' ) ?>:
+    <?php _e( 'File Name', 'participants-database' ) ?>:
                   <input type="text" name="filename" value="<?php echo $suggested_filename ?>" size="<?php echo $namelength ?>" />
                   <input type="submit" name="submit-button" value="<?php _e( 'Download CSV for this list', 'participants-database' ) ?>" class="button button-primary" />
                   <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php _e( 'Include field titles', 'participants-database' ) ?></label>
                 </fieldset>
                 <p>
-                  <?php _e( 'This will download the whole list of participants that match your search terms, and in the order specified by the sort. The export will include records on all list pages. The fields included in the export are defined in the "CSV" column on the Manage Database Fields page.', 'participants-database' ) ?>
+    <?php _e( 'This will download the whole list of participants that match your search terms, and in the order specified by the sort. The export will include records on all list pages. The fields included in the export are defined in the "CSV" column on the Manage Database Fields page.', 'participants-database' ) ?>
                 </p>
               </form>
             </div>
@@ -987,7 +983,7 @@ class PDb_List_Admin {
       <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
         <?php /* translators: uses the check symbol in a phrase that means "check all"  printf('<span class="checkmark" >&#10004;</span>%s', __('all', 'participants-database'))s */ ?>
         <input type="checkbox" name="checkall" id="checkall" ><span class="glyphicon glyphicon-edit" style="opacity: 0"></span>
-      <?php endif ?>
+    <?php endif ?>
     </th>
     <?php
     // print the top header row
