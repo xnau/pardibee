@@ -47,7 +47,7 @@ class PDb_Live_Notification {
    */
   public function content()
   {
-    return $this->get_response_body()->content->rendered;
+    return $this->get_response_property( 'content' );
   }
   
   /**
@@ -57,7 +57,7 @@ class PDb_Live_Notification {
    */
   public function title()
   {
-    return $this->get_response_body()->title->rendered;
+    return $this->get_response_property( 'title' );
   }
 
   /**
@@ -77,6 +77,18 @@ class PDb_Live_Notification {
     }
     return json_decode( $response );
   }
+  
+  /**
+   * provides a response body property
+   * 
+   * @param string $name property name to get
+   * @return string
+   */
+  private function get_response_property( $name )
+  {
+    $response = $this->get_response_body();
+    return is_object($response) && isset( $response->{$name} ) ? $response->{$name}->rendered : '';
+  }
 
   /**
    * refreshes the response cache
@@ -91,7 +103,7 @@ class PDb_Live_Notification {
       $this->store_response( $this->get_response() );
       $cache_is_stale = true;
     }
-    error_log(__METHOD__.' getting response from ' . ($cache_is_stale ? 'xnau.com' : 'cache: ' . $this->transient_name() ) );
+    //error_log(__METHOD__.' getting response from ' . ($cache_is_stale ? 'xnau.com' : 'cache: ' . $this->transient_name() ) );
     return $cache_is_stale;
   }
 
@@ -105,7 +117,7 @@ class PDb_Live_Notification {
     $response = '';
     if ( $this->named_endpoint() ) {
       $response = wp_remote_retrieve_body( wp_remote_get( $this->endpoint() ) );
-      error_log(__METHOD__.' response: '. $response );
+      //error_log(__METHOD__.' response: '. $response );
     }
     return $response;
   }
