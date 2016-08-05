@@ -247,8 +247,6 @@ class PDb_FormValidation extends xnau_FormValidation {
     $error_messages = array();
     $this->error_CSS = array();
     
-    error_log(__METHOD__.' errors: '.print_r($this->errors,1));
-
     foreach ($this->errors as $field => $error) {
 
       if ( $field !== '' ) {
