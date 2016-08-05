@@ -117,11 +117,11 @@ class PDb_Init {
     delete_option( Participants_Db::$default_options );
 
     // clear transients
-    delete_transient( Participants_Db::$last_record );
-    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "%' . Participants_Db::$prefix . 'retrieve-count-%" OR `option_name` LIKE "%' . PDb_List_Admin::$user_settings . '%" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'captcha_key" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'signup-email-sent" OR `option_name` LIKE "%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%" ';
-    $transients = $wpdb->get_col( $sql );
-    foreach ( $transients as $name ) {
-      delete_transient( $name );
+    delete_transient(Participants_Db::$last_record);
+    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "%' . Participants_Db::$prefix . 'retrieve-count-%" OR `option_name` LIKE "%' . PDb_List_Admin::$user_settings . '%" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'captcha_key" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'signup-email-sent" OR `option_name` LIKE "%' . Participants_Db::$prefix . PDb_Live_Notification::cache . '%" ';
+    $transients = $wpdb->get_col($sql);
+    foreach ($transients as $name) {
+      delete_transient($name);
     }
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin uninstalled' );
