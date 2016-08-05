@@ -151,6 +151,8 @@ class PDb_Template_Item {
    */
   protected function assign_props( $item, $class = __CLASS__ ) {
     
+    $item = (object) $item;
+    
     $class_properties = array_keys( get_class_vars( $class ) );
       
     if (isset(Participants_Db::$fields[$item->name]) && is_object(Participants_Db::$fields[$item->name])) {
