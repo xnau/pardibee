@@ -694,7 +694,16 @@ class PDb_List_Query {
   private function _reindex_subclauses()
   {
     $diff = $this->clause_count - $this->clause_index;
-    //if ( $diff === 0 ) return;
+    if ( $diff >= 0 ) {
+      /**
+       * @version 1.7.0.3
+       * no need to reindex if the count is >= the index
+       * 
+       * this means that no clauses were removed from the sequence, therefore no 
+       * reindexing is needed
+       */
+      return;
+    }
     foreach ($this->subclauses as $clauses) {
       foreach ($clauses as $clause) {
         $index = $clause->index() + $diff;
