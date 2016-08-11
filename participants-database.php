@@ -1557,7 +1557,7 @@ class Participants_Db extends PDb_Base {
         // this prevents unauthorized users from saving readonly field data
         $post[$column->name] = '';
       }
-      
+
       $new_value = false;
       // we can process individual submit values here
       switch ( $column->name ) {
@@ -3354,11 +3354,11 @@ class Participants_Db extends PDb_Base {
      * 
      */
     ?>
-    <?php if ( $greeting && self::apply_filters('show_live_notifications', true ) ) : ?>
-    <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
-      <?php echo wpautop( $greeting ); ?>
-    </div>
-    <?php endif;?>
+    <?php if ( $greeting && self::apply_filters( 'show_live_notifications', true ) ) : ?>
+      <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
+        <?php echo wpautop( $greeting ); ?>
+      </div>
+    <?php endif; ?>
     <div id="PDb_footer" class="pdb-footer widefat redfade postbox">
       <div class="section">
         <h4><?php echo 'Participants Database ', self::$plugin_version ?><br /><?php _e( 'WordPress Plugin', 'participants-database' ) ?></h4>
@@ -3423,7 +3423,7 @@ class Participants_Db extends PDb_Base {
 
       //error_log( ' meta links: '.print_r( $links,1 ));
 
-      $links[1] = str_replace( self::_get_plugin_data( 'Author'), '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
+      $links[1] = str_replace( self::_get_plugin_data( 'Author' ), '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
       $links[] = '<a href="http://wordpress.org/support/view/plugin-reviews/participants-database">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
       $links[] = '<span style="color:#6B4001;">' . __( 'Free tech support and continued development relies on your support:', 'participants-database' ) . ' <a class="button xnau-contribute" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6C7FSX2DQFWY4">' . __( 'contribute', 'participants-database' ) . '</a></span>';
     }
@@ -3460,16 +3460,19 @@ if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
   Participants_Db::initialize();
 } else {
 
-  add_action( 'admin_notices', function () {
-    echo '<div class="error"><p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database requires PHP version %s to function properly, you have PHP version %s. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version, PHP_VERSION ) . '</p></div>';
-    if ( isset( $_GET['activate'] ) ) {
-      unset( $_GET['activate'] );
-    }
-  } );
+  add_action( 'admin_notices', 'pdb_handle_php_version_error' );
 
   add_action( 'admin_init', function () {
     deactivate_plugins( plugin_basename( __FILE__ ) );
   } );
 
   return;
+}
+
+function pdb_handle_php_version_error()
+{
+  echo '<div class="error"><p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database requires PHP version %s to function properly, you have PHP version %s. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version, PHP_VERSION ) . '</p></div>';
+  if ( isset( $_GET['activate'] ) ) {
+    unset( $_GET['activate'] );
+  }
 }
