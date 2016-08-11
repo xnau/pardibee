@@ -124,9 +124,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     function __construct( $subclass, $plugin_file )
     {
+      // provides the fallback values for these plugin data fields
       $this->plugin_data += array(
-          'ProductPage' => 'https://xnau.com/shop/',
-          'SupportPage' => 'https://xnau.com/product_support/',
+          'PluginURI' => 'https://xnau.com/shop/',
+          'SupportURI' => 'https://xnau.com/product_support/',
       );
       $this->plugin_path = $plugin_file;
       $this->parent_path = plugin_dir_path( $plugin_file );
@@ -223,7 +224,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function set_plugin_options()
     {
-      $this->plugin_data += function_exists( 'get_plugin_data' ) ? get_plugin_data( $this->plugin_path ) : array('Author' => 'Roland Barker, xnau webdesign');
+      $this->plugin_data = ( function_exists( 'get_plugin_data' ) ? get_plugin_data( $this->plugin_path ) : array('Author' => 'Roland Barker, xnau webdesign') ) + $this->plugin_data;
       $this->set_attribution();
       $this->register_option_for_translations();
       /*
@@ -289,6 +290,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         $links[1] = str_replace( $this->plugin_data['Author'], '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
         $links[] = '<a href="http://wordpress.org/support/view/plugin-reviews/participants-database">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
       }
+      
+      error_log(__METHOD__.' plugin data: '. print_r($this->plugin_data,1));
+      
+      
       return $links;
     }
 
