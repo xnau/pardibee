@@ -99,7 +99,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Romanian: Cornelia Năescu
 
-* Ukranian: Michael Yunat, [http://getvoip.com/blog](http://getvoip.com)
+* Ukranian: Michael Yunat, [getvoip.com](http://getvoip.com/blog)
 
 * Spanish: Cristhofer Chávez
 
@@ -109,11 +109,13 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Estonian: Laura Vunk
 
+* Belarusian: Natasha Dyatko [UStarCash] (https://www.ustarcash.com)
+
 If you are multi-lingual and feel like contributing a translation, please contact me at: support@xnau.com.
 
 Please note that several of these translations are out of date. If your language is in this list and you'd like to help me provide the latest translation, please contact me.
 
-The latest POT file is always available [here.](http://plugins.svn.wordpress.org/participants-database/trunk/participants-database.pot)
+The latest POT file is always [available here.](http://plugins.svn.wordpress.org/participants-database/trunk/participants-database.pot)
 
 = Key Image Credit =
 

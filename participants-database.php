@@ -3423,7 +3423,7 @@ class Participants_Db extends PDb_Base {
 
       //error_log( ' meta links: '.print_r( $links,1 ));
 
-      $links[1] = str_replace( 'Roland Barker', '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
+      $links[1] = str_replace( self::_get_plugin_data( 'Author'), '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
       $links[] = '<a href="http://wordpress.org/support/view/plugin-reviews/participants-database">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
       $links[] = '<span style="color:#6B4001;">' . __( 'Free tech support and continued development relies on your support:', 'participants-database' ) . ' <a class="button xnau-contribute" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6C7FSX2DQFWY4">' . __( 'contribute', 'participants-database' ) . '</a></span>';
     }

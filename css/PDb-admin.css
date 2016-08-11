@@ -227,6 +227,21 @@ aside.attribution {
   border-bottom: 5px solid rgb(181, 85, 1);
 }
 
+@media (max-width: 1155px) {
+  .pdb-news-panel,
+  .wrap.has-news-panel {
+    float: none;
+    width: calc( 100% - 10px );
+  }
+  .pdb-news-panel {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .wrap.has-news-panel {
+  }
+}
+
 /*** ***/
 .admin-edit-participant .fieldnote {
   color: #AAAAAA;

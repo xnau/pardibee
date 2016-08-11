@@ -329,8 +329,14 @@ abstract class PDb_Shortcode {
      */
     $template = Participants_Db::apply_filters('template_select', $custom_template_file);
 
+    /**
+     * @version 1.7.0.5
+     * @filter 'pdb-custom_template_location'
+     * 
+     * provides a global custom template location for the main and auxiliary plugins
+     */
     if (!file_exists($template)) {
-      $template = get_stylesheet_directory() . '/templates/' . $custom_template_file;
+      $template = Participants_Db::apply_filters( 'custom_template_location', get_stylesheet_directory() . '/templates/' ) . $custom_template_file;
     }
 
     if (!file_exists($template)) {
