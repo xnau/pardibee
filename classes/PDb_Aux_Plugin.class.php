@@ -288,7 +288,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( strstr( $file, '/', true ) == strstr( $plugin, '/', true ) ) {
 
         $links[1] = str_replace( $this->plugin_data['Author'], '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
-        $links[] = '<a href="' . $this->plugin_data['PluginURI'] . '">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
+        if ( ! empty( $this->plugin_data['PluginURI'] ) ) {
+          $links[] = '<a href="' . $this->plugin_data['PluginURI'] . '">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
+        }
         $links[] = '<a href="' . $this->plugin_data['SupportURI'] . '">' . __( 'Support', 'participants-database' ) . ' </a>';
       }
       return $links;
