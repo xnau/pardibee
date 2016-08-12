@@ -129,15 +129,16 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       $this->skip_count++;
       break;
     
+      case 'error' :
+      $this->error_count++;
+      break;
+    
     }
     
   }
   
   /**
-   * detect an enclosure character
-   *
-   * @todo experiment with doing this with a regex using a backreference 
-   *       counting repetitions of first and last character matches
+   * detect the enclosure character
    *
    * @param string $csv_file path to a csv file to read and analyze
    * @return string the best guess enclosure character
