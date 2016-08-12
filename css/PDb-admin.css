@@ -16,7 +16,14 @@ body[class*='participants-database'] .widefat td {
 body[class*='participants-database']  .widefat tr:nth-child(even) {
   background-color:#f6f6f6;
 }
-.participants_db input[type='text'] {
+.participants_db input[type='text'],
+.participants_db input[type='email'],
+.participants_db input[type='url'],
+.participants_db input[type='tel'],
+.participants_db input[type='number'],
+.participants_db input[type='password'],
+.participants_db input[type='date']
+{
   width: 99%;
   max-width: 400px;
 }
@@ -296,6 +303,12 @@ body[class*='participants-database'] .form-table {
   background-color: #F7F7F7;
 } 
 .participants_db input[type='text']+.helptext,
+.participants_db input[type='email']+.helptext,
+.participants_db input[type='url']+.helptext,
+.participants_db input[type='tel']+.helptext,
+.participants_db input[type='number']+.helptext,
+.participants_db input[type='date']+.helptext,
+.participants_db input[type='password']+.helptext,
 .participants_db input[type='checkbox']+.helptext,
 .participants_db select+.helptext,
 .participants_db script+.helptext,
@@ -303,8 +316,14 @@ body[class*='participants-database'] .form-table {
 .participants_db textarea+.helptext {
   width:390px;
 }
-.participants_db input[type='text']+.helptext {
-  float:left;
+.participants_db input[type='text']+.helptext,
+.participants_db input[type='email']+.helptext,
+.participants_db input[type='url']+.helptext,
+.participants_db input[type='tel']+.helptext,
+.participants_db input[type='number']+.helptext,
+.participants_db input[type='password']+.helptext,
+.participants_db input[type='date']+.helptext {
+  display: block;;
 }
 .participants_db .wp-editor-wrap {
   float:left;
