@@ -155,6 +155,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
     
     if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
+      // now we can use our field classs methods
       $field = new PDb_Field_Item( $field );
     }
 
@@ -335,6 +336,11 @@ class PDb_FormElement extends xnau_FormElement {
 
           $field->value = $field->default;
           $return = $html ? self::make_link( $field ) : $field->value;
+          break;
+        
+        case 'password':
+          // password hashes are never shown
+          $return = '';
           break;
 
         case 'hidden':
