@@ -1557,7 +1557,6 @@ class Participants_Db extends PDb_Base {
         // this prevents unauthorized users from saving readonly field data
         $post[$column->name] = '';
       }
-
       $new_value = false;
       // we can process individual submit values here
       switch ( $column->name ) {
@@ -3465,7 +3464,6 @@ if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
   add_action( 'admin_init', function () {
     deactivate_plugins( plugin_basename( __FILE__ ) );
   } );
-
   return;
 }
 

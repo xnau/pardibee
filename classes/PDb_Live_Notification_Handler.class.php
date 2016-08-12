@@ -16,7 +16,7 @@
 class PDb_Live_Notification_Handler {
 
   /**
-   * @var array defines the post IDs to use for the named content
+  * @var array defines the post IDs to use for the named content
    * 
    * any new named content pieces can be added here, also if the post ID of a piece 
    * changes, it must be changed here
