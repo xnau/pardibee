@@ -277,8 +277,9 @@ class PDb_FormElement extends xnau_FormElement {
             break;
           }
 
-          if ( empty( $linkdata[1] ) )
-            $linkdata[1] = str_replace( 'http://', '', $linkdata[0] );
+          if ( empty( $linkdata[1] ) ) {
+            $linkdata[1] = preg_replace( '#(https?://)#', '', $linkdata[0] );
+          }
 
           if ( $html )
             $return = vsprintf( ( empty( $linkdata[0] ) ? '%1$s%2$s' : '<a href="%1$s">%2$s</a>' ), $linkdata );
