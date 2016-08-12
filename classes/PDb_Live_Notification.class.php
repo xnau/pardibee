@@ -38,29 +38,9 @@ class PDb_Live_Notification {
   public function __construct( $name )
   {
     $this->name = $name;
-    add_filter( 'pdb-live_notification_' . $name, function ( $content ) use ( $name ) {
-      $this->content_filter( $content, array('utm_medium' => $name) );
+    add_filter( 'pdb-live_notification_' . $this->name, function ( $content ) {
+      return $this->content_filter( $content, $this->analytics_vars() );
     } );
-  }
-  
-  /**
-   * supplies the notification content
-   * 
-   * @return string
-   */
-  public function content()
-  {
-    return Participants_Db::apply_filters( 'live_notification_' . $name, $this->get_response_property( 'content' ) );
-  }
-  
-  /**
-   * supplies the notification content
-   * 
-   * @return string
-   */
-  public function title()
-  {
-    return $this->get_response_property( 'title' );
   }
 
   /**
@@ -73,18 +53,40 @@ class PDb_Live_Notification {
    */
   public function content_filter( $content, $vars )
   {
-    $this->analytics_vars = $vars + $this->analytics_vars;
     return preg_replace_callback(
-            '/"(https?:\/\/xnau.com\/[^"]+)"/', 
-            function ($matches) {
-              if ( stripos( $matches[1], 'utm_campaign' ) === false ) {
-                return add_query_arg( $this->analytics_vars, $matches[1] );
-              } else {
-                return $matches[1];
-              }
-            }, $content );
+            '/"(https?:\/\/xnau.com\/[^"]+)"/', function ( $matches ) use ( $vars ) {
+      if ( stripos( $matches[1], 'utm_campaign' ) === false ) {
+        if ( stripos( $matches[1], '.jpg') !== false ) {
+          // if it's the image, mark it as a load instead of a click
+          $vars['utm_medium'] = $vars['utm_medium'] . '_load';
+        }
+        return add_query_arg( $vars, $matches[1] );
+      } else {
+        return $matches[1];
+      }
+    }, $content );
   }
-  
+
+  /**
+   * supplies the notification content
+   * 
+   * @return string
+   */
+  public function content()
+  {
+    return Participants_Db::apply_filters( 'live_notification_' . $this->name, $this->get_response_property( 'content' ) );
+  }
+
+  /**
+   * supplies the notification content
+   * 
+   * @return string
+   */
+  public function title()
+  {
+    return $this->get_response_property( 'title' );
+  }
+
   /**
    * provides a response body property
    * 
@@ -94,7 +96,7 @@ class PDb_Live_Notification {
   private function get_response_property( $name )
   {
     $response = $this->get_response_body();
-    return is_object($response) && isset( $response->{$name} ) ? $response->{$name}->rendered : '';
+    return is_object( $response ) && isset( $response->{$name} ) ? $response->{$name}->rendered : '';
   }
 
   /**
@@ -121,7 +123,7 @@ class PDb_Live_Notification {
     if ( $cached === false && $this->remote_content_is_available() ) {
       //error_log(__METHOD__.' getting remote content');
       $response = wp_remote_retrieve_body( wp_remote_get( $this->endpoint() ) );
-      $this->cache_response($response);
+      $this->cache_response( $response );
     } elseif ( $cached !== false ) {
       //error_log(__METHOD__.' getting cached content');
       $response = $cached;
@@ -131,7 +133,7 @@ class PDb_Live_Notification {
     }
     return $response;
   }
-  
+
   /**
    * checks the remote content for availabilty
    * 
@@ -143,7 +145,7 @@ class PDb_Live_Notification {
   {
     $response = wp_remote_head( $this->endpoint() );
     $final_endpoint = $this->named_endpoint();
-    if ( is_wp_error($response) || empty( $final_endpoint ) ) {
+    if ( is_wp_error( $response ) || empty( $final_endpoint ) ) {
       return false;
     }
     /*
@@ -152,7 +154,7 @@ class PDb_Live_Notification {
     //error_log(__METHOD__.' response code: '.$response['response']['code']);
     return preg_match( '/^[23]\d{2}$/', $response['response']['code'] ) === 1;
   }
-  
+
   /**
    * caches the supplied response string
    * 
@@ -161,7 +163,7 @@ class PDb_Live_Notification {
   private function cache_response( $response )
   {
     if ( Participants_Db::apply_filters( 'live_notification_cache_enable', true ) ) {
-      $this->store_response($response);
+      $this->store_response( $response );
     }
   }
 
@@ -207,7 +209,7 @@ class PDb_Live_Notification {
   {
     return PDb_Live_Notification_Handler::content_id( $this->name );
   }
-  
+
   /**
    * provides a blank response
    * 
@@ -215,7 +217,21 @@ class PDb_Live_Notification {
    */
   private function blank_response()
   {
-    return (object) array( 'content' => array( 'rendered' => '' ), 'title'  => array( 'rendered' => '' ) );
+    return (object) array('content' => array('rendered' => ''), 'title' => array('rendered' => ''));
+  }
+
+  /**
+   * supplies the analytics vars array
+   * 
+   * sets the "medium" string to the message location
+   * 
+   * @return atring
+   */
+  private function analytics_vars()
+  {
+    $analytics_vars = PDb_Live_Notification_Handler::$analytics_vars;
+    $analytics_vars['utm_medium'] = PDb_Live_Notification_Handler::$analytics_vars['utm_medium'][$this->name];
+    return $analytics_vars;
   }
 
 }
