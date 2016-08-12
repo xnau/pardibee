@@ -63,6 +63,10 @@ abstract class xnau_CSV_Import {
    */
   var $skip_count = 0;
   /**
+   * @var int holds the number of skipped records
+   */
+  var $error_count = 0;
+  /**
    * @var string holds the context string for the internationalization functions
    */
   var $i10n_context;
@@ -104,6 +108,11 @@ abstract class xnau_CSV_Import {
           if ($this->skip_count > 0) {
 
             $this->set_error_heading(sprintf(_n('%s duplicate record skipped', '%s duplicate records skipped', $this->skip_count, 'participants-database'), $this->skip_count), '', false);
+          }
+
+          if ($this->error_count > 0) {
+
+            $this->set_error_heading(sprintf(_n('%s record skipped due to errors', '%s records skipped due to errors', $this->error_count, 'participants-database'), $this->error_count), '', false);
           }
           if ($this->update_count == 0 and $this->insert_count == 0) {
 
