@@ -29,7 +29,7 @@ class PDb_Live_Notification_Handler {
   /**
    * @var array base analytics values
    */
-  private $analytics_vars = array(
+  static $analytics_vars = array(
       'utm_campaign' => 'pdb-addons-inplugin-promo',
       'utm_medium' => '',
       'utm_source' => 'pdb_plugin_user',
