@@ -1742,6 +1742,7 @@ class Participants_Db extends PDb_Base {
         $column_data[] = "`" . $column->name . "` = " . ( $new_value === null ? "NULL" : "%s" );
       }
     } // columns
+    
     // if the validation object exists and there are errors, stop here
     if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
 
@@ -1814,7 +1815,7 @@ class Participants_Db extends PDb_Base {
       if ( !$currently_importing_csv && $result ) {
         self::set_admin_message( ($action == 'insert' ? self::$i18n['added'] : self::$i18n['updated'] ), 'updated' );
       } elseif ( ! empty( $db_error_message ) ) {
-        self::set_admin_message( self::db_error_message( $db_error_message ), 'error' );
+        self::set_admin_message( self::db_error_message( $db_error_message ), 'record-insert error' );
       }
     }
     /*
