@@ -38,6 +38,9 @@ class PDb_Live_Notification {
   public function __construct( $name )
   {
     $this->name = $name;
+    add_filter( 'pdb-live_notification_' . $name, function ( $content ) use ( $name ) {
+      $this->content_filter( $content, array('utm_medium' => $name) );
+    } );
   }
   
   /**
@@ -47,7 +50,7 @@ class PDb_Live_Notification {
    */
   public function content()
   {
-    return $this->get_response_property( 'content' );
+    return Participants_Db::apply_filters( 'live_notification_' . $name, $this->get_response_property( 'content' ) );
   }
   
   /**
@@ -58,6 +61,28 @@ class PDb_Live_Notification {
   public function title()
   {
     return $this->get_response_property( 'title' );
+  }
+
+  /**
+   * filters the live notification html, adding the analytics vars
+   * 
+   * used as a filter callback on the output
+   * 
+   * @param string $content the html content
+   * @param array $vars the analytics query var override values
+   */
+  public function content_filter( $content, $vars )
+  {
+    $this->analytics_vars = $vars + $this->analytics_vars;
+    return preg_replace_callback(
+            '/"(https?:\/\/xnau.com\/[^"]+)"/', 
+            function ($matches) {
+              if ( stripos( $matches[1], 'utm_campaign' ) === false ) {
+                return add_query_arg( $this->analytics_vars, $matches[1] );
+              } else {
+                return $matches[1];
+              }
+            }, $content );
   }
   
   /**
