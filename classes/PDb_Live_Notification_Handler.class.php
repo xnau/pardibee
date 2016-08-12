@@ -48,7 +48,7 @@ class PDb_Live_Notification_Handler {
   public static function greeting()
   {
     $notification = new PDb_Live_Notification( 'greeting' );
-    return Participants_Db::apply_filters( 'live_notification_greeting', $notification->content() );
+    return $notification->content();
   }
 
   /**
@@ -59,7 +59,7 @@ class PDb_Live_Notification_Handler {
   public static function latest_news()
   {
     $notification = new PDb_Live_Notification( 'latest' );
-    return Participants_Db::apply_filters( 'live_notification_latest', $notification->content() );
+    return $notification->content();
   }
 
   /**
@@ -67,32 +67,6 @@ class PDb_Live_Notification_Handler {
    */
   public function __construct()
   {
-    add_filter( 'pdb-live_notification_greeting', function ( $content ) {
-      $this->content_filter( $content, array('utm_medium' => 'greeting') );
-    } );
-    add_filter( 'pdb-live_notification_latest', function ( $content ) {
-      $this->content_filter( $content, array('utm_medium' => 'latest') );
-    } );
-  }
-
-  /**
-   * filters the live notification html, adding the analytics vars
-   * 
-   * @param string $content the html content
-   * @param array $vars the analytics query var override values
-   */
-  public function content_filter( $content, $vars )
-  {
-    $this->analytics_vars = $vars + $this->analytics_vars;
-    return preg_replace_callback(
-            '/"(https?:\/\/xnau.com\/[^"]+)"/', 
-            function ($matches) {
-              if ( stripos( $matches[1], 'utm_campaign' ) === false ) {
-                return add_query_arg( $this->analytics_vars, $matches[1] );
-              } else {
-                return $matches[1];
-              }
-            }, $content );
   }
 
   /**
