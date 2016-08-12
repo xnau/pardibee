@@ -1783,10 +1783,13 @@ class Participants_Db extends PDb_Base {
 
     $result = $wpdb->query( $wpdb->prepare( $sql, $new_values ) );
 
+    $db_error_message = '';
     if ( $result === 0 ) {
       $db_error_message = sprintf( self::$i18n['zero_rows_error'], $wpdb->last_query );
+      self::$insert_status = 'error';
     } elseif ( $result === false ) {
       $db_error_message = sprintf( self::$i18n['database_error'], $wpdb->last_query, $wpdb->last_error );
+      self::$insert_status = 'error';
     } else {
       // is it a new record?
       if ( $action == 'insert' ) {
@@ -1807,11 +1810,11 @@ class Participants_Db extends PDb_Base {
     /*
      * set up user feedback
      */
-    if ( !$currently_importing_csv && is_admin() ) {
-      if ( $result ) {
+    if ( is_admin() ) {
+      if ( !$currently_importing_csv && $result ) {
         self::set_admin_message( ($action == 'insert' ? self::$i18n['added'] : self::$i18n['updated'] ), 'updated' );
-      } else {
-        self::set_admin_message( $db_error_message, 'error' );
+      } elseif ( ! empty( $db_error_message ) ) {
+        self::set_admin_message( self::db_error_message( $db_error_message ), 'error' );
       }
     }
     /*
@@ -1821,6 +1824,17 @@ class Participants_Db extends PDb_Base {
     PDb_Participant_Cache::is_now_stale( $participant_id );
 
     return $participant_id;
+  }
+  
+  /**
+   * provides a truncated database error message
+   * 
+   * @param string  the full error message
+   * @return  string
+   */
+  public static function db_error_message( $message )
+  {
+    return rtrim( stristr($message, 'on query:', true), 'on query:' );
   }
 
   /**
