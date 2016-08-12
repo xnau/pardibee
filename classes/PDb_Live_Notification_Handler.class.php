@@ -23,7 +23,7 @@ class PDb_Live_Notification_Handler {
    */
   static $post_index = array(
       'greeting' => 2047,
-      'latest' => 2050
+      'latest' => 2184, // 2050
   );
 
   /**
@@ -31,7 +31,10 @@ class PDb_Live_Notification_Handler {
    */
   static $analytics_vars = array(
       'utm_campaign' => 'pdb-addons-inplugin-promo',
-      'utm_medium' => '',
+      'utm_medium' => array( 
+          'latest' => 'settings_page_banner', 
+          'greeting' => 'list_page_banner',
+          ),
       'utm_source' => 'pdb_plugin_user',
   );
 
