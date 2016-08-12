@@ -1467,7 +1467,8 @@ class Participants_Db extends PDb_Base {
               self::$validation_errors = new PDb_FormValidation();
             }
             self::$validation_errors->add_error( $match_field, 'duplicate' );
-            // $action = 'skip';
+            // we won't be saving this record
+            $action = 'skip';
             // go on validating the rest of the form
             break;
         }
@@ -1517,8 +1518,10 @@ class Participants_Db extends PDb_Base {
         break;
 
       case 'skip':
-        return false;
+        // do nothing, this record won't be saved because there is a duplicate error
     }
+    
+    
 
     /*
      * determine the set of columns to process
