@@ -243,6 +243,8 @@ input.otherfield[type=text] {
 }
 .ajax-loading {
   display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 /* pagination */
