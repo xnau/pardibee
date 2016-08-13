@@ -73,6 +73,7 @@ PDbListFilter = (function ($) {
     }
     $submitButton.PDb_processSubmission();
     // trigger a general-purpose event
+    // this does not wait for the ajax to complete
     $('html').trigger('pdbListFilterComplete');
   };
   var get_page_button = function (target) {
@@ -110,6 +111,12 @@ PDbListFilter = (function ($) {
     }
     $('.wrap.pdb-list').PDb_idFix();
   };
+  var scroll_to_top = function () {
+    var instance = submission.instance_index;
+    $('html, body').animate({
+      scrollTop : $("#participants-list-"+instance).offset().top
+    }, 200);
+  }
   var add_value_to_submission = function (el, submission) {
     var value = encodeURI(el.val());
     var fieldname = el.attr('name');
@@ -140,7 +147,7 @@ PDbListFilter = (function ($) {
       success : function (html, status) {
         if (/^failed/.test(html)) {
           // if the call fails, submit synchronously to reset form
-          filterform.append('<input type="hidden" name="submit_button" value="'+submission.submit+'" /> ').submit();
+          filterform.append('<input type="hidden" name="submit_button" value="' + submission.submit + '" /> ').submit();
         }
         var newContent = $(html);
         var replacePagination = newContent.find('.pdb-pagination');
@@ -162,6 +169,8 @@ PDbListFilter = (function ($) {
           pagination.remove();
         }
         spinner.remove();
+        // trigger a general-purpose event
+        $('html').trigger('pdbListAjaxComplete');
       },
       error : function (jqXHR, status, errorThrown) {
         console.log('Participants Database JS error status:' + status + ' error:' + errorThrown);
@@ -213,6 +222,7 @@ PDbListFilter = (function ($) {
       filterform.on('click', '[type="submit"]', submit_search);
       remoteform.on('click', '[type="submit"]', submit_remote_search);
       $('.pdb-list').on('click', '.pdb-pagination a', get_page);
+      $('html').on( 'pdbListAjaxComplete', scroll_to_top );
     }
   };
 }(jQuery));
