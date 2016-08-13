@@ -81,35 +81,35 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 = Translation Credits =
 
-* French: Dominique Chapelle
-
-* Italian: Michele Balderi
-
-* Dutch: At Voogt [www.wederzijdsgenoegen.nl](http://www.wederzijdsgenoegen.nl)
-
-* Polish: Piotr Kubala
-
-* Russian: Konstantin Bashevoy [Полиатлон России](http://polyathlon-russia.com/base)
-
-* Slovak: Branco Radenovich [WebHostingGeeks.com](http://webhostinggeeks.com/blog/)
-
-* Norwegian: Anders Kleppe
-
-* Serbian: Cherry, NBG, [www.trade.in.rs](http://trade.in.rs/)
-
-* Romanian: Cornelia Năescu
-
-* Ukranian: Michael Yunat, [getvoip.com](http://getvoip.com/blog)
-
-* Spanish: Cristhofer Chávez
-
-* German: Martin Sauter
+* Belarusian: Natasha Dyatko [UStarCash] (https://www.ustarcash.com)
 
 * Danish: Bo Hejberg Nielsen
 
+* Dutch: At Voogt [www.wederzijdsgenoegen.nl](http://www.wederzijdsgenoegen.nl)
+
 * Estonian: Laura Vunk
 
-* Belarusian: Natasha Dyatko [UStarCash] (https://www.ustarcash.com)
+* French: Dominique Chapelle
+
+* German: Martin Sauter
+
+* Italian: Michele Balderi
+
+* Norwegian: Anders Kleppe
+
+* Polish: Piotr Kubala
+
+* Romanian: Cornelia Năescu
+
+* Russian: Konstantin Bashevoy [Полиатлон России](http://polyathlon-russia.com/base)
+
+* Serbian: Cherry, NBG, [www.trade.in.rs](http://trade.in.rs/)
+
+* Slovak: Branco Radenovich [WebHostingGeeks.com](http://webhostinggeeks.com/blog/)
+
+* Spanish: Cristhofer Chávez
+
+* Ukranian: Michael Yunat, [getvoip.com](http://getvoip.com/blog)
 
 If you are multi-lingual and feel like contributing a translation, please contact me at: support@xnau.com.
 
@@ -119,7 +119,7 @@ The latest POT file is always [available here.](http://plugins.svn.wordpress.org
 
 = Key Image Credit =
 
-Sala_macchina_del_Cineca_1971 By Tukulti65 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=47436569
+By Tukulti65 (Own work) [CC BY-SA 4.0 (http://creativecommons.org/licenses/by-sa/4.0)], via Wikimedia Commons
 
 == Installation ==
 
