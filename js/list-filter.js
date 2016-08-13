@@ -135,7 +135,7 @@ PDbListFilter = (function ($) {
     var target_instance = $('.pdb-list.pdb-instance-' + submission.target_instance);
     var container = target_instance.length ? target_instance : $('.pdb-list').first();
     var pagination = container.find('.pdb-pagination');
-    var buttonParent = button.parent('fieldset, div');
+    var buttonParent = button.closest('fieldset, ul, div');
     var spinner = $(PDb_ajax.loading_indicator).clone();
     $.ajax({
       type : "POST",
