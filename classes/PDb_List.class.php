@@ -302,7 +302,7 @@ class PDb_List extends PDb_Shortcode {
                 'size' => $this->page_list_limit,
                 'total_records' => $this->num_records,
                 'filtering' => $this->shortcode_atts['filtering'],
-                'add_variables' => 'instance=' . $this->instance_index . ( Participants_Db::plugin_setting_is_true( 'use_pagination_scroll_anchor' ) ? '#' . $this->list_anchor : '' ),
+                'add_variables' => 'instance=' . $this->instance_index . $this->pagination_link_anchor(),
             ) );
     
     // instantiate the pagination object
@@ -366,6 +366,22 @@ class PDb_List extends PDb_Shortcode {
      * which is the data for a field
      */
     // error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+  }
+  
+  /**
+   * provides the pagination scroll anchor
+   * 
+   * the anchor is not added if AJAX is enabled becuase the scroll is enacted by the JS
+   * 
+   * @return string the anchor; empty string if not configured to add it
+   */
+  protected function pagination_link_anchor()
+  {
+    $anchor = '';
+    if ( Participants_Db::plugin_setting_is_true( 'use_pagination_scroll_anchor' ) && !Participants_Db::plugin_setting_is_true( 'ajax_search') ) {
+      $anchor = '#' . $this->list_anchor;
+    }
+    return $anchor;
   }
 
   /**
