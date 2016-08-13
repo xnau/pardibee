@@ -18,7 +18,7 @@ class PDb_Live_Notification {
   /**
    * @var string base URL for notifications
    */
-  const base_url = 'https://xnau.com/wp-json/wp/v2/pages/';
+  const base_url = 'https://xnau.com/wp-json/wp/v2/live_notification/';
 
   /**
    * @var string  base name of the transient
