@@ -16,14 +16,16 @@
 class PDb_Live_Notification_Handler {
 
   /**
-  * @var array defines the post IDs to use for the named content
+   * @var array defines the post IDs to use for the named content
+   * 
+   * @version 1.7.0.5 started using live_notification post types
    * 
    * any new named content pieces can be added here, also if the post ID of a piece 
    * changes, it must be changed here
    */
   static $post_index = array(
-      'greeting' => 2047,
-      'latest' => 2184, // 2050
+      'greeting' => 2199, //  formerly page id 2047
+      'latest' => 2200, // 2050
   );
 
   /**
@@ -31,10 +33,10 @@ class PDb_Live_Notification_Handler {
    */
   static $analytics_vars = array(
       'utm_campaign' => 'pdb-addons-inplugin-promo',
-      'utm_medium' => array( 
-          'latest' => 'settings_page_banner', 
+      'utm_medium' => array(
+          'latest' => 'settings_page_banner',
           'greeting' => 'list_page_banner',
-          ),
+      ),
       'utm_source' => 'pdb_plugin_user',
   );
 
@@ -70,6 +72,7 @@ class PDb_Live_Notification_Handler {
    */
   public function __construct()
   {
+    
   }
 
   /**
