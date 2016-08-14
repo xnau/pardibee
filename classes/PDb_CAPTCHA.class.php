@@ -131,7 +131,7 @@ class PDb_CAPTCHA {
     if (empty($this->HTML)) {
       switch ($this->captcha_type) {
         case 'math':
-          $this->math_capcha();
+          $this->math_captcha();
           break;
       }
     }
@@ -148,7 +148,7 @@ class PDb_CAPTCHA {
    * 
    * @return null
    */
-  protected function math_capcha() {
+  protected function math_captcha() {
     
     if (is_array($this->value)) {
       $this->value = $this->value[1];
