@@ -481,7 +481,6 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _captcha()
   {
-
     $captcha = new PDb_CAPTCHA( $this );
     $this->_addline( $captcha->get_html() );
   }
