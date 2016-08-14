@@ -263,7 +263,13 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.0.5 =
+* added Belarusian translation
 * updated German/Swiss German translations
+* fixed incorrect update/import record counts on CSV import #1290
+* list search/sort/pagination now uses JS scroller when AJAX is enabled #1299
+* fixed bug in the PHP version checker #1309
+* bare https links now get the correct linktext #1311
+* password field is now blank instead of trying to show the hash #1315
 
 = 1.7.0.4 =
 * bugfix restores missing settings submit button
