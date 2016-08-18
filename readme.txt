@@ -4,14 +4,14 @@ Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 4.5.3
-Stable tag: 1.7.0.4
+Stable tag: 1.7.0.5
 License: GPLv2
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
 
 == Description ==
 
-This plugin offers all the functionality needed to build and maintain a database of people. The database is fully configurable, allowing you to define all the fields of information you want to store for each record. The records can be entered individually in the WordPress admin section, imported with a CSV file, or let the individuals themselves create their own record. Display lists of records can be sorted and filtered by any field, and the result exported as a CSV file.
+This plugin offers all the functionality needed to build and maintain a database of people or anything you want. The database is fully configurable, allowing you to define all the fields of information you want to store for each record. The records can be entered individually in the WordPress admin section, imported with a CSV file, or let the individuals themselves create their own record. Display lists of records can be sorted and filtered by any field, and the result exported as a CSV file.
 
 This plugin was developed for an organization with the mission of educating and empowering voters. This organization needed to quickly build a database of concerned voters, supporters, and volunteers, giving them an ability to collect input and feedback, organize volunteers, and mobilize it's voter constituency with actions such as petition drives and voter education campaigns.
 
@@ -23,6 +23,7 @@ The plugin can be easily adapted to work as a database for other applications su
 
 * fully configurable database for holding any kind of information about people (or anything, really!)
 * customizable forms for collecting and maintaining records
+* plugin enhancements and add-ons are available from a growing list of downloads on xnau.com
 * both front-end and back-end versions of the forms
 * shortcode for inserting a configurable sign-up short form into WordPress pages, posts, etc.
 * completing the sign-up form can direct visitors to another page for a thank you message or reward
@@ -36,6 +37,7 @@ The plugin can be easily adapted to work as a database for other applications su
 * export CSV files for interacting with other databases, mass email, print records
 * import CSV files to add large numbers of records from spreadsheets such as Open Office or Google Docs
 * forms can be organized into groups of fields, making long forms easier to navigate and fill out
+* comes with a comprehensive API for deep customization of the plugin functionality
 
 = Database =
 
@@ -637,227 +639,13 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.4 =
-Version 1.7.0.4 is an important bugfix release for all users
+= 1.7.0.5 =
+Version 1.7.0.5 is a general update release for all users
 
-== Using the Plugin ==
+== Plugin Support ==
 
-* General Description
-* Quick Start Instructions
-* List of Plugin Shortcodes
-* The List Shortcode
-* Shortcode Templates
-* The Thank You Page
-* Hidden Signup Fields
-* Uploading Images
-* Importing Records
+**[Plugin manual and documentation](https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/?utm_source=wporg_visitor&utm_medium=plugin_page&utm_campaign=pdb-addons-promo) is published on the developer's website, xnau.com**
 
-This plugin has two modes of interacting with the database. First, as a tool for logged-in admin or editors to manage the database, second as a way for site visitors to sign up and fill in their information themselves. Depending on what you need, you can use either or both.
+Plugin technical support is available here under the "Support" tab, on xnau.com in the comments section.
 
-*Please read the documentation fully, as this is a complex plugin that can be used in a lot of different ways.*
-
-To collect signups on your website use this shortcode: `[pdb_signup]`. The shortcode will generate a short form to give people a way to add their name to your list. You can customize which fields they need to fill in. 
-
-When they sign up, they can be provided with a private link to their record, which the can add to or edit.  Place the `[pdb_record]` shortcode on they page you want them to go to to edit their record. This page should also be selected in the settings as the "Participant Record Page."
-
-The idea is your site visitors can sign up with only a name and email (for instance) and then go back and fill out all the other information you want to get from them. It is not necessary for them to log in or register, and the people in the database are separate from your WordPress site users.
-
-When your site visitors fill out and submit the signup form, they will be sent an email with a private link to their full record. This page is where the `[pdb_record]` shortcode goes. <a id="quickstart"></a>
-
-= Quick Start Instructions: =
-
-1. Go to the "manage fields" page and set up the fields you want to use for your database. You can also change this later, but it's best to have it all set up before you really start adding records.
-2. While you are setting up your fields, look at the "signup" column. This is where you choose which fields the site visitor will have to fill out in order to sign up. The email field is required in order to email them a link to come back and fill out their full record. If you don't want them to do that, you don't have to include the email field in the signup form. You can also turn the email sending off in the settings.
-3. Put the `[pdb_signup]` shortcode wherever you want your signup form to appear.
-4. Put the `[pdb_record]` shortcode on the page where you want them to fill out their full record. You must go to the plugin settings page and select this page in the "Participant Record Page" dropdown.
-5. When someone signs up, an email is sent to them with a private link to their record so they can fill out all the fields you want them to. This is why you need to tell the plugin where your `[pdb_record]` shortcode is. You can define which fields they will see there on the "manage fields" page.
-6. Go to the plugin settings page to set up the emails. There are both user and admin emails sent on a signup, and you can determine the content of the emails and also whether to send them and to whom.
-
-Of course, records can be entered in the backend by a user with "edit posts" or above capabilities. Setting up the fields and plugin settings requires an admin. Records can also be imported with a CSV file. <a id="shortcodes"></a>
-
-= Shortcodes this Plugin Uses =
-
-This plugin uses a number of different shortcodes to place it's functionality in your content. Here is a breakdown of all the codes:
-
-1. `[pdb_signup]` - This prints out the signup form including only those fields selected for inclusion. On submission, it creates a new record and optionally notifies the admin and the person signing up by email.
-2. `[pdb_record]` - This shortcode only displays when accessed with a URL including the record "private id" number. It allows the user to edit and add to their own record, while others won't have access to it. A private link to this record can be included in the "thankyou" email they will receive on submission.
-3. `[pdb_list]` - This shortcode prints out a list of records from the database. Which records get displayed and how can all be determined by the admin. It is also possible to allow the site visitor to filter (search) the list and also sort it.
-4. `[pdb_single]` - This shows a single record as determined by the record ID present in the URL used to access the page. It is possible to set a link to the single record in the record list, allowing for a detail display of a single record.
-5. `[pdb_signup_thanks]` - If you want to send the people who use the signup form to another page after they submit, you can use this shortcode to display the thankyou message. This is not needed if you have them just go back to the signup page, the signup shortcode will take care if it. <a id="list"></a>
-6. `[pdb_search]` - will show a search form which can be placed anywhere. When the search is performed, the user is taken to a page with a [pdb_list] shortcode and shown the result of their search.
-7. `[pdb_request_link]` - shows a form for requesting the private link to be resent.
-8. `[pdb_total]` – shows the either the number of records matching a given filter or the numeric total of a given column of values.
-
-= Showing a List of Records on Your Website =
-
-You can use the `[pdb_list]` shortcode to show the records on your site. Just put the shortcode where you want it to show up.
-
-Here is the full list of parameters you can use with the `[pdb_list]` shortcode with an example of it's use:
-
-* search - set to 'true' to show a list search field `[pdb_list search="true"]`
-* sort - set to 'true' to show a list sort field `[pdb_list sort="true"]`
-* fields - a comma-separated ordered list of fields to show (defaults to the fields display column setting) `[pdb_list fields="first_name,last_name,city,state"]`
-* list_limit - sets the number of records to list per page (defaults to the plugin setting value) `[pdb_list list_limit="5"]`
-* class - lets you set the CSS class of the container (defaults to 'participants-database') `[pdb_list class="full-list centered"]`
-* filter - lets you determine which records are shown (see the usage notes for an explanation) `[pdb_list filter="event_date>oct 13,2011&state=NY"]`
-* orderby - order the list by one of the columns `[pdb_list orderby="event_date"]` It's also possible to order the list randomly with `orderby=random`
-* order - determines whether the list is ordered in ascending (asc) or descending (desc) order `[pdb_list order="asc"]`
-* display_count - if set to 'true' will display a total of all records displayed `[pdb_list display_count="true"]`
-
-All of these can be combined into one shortcode, for instance: `[pdb_list fields="first_name,last_name,city,state,event_date" search="true" sort="true" filter="event_date>oct 13,2011&state=NY"]`
-
-You can set the number of records to show per page (yes, it's paginated!) with the 'list_limit' setting.
-
-Which columns are shown by the shortcode is set up on the fields management page. For each field there is a value called "display" that determines the order of the columns in your list display. You can also set the columns to display in the shortcode by including a list of the names (not Titles!) of the fields you want to show in the order you want to show them: `[pdb_list fields="last_name,city,email,photo"]`
-
-If you want to get tricky with the CSS, each header column has a class name that corresponds to the name of the field, you can use CSS to lay out the listing exactly as you want.
-
-= Searching and Sorting The List =
-
-You can activate user list searching and/or sorting for your users with these attributes: `[pdb_list search=true]` or `[pdb_list sort=true]` These attributes will enable a search form and/or sort form displayed above the list. The user can select which field they want to search through a dropdown and type in a search term. Only fields that are displayed can be searched. For sorting, the fields offered for sorting must be checked as "sortable" and also be present in the list display.
-
-User list searches now allow for the use of the '*' wildcard, so for instance, to search for records beginning with the letter 'B' the search would be 'B*'.
-
-There are two search modes for the list: strict or not strict. If the "Strict User Searching" setting (this is in the plugin settings) is checked, the search term must match *exactly* the whole contents of the field in order to be found. If unchecked, the search will show any records where any part of the searched field contains the search term.
-
-It's also possible to perform a "search" on the list with parameters in the URL. This would be handy if you wanted to create a link to the list that would only show certain results. For instance, if you wanted to make a link to the list that showed only results from the city of Phoenix you would add these variables to the URL: 
-`?search_field=city&value=phoenix&operator=LIKE&submit=Search` 
-The URL must include the 'submit' variable to perform the search when the link is opened. Add that to the end of a link to the page where the `[pdb_list]` shortcode is (replace the '?' with a '&' if the '?' is already there), and it will only show records with a city value of 'phoenix.' This also means you can create your own search functionality, the primary limitation being you can only do this for one field at a time.
-
-Please note that user list searching, sorting and pagination will not work properly if there is more than one list on a page. The shortcode filtering and sorting will work as expected, however.
-
-= Filtering which Records Get Shown with the List Shortcode =
-
-There are 3 parameters for the `[pdb_list]` shortcode that allow you to determine which records get shown. It's a little complicated, but here's how you do it.
-
-There is a parameter called 'filter' which determines which records to show. The general format of the parameter is this: *field* *operator* *value* So for instance if you wanted to show all records from the state of New York, you would put `[pdb_list filter='state=NY']` just like that. "state" is the field (it must match exactly the field name as listed on the mange database fields page in the plugin) "=" is the operator and "NY" is the value. The filter is grabbing all records where the state is NY.
-
-The operators can be '=', '!', '<', '>' and '~' only. '!' means "NOT", so if you wanted everything except a certain value. '<' and '>' mean "less than" and "greater than" and can be used to compare values, like this: `[pdb_list filter='last_name>k' ]` That would give you all the records where the last name began with any letter coming after 'k' in the alphabet. The '=' operator looks for a strict match, and the '~' looks for a string inside the value. Careful with this one, it can give unexpected results.
-
-You can use more than one filter by stringing them together like this: `[pdb_list filter='last_name>c&last_name<h' ]` (note ampersand between filter statements) This gives you all records with last names that start with d through g. Upper case or lower case doesn't matter. These comparisons can be made with dates and numbers too, of course.
-
-It's now also possible to use an "or" operator to link statements, for instance if you wanted to show all records with a city of Boston or Providence, you would use `[pdb_list filter="city=boston|city=providence"]` and they can be combined: `[pdb_list filter="last_name=smith&city=boston|city=providence"]`
-
-To correctly compare dates, the field *must* be defined as a date field form element on the manage database fields page. Date values should be a regular date string like this: `[pdb_list filter='date>jan3,2012']` It's best not to use a number for the month because the date/month/year order is different on different servers.
-
-The "Strict Date Format" setting affects how the shortcode filters are interpreted, so if this is checked, the date format in your filter argument must match the date format set in your WP General Settings.
-
-= Numeric Sorting =
-
-By default all sorting of lists is done alphabetically, which means that if you have a field that is numeric (like prices or rating points) you will not get a numeric sort if you use that field to sort the list. If you need to do this, you must manually edit the database to make your numeric field work like a number and not a word. Here's how you do that:
-
-Get into your database using PHPMyAdmin or similar application. Click on the structure tab of the 'participants_database' table. This shows you the types of all the fields that are used to store the data. You will recognize the names, and most of them will be of type TINYTEXT. You need to change the field type for only the fields where your numbers are stored.
-
-Click on the little pencil to edit the field where you have numbers. You need to decide the range of numbers you will be using. Lets say you need to be able to go up to 9999 with two decimal places. Change the type from TINYTEXT to DECIMAL. In the LENGTH/VALUES field, put the size of number you want to use...our example would be 4,2 giving you up to four figures to the left of the dot and two to the right. Save it and now your sorts on that field will be numeric. This also applies to comparisons in the shortcode filter.
-
-Please note that non-numeric characters cannot be stored in a DECIMAL field, including commas and currency symbols.
-
-= Only Showing List Items When a User Searches =
-
-You can set up the list so no listings will show until a user makes a search. Just add a filter for id=0, like this: `[pdb_list filter="id=0"]` since there is no record with that ID, nothing will show. The user search will override that and show the result of their search, but this is a special case.
-
-Normally, a user search can only override the fields they search on. For instance, if you set your list to show only listings from a certain city, and a user searches for a name, the search results will find the name they searched for and also continue to be filtered by the city. If they search by city, their search will override the city filter in the shortcode.
-
-= Approving Records for Public Display =
-
-One application for the list filtering option allows you to control whether a record gets displayed, giving you an approval process for new records. Create an administrative field (one that is not displayed or edited on the frontend) called "approved" that is a checkbox. Put this (without the quotes) in the values for the field: 'yes,no' with a default value of 'no'. Then put this in the shortcode: `[pdb_list filter='approved=yes']` Now, only records that have been approved will be included in the list display. You may need to do something like this if you get a problem with spam, for instance.<a id="templates"></a>
-
-= Shortcode Templates =
-
-The list, record, single and signup shortcodes use templates to determine how they are presented. Plugin default templates are found in the "templates" directory in the plugin directory. These templates are commented to help you understand how they work, and are intended to serve as starting points to creating your own custom templates. Like WordPress theme templates, some knowledge of PHP, CSS and HTML is required to create and edit them.
-
-If you want to customize a template, use an FTP program to copy the template file you want to use as a starting point to a "templates" directory in your theme:  `wp-content/themes/your_theme_name/templates/`. Create the directory if it doesn't exist; if it does exist, just place the the template file in there.
-
-IMPORTANT: if you modify the templates in the shortcode directory, your changes will be lost when you upgrade the plugin. Copy them to your theme directory in a directory named "templates." The path will look something like this: `(WP ROOT)/wp-content/themes/your_theme_name/templates/pdb-signup-customtemplate.php`
-
-Template files use this naming convention: pdb-{shortcode name}-{template name}.php. So, for instance, the default template for the `[pdb_signup]` shortcode is "pdb-signup-default.php" If you want to create your own template file, you would rename it something like: "pdb-signup-mytemplate.php" then, call it in the shortcode like this: `[pdb_signup template="mytemplate"]`.
-
-I have created a help page for custom templates which includes a tutorial: http://xnau.com/pdb-templates/
-
-= Single Record Templates =
-
-Templates for the single record shortcode include an array that can be used to prevent any fields from displaying. Let's say you wanted to exclude the city, state and postcode. In that case the array would be filled with those names like this:
-
-`$exclude = array('city','state','postcode');`
-
-These fields will now be excluded from the display. The template offers many other opportunities to customize the output of the `[pdb_single]` shortcode to match your theme.
-
-= Showing an Individual Record on Your Website =
-
-To show an individual record on the website, use the `[pdb_single]` shortcode. You must include the id of the record in the URL, so there must be 'pdb=1333' at the end of the page URL. The '1333' in this example would be the actual id number of the record you want to show.
-
-You can put a link to the single record in the participant list by defining the page on which the `[pdb_single]` is placed, and the column where you want the link to appear. In the plugin settings, general settings tab, look for "Single Record Page": set that to the page where your `[pdb_single]` shortcode is. Then, go to "Single Record Link Field" and choose which field will be the link to the single record page. You can set the link on any text field or an image field.
-
-If you want to make a field that is just for linking to the record, create a field called "link" or something and then put as the default value the text you want to use for your link like "VIEW". Set the field to "read only" so it can't be edited.
-
-If you are good with CSS, you can easily make the link look like a button.
-
-= Determining Which Fields are Shown by Each Shortcode =
-
-Each of the 4 main shortcodes (signup, record, list and single) can show any or all of the fields you have defined, depending on the settings on the "manage database fields" page. For the signup, record and single shortcodes, only fields in groups marked "display" will be shown. The signup shortcode also only shows fields that have "signup" checked. The list shortcode only shows fields that have a non-zero "display" value.
-
-Each of these 4 shortcodes can also determine which fields to show in the shortcode itself by using the "fields" attribute. This attribute is a comma-separated list of field names to show in the shortcode. This makes it easy to have different sets of fields appear on different pages, or to create different signup forms for different pages. For example: `[pdb_signup fields="first_name,last_name,address,city,country,email,newsletter"]`
-
-By using custom templates, you can have even more control over how things are displayed by the shortcode. These templates are very similar to the templates that a WordPress theme uses. <a id="thankyou"></a>
-
-= Setting Up the Signup Form "Thank You" Page =
-
-To have your visitors go to another page after they submit a signup, go to the settings page and set the "Signup Thanks Page" setting to point to your page. Place the `[pdb_signup_thanks]` shortcode on that page to display the thank you message. You don't have to use the shortcode, but it gives you a way to thank them using their name.
-
-It's also possible to use this feature to make filling out the signup form required in order to get to another (hidden) page on your website.<a id="hidden"></a>
-
-= Hidden Signup Fields =
-
-There is a field type called "hidden" that can be used to add dynamic values to the signup form submissions. For instance, if you had the signup form in multiple locations on your blog, you could know which page the user was on when they signed up because the page name would be placed in a hidden field. 
-
-Here is a quick tutorial to add a field that tracks the page the signup form is on:
-
-1. Add a new field with a descriptive name, like "source page" 
-
-2. Make that field a hidden type
-
-3. for the default value, put "post->post_title" (without the quotes)
-
-4. This will fill in the title of the page the signup form appears on. 
-
-When the form is submitted, the information in the hidden field will be included.
-
-At the moment, two WordPress objects are available: $post and $current_user. You can look these up in the codex to see what properties you can access. The way this works is simple: just put the name of the property in the default value field for the hidden field. For instance "current_user->user_login" will put in the user login of a logged-in user. You don't need the dollar sign, it will ignore it if you do put it in.
-
-If you just want to put in a fixed value, the hidden field will include any string you put into the "default" for the field.
-
-You can also access some PHP "Superglobals." For instance, to get the IP of the user, put this into the default: "SERVER:REMOTE_ADDR" You can access these superglobals: POST, GET, REQUEST, COOKIE, SERVER, SESSION. This means you can get the value of a cookie and put it into the form, saving it when the form is submitted. You don't need the '$_' that is used in PHP. A good reference for what is possible can be found here: <http://php.net/manual/en/language.variables.superglobals.php>
-
-For those with some Javascript skills, you can use these fields to store dynamic information about a signup. The hidden fields are also present in the form presented by the `[pdb_record]` shortcode. These fields are visible and editable in the admin edit page.<a id="images"></a>
-
-= Image & File Uploads =
-
-Files can be uploaded and managed using the "File Upload" field type. The allowed filetypes (determined by extension) are defined in the "Allowed File Types" setting. This is a global setting for all uploads. Image files are uploaded and managed using the "Image Upload" field type. If you use a "File Upload" type field for image uploads, the image itself won't show in listings, only the filename.
-
-Uploaded images and files can be stored anywhere in the WP install directory, and can be moved without breaking image sources. The 'File Upload Location' setting will always determine the location for files uploaded using the plugin forms. The files are stored in the database as filenames without any path information.
-
-The plugin has a "default image" that will be shown if no image is present. You can create your own, but you shouldn't keep it in the plugin folder. Keep it in the uploads directory or in your theme directory. Change the "Default Image" setting to point to your image. If you don't want anything to show if no image is present, make the "Default Image" setting blank.
-
-IMPORTANT: Don't store your files in the plugin directory, they will be deleted by automatic upgrades. The new default location is in "wp-content/uploads/participants-database/" If you have files in the plugin directory, move them to this directory (it's a good choice, but if you know a better one, use it) and then change the plugin setting to point to the new location.
-
-File uploads can present a security risk to a website, so some precautions should be taken. The plugin secures uploads by replacing the filename of the uploaded file with a sanitized filename. We are depending on the hosting server to prevent the possibility of executing an uploaded file based on the filename extension.<a id="csv" name="csv"></a>
-
-= Importing CSV Files =
-
-CSV is a common file format for exporting databases and spreadsheets. You can export a CSV file from your spreadsheet or database and import the records into the plugin. It can be a tricky process, so I'll offer a few hints here on getting it to work.
-
-The import will work most reliably if the CSV file has it's fields delimited by a comma and the text enclosed by double quotes. (this is actually only required for a field that contains a delimiter character) The first row should be a header row containing the column names (which are the same as your field names). The encoding of the file must be UTF-8. On the CSV import page is a button to export a blank CSV file in the correct format to get you started.
-
-It is critical that your database or spreadsheet application be able to export the CSV in the proper format for the process to work. In some cases, you may have to open your CSV file (as exported from your spreadsheet or database) in a text editing application for further modification to get everything working. This must be a plain-text editor, don't try this with a word processor!
-
-In particular, if your data has both double and single quotes (which are also apostrophes!) in it, it will be very difficult to import because one of the two will need to be used as the text delimiter. I suggest you convert quotes and apostrophes that are part of blocks of text into their HTML equivalents: &#39; for apostrophes and single quotes and &quot; for double quotes. This way, the text delimiter can do it's job without other characters interfering. You will probably have to use a text editing application to make these substitutions.
-
-The "Image Upload Location" setting in the plugin is important here because that is where the plugin will place the uploaded CSV. The default setting for this is 'wp-content/uploads/participants-database/' If the plugin does not find the directory specified in the "Image Upload Location" setting, it will attempt to create it. It should notify you if it fails, and you may have to create the directory manually (using an FTP client, for instance) to get the CSV import to work.
-
-If you are importing a CSV into a database that has records in it, then there are three modes for that you can use, determined by the "Duplicate Record Preference" under the Signup tab. You can choose to import all records as new records, leaving the existing records alone. Or-- by choosing a field to match, either update the existing records with the uploaded information or skip importing any record that matches an existing record. The field you choose for a match should be a unique field...if it is not, messy, unpredictable things can happen.
-
-= Plugin Support =
-
-I do monitor the WP forums and comments page on my own website for support requests. I very much appreciate bugs being brought to my attention, so please let me know if things are broken or not working as expected.
-
-I only ask that you read the documentation before posting with support requests because it will save us both valuable time. Many of the issues people have are due to improper setup or use of the plugin...this is partly due, I know, to shortcomings in the documentation. It is a complex plugin with lots of options, so it can be difficult to explain how it works in a way that everybody will understand.
+A growing list of [plugin add-ons and functionality enhancements](https://xnau.com/shop/?utm_source=wporg_visitor&utm_medium=plugin_page&utm_campaign=pdb-addons-promo) are also available on xnau.com.
