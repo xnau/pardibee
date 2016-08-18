@@ -38,8 +38,13 @@ class PDb_Live_Notification {
   public function __construct( $name )
   {
     $this->name = $name;
-    add_filter( 'pdb-live_notification_' . $this->name, function ( $content ) {
-      return $this->content_filter( $content, $this->analytics_vars() );
+    /**
+     * @version 1.7.0.6
+     * fix assumed availability of $this in the closure #1321
+     */
+    $self =& $this;
+    add_filter( 'pdb-live_notification_' . $this->name, function ( $content ) use ( &$self ) {
+      return $self->content_filter( $content, $self->analytics_vars() );
     } );
   }
 
