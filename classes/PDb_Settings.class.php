@@ -70,14 +70,23 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     $default_options = get_option( Participants_Db::$default_options );
 
-    if ( !is_array( $default_options ) ) {
+    if ( !is_array( $default_options ) || empty( $default_options ) ) {
 
-      $default_options = $this->get_default_options();
+      add_filter( 'plugins_loaded', array($this, 'save_default_options'), 20 );
 
-      add_option( Participants_Db::$default_options, $default_options, '', false );
     }
 
     Participants_Db::$plugin_options = array_merge( $default_options, (array) get_option( $this->WP_setting ) );
+  }
+
+  /**
+   * saves the default options option
+   */
+  public function save_default_options()
+  {
+    $default_options = $this->get_default_options();
+
+    update_option( Participants_Db::$default_options, $default_options, '', false );
   }
 
   /**
