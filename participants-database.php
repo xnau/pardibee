@@ -501,7 +501,7 @@ class Participants_Db extends PDb_Base {
   public static function check_for_shortcode()
   {
     global $post;
-    if ( preg_match( '/\[pdb_/', $post->post_content ) > 0 ) {
+    if ( is_object($post) && preg_match( '/\[pdb_/', $post->post_content ) > 0 ) {
       do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
   }
