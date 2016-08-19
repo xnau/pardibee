@@ -266,6 +266,7 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.7.0.7 =
 * fixed private method access issue for PHP version 5.3 #1323
+* gracefully handles servers that don't allow remote URLS opened as files #1324
 
 = 1.7.0.6 =
 * fixed reference to $this in anonymous function #1321
