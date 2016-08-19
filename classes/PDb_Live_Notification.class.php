@@ -232,7 +232,7 @@ class PDb_Live_Notification {
    * 
    * @return atring
    */
-  private function analytics_vars()
+  public function analytics_vars()
   {
     $analytics_vars = PDb_Live_Notification_Handler::$analytics_vars;
     $analytics_vars['utm_medium'] = PDb_Live_Notification_Handler::$analytics_vars['utm_medium'][$this->name];
