@@ -264,6 +264,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.7 =
+* fixed private method access issue for PHP version 5.3 #1323
+
 = 1.7.0.6 =
 * fixed reference to $this in anonymous function #1321
 * template class now properly handles array values #1321
@@ -646,8 +649,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.6 =
-Version 1.7.0.6 is a general bugfix release for all users
+= 1.7.0.7 =
+Version 1.7.0.6 is a minor bugfix release for users running PHP version 5.3
 
 == Plugin Support ==
 
