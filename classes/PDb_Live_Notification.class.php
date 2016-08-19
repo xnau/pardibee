@@ -37,6 +37,8 @@ class PDb_Live_Notification {
    */
   public function __construct( $name )
   {
+    error_log(__METHOD__.' allow_url_fopen: '.ini_get('allow_url_fopen'));
+    
     $this->name = $name;
     /**
      * @version 1.7.0.6
@@ -150,13 +152,15 @@ class PDb_Live_Notification {
   {
     $response = wp_remote_head( $this->endpoint() );
     $final_endpoint = $this->named_endpoint();
-    if ( is_wp_error( $response ) || empty( $final_endpoint ) ) {
+    
+    
+    if ( is_wp_error( $response ) || empty( $final_endpoint ) || ! ini_get( 'allow_url_fopen' ) ) {
       return false;
     }
     /*
      * code should be 2xx or 3xx for a valid content response
      */
-    //error_log(__METHOD__.' response code: '.$response['response']['code']);
+//    error_log(__METHOD__.' response code: '.$response['response']['code']);
     return preg_match( '/^[23]\d{2}$/', $response['response']['code'] ) === 1;
   }
 
@@ -222,7 +226,27 @@ class PDb_Live_Notification {
    */
   private function blank_response()
   {
-    return (object) array('content' => array('rendered' => ''), 'title' => array('rendered' => ''));
+    return $this->static_content();
+  }
+  
+  /**
+   * supplies static default content
+   * 
+   * this is simply copied from the live notification content on xnau.com and is 
+   * available locally in case allow_url_fopen is off or remote content is not 
+   * available for other reasons
+   * 
+   * @return object
+   */
+  private function static_content()
+  {
+    switch ( $this->name ) {
+      case 'greeting':
+        return (object) array('content' => array('rendered' => '<div class="top_notification_banner live_notification-cpt static-content"><img class="size-medium wp-image-1623 aligncenter" style="width: 100%; height: auto;" src="https://xnau.com/images/branding/participants-database/plain-banner-600x122.jpg" alt="By Tukulti65 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=47436569" /></div>
+<h3><a href="https://xnau.com/shop"><span style="color: #993300;">Now Available...</span></a> add-ons and UI enhancements for Participants Database at the <a href="https://xnau.com/shop">xnau.com store</a>!</h3>'), 'title' => array('rendered' => 'Greeting'));
+      default:
+        return (object) array('content' => array('rendered' => ''), 'title' => array('rendered' => ''));
+    }
   }
 
   /**
