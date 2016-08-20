@@ -242,7 +242,6 @@ class PDb_FormElement extends xnau_FormElement {
           }
 
         case 'date' :
-
           if ( !self::is_empty( $field->value ) ) {
             $return = PDb_Date_Display::get_date( $field->value, __METHOD__ . ' date field' );
           }
