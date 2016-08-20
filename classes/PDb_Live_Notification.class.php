@@ -37,7 +37,6 @@ class PDb_Live_Notification {
    */
   public function __construct( $name )
   {
-    error_log(__METHOD__.' allow_url_fopen: '.ini_get('allow_url_fopen'));
     
     $this->name = $name;
     /**
