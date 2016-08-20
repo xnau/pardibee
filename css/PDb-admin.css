@@ -217,6 +217,9 @@ aside.attribution {
   background-color: rgb(181, 85, 1);
   padding-bottom: 3px;
 }
+.padded .top_notification_banner {
+  margin: 0 -14px;
+}
 .pdb-news-panel .top_notification_banner {
   border-bottom: 4px solid rgb(101, 98, 35);
   background-color: rgb(181, 85, 1);
