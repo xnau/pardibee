@@ -569,6 +569,8 @@ abstract class xnau_FormElement {
       $this->value = current($this->value);
     }
     
+    $this->add_options_to_attributes();
+    
     $this->value = htmlspecialchars($this->value, ENT_QUOTES, 'UTF-8', false);
     
     $this->_addline( $this->_input_tag() );
@@ -582,6 +584,8 @@ abstract class xnau_FormElement {
     if (is_array($this->value)) {
       $this->value = current($this->value);
     }
+    
+    $this->add_options_to_attributes();
     
     $this->_addline( $this->_input_tag('number') );
     
@@ -1329,6 +1333,11 @@ abstract class xnau_FormElement {
     $attributes_array = $this->attributes;
     $output = '';
     
+    error_log(__METHOD__.' 
+      attributes: '.print_r($attributes_array,1).' 
+        
+options: '.print_r( $this->options,1 ) );
+    
     if ( empty( $attributes_array ) ) return '';
         
     $pattern = '%1$s="%2$s" ';
@@ -1346,6 +1355,16 @@ abstract class xnau_FormElement {
     
     return $output;
     
+  }
+  
+  /**
+   * merges the options array into the attributes
+   * 
+   * this is used on elements that need arbitrary attribtues added
+   */
+  protected function add_options_to_attributes()
+  {
+    $this->attributes += $this->options; 
   }
   
   /**
