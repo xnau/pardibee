@@ -243,7 +243,7 @@ class PDb_Live_Notification {
     switch ( $this->name ) {
       case 'greeting':
         return (object) array('content' => array('rendered' => '<div class="top_notification_banner live_notification-cpt static-content"><img class="size-medium wp-image-1623 aligncenter" style="width: 100%; height: auto;" src="https://xnau.com/images/branding/participants-database/plain-banner-600x122.jpg" alt="By Tukulti65 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=47436569" /></div>
-<h3><a href="https://xnau.com/shop"><span style="color: #993300;">Now Available...</span></a> add-ons and UI enhancements for Participants Database at the <a href="https://xnau.com/shop">xnau.com store</a>!</h3>'), 'title' => array('rendered' => 'Greeting'));
+<h3><a href="https://xnau.com/shop?utm_campaign=pdb-addons-inplugin-promo&amp;utm_medium=list_page_banner-static&amp;utm_source=pdb_plugin_user"><span style="color: #993300;">Now Available...</span></a> add-ons and UI enhancements for Participants Database at the <a href="https://xnau.com/shop?utm_campaign=pdb-addons-inplugin-promo&amp;utm_medium=list_page_banner-static&amp;utm_source=pdb_plugin_user">xnau.com store</a>!</h3>'), 'title' => array('rendered' => 'Greeting'));
       default:
         return (object) array('content' => array('rendered' => ''), 'title' => array('rendered' => ''));
     }
