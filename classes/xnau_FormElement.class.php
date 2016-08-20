@@ -1333,11 +1333,6 @@ abstract class xnau_FormElement {
     $attributes_array = $this->attributes;
     $output = '';
     
-    error_log(__METHOD__.' 
-      attributes: '.print_r($attributes_array,1).' 
-        
-options: '.print_r( $this->options,1 ) );
-    
     if ( empty( $attributes_array ) ) return '';
         
     $pattern = '%1$s="%2$s" ';
@@ -1364,7 +1359,9 @@ options: '.print_r( $this->options,1 ) );
    */
   protected function add_options_to_attributes()
   {
-    $this->attributes += $this->options; 
+    if ( is_array( $this->options ) ) {
+      $this->attributes += $this->options;
+    }
   }
   
   /**
