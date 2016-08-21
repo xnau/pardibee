@@ -808,5 +808,23 @@ class PDb_FormElement extends xnau_FormElement {
     );
     return Participants_Db::apply_filters( 'field_is_linkable', $linkable, $field->form_element );
   }
+  
+    /**
+   * returns a MYSQL datatype appropriate to the form element type
+   * 
+   * @param string|array $element the (string) form element type or (array) field definition array
+   * @return string the name of the MySQL datatype
+   */
+  public static function get_datatype($element) {
+    /**
+     * @version 1.7.0.7
+     * @filter pdb-form_element_datatype
+     * 
+     * @param string $datatype the datatype found by the parent method
+     * @param string  $form_element the name of the form element
+     * @return string $datatype 
+     */
+    return Participants_Db::apply_filters('form_element_datatype', parent::get_datatype($element), is_array( $element ) ? $element['form_element'] : $element );
+  }
 
 }
