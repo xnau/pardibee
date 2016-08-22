@@ -134,7 +134,7 @@ class PDb_FormElement extends xnau_FormElement {
      * a filter handle that includes the name of the custom form element. The 
      * filter callback is expected to fill the output property
      */
-    Participants_Db::apply_filters( 'form_element_build_' . $this->type, $this );
+    Participants_Db::do_action( 'form_element_build_' . $this->type, $this );
 
     if ( empty( $this->output ) ) {
       $this->call_element_method();
