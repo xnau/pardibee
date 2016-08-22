@@ -1315,12 +1315,17 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
       $columnlist = $null ? array('null_select' => '') : array('null_select' => false);
 
+      /**
+       * @version 1.7.0.7
+       * 
+       * we exclude array-type and other inappropriate field types instead of explicitly including a list of types
+       */
       $sql = '
 SELECT v.name, v.title 
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
-      WHERE v.form_element IN ("text-line","radio","dropdown","select-other","hidden") AND v.group <> "internal"
+      WHERE v.form_element NOT IN ("rich-text", "multi-checkbox","multi-dropdown","multi-select-other", "link", "image-upload", "file-upload", "password", "placeholder") AND v.group <> "internal"
 ORDER BY g.order, v.order';
 
       $columns = $wpdb->get_results( $sql, OBJECT_K );
