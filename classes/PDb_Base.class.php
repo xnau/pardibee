@@ -692,9 +692,7 @@ class PDb_Base {
    */
   public static function set_filter( $slug, $term, $var1 = NULL, $var2 = NULL )
   {
-    if ( strpos( $slug, Participants_Db::$prefix ) !== 0 ) {
-      $slug = Participants_Db::$prefix . $slug;
-    }
+    $slug = self::add_prefix($slug);
     if ( !has_filter( $slug ) ) {
       return $term;
     }
@@ -715,6 +713,31 @@ class PDb_Base {
   public static function apply_filters( $slug, $term, $var1 = NULL, $var2 = NULL )
   {
     return self::set_filter( $slug, $term, $var1, $var2 );
+  }
+  
+  /**
+   * triggers an action
+   * 
+   * @param string $slug the base slug of the plugin API filter
+   * @param unknown $term the term to filter
+   * @param unknown $var1 extra variable
+   * @param unknown $var2 extra variable
+   * @return unknown the filtered or unfiltered term
+   */
+  public static function do_action( $slug, $term, $var1 = NULL, $var2 = NULL )
+  {
+    do_action( self::add_prefix($slug), $term, $var1, $var2 );
+  }
+  
+  /**
+   * provides a prefixed slug
+   * 
+   * @param string  $slug the paybe-prefixed slug
+   * @return string the prefixed slug
+   */
+  public static function add_prefix( $slug )
+  {
+    return strpos( $slug, Participants_Db::$prefix ) !== 0 ? Participants_Db::$prefix . $slug : $slug;
   }
 
   /**
