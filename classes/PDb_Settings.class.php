@@ -76,7 +76,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     }
 
-    Participants_Db::$plugin_options = array_merge( $default_options, (array) get_option( $this->WP_setting ) );
+    Participants_Db::$plugin_options = array_merge( (array) $default_options, (array) get_option( $this->WP_setting ) );
   }
 
   /**
