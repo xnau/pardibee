@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -54,6 +54,11 @@ class PDb_Template_Item {
    * @var array holds an array of class strings
    */
   var $class = array();
+  
+  /**
+   * @var bool true if the item is a Participants Database field
+   */
+  private $is_pdb_field = false;
   
   /**
    * constructs a Template Item object
@@ -157,6 +162,7 @@ class PDb_Template_Item {
       
     if (isset(Participants_Db::$fields[$item->name]) && is_object(Participants_Db::$fields[$item->name])) {
       $field = clone Participants_Db::$fields[$item->name];
+      $this->is_pdb_field = true;
     }
     
     // grab and assign the class properties from the provided object
@@ -181,6 +187,16 @@ class PDb_Template_Item {
    */
   public function print_class() {
     echo implode(' ', $this->class);
+  }
+  
+  /**
+   * tells if the item is a Participants Database defined field
+   * 
+   * @return bool
+   */
+  public function is_pdb_field()
+  {
+    return (bool) $this->is_pdb_field;
   }
   
 }
