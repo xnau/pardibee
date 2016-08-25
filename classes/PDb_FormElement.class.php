@@ -604,8 +604,11 @@ class PDb_FormElement extends xnau_FormElement {
       }
     } elseif ( filter_var( $URI, FILTER_VALIDATE_EMAIL ) !== false && Participants_Db::plugin_setting_is_true( 'email_protect' ) && !Participants_Db::$sending_email ) {
 
-      // only obfuscating, not making links
-      return vsprintf( '%1$s AT %2$s', explode( '@', $URI, 2 ) );
+      /**
+       * @todo obfuscate other email links
+       * if the email address is wrapped in a link, we should obfuscate it
+       */
+      return $URI;
     } else {
       return $field->value; // if it is neither URL nor email address and we're not formatting it as html
     }
