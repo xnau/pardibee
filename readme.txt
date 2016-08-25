@@ -4,7 +4,7 @@ Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 4.6
-Stable tag: 1.7.0.6
+Stable tag: 1.7.0.7
 License: GPLv2
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -23,8 +23,7 @@ The plugin can be easily adapted to work as a database for other applications su
 
 * fully configurable database for holding any kind of information about people (or anything, really!)
 * customizable forms for collecting and maintaining records
-* plugin enhancements and add-ons are available from a growing list of downloads on xnau.com
-* both front-end and back-end versions of the forms
+* plugin enhancements and add-ons are available from a growing list of [free and premium downloads on xnau.com](https://xnau.com/shop/?utm_source=wporg_visitor&utm_medium=plugin_page_description_tab&utm_campaign=pdb-addons-promo)
 * shortcode for inserting a configurable sign-up short form into WordPress pages, posts, etc.
 * completing the sign-up form can direct visitors to another page for a thank you message or reward
 * shortcode for inserting a full-length form for people to fill out and maintain their own records
@@ -83,7 +82,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 = Translation Credits =
 
-* Belarusian: Natasha Dyatko [UStarCash] (https://www.ustarcash.com)
+* Belarusian: Natasha Dyatko [UStarCash](https://www.ustarcash.com)
 
 * Danish: Bo Hejberg Nielsen
 
@@ -125,24 +124,28 @@ By Tukulti65 (Own work) [CC BY-SA 4.0 (http://creativecommons.org/licenses/by-sa
 
 == Installation ==
 
-1. Download the zip file, and unzip it on your computer.
-2. Upload this directory (participants-database) and its contents to the `/wp-content/plugins/` directory on your web server
-
-**or**
-
 1. In the admin for your WordPress site, click on "add new" in the plug-ins menu.
 2. Search for "participants database" in the WP plugin repository and install
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Place `[pdb_record]` in your blog posts and pages to show the signup form
 5. Additonal features and instructions can be found on the help tab of the plugin's settings page
 
+**or**
+
+1. Download the zip file
+2. Click on "Add New" in the plugins menu
+3. At the top of the "Add Plugins" page find and click the "Upload Plugin" button
+4. Select the zip file on your computer and upload it
+5. The plugin will install itself. Click on "activate" to activate the plugin
+
 = Using the Plugin: =
 
-This is a complex plugin that can be configured in many ways. I am happy to answer support questions, but please read the documentation I have provided. More often than not, your questions will be answered there.
+This is a complex plugin that can be configured in many ways. I am happy to answer support questions, but please read the documentation, there are also many articles and tutroials to help you get the most out of Participants Database. Here are some helpful links:
 
-I have created a [Quick Setup Guide](http://xnau.com/participants-database-quick-setup-guide/) for an example setup to get you started.
-
-Go to the [plugin use instructions](http://wordpress.org/extend/plugins/participants-database/other_notes/) page for a more detailed explanation of the plugin's features.
+* [Participants Database](https://xnau.com/work/wordpress-plugins/participants-database/)
+* [Participants database Documentation](https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/)
+* [Add-Ons and UI Enhancements](https://xnau.com/shop/?utm_source=wporg_visitor&utm_medium=plugin_page_inatallation_tab&utm_campaign=pdb-addons-promo)
+* [Quick Setup Guide](https://xnau.com/participants-database-quick-setup-guide/)
 
 == Frequently Asked Questions ==
 
@@ -263,6 +266,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.0.8 =
+* fixed settings class warning on plugin first activate #1346
+* record_edit URLs in emails #1343
+* email obfuscation leaves un-obfuscated email visible is linking is off #1344
 
 = 1.7.0.7 =
 * fixed private method access issue for PHP version 5.3 #1323
@@ -651,13 +659,13 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.7 =
-Version 1.7.0.7 is a bugfix release for all users
+= 1.7.0.8 =
+Version 1.7.0.8 is a bugfix release for all users
 
 == Plugin Support ==
 
-**[Plugin manual and documentation](https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/?utm_source=wporg_visitor&utm_medium=plugin_page&utm_campaign=pdb-addons-promo) is published on the developer's website, xnau.com**
+**[Plugin manual and documentation](https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/?utm_source=wporg_visitor&utm_medium=plugin_page_othernotes__tab&utm_campaign=pdb-addons-promo) is published on the developer's website, xnau.com**
 
 Plugin technical support is available here under the "Support" tab, on xnau.com in the comments section.
 
-A growing list of [plugin add-ons and functionality enhancements](https://xnau.com/shop/?utm_source=wporg_visitor&utm_medium=plugin_page&utm_campaign=pdb-addons-promo) are also available on xnau.com.
+A growing list of [plugin add-ons and functionality enhancements](https://xnau.com/shop/?utm_source=wporg_visitor&utm_medium=plugin_page_othernotes__tab&utm_campaign=pdb-addons-promo) are also available on xnau.com.
