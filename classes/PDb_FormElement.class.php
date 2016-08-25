@@ -177,7 +177,7 @@ class PDb_FormElement extends xnau_FormElement {
       // provided for backward-compatibility
       $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value, $field->form_element );
     }
-
+    
     if ( empty( $return ) ) {
 
       switch ( $field->form_element ) :
@@ -186,6 +186,7 @@ class PDb_FormElement extends xnau_FormElement {
           switch ($field->module) {
             case 'single':
             case 'list':
+            case 'tag-template':
               $display_mode = 'image';
               break;
             case 'signup':
