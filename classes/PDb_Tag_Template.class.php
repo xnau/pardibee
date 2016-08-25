@@ -178,11 +178,14 @@ class PDb_Tag_Template {
   protected function prepare_display_values()
   {
     foreach ( $this->data as $fieldname => &$value ) {
-      $field = new PDb_Field_Item( array( 'name' => $fieldname, 'value' => $value ) );
+      $field = new PDb_Field_Item( array( 'name' => $fieldname, 'value' => $value, 'module' => 'tag-template' ) );
       /**
-       * @version 1.7.0.8 prevent html from getting used in templates
+       * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
+       * 
        */
-      $field->html_mode(false);
+      if ( ! $field->is_pdb_field() ) {
+        $field->html_mode(false);
+      }
       $value = $field->get_value();
     }
   }
