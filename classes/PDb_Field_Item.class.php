@@ -79,6 +79,11 @@ class PDb_Field_Item extends PDb_Template_Item {
   var $link = false;
   
   /**
+   * @var bool determines if the field value is output as HTML or a formatted value 
+   */
+  public $html_output = true;
+  
+  /**
    * 
    * @param array|object|string $field the field attributes or field name
    * @param mixed $id the id of the source record if available
@@ -129,7 +134,7 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function get_value() {
     
-    return PDb_FormElement::get_field_value_display($this);
+    return PDb_FormElement::get_field_value_display($this, $this->html_output );
     
   }
   
@@ -180,6 +185,16 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function __get( $name )
   {
     return isset( $this->{$name} ) ? $this->{$name} : '';
+  }
+  
+  /**
+   * sets the html mode
+   * 
+   * @param bool $mode tur to use html, false to use ony formatted values
+   */
+  public function html_mode( $mode )
+  {
+    $this->html_output = (bool) $mode;
   }
 	
 	/**
