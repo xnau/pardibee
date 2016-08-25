@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -42,6 +42,7 @@ class PDb_Template_Email extends xnau_Template_Email {
     }
     $this->setup_data( $data );
     parent::__construct( $config, $this->data );
+    Participants_Db::$sending_email = true;
   }
 
   /**
