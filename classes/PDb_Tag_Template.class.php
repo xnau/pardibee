@@ -179,6 +179,10 @@ class PDb_Tag_Template {
   {
     foreach ( $this->data as $fieldname => &$value ) {
       $field = new PDb_Field_Item( array( 'name' => $fieldname, 'value' => $value ) );
+      /**
+       * @version 1.7.0.8 prevent html from getting used in templates
+       */
+      $field->html_mode(false);
       $value = $field->get_value();
     }
   }
