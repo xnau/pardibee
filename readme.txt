@@ -270,7 +270,7 @@ You can define a "captcha" form element which will show a simple math question f
 = 1.7.0.8 =
 * fixed settings class warning on plugin first activate #1346
 * record_edit URLs in emails #1343
-* email obfuscation leaves un-obfuscated email visible is linking is off #1344
+* email obfuscation leaves un-obfuscated email visible if linking is off #1344
 
 = 1.7.0.7 =
 * fixed private method access issue for PHP version 5.3 #1323
