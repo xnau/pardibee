@@ -742,17 +742,17 @@ class PDb_Manage_Fields {
      */
     function prep_values_array( $values )
     {
-
+      
       /* we can do this because if the matching string is in position 0, it's not 
        * valid syntax anyway
        */
       $has_labels = strpos( $values, '::' ) !== false;
       $array = array();
-      $a = explode( ',', stripslashes( $values ) );
+      $term_list = explode( ',', stripslashes( $values ) );
       if ( $has_labels ) {
-        foreach ($a as $e) {
-          if ( strpos( $e, '::' ) !== false ) {
-            list($key, $value) = explode( '::', $e );
+        foreach ($term_list as $term) {
+          if ( strpos( $term, '::' ) !== false && strpos( $term, '::' ) !== 0 ) {
+            list($key, $value) = explode( '::', $term );
             /*
              * @version 1.6
              * this is to allow for an optgroup label that is the same as a value label...
@@ -762,12 +762,14 @@ class PDb_Manage_Fields {
             $array_key = in_array( $value, array( 'false', 'optgroup', false ) ) ? trim( $key ) . ' ' : trim( $key );
             $array[$array_key] = $this->prep_value( trim( $value ), true );
           } else {
-            $array[$this->prep_value( $e, true )] = $this->prep_value( $e, true );
+            // strip out the double colon in case it is present
+            $term = str_replace(array( '::' ), '', $term );
+            $array[$this->prep_value( $term, true )] = $this->prep_value( $term, true );
           }
         }
       } else {
-        foreach ($a as $e) {
-          $array[] = $this->prep_value( $e, true );
+        foreach ($term_list as $term) {
+          $array[] = $this->prep_value( $term, true );
         }
       }
 
