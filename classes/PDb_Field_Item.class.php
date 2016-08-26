@@ -292,7 +292,7 @@ class PDb_Field_Item extends PDb_Template_Item {
      * 
      * @param PDb_Form_Element this instance
      */
-    Participants_Db::apply_filters('before_display_form_input', $this);
+    Participants_Db::do_action('before_display_form_input', $this);
 
     if ($this->readonly && !in_array($this->form_element, array('captcha'))) {
 
