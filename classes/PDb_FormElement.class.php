@@ -120,6 +120,15 @@ class PDb_FormElement extends xnau_FormElement {
   }
 
   /**
+   * builds an output string
+   */
+  protected function _output() {
+
+    return Participants_Db::apply_filters( 'form_element_html', parent::_output() );
+
+  }
+
+  /**
    * builds the form element
    * 
    * allows an external func to build the element. If that doens't happen, uses 
