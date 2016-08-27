@@ -2286,9 +2286,7 @@ class Participants_Db extends PDb_Base {
       return;
 
     // add a filter to check the submission before anything is done with it
-    $check = true;
-    self::apply_filters( 'check_submission', $check );
-    if ( $check === false )
+    if ( self::apply_filters( 'check_submission', true ) === false )
       return;
 
     // error_log( __METHOD__.' post:'.print_r( $_POST, true ) );
