@@ -66,7 +66,7 @@ class PDb_FormValidation extends xnau_FormValidation {
     //$field = (object) compact( 'value', 'name', 'validation', 'form_element', 'error_type' );
     $field = new PDb_Validating_Field( $value, $name, $validation, $form_element );
 
-    /*
+    /**
      * this filter sends the $field object through a filter to allow a custom 
      * validation to be inserted
      * 
@@ -75,8 +75,11 @@ class PDb_FormValidation extends xnau_FormValidation {
      * method, that method will be applied. If $field->validation is set to false 
      * by the filter callback, no further processing will be applied.
      * 
+     * @action pdb-before_validate_field
+     * @param PDb_Validating_field object $field
+     * 
      */
-    Participants_Db::apply_filters( 'before_validate_field', $field );
+    Participants_Db::do_action( 'before_validate_field', $field );
 
     /*
      * if there is no validation method defined, exit here
