@@ -773,13 +773,14 @@ abstract class xnau_FormElement {
         // build the text input element
         $this->attributes['id'] .= '_other';
         $is_other = $this->_set_selected( $this->options, $this->value, 'selected', false ) !== '';
-        $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other ? $this->value : '' ) . '" ' . $this->_attributes() . $this->_class( 'otherfield' ) . ' >' );
+        
+        $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other ? $this->value : '' ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' >' );
         $this->_addline( '</div>' );
       }
     } else {
       // readonly display
       $this->attributes['id'] .= '_readonly';
-      $this->_addline( '<input type="text" name="' . $this->name . '" value="' . $this->value . '" ' . $this->_attributes() . $this->_class( 'pdb-readonly' ) . ' >' );
+      $this->_addline( '<input type="text" name="' . $this->name . '" value="' . $this->value . '" ' . $this->_attributes('no validate') . $this->_class( 'pdb-readonly' ) . ' >' );
     }
   }
 
@@ -878,7 +879,7 @@ abstract class xnau_FormElement {
     $name = $type == 'checkbox' ? str_replace( '[]', '', $this->name ) . '[other]' : '';
     $id = $this->element_id();
     $this->attributes['id'] = $id . '_other';
-    $this->_addline( '<input type="text" name="' . $name . '" value="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8', false ) . '" ' . $this->_attributes() . $this->_class( 'otherfield' ) . ' >' );
+    $this->_addline( '<input type="text" name="' . $name . '" value="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8', false ) . '" ' . $this->_attributes('no validate') . $this->_class( 'otherfield' ) . ' >' );
     $this->attributes['id'] = $id;
     array_push( $this->output, $controltag, $closetag ); // replace the span close tags, enclosing the input element in it
     // close the container
