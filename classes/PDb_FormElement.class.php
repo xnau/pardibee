@@ -122,7 +122,8 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * builds an output string
    */
-  protected function _output() {
+  protected function _output()
+  {
 
     /**
      * @version 1.7.0.9
@@ -131,7 +132,6 @@ class PDb_FormElement extends xnau_FormElement {
      * @return string
      */
     return Participants_Db::apply_filters( 'form_element_html', parent::_output() );
-
   }
 
   /**
@@ -168,8 +168,8 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_field_value_display( $field, $html = true )
   {
-    
-    if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
+
+    if ( !is_a( $field, 'PDb_Field_Item' ) ) {
       // now we can use our field classs methods
       $field = new PDb_Field_Item( $field );
     }
@@ -192,13 +192,13 @@ class PDb_FormElement extends xnau_FormElement {
       // provided for backward-compatibility
       $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value, $field->form_element );
     }
-    
+
     if ( empty( $return ) ) {
 
       switch ( $field->form_element ) :
 
         case 'image-upload' :
-          switch ($field->module) {
+          switch ( $field->module ) {
             case 'single':
             case 'list':
             case 'tag-template':
@@ -218,7 +218,7 @@ class PDb_FormElement extends xnau_FormElement {
               'link' => $field->link,
               'module' => $field->module,
               'mode' => $display_mode,
-          ) );
+                  ) );
 
           if ( $html ) {
 
@@ -241,7 +241,7 @@ class PDb_FormElement extends xnau_FormElement {
             if ( $field->module == 'signup' ) {
               $field->link = false;
               $return = $field->value;
-            } elseif ( ! empty( $field->value ) ) {
+            } elseif ( !empty( $field->value ) ) {
               $field->link = Participants_Db::files_uri() . $field->value;
               if ( $field->default ) {
                 $field->value = $field->default;
@@ -352,7 +352,7 @@ class PDb_FormElement extends xnau_FormElement {
           $field->value = $field->default;
           $return = $html ? self::make_link( $field ) : $field->value;
           break;
-        
+
         case 'password':
           // password hashes are never shown
           $return = '';
@@ -471,7 +471,7 @@ class PDb_FormElement extends xnau_FormElement {
     foreach ( $multivalues as $value ) {
       $titles[] = self::get_value_title( $value, $field->name );
     }
-    return implode( Participants_Db::apply_filters('stringify_array_glue', ', '), $titles );
+    return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
   }
 
   /*   * *********************** 
@@ -767,6 +767,35 @@ class PDb_FormElement extends xnau_FormElement {
     return strlen( $string ) > 0;
   }
 
+  /**
+   * builds a string of attributes for inclusion in an HTML element
+   *
+   * @param string $filter to apply to the array
+   * @return string
+   */
+  protected function _attributes( $filter = 'none' )
+  {
+    /**
+     * @version 1.7.0.9
+     * @filter pdb-form_element_attributes_filter
+     * @param array the attributes array in name=>value format
+     * @param string the name of the filter called
+     */
+    $attributes_array = Participants_Db::apply_filters('form_element_attributes_filter', $this->attributes, $filter );
+    switch ( $filter ) {
+      case 'none':
+        break;
+      case 'no validate':
+        foreach ( array('required', 'maxlength', 'pattern') as $att ) {
+          unset( $attributes_array[$att] );
+        }
+        break;
+        // any more filters...add them here
+    }
+
+    return parent::_attributes( $attributes_array );
+  }
+
   /*
    * static function for assembling the types array
    * 
@@ -827,14 +856,15 @@ class PDb_FormElement extends xnau_FormElement {
     );
     return Participants_Db::apply_filters( 'field_is_linkable', $linkable, $field->form_element );
   }
-  
-    /**
+
+  /**
    * returns a MYSQL datatype appropriate to the form element type
    * 
    * @param string|array $element the (string) form element type or (array) field definition array
    * @return string the name of the MySQL datatype
    */
-  public static function get_datatype($element) {
+  public static function get_datatype( $element )
+  {
     /**
      * @version 1.7.0.7
      * @filter pdb-form_element_datatype
@@ -843,7 +873,7 @@ class PDb_FormElement extends xnau_FormElement {
      * @param string  $form_element the name of the form element
      * @return string $datatype 
      */
-    return Participants_Db::apply_filters('form_element_datatype', parent::get_datatype($element), is_array( $element ) ? $element['form_element'] : $element );
+    return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $element ), is_array( $element ) ? $element['form_element'] : $element  );
   }
 
 }
