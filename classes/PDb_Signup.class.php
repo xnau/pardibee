@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -490,12 +490,12 @@ class PDb_Signup extends PDb_Shortcode {
   }
   
   /**
-   * changes the readonly status of internal fields used in the retrieve form
+   * changes the readonly status of fields used in the retrieve form
    * 
    * @param $field a PDb_Field_Item object
    */
   public function allow_readonly_fields_in_form($field) {
-    if ($field->group !== 'internal') return $field;
+    // if ($field->group !== 'internal') return $field;
     $field->readonly = 0;
     return $field;
   }
