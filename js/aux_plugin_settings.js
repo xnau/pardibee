@@ -40,20 +40,22 @@ PDbAuxSettings = (function ($) {
     init : function () {
       var wrapped = $(".pdb-aux-settings-tabs .ui-tabs>h2, .pdb-aux-settings-tabs .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">");
       var wrapclass = $('.pdb-aux-settings-tabs').attr('class');
-      wrapped.each(function () {
-        $(this).parent().append($(this).parent().nextUntil("div.ui-tabs-panel"));
-      });
-      $(".ui-tabs-panel").each(function (index) {
-        var str = $(this).find('a').attr('name').replace(/\s/g, "_");
-        $(this).attr("id", str.toLowerCase());
-      });
-      $(".pdb-aux-settings-tabs").removeClass().addClass(wrapclass + " main");
-      $('.pdb-aux-settings-tabs .ui-tabs').tabs(tabsetup).bind('tabsselect', function (event, ui) {
-        var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
-        $(".pdb-aux-settings-tabs").removeClass().addClass(wrapclass + " " + activeclass);
-      });
-      if ($.browser.mozilla) {
-        $("form").attr("autocomplete", "off");
+      if (wrapped.length) {
+        wrapped.each(function () {
+          $(this).parent().append($(this).parent().nextUntil("div.ui-tabs-panel"));
+        });
+        $(".ui-tabs-panel").each(function (index) {
+          var str = $(this).find('a').attr('name').replace(/\s/g, "_");
+          $(this).attr("id", str.toLowerCase());
+        });
+        $(".pdb-aux-settings-tabs").removeClass().addClass(wrapclass + " main");
+        $('.pdb-aux-settings-tabs .ui-tabs').tabs(tabsetup).bind('tabsselect', function (event, ui) {
+          var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
+          $(".pdb-aux-settings-tabs").removeClass().addClass(wrapclass + " " + activeclass);
+        });
+        if ($.browser.mozilla) {
+          $("form").attr("autocomplete", "off");
+        }
       }
     }
   }
