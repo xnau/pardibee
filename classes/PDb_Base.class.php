@@ -1221,7 +1221,7 @@ class PDb_Base {
       $post = get_page_by_path( $page_slug );
     }
 
-    if ( is_a( 'WP_Post', $post ) ) {
+    if ( is_a( $post, 'WP_Post' ) ) {
       return $post->ID;
     }
 
