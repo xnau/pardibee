@@ -73,6 +73,23 @@ class PDb_Base {
     }
     return $scheme . trailingslashit( implode( '/', $common ) );
   }
+  
+  /**
+   * provides a simplified way to add or update a participant record
+   * 
+   * 
+   * @param array $post associative array of data to store
+   * @param int $id the record id to update, creates new record if omitted
+   * @return  int the ID of the record added or updated
+   */
+  public static function write_participant( Array $post, $id = '' )
+  {
+    $action = 'insert';
+    if ( is_numeric( $id ) ) {
+      $action = Participants_Db::get_participant($id) === false ? 'insert' : 'update';
+    }
+    return Participants_Db::process_form($post, $action, $id);
+  }
 
   /**
    * parses a list shortcode filter string into an array
@@ -828,7 +845,6 @@ class PDb_Base {
    */
   public static function is_form_validated()
   {
-
     if ( is_admin() ) {
       return self::current_user_has_plugin_role( 'admin', 'forms not validated' ) === false;
     } else {
