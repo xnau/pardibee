@@ -273,7 +273,7 @@ You can define a "captcha" form element which will show a simple math question f
 * JS bug in aux_plugin_settings.js Bug #1352
 * better implementation of HTML5 client-side validation for aux plugins
 * read-only field can now be used for private link recovery #1342
-
+* added Participants_db::write_participant API method #1353
 
 = 1.7.0.8 =
 * fixed settings class warning on plugin first activate #1346
