@@ -3097,19 +3097,6 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * gets the ID of a page given it's slug
-   *
-   * this is to provide backwards-compatibility with previous versions that used a page-slug to point to the [pdb_record] page.
-   */
-  public static function get_id_by_slug( $page_slug )
-  {
-
-    $page = get_page_by_path( $page_slug );
-
-    return is_object( $page ) ? $page->ID : false;
-  }
-
-  /**
    * prints the list with filtering parameters applied 
    *
    * called by the wp_ajax_nopriv_pdb_list_filter action: this happens when a 
