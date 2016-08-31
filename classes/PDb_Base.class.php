@@ -38,7 +38,7 @@ class PDb_Base {
   {
     $content_path = explode( '/', WP_CONTENT_DIR );
     $wp_app_path = explode( '/', ABSPATH );
-    $end = min( array( count( $content_path ), count( $wp_app_path ) ) );
+    $end = min( array(count( $content_path ), count( $wp_app_path )) );
     $i = 0;
     $common = array();
     while ( $content_path[$i] === $wp_app_path[$i] and $i < $end ) {
@@ -64,7 +64,7 @@ class PDb_Base {
     $wp_app_path = explode( '/', str_replace( $scheme, '', site_url() ) );
 
 
-    $end = min( array( count( $content_path ), count( $wp_app_path ) ) );
+    $end = min( array(count( $content_path ), count( $wp_app_path )) );
     $i = 0;
     $common = array();
     while ( $i < $end and $content_path[$i] === $wp_app_path[$i] ) {
@@ -93,7 +93,7 @@ class PDb_Base {
   {
     $return = array();
     $statements = preg_split( '/(&|\|)/', html_entity_decode( $filter ), null, PREG_SPLIT_DELIM_CAPTURE );
-    foreach ($statements as $s) {
+    foreach ( $statements as $s ) {
       $statement = self::_filter_statement( $s );
       if ( $statement )
         $return[] = $statement;
@@ -109,7 +109,7 @@ class PDb_Base {
   public static function build_filter_string( $filter_array )
   {
     $filter_string = '';
-    foreach ($filter_array as $statement) {
+    foreach ( $filter_array as $statement ) {
       $filter_string .= $statement['column'] . $statement['operator'] . $statement['search_term'] . $statement['relation'];
     }
     return rtrim( $filter_string, '&|' );
@@ -129,7 +129,7 @@ class PDb_Base {
   public static function merge_filter_arrays( $array1, $array2 )
   {
     $return = array();
-    foreach ($array1 as $statement) {
+    foreach ( $array1 as $statement ) {
       $index = self::search_array_column( $array2, $statement['column'] );
       if ( $index === false ) {
         $return[] = $statement;
@@ -151,7 +151,7 @@ class PDb_Base {
    */
   private static function search_array_column( $array, $term, $key = 'column' )
   {
-    for ($i = 0; $i < count( $array ); $i++) {
+    for ( $i = 0; $i < count( $array ); $i++ ) {
       if ( $array[$i][$key] == $term )
         return $i;
     }
@@ -197,7 +197,7 @@ class PDb_Base {
    */
   public static function find_record_match( $columns, $submission )
   {
-    $matched_id = self::record_match_id($columns, $submission);
+    $matched_id = self::record_match_id( $columns, $submission );
     /**
      * @version 1.6
      * 
@@ -233,7 +233,7 @@ class PDb_Base {
     $values = array();
     $where = array();
     $columns = !is_array( $columns ) ? explode( ',', str_replace( ' ', '', $columns ) ) : (array) $columns;
-    foreach ($columns as $column) {
+    foreach ( $columns as $column ) {
       if ( isset( $submission[$column] ) ) {
         $values[] = $submission[$column];
         $where[] = ' r.' . $column . ' = %s';
@@ -243,7 +243,7 @@ class PDb_Base {
     }
     $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode( ' AND ', $where );
     $match = $wpdb->get_var( $wpdb->prepare( $sql, $values ) );
-    
+
     return is_numeric( $match ) ? (int) $match : false;
   }
 
@@ -308,7 +308,7 @@ class PDb_Base {
 
     $empty = true;
 
-    foreach ($array as $key => $value) {
+    foreach ( $array as $key => $value ) {
 
       if ( $value !== '' )
         $empty = false;
@@ -573,7 +573,7 @@ class PDb_Base {
   {
 
     $capability = 'read'; // assume the lowest cap
-    if ( in_array( $cap, array( 'plugin_admin_capability', 'record_edit_capability' ) ) ) {
+    if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
       $capability = self::apply_filters( 'access_capability', self::plugin_setting( $cap ), $context );
     }
     return $capability;
@@ -692,7 +692,7 @@ class PDb_Base {
    */
   public static function set_filter( $slug, $term, $var1 = NULL, $var2 = NULL )
   {
-    $slug = self::add_prefix($slug);
+    $slug = self::add_prefix( $slug );
     if ( !has_filter( $slug ) ) {
       return $term;
     }
@@ -714,7 +714,7 @@ class PDb_Base {
   {
     return self::set_filter( $slug, $term, $var1, $var2 );
   }
-  
+
   /**
    * triggers an action
    * 
@@ -726,9 +726,9 @@ class PDb_Base {
    */
   public static function do_action( $slug, $term, $var1 = NULL, $var2 = NULL )
   {
-    do_action( self::add_prefix($slug), $term, $var1, $var2 );
+    do_action( self::add_prefix( $slug ), $term, $var1, $var2 );
   }
-  
+
   /**
    * provides a prefixed slug
    * 
@@ -868,7 +868,7 @@ class PDb_Base {
   public static function array_merge2( $array, $override )
   {
     $x = array();
-    foreach ($array as $k => $v) {
+    foreach ( $array as $k => $v ) {
       if ( isset( $override[$k] ) ) {
         if ( is_array( $v ) ) {
           $v = Participants_Db::array_merge2( $v, (array) $override[$k] );
@@ -892,8 +892,6 @@ class PDb_Base {
   {
     return is_int( $timestamp ) or ( (string) (int) $timestamp === $timestamp);
   }
-  
-  
 
   /**
    * translates a PHP date() format string to a jQuery format string
@@ -901,10 +899,10 @@ class PDb_Base {
    * @param string $PHP_date_format the date format string
    *
    */
-  static function get_jqueryUI_date_format($PHP_date_format = '')
+  static function get_jqueryUI_date_format( $PHP_date_format = '' )
   {
 
-    $dateformat = empty($PHP_date_format) ? Participants_Db::$date_format : $PHP_date_format;
+    $dateformat = empty( $PHP_date_format ) ? Participants_Db::$date_format : $PHP_date_format;
 
     return xnau_Date_Format_String::to_jQuery( $dateformat );
   }
@@ -930,7 +928,7 @@ class PDb_Base {
   public static function set_admin_message( $message, $type = 'error' )
   {
     if ( is_admin() ) {
-      Participants_Db::$session->set( 'admin_message', array( $message, $type ) );
+      Participants_Db::$session->set( 'admin_message', array($message, $type) );
       Participants_Db::$admin_message = $message;
       Participants_Db::$admin_message_type = $type;
     }
@@ -978,7 +976,7 @@ class PDb_Base {
     if ( empty( $matches ) )
       return array();
     // check each one for a plugin shortcode
-    foreach ($matches as $shortcode) {
+    foreach ( $matches as $shortcode ) {
       if ( false !== strpos( $shortcode[0], $tag ) ) {
         $shortcodes[] = $shortcode[2] . '-shortcode';
       }
@@ -1008,7 +1006,7 @@ class PDb_Base {
     if ( empty( $matches ) )
       return false;
     // check each one for a plugin shortcode
-    foreach ($matches as $shortcode) {
+    foreach ( $matches as $shortcode ) {
       if ( false !== strpos( $shortcode[0], $tag ) ) {
         return true;
       }
@@ -1178,10 +1176,10 @@ class PDb_Base {
   public static function deep_stripslashes( $input )
   {
     if ( is_array( $input ) ) {
-      $input = array_map( array( __CLASS__, 'deep_stripslashes' ), $input );
+      $input = array_map( array(__CLASS__, 'deep_stripslashes'), $input );
     } elseif ( is_object( $input ) ) {
       $vars = get_object_vars( $input );
-      foreach ($vars as $k => $v) {
+      foreach ( $vars as $k => $v ) {
         $input->{$k} = deep_stripslashes( $v );
       }
     } else {
@@ -1206,6 +1204,35 @@ class PDb_Base {
   }
 
   /**
+   * gets the ID of a page given it's slug
+   *
+   * this is to provide backwards-compatibility with previous versions that used a page-slug to point to the [pdb_record] page.
+   * 
+   * @global object $wpdb
+   * @param string $page_slug slug or ID of a page or post
+   * @param string $post_type name of the post type; defualts to page
+   * @return string|bool the post ID; bool false if nothing found
+   */
+  public static function get_id_by_slug( $page_slug, $post_type = 'page' )
+  {
+    if ( is_numeric( $page_slug ) ) {
+      $post = get_post( $page_slug );
+    } else {
+      $post = get_page_by_path( $page_slug );
+    }
+
+    if ( is_a( 'WP_Post', $post ) ) {
+      return $post->ID;
+    }
+
+    // fallback method
+    global $wpdb;
+    $id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'", $page_slug, $post_type ) );
+
+    return empty( $id ) ? false : $id;
+  }
+
+  /**
    * encodes or decodes a string using a simple XOR algorithm
    * 
    * @param string $string the tring to be encoded/decoded
@@ -1219,8 +1246,8 @@ class PDb_Base {
     }
     $text = $string;
     $output = '';
-    for ($i = 0; $i < strlen( $text );) {
-      for ($j = 0; ($j < strlen( $key ) && $i < strlen( $text )); $j++, $i++) {
+    for ( $i = 0; $i < strlen( $text ); ) {
+      for ( $j = 0; ($j < strlen( $key ) && $i < strlen( $text ) ); $j++, $i++ ) {
         $output .= $text{$i} ^ $key{$j};
       }
     }
