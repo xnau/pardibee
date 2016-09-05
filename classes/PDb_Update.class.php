@@ -80,6 +80,7 @@ class PDb_Update {
    */
   public function check_update($transient)
   {
+    
     if (empty($transient->checked)) {
       return $transient;
     }

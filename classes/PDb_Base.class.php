@@ -622,15 +622,15 @@ class PDb_Base {
   /**
    * sends a string through a generic gettext call
    * 
-   * this is meant for strings with embedded language tags
+   * this is meant for strings with embedded language tags, if the argument is not 
+   * a non-numeric string, it is passed through
    * 
-   * @param string the unstranslated string
+   * @param mixed the unstranslated string
    * 
-   * @return string
+   * @return mixed the translated string or unaltered input value
    */
   public static function string_static_translation( $string )
   {
-
     return is_string( $string ) && !is_numeric( $string ) ? __( $string ) : $string;
   }
 
