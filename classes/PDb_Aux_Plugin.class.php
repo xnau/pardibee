@@ -189,6 +189,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * 
      * uses a filter of the form {$aux_plugin_shortmame}-{$option_name}
      * 
+     * @version 1.7.1 passed through multilingual filter
+     * 
      * @param string $option_name
      * @param mixed $default
      * 
@@ -196,7 +198,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function plugin_option( $option_name, $default = false )
     {
-      return apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default  );
+      return Participants_Db::apply_filters( 'translate_string', apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default  ) );
     }
 
     /**
