@@ -323,7 +323,7 @@ class PDb_List_Query {
   {
 
     $this->_add_single_statement(
-            filter_var( $field, FILTER_SANITIZE_STRING ), $this->_sanitize_operator( $operator ), filter_var( $term, FILTER_SANITIZE_STRING ), ($logic === 'OR' ? 'OR' : 'AND' ), false
+            filter_var( $field, FILTER_SANITIZE_STRING ), $this->_sanitize_operator( $operator ), filter_var( $term, FILTER_SANITIZE_STRING, array( 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES ) ), ($logic === 'OR' ? 'OR' : 'AND' ), false
     );
   }
 
