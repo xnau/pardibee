@@ -918,7 +918,7 @@ class PDb_Base {
   static function get_jqueryUI_date_format( $PHP_date_format = '' )
   {
 
-    $dateformat = empty( $PHP_date_format ) ? Participants_Db::$date_format : $PHP_date_format;
+    $dateformat = empty( $PHP_date_format ) ? get_option( 'date_format' ) : $PHP_date_format;
 
     return xnau_Date_Format_String::to_jQuery( $dateformat );
   }
