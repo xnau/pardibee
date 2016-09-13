@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -37,7 +37,7 @@ class PDb_Update_Notices {
   /**
    * @var string tested version
    */
-  static $tested_version = '4.2.2';
+  static $tested_version = '4.6';
   /**
    * @var testing switch
    */
@@ -63,15 +63,17 @@ class PDb_Update_Notices {
      * custom upgrade details window
      */
     add_filter('plugins_api', array($this, 'plugin_update_info'), 10, 3);
-    /*
-     * this adds a custom update message to the plugin list 
+    /**
+     * this adds a custom update message to the plugin list
+     * 
+     * this is only used if we need to add an extra messae that is seen in the plugin list.
      */
     global $pagenow;
     if ( 'plugins.php' === $pagenow )
     {
       $plugin_path = plugin_basename( $this->plugin_file_path );
       $hook = "in_plugin_update_message-" . $plugin_path;
-      add_action( $hook, array($this, 'plugin_update_message'), 20, 2 );
+      //add_action( $hook, array($this, 'plugin_update_message'), 20, 2 );
     }
   }
   /**
@@ -137,6 +139,8 @@ class PDb_Update_Notices {
   public function plugin_update_info($false, $action, $arg)
   {
     
+//    error_log(__METHOD__.' action: '.$action.' args: '.print_r($arg,1));
+    
     // if the data is not available, return a false
     if ( ! is_object( $arg ) || ! property_exists( $arg, 'slug' ) || $arg->slug !== Participants_Db::PLUGIN_NAME ) return false;
 
@@ -144,6 +148,9 @@ class PDb_Update_Notices {
     $response = $this->response();
     $response->version = $plugin_data['Version'];
     $response->homepage = $plugin_data['PluginURI'];
+    $response->author = $plugin_data['Author'];
+    $response->banners['low'] = '//ps.w.org/participants-database/assets/banner-772x250.jpg';
+    $response->banners['high'] = '//ps.w.org/participants-database/assets/banner-1544x500.jpg';
     $response->sections = array(
         'description' => wpautop(self::format_markdown('This WordPress plugin is for the purpose of creating a simple database for use on a WordPress site. It is primarily intended as a way to manage information pertaining to people such as the members of a club or team, volunteers, students, anything like that. It gives you the ability to allow people to create and edit their own record while additional information can be managed by administrators or managers. The plugin may also be used as the basis for an index, directory or catalog.
 
@@ -153,8 +160,6 @@ The database is made up of fields, and each field may be one of several types th
 ')),
         'changelog' => wpautop(self::format_markdown($this->upgrade_notice())),
     );
-
-    //error_log(__METHOD__ . ' data returned:' . print_r($response, 1));
 
     return $response;
   }
@@ -185,14 +190,24 @@ The database is made up of fields, and each field may be one of several types th
    */
   private function upgrade_notice($html = false)
   {
+    return $this->readme_section('Upgrade Notice');
+  }
+  /**
+   * extracts a section from the plugin readme
+   * 
+   * @param string  $section_header the section header string
+   * @return string the section content
+   */
+  private function readme_section( $section_header )
+  {
     
     // readme contents
     $data = file_get_contents( $this->readme_url );
     
-    $changelog = stristr($data, '== Upgrade Notice ==');
-    $changelog = stristr($changelog, '== Using the Plugin ==', true);
+    preg_match( '/== ' .$section_header . ' ==(.+)== /s', $data, $matches );
     
-    return $changelog;
+    return isset( $matches[1] ) ? $matches[1] : '';
+    
   }
   /**
    * sets the current and latest version values
@@ -203,11 +218,17 @@ The database is made up of fields, and each field may be one of several types th
     $update_info = $update_info ? $update_info : get_site_transient('update_plugins');
     $plugin_check_path = plugin_basename($this->plugin_file_path);
     if (is_object($update_info)) {
+//      error_log(__METHOD__.' update info: '.print_r($update_info,1));
       $response = isset($update_info->response[$plugin_check_path]) ? $update_info->response[$plugin_check_path] : '';
       $no_update = isset($update_info->no_update[$plugin_check_path]) ? $update_info->no_update[$plugin_check_path] : Participants_Db::$plugin_version;
       $checked = isset($update_info->checked[$plugin_check_path]) ? $update_info->checked[$plugin_check_path] : '';
       self::$latest_version = is_object($response) ? $response->new_version : ( is_object($no_update) ? $no_update->new_version : $no_update );
-      self::$current_version = is_object($checked) ?  $checked : Participants_Db::$plugin_version;
+      
+//      error_log(__METHOD__.' plugin path: '. $plugin_check_path.' 
+//        response: '.print_r($response,1));
+      
+      self::$current_version = empty($checked) ?  Participants_Db::$plugin_version : $checked;
+      self::$tested_version = is_object($response) ? $response->tested : self::$tested_version;
     }
   }
   /**
