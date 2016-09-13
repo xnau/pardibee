@@ -62,10 +62,10 @@ class PDb_Update_Notices {
   {
     $this->plugin_file_path = $plugin_file_path;
     $this->readme_url = $this->testmode ? 'http://wp.xnau.dev/content/plugins/participants-database/readme.txt' : 'http://plugins.svn.wordpress.org/participants-database/trunk/readme.txt?format=txt';
-    
+
     remove_action( 'install_plugins_pre_plugin-information', 'install_plugin_information' );
-    add_filter( 'install_plugins_pre_plugin-information', array( $this, 'install_plugin_information' ) );
-    
+    add_filter( 'install_plugins_pre_plugin-information', array($this, 'install_plugin_information') );
+
     /**
      * this adds a custom update message to the plugin list
      * 
@@ -78,7 +78,7 @@ class PDb_Update_Notices {
       //add_action( $hook, array($this, 'plugin_update_message'), 20, 2 );
     }
   }
-  
+
   /**
    * provides an upsell link
    * 
@@ -173,6 +173,14 @@ class PDb_Update_Notices {
    */
   public function install_plugin_information()
   {
+    if ( wp_unslash( $_REQUEST['plugin'] ) !== Participants_Db::PLUGIN_NAME ) {
+      /*
+       * if it's not our plugin, use the WP function
+       */
+      install_plugin_information();
+      return;
+    }
+
     global $tab;
 
     if ( empty( $_REQUEST['plugin'] ) ) {
@@ -193,7 +201,7 @@ class PDb_Update_Notices {
     if ( is_wp_error( $api ) ) {
       wp_die( $api );
     }
-    
+
     $api->upsell = $this->upsell_link();
 
     $plugins_allowedtags = array(
@@ -213,7 +221,7 @@ class PDb_Update_Notices {
         'screenshots' => _x( 'Screenshots', 'Plugin installer section title' ),
         'changelog' => _x( 'Changelog', 'Plugin installer section title' ),
         'reviews' => _x( 'Reviews', 'Plugin installer section title' ),
-        'other_notes' => _x( 'Other Notes', 'Plugin installer section title' )
+        'other_notes' => _x( 'Support', 'Plugin installer section title' )
     );
 
     // Sanitize HTML
@@ -284,18 +292,18 @@ class PDb_Update_Notices {
     <div id="<?php echo $_tab; ?>-content" class='<?php echo $_with_banner; ?>'>
       <div class="fyi">
         <ul>
-    <?php if ( !empty( $api->version ) ) { ?>
+          <?php if ( !empty( $api->version ) ) { ?>
             <li><strong><?php _e( 'Version:' ); ?></strong> <?php echo $api->version; ?></li>
-            <?php } if ( !empty( $api->author ) ) { ?>
+          <?php } if ( !empty( $api->author ) ) { ?>
             <li><strong><?php _e( 'Author:' ); ?></strong> <?php echo links_add_target( $api->author, '_blank' ); ?></li>
-            <?php } if ( !empty( $api->last_updated ) ) { ?>
+          <?php } if ( !empty( $api->last_updated ) ) { ?>
             <li><strong><?php _e( 'Last Updated:' ); ?></strong>
-            <?php
-            /* translators: %s: Time since the last update */
-            printf( __( '%s ago' ), human_time_diff( strtotime( $api->last_updated ) ) );
-            ?>
+              <?php
+              /* translators: %s: Time since the last update */
+              printf( __( '%s ago' ), human_time_diff( strtotime( $api->last_updated ) ) );
+              ?>
             </li>
-            <?php } if ( !empty( $api->requires ) ) { ?>
+          <?php } if ( !empty( $api->requires ) ) { ?>
             <li>
               <strong><?php _e( 'Requires WordPress Version:' ); ?></strong>
               <?php
@@ -307,40 +315,41 @@ class PDb_Update_Notices {
             <li><strong><?php _e( 'Compatible up to:' ); ?></strong> <?php echo $api->tested; ?></li>
           <?php } if ( !empty( $api->active_installs ) ) { ?>
             <li><strong><?php _e( 'Active Installs:' ); ?></strong> <?php
-            if ( $api->active_installs >= 1000000 ) {
-              _ex( '1+ Million', 'Active plugin installs' );
-            } else {
-              echo number_format_i18n( $api->active_installs ) . '+';
-            }
-            ?></li>
-        <?php } if ( !empty( $api->slug ) && empty( $api->external ) ) { ?>
+              if ( $api->active_installs >= 1000000 ) {
+                _ex( '1+ Million', 'Active plugin installs' );
+              } else {
+                echo number_format_i18n( $api->active_installs ) . '+';
+              }
+              ?></li>
+            <?php } if ( !empty( $api->slug ) && empty( $api->external ) ) { ?>
             <li><a target="_blank" href="https://wordpress.org/plugins/<?php echo $api->slug; ?>/"><?php _e( 'WordPress.org Plugin Page &#187;' ); ?></a></li>
-        <?php } if ( !empty( $api->homepage ) ) { ?>
+          <?php } if ( !empty( $api->homepage ) ) { ?>
             <li><a target="_blank" href="<?php echo esc_url( $api->homepage ); ?>"><?php _e( 'Plugin Homepage &#187;' ); ?></a></li>
-        <?php } if ( !empty( $api->upsell ) ) { ?>
+          <?php } if ( !empty( $api->upsell ) ) { ?>
             <li><a target="_blank" href="<?php echo esc_url( $api->upsell ); ?>"><?php _e( 'Add-Ons &amp; Extras &#187;' ); ?></a></li>
-        <?php } if ( !empty( $api->donate_link ) && empty( $api->contributors ) ) { ?>
+          <?php } if ( !empty( $api->donate_link ) && empty( $api->contributors ) ) { ?>
             <li><a target="_blank" href="<?php echo esc_url( $api->donate_link ); ?>"><?php _e( 'Donate to this plugin &#187;' ); ?></a></li>
-        <?php } ?>
+          <?php } ?>
         </ul>
         <?php if ( !empty( $api->rating ) ) { ?>
           <h3><?php _e( 'Average Rating' ); ?></h3>
           <?php wp_star_rating( array('rating' => $api->rating, 'type' => 'percent', 'number' => $api->num_ratings) ); ?>
           <p aria-hidden="true" class="fyi-description"><?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $api->num_ratings ), number_format_i18n( $api->num_ratings ) ); ?></p>
-        <?php }
+        <?php
+        }
 
         if ( !empty( $api->ratings ) && array_sum( (array) $api->ratings ) > 0 ) {
           ?>
           <h3><?php _e( 'Reviews' ); ?></h3>
           <p class="fyi-description"><?php _e( 'Read all reviews on WordPress.org or write your own!' ); ?></p>
-      <?php
-      foreach ( $api->ratings as $key => $ratecount ) {
-        // Avoid div-by-zero.
-        $_rating = $api->num_ratings ? ( $ratecount / $api->num_ratings ) : 0;
-        /* translators: 1: number of stars (used to determine singular/plural), 2: number of reviews */
-        $aria_label = esc_attr( sprintf( _n( 'Reviews with %1$d star: %2$s. Opens in a new window.', 'Reviews with %1$d stars: %2$s. Opens in a new window.', $key ), $key, number_format_i18n( $ratecount )
-                ) );
-        ?>
+          <?php
+          foreach ( $api->ratings as $key => $ratecount ) {
+            // Avoid div-by-zero.
+            $_rating = $api->num_ratings ? ( $ratecount / $api->num_ratings ) : 0;
+            /* translators: 1: number of stars (used to determine singular/plural), 2: number of reviews */
+            $aria_label = esc_attr( sprintf( _n( 'Reviews with %1$d star: %2$s. Opens in a new window.', 'Reviews with %1$d stars: %2$s. Opens in a new window.', $key ), $key, number_format_i18n( $ratecount )
+                    ) );
+            ?>
             <div class="counter-container">
               <span class="counter-label"><a href="https://wordpress.org/support/view/plugin-reviews/<?php echo $api->slug; ?>?filter=<?php echo $key; ?>"
                                              target="_blank" aria-label="<?php echo $aria_label; ?>"><?php printf( _n( '%d star', '%d stars', $key ), $key ); ?></a></span>
@@ -349,11 +358,11 @@ class PDb_Update_Notices {
               </span>
               <span class="counter-count" aria-hidden="true"><?php echo number_format_i18n( $ratecount ); ?></span>
             </div>
-              <?php
-            }
+            <?php
           }
-          if ( !empty( $api->contributors ) ) {
-            ?>
+        }
+        if ( !empty( $api->contributors ) ) {
+          ?>
           <h3><?php _e( 'Contributors' ); ?></h3>
           <ul class="contributors">
             <?php
@@ -376,7 +385,7 @@ class PDb_Update_Notices {
           <?php if ( !empty( $api->donate_link ) ) { ?>
             <a target="_blank" href="<?php echo esc_url( $api->donate_link ); ?>"><?php _e( 'Donate to this plugin &#187;' ); ?></a>
           <?php } ?>
-        <?php } ?>
+    <?php } ?>
       </div>
       <div id="section-holder" class="wrap">
         <?php
@@ -434,5 +443,6 @@ class PDb_Update_Notices {
         iframe_footer();
         exit;
       }
+
     }
     
