@@ -268,6 +268,7 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.0.9 =
+Version 1.7.0.9 is a bugfix release for all users
 * fixed bad call in regpage_setting_fix Bug #1317
 * added pdb-form_element_html filter
 * JS bug in aux_plugin_settings.js Bug #1352
@@ -674,6 +675,6 @@ Version 1.7.0.9 is a bugfix release for all users
 
 **[Plugin manual and documentation](https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/?utm_source=wporg_visitor&utm_medium=plugin_page_othernotes__tab&utm_campaign=pdb-addons-promo) is published on the developer's website, xnau.com**
 
-Plugin technical support is available here under the "Support" tab, on xnau.com in the comments section.
+Plugin technical support is available on the [WordPress Plugin Plugin Support Forum](https://wordpress.org/support/plugin/participants-database), and on xnau.com in the comments section.
 
 A growing list of [plugin add-ons and functionality enhancements](https://xnau.com/shop/?utm_source=wporg_visitor&utm_medium=plugin_page_othernotes__tab&utm_campaign=pdb-addons-promo) are also available on xnau.com.
