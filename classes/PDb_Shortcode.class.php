@@ -1049,23 +1049,33 @@ abstract class PDb_Shortcode {
     $value = maybe_unserialize($value);
 
     if (is_array($value)) {
-
-      $return = array();
-      foreach ($value as $k => $v)
-        $return[$k] = $this->_esc_value($v);
+      array_walk_recursive( $value, array( $this, '_esc_element' ) );
     } else {
-
       $return = $this->_esc_value($value);
     }
 
     return $return;
   }
+  
+  /**
+   * escapes an array element
+   * 
+   * @param string $value the element value
+   */
+  private function _esc_element( &$value )
+  {
+    $value = $this->_esc_value($value);
+  }
 
   /**
    * escape a value from a form submission
+   * 
+   * @param string
+   * 
+   * @return the value, escaped
    */
-  private function _esc_value($value) {
-
+  private function _esc_value($value)
+  {
     return esc_html(stripslashes($value));
   }
 
