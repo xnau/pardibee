@@ -3465,10 +3465,13 @@ if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
 
   add_action( 'admin_notices', 'pdb_handle_php_version_error' );
 
-  add_action( 'admin_init', function () {
-    deactivate_plugins( plugin_basename( __FILE__ ) );
-  } );
+  add_action( 'admin_init', 'pdb_deactivate_plugin' );
   return;
+}
+
+function pdb_deactivate_plugin()
+{
+    deactivate_plugins( plugin_basename( __FILE__ ) );
 }
 
 function pdb_handle_php_version_error()
