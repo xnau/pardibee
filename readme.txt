@@ -267,6 +267,11 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.10 =
+* fixed bug in date parser while using intl date parser
+* replaced anonymous function in version check
+* update notice detail now shows complete and current information
+
 = 1.7.0.9 =
 Version 1.7.0.9 is a bugfix release for all users
 * fixed bad call in regpage_setting_fix Bug #1317
@@ -668,8 +673,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.8 =
-Version 1.7.0.9 is a bugfix release for all users
+= 1.7.0.10 =
+Version 1.7.0.10 is a bugfix release for all users
 
 == Plugin Support ==
 

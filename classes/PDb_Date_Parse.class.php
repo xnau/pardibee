@@ -224,11 +224,7 @@ class PDb_Date_Parse {
     $DateFormat->setLenient( false ); // we want it strict
     $timestamp = $DateFormat->parse( $this->input );
 
-    if ( $DateFormat->getErrorCode() !== 0 ) {
-      $errors = array( 'code' => $DateFormat->getErrorCode(), 'error' => $DateFormat->getErrorMessage() );
-    }
-
-    if ( !$errors ) {
+    if ( ! intl_is_failure( $DateFormat->getErrorCode() ) ) {
       $the_Date = new DateTime();
       $the_Date->setTimestamp( $timestamp );
     } elseif ( WP_DEBUG ) {
@@ -270,9 +266,9 @@ class PDb_Date_Parse {
   private function set_timestamp_from_datetime( DateTime $date )
   {
     if ( $this->zero_time ) {
-      $the_Date->setTime( 0, 0 );
+      $date->setTime( 0, 0 );
     }
-    $this->timestamp = $the_Date->format( 'U' );
+    $this->timestamp = $date->format( 'U' );
   }
 
   /**
@@ -347,17 +343,17 @@ class PDb_Date_Parse {
   public function setup_config( $config )
   {
     
-    foreach ($config as $name => $value) {
+    foreach (  get_object_vars( $this ) as $name => $value) {
       switch ( $name ) {
         case 'strict':
-          $this->strict = (bool) ( $value ? $value : Participants_Db::$plugin_options['strict_dates'] == 1 );
+          $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : Participants_Db::$plugin_options['strict_dates'] == 1 );
           break;
         case 'european_order':
         case 'zero_time':
-          $this->{$name} = $value ? true : false;
+          $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : false );
           break;
         case 'input_format':
-          $this->input_format = $value;
+          $this->{$name} = isset( $config[$name] ) ? $config[$name] : $this->input_format;
           break;
       }
     }

@@ -503,6 +503,21 @@ class PDb_FormElement extends xnau_FormElement {
   }
 
   /**
+   * builds a date field
+   */
+  protected function _date_field()
+  {
+
+    $this->add_class( 'date_field' );
+
+    if ( !empty( $this->value ) ) {
+      $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ . ' date field' );
+    }
+
+    $this->_addline( $this->_input_tag() );
+  }
+
+  /**
    * builds a file upload element
    * 
    * @param string $type the upload type: file or image
