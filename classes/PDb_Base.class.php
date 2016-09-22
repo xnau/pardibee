@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1066,12 +1066,12 @@ class PDb_Base {
     global $wpdb;
     $sql = 'SELECT f.' . ($indices ? 'id' : 'name') . ' FROM ' . Participants_Db::$fields_table . ' f ';
     $sql .= 'WHERE f.' . ($indices ? 'name' : 'id') . ' ';
-    if ( count( $fieldnames ) > 1 && count( $fieldnames ) < 100 ) {
+    if ( count( $fieldnames ) > 1 ) {
       $sql .= 'IN ("' . implode( '","', $fieldnames );
       if ( count( $fieldnames ) < 100 ) {
         $sql .= '") ORDER BY FIELD(f.name, "' . implode( '","', $fieldnames ) . '")';
       } else {
-        '") ORDER BY f.' . ($indices ? 'id' : 'name') . ' ASC';
+        $sql .= '") ORDER BY f.' . ($indices ? 'id' : 'name') . ' ASC';
       }
     } else {
       $sql .= '= "' . current( $fieldnames ) . '"';
