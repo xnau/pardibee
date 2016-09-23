@@ -269,7 +269,7 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.7.0.11 =
 * fixed bug that affected installations with very large (>100) field counts #1373
-* fixed bug affecting some values stored as arrays #1365 #1372
+* fixed bug affecting some values stored as 3-d arrays #1365 #1372
 
 = 1.7.0.10 =
 * fixed bug in date parser while using intl date parser #1367
