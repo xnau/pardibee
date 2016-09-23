@@ -21,7 +21,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -1050,6 +1050,7 @@ abstract class PDb_Shortcode {
 
     if (is_array($value)) {
       array_walk_recursive( $value, array( $this, '_esc_element' ) );
+      $return = $value;
     } else {
       $return = $this->_esc_value($value);
     }
