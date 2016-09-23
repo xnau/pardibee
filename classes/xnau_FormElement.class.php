@@ -911,8 +911,12 @@ abstract class xnau_FormElement {
 
     $link_placeholder = '(URL)';
     $linktext_placeholder = $this->i18n['linktext'];
-
-    $parts = (array) maybe_unserialize( $this->value );
+    
+    if ( is_null( $this->value ) || strlen( $this->value ) === 0 ) {
+      $this->value = array('');
+    }
+    
+    $parts = maybe_unserialize( $this->value );
 
     // if the value contains only a URL, the linktext and URL are made the same
     // if the value is not a URL, only the linked text is used
