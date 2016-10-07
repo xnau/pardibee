@@ -912,7 +912,7 @@ abstract class xnau_FormElement {
     $link_placeholder = '(URL)';
     $linktext_placeholder = $this->i18n['linktext'];
     
-    if ( is_null( $this->value ) || strlen( $this->value ) === 0 ) {
+    if ( is_null( $this->value ) || ( is_string( $this->value ) && strlen( $this->value ) === 0 ) ) {
       $this->value = array('');
     }
     
