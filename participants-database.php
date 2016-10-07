@@ -2824,6 +2824,15 @@ class Participants_Db extends PDb_Base {
     $column = current( $columns );
 
     foreach ( $raw_array as $key => $value ) {
+      
+      /**
+       * @version 1.7.1
+       * @filter pdb-csv_export_value_raw
+       * @param mixed the raw value
+       * @param object the field object
+       * @return mixed
+       */
+      $value = self::apply_filters('csv_export_value_raw', $value, $column);
 
       // process any other value types
       switch ( $column->form_element ) {
@@ -2864,7 +2873,10 @@ class Participants_Db extends PDb_Base {
         default:
 
           // flatten arrays
-          $value = implode( ', ', (array) maybe_unserialize( $value ) );
+          if ( is_array( maybe_unserialize( $value ) ) ) {
+            $value = implode( ', ', maybe_unserialize( $value ) );
+          }
+          
       }
 
       /*
