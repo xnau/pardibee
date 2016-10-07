@@ -127,8 +127,10 @@ class PDb_FormValidation extends xnau_FormValidation {
         default:
           /*
            * check all the validated fields for empty first
+           * 
+           * regexes aren't checked for empty, we rely on the regex to do that
            */
-          if ( $this->is_empty( $field->value ) ) {
+          if ( $this->is_empty( $field->value ) && ! self::is_regex( $field->validation ) ) {
             $field->validation_state_is( 'empty' );
           } elseif ( $field->validation === 'yes' ) {
             $field->validation_state_is( 'valid' );
@@ -197,7 +199,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           $field->validation_state_is( 'valid' );
         }
       } elseif ( $regex !== false && self::is_regex( $regex ) ) {
-
+        
         $test_result = preg_match( $regex, $field->value );
 
         if ( $test_result === 0 ) {
