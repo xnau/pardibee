@@ -654,6 +654,12 @@ a.dragger {
   padding-bottom: 3px;
   border-bottom: 1px solid #aaa;
 }
+[class*=participants-database] h2 {
+    border-bottom: 10px solid rgba( 0,0,0,0.08);
+}
+[class*=participants-database] .wrap [class$="icon32"] + h2 {
+  border-bottom: none;
+}
 
 /*   UI TABS   */
 
