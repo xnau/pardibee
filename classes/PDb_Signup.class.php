@@ -162,6 +162,9 @@ class PDb_Signup extends PDb_Shortcode {
 
     // run the parent class initialization to set up the $shortcode_atts property
     parent::__construct($shortcode_atts, $shortcode_defaults);
+    
+    $record_edit_page = Participants_Db::find_permalink( $this->shortcode_atts['edit_record_page'] );
+    add_filter( 'pdb-record_edit_page', function() use ( $record_edit_page ) { return $record_edit_page; } );
 
     // set up the signup form email preferences
     $this->_set_email_prefs();
