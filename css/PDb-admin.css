@@ -713,6 +713,7 @@ a.dragger {
   margin: 18px 0 20px;
   padding: 0 10px;
   overflow: visible;
+  width: 100%;
 }
 .participants_db .ui-tabs-nav li {
   background-color: transparent;
