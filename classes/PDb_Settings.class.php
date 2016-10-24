@@ -1356,7 +1356,7 @@ ORDER BY g.order, v.order';
    *                          or null select value can be added to the resulting array
    * @return array [title (name)] => name
    */
-  private static function column_dropdown_options( $columns, $columnlist = array() )
+  public static function column_dropdown_options( $columns, $columnlist = array() )
   {
     foreach ( $columns as $column ) {
       $columnlist[Participants_Db::title_key( $column->title, $column->name )] = $column->name;
