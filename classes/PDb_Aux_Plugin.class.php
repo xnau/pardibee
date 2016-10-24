@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.0
+ * @version    4.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -153,10 +153,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
        * 
        * @version 1.6.3
        */
-      require_once plugin_dir_path( __FILE__ ) . 'aux-plugin-update/plugin-update-checker.php';
-      PucFactory::buildUpdateChecker(
-              self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name, $plugin_file, $this->aux_plugin_name
-      );
+      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) ) {
+        require_once plugin_dir_path( __FILE__ ) . 'aux-plugin-update/plugin-update-checker.php';
+        PucFactory::buildUpdateChecker(
+                self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name, $plugin_file, $this->aux_plugin_name
+        );
+      }
     }
 
     /**
