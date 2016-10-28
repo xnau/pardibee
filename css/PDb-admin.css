@@ -305,6 +305,9 @@ body[class*='participants-database'] .form-table {
 .participants_db .form-table tr:hover {
   background-color: #F7F7F7;
 } 
+.wrap.pdb-admin-edit-participant {
+  background-color: transparent;
+}
 .participants_db input[type='text']+.helptext,
 .participants_db input[type='email']+.helptext,
 .participants_db input[type='url']+.helptext,
