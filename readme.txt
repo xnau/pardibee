@@ -267,6 +267,12 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.0.13 =
+* aux plugin option passed through translation filter #1358
+* edit_record_page shortcode attribute fixed #1387
+* fixed file and image field display bugs #1391, #1393, #1390
+* help text shown in read-only fields
+
 = 1.7.0.12 =
 * fixed bug that prevented regex validation from allowing a blank value
 
@@ -685,8 +691,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.12 =
-Version 1.7.0.12 is a minor bugfix release
+= 1.7.0.13 =
+Version 1.7.0.13 is a minor bugfix release
 
 == Plugin Support ==
 
