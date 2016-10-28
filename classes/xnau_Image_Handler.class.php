@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  *
  * functionality provided here:
@@ -518,8 +518,12 @@ abstract class xnau_Image_Handler {
    */
   public function test_absolute_path_image($src)
   {
-
-    if ($this->test_url_validity($src) and false !== self::getimagesize($src)) {
+    /*
+     * we used to test the absolute path with getimagesize, but that failed too 
+     * often and took too much time, now we just check for a semantically-correct 
+     * absolute URL
+     */
+    if ($this->test_url_validity($src) /* and false !== self::getimagesize($src) */ ) {
       return $this->file_exists = true;
     }
   }
