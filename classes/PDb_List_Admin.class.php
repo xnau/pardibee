@@ -829,7 +829,10 @@ class PDb_List_Admin {
                                 $display_value = $image->get_image_html();
 
                                 break;
-
+                                
+                              case 'file-upload':
+                                $display_value = PDb_FormElement::get_field_value_display( $field, true );
+                                break;
                               case 'date':
                               case 'timestamp':
 
