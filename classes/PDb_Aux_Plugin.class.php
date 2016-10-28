@@ -191,7 +191,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * 
      * uses a filter of the form {$aux_plugin_shortmame}-{$option_name}
      * 
-     * @version 1.7.1 passed through multilingual filter
+     * @version 1.7.0.13 passed through multilingual filter
      * 
      * @param string $option_name
      * @param mixed $default
@@ -200,7 +200,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function plugin_option( $option_name, $default = false )
     {
-      return Participants_Db::apply_filters( 'translate_string', apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default  ) );
+      return Participants_Db::apply_filters(
+                      'translate_string', apply_filters( 
+                              $this->aux_plugin_shortname . '-' . $option_name, 
+                              isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default  
+                              )
+      );
     }
 
     /**
@@ -292,7 +297,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( strstr( $file, '/', true ) == strstr( $plugin, '/', true ) ) {
 
         $links[1] = str_replace( $this->plugin_data['Author'], '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
-        if ( ! empty( $this->plugin_data['PluginURI'] ) ) {
+        if ( !empty( $this->plugin_data['PluginURI'] ) ) {
           $links[] = '<a href="' . $this->plugin_data['PluginURI'] . '">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
         }
         $links[] = '<a href="' . $this->plugin_data['SupportURI'] . '">' . __( 'Support', 'participants-database' ) . ' </a>';
@@ -461,10 +466,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       ?>
       <div class="wrap pdb-admin-settings participants_db" >
 
-      <?php Participants_Db::admin_page_heading() ?>  
+        <?php Participants_Db::admin_page_heading() ?>  
         <h2><?php echo $this->aux_plugin_title ?></h2>
 
-      <?php settings_errors(); ?>  
+        <?php settings_errors(); ?>  
 
         <form method="post" action="options.php">  
           <?php
@@ -773,6 +778,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     }
 
   }
+
+  
 
   
 
