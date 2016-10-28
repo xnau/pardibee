@@ -236,26 +236,23 @@ class PDb_FormElement extends xnau_FormElement {
           break;
 
         case 'file-upload' :
-
           if ( $html && $field->value !== $field->default ) {
 
             $return = '';
-            if ( $field->module == 'signup' ) {
+            if ( $field->module === 'signup' ) {
               $field->link = false;
               $return = $field->value;
-            } elseif ( !empty( $field->value ) ) {
-              $field->link = Participants_Db::files_uri() . $field->value;
-              if ( $field->default ) {
+            } elseif ( !empty( $field->value ) && Participants_Db::is_allowed_file_extension( $field->value, $field->values ) ) {
+              $field->link = filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL );
+              if ( ( ! is_admin() || ( defined('DOUNG_AJAX') && DOING_AJAX ) ) && $field->link && strlen( $field->default ) > 0 ) {
                 $field->value = $field->default;
               }
               $return = self::make_link( $field );
             }
             break;
           } else {
-            /*
-             * no file is defined, show nothing
-             */
-            $return = ''; // $field->value;
+            // no valid filename in the value, show a blank
+            $return = '';
             break;
           }
 
@@ -376,7 +373,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       endswitch;
     }
-
+    
     return $return;
   }
 
