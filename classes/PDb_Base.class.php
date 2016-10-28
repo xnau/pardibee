@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -394,6 +394,25 @@ class PDb_Base {
     }
 
     return $filename;
+  }
+  
+  /**
+   * tests a filename for allowed file extentions
+   * 
+   * @param string  $filename the filename to test
+   * @param string $allowed comma-separated list of allowd extensions to use instead of the globally-defined setting
+   * 
+   * @return bool true if the extension is allowed
+   */
+  public static function is_allowed_file_extension( $filename, $allowed = '' )
+  {
+    if ( is_string($allowed) && empty($allowed) ) {
+      $allowed = Participants_Db::$plugin_options['allowed_file_types'];
+    } elseif ( is_array( $allowed ) ) {
+      $allowed = implode( ',', $allowed );
+    }
+    $regex = '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $allowed ) ) ) ) ) . ')$#';
+    return preg_match( $regex, strtolower( $filename ), $matches ) === 1;
   }
 
   /**
