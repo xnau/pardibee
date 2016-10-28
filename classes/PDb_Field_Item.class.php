@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -22,11 +22,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    * @var string the field's value
    */
   var $value;
-
-  /**
-   * @var array option values
-   */
-  var $values;
 
   /**
    * @var array additional attributes
@@ -44,12 +39,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    * @var string the field's form element
    */
   var $form_element;
-
-  /**
-   *
-   * @var int id of the current record
-   */
-  var $record_id;
 
   /**
    *
@@ -193,7 +182,15 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function __get( $name )
   {
-    return isset( $this->{$name} ) ? $this->{$name} : '';
+    $value = isset( $this->{$name} ) ? $this->{$name} : '';
+    switch ($name) {
+      case 'values':
+        $return = maybe_unserialize($value);
+        break;
+      default:
+        $return = $value;
+    }
+    return $return;
   }
 
   /**
