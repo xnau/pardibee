@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcipants_Db
  */
@@ -180,7 +180,7 @@ class PDb_Date_Parse {
       if ( $this->timestamp_not_found() ) {
         $this->datetime_parse();
       }
-      if ( $this->timestamp_not_found() ) {
+      if ( $this->timestamp_not_found() && function_exists( 'strptime' ) ) {
         $this->strptime_parse();
       }
     }
