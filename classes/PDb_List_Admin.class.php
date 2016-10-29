@@ -540,17 +540,19 @@ class PDb_List_Admin {
         }
       }
     } elseif ( $filter_set['value'] === 'null' ) {
+      
+      $is_numeric = PDb_FormElement::is_numeric_datatype($filter_set['search_field']);
 
       switch ( $filter_set['operator'] ) {
         case '<>':
         case '!=':
         case 'NOT LIKE':
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> "")';
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL' . ( $is_numeric ? '' : ' AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) .')';
           break;
         case 'LIKE':
         case '=':
         default:
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL OR p.' . esc_sql( $filter_set['search_field'] ) . ' = "")';
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) .')';
           break;
       }
     } else {
