@@ -230,7 +230,7 @@ class PDb_List_Query {
     $this->sort = array();
     $fields = $this->_to_array( $fields );
     $ascdesc = $this->_to_array( $ascdesc );
-    for ($i = 0; $i < count( $fields ); $i++) {
+    for ( $i = 0; $i < count( $fields ); $i++ ) {
       if ( !empty( $fields[$i] ) ) {
         $this->sort[$fields[$i]] = array(
             'field' => $fields[$i],
@@ -323,7 +323,7 @@ class PDb_List_Query {
   {
 
     $this->_add_single_statement(
-            filter_var( $field, FILTER_SANITIZE_STRING ), $this->_sanitize_operator( $operator ), filter_var( $term, FILTER_SANITIZE_STRING, array( 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES ) ), ($logic === 'OR' ? 'OR' : 'AND' ), false
+            filter_var( $field, FILTER_SANITIZE_STRING ), $this->_sanitize_operator( $operator ), filter_var( $term, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES) ), ($logic === 'OR' ? 'OR' : 'AND' ), false
     );
   }
 
@@ -336,7 +336,7 @@ class PDb_List_Query {
   public function clear_background_clauses( $field )
   {
     if ( isset( $this->subclauses[$field] ) && is_array( $this->subclauses[$field] ) ) {
-      foreach ($this->subclauses[$field] as $index => $clause) {
+      foreach ( $this->subclauses[$field] as $index => $clause ) {
         if ( $clause->is_shortcode() ) {
           unset( $this->subclauses[$field][$index] );
         }
@@ -352,11 +352,11 @@ class PDb_List_Query {
    */
   private function requested_page()
   {
-    $page_number = filter_input(INPUT_GET, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
-    if ( ! $page_number ) {
-      $page_number = filter_input(INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+    $page_number = filter_input( INPUT_GET, Participants_Db::$list_page, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+    if ( !$page_number ) {
+      $page_number = filter_input( INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
     }
-    if ( ! $page_number ) {
+    if ( !$page_number ) {
       return false;
     }
     return $page_number;
@@ -403,8 +403,8 @@ class PDb_List_Query {
         // process a multi search
         $this->post_input = filter_input_array( INPUT_POST, self::multi_search_input_filter() );
         $search_fields = array();
-        foreach ($_POST['search_field'] as $index => $value) {
-          foreach (array( 'search_field', 'operator', 'value', 'logic' ) as $fieldname) {
+        foreach ( $_POST['search_field'] as $index => $value ) {
+          foreach ( array('search_field', 'operator', 'value', 'logic') as $fieldname ) {
             $this->post_input[$fieldname][$index] = filter_var( $_POST[$fieldname][$index], FILTER_SANITIZE_STRING );
           }
         }
@@ -453,7 +453,7 @@ class PDb_List_Query {
         $input['orderstring'] = $input['ascdesc'];
       }
       if ( is_array( $input['search_field'] ) ) {
-        foreach ($input['search_field'] as $i => $search_field) { // for ($i = 0; $i < count($input['search_field']); $i++) {
+        foreach ( $input['search_field'] as $i => $search_field ) { // for ($i = 0; $i < count($input['search_field']); $i++) {
           if ( strlen( $input['value'][$i] ) === 0 )
             continue;
           $logic = isset( $input['logic'][$i] ) ? $input['logic'][$i] : $set_logic;
@@ -535,7 +535,7 @@ class PDb_List_Query {
      * each element in the where_clauses property array is an array of statements 
      * acting on a single field; The key is the name of the field.
      */
-    foreach ($clause_sequence as $clause) {
+    foreach ( $clause_sequence as $clause ) {
 
       /**
        * @todo fix the _reindex_subclauses method so it gets it right when there is only one clause
@@ -587,8 +587,8 @@ class PDb_List_Query {
   private function _build_clause_sequence()
   {
     $sequence = array();
-    foreach ($this->subclauses as $field_clauses) {
-      foreach ($field_clauses as $clause) {
+    foreach ( $this->subclauses as $field_clauses ) {
+      foreach ( $field_clauses as $clause ) {
         $sequence[$clause->index()] = $clause;
       }
     }
@@ -608,7 +608,7 @@ class PDb_List_Query {
     }
     $subquery = array();
     $random = false;
-    foreach ($this->sort as $sort) {
+    foreach ( $this->sort as $sort ) {
       extract( $sort ); // yields $field and $ascdesc
       if ( $field === 'random' ) {
         $random = true;
@@ -683,7 +683,7 @@ class PDb_List_Query {
    */
   private function decrement_clause_index( $amount = 1 )
   {
-    $this->clause_index = max( array( $this->clause_index - $amount, 0 ) );
+    $this->clause_index = max( array($this->clause_index - $amount, 0) );
   }
 
   /**
@@ -704,8 +704,8 @@ class PDb_List_Query {
        */
       return;
     }
-    foreach ($this->subclauses as $clauses) {
-      foreach ($clauses as $clause) {
+    foreach ( $this->subclauses as $clauses ) {
+      foreach ( $clauses as $clause ) {
         $index = $clause->index() + $diff;
         $clause->index( $index );
       }
@@ -770,8 +770,8 @@ class PDb_List_Query {
   {
     $this->_reset_filters();
 
-    foreach ($this->subclauses as $field_name => $filters) {
-      foreach ($filters as $filter) {
+    foreach ( $this->subclauses as $field_name => $filters ) {
+      foreach ( $filters as $filter ) {
         /*
          * include the filter if it is a search filter
          * 
@@ -801,7 +801,7 @@ class PDb_List_Query {
 
       $statements = preg_split( '#(?<!\\\\)(&|\\|)#', html_entity_decode( $filter_string ), -1, PREG_SPLIT_DELIM_CAPTURE );
 
-      for ($i = 0; $i < count( $statements ); $i = $i + 2) {
+      for ( $i = 0; $i < count( $statements ); $i = $i + 2 ) {
 
         $logic = isset( $statements[$i + 1] ) && $statements[$i + 1] === '|' ? 'OR' : 'AND';
 
@@ -828,6 +828,7 @@ class PDb_List_Query {
 
     if ( $operator === 0 )
       return false; // no valid operator; skip to the next statement
+
 
       
 // get the parts
@@ -895,10 +896,17 @@ class PDb_List_Query {
 
     $statement = false;
 
+    /**
+     * @version 1.7.1
+     * added support for numeric datatypes
+     * 
+     */
+    $is_numeric = PDb_FormElement::is_numeric_datatype( $column );
+
     /*
      * set up special-case field types
      */
-    if ( in_array( $field_atts->form_element, array( 'date', 'timestamp' ) ) and $filter->is_string_search() ) {
+    if ( in_array( $field_atts->form_element, array('date', 'timestamp') ) and $filter->is_string_search() ) {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
@@ -910,7 +918,7 @@ class PDb_List_Query {
       if ( $search_term === false )
         return false;
 
-      $operator = in_array( $operator, array( '>', '<', '>=', '<=' ) ) ? $operator : '=';
+      $operator = in_array( $operator, array('>', '<', '>=', '<=') ) ? $operator : '=';
       if ( $field_atts->form_element == 'timestamp' ) {
         /**
          * @since 1.6.3
@@ -925,13 +933,6 @@ class PDb_List_Query {
       }
     } elseif ( $filter->is_empty_search() ) {
 
-      /**
-       * @version 1.7.1
-       * added support for numeric datatypes
-       * 
-       */
-      $is_numeric = PDb_FormElement::is_numeric_datatype($column);
-      
       if ( $operator === 'NOT LIKE' or $operator === '!' ) {
         $pattern = $is_numeric ? 'p.%1$s IS NOT NULL' : '(p.%1$s IS NOT NULL AND p.%1$s <> "")';
       } else {
@@ -942,8 +943,29 @@ class PDb_List_Query {
 
       if ( $operator === NULL )
         $operator = 'LIKE';
+      
+      /*
+       * don't use string operators on numeric values
+       */
+      if ( $is_numeric ) {
+        
+        switch ( $operator ) {
+          
+          case 'LIKE':
+          case '~':
+            
+            $operator = '=';
+            break;
+          
+          case 'NOT LIKE':
+          case '!':
+            
+            $operator = '<>';
+            break;
+        }
+      }
 
-      $delimiter = array( '"', '"' );
+      $delimiter = array('"', '"');
 
       /*
        * set the operator and delimiters
@@ -954,14 +976,14 @@ class PDb_List_Query {
         case 'LIKE':
 
           $operator = 'LIKE';
-          $delimiter = $filter->wildcard_present() ? array( '"', '"' ) : array( '"%', '%"' );
+          $delimiter = $filter->wildcard_present() ? array('"', '"') : array('"%', '%"');
           break;
 
         case '!':
         case 'NOT LIKE':
 
           $operator = 'NOT LIKE';
-          $delimiter = $filter->wildcard_present() ? array( '"', '"' ) : array( '"%', '%"' );
+          $delimiter = $filter->wildcard_present() ? array('"', '"') : array('"%', '%"');
           break;
 
         case 'ne':
@@ -979,8 +1001,8 @@ class PDb_List_Query {
            * serialized array), we must prepare a special statement to search 
            * for the double quotes surrounding the value in the serialization
            */
-          if ( in_array( $field_atts->form_element, array( 'multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown' ) ) ) {
-            $delimiter = array( '\'%"', '"%\'' );
+          if ( in_array( $field_atts->form_element, array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) ) {
+            $delimiter = array('\'%"', '"%\'');
             $operator = 'LIKE';
             /*
              * this is so the search term will be treated as a comparison string 
@@ -1029,7 +1051,7 @@ class PDb_List_Query {
       $statement = sprintf( 'p.%s %s %s%s%s', $column, $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
     }
     if ( $statement ) {
-      $filter->update_parameters( array( 'statement' => $statement ) );
+      $filter->update_parameters( array('statement' => $statement) );
 
       $this->subclauses[$column][] = $filter;
     }
@@ -1043,9 +1065,9 @@ class PDb_List_Query {
   private function _count_clauses()
   {
     $count = 0;
-    foreach ($this->subclauses as $field) {
+    foreach ( $this->subclauses as $field ) {
       if ( is_array( $field ) ) {
-        foreach ($field as $clause) {
+        foreach ( $field as $clause ) {
           $count++;
         }
       }
@@ -1283,7 +1305,7 @@ class PDb_List_Query {
         ),
         'search_field' => array(
             'filter' => FILTER_CALLBACK,
-            'options' => array( __CLASS__, 'sanitize_search_field' )
+            'options' => array(__CLASS__, 'sanitize_search_field')
         ),
         'operator' => FILTER_SANITIZE_STRING,
         'sortstring' => FILTER_SANITIZE_STRING,
@@ -1324,18 +1346,18 @@ class PDb_List_Query {
         'submit-button' => FILTER_SANITIZE_STRING,
         'ascdesc' => FILTER_SANITIZE_STRING,
         'sortBy' => FILTER_SANITIZE_STRING,
-        Participants_Db::$list_page => array( 
-            'filter' => FILTER_VALIDATE_INT, 
-            'options' => array( 
-                'min_range' => 1 
-                ) 
-            ),
-        'target_instance' => array( 
-            'filter' => FILTER_VALIDATE_INT, 
-            'options' => array( 
-                'min_range' => 1 
-                ) 
-            ),
+        Participants_Db::$list_page => array(
+            'filter' => FILTER_VALIDATE_INT,
+            'options' => array(
+                'min_range' => 1
+            )
+        ),
+        'target_instance' => array(
+            'filter' => FILTER_VALIDATE_INT,
+            'options' => array(
+                'min_range' => 1
+            )
+        ),
     );
   }
 
