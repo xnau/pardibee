@@ -268,6 +268,12 @@ abstract class PDb_Shortcode {
     if (WP_DEBUG && in_array($this->module, array('signup','single','record','list','search'))) {
     echo '<!-- template: ' . $this->template_basename($this->template) . ' -->';
     }
+    
+    /**
+     * @filter pdb-before_include_shortcode_template
+     * @param Object the current shortcode object
+     */
+    Participants_Db::do_action('before_include_shortcode_template', $this);
 
     // this will be included in the subclass context
     $this->_include_template();
