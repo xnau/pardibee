@@ -1678,6 +1678,22 @@ abstract class xnau_FormElement {
   }
 
   /**
+   * tells if the named column is a numeric datatype
+   * 
+   * @oaram string  $column name of the column to check
+   * @return bool true if the column is a numeric type
+   */
+  public static function is_numeric_datatype( $column )
+  {
+    global $wpdb;
+    $sql = 'SHOW FIELDS FROM '. Participants_Db::$participants_table . ' WHERE Field = "%s"';
+    $result = $wpdb->get_row( $wpdb->prepare( $sql, $column ) );
+    $type = isset( $result->Type ) ? strtoupper( $result->Type ) : '';
+    
+    return preg_match('/(INT|DECIMAL|FLOAT|NUMERIC|DOUBLE)/', $type) === 1;
+  }
+
+  /**
    * returns a MYSQL datatype appropriate to the form element type
    * 
    * @param string|array $element the (string) form element type or (array) field definition array
