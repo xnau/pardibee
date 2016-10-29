@@ -925,10 +925,17 @@ class PDb_List_Query {
       }
     } elseif ( $filter->is_empty_search() ) {
 
+      /**
+       * @version 1.7.1
+       * added support for numeric datatypes
+       * 
+       */
+      $is_numeric = PDb_FormElement::is_numeric_datatype($column);
+      
       if ( $operator === 'NOT LIKE' or $operator === '!' ) {
-        $pattern = '(p.%1$s IS NOT NULL AND p.%1$s <> "")';
+        $pattern = $is_numeric ? 'p.%1$s IS NOT NULL' : '(p.%1$s IS NOT NULL AND p.%1$s <> "")';
       } else {
-        $pattern = '(p.%1$s IS NULL OR p.%1$s = "")';
+        $pattern = $is_numeric ? 'p.%1$s IS NULL' : '(p.%1$s IS NULL OR p.%1$s = "")';
       }
       $statement = sprintf( $pattern, $column );
     } else {
