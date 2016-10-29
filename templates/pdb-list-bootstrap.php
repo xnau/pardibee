@@ -82,7 +82,7 @@ $this->pagination->set_props(array(
 		 * 
 		 * the tag wrapping the count statment can be supplied in the function argument, example here
 		 */
-		$this->print_list_count('<h5>'); 
+		$this->print_list_count('<caption>'); 
 		?>
 
     <?php if ($record_count > 0) : ?>
