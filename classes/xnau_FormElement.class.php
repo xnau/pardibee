@@ -732,6 +732,8 @@ abstract class xnau_FormElement {
     } else
       $otherlabel = $this->i18n['other'];
 
+      // set the ID for the select element
+      $id = $this->element_id();
     if ( !isset( $this->attributes['readonly'] ) ) {
 
       // make a unique prefix for the js function
@@ -779,8 +781,9 @@ abstract class xnau_FormElement {
       }
     } else {
       // readonly display
-      $this->attributes['id'] .= '_readonly';
-      $this->_addline( '<input type="text" name="' . $this->name . '" value="' . $this->value . '" ' . $this->_attributes('no validate') . $this->_class( 'pdb-readonly' ) . ' >' );
+      $this->attributes['id'] = ( empty($this->attributes['id']) ? $this->element_id() : $this->attributes['id'] ) . '_readonly';
+      $options = $this->_make_assoc( $this->options );
+      $this->_addline( '<input type="text" name="' . $this->name . '" value="' . array_search($this->value, $options) . '" ' . $this->_attributes('no validate') . $this->_class( 'pdb-readonly' ) . ' >' );
     }
   }
 
