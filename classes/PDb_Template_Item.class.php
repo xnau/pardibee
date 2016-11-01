@@ -48,7 +48,7 @@ class PDb_Template_Item {
   /**
    * @var array of all record values, indexed by name
    */
-  protected $values;
+  public $values;
   
   /**
    * @var array holds an array of class strings
