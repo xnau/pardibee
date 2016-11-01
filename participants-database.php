@@ -1566,6 +1566,19 @@ class Participants_Db extends PDb_Base {
         case 'id':
           $new_value = $participant_id;
           break;
+        
+        case 'last_accessed':
+          if ( ! PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
+            $date = PDb_Date_Parse::timestamp($post[$column->name]);
+            if ( $date ) {
+              $new_value = date( 'Y-m-d H:i:s', $date );
+            } else {
+              $new_value = '';
+            }
+          } else {
+            $new_value = $post[$column->name];
+          }
+          break;
 
         case 'date_recorded':
         case 'date_updated':
