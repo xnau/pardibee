@@ -67,7 +67,7 @@ class PDb_Date_Display {
   }
 
   /**
-   * gets a date string for a given timestamp and format
+   * gets a mysql timestamp date string for a given timestamp and format
    * 
    * @param string|int $timestamp
    * @param string $context
@@ -220,7 +220,13 @@ class PDb_Date_Display {
       return $date;
     }
     // we parse it into a TS or false if it can't be parsed
-    return PDb_Date_Parse::timestamp( $date, array(), __METHOD__ . ' ( ' . $this->context . ' )' );
+    // first try using the display format
+    $date = PDb_Date_Parse::timestamp( $date, array( 'input_format' => $this->format ), __METHOD__ . ' ( ' . $this->context . ' )' );
+    if ( $date === false ) {
+      // then try it using in input format
+      $date = PDb_Date_Parse::timestamp( $date, array(), __METHOD__ . ' ( ' . $this->context . ' )' );
+    }
+    return $date;
   }
 
   /**
