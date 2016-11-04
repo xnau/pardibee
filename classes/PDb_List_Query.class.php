@@ -897,7 +897,7 @@ class PDb_List_Query {
     $statement = false;
 
     /**
-     * @version 1.7.1
+     * @version 1.7.0.14
      * added support for numeric datatypes
      * 
      */
