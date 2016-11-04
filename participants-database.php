@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.0.14
+ * Version: 1.7.0.15
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -1567,38 +1567,34 @@ class Participants_Db extends PDb_Base {
           $new_value = $participant_id;
           break;
         
+        case 'date_recorded':
+        case 'date_updated':
         case 'last_accessed':
+          /**
+           * @version 1.7.0.15
+           * 
+           * if the localized timestamp date strings can't be parsed normally, so we use the saved value if available
+           */
           if ( ! PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
-            $date = PDb_Date_Parse::timestamp($post[$column->name]);
-            if ( $date ) {
-              $new_value = date( 'Y-m-d H:i:s', $date );
+            $new_value = '';
+            $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+            $timestamp = PDb_Date_Parse::timestamp($post[$column->name], array('input_format' => $display_format ), __METHOD__ . ' saving timestamps');
+            if ( $timestamp ) {
+              $new_value = PDb_Date_Display::get_mysql_timestamp($timestamp);
+              error_log(__METHOD__.' parsed using display format: '. $display_format. ' got: '. $new_value);
             } else {
-              $new_value = '';
+              // try using the saved value
+              $saved = is_numeric($participant_id) ? self::get_participant($participant_id) : false;
+              // use the saved value if available so we don't have to try to parse the string back to a mysql timestamp
+              if ( $saved && isset( $saved[$column->name] ) && PDb_Date_Parse::is_mysql_timestamp( $saved[$column->name] )  ) {
+                $new_value = $saved[$column->name];
+              }
             }
           } else {
             $new_value = $post[$column->name];
           }
           break;
 
-        case 'date_recorded':
-        case 'date_updated':
-          /* case 'last_accessed': */
-
-          /*
-           *  remove the value from the post array if it is already set in the sql
-           * 
-           * we dont check if its empty any more because timestamps are empty, but 
-           * should be removed if they're already in the query
-           */
-          if ( /* isset( $post[$column->name] ) && */ strpos( $sql, $column->name ) !== false ) {
-            unset( $post[$column->name] );
-            $new_value = false;
-            break;
-          }
-
-          $new_value = PDb_Date_Display::get_mysql_timestamp( isset( $post[$column->name] ) ? $post[$column->name] : '', __METHOD__ );
-
-          break;
 
         case 'private_id':
 
