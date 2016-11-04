@@ -224,11 +224,13 @@ class PDb_Date_Parse {
     $DateFormat->setLenient( false ); // we want it strict
     $timestamp = $DateFormat->parse( $this->input );
 
+    $the_Date = '';
+    
     if ( ! intl_is_failure( $DateFormat->getErrorCode() ) ) {
       $the_Date = new DateTime();
       $the_Date->setTimestamp( $timestamp );
     } elseif ( WP_DEBUG ) {
-      error_log( __METHOD__ . '(' .$this->context . ') ' .' IntlDateFormatter error: format string: ' . $this->icu_format() . ' input: ' . $this->input . ' formatter error: ' . $DateFormat->getErrorMessage() );
+      //error_log( __METHOD__ . '(' .$this->context . ') ' .' IntlDateFormatter error: format string: ' . $this->icu_format() . ' input: ' . $this->input . ' formatter error: ' . $DateFormat->getErrorMessage() );
     }
     if ( is_a( $the_Date, 'DateTime' ) ) {
       $this->set_timestamp_from_datetime( $the_Date );
