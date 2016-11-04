@@ -1573,7 +1573,7 @@ class Participants_Db extends PDb_Base {
           /**
            * @version 1.7.0.15
            * 
-           * if the localized timestamp date strings can't be parsed normally, so we use the saved value if available
+           * if the localized timestamp date strings can't be parsed normally, we use the saved value if available
            */
           if ( ! PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
             $new_value = '';
@@ -1581,7 +1581,6 @@ class Participants_Db extends PDb_Base {
             $timestamp = PDb_Date_Parse::timestamp($post[$column->name], array('input_format' => $display_format ), __METHOD__ . ' saving timestamps');
             if ( $timestamp ) {
               $new_value = PDb_Date_Display::get_mysql_timestamp($timestamp);
-              error_log(__METHOD__.' parsed using display format: '. $display_format. ' got: '. $new_value);
             } else {
               // try using the saved value
               $saved = is_numeric($participant_id) ? self::get_participant($participant_id) : false;
