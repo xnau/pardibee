@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.0.15
+ * Version: 1.7.0.16
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -1570,6 +1570,14 @@ class Participants_Db extends PDb_Base {
         case 'date_recorded':
         case 'date_updated':
         case 'last_accessed':
+          /*
+           *  remove the value from the post data if it is already set in the sql
+           */
+          if ( strpos( $sql, $column->name ) !== false ) {
+            unset( $post[$column->name] );
+            $new_value = false;
+            break;
+          }
           /**
            * @version 1.7.0.15
            * 
