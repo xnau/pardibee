@@ -23,6 +23,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
   {
 
     $this->setup_plugin_options();
+    $this->add_settings_filters();
 
     /*
      * define the settings sections
@@ -1101,6 +1102,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    $this->plugin_settings[] = array(
+        'name' => 'disable_live_notifications',
+        'title' => __( 'Disable Backend Developer Ads', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'select this to hide developer ads in the admin.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
     /*     * ****************************************************
      *
      *   admin section settings
@@ -1557,6 +1571,16 @@ ORDER BY g.order, v.order';
       }
     }
     return $settings;
+  }
+  
+  /**
+   * sets up filters for allowing access to settings values
+   */
+  private function add_settings_filters()
+  { 
+    add_filter( Participants_Db::$prefix . 'disable_live_notifications', function(){
+      return Participants_Db::plugin_setting('disable_live_notifications', '0' ) == '1';
+    });
   }
 
 }
