@@ -52,10 +52,11 @@ class PDb_Live_Notification_Handler {
    */
   public static function greeting()
   {
-    if ( Participants_Db::apply_filters('enable_live_notifications', false ) ) {
-      $notification = new PDb_Live_Notification( 'greeting' );
-      return $notification->content();
-    }
+    if ( Participants_Db::apply_filters( 'disable_live_notifications', true ) )
+      return;
+    
+    $notification = new PDb_Live_Notification( 'greeting' );
+    return $notification->content();
   }
 
   /**
@@ -65,10 +66,11 @@ class PDb_Live_Notification_Handler {
    */
   public static function latest_news()
   {
-    if ( Participants_Db::apply_filters('enable_live_notifications', false ) ) {
-      $notification = new PDb_Live_Notification( 'latest' );
-      return $notification->content();
-    }
+    if ( Participants_Db::apply_filters( 'disable_live_notifications', true ) )
+      return;
+    
+    $notification = new PDb_Live_Notification( 'latest' );
+    return $notification->content();
   }
 
   /**
