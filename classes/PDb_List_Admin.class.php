@@ -114,12 +114,22 @@ class PDb_List_Admin {
 
     self::_setup_i18n();
 
-    wp_localize_script( Participants_Db::$prefix . 'list-admin', 'list_adminL10n', array(
+    $apply_confirm_messages = Participants_Db::apply_filters( 'admin_list_with_selected_action_conf_messages', array(
+                'delete' => array(
+                    "singular" => __( "Do you really want to delete the selected record?", 'participants-database' ),
+                    "plural" => __( "Do you really want to delete the selected records?", 'participants-database' ),
+                ),
+                    )
+    );
+
+    wp_localize_script(
+            Participants_Db::$prefix . 'list-admin', 'list_adminL10n', array(
         'delete' => self::$i18n['delete_checked'],
         'cancel' => self::$i18n['change'],
-        "record" => __( "Do you really want to delete the selected record?", 'participants-database' ),
-        "records" => __( "Do you really want to delete the selected records?", 'participants-database' ),
-    ) );
+        'apply' => self::$i18n['apply'],
+        'apply_confirm' => $apply_confirm_messages,
+            )
+    );
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
 
@@ -320,22 +330,66 @@ class PDb_List_Admin {
 
       switch ( filter_input( INPUT_POST, 'submit-button' ) ) {
 
-        case self::$i18n['delete_checked']:
-
-          $selected_ids = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+        //case self::$i18n['delete_checked']:
+        case self::$i18n['apply']:
           /**
-           * @version 1.6.3
-           * @filter  'pdb-before_admin_delete_record'
-           * @param array $selected_ids list of ids to delete
+           * @version 1.7.1
+           * @filter  'before_list_admin_with_selected_action'
+           * @param array $selected_ids list of ids to apply the list action to
            */
-          $selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $selected_ids );
-          if ( $selected_ids ) {
-            $count = count( $selected_ids );
+          $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input( INPUT_POST, 'pid', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) );
+          $selected_count = count( $selected_ids );
+          $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
+          switch ( $selected_action ) {
 
-            $pattern = $count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $count ), ',' ) . ' )' : '= %s';
-            $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
-            $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
-            Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
+            case 'delete':
+              /**
+               * @version 1.6.3
+               * @filter  'pdb-before_admin_delete_record'
+               * @param array $selected_ids list of ids to delete
+               */
+              $selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $selected_ids );
+
+
+              if ( is_array( $selected_ids ) && count( $selected_ids ) > 0 ) {
+                $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= %s';
+                $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
+                $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
+                Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
+              }
+              break;
+
+            case 'send_signup_email':
+
+              $email_limit = Participants_Db::apply_filters('mass_signup_email_limit', 100);
+              $send_count = 0;
+              foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
+                $data = Participants_Db::get_participant( $id );
+                $recipient = $data[Participants_Db::plugin_setting( 'primary_email_address_field' )];
+                if ( filter_var( $recipient, FILTER_VALIDATE_EMAIL ) !== false ) {
+
+                  PDb_Template_Email::send( array(
+                      'to' => $recipient,
+                      'subject' => Participants_Db::apply_filters( 'receipt_email_subject', Participants_Db::plugin_setting( 'signup_receipt_email_subject' ), $data ),
+                      'template' => Participants_Db::apply_filters( 'receipt_email_template', Participants_Db::plugin_setting( 'signup_receipt_email_body' ), $data ),
+                      'context' => __METHOD__,
+                          ), $data );
+                  $send_count++;
+                }
+              }
+              Participants_Db::set_admin_message( sprintf( _x( '%d emails were sent.', 'number of emails sent', 'participants-database' ), $send_count ), 'updated' );
+
+            default:
+              /**
+               * @action pdb_admin_list_with_{$selected_action}
+               * 
+               * this action is executed if none of the default actions were selected 
+               * so that a custom action can be performed
+               * 
+               * @param array of selected record ids
+               * @param object class
+               */
+              do_action( 'pdb_admin_list_with_' . $selected_action, $selected_ids );
           }
           break;
 
@@ -354,7 +408,7 @@ class PDb_List_Admin {
            * 
            * @version 1.6
            */
-          do_action( Participants_Db::$prefix . 'process_admin_list_submission', $this );
+          do_action( Participants_Db::$prefix . 'process_admin_list_submission' );
       }
     }
   }
@@ -540,19 +594,19 @@ class PDb_List_Admin {
         }
       }
     } elseif ( $filter_set['value'] === 'null' ) {
-      
-      $is_numeric = PDb_FormElement::is_numeric_datatype($filter_set['search_field']);
+
+      $is_numeric = PDb_FormElement::is_numeric_datatype( $filter_set['search_field'] );
 
       switch ( $filter_set['operator'] ) {
         case '<>':
         case '!=':
         case 'NOT LIKE':
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL' . ( $is_numeric ? '' : ' AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) .')';
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL' . ( $is_numeric ? '' : ' AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) . ')';
           break;
         case 'LIKE':
         case '=':
         default:
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) .')';
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) . ')';
           break;
       }
     } else {
@@ -728,11 +782,36 @@ class PDb_List_Admin {
              */
 //            do_action(Participants_Db::$prefix . 'admin_list_form_top', $this);
             do_action( Participants_Db::$prefix . 'admin_list_form_top' );
+            /**
+             * @filter pdb-admin_list_with_selected_actions
+             * @param array as $title => $action of actions to apply to selected records
+             */
+            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', array(
+                        __( 'delete', 'participants-database' ) => 'delete',
+                        __( 'send signup email', 'participants-database' ) => 'send_signup_email',
+                    ) );
             ?>
             <table class="form-table"><tbody><tr><td>
                     <fieldset class="widefat inline-controls">
-                      <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
-                        <span style="padding-right:20px" ><input type="submit" name="submit-button" class="button button-default" value="<?php echo self::$i18n['delete_checked'] ?>" id="delete_button"  ></span>
+                      <?php
+                      if (
+                              current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ||
+                              current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'send_list_email' ) )
+                      ) :
+                        ?>
+                        <span style="padding-right:20px" >
+                          <?php echo self::$i18n['with_selected'] ?>: 
+                          <?php
+                          $element = array(
+                              'type' => 'dropdown',
+                              'name' => 'with_selected',
+                              'value' => filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ),
+                              'options' => $with_selected_selections,
+                          );
+                          PDb_FormElement::print_element( $element );
+                          ?>
+                          <input type="submit" name="submit-button" class="button button-default" value="<?php echo self::$i18n['apply'] ?>" id="apply_button"  >
+                        </span>
                       <?php endif ?>
                       <?php
                       $list_limit = PDb_FormElement::get_element( array(
@@ -747,7 +826,7 @@ class PDb_List_Admin {
                               )
                       ?>
                       <?php printf( __( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
-    <?php PDb_FormElement::print_element( array('type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n['change']) ) ?>
+                      <?php PDb_FormElement::print_element( array('type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n['change']) ) ?>
 
                     </fieldset>
                   </td></tr></tbody></table>
@@ -763,7 +842,7 @@ class PDb_List_Admin {
           {
             $hscroll = Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
             ?>
-              <?php if ( $hscroll ) : ?>
+            <?php if ( $hscroll ) : ?>
               <div class="pdb-horiz-scroll-scroller">
                 <div class="pdb-horiz-scroll-width" style="width: <?php echo count( self::$display_columns ) * 10 ?>em">
                 <?php endif ?>
@@ -800,11 +879,11 @@ class PDb_List_Admin {
                       foreach ( self::$participants as $value ) {
                         ?>
                         <tr>
-                          <?php // print delete check   ?>
+                          <?php // print delete check     ?>
                           <td>
                             <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
                               <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value['id'] ?>" />
-        <?php endif ?>
+                            <?php endif ?>
                             <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="glyphicon glyphicon-edit"></span></a>
                           </td>
                           <?php
@@ -831,7 +910,7 @@ class PDb_List_Admin {
                                 $display_value = $image->get_image_html();
 
                                 break;
-                                
+
                               case 'file-upload':
                                 $display_value = PDb_FormElement::get_field_value_display( $field, true );
                                 break;
@@ -903,7 +982,7 @@ class PDb_List_Admin {
                           }
                           ?>
                         </tr>
-      <?php } ?>
+                      <?php } ?>
                     </tbody>
 
                   <?php else : // if there are no records to show; do this
@@ -917,7 +996,7 @@ class PDb_List_Admin {
                   endif; // participants array
                   ?>
                 </table>
-    <?php if ( $hscroll ) : ?>
+                <?php if ( $hscroll ) : ?>
                 </div>
               </div>
             <?php endif ?>
@@ -946,7 +1025,7 @@ class PDb_List_Admin {
                 $namelength = round( strlen( $suggested_filename ) * 0.9 );
                 ?>
                 <fieldset class="inline-controls">
-    <?php _e( 'File Name', 'participants-database' ) ?>:
+                  <?php _e( 'File Name', 'participants-database' ) ?>:
                   <input type="text" name="filename" value="<?php echo $suggested_filename ?>" size="<?php echo $namelength ?>" />
                   <input type="submit" name="submit-button" value="<?php _e( 'Download CSV for this list', 'participants-database' ) ?>" class="button button-primary" />
                   <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php _e( 'Include field titles', 'participants-database' ) ?></label>
@@ -989,7 +1068,7 @@ class PDb_List_Admin {
       <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
         <?php /* translators: uses the check symbol in a phrase that means "check all"  printf('<span class="checkmark" >&#10004;</span>%s', __('all', 'participants-database'))s */ ?>
         <input type="checkbox" name="checkall" id="checkall" ><span class="glyphicon glyphicon-edit" style="opacity: 0"></span>
-    <?php endif ?>
+      <?php endif ?>
     </th>
     <?php
     // print the top header row
@@ -1215,6 +1294,8 @@ class PDb_List_Admin {
         'filter' => _x( 'Filter', 'submit button label', 'participants-database' ),
         'clear' => _x( 'Clear', 'submit button label', 'participants-database' ),
         'search' => _x( 'Search', 'search button label', 'participants-database' ),
+        'apply' => __( 'Apply' ),
+        'with_selected' => _x( 'With selected', 'phrase used just before naming the action to perform on the selected items', 'participants-database' ),
     );
   }
 
