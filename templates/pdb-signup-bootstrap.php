@@ -1,9 +1,11 @@
 <?php
-/*
+/**
  * bootstrap template for signup form
  *
  * outputs a Twitter Bootstrap-compatible form
  * http://twitter.github.com/bootstrap/index.html
+ * 
+ * @version 0.2
  *
  */
 ?>
@@ -28,8 +30,9 @@
         <?php $feedback_class = $this->field->has_error() ? 'error' : ''; ?>
 
         <div class="<?php $this->field->print_element_class() ?> control-group <?php echo $feedback_class ?>">
-
+          <?php if ( $this->field->has_title() ) : ?>
           <label class="control-label" for="<?php $this->field->print_element_id() ?>" ><?php $this->field->print_label(); // this function adds the required marker ?></label>
+          <?php endif ?>
           <div class="controls"><?php $this->field->print_element_with_id(); ?>
 
 						<?php if ( $this->field->has_help_text() ) :?>

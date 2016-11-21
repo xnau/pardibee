@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -103,8 +103,17 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function print_label()
   {
-
     echo $this->_label();
+  }
+  
+  /**
+   * tells if the title (field label) is empty
+   * 
+   * @return bool true if there is a title string defined
+   */
+  public function has_title()
+  {
+    return strlen( $this->title ) > 0;
   }
 
   /**

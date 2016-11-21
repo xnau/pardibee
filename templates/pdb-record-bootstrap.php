@@ -4,7 +4,7 @@
  *
  * this template is design to match the formatting and layout of the pdb-signup-default template
  * 
- * @version Participants Database 1.6
+ * @version 0.3
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?>">
@@ -34,9 +34,11 @@
           ?>
 
           <div class="form-group <?php $this->field->print_element_class() ?>">
+            <?php if ( $this->field->has_title() ) : ?>
             <label>
               <?php $this->field->print_label() ?>
             </label>
+            <?php endif ?>
             <div class="input-group" >
               <?php $this->field->print_element_with_id(); ?>
             </div>
