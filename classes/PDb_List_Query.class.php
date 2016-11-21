@@ -417,7 +417,6 @@ class PDb_List_Query {
       // accomodate several different submit button names and un-translate to get key values
       $this->post_input = $this->_prepare_submit_value( $this->post_input );
 
-
       switch ( $this->post_input['submit'] ) {
         case 'clear':
           $_GET[Participants_Db::$list_page] = 1;
@@ -849,7 +848,6 @@ class PDb_List_Query {
    */
   private function _add_single_statement( $column, $operator, $search_term = '', $logic = 'AND', $shortcode = false )
   {
-
     /*
      * don't add an 'id = 0' clause if there is a user search. This gives us a 
      * way to create a "search results only" list if the shortcode contains 
@@ -863,7 +861,7 @@ class PDb_List_Query {
       return false;
     }
 
-    $search_term = Participants_Db::apply_filters( 'raw_search_term', trim( urldecode( $search_term ) ) );
+    $search_term = Participants_Db::apply_filters( 'raw_search_term', trim( rawurldecode( $search_term ) ) );
 
     /**
      * if the search term is empty and it's not allowed in settings and not a shortcode 
