@@ -393,7 +393,7 @@ class PDb_List_Admin {
                 $result = $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
                 if ( $result > 0 ) {
                   do_action( 'pdb-list_admin_with_selected_' . $selected_action, $selected_ids );
-                  Participants_Db::set_admin_message( sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ), 'updated' );
+                  Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ) ), 'updated' );
                 }
               }
               break;
@@ -429,6 +429,12 @@ class PDb_List_Admin {
                * @param array of selected record ids
                */
               do_action( 'pdb_admin_list_with_selected_' . $selected_action, $selected_ids );
+              /**
+               * @filter pdb-admin_list_action_feedback
+               * 
+               * @param string feedback to show after the action has been performed
+               */
+              Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', ''), 'updated' );
           }
           break;
 
