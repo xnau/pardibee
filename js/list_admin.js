@@ -2,19 +2,19 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.3
+ * @version 0.4
  */
 var PDbListAdmin = (function ($) {
   "use strict";
   var checkState = false;
   var listform = $('#list_form');
   var count_element = $('#select_count');
-  var delete_button = $('#delete_button').prop('disabled', true).addClass('unarmed');
+  var apply_button = $('#apply_button').prop('disabled', true).addClass('unarmed');
   var checkall = $('#checkall');
   var submitElement = $('<input type="hidden" name="submit-button" />');
   var armDeleteButton = function (state) {
-    delete_button
-            .attr('class', state ? delete_button.attr('class').replace('unarmed', 'armed') : delete_button.attr('class').replace('armed', 'unarmed'))
+    apply_button
+            .attr('class', state ? apply_button.attr('class').replace('unarmed', 'armed') : apply_button.attr('class').replace('armed', 'unarmed'))
             .prop('disabled', state ? false : true);
   };
   var addSelects = function (selected) {
@@ -56,7 +56,7 @@ var PDbListAdmin = (function ($) {
           primary : "dashicons dashicons-yes ui-icon-check"
         },
         click : function () {
-          listform.prepend(submitElement.clone().val(list_adminL10n.delete));
+          listform.prepend(submitElement.clone().val(list_adminL10n.apply));
           armDeleteButton(true);
           checkState = false;
           $(this).dialog("destroy");
@@ -74,10 +74,11 @@ var PDbListAdmin = (function ($) {
   });
   return {
     init : function () {
-      delete_button.on('click', function (e) {
+      apply_button.on('click', function (e) {
         e.preventDefault();
-        var plural = (parseInt(count_element.val(), 10) > 1) ? true : false;
-        confirmDialog.html($('<h3/>').text(plural ? list_adminL10n.records : list_adminL10n.record)).dialog('open');
+        var sense = (parseInt(count_element.val(), 10) > 1) ? 'plural' : 'singular';
+        var action = $('[name=with_selected]').val();
+        confirmDialog.html($('<h3/>').text(list_adminL10n.apply_confirm[action][sense])).dialog('open');
       });
       checkall.click(checkAll);
       $('.delete-check').on('click', function () {
