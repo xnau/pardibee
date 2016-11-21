@@ -131,6 +131,9 @@ fieldset.widefat.inline-controls label {
   display: inline-block;
   margin: 0 15px 15px 0;
 }
+#list_filter_count {
+  width: 3em;
+}
 
 /* HORIZ SCROLL */
 .pdb-horiz-scroll-scroller {
