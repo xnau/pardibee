@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -56,6 +56,8 @@ class PDb_Template_Email extends xnau_Template_Email {
    *                'subject'   => $email_subject
    *                'template'  => $email_template
    *                'context'   => $context
+   *                'attachments' => $attachments
+   * 
    * @param int|array $data if an integer, gets the PDB record with that ID, is 
    *                        array, uses it as the data source; must be associative 
    *                        array with fields labeled
