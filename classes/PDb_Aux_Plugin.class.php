@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.1
+ * @version    4.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -108,6 +108,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var string holds the plugin version number and author attribution
      */
     public $attribution;
+    
+    /**
+     * @var array of registered aux_plugin events as $tag => $title
+     */
+    public $aux_plugin_events = array();
 
     /**
      * @var string  URL for the aux plugin updater
@@ -144,6 +149,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       add_action( 'init', array($this, 'load_textdomain'), 1 );
       add_action( 'init', array($this, 'initialize_updater'), 50 );
       add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
+      add_action( 'plugins_loaded', array($this, 'register_global_events'), 100 );
 
       /**
        * include the aux plugin update class
@@ -247,6 +253,20 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         add_filter( 'pre_update_option_' . $this->aux_plugin_settings, array($this, 'settings_callbacks'), 10, 2 );
       }
       $this->plugin_options = get_option( $this->settings_name() );
+    }
+    
+    /**
+     * gathers all the registered events
+     * 
+     */
+    public function register_global_events()
+    {
+      /**
+       * 
+       * @filter 'pdb-register_global_event'
+       * @param array $events as $tag => $title
+       */
+      $this->aux_plugin_events = Participants_Db::apply_filters( 'register_global_event', array() );
     }
 
     /**
