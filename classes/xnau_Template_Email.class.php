@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -55,6 +55,11 @@ class xnau_Template_Email {
    * @var array and associative array of values for use by the template
    */
   protected $data;
+  
+  /**
+   * @var array of attachment paths
+   */
+  protected $attachments = array();
 
   /**
    * instantiates the class instance
@@ -94,6 +99,7 @@ class xnau_Template_Email {
    *                'subject'   => $email_subject
    *                'template'  => $email_template
    *                'context'   => $context
+   *                'attachments' => $attachments
    * @param int|array $data if an integer, gets the PDB record with that ID, is 
    *                        array, uses it as the data source; must be associative 
    *                        array with fields labeled
@@ -127,7 +133,7 @@ message:
 ' . $body
             );
 
-    $sent = wp_mail( $recipients, $subject, $body, $this->email_header() );
+    $sent = wp_mail( $recipients, $subject, $body, $this->email_header(), $this->attachments );
 
     if ( false === $sent )
       error_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
@@ -193,6 +199,7 @@ message:
     $this->email_from = apply_filters( $this->prefix . 'email_from',  $config['from'], $this->context );
     $this->email_subject = apply_filters( $this->prefix . 'email_subject',  $config['subject'], $this->context );
     $this->email_template = apply_filters( $this->prefix . 'email_template',  $config['template'], $this->context );
+    $this->attachments = apply_filters( $this->prefix . 'email_attachments',  $config['attachments'], $this->context );
   }
 
 }
