@@ -119,6 +119,18 @@ class PDb_List_Admin {
                     "singular" => __( "Do you really want to delete the selected record?", 'participants-database' ),
                     "plural" => __( "Do you really want to delete the selected records?", 'participants-database' ),
                 ),
+                'approve' => array(
+                    "singular" => __( "Approve the selected record?", 'participants-database' ),
+                    "plural" => __( "Approve the selected records?", 'participants-database' ),
+                ),
+                'unapprove' => array(
+                    "singular" => __( "Unapprove the selected record?", 'participants-database' ),
+                    "plural" => __( "Unapprove the selected records?", 'participants-database' ),
+                ),
+                'send_signup_email' => array(
+                    "singular" => __( "Send the signup email to the selected record?", 'participants-database' ),
+                    "plural" => __( "Send the signup email to the selected records?", 'participants-database' ),
+                ),
                     )
     );
 
@@ -337,7 +349,12 @@ class PDb_List_Admin {
            * @filter  'before_list_admin_with_selected_action'
            * @param array $selected_ids list of ids to apply the list action to
            */
-          $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input( INPUT_POST, 'pid', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) );
+          $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input_array( INPUT_POST, array( 
+              'pid' => array(
+                  'filter' => FILTER_VALIDATE_INT,
+                  'flags'  => FILTER_REQUIRE_ARRAY,
+                  )
+              ))['pid']);
           $selected_count = count( $selected_ids );
           $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
           switch ( $selected_action ) {
@@ -351,7 +368,7 @@ class PDb_List_Admin {
               $selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $selected_ids );
 
 
-              if ( is_array( $selected_ids ) && count( $selected_ids ) > 0 ) {
+              if ( $selected_count > 0 ) {
                 $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= %s';
                 $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
                 $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
@@ -359,15 +376,31 @@ class PDb_List_Admin {
               }
               break;
 
+            case 'approve':
+            case 'unapprove':
+              if ( $selected_count > 0 ) {
+                $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
+                $approval_field = Participants_Db::$fields[$approval_field_name];
+                list ( $yes, $no ) = unserialize( $approval_field->values );
+                $set_value = $selected_action === 'approve' ? $yes : $no;
+                
+                $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= "%s"';
+                
+                $sql = "UPDATE " . Participants_Db::$participants_table . " SET `$approval_field_name` = '$set_value' WHERE id $pattern";
+                $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
+                
+                Participants_Db::set_admin_message( sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ), 'updated' );
+              }
+              break;
+
             case 'send_signup_email':
 
-              $email_limit = Participants_Db::apply_filters('mass_signup_email_limit', 100);
+              $email_limit = Participants_Db::apply_filters( 'mass_signup_email_limit', 100 );
               $send_count = 0;
               foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
                 $data = Participants_Db::get_participant( $id );
                 $recipient = $data[Participants_Db::plugin_setting( 'primary_email_address_field' )];
                 if ( filter_var( $recipient, FILTER_VALIDATE_EMAIL ) !== false ) {
-
                   PDb_Template_Email::send( array(
                       'to' => $recipient,
                       'subject' => Participants_Db::apply_filters( 'receipt_email_subject', Participants_Db::plugin_setting( 'signup_receipt_email_subject' ), $data ),
@@ -378,6 +411,7 @@ class PDb_List_Admin {
                 }
               }
               Participants_Db::set_admin_message( sprintf( _x( '%d emails were sent.', 'number of emails sent', 'participants-database' ), $send_count ), 'updated' );
+              break;
 
             default:
               /**
@@ -387,7 +421,6 @@ class PDb_List_Admin {
                * so that a custom action can be performed
                * 
                * @param array of selected record ids
-               * @param object class
                */
               do_action( 'pdb_admin_list_with_' . $selected_action, $selected_ids );
           }
@@ -788,6 +821,8 @@ class PDb_List_Admin {
              */
             $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', array(
                         __( 'delete', 'participants-database' ) => 'delete',
+                        __( 'approve', 'participants-database' ) => 'approve',
+                        __( 'unapprove', 'participants-database' ) => 'unapprove',
                         __( 'send signup email', 'participants-database' ) => 'send_signup_email',
                     ) );
             ?>
