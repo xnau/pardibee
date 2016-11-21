@@ -349,12 +349,12 @@ class PDb_List_Admin {
            * @filter  'before_list_admin_with_selected_action'
            * @param array $selected_ids list of ids to apply the list action to
            */
-          $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input_array( INPUT_POST, array( 
-              'pid' => array(
-                  'filter' => FILTER_VALIDATE_INT,
-                  'flags'  => FILTER_REQUIRE_ARRAY,
-                  )
-              ))['pid']);
+          $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input_array( INPUT_POST, array(
+                              'pid' => array(
+                                  'filter' => FILTER_VALIDATE_INT,
+                                  'flags' => FILTER_REQUIRE_ARRAY,
+                              )
+                          ) )['pid'] );
           $selected_count = count( $selected_ids );
           $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
           switch ( $selected_action ) {
@@ -371,8 +371,11 @@ class PDb_List_Admin {
               if ( $selected_count > 0 ) {
                 $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= %s';
                 $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
-                $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
-                Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
+                $result = $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
+                if ( $result > 0 ) {
+                  do_action( 'pdb-list_admin_with_selected_' . $selected_action, $selected_ids );
+                  Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
+                }
               }
               break;
 
@@ -383,13 +386,15 @@ class PDb_List_Admin {
                 $approval_field = Participants_Db::$fields[$approval_field_name];
                 list ( $yes, $no ) = unserialize( $approval_field->values );
                 $set_value = $selected_action === 'approve' ? $yes : $no;
-                
+
                 $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= "%s"';
-                
+
                 $sql = "UPDATE " . Participants_Db::$participants_table . " SET `$approval_field_name` = '$set_value' WHERE id $pattern";
-                $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
-                
-                Participants_Db::set_admin_message( sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ), 'updated' );
+                $result = $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
+                if ( $result > 0 ) {
+                  do_action( 'pdb-list_admin_with_selected_' . $selected_action, $selected_ids );
+                  Participants_Db::set_admin_message( sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ), 'updated' );
+                }
               }
               break;
 
@@ -408,6 +413,7 @@ class PDb_List_Admin {
                       'context' => __METHOD__,
                           ), $data );
                   $send_count++;
+                  do_action( 'pdb-list_admin_with_selected_send_signup_email', $data );
                 }
               }
               Participants_Db::set_admin_message( sprintf( _x( '%d emails were sent.', 'number of emails sent', 'participants-database' ), $send_count ), 'updated' );
@@ -415,14 +421,14 @@ class PDb_List_Admin {
 
             default:
               /**
-               * @action pdb_admin_list_with_{$selected_action}
+               * @action pdb_admin_list_with_selected_{$selected_action}
                * 
                * this action is executed if none of the default actions were selected 
                * so that a custom action can be performed
                * 
                * @param array of selected record ids
                */
-              do_action( 'pdb_admin_list_with_' . $selected_action, $selected_ids );
+              do_action( 'pdb_admin_list_with_selected_' . $selected_action, $selected_ids );
           }
           break;
 
@@ -1313,6 +1319,22 @@ class PDb_List_Admin {
   public static function filename_datestamp()
   {
     return '-' . str_replace( array('/', '#', '.', '\\', ', ', ',', ' '), '-', PDb_Date_Display::get_date() );
+  }
+  
+  /**
+   * registers admin list events
+   * 
+   * @return array of event definitions
+   */
+  public static function register_admin_list_events( $list )
+  {
+    $admin_list_events = array(
+        'pdb-list_admin_with_selected_delete' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'delete', 'participants-database' ),
+        'pdb-list_admin_with_selected_approve' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'approve', 'participants-database' ),
+        'pdb-list_admin_with_selected_unapprove' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'unapprove', 'participants-database' ),
+        'pdb-list_admin_with_selected_send_signup_email' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'send signup email', 'participants-database' ),
+    );
+    return $list + $admin_list_events;
   }
 
   /**
