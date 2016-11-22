@@ -421,14 +421,14 @@ class PDb_List_Admin {
 
             default:
               /**
-               * @action pdb_admin_list_with_selected_{$selected_action}
+               * @action pdb_admin_list_with_selected/{$selected_action}
                * 
                * this action is executed if none of the default actions were selected 
                * so that a custom action can be performed
                * 
                * @param array of selected record ids
                */
-              do_action( 'pdb_admin_list_with_selected_' . $selected_action, $selected_ids );
+              do_action( 'pdb_admin_list_with_selected/' . $selected_action, $selected_ids );
               /**
                * @filter pdb-admin_list_action_feedback
                * 
