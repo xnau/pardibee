@@ -400,7 +400,7 @@ class PDb_List_Admin {
 
             case 'send_signup_email':
 
-              $email_limit = Participants_Db::apply_filters( 'mass_signup_email_limit', 100 );
+              $email_limit = Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit );
               $send_count = 0;
               foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
                 $data = Participants_Db::get_participant( $id );

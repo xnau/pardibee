@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.0.16
+ * Version: 1.7.1
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -265,6 +265,14 @@ class Participants_Db extends PDb_Base {
    * @var int the number of characters to use in the private ID
    */
   public static $private_id_length = 5;
+  
+  /**
+   * @var int maximum number of emails to send per session
+   * 
+   * this must be small enough to prevent a script timeout and/or stay under the 
+   * typical email rate limit for shared hosting.
+   */
+  public static $mass_email_session_limit = 100;
 
   /**
    * initializes the static class
