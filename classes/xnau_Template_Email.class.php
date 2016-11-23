@@ -128,6 +128,7 @@ class xnau_Template_Email {
 context: '. $this->context . '
 header: ' . $this->email_header() . '
 to: ' . $recipients . ' 
+attachments: ' . print_r(  $this->attachments,1 ) . '
 subj.: ' . $subject . ' 
 message:
 ' . $body
