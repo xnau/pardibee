@@ -835,7 +835,6 @@ class PDb_List_Admin {
                         __( 'delete', 'participants-database' ) => 'delete',
                         __( 'approve', 'participants-database' ) => 'approve',
                         __( 'unapprove', 'participants-database' ) => 'unapprove',
-                        __( 'send signup email', 'participants-database' ) => 'send_signup_email',
                     ) );
             ?>
             <table class="form-table"><tbody><tr><td>
