@@ -1329,15 +1329,18 @@ class PDb_List_Admin {
   /**
    * registers admin list events
    * 
+   * this is called by the PDb Email Expansion Add-On
+   * 
    * @return array of event definitions
    */
   public static function register_admin_list_events( $list )
   {
+    $prefix = __('PDb Admin List With Selected: ', 'participants-database');
     $admin_list_events = array(
-        'pdb-list_admin_with_selected_delete' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'delete', 'participants-database' ),
-        'pdb-list_admin_with_selected_approve' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'approve', 'participants-database' ),
-        'pdb-list_admin_with_selected_unapprove' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'unapprove', 'participants-database' ),
-        'pdb-list_admin_with_selected_send_signup_email' => __('PDB Admin List With Selected: ', 'participants-database') . __( 'send signup email', 'participants-database' ),
+        'pdb-list_admin_with_selected_delete' => $prefix . __( 'delete', 'participants-database' ),
+        'pdb-list_admin_with_selected_approve' => $prefix . __( 'approve', 'participants-database' ),
+        'pdb-list_admin_with_selected_unapprove' => $prefix . __( 'unapprove', 'participants-database' ),
+        'pdb-list_admin_with_selected_send_signup_email' => $prefix . __( 'send signup email', 'participants-database' ),
     );
     return $list + $admin_list_events;
   }
