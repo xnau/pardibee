@@ -150,7 +150,7 @@ class PDb_FormValidation extends xnau_FormValidation {
 
         case ( $field->is_email() ) :
 
-          $regex = Participants_Db::apply_filters( 'email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$#i' );
+          $regex = Participants_Db::apply_filters( 'email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$#i' ); // version 1.7.1 long tld's allowed
           break;
 
         case ( 'captcha' == strtolower( $field->validation ) ) :
