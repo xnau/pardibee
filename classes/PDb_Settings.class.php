@@ -34,8 +34,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'pdb-record' => __( 'Record Form Settings', 'participants-database' ),
         'pdb-list' => __( 'List Display Settings', 'participants-database' ),
         'pdb-resend' => __( 'Resend Link Settings', 'participants-database' ),
-        'pdb-advanced' => __( 'Advanced Settings', 'participants-database' ),
         'pdb-admin' => __( 'Admin Settings', 'participants-database' ),
+        'pdb-advanced' => __( 'Advanced Settings', 'participants-database' ),
         'pdb-css' => __( 'Custom CSS', 'participants-database' ),
     );
 
@@ -1109,7 +1109,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'select this to hide developer ads in the admin.', 'participants-database' ),
+            'help_text' => __( 'select this to disable developer ads in the admin.', 'participants-database' ),
             'value' => 0,
             'options' => array(1, 0),
         ),
