@@ -56,11 +56,13 @@ class PDb_Template_Email extends xnau_Template_Email {
    *                'subject'   => $email_subject
    *                'template'  => $email_template
    *                'context'   => $context
-   *                'attachments' => $attachments
+   *                'attachments' => (array) $attachments
    * 
    * @param int|array $data if an integer, gets the PDB record with that ID, is 
    *                        array, uses it as the data source; must be associative 
    *                        array with fields labeled
+   * 
+   * @return  bool  true if the operation was successful
    */
   public static function send( $config, $data )
   {
