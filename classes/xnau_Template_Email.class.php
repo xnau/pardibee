@@ -200,7 +200,9 @@ message:
     $this->email_from = apply_filters( $this->prefix . 'email_from',  $config['from'], $this->context );
     $this->email_subject = apply_filters( $this->prefix . 'email_subject',  $config['subject'], $this->context );
     $this->email_template = apply_filters( $this->prefix . 'email_template',  $config['template'], $this->context );
-    $this->attachments = apply_filters( $this->prefix . 'email_attachments',  $config['attachments'], $this->context );
+    if ( isset( $config['attachments'] ) ) {
+      $this->attachments = apply_filters( $this->prefix . 'email_attachments',  $config['attachments'], $this->context );
+    }
   }
 
 }
