@@ -267,6 +267,14 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.1 =
+* new "with selected" edit feature in admin list #1416
+* developer ads can now be disabled #1418
+* long TLDs in emails now validate #1413
+* attachment handing in the PDb_Template_Email class #1412
+* plus signs in search terms #1406
+* avoid printing label tags for empty titles in record and signup forms #1397
+
 = 1.7.0.16 =
 * fixed duplicate field bug when adding new record #1411
 
@@ -702,8 +710,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.0.16 =
-Version 1.7.0.16 is a minor bugfix release for all users
+= 1.7.1 =
+Version 1.7.1 is a minor feature upgrade for all users
 
 == Plugin Support ==
 
