@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -281,7 +281,7 @@ class PDb_Template {
   public function get_edit_link( $page = '' )
   {
     $edit_page = empty( $page ) ? $this->edit_page : Participants_Db::find_permalink( $page );
-    return $this->cat_url_var( $edit_page, Participants_Db::$record_query, $this->_value( 'private_id' ) );
+    return Participants_Db::get_record_link( $this->_value( 'private_id' ), $edit_page );
   }
 
   /**
