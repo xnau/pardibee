@@ -3119,8 +3119,9 @@ class Participants_Db extends PDb_Base {
      * @since 1.7.1.1
      * @filter pdb-record_edit_url
      * @param string the full URL to the record edit page with the query var
+     * @param string the private ID value
      */
-    return self::apply_filters('record_edit_url', self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID );
+    return self::apply_filters('record_edit_url', self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID, $PID );
   }
 
   /**
