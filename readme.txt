@@ -267,6 +267,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.1.1 =
+* fixed syntax error for sites running PHP 5.3 #1423
+* added filter for modifying the record edit URL #1426
+
 = 1.7.1 =
 * new "with selected" edit feature in admin list #1416
 * developer ads can now be disabled #1418
@@ -710,8 +714,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.1 =
-Version 1.7.1 is a minor feature upgrade for all users
+= 1.7.1.1 =
+Version 1.7.1 is a bugfix upgrade for all users running PHP 5.3
 
 == Plugin Support ==
 
