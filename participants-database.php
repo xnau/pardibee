@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.1
+ * Version: 1.7.1.1
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -1575,6 +1575,13 @@ class Participants_Db extends PDb_Base {
         case 'date_recorded':
         case 'date_updated':
         case 'last_accessed':
+          /**
+           * skip the "last_accessed" field if the record is newly created
+           */
+          if ( $column->name === 'last_accessed' && $action !== 'update' ) {
+            $new_value = false;
+            break;
+          }
           /*
            *  remove the value from the post data if it is already set in the sql
            */
@@ -3108,7 +3115,12 @@ class Participants_Db extends PDb_Base {
      * @version 1.6.3
      * @filter pdb-record_edit_page
      */
-    return self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID;
+    /**
+     * @since 1.7.1.1
+     * @filter pdb-record_edit_url
+     * @param string the full URL to the record edit page with the query var
+     */
+    return self::apply_filters('record_edit_url', self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID );
   }
 
   /**
