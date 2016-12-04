@@ -267,8 +267,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.7.1.1 =
+= 1.7.1.2 =
 * fixed syntax error for sites running PHP 5.3 #1423
+
+= 1.7.1.1 =
 * added filter for modifying the record edit URL #1426
 
 = 1.7.1 =

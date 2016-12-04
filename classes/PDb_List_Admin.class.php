@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.8
+ * @version    Release: 1.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -354,7 +354,8 @@ class PDb_List_Admin {
                                   'filter' => FILTER_VALIDATE_INT,
                                   'flags' => FILTER_REQUIRE_ARRAY,
                               )
-                          ) )['pid'] );
+                          ) ) );
+          $selected_ids = $selected_ids['pid'];
           $selected_count = count( $selected_ids );
           $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
           switch ( $selected_action ) {
