@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.1.2
+ * Version: 1.7.1.4
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -265,7 +265,7 @@ class Participants_Db extends PDb_Base {
    * @var int the number of characters to use in the private ID
    */
   public static $private_id_length = 5;
-  
+
   /**
    * @var int maximum number of emails to send per session
    * 
@@ -505,7 +505,7 @@ class Participants_Db extends PDb_Base {
   public static function check_for_shortcode()
   {
     global $post;
-    if ( is_object($post) && preg_match( '/\[pdb_/', $post->post_content ) > 0 ) {
+    if ( is_object( $post ) && preg_match( '/\[pdb_/', $post->post_content ) > 0 ) {
       do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
   }
@@ -1522,10 +1522,10 @@ class Participants_Db extends PDb_Base {
         break;
 
       case 'skip':
-        // do nothing, this record won't be saved because there is a duplicate error
+      // do nothing, this record won't be saved because there is a duplicate error
     }
-    
-    
+
+
 
     /*
      * determine the set of columns to process
@@ -1571,7 +1571,7 @@ class Participants_Db extends PDb_Base {
         case 'id':
           $new_value = $participant_id;
           break;
-        
+
         case 'date_recorded':
         case 'date_updated':
         case 'last_accessed':
@@ -1595,17 +1595,17 @@ class Participants_Db extends PDb_Base {
            * 
            * if the localized timestamp date strings can't be parsed normally, we use the saved value if available
            */
-          if ( ! PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
+          if ( !PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
             $new_value = '';
             $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-            $timestamp = PDb_Date_Parse::timestamp($post[$column->name], array('input_format' => $display_format ), __METHOD__ . ' saving timestamps');
+            $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array('input_format' => $display_format), __METHOD__ . ' saving timestamps' );
             if ( $timestamp ) {
-              $new_value = PDb_Date_Display::get_mysql_timestamp($timestamp);
+              $new_value = PDb_Date_Display::get_mysql_timestamp( $timestamp );
             } else {
               // try using the saved value
-              $saved = is_numeric($participant_id) ? self::get_participant($participant_id) : false;
+              $saved = is_numeric( $participant_id ) ? self::get_participant( $participant_id ) : false;
               // use the saved value if available so we don't have to try to parse the string back to a mysql timestamp
-              if ( $saved && isset( $saved[$column->name] ) && PDb_Date_Parse::is_mysql_timestamp( $saved[$column->name] )  ) {
+              if ( $saved && isset( $saved[$column->name] ) && PDb_Date_Parse::is_mysql_timestamp( $saved[$column->name] ) ) {
                 $new_value = $saved[$column->name];
               }
             }
@@ -1769,7 +1769,6 @@ class Participants_Db extends PDb_Base {
         $column_data[] = "`" . $column->name . "` = " . ( $new_value === null ? "NULL" : "%s" );
       }
     } // columns
-    
     // if the validation object exists and there are errors, stop here
     if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
 
@@ -1841,7 +1840,7 @@ class Participants_Db extends PDb_Base {
     if ( is_admin() ) {
       if ( !$currently_importing_csv && $result ) {
         self::set_admin_message( ($action == 'insert' ? self::$i18n['added'] : self::$i18n['updated'] ), 'updated' );
-      } elseif ( ! empty( $db_error_message ) ) {
+      } elseif ( !empty( $db_error_message ) ) {
         self::set_admin_message( self::db_error_message( $db_error_message ), 'record-insert error' );
       }
     }
@@ -1853,7 +1852,7 @@ class Participants_Db extends PDb_Base {
 
     return $participant_id;
   }
-  
+
   /**
    * provides a truncated database error message
    * 
@@ -1862,7 +1861,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function db_error_message( $message )
   {
-    return rtrim( stristr($message, 'on query:', true), 'on query:' );
+    return rtrim( stristr( $message, 'on query:', true ), 'on query:' );
   }
 
   /**
@@ -2852,7 +2851,7 @@ class Participants_Db extends PDb_Base {
     $column = current( $columns );
 
     foreach ( $raw_array as $key => $value ) {
-      
+
       /**
        * @version 1.7.1
        * @filter pdb-csv_export_value_raw
@@ -2860,7 +2859,7 @@ class Participants_Db extends PDb_Base {
        * @param object the field object
        * @return mixed
        */
-      $value = self::apply_filters('csv_export_value_raw', $value, $column);
+      $value = self::apply_filters( 'csv_export_value_raw', $value, $column );
 
       // process any other value types
       switch ( $column->form_element ) {
@@ -2904,7 +2903,6 @@ class Participants_Db extends PDb_Base {
           if ( is_array( maybe_unserialize( $value ) ) ) {
             $value = implode( ', ', maybe_unserialize( $value ) );
           }
-          
       }
 
       /*
@@ -3121,7 +3119,7 @@ class Participants_Db extends PDb_Base {
      * @param string the full URL to the record edit page with the query var
      * @param string the private ID value
      */
-    return self::apply_filters('record_edit_url', self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID, $PID );
+    return self::apply_filters( 'record_edit_url', self::add_uri_conjunction( self::apply_filters( 'record_edit_page', $registration_page ) ) . Participants_Db::$record_query . '=' . $PID, $PID );
   }
 
   /**
@@ -3404,9 +3402,9 @@ class Participants_Db extends PDb_Base {
     ?>
     <?php if ( $greeting && self::apply_filters( 'show_live_notifications', true ) ) : ?>
       <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
-        <?php echo wpautop( $greeting ); ?>
+      <?php echo wpautop( $greeting ); ?>
       </div>
-    <?php endif; ?>
+      <?php endif; ?>
     <div id="PDb_footer" class="pdb-footer widefat redfade postbox">
       <div class="section">
         <h4><?php echo 'Participants Database ', self::$plugin_version ?><br /><?php _e( 'WordPress Plugin', 'participants-database' ) ?></h4>
@@ -3516,7 +3514,7 @@ if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
 
 function pdb_deactivate_plugin()
 {
-    deactivate_plugins( plugin_basename( __FILE__ ) );
+  deactivate_plugins( plugin_basename( __FILE__ ) );
 }
 
 function pdb_handle_php_version_error()
