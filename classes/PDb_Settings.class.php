@@ -1339,7 +1339,7 @@ SELECT v.name, v.title
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
-      WHERE v.form_element NOT IN ("rich-text", "multi-checkbox","multi-dropdown","multi-select-other", "link", "image-upload", "file-upload", "password", "placeholder") AND v.group <> "internal"
+      WHERE v.form_element NOT IN ("rich-text", "multi-checkbox","multi-dropdown","multi-select-other", "link", "image-upload", "file-upload", "password", "placeholder", "timestamp")
 ORDER BY g.order, v.order';
 
       $columns = $wpdb->get_results( $sql, OBJECT_K );
