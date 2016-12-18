@@ -145,6 +145,7 @@ class PDb_Tag_Template {
     $fulltext = vsprintf( $pattern, $this->data );
     
 //    error_log(__METHOD__.' pattern: '.$pattern.' data: '.print_r($this->data,1));
+//    error_log(__METHOD__.' rich text? '.($this->rich_text?'yes':'no'). '   '.$fulltext);
     
     return $this->rich_text ? Participants_Db::process_rich_text( $fulltext, 'tag template' ) : $fulltext;
   }
