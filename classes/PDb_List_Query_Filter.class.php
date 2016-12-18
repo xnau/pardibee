@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( ! defined( 'ABSPATH' ) ) die;
@@ -246,6 +246,10 @@ class PDb_List_Query_Filter {
     if (method_exists($wpdb, 'esc_like')) {
       return $wpdb->esc_like($term);
      }
-     return mysql_real_escape_string(addcslashes($term, "%_"));
+     /**
+      * @since 1.7.1.3
+      *  for forward compatibility: PHP 5.5 +
+      */
+     return mysqli_real_escape_string(addcslashes($term, "%_"));
   }
 }
