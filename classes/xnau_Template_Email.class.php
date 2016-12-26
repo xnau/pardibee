@@ -121,7 +121,6 @@ class xnau_Template_Email {
    */
   protected function _mail( $recipients, $subject, $body )
   {
-
     if ( WP_DEBUG )
       error_log( __METHOD__ . '
       
