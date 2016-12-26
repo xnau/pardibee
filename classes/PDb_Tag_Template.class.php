@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -29,16 +29,23 @@ class PDb_Tag_Template {
    * @var bool rich text flag
    */
   private $rich_text = false;
+  
+  /**
+   * @var bool  if true, replacement values will not contain HTML tags
+   */
+  private $raw;
 
   /**
    * sets up the class
    * 
    * @param string $template the template containing replacement tags
    * @param array|int $data associative array of data to draw from, or an integer record ID
+   * @param bool  $raw  if true, don't use HTML tags in replacement data
    */
-  private function __construct( $template, $data )
+  private function __construct( $template, $data, $raw = false )
   {
     $this->template = $template;
+    $this->raw = $raw;
     $this->setup_data( $data );
   }
 
@@ -51,8 +58,24 @@ class PDb_Tag_Template {
    */
   public static function replaced_text( $template, $data )
   {
-    $template = new self( $template, $data );
-    return $template->_replace_tags();
+    $tag_template = new self( $template, $data );
+    return $tag_template->_replace_tags();
+  }
+
+  /**
+   * provides a tag-replaced string
+   * 
+   * @param string $template
+   * @param int|array $data
+   * @return string
+   */
+  public static function replaced_text_raw( $template, $data )
+  {
+    $tag_template = new self( $template, $data, true );
+    
+    error_log(__METHOD__.' template: '. $template );
+    
+    return $tag_template->_replace_tags();
   }
 
   /**
@@ -64,9 +87,9 @@ class PDb_Tag_Template {
    */
   public static function replaced_rich_text( $template, $data )
   {
-    $template = new self( $template, $data );
-    $template->rich_text = true;
-    return $template->_replace_tags();
+    $tag_template = new self( $template, $data );
+    $tag_template->rich_text = true;
+    return $tag_template->_replace_tags();
   }
   /**
    * supplies a class instance
@@ -165,6 +188,9 @@ class PDb_Tag_Template {
       $this->data = array();
     }
     $this->prepare_display_values();
+    
+    error_log(__METHOD__.' raw? '.($this->raw?'yes':'no'). ' data: '.print_r($this->data,1) );
+    
   }
   
   /**
@@ -183,8 +209,10 @@ class PDb_Tag_Template {
       /**
        * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
        * 
+       * @vaersion 1.7.1.4 added "raw" mode
+       * 
        */
-      if ( ! $field->is_pdb_field() ) {
+      if ( ! $field->is_pdb_field() || $this->raw ) {
         $field->html_mode(false);
       }
       $value = $field->get_value();
