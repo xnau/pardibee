@@ -73,8 +73,6 @@ class PDb_Tag_Template {
   {
     $tag_template = new self( $template, $data, true );
     
-    error_log(__METHOD__.' template: '. $template );
-    
     return $tag_template->_replace_tags();
   }
 
@@ -188,9 +186,6 @@ class PDb_Tag_Template {
       $this->data = array();
     }
     $this->prepare_display_values();
-    
-    error_log(__METHOD__.' raw? '.($this->raw?'yes':'no'). ' data: '.print_r($this->data,1) );
-    
   }
   
   /**
