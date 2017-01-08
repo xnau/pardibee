@@ -383,7 +383,7 @@ class PDb_Signup extends PDb_Shortcode {
    * @param string $template an optional override template to use
    * @return string
    */
-  private function get_thanks_message( $template = '' )
+  protected function get_thanks_message( $template = '' )
   {
     $data = $this->participant_values;
     $template = empty( $template ) ? $this->thanks_message : $template;
