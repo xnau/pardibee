@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -125,9 +125,24 @@ class PDb_Template_Email extends xnau_Template_Email {
      * the main script has already built an email header that consists of the From 
      * and the Content-Type lines
      */
-    return Participants_Db::apply_filters( 'template_email_header', Participants_Db::$email_headers . "\n" . 'Return-Path:' . $this->return_path() . "\n" . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
+    return Participants_Db::apply_filters( 'template_email_header', $this->base_header() . "\n" . 'Return-Path:' . $this->return_path() . "\n" . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
   }
   
+  /**
+   * supplies the base header string
+   * 
+   * @return string email header
+   */
+  protected function base_header()
+  {
+    $base_header = Participants_Db::$email_headers;
+    if ( isset( $this->email_from ) && ! empty( $this->email_from ) ) {
+     $base_header = preg_replace('/^From: .+$/m', 'From: ' . $this->email_from, $base_header );
+    }
+    return $base_header;
+  }
+
+
   /**
    * provides the return-path address
    * 
