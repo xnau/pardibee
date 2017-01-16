@@ -365,7 +365,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( $this->settings_API_status ) {
         // create the submenu page
         add_submenu_page(
-                Participants_Db::$plugin_page, $this->aux_plugin_title . ' Settings', $this->aux_plugin_title, 'manage_options', $this->settings_page, array($this, 'render_settings_parent_page')
+                Participants_Db::$plugin_page, $this->aux_plugin_title . ' Settings', $this->aux_plugin_title, Participants_Db::plugin_capability( 'plugin_admin_capability', $this->aux_plugin_name ), $this->settings_page, array($this, 'render_settings_parent_page')
         );
       }
     }
