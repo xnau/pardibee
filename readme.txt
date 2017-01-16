@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 4.7
+Tested up to: 4.7.1
 Stable tag: 1.7.1.4
 License: GPLv2
 
@@ -268,7 +268,8 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.1.5 =
-* raw text mode for Tag_Template class
+* aux plugin access level is now filterable
+* improved user feedback on admin list operations
 
 = 1.7.1.4 =
 * improved compatibility with email expansion kit
@@ -726,8 +727,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.1.1 =
-Version 1.7.1 is a bugfix upgrade for all users running PHP 5.3
+= 1.7.1.5 =
+Version 1.7.1.5 is a minor bugfix upgrade
 
 == Plugin Support ==
 
