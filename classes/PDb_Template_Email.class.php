@@ -136,7 +136,7 @@ class PDb_Template_Email extends xnau_Template_Email {
   protected function base_header()
   {
     $base_header = Participants_Db::$email_headers;
-    if ( isset( $this->email_from ) && ! empty( $this->email_from ) ) {
+    if ( isset( $this->email_from ) && strpos( $this->email_from, '<>' ) === false ) {
      $base_header = preg_replace('/^From: .+$/m', 'From: ' . $this->email_from, $base_header );
     }
     return $base_header;
