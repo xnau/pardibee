@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9
+ * @version    Release: 1.9.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -135,6 +135,7 @@ class PDb_List_Admin {
                     "singular" => __( 'Send the "resend link" email to the selected record?', 'participants-database' ),
                     "plural" => __( 'Send the "resend link" email to the selected records?', 'participants-database' ),
                 ),
+                'recipient_count_exceeds_limit' => sprintf( __( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database'), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}'),
                     )
     );
 
@@ -144,6 +145,7 @@ class PDb_List_Admin {
         'cancel' => self::$i18n['change'],
         'apply' => self::$i18n['apply'],
         'apply_confirm' => $apply_confirm_messages,
+        'send_limit' => (int) Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit ),
             )
     );
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
@@ -868,7 +870,7 @@ class PDb_List_Admin {
                       <?php
                       if (
                               current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ||
-                              current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'send_list_email' ) )
+                              current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'send_list_email' ) ) // note: this is not fully implemented
                       ) :
                         ?>
                         <span style="padding-right:20px" >
