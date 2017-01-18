@@ -9,7 +9,7 @@
  * plugins requiring a more complex settings scheme, such as multiple pages. It
  * will work well with Javascript tabs, however.
  *
- * @version 1.1
+ * @version 1.2
  *
  * @depends xnau_FormElement class
  */
@@ -362,7 +362,7 @@ class xnau_Plugin_Settings {
 
         $args = wp_parse_args( $input, array(
             'options' => false,
-            'attributes' => '',
+            'attributes' => array(),
             'value' => ''
                 ) );
 
