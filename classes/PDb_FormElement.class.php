@@ -44,6 +44,7 @@ class PDb_FormElement extends xnau_FormElement {
   public function __construct( $parameters )
   {
     $this->prefix = Participants_Db::$prefix;
+    
     parent::__construct( $parameters );
   }
 
