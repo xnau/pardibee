@@ -206,7 +206,6 @@ abstract class xnau_FormElement {
    */
   public function __construct( $parameters )
   {
-
     $this->_set_types();
 
     $defaults = array(
