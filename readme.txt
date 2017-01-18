@@ -270,6 +270,7 @@ You can define a "captcha" form element which will show a simple math question f
 = 1.7.1.5 =
 * aux plugin access level is now filterable
 * improved user feedback on admin list operations
+* fixed settings page bug in PHP 7 #1443
 
 = 1.7.1.4 =
 * improved compatibility with email expansion kit
@@ -728,7 +729,7 @@ Taking defensive precautions against other plugins in the admin:
 == Upgrade Notice ==
 
 = 1.7.1.5 =
-Version 1.7.1.5 is a minor bugfix upgrade
+Version 1.7.1.5 is a bugfix upgrade; essential to all PHP 7 users
 
 == Plugin Support ==
 
