@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.2
+ * @version    4.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -149,7 +149,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       add_action( 'init', array($this, 'load_textdomain'), 1 );
       add_action( 'init', array($this, 'initialize_updater'), 50 );
       add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
-      add_action( 'plugins_loaded', array($this, 'register_global_events'), 100 );
+      add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
 
       /**
        * include the aux plugin update class
