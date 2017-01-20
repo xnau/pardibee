@@ -978,6 +978,7 @@ class PDb_List_Admin {
                                 if ( Participants_Db::is_single_record_link( $column ) ) {
                                   $image_params['link'] = Participants_Db::single_record_url( $value['id'] );
                                 }
+                                
                                 // this is to display the image as a linked thumbnail
                                 $image = new PDb_Image( $image_params );
 
