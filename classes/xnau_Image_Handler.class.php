@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  *
  * functionality provided here:
@@ -114,11 +114,6 @@ abstract class xnau_Image_Handler {
   var $defaultclass = 'default-image';
 
   /**
-   * @var string the "rel" attribute of the image
-   */
-  var $relstring;
-
-  /**
    * determines the display mode for the returned HTML:
    *    image - shows the image (default)
    *    filename - shows the filename
@@ -143,6 +138,12 @@ abstract class xnau_Image_Handler {
    * @var string
    */
   var $module;
+  
+  /**
+   * 
+   * @var array of attributes to apply
+   */
+  var $attributes;
 
   /**
    * intializes the object with a setup array
@@ -154,6 +155,7 @@ abstract class xnau_Image_Handler {
    *                     'link' => URI for a wrapping anchor tag
    *                     'mode' => display mode: as an image or a filename or both
    *                     'module' => calling module
+   *                     'attributes' => array of html attributes to add
    */
   function __construct($config)
   {
@@ -164,7 +166,8 @@ abstract class xnau_Image_Handler {
     $this->image_file = isset($config['filename']) ? $config['filename'] : '';
     $this->link = isset($config['link']) ? $config['link'] : '';
     $this->classname = isset($config['classname']) ? $config['classname'] : 'image-field-wrap';
-    $this->relstring = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
+    $this->attributes = isset( $config['attributes'] ) && is_array( $config['attributes'] ) ? $config['attributes'] : array();
+    $this->attributes['rel'] = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
     $this->module = isset($config['module']) ? $config['module'] : '';
 
     $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
@@ -213,7 +216,7 @@ abstract class xnau_Image_Handler {
                     $this->wrap_class(), 
                     $this->link, 
                     basename($this->image_uri), 
-                    $this->relstring
+                    $this->attribute_string( $this->attributes )
             ), 
             $this->image_uri, 
             $this->image_wrap[1], 
@@ -266,6 +269,23 @@ abstract class xnau_Image_Handler {
     } else {
       $this->display_mode = 'none';
     }
+  }
+  
+  /**
+   * provides an HTML element attribute string
+   * 
+   * @param array $atts an associative array of attributes
+   * @return string
+   */
+  protected function attribute_string( $atts )
+  {
+    $attstring = '';
+    foreach ( $atts as $name => $value ) {
+      if ( is_string( $name ) && strlen( $name ) > 0 ) {
+        $attstring .= sprintf( ' %s="%s" ', $name, $value );
+      }
+    }
+    return $attstring;
   }
   
   /**
@@ -598,7 +618,7 @@ abstract class xnau_Image_Handler {
   {
 
     $this->image_wrap = array(
-        '<span class="%s">',
+        '<span class="%1$s" title="%3$s" %4$s >',
         '</span>'
     );
   }
