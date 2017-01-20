@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -141,12 +141,15 @@ class PDb_Signup extends PDb_Shortcode {
      * if no ID is set, no submission has been received
      */
     if ( $this->participant_id === false ) {
+      
+      // override read-only in signup and link recovery forms
+      add_filter( 'pdb-before_field_added_to_iterator', array($this, 'allow_readonly_fields_in_form') );
+      
       if ( filter_input( INPUT_GET, 'm' ) === 'r' || $shortcode_atts['module'] == 'retrieve' ) {
         /*
          * we're proceesing a link retrieve request
          */
         $shortcode_atts['module'] = 'retrieve';
-        add_filter( 'pdb-before_field_added_to_iterator', array($this, 'allow_readonly_fields_in_form') );
       }
       if ( $shortcode_atts['module'] == 'signup' ) {
         /*
