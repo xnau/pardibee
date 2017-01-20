@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -178,6 +178,8 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     $return = '';
+    
+//    error_log(__METHOD__.' field: '.print_r($field,1));
 
     /**
      * filter: pdb-before_display_form_element
@@ -221,6 +223,7 @@ class PDb_FormElement extends xnau_FormElement {
               'link' => $field->link,
               'module' => $field->module,
               'mode' => $display_mode,
+              'attributes' => $field->attributes,
                   ) );
 
           if ( $html ) {
@@ -644,12 +647,14 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     // default template for links
-    $linktemplate = $template === false ? '<a href="%1$s" >%2$s</a>' : $template;
+    $linktemplate = $template === false ? '<a href="%1$s" %3$s >%2$s</a>' : $template;
 
     $linktext = empty( $linktext ) ? str_replace( array('http://', 'https://'), '', $URI ) : $linktext;
+    
+    $target = isset( $field->attributes['target'] ) ? 'target="' . $field->attributes['target'] . '"' : '';
 
     //construct the link
-    return sprintf( $linktemplate, $URI, esc_html( $linktext ) );
+    return sprintf( $linktemplate, $URI, esc_html( $linktext ), $target );
   }
 
   /**
