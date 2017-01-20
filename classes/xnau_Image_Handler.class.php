@@ -157,10 +157,7 @@ abstract class xnau_Image_Handler {
    */
   function __construct($config)
   {
-
     $this->set_image_directory();
-
-    $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
 
     $this->set_default_image();
 
@@ -169,6 +166,8 @@ abstract class xnau_Image_Handler {
     $this->classname = isset($config['classname']) ? $config['classname'] : 'image-field-wrap';
     $this->relstring = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
     $this->module = isset($config['module']) ? $config['module'] : '';
+
+    $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
 
     $this->_file_setup();
 
@@ -585,8 +584,9 @@ abstract class xnau_Image_Handler {
           $wrap_tags[0],
           $wrap_tags[1],
       );
-    } else
+    } else {
       $this->_set_image_wrap();
+    }
   }
 
   /**
