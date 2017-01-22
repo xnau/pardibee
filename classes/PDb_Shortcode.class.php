@@ -1352,7 +1352,8 @@ abstract class PDb_Shortcode {
     $displayed = array();
     foreach ( $this->display_columns as $column ) {
       $field = $this->fields[$column];
-      if ( (!in_array( $field->form_element, array('hidden') ) && $field->readonly === '0') || $field->form_element === 'captcha' ) {
+      if ( ( !in_array( $field->form_element, array('hidden') ) || $field->form_element === 'captcha'  ) && ( $this->module === 'signup' || $field->readonly === '0' ) ) {
+        
         $displayed[] = $field->name;
       }
     }
