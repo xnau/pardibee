@@ -143,7 +143,7 @@ class PDb_Signup extends PDb_Shortcode {
     if ( $this->participant_id === false ) {
       
       // override read-only in signup and link recovery forms
-      add_filter( 'pdb-before_field_added_to_iterator', array($this, 'allow_readonly_fields_in_form') );
+      add_action( 'pdb-before_field_added_to_iterator', array($this, 'allow_readonly_fields_in_form') );
       
       if ( filter_input( INPUT_GET, 'm' ) === 'r' || $shortcode_atts['module'] == 'retrieve' ) {
         /*
