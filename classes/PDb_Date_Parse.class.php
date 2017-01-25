@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcipants_Db
  */
@@ -129,8 +129,8 @@ class PDb_Date_Parse {
     $this->context = $context;
     PDb_Date_Display::reassert_timezone();
     $this->setup_config( $config );
+    $this->setup_input_format();
     $this->setup_input( $input );
-    $this->setup_strict_dates();
   }
 
   /**
@@ -175,14 +175,12 @@ class PDb_Date_Parse {
     /*
      * now go through a series of possible methods
      */
-    if ($this->strict) {
-      $this->intl_parse();
-      if ( $this->timestamp_not_found() ) {
-        $this->datetime_parse();
-      }
-      if ( $this->timestamp_not_found() && function_exists( 'strptime' ) ) {
-        $this->strptime_parse();
-      }
+    $this->intl_parse();
+    if ( $this->timestamp_not_found() ) {
+      $this->datetime_parse();
+    }
+    if ( $this->timestamp_not_found() && function_exists( 'strptime' ) ) {
+      $this->strptime_parse();
     }
     if ( $this->timestamp_not_found() ) {
       $this->strtotime_parse();
@@ -312,9 +310,7 @@ class PDb_Date_Parse {
    */
   private function setup_input_format()
   {
-    if ( is_null( $this->input_format ) ) {
-      $this->input_format = Participants_Db::$plugin_options['input_date_format'];
-    }
+    $this->input_format =  $this->strict ? Participants_Db::$plugin_options['input_date_format'] : get_option('date_format');
   }
   
   /**
@@ -353,9 +349,6 @@ class PDb_Date_Parse {
         case 'european_order':
         case 'zero_time':
           $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : false );
-          break;
-        case 'input_format':
-          $this->{$name} = isset( $config[$name] ) ? $config[$name] : $this->input_format;
           break;
       }
     }
