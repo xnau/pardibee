@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -508,7 +508,7 @@ class PDb_Template {
     $this->set_edit_page();
     $this->set_detail_page();
     $this->module = $this->shortcode_object->module;
-    $this->id = $this->values['id'];
+    $this->id = isset( $this->values['id'] ) ? $this->values['id'] : '';
     $this->edit_link = $this->cat_url_var( $this->edit_page, Participants_Db::$record_query, $this->values['private_id'] );
     $this->detail_link = $this->cat_url_var( $this->detail_page, Participants_Db::$single_query, $this->id );
     $this->fields = new stdClass();
