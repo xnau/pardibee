@@ -4,7 +4,7 @@ Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 4.7.1
-Stable tag: 1.7.1.6
+Stable tag: 1.7.1.7
 License: GPLv2
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -167,6 +167,10 @@ This form appears on the page where you have placed the `[pdb_record]` shortcode
 
 An individual record can be edited on the frontend of your website by someone who has the private link to that record. The purpose here is to let people maintain their own records. It's also possible to put things like survey questions in the form so you can get feedback from people. You have complete control over what fields appear on this form. Fields can be designated as showing up on the signup form, on the frontend user's form, and on the backend admin form.
 
+= How do I delete all the records but leave everything else in place? =
+
+The best way to do this is to perform a "truncate" on the table. You'll need to get direct access to the database to do this, usually using phpMyAdmin, which is typically found in your hosting control panel. Open the database and find the main participants database table...usually called "wp_participants_database". Perform a truncate on that table only. The truncate command is found by selecting the table, then under the "operations" tab in the lower right. 
+
 = What if I just want them to sign up and fill out all their info at that point? =
 
 OK, just assign all the fields you want them to fill out to the signup form (this is done in the "manage fields" page). That form can be as big as you want. Then, remove the private link from the email they get when they sign up.
@@ -266,6 +270,10 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.1.8 =
+* date parsing now uses global date format #1448
+* fixed bug with blank CSV exports on some installations #1449
 
 = 1.7.1.7 =
 * fixed bug where readonly fields were not saved in the signup form
@@ -735,8 +743,10 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.1.7 =
-Version 1.7.1.7 is a minor bugfix upgrade for users with readonly fields in the signup form
+= 1.7.1.8 =
+Version 1.7.1.8 is a minor bugfix upgrade
+* fixes an issue with european-style dates not getting parsed correctly
+* fixed issue with some installs exporting blank CSVs
 
 == Plugin Support ==
 
