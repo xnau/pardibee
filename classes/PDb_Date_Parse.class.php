@@ -307,20 +307,14 @@ class PDb_Date_Parse {
   
   /**
    * sets up the input format
+   * 
+   * this will use the plugin input date format is strict dates is enabled, otherwise 
+   * it will use the global date format
+   * 
    */
   private function setup_input_format()
   {
     $this->input_format =  $this->strict ? Participants_Db::$plugin_options['input_date_format'] : get_option('date_format');
-  }
-  
-  /**
-   * sets up the strict dates mode
-   */
-  private function setup_strict_dates()
-  {
-    if ( $this->strict ) {
-      $this->setup_input_format();
-    }
   }
   
   /**
