@@ -195,7 +195,7 @@ class PDb_List_Admin {
      * save the query in a transient so it can be used by the export CSV functionality
      */
     if ( self::user_can_export_csv() ) {
-      set_transient( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID, self::$list_query, 3600 * 24 );
+      Participants_Db::$session->set( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID, self::$list_query );
     }
 
     // get the $wpdb object
@@ -253,6 +253,7 @@ class PDb_List_Admin {
   public static function user_can_export_csv()
   {
     $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'editor' : 'admin';
+    
     return Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' );
   }
 
