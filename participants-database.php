@@ -2517,7 +2517,7 @@ class Participants_Db extends PDb_Base {
               $data['titles'] = $title_row;
 
             global $current_user;
-            $query = get_transient( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID );
+            $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID );
 
             if ( $query ) {
               $query = str_replace( '*', ' ' . trim( $import_columns, ',' ) . ' ', $query );
