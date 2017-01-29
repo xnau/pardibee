@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.1
+ * @version    Release: 1.9.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1229,8 +1229,7 @@ class PDb_List_Admin {
    */
   public static function save_filter( $value )
   {
-
-    set_transient( self::$filter_transient, $value );
+    Participants_Db::$session->set( self::$filter_transient, $value );
   }
 
   /**
@@ -1244,8 +1243,7 @@ class PDb_List_Admin {
    */
   public static function get_filter()
   {
-
-    $filter = get_transient( self::$filter_transient );
+    $filter = Participants_Db::$session->getArray( self::$filter_transient );
 
     return $filter ? $filter : self::$default_filter;
   }
@@ -1319,12 +1317,12 @@ class PDb_List_Admin {
   {
 
     $settings = array();
-    $saved_settings = get_transient( $setting_name );
+    $saved_settings = Participants_Db::$session->getArray( $setting_name );
     if ( is_array( $saved_settings ) ) {
       $settings = $saved_settings;
     }
     $settings[$name] = $value;
-    set_transient( $setting_name, $settings );
+    Participants_Db::$session->set( $setting_name, $settings );
   }
 
   /**
@@ -1337,8 +1335,7 @@ class PDb_List_Admin {
    */
   public static function get_user_setting( $name, $setting, $setting_name )
   {
-
-    if ( $settings = get_transient( $setting_name ) ) {
+    if ( $settings = Participants_Db::$session->getArray( $setting_name ) ) {
       $setting = isset( $settings[$name] ) ? $settings[$name] : $setting;
     }
     return $setting;
