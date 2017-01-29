@@ -1297,10 +1297,11 @@ class PDb_Base {
    */
   public static function get_key()
   {
-    if ( !$key = get_transient( Participants_Db::$prefix . 'captcha_key' ) ) {
-      set_transient( Participants_Db::$prefix . 'captcha_key', self::generate_key(), (60 * 60 * 24 ) );
+    if ( ! $key = Participants_Db::$session->get( PDb_CAPTCHA::captcha_key) ) {
+      $key = self::generate_key();
+      Participants_Db::$session->set( PDb_CAPTCHA::captcha_key, $key );
     }
-    $key = get_transient( Participants_Db::$prefix . 'captcha_key' );
+    //$key = Participants_Db::$session->get( PDb_CAPTCHA::captcha_key);
     //error_log(__METHOD__.' get new key: '.$key);
     return $key;
   }

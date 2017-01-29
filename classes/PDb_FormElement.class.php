@@ -297,7 +297,7 @@ class PDb_FormElement extends xnau_FormElement {
           }
 
           if ( empty( $linkdata[1] ) ) {
-            $linkdata[1] = preg_replace( '#(https?://)#', '', $linkdata[0] );
+            $linkdata[1] = strlen( $field->default ) > 0 ? $field->default : preg_replace( '#(https?://)#', '', $linkdata[0] );
           }
 
           if ( $html )

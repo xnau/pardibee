@@ -21,6 +21,11 @@ class PDb_CAPTCHA {
    */
   static $key_life = DAY_IN_SECONDS;
   /**
+   * @var string name of the key session value
+   */
+  const captcha_key = 'captcha_key';
+
+  /**
    * @var string name of the element
    */
   var $name;
@@ -240,10 +245,12 @@ class PDb_CAPTCHA {
    * @return null
    */
   public static function get_key() {
-    if (!$key = get_transient(Participants_Db::$prefix . 'captcha_key')) {
-      set_transient(Participants_Db::$prefix . 'captcha_key', self::generate_key(), self::$key_life);
+    if (! $key = Participants_Db::$session->get(self::captcha_key) ) {
+      $key = self::generate_key();
+      Participants_Db::$session->set(self::captcha_key, $key);
     }
-    $key = get_transient(Participants_Db::$prefix . 'captcha_key');
+    //$key = get_transient(Participants_Db::$prefix . 'captcha_key');
+    //$key = Participants_Db::$session->get(self::captcha_key);
     //error_log(__METHOD__.' get new key: '.$key);
     return $key;
   }

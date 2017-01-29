@@ -405,7 +405,9 @@ class PDb_List_Query {
         $search_fields = array();
         foreach ( $_POST['search_field'] as $index => $value ) {
           foreach ( array('search_field', 'operator', 'value', 'logic') as $fieldname ) {
-            $this->post_input[$fieldname][$index] = filter_var( $_POST[$fieldname][$index], FILTER_SANITIZE_STRING );
+            if ( isset( $_POST[$fieldname][$index] ) ) {
+              $this->post_input[$fieldname][$index] = filter_var( $_POST[$fieldname][$index], FILTER_SANITIZE_STRING );
+            }
           }
         }
       } else {
