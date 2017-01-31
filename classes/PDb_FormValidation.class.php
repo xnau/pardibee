@@ -33,7 +33,7 @@ class PDb_FormValidation extends xnau_FormValidation {
      * get our error messages from the plugin options
      * 
      */
-    foreach (array( 'invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier' ) as $error_type) {
+    foreach ( array('invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier') as $error_type ) {
       $this->error_messages[$error_type] = Participants_Db::plugin_setting( $error_type . '_field_message' );
     }
     /*
@@ -45,6 +45,24 @@ class PDb_FormValidation extends xnau_FormValidation {
     $this->error_messages = Participants_Db::apply_filters( 'validation_error_messages', $this->error_messages );
 
     $this->error_style = Participants_Db::plugin_setting( 'field_error_style' );
+  }
+
+  /**
+   * provides an array of validation methods
+   * 
+   * the "regex/match" method is added as the "other" option
+   * 
+   * @return  array in the form $key => $title
+   */
+  public static function validation_methods()
+  {
+    return Participants_Db::apply_filters( 'validation_methods', array(
+                'no' => __( 'Not Required', 'participants-database' ),
+                'yes' => __( 'Required', 'participants-database' ),
+                'email-regex' => __( 'Email', 'participants-database' ),
+                'other' => __( 'regex/match', 'participants-database' ),
+                'captcha' => 'CAPTCHA',
+            ) );
   }
 
   /**
@@ -84,7 +102,7 @@ class PDb_FormValidation extends xnau_FormValidation {
     /*
      * if there is no validation method defined, exit here
      */
-    if ( ! $field->is_validated() ) {
+    if ( !$field->is_validated() ) {
       return;
     }
 
@@ -130,7 +148,7 @@ class PDb_FormValidation extends xnau_FormValidation {
            * 
            * regexes aren't checked for empty, we rely on the regex to do that
            */
-          if ( $this->is_empty( $field->value ) && ! self::is_regex( $field->validation ) ) {
+          if ( $this->is_empty( $field->value ) && !self::is_regex( $field->validation ) ) {
             $field->validation_state_is( 'empty' );
           } elseif ( $field->validation === 'yes' ) {
             $field->validation_state_is( 'valid' );
@@ -158,7 +176,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           $field->value = isset( $field->value[1] ) ? $field->value[1] : '';
 
           // grab the value and the validation key
-          list($info, $v) = (isset( $this->post_array[$field->name][1] ) ? $this->post_array[$field->name] : array( $this->post_array[$field->name][0], $field->value ));
+          list($info, $v) = (isset( $this->post_array[$field->name][1] ) ? $this->post_array[$field->name] : array($this->post_array[$field->name][0], $field->value));
           $info = json_decode( urldecode( $info ) );
 
           /**
@@ -199,7 +217,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           $field->validation_state_is( 'valid' );
         }
       } elseif ( $regex !== false && self::is_regex( $regex ) ) {
-        
+
         $test_result = preg_match( $regex, $field->value );
 
         if ( $test_result === 0 ) {
@@ -251,8 +269,8 @@ class PDb_FormValidation extends xnau_FormValidation {
     $output = '';
     $error_messages = array();
     $this->error_CSS = array();
-    
-    foreach ($this->errors as $field => $error) {
+
+    foreach ( $this->errors as $field => $error ) {
 
       if ( $field !== '' ) {
 
@@ -300,9 +318,9 @@ class PDb_FormValidation extends xnau_FormValidation {
      * @param string  $CSS    the error CSS
      * @param array   $errors the current errors array
      */
-    $error_css = Participants_Db::apply_filters('error_css', empty( $this->error_CSS ) ? '' : implode( ",\r", $this->error_CSS ) . '{ ' . $this->error_style . ' }', $this->errors );
+    $error_css = Participants_Db::apply_filters( 'error_css', empty( $this->error_CSS ) ? '' : implode( ",\r", $this->error_CSS ) . '{ ' . $this->error_style . ' }', $this->errors );
     if ( !empty( $error_css ) ) {
-      return sprintf('<style type="text/css">%s</style>', $error_css );
+      return sprintf( '<style type="text/css">%s</style>', $error_css );
     } else {
       return '';
     }
@@ -318,7 +336,7 @@ class PDb_FormValidation extends xnau_FormValidation {
   public static function xcrypt( $string, $key )
   {
 
-    for ($i = 0; $i < strlen( $string ); $i++) {
+    for ( $i = 0; $i < strlen( $string ); $i++ ) {
       $pos = $i % strlen( $key );
       $replace = ord( $string[$i] ) ^ ord( $key[$pos] );
       $string[$i] = chr( $replace );
@@ -368,7 +386,7 @@ class PDb_Validating_Field {
    */
   public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false )
   {
-    foreach (get_object_vars( $this ) as $prop => $val) {
+    foreach ( get_object_vars( $this ) as $prop => $val ) {
       $this->{$prop} = $$prop;
     }
   }
@@ -380,7 +398,7 @@ class PDb_Validating_Field {
    */
   public function is_validated()
   {
-    return ! ( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
+    return !( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
   }
 
   /**

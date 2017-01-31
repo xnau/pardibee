@@ -874,14 +874,7 @@ class PDb_Manage_Fields {
         case 'validation':
           return array(
               'type' => 'dropdown-other',
-              'options' => array(
-                  __( 'Not Required', 'participants-database' ) => 'no',
-                  __( 'Required', 'participants-database' ) => 'yes',
-                  __( 'Email', 'participants-database' ) => 'email-regex',
-                  'CAPTCHA' => 'captcha',
-                  'null_select' => false,
-              ),
-              'attributes' => array('other' => 'regex/match'),
+              'options' => array_flip( PDb_FormValidation::validation_methods() ) + array('null_select' => false ),
           );
 
         case 'group':
