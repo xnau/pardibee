@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -330,6 +330,10 @@ class PDb_Signup extends PDb_Shortcode {
       $this->submission_page = $_SERVER['REQUEST_URI'];
     }
     $this->set_form_status( $form_status );
+    
+    
+    
+    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
   }
 
   /**
@@ -371,12 +375,12 @@ class PDb_Signup extends PDb_Shortcode {
    */
   public function print_retrieve_link( $linktext = '', $open_tag = '<span class="pdb-retrieve-link">', $close_tag = '</span>' )
   {
-
-    $linktext = empty( $linktext ) ? Participants_Db::$plugin_options['retrieve_link_text'] : $linktext;
-
     if ( Participants_Db::plugin_setting_is_true( 'show_retrieve_link' ) ) {
+
+      $linktext = empty( $linktext ) ? Participants_Db::plugin_setting( 'retrieve_link_text' ) : $linktext;
+
       $retrieve_link = Participants_Db::plugin_setting( 'link_retrieval_page' ) !== 'none' ? get_permalink( Participants_Db::plugin_setting( 'link_retrieval_page' ) ) : $_SERVER['REQUEST_URI'];
-      echo $open_tag . '<a href="' . Participants_Db::add_uri_conjunction( $retrieve_link ) . 'm=r">' . Participants_Db::apply_filters( 'translate_string', $linktext ) . '</a>' . $close_tag;
+      echo $open_tag . '<a href="' . Participants_Db::add_uri_conjunction( $retrieve_link ) . 'm=r">' . $linktext . '</a>' . $close_tag;
     }
   }
 
