@@ -5,7 +5,7 @@
  * outputs a Twitter Bootstrap-compatible form
  * http://twitter.github.com/bootstrap/index.html
  * 
- * @version 0.2
+ * @version 0.3
  *
  */
 ?>
@@ -53,7 +53,7 @@
       <fieldset class="field-group field-group-submit">
         <div id="submit-button" class="controls">
           <?php $this->print_submit_button('btn btn-primary'); // you can specify a class for the button ?>
-          <span class="pdb-retrieve-link"><?php $this->print_retrieve_link(__('Forget your private link? Click here to have it emailed to you.','participants-database')); ?></span>
+          <?php $this->print_retrieve_link(); ?>
         </div>
       </fieldset>
     </div>
