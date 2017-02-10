@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -209,7 +209,7 @@ class PDb_Signup extends PDb_Shortcode {
           $signup_feedback->$prop = &$this->$prop;
         }
 
-        apply_filters( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
+        do_action( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
       }
 
       $this->_send_email();
@@ -330,10 +330,6 @@ class PDb_Signup extends PDb_Shortcode {
       $this->submission_page = $_SERVER['REQUEST_URI'];
     }
     $this->set_form_status( $form_status );
-    
-    
-    
-    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
   }
 
   /**
