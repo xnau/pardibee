@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -167,9 +167,14 @@ class PDb_List_Query {
 //    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
 
     if ( $this->requested_page() ) {
+      // we're getting a list page
       $this->_restore_query_session();
     } elseif ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' && $this->is_search_result() ) {
+      // we're showing a search result
       $this->_save_query_session();
+    } else {
+      // we're just showing the list with the shortcode parameters
+      $this->_clear_query_session();
     }
   }
 
@@ -1161,6 +1166,7 @@ class PDb_List_Query {
    */
   private function _clear_query_session()
   {
+    error_log(__METHOD__);
     Participants_Db::$session->clear( $this->query_session_name() );
   }
 
@@ -1177,6 +1183,10 @@ class PDb_List_Query {
     if ( !is_array( $data ) ) {
       return false;
     }
+    
+    error_log(__METHOD__.' data: '.print_r($data,1));
+    
+    
     $where_clauses = $data['where_clauses'];
     $sort = $data['sort'];
     $this->clause_count = $data['clause_count'];
