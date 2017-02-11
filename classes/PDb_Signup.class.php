@@ -208,7 +208,7 @@ class PDb_Signup extends PDb_Shortcode {
         foreach ( $signup_feedback_props as $prop ) {
           $signup_feedback->$prop = &$this->$prop;
         }
-        apply_filters( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
+        do_action( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
       }
 
       $this->_send_email();
