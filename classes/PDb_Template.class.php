@@ -566,6 +566,7 @@ class PDb_Template {
   {
     $this->record = new stdClass();
     $this->_setup_record_groups();
+    
     foreach ( $this->fields as $name => $field ) {
       $this->groups[$field->group]->fields[$field->order] = $name;
       $this->record->{$field->group}->fields->{$name} = clone $field;
