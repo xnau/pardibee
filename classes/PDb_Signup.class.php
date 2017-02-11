@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -208,8 +208,7 @@ class PDb_Signup extends PDb_Shortcode {
         foreach ( $signup_feedback_props as $prop ) {
           $signup_feedback->$prop = &$this->$prop;
         }
-
-        do_action( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
+        apply_filters( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
       }
 
       $this->_send_email();
