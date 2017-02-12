@@ -241,7 +241,6 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'file-upload' :
           if ( $html && $field->value !== $field->default ) {
-
             $return = '';
             if ( $field->module === 'signup' ) {
               $field->link = false;
