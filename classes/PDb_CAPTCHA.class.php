@@ -249,9 +249,6 @@ class PDb_CAPTCHA {
       $key = self::generate_key();
       Participants_Db::$session->set(self::captcha_key, $key);
     }
-    //$key = get_transient(Participants_Db::$prefix . 'captcha_key');
-    //$key = Participants_Db::$session->get(self::captcha_key);
-    //error_log(__METHOD__.' get new key: '.$key);
     return $key;
   }
   /**
