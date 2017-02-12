@@ -1166,7 +1166,6 @@ class PDb_List_Query {
    */
   private function _clear_query_session()
   {
-    error_log(__METHOD__);
     Participants_Db::$session->clear( $this->query_session_name() );
   }
 
