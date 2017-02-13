@@ -913,6 +913,7 @@ a.dragger {
 }
 .ui-dialog .ui-icon {
   vertical-align: middle;
+  text-indent: 0;
 }
 .ui-dialog .ui-icon.dashicons[class*="no"] {
   color: #D54E21;
