@@ -77,7 +77,7 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   protected function send_email()
   {
-    return $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text( $this->email_subject, $this->data ), PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) );
+    return $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text_raw( $this->email_subject, $this->data ), PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) );
   }
 
   /**
