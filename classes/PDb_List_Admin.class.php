@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.2
+ * @version    Release: 1.9.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -374,14 +374,14 @@ class PDb_List_Admin {
                * @param array $selected_ids list of ids to delete
                */
               $selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $selected_ids );
-
+              $selected_count = count( $selected_ids );
 
               if ( $selected_count > 0 ) {
+                do_action( 'pdb-list_admin_with_selected_delete', $selected_ids );
                 $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= %s';
                 $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
                 $result = $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
                 if ( $result > 0 ) {
-                  do_action( 'pdb-list_admin_with_selected_' . $selected_action, $selected_ids );
                   Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
                 }
               }
@@ -457,7 +457,7 @@ class PDb_List_Admin {
                * 
                * @param array of selected record ids
                */
-              do_action( 'pdb_admin_list_with_selected/' . $selected_action, $selected_ids );
+                do_action( 'pdb_admin_list_with_selected/' . $selected_action, $selected_ids );
               /**
                * @filter pdb-admin_list_action_feedback
                * 
