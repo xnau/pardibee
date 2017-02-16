@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/participants-database\n"
 "POT-Creation-Date: 2013-12-27 17:36:25+00:00\n"
 "PO-Revision-Date: 2014-06-01 16:06-1000\n"
-"Last-Translator: Roland Barker <webdesign@xnau.com>\n"
+"Last-Translator: Łukasz Markusik <lukasz.markusik@positive-power.pl>\n"
 "Language-Team: PiK\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
@@ -92,29 +92,29 @@ msgstr ""
 #: classes/PDb_Init.class.php:700
 #, fuzzy
 msgid "Participant Info"
-msgstr "Dodaj certyfikat"
+msgstr "Dodaj kursanta"
 
 #: classes/PDb_Init.class.php:701
 msgid "Personal Info"
-msgstr ""
+msgstr "Dane osobsite"
 
 #: classes/PDb_Init.class.php:702
 msgid "Administrative Info"
-msgstr ""
+msgstr "Dane administracyjne"
 
 #: classes/PDb_Init.class.php:703
 msgid "Record Info"
-msgstr ""
+msgstr "Dane wpisu"
 
 #: classes/PDb_List.class.php:786 templates/pdb-list-bootstrap.php:34
 #: templates/pdb-list-detailed.php:31 templates/pdb-search-default.php:22
 msgid "Please select a column to search in."
-msgstr ""
+msgstr "Wybierz columnę do przeszukania."
 
 #: classes/PDb_List.class.php:787 templates/pdb-list-bootstrap.php:35
 #: templates/pdb-list-detailed.php:32 templates/pdb-search-default.php:23
 msgid "Please type in something to search for."
-msgstr ""
+msgstr "Wpisz wartość do wyszukania."
 
 #: classes/PDb_List.class.php:795 templates/pdb-list-bootstrap.php:45
 #: templates/pdb-list-detailed.php:47 templates/pdb-search-default.php:35
@@ -129,7 +129,7 @@ msgstr "Kolejność wg"
 
 #: classes/PDb_List.class.php:881
 msgid "select"
-msgstr ""
+msgstr "wybierz"
 
 #: classes/PDb_List.class.php:952 classes/PDb_List_Admin.class.php:506
 #: classes/PDb_Settings.class.php:810 classes/PDb_Settings.class.php:836
@@ -175,7 +175,7 @@ msgstr "Szukaj"
 
 #: classes/PDb_List_Admin.class.php:199
 msgid "Record delete successful."
-msgstr ""
+msgstr "Wpis został pomyślnie usunięty."
 
 #: classes/PDb_List_Admin.class.php:360 participants-database.php:508
 msgid "Do you really want to delete the selected record?"
@@ -188,19 +188,33 @@ msgstr "Czy na pewno chcesz skasować wybrane wiersze?"
 #: classes/PDb_List_Admin.class.php:426 participants-database.php:416
 #: participants-database.php:417
 msgid "List Participants"
-msgstr "Lista certyfikatów"
+msgstr "Lista kursantów"
 
 #: classes/PDb_List_Admin.class.php:427
 #, fuzzy
 msgid "%s record found, sorted by: %s"
-msgid_plural "%s records found, sorted by: %s"
-msgstr[0] "Nie znaleziono certyfikatu %s"
-msgstr[1] "Nie znaleziono certyfikatu %s"
-msgstr[2] "Nie znaleziono certyfikatu %s"
+msgid_plural "Znaleziono %s wpisów, posortowanych po: %s"
+msgstr[0] "Nie znaleziono kursanta %s"
+msgstr[1] "Nie znaleziono kursanta %s"
+msgstr[2] "Nie znaleziono kursanta %s"
 
 #: classes/PDb_List_Admin.class.php:447
 msgid "Show only records with"
-msgstr "Pokaż tylko certyfikaty z"
+msgstr "Pokaż tylko kursantów z"
+
+#: classes/PDb_List_Admin.class.php:609
+msgctxt "joins two search terms, such as in \"Show only records with last name that is Smith\""
+msgid "that"
+msgstr "które"
+
+#: classes/PDb_List_Admin.class.php:655
+msgid "Number of filters to use: "
+msgstr "Ilość filtrów do użycia:"
+
+#: classes/PDb_List_Admin.class.php:609
+msgctxt "phrase used just before naming the action to perform on the selected items"
+msgid "With selected"
+msgstr "Akcja grupowa"
 
 #: classes/PDb_List_Admin.class.php:450
 msgid "show all"
@@ -236,7 +250,7 @@ msgstr "Pokaż %s wierszy na stronie"
 
 #: classes/PDb_List_Admin.class.php:760
 msgid "No records found"
-msgstr "Nie znaleziono żadnego certyfikatu"
+msgstr "Nie znaleziono żadnego kursanta"
 
 #: classes/PDb_List_Admin.class.php:778
 msgid "Export CSV"
@@ -252,7 +266,7 @@ msgstr "Ściągnij listę w formacie CSV"
 
 #: classes/PDb_List_Admin.class.php:794
 msgid "Include field titles"
-msgstr ""
+msgstr "Uwzględnij tytuły pól"
 
 #: classes/PDb_List_Admin.class.php:797
 msgid ""
@@ -261,7 +275,7 @@ msgid ""
 "records on all list pages. The fields included in the export are defined in "
 "the \"CSV\" column on the Manage Database Fields page."
 msgstr ""
-"Spowoduje to ściągnięcie pełnej listy certyfikatów, które spełniają twoje "
+"Spowoduje to ściągnięcie pełnej listy kursantów, które spełniają twoje "
 "kryteria wyszukiwania, w ustalonej tutaj kolejności. Eksport będzie zawierał "
 "wpisy ze wszystkich stron. Pola zawarte w eksporcie definiuje się w kolumnie "
 "\"CSV\" w na stronie zarządzania polami bazy danych."
@@ -292,23 +306,23 @@ msgstr "Formatka rejestracji"
 
 #: classes/PDb_Settings.class.php:20
 msgid "Record Form Settings"
-msgstr "Formatka certyfikatu"
+msgstr "Formatka kursanta"
 
 #: classes/PDb_Settings.class.php:21
 msgid "List Display Settings"
-msgstr ""
+msgstr "Ustawienia listowania"
 
 #: classes/PDb_Settings.class.php:22
 msgid "Resend Link Settings"
-msgstr ""
+msgstr "Ustawienia wysyłania linków"
 
 #: classes/PDb_Settings.class.php:23
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Ustawienia zaawansowane"
 
 #: classes/PDb_Settings.class.php:24
 msgid "Custom CSS"
-msgstr ""
+msgstr "Niestandardowy CSS"
 
 #: classes/PDb_Settings.class.php:28
 msgid ""
@@ -843,7 +857,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:601
 msgid "Participant Record Page"
-msgstr "Szczegółowa strona certyfikatu"
+msgstr "Szczegółowa strona kursanta"
 
 #: classes/PDb_Settings.class.php:606
 msgid ""
@@ -857,7 +871,7 @@ msgstr "Pokaż opisy grup"
 
 #: classes/PDb_Settings.class.php:619
 msgid "Show the group description under each group title in the record form."
-msgstr "Pokazuj opis grupy pod każdą nazwą grupy na formularzu certyfikatu. "
+msgstr "Pokazuj opis grupy pod każdą nazwą grupy na formularzu kursanta. "
 
 #: classes/PDb_Settings.class.php:627
 msgid "Save Changes Label"
@@ -865,7 +879,7 @@ msgstr "Etykieta zapisu zmian"
 
 #: classes/PDb_Settings.class.php:632
 msgid "label for the save changes button on the record form"
-msgstr "etykieta przycisku zapisywania zmian na stronie certyfikatu"
+msgstr "etykieta przycisku zapisywania zmian na stronie kursanta"
 
 #: classes/PDb_Settings.class.php:633
 msgid "Save Your Changes"
@@ -886,7 +900,7 @@ msgstr "Zapisz"
 
 #: classes/PDb_Settings.class.php:651
 msgid "Record Updated Message"
-msgstr "Komunikat o aktualizacji certyfikatu"
+msgstr "Komunikat o aktualizacji kursanta"
 
 #: classes/PDb_Settings.class.php:655
 msgid "the message shown when a record form has been successfully submitted"
@@ -912,7 +926,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:673
 msgid "Send Record Form Update Notification Email"
-msgstr "Wyślij potwierdzenie aktualizacji certyfikatu emailem"
+msgstr "Wyślij potwierdzenie aktualizacji kursanta emailem"
 
 #: classes/PDb_Settings.class.php:678
 msgid ""
@@ -923,7 +937,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:686
 msgid "Record Update Email Subject"
-msgstr "Temat informacji o aktualizacji certyfikatu"
+msgstr "Temat informacji o aktualizacji kursanta"
 
 #: classes/PDb_Settings.class.php:690
 msgid ""
@@ -933,12 +947,12 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:691
 msgid "A record has just been updated on %s"
-msgstr "Zaktualizowano certyfikat na %s"
+msgstr "Zaktualizowano kursanta na %s"
 
 #: classes/PDb_Settings.class.php:697
 #, fuzzy
 msgid "Record Update Notification Email"
-msgstr "Powiadomienie o aktualizacji certyfikatu"
+msgstr "Powiadomienie o aktualizacji kursanta"
 
 #. translators: [date] and [admin_record_link] must not be translated, they
 #. must be used literally. The rest of the words enclosed in brackets can be
@@ -981,7 +995,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:740
 msgid "Single Record Page"
-msgstr "Szczegółowa strona certyfikatu"
+msgstr "Szczegółowa strona kursanta"
 
 #: classes/PDb_Settings.class.php:746
 msgid ""
@@ -1150,7 +1164,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:964
 msgid "Record Edit Access Level"
-msgstr "Poziom dostępu do edycji certyfikatów"
+msgstr "Poziom dostępu do edycji kursantów"
 
 #: classes/PDb_Settings.class.php:968
 msgid "sets the user access level for adding, editing and listing records."
@@ -1270,13 +1284,15 @@ msgstr[1] ""
 
 #: classes/xnau_CSV_Import.class.php:77
 msgid "Zero records imported"
-msgstr ""
+msgstr "Nie zaimportowano żadnych wpisów"
 
 #: classes/xnau_CSV_Import.class.php:82
 msgid ""
 "There was an error uploading the file. This could be a problem with "
 "permissions on the uploads directory."
 msgstr ""
+"Wystąpił problem przy wgrywaniu pliku. To może być problem z "
+"uprawnieniami w folderze 'uploads'."
 
 #: classes/xnau_CSV_Import.class.php:82 classes/xnau_CSV_Import.class.php:88
 #, fuzzy
@@ -1288,6 +1304,8 @@ msgid ""
 "Target directory does not exist and could not be created. Try creating it "
 "manually."
 msgstr ""
+"Podane miejsce zapisu nie istnieje i nie mogło zostać utworzone. Spróbuj je utworzyć "
+"ręcznie."
 
 #. translators: the %s will be the name of the file
 #: classes/xnau_CSV_Import.class.php:142
@@ -1315,7 +1333,7 @@ msgstr "Liczba wartości nie jest zgodna z ilością kolumn"
 
 #: classes/xnau_CSV_Import.class.php:298
 msgid "New columns imported from the CSV file."
-msgstr ""
+msgstr "Nowe kolumny zostały zaimportowane z pliku CSV."
 
 #: classes/xnau_FormElement.class.php:239
 msgctxt "indicates a write-in choice"
@@ -1329,11 +1347,11 @@ msgstr "Tekst odnośnika"
 
 #: edit_participant.php:19
 msgid "Add New Participant Record"
-msgstr "Dodaj nowy certyfikat"
+msgstr "Dodaj nowego kursanta"
 
 #: edit_participant.php:24
 msgid "Edit Existing Participant Record"
-msgstr "Edytuj istniejący certyfikat"
+msgstr "Edytuj istniejącego kursanta"
 
 #: edit_participant.php:83
 msgctxt "abbreviation for \"identification\""
@@ -1343,19 +1361,19 @@ msgstr "ID"
 #: edit_participant.php:83
 msgctxt "indicates a new record is being entered"
 msgid "(new record)"
-msgstr "(nowy certyfikat)"
+msgstr "(nowy kursant)"
 
 #: edit_participant.php:105
 msgid "hidden"
-msgstr ""
+msgstr "ukryty"
 
 #: edit_participant.php:108
 msgid "read only"
-msgstr ""
+msgstr "tylko do odczytu"
 
 #: edit_participant.php:223
 msgid "Save the Record"
-msgstr "Zapisz certyfikat"
+msgstr "Zapisz kursanta"
 
 #: edit_participant.php:236
 msgid ""
@@ -1364,12 +1382,12 @@ msgid ""
 "save record and then start a new one"
 msgstr ""
 "<strong>Submit:</strong> zapisz i powróć do listy<br><strong>Apply:</strong> "
-"zapisz i kontynuuj pracę z tym samym certyfikatem<br><strong>Next:</strong> "
-"zapisz i przejdź do następnego certyfikatu"
+"zapisz i kontynuuj pracę z tym samym kursantem<br><strong>Next:</strong> "
+"zapisz i przejdź do następnego kursanta"
 
 #: edit_participant.php:238
 msgid "<strong>Previous:</strong> save and move to previous record"
-msgstr ""
+msgstr "<strong>Poprzedni:</strong> zapisz i przejdź do poprzedniego wpisu"
 
 #. translators: these strings are used in logic matching, please test after
 #. translating in case special characters cause problems
@@ -1475,7 +1493,7 @@ msgstr ""
 #: manage_fields.php:31
 msgctxt "column name"
 msgid "Read Only"
-msgstr ""
+msgstr "Tylko do odczytu"
 
 #: manage_fields.php:32
 msgctxt "column name"
@@ -1587,9 +1605,9 @@ msgid ""
 "the form is presented. You will be able to see your changes to how the "
 "fields are set up by checking this page."
 msgstr ""
-"Baza danych przechowuje informacje o certyfikatach. Na tej stronie możesz "
+"Baza danych przechowuje informacje o kursantach. Na tej stronie możesz "
 "określić jakie informacje będą przechowywane i w jaki sposób będą one "
-"prezentowane. Spójrz na stronę \"Dodaj certyfikat\" aby zobaczyć jak wygląda "
+"prezentowane. Spójrz na stronę \"Dodaj kursanta\" aby zobaczyć jak wygląda "
 "formularz. Możesz sprawdzić na tej stronie skutki wprowadzanych przez siebie "
 "zmian w ustawieniach pól."
 
@@ -1603,11 +1621,11 @@ msgid ""
 "editing the record."
 msgstr ""
 "<strong>Ważne:</strong> Niektóre zmiany mogą wpłynąć na zawartość już "
-"przechowywanych certyfikatów. Najlepiej jest ustawić wszystko zanim "
-"rozpoczniesz wprowadzanie certyfikatów ale istnieje możliwość zmiany pól "
-"bazy danych w dowolnym momencie. Wszystkie certyfikaty wprowadzone przed "
-"zdefiniowaniem nowego pola będą miały to pole puste. Oczywiście możesz je "
-"uzupełnić edytując poszczególne certyfikaty."
+"przechowywanych kursantów. Najlepiej jest ustawić wszystko zanim "
+"rozpoczniesz wprowadzanie kursantów ale istnieje możliwość zmiany pól "
+"bazy danych w dowolnym momencie. Wszystcy kursanci wprowadzeni przed "
+"zdefiniowaniem nowego pola będą mieli to pole puste. Oczywiście możesz je "
+"uzupełnić edytując poszczególnych kursantów."
 
 #: manage_fields_help.php:9
 msgid "Delete"
@@ -1619,8 +1637,8 @@ msgid ""
 "this data field, that information will not be deleted from the database, but "
 "you will no longer be able to display or edit it."
 msgstr ""
-"Kliknij na czerwony \"X\" aby skasować pole. Jeśli w bazie danych są jakieś "
-"certyfikaty z danymi w tym polu, to te dane nie zostaną wykasowane z bazy "
+"Kliknij na czerwony \"X\" aby skasować pole. Jeśli w bazie danych są jacyś "
+"kursanci z danymi w tym polu, to te dane nie zostaną wykasowane z bazy "
 "danych ale nie będziesz miał już do nich dostępu."
 
 #: manage_fields_help.php:11
@@ -1782,9 +1800,9 @@ msgid ""
 "if you have multiple items with the same number (other than 0), only the "
 "last one with the number will appear."
 msgstr ""
-"To zmienia jedynie stronę zawierającą listę certyfikatów. Ponieważ byłoby "
+"To zmienia jedynie stronę zawierającą listę kursantów. Ponieważ byłoby "
 "bardzo niepraktyczne wypisywać na takiej stronie wszystkie informacje na "
-"temat każdego certyfikatu, możesz określić które pola mają być na tej liście "
+"temat każdego kursanta, możesz określić które pola mają być na tej liście "
 "widoczne. \"0\" oznacza aby informacji nie wyświetlać, natomiast wyższy "
 "numer opisuje, w której kolumnie wypisać zawartość pola. Do ciebie należy "
 "zapewnienie, aby numery kolumn miały sens, jeśli wstawisz kilka pól do tej "
@@ -1800,7 +1818,7 @@ msgid ""
 "column determines whether the column will be shown and in what order."
 msgstr ""
 "To służy do określenia czy dana kolumna zostanie wyświetlona i w jakiej "
-"kolejności, gdy użyjesz skrótu [pdb_list] do wyświetlenia listy certyfikatów."
+"kolejności, gdy użyjesz skrótu [pdb_list] do wyświetlenia listy kursantów."
 
 #: manage_fields_help.php:33
 msgid "Switches"
@@ -1813,7 +1831,7 @@ msgid ""
 "value in \"Column\" to be seen at all."
 msgstr ""
 "<strong>Sortowalne</strong> oznacza, że lista wyświetlona po wybraniu opcji "
-"\"Lista certyfikatów\" może być sortowana wg tego pola. Oczywiście numer "
+"\"Lista kursantów\" może być sortowana wg tego pola. Oczywiście numer "
 "kolumny musi być niezerowy, aby pole w ogóle było widoczne na liście."
 
 #: manage_fields_help.php:35
@@ -1825,9 +1843,9 @@ msgid ""
 "<p>"
 msgstr ""
 "<strong>CSV</strong> oznacza, że pole będzie importowane bądź esportowane w "
-"plikach CSV. Jeśli używasz plików CSV do importowania certyfikatów, "
+"plikach CSV. Jeśli używasz plików CSV do importowania kursantów, "
 "powinieneś ustawić te przełączniki na podstawie tego, które pola zamierzasz "
-"importować. Kiedy eksportujesz certyfikaty ten przełącznik określa,czy pole "
+"importować. Kiedy eksportujesz kursantów ten przełącznik określa,czy pole "
 "będzie eksportowane.<p>"
 
 #: manage_fields_help.php:36
@@ -1840,11 +1858,11 @@ msgid ""
 "the series, the next blank record will have this city pre-filled."
 msgstr ""
 "<strong>Trwałość</strong> to wygodna cecha przydatna wtedy gdy wprowadzasz "
-"certyfikaty w panelu administratora. Jeśli ją zaznaczysz spowoduje to, że "
+"kursantów w panelu administratora. Jeśli ją zaznaczysz spowoduje to, że "
 "wpisana wartość przeniesie się do nowego formularza. Np. jeśli cała grupa "
-"wprowadzanych certyfikatów dotyczy tego samego miasta ustaw pole \"miasto\" "
+"wprowadzanych kursantów dotyczy tego samego miasta ustaw pole \"miasto\" "
 "jako trwałe a nazwę miasta będziesz musiał wpisać tylko raz, kolejne "
-"formularze dla nowych certyfikatów będą miały już to pole wstępnie "
+"formularze dla nowych kursantów będą miały już to pole wstępnie "
 "wypełnione."
 
 #: manage_fields_help.php:37
@@ -1868,11 +1886,11 @@ msgstr ""
 #. Plugin Name of the plugin/theme
 #: participants-database.php:338
 msgid "Participants Database"
-msgstr "Baza certyfikatów"
+msgstr "Baza kursantów"
 
 #: participants-database.php:425 participants-database.php:426
 msgid "Add Participant"
-msgstr "Dodaj certyfikat"
+msgstr "Dodaj kursanta"
 
 #: participants-database.php:443 participants-database.php:444
 #: upload_csv.php:8
@@ -1885,7 +1903,7 @@ msgstr ""
 
 #: participants-database.php:470 participants-database.php:471
 msgid "Edit Record"
-msgstr "Edytuj certyfikat"
+msgstr "Edytuj kursanta"
 
 #. translators: don't translate the words in brackets {}
 #: participants-database.php:520
@@ -1894,7 +1912,7 @@ msgstr ""
 
 #: participants-database.php:521
 msgid "Delete the \"{name}\" {thing}?"
-msgstr ""
+msgstr "Usunąć \"{name}\" {thing}?"
 
 #: participants-database.php:2383
 msgid ""
@@ -1905,16 +1923,17 @@ msgstr ""
 
 #: participants-database.php:2399 participants-database.php:2427
 msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
-msgstr ""
+msgstr "Dla \"%s\", możesz tylko wgrać pliki graficzne typu JPEG, GIF or PNG."
 
 #: participants-database.php:2401
 msgid "The file selected for \"%s\" must be one of these types: %s. "
-msgstr ""
+msgstr "Plik wybrany dla \"%s\" musi mieć jedno z tych rozszerzeń: %s. "
 
 #: participants-database.php:2433
 msgid ""
 "The file you tried to upload is too large. The file must be smaller than %sK."
 msgstr ""
+"Plik, który próbowałeś wgrać jest za duży. Plik musi być mniejszy niż %sK."
 
 #: participants-database.php:2440
 msgid "The file could not be saved."
@@ -1934,15 +1953,15 @@ msgstr ""
 
 #: participants-database.php:2817 templates/pdb-retrieve-default.php:45
 msgid "Submit"
-msgstr ""
+msgstr "Zapisz i wróć do listy"
 
 #: participants-database.php:2818
 msgid "Apply"
-msgstr ""
+msgstr "Zapisz"
 
 #: participants-database.php:2821
 msgid "The record has been updated."
-msgstr ""
+msgstr "Wpis został zmieniony"
 
 #: participants-database.php:2822
 #, fuzzy
@@ -1958,7 +1977,7 @@ msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr ""
 "Pomaga organizacjom zarządzać woluntariuszami, członkami, uczestnikami i "
-"certyfikatami."
+"kursantami."
 
 #: participants-database.php:2944
 msgid "Developed by"
@@ -2003,7 +2022,7 @@ msgid ""
 "must match exactly the columns in the database. Currently, the CSV import "
 "columns are as follows:"
 msgstr ""
-"Aby poprawnie zaimportować certyfikaty, poszczególne kolumny w twoim arkuszu "
+"Aby poprawnie zaimportować kursantów, poszczególne kolumny w twoim arkuszu "
 "muszą dokładnie pasować do kolumn w bazie danych. Kolumny importowanego "
 "pliku CSV powinny być następujące:"
 
@@ -2040,7 +2059,7 @@ msgstr ""
 
 #: upload_csv.php:52
 msgid "Export the .csv file"
-msgstr ""
+msgstr "Wyeksportuj plik .csv"
 
 #: upload_csv.php:54
 msgid ""
@@ -2057,7 +2076,7 @@ msgstr ""
 
 #: upload_csv.php:59
 msgid "Upload the .csv file"
-msgstr ""
+msgstr "Wgraj plik .csv"
 
 #: upload_csv.php:62
 msgid ""
@@ -2107,7 +2126,7 @@ msgstr "http://xnau.com/wordpress-plugins/participants-database"
 msgid "Plugin for managing a database of participants, members or volunteers"
 msgstr ""
 "Wtyczka do zarządzania bazą uczestników, członków woluntariuszy lub "
-"certyfikatów"
+"kursantów"
 
 #. Author of the plugin/theme
 msgid "Roland Barker"
@@ -2122,7 +2141,7 @@ msgstr "http://xnau.com"
 #~ msgstr "Strona"
 
 #~ msgid "List Participants: %s record found, sorted by:"
-#~ msgstr "Lista certyfikatów: %s wierszy, kolejność wg"
+#~ msgstr "Lista kursantów: %s wierszy, kolejność wg"
 
 #~ msgid "Edit"
 #~ msgstr "Edycja"
@@ -2138,7 +2157,7 @@ msgstr "http://xnau.com"
 #~ "the existing record, don&#39;t create a new one."
 #~ msgstr ""
 #~ "jeśli ktoś rejestruje adres email, który już istnieje, wtedy zaktualizuj "
-#~ "istniejący certyfikat zamiast dodawania nowego."
+#~ "istniejącego kursanta zamiast dodawania nowego."
 
 #~ msgid "Show the Private ID in List"
 #~ msgstr "Pokazuj prywatny ID na liście"
@@ -2191,7 +2210,7 @@ msgstr "http://xnau.com"
 #~ "select the field on which to put a link to the single record. Leave blank "
 #~ "or set to \"none\" for no link."
 #~ msgstr ""
-#~ "wybierz pole, które ma być odnośnikiem do strony certyfikatu. Pozostaw "
+#~ "wybierz pole, które ma być odnośnikiem do strony kursanta. Pozostaw "
 #~ "puste lub wpisz \"none\" jeśli nie chcesz odnośnika."
 
 #~ msgid ""
@@ -2234,7 +2253,7 @@ msgstr "http://xnau.com"
 #~ "HTML, placeholders:[first_name],[last_name],[email],[record_link]."
 #~ msgstr ""
 #~ "Treść wiadomości, którą otrzyma osoba, która się zarejestrowała. "
-#~ "Odpowiedź powinna zawierać odnośnik ([record_link]) do certyfikatu aby "
+#~ "Odpowiedź powinna zawierać odnośnik ([record_link]) do kursanta aby "
 #~ "osoba rejestrująca mogła go uzupełnić. Może zawierać zawerać także HTML "
 #~ "oraz pola: [imie],[nazwisko],[email],[record_link]. "
 
@@ -2271,16 +2290,16 @@ msgstr "http://xnau.com"
 #~ "the page where your participant record ([pdb_record] shortcode) is "
 #~ "displayed"
 #~ msgstr ""
-#~ "strona, na ktorej znajdują się szczegóły certyfikatu (skrót [pdb_record])"
+#~ "strona, na ktorej znajdują się szczegóły kursanta (skrót [pdb_record])"
 
 #~ msgid "Your information has been updated:"
 #~ msgstr "Twoje dane zostały zaktualizowane"
 
 #~ msgid "Send an email notification that a record has been updated."
-#~ msgstr "Wyślij informację o tym, że certyfikat został zaktualizowany"
+#~ msgstr "Wyślij informację o tym, że kursant został zaktualizowany"
 
 #~ msgid "subject line for the record update notification email"
-#~ msgstr "temat informacji o aktualizacji certyfikatu"
+#~ msgstr "temat informacji o aktualizacji kursanta"
 
 #~ msgid ""
 #~ "Body of the the email sent when a user updates their record. Any field "
@@ -2290,18 +2309,18 @@ msgstr "http://xnau.com"
 #~ "page.)  Also available is [date] which will show the date and time of the "
 #~ "update"
 #~ msgstr ""
-#~ "Treść emaila z informacją o aktualizacji certyfikatu. Dowolne pola "
-#~ "certyfikatu mogą znaleźć się treści poprzez użycie kodów [nazwa_pola], "
+#~ "Treść emaila z informacją o aktualizacji kursanta. Dowolne pola "
+#~ "kursanta mogą znaleźć się treści poprzez użycie kodów [nazwa_pola], "
 #~ "np.: [imie], [nazwisko], [email] itp. (nazwy pól znajdują się w kolumnie "
 #~ "\"nazwa\" na stronie zarządzania polami bazy danych). Dodatkowo dostępny "
-#~ "jest kod [date], który zawiera datę i czas aktualizacji certyfikatu."
+#~ "jest kod [date], który zawiera datę i czas aktualizacji kursanta."
 
 #~ msgid ""
 #~ "<p>The following record was updated on [date]:</p><ul><li>Name: "
 #~ "[first_name] [last_name]</li><li>Address: [address]</li><li>[city], "
 #~ "[state], [country]</li><li>Phone: [phone]</li><li>Email: [email]</li></ul>"
 #~ msgstr ""
-#~ "<p>Dnia [date] został zaktualizowany następujący certyfikat:</"
+#~ "<p>Dnia [date] został zaktualizowany następujący kursant:</"
 #~ "p><ul><li>Nazwa: [first_name] [last_name]</li><li>Adres: [address]</"
 #~ "li><li>[city], [state], [country]</li><li>Tel: [phone]</li><li>Email: "
 #~ "[email]</li></ul>"
@@ -2334,7 +2353,7 @@ msgstr "http://xnau.com"
 #~ "skrót [Pdb_signup]."
 
 #~ msgid "There is no record for this ID."
-#~ msgstr "Nie ma certyfikatu z takim identyfikatorem."
+#~ msgstr "Nie ma kursanta z takim identyfikatorem."
 
 #~ msgctxt "message to show if the plugin cannot find the template"
 #~ msgid "Missing Template"
@@ -2350,10 +2369,10 @@ msgstr "http://xnau.com"
 #~ "Obrazek, który przysłałeś jest za duży. Plik musi być mniejszy niż %sK."
 
 #~ msgid "record imported"
-#~ msgstr "zaimportowanych certyfikatów."
+#~ msgstr "zaimportowanych kursantów."
 
 #~ msgid "Zero records imported."
-#~ msgstr "Nie zaimportowano żadnych certyfikatów."
+#~ msgstr "Nie zaimportowano żadnych kursantów."
 
 #~ msgid "There was an error uploading the file."
 #~ msgstr "W trakcie przesyłania pliku pojawił się błąd"
@@ -2369,12 +2388,12 @@ msgstr "http://xnau.com"
 #~ "data from the imported record. Blank or missing fields in such an "
 #~ "imported record will not overwrite existing data."
 #~ msgstr ""
-#~ "<strong>Uwaga:</strong> Importowane certyfikaty są sprawdzane z "
+#~ "<strong>Uwaga:</strong> Importowani kursanci są sprawdzani z "
 #~ "istniejącymi pod kątem unikatowości pola email (tylko wtedy, gdy "
 #~ "zaznaczyłeś opcję \"blokuj duplikaty adresów email\" w ustawieniach bazy "
-#~ "danych). Jeśli zostanie zaimportowany certyfikat z takim samym emailem, "
-#~ "jak jeden z certyfikatow w bazie danych, to zostanie zaktualizowana "
-#~ "zawartość istniejącego certyfikatu. Puste lub brakujące pola w "
+#~ "danych). Jeśli zostanie zaimportowany kursant z takim samym emailem, "
+#~ "jak jeden z kursantow w bazie danych, to zostanie zaktualizowana "
+#~ "zawartość istniejącego kursanta. Puste lub brakujące pola w "
 #~ "importowanym pliku nie spowodują skasowania danych w odpowiadających im "
 #~ "polach w bazie danych."
 

@@ -94,11 +94,13 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * German: Martin Sauter
 
+* Hebrew: Gila Baam
+
 * Italian: Michele Balderi
 
 * Norwegian: Anders Kleppe
 
-* Polish: Piotr Kubala
+* Polish: Łukasz Markusik
 
 * Portuguese: Alan Tygel
 
