@@ -524,10 +524,10 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _upload( $type )
   {
-
+    $field_def = Participants_Db::$fields[$this->name];
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
-    if ( !empty( $this->value ) ) {
+    if ( $this->value !== $field_def->default ) {
 
       $this->_addline( self::get_field_value_display( $this ) );
     }
@@ -544,9 +544,9 @@ class PDb_FormElement extends xnau_FormElement {
     if ( !isset( $this->attributes['readonly'] ) ) {
 
       $this->_addline( $this->_input_tag( 'file' ) );
-
+      
       // add the delete checkbox if there is a file defined
-      if ( !empty( $this->value ) )
+      if ( $this->value !== $field_def->default && $this->module !== 'signup' )
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile" ' . $this->_attributes('no validate') . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
     }
 
