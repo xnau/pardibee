@@ -38,6 +38,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $this->match_field = filter_input(INPUT_POST, 'match_field', FILTER_SANITIZE_STRING);
     $this->match_preference = filter_input(INPUT_POST, 'match_preference', FILTER_SANITIZE_NUMBER_INT);
     
+    Participants_Db::$session->set( 'form_status', 'normal' ); // CSV import is a normal status
+    
     parent::__construct( $file_field_name );
     
   }
