@@ -142,6 +142,16 @@ class PDb_FormValidation extends xnau_FormValidation {
             $field->validation_state_is( 'valid' );
           }
           break;
+        case 'checkbox':
+          $field_def = Participants_Db::$fields[$field->name];
+          $values = maybe_unserialize( $field_def->values );
+          $checked_value = current( $values );
+          if ( $field->validation === 'yes' && $field->value !== $checked_value ) {
+            $field->validation_state_is( 'empty' );
+          } elseif ( $field->validation === 'yes' ) {
+            $field->validation_state_is( 'valid' );
+          }
+          break;
         default:
           /*
            * check all the validated fields for empty first
