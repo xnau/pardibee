@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.1.12
+ * Version: 1.7.2
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -1424,7 +1424,7 @@ class Participants_Db extends PDb_Base {
       $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field );
       // if true, the incoming record matches an existing record
       /**
-       * @version 1.6
+       * @since 1.6
        * the $record_match status variable is made available to a filter so a custom 
        * record matching method can be implemented
        * 
@@ -1448,6 +1448,17 @@ class Participants_Db extends PDb_Base {
             // get the first one
             if ( is_array( $participant_id ) )
               $participant_id = current( $participant_id );
+            
+            /**
+             * @since 1.7.2
+             * @filter pdb-process_form_matched_record
+             * 
+             * @param int id of the matched record
+             * @param array the submitted post data
+             * 
+             * @eturn int the id of the matched record
+             */
+            $participant_id = self::apply_filters('process_form_matched_record', $participant_id, $post );
 
             // set the update mode
             $action = 'update';
