@@ -92,6 +92,8 @@ class PDb_Field_Item extends PDb_Template_Item {
     $this->assign_props( $field, __CLASS__ );
 
     $this->record_id = $id;
+    
+    $this->set_link_field_value();
 
     //error_log(__METHOD__.' instantiated:'.print_r($this,1));
   }
@@ -210,6 +212,20 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function html_mode( $mode )
   {
     $this->html_output = (bool) $mode;
+  }
+  
+  /**
+   * assigns the values for the special case of the "link" field 
+   */
+  private function set_link_field_value()
+  {
+    if ( $this->form_element === 'link' ) {
+      $parts = (array) maybe_unserialize( $this->value );
+      if ( filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
+        $this->link = $parts[0];
+      }
+      //$this->value = isset( $parts[1] ) ? $parts[1] : '';
+    }
   }
 
   /**
@@ -335,7 +351,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function _print()
   {
-
     PDb_FormElement::print_element( array(
         'type' => $this->form_element,
         'value' => $this->value,
