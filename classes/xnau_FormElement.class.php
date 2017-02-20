@@ -919,6 +919,12 @@ abstract class xnau_FormElement {
     }
     
     $parts = maybe_unserialize( $this->value );
+    
+    if ( ! is_array( $parts ) ) {
+      $linktext_placeholder = $this->value;
+      $this->value = array('');
+      $parts = array('');
+    }
 
     // if the value contains only a URL, the linktext and URL are made the same
     // if the value is not a URL, only the linked text is used
@@ -927,7 +933,7 @@ abstract class xnau_FormElement {
       if ( !filter_var( $parts[0], FILTER_VALIDATE_URL ) )
         $parts[0] = '';
     }
-
+    
     list( $url, $title ) = $parts;
 
     $this->_addline( '<div class="link-element">' );
