@@ -2094,15 +2094,15 @@ class Participants_Db extends PDb_Base {
 
     $pid = '';
 
-    $chr_source = array(
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+    $chr_source = str_split('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
     for ( $i = 0; $i < self::$private_id_length; $i++ ) {
 
       $pid .= $chr_source[array_rand( $chr_source )];
     }
 
+    $pid = self::apply_filters( 'generate_private_id', $pid );
+    
     // if by chance we've generated a string that has been used before, generate another
     return self::_id_exists( $pid, 'private_id' ) ? self::generate_pid() : $pid;
   }
