@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -969,6 +969,27 @@ class PDb_List_Query {
             break;
         }
       }
+      
+      /*
+       * change the operator if whole word match is enabled
+       */
+      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) ) {
+        
+        switch ( $operator ) {
+          
+          case 'LIKE':
+          case '~':
+            
+            $operator = 'WORD';
+            break;
+          
+          case 'NOT LIKE':
+          case '!':
+            
+            $operator = 'NOT WORD';
+            break;
+        }
+      }
 
       $delimiter = array('"', '"');
 
@@ -976,7 +997,7 @@ class PDb_List_Query {
        * set the operator and delimiters
        */
       switch ( $operator ) {
-
+        
         case '~':
         case 'LIKE':
 
@@ -989,6 +1010,20 @@ class PDb_List_Query {
 
           $operator = 'NOT LIKE';
           $delimiter = $filter->wildcard_present() ? array('"', '"') : array('"%', '%"');
+          break;
+
+        case 'WORD':
+
+          $operator = 'REGEXP';
+          $delimiter = array('"[[:<:]]', '[[:>:]]"');
+          $filter->is_regex = true;
+          break;
+
+        case 'NOT WORD':
+
+          $operator = 'NOT REGEXP';
+          $delimiter = array('"[[:<:]]', '[[:>:]]"');
+          $filter->is_regex = true;
           break;
 
         case 'ne':
@@ -1053,6 +1088,7 @@ class PDb_List_Query {
           // invalid operator: don't add the statement
           return false;
       }
+      
       $statement = sprintf( 'p.%s %s %s%s%s', $column, $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
     }
     if ( $statement ) {
@@ -1293,6 +1329,12 @@ class PDb_List_Query {
       case 'lte':
       case '<=':
         $operator = '<=';
+        break;
+      case 'WORD':
+        $operator = 'WORD';
+        break;
+      case 'NOT WORD':
+        $operator = 'NOT WORD';
         break;
       default:
         $operator = '=';
