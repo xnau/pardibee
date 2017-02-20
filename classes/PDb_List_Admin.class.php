@@ -365,6 +365,7 @@ class PDb_List_Admin {
           $selected_ids = $selected_ids['pid'];
           $selected_count = count( $selected_ids );
           $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
+          self::set_admin_user_setting('with_selected', $selected_action );
           switch ( $selected_action ) {
 
             case 'delete':
@@ -865,6 +866,7 @@ class PDb_List_Admin {
                         __( 'approve', 'participants-database' ) => 'approve',
                         __( 'unapprove', 'participants-database' ) => 'unapprove',
                     ) );
+            $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
             ?>
             <table class="form-table"><tbody><tr><td>
                     <fieldset class="widefat inline-controls">
@@ -880,7 +882,7 @@ class PDb_List_Admin {
                           $element = array(
                               'type' => 'dropdown',
                               'name' => 'with_selected',
-                              'value' => filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ),
+                              'value' => $with_selected_value,
                               'options' => $with_selected_selections,
                           );
                           PDb_FormElement::print_element( $element );
@@ -1289,7 +1291,6 @@ class PDb_List_Admin {
    */
   public static function get_admin_user_setting( $name, $setting = false )
   {
-
     return self::get_user_setting( $name, $setting, self::$user_settings );
   }
 
@@ -1302,7 +1303,6 @@ class PDb_List_Admin {
    */
   public static function set_admin_user_setting( $name, $value )
   {
-
     self::set_user_setting( $name, $value, self::$user_settings );
   }
 
