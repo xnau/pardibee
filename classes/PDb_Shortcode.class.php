@@ -527,7 +527,6 @@ abstract class PDb_Shortcode {
    */
   public function the_field()
   {
-
     // the first time through, use current()
     if ( $this->current_field_pointer == 1 ) {
       if ( is_object( $this->group ) )
