@@ -178,20 +178,20 @@ class PDb_List extends PDb_Shortcode {
       $this->suppress = filter_var( $this->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
     }
 
+    global $wp_query;
+
+    $ajax_params = array(
+        'ajaxurl' => admin_url( 'admin-ajax.php' ),
+        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
+        'postID' => ( isset( $wp_query->post ) ? $wp_query->post->ID : '' ),
+        'prefix' => Participants_Db::$prefix,
+        'loading_indicator' => Participants_Db::get_loading_spinner()
+    );
+
+    wp_localize_script( Participants_Db::$prefix . 'list-filter', 'PDb_ajax', $ajax_params );
+
     // enqueue the filter/sort AJAX script
     if ( Participants_Db::plugin_setting_is_true( 'ajax_search' ) ) {
-
-      global $wp_query;
-
-      $ajax_params = array(
-          'ajaxurl' => admin_url( 'admin-ajax.php' ),
-          'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
-          'postID' => ( isset( $wp_query->post ) ? $wp_query->post->ID : '' ),
-          'prefix' => Participants_Db::$prefix,
-          'loading_indicator' => Participants_Db::get_loading_spinner()
-      );
-
-      wp_localize_script( Participants_Db::$prefix . 'list-filter', 'PDb_ajax', $ajax_params );
 
       wp_enqueue_script( Participants_Db::$prefix . 'list-filter' );
     }
