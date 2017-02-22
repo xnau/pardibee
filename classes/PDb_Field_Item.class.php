@@ -82,6 +82,8 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function __construct( $field, $id = false )
   {
+    
+    //error_log(__METHOD__.' with: '.print_r($field,1));
 
     if ( is_string( $field ) ) {
       $field = (object) array('name' => $field);
@@ -221,7 +223,7 @@ class PDb_Field_Item extends PDb_Template_Item {
   {
     if ( $this->form_element === 'link' ) {
       $parts = (array) maybe_unserialize( $this->value );
-      if ( filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
+      if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
         $this->link = $parts[0];
       }
       //$this->value = isset( $parts[1] ) ? $parts[1] : '';
