@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Image_Handler class
  */
@@ -22,13 +22,14 @@ class PDb_Image extends xnau_Image_Handler {
    * intializes the object with a setup array
    *
    * @param array $config an array of optional parameters:
-   *                     'filename' => an image path, filename or URL
-   *                     'classname' => a classname for the image
-   *                     'wrap_tags' => array of open and close HTML
-   *                     'link' URI for a wrapping anchor tag
-   *                     'relstring' => string to show in the "rel" attribute of the image
-   *                     'mode' => display mode: as an image or a filename or both
-   *                     'module' => calling module
+   *                      'filename' => an image path, filename or URL
+   *                      'classname' => a classname for the image
+   *                      'wrap_tags' => array of open and close HTML
+   *                      'link' URI for a wrapping anchor tag
+   *                      'relstring' => string to show in the "rel" attribute of the image
+   *                      'mode' => display mode: as an image or a filename or both
+   *                      'module' => calling module
+   *                      'attributes' => HTML element attributes 
    */
   function __construct($config)
   {
@@ -39,6 +40,67 @@ class PDb_Image extends xnau_Image_Handler {
     if (empty($this->link)) {
       $this->link = $this->image_defined && Participants_Db::plugin_setting_is_true('image_link') ? $this->image_uri : '';
     }
+  }
+
+  /**
+   * supplies the HTML for the image
+   * 
+   * @return string HTML
+   */
+  public function get_image_html()
+  {
+
+    switch ($this->display_mode) {
+      case 'both':
+        $pattern = $this->image_wrap[0] . '<img src="%5$s" %7$s /><span class="image-filename">%6$s</span>' . $this->image_wrap[1];
+        break;
+      case 'filename':
+        $pattern = $this->image_wrap[0] . '%6$s' . $this->image_wrap[1];
+        break;
+      case 'none':
+        $pattern = '';
+        break;
+      case 'image':
+      default:
+        $pattern = $this->image_wrap[0] . '<img src="%5$s" %7$s />' . $this->image_wrap[1];
+    }
+
+    /**
+     * @filter pdb-image_wrap_template
+     * @param string  the template with sprintf-style numeric placeholders
+     * @param object  this instance
+     * 
+     * @return string the template
+     */
+    return sprintf( Participants_Db::apply_filters( 'image_wrap_template', $pattern, $this ), 
+                    $this->wrap_class(), 
+                    $this->link, 
+                    basename($this->image_uri), 
+                    $this->attribute_string( $this->attributes ),
+                    $this->image_uri,
+                    $this->image_file,
+                    $this->attribute_string( $this->image_attributes )
+          );
+  }
+  
+  
+  
+  /**
+   * sets up the attributes property
+   * 
+   * @param array $attributes from the config array
+   */
+  protected function set_attributes( $attributes )
+  {
+    if ( is_array( $attributes ) ) :
+    foreach ( $attributes as $key => $value ) {
+      if ( in_array( $key, Participants_Db::apply_filters('image_class_image_attributes', array( 'height', 'width' ) ) ) ) {
+        $this->image_attributes[$key] = $value;
+      } else {
+        $this->attributes[$key] = $value;
+      }
+    }
+    endif;
   }
 
   /**
