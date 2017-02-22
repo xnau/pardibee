@@ -394,6 +394,7 @@ class PDb_Signup extends PDb_Shortcode {
     if ( isset( $data['private_id'] ) ) {
       $data['record_link'] = Participants_Db::get_record_link( $data['private_id'] );
     }
+    
     $this->output = empty( $this->participant_values ) ? '' : PDb_Tag_Template::replaced_rich_text( $template, $data );
     unset( $_POST );
     return $this->output;
