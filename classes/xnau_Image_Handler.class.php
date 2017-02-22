@@ -140,10 +140,18 @@ abstract class xnau_Image_Handler {
   var $module;
   
   /**
-   * 
    * @var array of attributes to apply
+   * 
+   * these are applied to the image wrapper
    */
-  var $attributes;
+  var $attributes = array();
+  
+  /**
+   * @var array of attributes to apply
+   * 
+   * these are appplied to the image tag
+   */
+  var $image_attributes = array();
 
   /**
    * intializes the object with a setup array
@@ -166,7 +174,7 @@ abstract class xnau_Image_Handler {
     $this->image_file = isset($config['filename']) ? $config['filename'] : '';
     $this->link = isset($config['link']) ? $config['link'] : '';
     $this->classname = isset($config['classname']) ? $config['classname'] : 'image-field-wrap';
-    $this->attributes = isset( $config['attributes'] ) && is_array( $config['attributes'] ) ? $config['attributes'] : array();
+    $this->set_attributes( $config['attributes'] );
     $this->attributes['rel'] = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
     $this->module = isset($config['module']) ? $config['module'] : '';
 
@@ -231,7 +239,6 @@ abstract class xnau_Image_Handler {
    */
   public function get_image_file()
   {
-
     return $this->image_file;
   }
 
@@ -269,6 +276,24 @@ abstract class xnau_Image_Handler {
     } else {
       $this->display_mode = 'none';
     }
+  }
+  
+  /**
+   * sets up the attributes property
+   * 
+   * @param array $attributes from the config array
+   */
+  protected function set_attributes( $attributes )
+  {
+    if ( is_array( $attributes ) ) :
+    foreach ( $attributes as $key => $value ) {
+      if ( in_array( $key, array( 'height', 'width' )  ) ) {
+        $this->image_attributes[$key] = $value;
+      } else {
+        $this->attributes[$key] = $value;
+      }
+    }
+    endif;
   }
   
   /**
