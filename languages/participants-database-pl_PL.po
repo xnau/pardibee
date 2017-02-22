@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/participants-database\n"
 "POT-Creation-Date: 2013-12-27 17:36:25+00:00\n"
 "PO-Revision-Date: 2014-06-01 16:06-1000\n"
-"Last-Translator: Łukasz Markusik <lukasz.markusik@positive-power.pl>\n"
+"Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: PiK\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
@@ -192,11 +192,11 @@ msgstr "Lista kursantów"
 
 #: classes/PDb_List_Admin.class.php:427
 #, fuzzy
-msgid "%s record found, sorted by: %s"
-msgid_plural "Znaleziono %s wpisów, posortowanych po: %s"
-msgstr[0] "Nie znaleziono kursanta %s"
-msgstr[1] "Nie znaleziono kursanta %s"
-msgstr[2] "Nie znaleziono kursanta %s"
+msgid "%s record found, sorted by: %s."
+msgid_plural "%s records found, sorted by: %s."
+msgstr[0] "Znaleziono %s kursanta, sortowanie wg:  %s"
+msgstr[1] "Znaleziono %s kursantów, sortowanie wg:  %s"
+msgstr[2] "Znaleziono %s kursantów, sortowanie wg:  %s"
 
 #: classes/PDb_List_Admin.class.php:447
 msgid "Show only records with"
