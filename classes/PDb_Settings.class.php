@@ -1247,6 +1247,21 @@ class PDb_Settings extends xnau_Plugin_Settings {
             ),
         )
     );
+    $this->plugin_settings[] = array(
+        'name' => 'custom_admin_css',
+        'title' => __( 'Custom Admin Stylesheet', 'participants-database' ),
+        'group' => 'pdb-css',
+        'options' => array(
+            'type' => 'text-area',
+            'value' => '',
+            'help_text' => __( 'use this to add or modify CSS rules that are applied on all plugin pages in the WordPress backend.', 'participants-database' ),
+            'attributes' => array(
+                'style' => "height:20em;width:90%;max-width:400px;",
+                'class' => 'code',
+                'lang' => 'CSS'
+            ),
+        )
+    );
   }
 
   private function _get_pagelist( $with_none = false, $with_blank = false )
