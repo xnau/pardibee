@@ -1218,10 +1218,6 @@ class PDb_List_Query {
     if ( !is_array( $data ) ) {
       return false;
     }
-    
-    error_log(__METHOD__.' data: '.print_r($data,1));
-    
-    
     $where_clauses = $data['where_clauses'];
     $sort = $data['sort'];
     $this->clause_count = $data['clause_count'];
