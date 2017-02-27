@@ -88,7 +88,6 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_element( $parameters )
   {
-
     $Element = new PDb_FormElement( $parameters );
 
     return $Element->_output();
