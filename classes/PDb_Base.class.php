@@ -778,6 +778,17 @@ class PDb_Base {
   }
 
   /**
+   * writes the admin side custom CSS setting to the custom css file
+   * 
+   * @return bool true if the css file can be written to
+   * 
+   */
+  protected static function _set_admin_custom_css()
+  {
+    return self::_setup_custom_css( Participants_Db::$plugin_path . '/css/PDb-admin-custom.css', 'custom_admin_css' );
+  }
+
+  /**
    * writes the custom CSS setting to the custom css file
    * 
    * @return bool true if the css file can be written to
@@ -785,16 +796,29 @@ class PDb_Base {
    */
   protected static function _set_custom_css()
   {
-    $css_file = Participants_Db::$plugin_path . '/css/PDb-custom.css';
-    if ( !is_writable( $css_file ) ) {
+    return self::_setup_custom_css( Participants_Db::$plugin_path . '/css/PDb-custom.css', 'custom_css' );
+  }
+
+  /**
+   * writes the custom CSS setting to the custom css file
+   * 
+   * @param string  $stylesheet_path absolute path to the stylesheet
+   * @param string  $setting_name name of the setting to use for the stylesheet content
+   * 
+   * @return bool true if the css file can be written to
+   * 
+   */
+  protected static function _setup_custom_css( $stylesheet_path, $setting )
+  {
+    if ( !is_writable( $stylesheet_path ) ) {
       return false;
     }
-    $file_contents = file_get_contents( $css_file );
-    $custom_css = Participants_Db::plugin_setting( 'custom_css' );
+    $file_contents = file_get_contents( $stylesheet_path );
+    $custom_css = Participants_Db::plugin_setting( $setting );
     if ( $file_contents === $custom_css ) {
       // error_log(__METHOD__.' CSS settings are unchanged; do nothing');
     } else {
-      file_put_contents( $css_file, $custom_css );
+      file_put_contents( $stylesheet_path, $custom_css );
     }
     return true;
   }
