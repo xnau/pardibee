@@ -137,6 +137,7 @@ class PDb_Signup extends PDb_Shortcode {
     } elseif ( $shortcode_atts['module'] === 'signup' && $this->participant_id === false ) {
       $this->_clear_multipage_session();
     }
+    
     /*
      * if no ID is set, no submission has been received
      */
@@ -395,8 +396,11 @@ class PDb_Signup extends PDb_Shortcode {
       $data['record_link'] = Participants_Db::get_record_link( $data['private_id'] );
     }
     
-    $this->output = empty( $this->participant_values ) ? '' : PDb_Tag_Template::replaced_rich_text( $template, $data );
-    unset( $_POST );
+    $this->output = '';
+    if ( ! empty( $this->participant_values ) ) {
+      $this->output = PDb_Tag_Template::replaced_rich_text( $template, $data );
+      unset( $_POST );
+    }
     return $this->output;
   }
 
