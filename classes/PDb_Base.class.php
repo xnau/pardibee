@@ -983,11 +983,20 @@ class PDb_Base {
    * sets an admin area error message
    * 
    * @param string $message the message to be dislayed
-   * @param string $type the type of message: 'updated' (yellow) or 'error' (red)
+   * @param string $type the type of message:
+   *    error - red
+   *    warning - yellow
+   *    success - green
+   *    info - blue
    */
   public static function set_admin_message( $message, $type = 'error' )
   {
     if ( is_admin() ) {
+      switch ($type) {
+        // this is to translate some legacy values
+        case 'updated':
+          $type = 'success';
+      }
       Participants_Db::$session->set( 'admin_message', array($message, $type) );
       Participants_Db::$admin_message = $message;
       Participants_Db::$admin_message_type = $type;
@@ -1002,7 +1011,7 @@ class PDb_Base {
     if ( Participants_Db::$session->get( 'admin_message' ) ) {
       list(Participants_Db::$admin_message, Participants_Db::$admin_message_type) = Participants_Db::$session->get( 'admin_message' );
       if ( !empty( Participants_Db::$admin_message ) ) {
-        printf( '<div class="%s"><p>%s</p></div>', Participants_Db::$admin_message_type, Participants_Db::$admin_message );
+        printf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', Participants_Db::$admin_message_type, Participants_Db::$admin_message );
         Participants_Db::$session->clear( 'admin_message' );
       }
     }
