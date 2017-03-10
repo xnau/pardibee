@@ -107,6 +107,11 @@ class PDb_List_Admin {
   protected static $inparens = false;
 
   /**
+   * @param array $errors array of error messages
+   */
+  public static $error_messages = array();
+  
+  /**
    * initializes and outputs the list for the backend
    */
   public static function initialize()
@@ -150,6 +155,10 @@ class PDb_List_Admin {
     );
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
+    
+    // set up email error feedback
+    add_action( 'wp_mail_failed', array( __CLASS__, 'get_email_error_feedback' ) );
+    add_action( 'pdb-list_admin_head', array( __CLASS__, 'show_email_error_feedback' ) );
 
     $current_user = wp_get_current_user();
 
@@ -703,6 +712,7 @@ class PDb_List_Admin {
     ?>
     <div id="pdb-list-admin"   class="wrap participants_db">
       <?php Participants_Db::admin_page_heading() ?>
+      <?php do_action('pdb-list_admin_head'); ?>
       <div id="poststuff">
         <div class="post-body">
           <h2><?php _e( 'List Participants', 'participants-database' ) ?></h2>
@@ -1370,6 +1380,48 @@ class PDb_List_Admin {
         'pdb-list_admin_with_selected_send_signup_email' => $prefix . __( 'send signup email', 'participants-database' ),
     );
     return $list + $admin_list_events;
+  }
+  
+  
+  
+  
+  /**
+   * registers error messages
+   * 
+   * called on wp_mail_failed hook
+   * 
+   * @param WP_Error
+   * 
+   */
+  public static function get_email_error_feedback( WP_Error $errors )
+  {
+    //error_log(__METHOD__.' error: '.print_r($errors,1));
+    $pattern = '
+<p>%s</p>
+';
+    foreach( $errors->get_error_messages() as $code => $message ) {
+      self::$error_messages[$code] = sprintf( $pattern, esc_html( $message ) );
+    }
+  }
+  
+  
+  /**
+   * registers error messages
+   * 
+   * called on wp_mail_failed hook
+   * 
+   */
+  public static function show_email_error_feedback()
+  {
+    $error_class = 'notice-error';
+    $wrap = '
+<div class="notice %s is-dismissible ">
+	%s
+</div>
+';
+    if ( !empty(self::$error_messages)) {
+      printf( $wrap, $error_class, implode( "\r", self::$error_messages ) );
+    }
   }
 
   /**
