@@ -316,7 +316,7 @@ class Participants_Db extends PDb_Base {
     add_action( 'admin_init', array(__CLASS__, 'reg_page_setting_fix') );
     add_action( 'wp_enqueue_scripts', array(__CLASS__, 'register_assets'), 1 );
 
-    add_action( 'wp_loaded', array(__CLASS__, 'process_page_request') ); // wp
+    add_action( 'wp_loaded', array(__CLASS__, 'process_page_request') ); // wp_loaded
     //
     add_action( 'admin_enqueue_scripts', array(__CLASS__, 'admin_includes') );
     // this is only fired if there is a plugin shortcode on the page
@@ -544,7 +544,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, false );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ) );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array(), '1.4' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '1.4' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       wp_enqueue_script( self::$prefix . 'jq-placeholder' );
