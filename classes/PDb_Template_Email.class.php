@@ -19,7 +19,7 @@ if ( !defined( 'ABSPATH' ) )
   exit;
 
 class PDb_Template_Email extends xnau_Template_Email {
-
+  
   /**
    * sets up the class
    * 

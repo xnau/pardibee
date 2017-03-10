@@ -277,8 +277,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.7.3 =
+= 1.7.2.1 =
 * new admin custom CSS setting
+* various bug fixes
 
 = 1.7.2 =
 * added new list filter operator for matching whole words #1474
@@ -780,8 +781,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.1.12 =
-Version 1.7.1.12 is a minor bugfix upgrade
+= 1.7.2.1 =
+Version 1.7.2.1 is a minor bugfix upgrade
 
 == Plugin Support ==
 
