@@ -880,8 +880,6 @@ abstract class PDb_Shortcode {
    */
   protected function _set_field_value( $field )
   {
-
-
     /*
      * get the value from the record; if it is empty, use the default value if the 
      * "persistent" flag is set.
@@ -889,8 +887,10 @@ abstract class PDb_Shortcode {
     $record_value = isset( $this->participant_values[$field->name] ) ? $this->participant_values[$field->name] : '';
     $value = $record_value;
     $default_value = $this->_empty( $field->default ) ? '' : $field->default;
+    
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
+      
       $value = isset( $_POST[$field->name] ) ? $this->_esc_submitted_value( $_POST[$field->name] ) : $value;
     }
 
