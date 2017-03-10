@@ -423,18 +423,20 @@ class PDb_List_Admin {
               foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
                 $data = Participants_Db::get_participant( $id );
                 $recipient = $data[Participants_Db::plugin_setting( 'primary_email_address_field' )];
-                if ( filter_var( $recipient, FILTER_VALIDATE_EMAIL ) !== false ) {
-                  PDb_Template_Email::send( array(
-                      'to' => $recipient,
-                      'subject' => Participants_Db::apply_filters( 'receipt_email_subject', Participants_Db::plugin_setting( 'signup_receipt_email_subject' ), $data ),
-                      'template' => Participants_Db::apply_filters( 'receipt_email_template', Participants_Db::plugin_setting( 'signup_receipt_email_body' ), $data ),
-                      'context' => __METHOD__,
-                          ), $data );
-                  $send_count++;
-                  do_action( 'pdb-list_admin_with_selected_send_signup_email', $data );
-                }
+                
+                $success = PDb_Template_Email::send( array(
+                    'to' => $recipient,
+                    'subject' => Participants_Db::apply_filters( 'receipt_email_subject', Participants_Db::plugin_setting( 'signup_receipt_email_subject' ), $data ),
+                    'template' => Participants_Db::apply_filters( 'receipt_email_template', Participants_Db::plugin_setting( 'signup_receipt_email_body' ), $data ),
+                    'context' => __METHOD__,
+                        ), $data );
+                $send_count += (int) $success;
+                do_action( 'pdb-list_admin_with_selected_send_signup_email', $data );
+                
               }
-              Participants_Db::set_admin_message( sprintf( _x( '%d emails were sent.', 'number of emails sent', 'participants-database' ), $send_count ), 'updated' );
+              $message_type = $send_count > 0 ? 'success' : 'warning';
+              $message = sprintf( _nx( '%d email was sent.', '%d emails were sent.', $send_count, 'number of emails sent', 'participants-database' ), $send_count );
+              Participants_Db::set_admin_message( $message, $message_type );
               break;
 
             case 'send_resend_link_email':
@@ -444,18 +446,19 @@ class PDb_List_Admin {
               foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
                 $data = Participants_Db::get_participant( $id );
                 $recipient = $data[Participants_Db::plugin_setting( 'primary_email_address_field' )];
-                if ( filter_var( $recipient, FILTER_VALIDATE_EMAIL ) !== false ) {
-                  PDb_Template_Email::send( array(
-                      'to' => $recipient,
-                      'subject' => Participants_Db::plugin_setting( 'retrieve_link_email_subject' ),
-                      'template' => Participants_Db::plugin_setting( 'retrieve_link_email_body' ),
-                      'context' => __METHOD__,
-                          ), $data );
-                  $send_count++;
-                  do_action( 'pdb-list_admin_with_selected_send_resend_link', $data );
-                }
+                
+                $success = PDb_Template_Email::send( array(
+                    'to' => $recipient,
+                    'subject' => Participants_Db::plugin_setting( 'retrieve_link_email_subject' ),
+                    'template' => Participants_Db::plugin_setting( 'retrieve_link_email_body' ),
+                    'context' => __METHOD__,
+                        ), $data );
+                $send_count += (int) $success;
+                do_action( 'pdb-list_admin_with_selected_send_resend_link', $data );
               }
-              Participants_Db::set_admin_message( sprintf( _x( '%d emails were sent.', 'number of emails sent', 'participants-database' ), $send_count ), 'updated' );
+              $message_type = $send_count > 0 ? 'success' : 'warning';
+              $message = sprintf( _nx( '%d email was sent.', '%d emails were sent.', $send_count, 'number of emails sent', 'participants-database' ), $send_count );
+              Participants_Db::set_admin_message( $message, $message_type );
               break;
 
             default:
