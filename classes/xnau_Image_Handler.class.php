@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  *
  * functionality provided here:
@@ -156,7 +156,7 @@ abstract class xnau_Image_Handler {
   /**
    * intializes the object with a setup array
    *
-   * @param array $config
+   * @param array $configuration
    *                     'filename' => an image path, filename or URL
    *                     'classname' => a classname for the image
    *                     'wrap_tags' => array of open and close HTML
@@ -165,24 +165,35 @@ abstract class xnau_Image_Handler {
    *                     'module' => calling module
    *                     'attributes' => array of html attributes to add
    */
-  function __construct($config)
+  function __construct($configuration)
   {
+    $config = shortcode_atts( array(
+        'filename' => '',
+        'link' => '',
+        'classname' => 'image-field-wrap',
+        'attributes' => array(),
+        'relstring' => 'lightbox',
+        'module' => '',
+        'mode' => '',
+    ), $configuration );
+    
+    
     $this->set_image_directory();
 
     $this->set_default_image();
 
-    $this->image_file = isset($config['filename']) ? $config['filename'] : '';
-    $this->link = isset($config['link']) ? $config['link'] : '';
-    $this->classname = isset($config['classname']) ? $config['classname'] : 'image-field-wrap';
+    $this->image_file = $config['filename'];
+    $this->link = $config['link'];
+    $this->classname = $config['classname'];
     $this->set_attributes( $config['attributes'] );
-    $this->attributes['rel'] = isset($config['relstring']) ? $config['relstring'] : 'lightbox';
-    $this->module = isset($config['module']) ? $config['module'] : '';
+    $this->attributes['rel'] = $config['relstring'];
+    $this->module = $config['module'];
 
-    $this->set_image_wrap(isset($config['wrap_tags']) and is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
+    $this->set_image_wrap(isset($config['wrap_tags']) && is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
 
     $this->_file_setup();
 
-    $this->set_display_mode(isset($config['mode']) ? $config['mode'] : '');
+    $this->set_display_mode( $config['mode'] );
   }
 
   /**
