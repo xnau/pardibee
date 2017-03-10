@@ -3,14 +3,14 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2017-02-27 10:51-1000\n"
+"POT-Creation-Date: 2017-03-10 08:23-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-WPHeader: participants-database.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -48,8 +48,8 @@ msgstr ""
 msgid "New columns imported from the CSV file."
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:549 classes/PDb_List_Admin.class.php:865
-#: classes/PDb_List_Admin.class.php:1367
+#: classes/PDb_FormElement.class.php:549 classes/PDb_List_Admin.class.php:878
+#: classes/PDb_List_Admin.class.php:1380
 #: classes/PDb_Manage_Fields.class.php:334
 #: classes/xnau_FormElement.class.php:1054
 msgid "delete"
@@ -185,7 +185,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: classes/PDb_List.class.php:515 classes/PDb_List_Admin.class.php:808
+#: classes/PDb_List.class.php:515 classes/PDb_List_Admin.class.php:821
 #: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:95
 #: templates/pdb-list-responsive.php:46 templates/pdb-search-default.php:63
 msgid "Sort by"
@@ -195,205 +195,207 @@ msgstr ""
 msgid "select"
 msgstr ""
 
-#: classes/PDb_List.class.php:750 classes/PDb_List_Admin.class.php:823
+#: classes/PDb_List.class.php:750 classes/PDb_List_Admin.class.php:836
 #: classes/PDb_Settings.class.php:754 classes/PDb_Settings.class.php:1146
 msgid "Ascending"
 msgstr ""
 
-#: classes/PDb_List.class.php:751 classes/PDb_List_Admin.class.php:824
+#: classes/PDb_List.class.php:751 classes/PDb_List_Admin.class.php:837
 #: classes/PDb_Settings.class.php:754 classes/PDb_Settings.class.php:1146
 msgid "Descending"
 msgstr ""
 
-#: classes/PDb_List.class.php:1291 classes/PDb_List_Admin.class.php:1383
+#: classes/PDb_List.class.php:1291 classes/PDb_List_Admin.class.php:1438
 msgctxt "submit button label"
 msgid "Delete Checked"
 msgstr ""
 
-#: classes/PDb_List.class.php:1292 classes/PDb_List_Admin.class.php:1384
+#: classes/PDb_List.class.php:1292 classes/PDb_List_Admin.class.php:1439
 msgctxt "submit button label"
 msgid "Change"
 msgstr ""
 
-#: classes/PDb_List.class.php:1293 classes/PDb_List_Admin.class.php:1385
+#: classes/PDb_List.class.php:1293 classes/PDb_List_Admin.class.php:1440
 msgctxt "submit button label"
 msgid "Sort"
 msgstr ""
 
-#: classes/PDb_List.class.php:1294 classes/PDb_List_Admin.class.php:1386
+#: classes/PDb_List.class.php:1294 classes/PDb_List_Admin.class.php:1441
 msgctxt "submit button label"
 msgid "Filter"
 msgstr ""
 
-#: classes/PDb_List.class.php:1295 classes/PDb_List_Admin.class.php:1387
+#: classes/PDb_List.class.php:1295 classes/PDb_List_Admin.class.php:1442
 msgctxt "submit button label"
 msgid "Clear"
 msgstr ""
 
-#: classes/PDb_List.class.php:1296 classes/PDb_List_Admin.class.php:1388
+#: classes/PDb_List.class.php:1296 classes/PDb_List_Admin.class.php:1443
 msgctxt "search button label"
 msgid "Search"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:119
+#: classes/PDb_List_Admin.class.php:124
 msgid "Do you really want to delete the selected record?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:120
+#: classes/PDb_List_Admin.class.php:125
 msgid "Do you really want to delete the selected records?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:123
+#: classes/PDb_List_Admin.class.php:128
 msgid "Approve the selected record?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:124
+#: classes/PDb_List_Admin.class.php:129
 msgid "Approve the selected records?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:127
+#: classes/PDb_List_Admin.class.php:132
 msgid "Unapprove the selected record?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:128
+#: classes/PDb_List_Admin.class.php:133
 msgid "Unapprove the selected records?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:131
+#: classes/PDb_List_Admin.class.php:136
 msgid "Send the signup email to the selected record?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:132
+#: classes/PDb_List_Admin.class.php:137
 msgid "Send the signup email to the selected records?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:135
+#: classes/PDb_List_Admin.class.php:140
 msgid "Send the \"resend link\" email to the selected record?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:136
+#: classes/PDb_List_Admin.class.php:141
 msgid "Send the \"resend link\" email to the selected records?"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:138
+#: classes/PDb_List_Admin.class.php:143
 #, php-format
 msgid ""
 "The number of selected records exceeds the %s email send limit.%s Only the "
 "first %s will be sent."
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:386
+#: classes/PDb_List_Admin.class.php:395
 msgid "Record delete successful."
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:405
+#: classes/PDb_List_Admin.class.php:414
 #, php-format
 msgctxt "number of records with approval statuses set"
 msgid "Approval status for %d records has been updated."
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:428 classes/PDb_List_Admin.class.php:449
+#: classes/PDb_List_Admin.class.php:438 classes/PDb_List_Admin.class.php:460
 #, php-format
 msgctxt "number of emails sent"
-msgid "%d emails were sent."
-msgstr ""
+msgid "%d email was sent."
+msgid_plural "%d emails were sent."
+msgstr[0] ""
+msgstr[1] ""
 
-#: classes/PDb_List_Admin.class.php:708 participants-database.php:3378
+#: classes/PDb_List_Admin.class.php:721 participants-database.php:3378
 msgid "List Participants"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:746
+#: classes/PDb_List_Admin.class.php:759
 msgid "Show only records with"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:757
+#: classes/PDb_List_Admin.class.php:770
 msgctxt ""
 "joins two search terms, such as in \"Show only records with last name that "
 "is Smith\""
 msgid "that"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:764
+#: classes/PDb_List_Admin.class.php:777
 msgid "is"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:765
+#: classes/PDb_List_Admin.class.php:778
 msgid "is not"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:766
+#: classes/PDb_List_Admin.class.php:779
 msgid "contains"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:767
+#: classes/PDb_List_Admin.class.php:780
 msgid "doesn&#39;t contain"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:768
+#: classes/PDb_List_Admin.class.php:781
 msgid "is greater than"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:769
+#: classes/PDb_List_Admin.class.php:782
 msgid "is less than"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:783
+#: classes/PDb_List_Admin.class.php:796
 msgid "and"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:784
+#: classes/PDb_List_Admin.class.php:797
 msgid "or"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:803
+#: classes/PDb_List_Admin.class.php:816
 msgid "Number of filters to use: "
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:835
+#: classes/PDb_List_Admin.class.php:848
 #, php-format
 msgid "%s record found, sorted by: %s."
 msgid_plural "%s records found, sorted by: %s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/PDb_List_Admin.class.php:866 classes/PDb_List_Admin.class.php:1368
+#: classes/PDb_List_Admin.class.php:879 classes/PDb_List_Admin.class.php:1381
 msgid "approve"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:867 classes/PDb_List_Admin.class.php:1369
+#: classes/PDb_List_Admin.class.php:880 classes/PDb_List_Admin.class.php:1382
 msgid "unapprove"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:905
+#: classes/PDb_List_Admin.class.php:918
 #, php-format
 msgid "Show %s items per page."
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:964
+#: classes/PDb_List_Admin.class.php:977
 msgid "Edit"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1070
+#: classes/PDb_List_Admin.class.php:1083
 msgid "No records found"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1096
+#: classes/PDb_List_Admin.class.php:1109
 msgid "Export CSV"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1106
+#: classes/PDb_List_Admin.class.php:1119
 msgid "File Name"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1108
+#: classes/PDb_List_Admin.class.php:1121
 msgid "Download CSV for this list"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1109
+#: classes/PDb_List_Admin.class.php:1122
 msgid "Include field titles"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1112
+#: classes/PDb_List_Admin.class.php:1125
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms, and in the order specified by the sort. The export will include "
@@ -401,19 +403,19 @@ msgid ""
 "the \"CSV\" column on the Manage Database Fields page."
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1365
+#: classes/PDb_List_Admin.class.php:1378
 msgid "PDb Admin List With Selected: "
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1370
+#: classes/PDb_List_Admin.class.php:1383
 msgid "send signup email"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1389 participants-database.php:3283
+#: classes/PDb_List_Admin.class.php:1444 participants-database.php:3283
 msgid "Apply"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1390
+#: classes/PDb_List_Admin.class.php:1445
 msgctxt ""
 "phrase used just before naming the action to perform on the selected items"
 msgid "With selected"
