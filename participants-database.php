@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.2.2
+ * Version: 1.7.2.3
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -1345,8 +1345,16 @@ class Participants_Db extends PDb_Base {
   public static function process_form( $post, $action, $participant_id = false, $column_names = false )
   {
 
-    if ( !isset( $action ) || !in_array( $action, array('insert', 'update') ) || ( isset( $post['subsource'] ) && $post['subsource'] !== Participants_Db::PLUGIN_NAME ) )
+    /**
+     * reject submissions that aren't properly tagged
+     */
+    if ( 
+            !isset( $action ) || 
+            !in_array( $action, array('insert', 'update') ) || 
+            ( isset( $post['subsource'] ) && $post['subsource'] !== Participants_Db::PLUGIN_NAME )
+            ) {
       return false;
+            }
 
 //    error_log(__METHOD__.' post: '.print_r($post,1));
 
@@ -1554,7 +1562,7 @@ class Participants_Db extends PDb_Base {
       $column_set = $column_names;
     } else {
 
-      if ( filter_input( INPUT_POST, 'action' ) === 'signup' ) {
+      if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'signup' ) {
 
         $column_set = 'signup';
       } else {
@@ -1574,9 +1582,16 @@ class Participants_Db extends PDb_Base {
         self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post );
       }
 
-      // check for user/readonly field status and disable saving field data for unauthorized users
-      if ( !self::current_user_has_plugin_role( 'editor', 'readonly access' ) && $column->readonly != '0' && $column->form_element !== 'hidden' ) {
-        // this prevents unauthorized users from saving readonly field data
+      /**
+       * readonly field data is prevented from being saved by unauthorized users 
+       * when not using the signup form
+       */
+      if (  
+              $column->readonly != '0' && 
+              $column->form_element !== 'hidden' && 
+              ! self::current_user_has_plugin_role( 'editor', 'readonly access' ) && 
+              filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) !== 'signup' 
+              ) {
         $post[$column->name] = '';
       }
       $new_value = false;
