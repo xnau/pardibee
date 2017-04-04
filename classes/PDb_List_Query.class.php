@@ -138,6 +138,9 @@ class PDb_List_Query {
     $this->_set_columns( $List->display_columns );
     $this->suppress = filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
     $this->_add_filter_from_shortcode_filter( $List->shortcode_atts['filter'] );
+    
+//    error_log(__METHOD__.' session query: '.print_r(Participants_Db::$session,1));
+    
     /*
      * at this point, the object has been instantiated with the properties provided 
      * in the shortcode
@@ -165,6 +168,7 @@ class PDb_List_Query {
 
 //    error_log(__METHOD__.' post: '.print_r($_POST,1));
 //    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
+//    error_log(__METHOD__.' action: '.$_POST['action'].' search? '.($this->is_search_result()?'yes':'no').' query session name: '.$this->query_session_name());
 
     if ( $this->requested_page() ) {
       // we're getting a list page
@@ -432,8 +436,9 @@ class PDb_List_Query {
           break;
         case 'search':
         case 'sort':
-        case 'page':
           $this->_add_filter_from_input( $this->post_input );
+          break;
+        case 'page':
           break;
       }
     }
@@ -448,7 +453,7 @@ class PDb_List_Query {
   private function _add_filter_from_input( $input )
   {
 
-    //error_log(__METHOD__.' input: '.print_r($input,1));
+//   error_log(__METHOD__.' input: '.print_r($input,1));
 
     $set_logic = Participants_Db::plugin_setting_is_true( 'strict_search' ) ? 'AND' : 'OR';
 
@@ -476,6 +481,7 @@ class PDb_List_Query {
       if ( !empty( $input['sortstring'] ) ) {
         $this->set_sort( $input['sortstring'], $input['orderstring'] );
       }
+      
       $this->_save_query_session();
     }
   }
@@ -1169,7 +1175,6 @@ class PDb_List_Query {
         'clause_count' => $this->clause_count,
         'is_search' => $this->is_search_result
     );
-
     Participants_Db::$session->set( $this->query_session_name(), $save );
   }
 
@@ -1242,9 +1247,9 @@ class PDb_List_Query {
    * 
    * @return string
    */
-  private function query_session_name( $index = '' )
+  public function query_session_name( $index = '' )
   {
-    return self::$query_session . empty( $index ) ? $this->instance_index : $index;
+    return self::$query_session . '-' . ( empty( $index ) ? $this->instance_index : $index );
   }
 
   /**
