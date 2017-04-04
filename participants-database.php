@@ -771,7 +771,7 @@ class Participants_Db extends PDb_Base {
      * 'pdb-shortcode_call_{$tag}' filter allows the shortcode atrributes to be 
      * altered before instantiating the shortcode object
      */
-    $shortcode_parameters = self::apply_filters( 'shortcode_call_' . $tag, $params );
+    $shortcode_parameters = self::apply_filters( 'shortcode_call_' . $tag, (array) $params );
 
     switch ( $tag ) {
       case 'pdb_record':
