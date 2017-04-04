@@ -84,7 +84,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Belarusian: Natasha Dyatko [UStarCash](https://www.ustarcash.com)
 
-* Danish: Bo Hejberg Nielsen
+* Danish: GråandvejTre
 
 * Dutch: At Voogt [www.wederzijdsgenoegen.nl](http://www.wederzijdsgenoegen.nl)
 
@@ -97,6 +97,8 @@ This plugin is fully compliant with WordPress Internationalization standards and
 * German: Martin Sauter
 
 * Hebrew: Gila Baam
+
+* Indonesian: Jordan Silaen [ChameleonJohn.com](http://chameleonjohn.com)
 
 * Italian: Michele Balderi
 
