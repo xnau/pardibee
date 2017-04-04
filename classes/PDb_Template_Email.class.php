@@ -103,13 +103,13 @@ class PDb_Template_Email extends xnau_Template_Email {
     // add the time tag
     $this->data['time'] = PDb_Date_Display::get_date_with_format( null, get_option( 'time_format' ), __METHOD__ );
 
-//    error_log(__METHOD__.' tag map: '.print_r($this->data,1));
-
     /**
      * @version 1.6.3
      * @filter pdb-template_email_tag_map
      */
     $this->data = Participants_Db::apply_filters( 'template_email_tag_map', $this->data, $this->context );
+
+//    error_log(__METHOD__.' tag map: '.print_r($this->data,1));
   }
 
   /**
