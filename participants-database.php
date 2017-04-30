@@ -283,6 +283,9 @@ class Participants_Db extends PDb_Base {
    */
   public static function initialize()
   {
+    
+    // set the debug global if not already
+    self::set_debug_mode();
 
     // set the plugin version
     self::$plugin_version = self::_get_plugin_data( 'Version' );
@@ -1356,7 +1359,7 @@ class Participants_Db extends PDb_Base {
       return false;
             }
 
-//    error_log(__METHOD__.' post: '.print_r($post,1));
+    //error_log(__METHOD__.' post: '.print_r($post,1));
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
 

@@ -1386,5 +1386,18 @@ class PDb_Base {
     return self::get_indexed_names( explode( '.', $datakey ) );
 //    return self::get_indexed_names( explode('.', self::xcrypt($datakey)));
   }
+  
+  /**
+   * sets the debug mode
+   * 
+   * @global PDB_DEBUG
+   */
+  protected static function set_debug_mode()
+  {
+    if ( ! defined( 'PDB_DEBUG' ) ) {
+      define( 'PDB_DEBUG', false );
+    }
+  }
+  
 
 }
