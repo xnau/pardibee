@@ -29,22 +29,15 @@ class PDb_FormValidation extends xnau_FormValidation {
   {
 
     parent::__construct();
-    /*
-     * get our error messages from the plugin options
-     * 
-     */
-    foreach ( array('invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier') as $error_type ) {
-      $this->error_messages[$error_type] = Participants_Db::plugin_setting( $error_type . '_field_message' );
-    }
-    /*
-     * this filter provides an opportunity to add or modify validation error messages
-     * 
-     * for example, if there is a custom validation that generates an error type of 
-     * "custom" an error message with a key of "custom" will be shown if it fails.
-     */
-    $this->error_messages = Participants_Db::apply_filters( 'validation_error_messages', $this->error_messages );
+
+    $this->set_up_error_messages();
 
     $this->error_style = Participants_Db::plugin_setting( 'field_error_style' );
+
+    // set the default error wrap HTML for the validation error feedback display
+    $this->error_html_wrap = is_admin() ?
+            Participants_Db::apply_filters('admin_validation_errors_template', array('<div class="error below-h2 %s">%s</div>', '<p %2$s >%1$s</p>' ) ) :
+            Participants_Db::apply_filters('validation_errors_template', array('<div class="%s">%s</div>', '<p %2$s >%1$s</p>' ) );
   }
 
   /**
@@ -63,6 +56,33 @@ class PDb_FormValidation extends xnau_FormValidation {
                 'other' => __( 'regex/match', 'participants-database' ),
                 'captcha' => 'CAPTCHA',
             ) );
+  }
+
+  /**
+   * returns the error messages HTML
+   *
+   */
+  public function get_error_html()
+  {
+
+    if ( empty( $this->errors ) )
+      return '';
+    
+    $this->build_validation_errors();
+
+    $output = $this->get_error_CSS();
+
+    $messages = '';
+
+    foreach ( $this->errors as &$error ) {
+      /* @var $error PDb_Validation_Error_Message */
+
+      $messages .= sprintf( $this->error_html_wrap[1], $error->error_message(), $error->element_attributes() );
+    }
+
+    $output .= sprintf( $this->error_html_wrap[0], $this->error_class, $messages );
+
+    return $output;
   }
 
   /**
@@ -250,7 +270,7 @@ class PDb_FormValidation extends xnau_FormValidation {
       Participants_Db::$session->set( 'captcha_result', $field->error_type );
     }
 
-    if ( false ) {
+    if ( PDB_DEBUG ) {
       error_log( __METHOD__ . '
   field: ' . $name . '
   element: ' . $field->form_element . '
@@ -263,24 +283,31 @@ class PDb_FormValidation extends xnau_FormValidation {
 
     return $field->value;
   }
+  
+  /**
+   * provides the validation errors array
+   * 
+   * @return  array of PDb_Validation_Error_Message instances
+   */
+  public function get_validation_errors() {
+    $this->build_validation_errors();
+    return $this->errors;
+  }
 
   /**
    * prepares the error messages and CSS for a main database submission
    *
    * @return array indexed array of error messages
    */
-  public function get_validation_errors()
+  public function build_validation_errors()
   {
 
     // check for errors
     if ( !$this->errors_exist() )
       return array();
 
-    $output = '';
-    $error_messages = array();
-    $this->error_CSS = array();
-
     foreach ( $this->errors as $field => $error ) {
+      /* @var $error PDb_Validation_Error_Message */
 
       if ( $field !== '' ) {
 
@@ -301,22 +328,38 @@ class PDb_FormValidation extends xnau_FormValidation {
             $field_selector = '[name="' . $field_atts->name . '"]';
         }
 
-        $this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
+        //$this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
+        $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
 
-        if ( isset( $this->error_messages[$error] ) ) {
-          $error_messages[] = $error == 'nonmatching' ? sprintf( $this->error_messages[$error], $field_atts->title, Participants_Db::column_title( $field_atts->validation ) ) : sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error] ), $field_atts->title );
+        if ( isset( $this->error_messages[$error->slug] ) ) {
+          $error_message = $error->slug == 'nonmatching' ? sprintf( $this->error_messages[$error->slug], $field_atts->title, Participants_Db::column_title( $field_atts->validation ) ) : sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field_atts->title );
           $this->error_class = Participants_Db::$prefix . 'error';
         } else {
-          $error_messages[] = $error;
+          $error_message = $error->slug;
           $this->error_class = empty( $field ) ? Participants_Db::$prefix . 'message' : Participants_Db::$prefix . 'error';
         }
       } else {
-        $error_messages[] = $error;
+        $error_message = $error;
         $this->error_class = Participants_Db::$prefix . 'message';
       }
-    } // $this->errors 
+      $error->set_error_message( $error_message );
+      $error->set_message_class( $this->error_class );
+    } 
+  }
 
-    return $error_messages;
+  /**
+   * sets the error status for a field
+   *
+   * @param string $field the name of the field
+   * @param string $error the error status of the field
+   * @param bool $overwrite if true, overwrites an existing error on the same field
+   */
+  protected function _add_error( $field, $error, $overwrite = false )
+  {
+
+    if ( $overwrite === true || !isset( $this->errors[$field] ) || empty( $this->errors[$field] ) ) {
+      $this->errors[$field] = new PDb_Validation_Error_Message( $field, array('slug' => $error) );
+    }
   }
 
   public function get_error_CSS()
@@ -328,12 +371,48 @@ class PDb_FormValidation extends xnau_FormValidation {
      * @param string  $CSS    the error CSS
      * @param array   $errors the current errors array
      */
-    $error_css = Participants_Db::apply_filters( 'error_css', empty( $this->error_CSS ) ? '' : implode( ",\r", $this->error_CSS ) . '{ ' . $this->error_style . ' }', $this->errors );
+    $error_css = Participants_Db::apply_filters( 'error_css', implode( ",\r", $this->error_selectors() ) . '{ ' . $this->error_style . ' }', $this->errors );
     if ( !empty( $error_css ) ) {
       return sprintf( '<style type="text/css">%s</style>', $error_css );
     } else {
       return '';
     }
+  }
+
+  /**
+   * supplies an array of error css selectors
+   * 
+   * @return array
+   */
+  private function error_selectors()
+  {
+    $selectors = array();
+    foreach ( $this->errors as $error ) {
+      $selectors[] = $error->css_selector;
+    }
+    return $selectors;
+  }
+
+  /**
+   * sets up the error messages
+   * 
+   */
+  private function set_up_error_messages()
+  {
+    /*
+     * get our error messages from the plugin options
+     * 
+     */
+    foreach ( array('invalid', 'empty', 'nonmatching', 'duplicate', 'captcha', 'identifier') as $error_type ) {
+      $this->error_messages[$error_type] = Participants_Db::plugin_setting( $error_type . '_field_message' );
+    }
+    /*
+     * this filter provides an opportunity to add or modify validation error messages
+     * 
+     * for example, if there is a custom validation that generates an error type of 
+     * "custom" an error message with a key of "custom" will be shown if it fails.
+     */
+    $this->error_messages = Participants_Db::apply_filters( 'validation_error_messages', $this->error_messages );
   }
 
   /**
@@ -497,6 +576,153 @@ class PDb_Validating_Field {
   public function __get( $name )
   {
     return $this->{$name};
+  }
+
+}
+
+class PDb_Validation_Error_Message {
+
+  /**
+   * @var string field name
+   */
+  private $fieldname;
+
+  /**
+   * @var string the error message slug
+   */
+  private $slug;
+
+  /**
+   * @var string the error message
+   */
+  private $error_message;
+
+  /**
+   * @var string the field CSS selector
+   */
+  private $css_selector;
+
+  /**
+   * @var object the field definition
+   */
+  private $field_def;
+
+  /**
+   * @var string the message class
+   */
+  private $class;
+
+  /**
+   * 
+   */
+  public function __construct( $fieldname, $config )
+  {
+    $this->fieldname = $fieldname;
+    $this->setup_config( $config );
+    $this->setup_field_def();
+  }
+
+  /**
+   * supplies the error message content
+   * 
+   * @return string
+   */
+  public function error_message()
+  {
+    return $this->error_message;
+  }
+
+  /**
+   * supplies the error message HMTL data
+   * 
+   * @return string HTML element attribute string
+   */
+  public function element_attributes()
+  {
+    return sprintf( ' data-field-group="%s" data-field-name="%s" ', $this->field_def->group, $this->fieldname );
+  }
+
+  /**
+   * sets up the field definition
+   */
+  private function setup_field_def()
+  {
+    $this->field_def = Participants_Db::$fields[$this->fieldname];
+  }
+
+  /**
+   * supplies object values
+   * 
+   * @param string  $name of the parameter to get
+   * @return mixed
+   */
+  public function __get( $name )
+  {
+    switch ( $name ) {
+      default:
+        if ( isset( $this->{$name} ) ) {
+          return $this->{$name};
+        }
+        if ( isset( $this->field_def->{$name} ) ) {
+          return $this->field_def->{$name};
+        }
+    }
+    return null;
+  }
+
+  /**
+   * sets the CSS selector property
+   * 
+   * @param string $selector the field selector
+   */
+  public function set_css_selector( $selector )
+  {
+    $this->css_selector = $selector;
+  }
+
+  /**
+   * sets the error message css class
+   * 
+   * @param string $class
+   */
+  public function set_message_class( $class )
+  {
+    $this->class = $class;
+  }
+
+  /**
+   * sets the error message content
+   * 
+   * @param string $message
+   */
+  public function set_error_message( $message )
+  {
+    $this->error_message = $message;
+  }
+
+  /**
+   * sets up the config values
+   * 
+   * @param array $config
+   */
+  public function setup_config( $config )
+  {
+    foreach ( get_object_vars( $this ) as $name => $value ) {
+
+      switch ( $name ) {
+        case 'slug':
+          if ( isset( $config['slug'] ) ) {
+            $this->slug = $config['slug'];
+          } else {
+            $this->slug = $this->fieldname;
+          }
+          break;
+        default:
+          if ( isset( $config[$name] ) ) {
+            $this->{$name} = $config[$name];
+          }
+      }
+    }
   }
 
 }
