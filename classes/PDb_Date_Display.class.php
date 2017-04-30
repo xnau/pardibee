@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcicipants_Db
  */
@@ -95,7 +95,9 @@ class PDb_Date_Display {
    */
   public static function reassert_timezone()
   {
-    date_default_timezone_set( self::timezone() );
+    if ( Participants_Db::apply_filters( 'php_timezone_sync', true ) ) {
+      date_default_timezone_set( self::timezone() );
+    }
   }
   
   /**
