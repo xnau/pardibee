@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcipants_Db
  */
@@ -129,7 +129,6 @@ class PDb_Date_Parse {
     $this->context = $context;
     PDb_Date_Display::reassert_timezone();
     $this->setup_config( $config );
-    $this->setup_input_format();
     $this->setup_input( $input );
   }
 
@@ -227,8 +226,8 @@ class PDb_Date_Parse {
     if ( ! intl_is_failure( $DateFormat->getErrorCode() ) ) {
       $the_Date = new DateTime();
       $the_Date->setTimestamp( $timestamp );
-    } elseif ( WP_DEBUG ) {
-      //error_log( __METHOD__ . '(' .$this->context . ') ' .' IntlDateFormatter error: format string: ' . $this->icu_format() . ' input: ' . $this->input . ' formatter error: ' . $DateFormat->getErrorMessage() );
+    } elseif ( PDB_DEBUG ) {
+      error_log( __METHOD__ . '(' .$this->context . ') ' .' IntlDateFormatter error: format string: ' . $this->icu_format() . ' input: ' . $this->input . ' formatter error: ' . $DateFormat->getErrorMessage() );
     }
     if ( is_a( $the_Date, 'DateTime' ) ) {
       $this->set_timestamp_from_datetime( $the_Date );
@@ -242,13 +241,14 @@ class PDb_Date_Parse {
   private function datetime_parse()
   {
     $the_Date = DateTime::createFromFormat( $this->input_format, $this->input );
+    
     if ( is_a( $the_Date, 'DateTime' ) ) {
       $errors = $the_Date->getLastErrors();
       if ( $errors['warning_count'] === 0 && $errors['error_count'] === 0 ) {
         $errors = false;
       }
       if ( is_array( $errors ) ) {
-        if ( WP_DEBUG )
+        if ( PDB_DEBUG )
           error_log( __METHOD__ . ' DateTime parse error: ' . implode( ', ', $errors ) );
 
         return;
@@ -306,15 +306,15 @@ class PDb_Date_Parse {
   }
   
   /**
-   * sets up the input format
+   * finds a default input format
    * 
    * this will use the plugin input date format is strict dates is enabled, otherwise 
    * it will use the global date format
    * 
    */
-  private function setup_input_format()
+  private function default_input_format()
   {
-    $this->input_format =  $this->strict ? Participants_Db::$plugin_options['input_date_format'] : get_option('date_format');
+    return $this->strict ? Participants_Db::$plugin_options['input_date_format'] : get_option('date_format');
   }
   
   /**
@@ -336,7 +336,11 @@ class PDb_Date_Parse {
   {
     
     foreach (  get_object_vars( $this ) as $name => $value) {
+      
       switch ( $name ) {
+        case 'input_format':
+          $this->input_format = isset( $config[$name] ) ? $config[$name] : $this->default_input_format();
+          break;
         case 'strict':
           $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : Participants_Db::$plugin_options['strict_dates'] == 1 );
           break;
