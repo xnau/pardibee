@@ -2749,8 +2749,9 @@ class Participants_Db extends PDb_Base {
      * 
      * @action pdb-before_send_retrieve_link_email
      * @param object  $retrieve_link_email
+     * @param array   $participants_values
      */
-    self::apply_filters( 'before_send_retrieve_link_email', $retrieve_link_email );
+    self::apply_filters( 'before_send_retrieve_link_email', $retrieve_link_email, $participant_values );
     if ( !empty( $retrieve_link_email->recipient ) ) {
       PDb_Template_Email::send( array(
           'to' => $retrieve_link_email->recipient,
