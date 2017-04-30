@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * 
  * adapted from: http://wp.tutsplus.com/tutorials/plugins/a-guide-to-the-wordpress-http-api-automatic-plugin-updates/
@@ -58,8 +58,9 @@ class PDb_Update {
     $this->current_version = $current_version;
     $this->update_path = $update_path;
     $this->plugin_file = $plugin_file;
-    list ($directory, $filename) = explode('/', $plugin_file);  
-    $this->slug = str_replace('.php', '', $filename);
+    
+    $filepath = explode('/', $plugin_file );  
+    $this->slug = str_replace('.php', '', end( $filepath ) );
 
     // define the alternative API for updating checking
     add_filter('pre_set_site_transient_update_plugins', array(&$this, 'check_update'));
