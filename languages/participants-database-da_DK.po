@@ -1,2819 +1,1749 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2017-03-18 21:01+0100\n"
-"PO-Revision-Date: 2017-03-28 21:54+0200\n"
+"POT-Creation-Date: 2015-02-23 15:26+0100\n"
+"PO-Revision-Date: 2017-04-06 20:47-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
-"Language-Team: Lars Hdg\n"
+"Language-Team: Bo Hejberg Nielsen\n"
 "Language: da_DK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: classes/PDb_Aux_Plugin.class.php:321 participants-database.php:3493
-msgid "Submit a rating or review"
-msgstr "Bedøm eller Anmeld"
-
-#: classes/PDb_Aux_Plugin.class.php:323
-msgid "Support"
-msgstr "Support"
-
-#: classes/PDb_Aux_Plugin.class.php:334
-#, php-format
-msgctxt "displays the name and version of the plugin"
-msgid "%s version %s"
-msgstr "%s version %s"
-
-#: classes/PDb_Aux_Plugin.class.php:335
-#, php-format
-msgctxt "displays the plugin author name"
-msgid "Authored by %s"
-msgstr "Forfattet af %s"
-
-#: classes/PDb_Aux_Plugin.class.php:353 classes/PDb_Settings.class.php:32
-msgid "General Settings"
-msgstr "Generel opsætning"
-
-#: classes/PDb_CSV_Import.class.php:74
-msgid "New columns imported from the CSV file."
-msgstr "Nye kolonner importeret fra CSV-filen."
-
-#: classes/PDb_FormElement.class.php:549 classes/PDb_List_Admin.class.php:878
-#: classes/PDb_List_Admin.class.php:1380 classes/PDb_Manage_Fields.class.php:334
-#: classes/xnau_FormElement.class.php:1054
+#: classes/PDb_FormElement.class.php:335 classes/xnau_FormElement.class.php:967
+#: manage_fields.php:465
 msgid "delete"
 msgstr "slet"
 
-#: classes/PDb_FormElement.class.php:825
+#: classes/PDb_FormElement.class.php:528
 msgid "Text-line"
 msgstr "Tekstlinje"
 
-#: classes/PDb_FormElement.class.php:826
+#: classes/PDb_FormElement.class.php:529
 msgid "Text Area"
-msgstr "Tekst Område"
+msgstr "Tekstområde"
 
-#: classes/PDb_FormElement.class.php:827
+#: classes/PDb_FormElement.class.php:530
 msgid "Rich Text"
-msgstr "Rich-tekst"
+msgstr "Redigér Rich-tekst"
 
-#: classes/PDb_FormElement.class.php:828
+#: classes/PDb_FormElement.class.php:531
 msgid "Checkbox"
 msgstr "Afkrydsningsfelt"
 
-#: classes/PDb_FormElement.class.php:829
+#: classes/PDb_FormElement.class.php:532
 msgid "Radio Buttons"
 msgstr "Radioknapper"
 
-#: classes/PDb_FormElement.class.php:830
+#: classes/PDb_FormElement.class.php:533
 msgid "Dropdown List"
 msgstr "Dropdown liste"
 
-#: classes/PDb_FormElement.class.php:831
+#: classes/PDb_FormElement.class.php:534
 msgid "Date Field"
 msgstr "Datofelt"
 
-#: classes/PDb_FormElement.class.php:832
-msgid "Numeric"
-msgstr "Numerisk"
-
-#: classes/PDb_FormElement.class.php:833
+#: classes/PDb_FormElement.class.php:535
 msgid "Dropdown/Other"
 msgstr "Dropdown/andre"
 
-#: classes/PDb_FormElement.class.php:834
+#: classes/PDb_FormElement.class.php:536
 msgid "Multiselect Checkbox"
 msgstr "MultiSelect afkrydsningsfeltet"
 
-#: classes/PDb_FormElement.class.php:835
-msgid "Multiselect Dropdown"
-msgstr "MultiSelect Dropdown"
-
-#: classes/PDb_FormElement.class.php:836
+#: classes/PDb_FormElement.class.php:537
 msgid "Radio Buttons/Other"
-msgstr "Radio knapper / andre"
+msgstr "Radioknapper / andre"
 
-#: classes/PDb_FormElement.class.php:837
+#: classes/PDb_FormElement.class.php:538
 msgid "Multiselect/Other"
 msgstr "MultiSelect/andre"
 
-#: classes/PDb_FormElement.class.php:838
+#: classes/PDb_FormElement.class.php:539
 msgid "Link Field"
-msgstr "Link felt"
+msgstr "Link Field"
 
-#: classes/PDb_FormElement.class.php:839
+#: classes/PDb_FormElement.class.php:540
 msgid "Image Upload Field"
-msgstr "Billede Upload felt"
+msgstr "Vælg billede, der skal overføres"
 
-#: classes/PDb_FormElement.class.php:840
+#: classes/PDb_FormElement.class.php:541
 msgid "File Upload Field"
-msgstr "Fil Upload felt"
+msgstr "Overfør fil"
 
-#: classes/PDb_FormElement.class.php:841
+#: classes/PDb_FormElement.class.php:542
 msgid "Hidden Field"
-msgstr "Skjult felt"
+msgstr "Skjult fil"
 
-#: classes/PDb_FormElement.class.php:842
+#: classes/PDb_FormElement.class.php:543
 msgid "Password Field"
-msgstr "Adgangskode felt"
+msgstr "Adgangskode"
 
-#: classes/PDb_FormElement.class.php:843
+#: classes/PDb_FormElement.class.php:544
 msgid "CAPTCHA"
 msgstr "CAPTCHA"
 
-#: classes/PDb_FormElement.class.php:844
-msgid "Placeholder"
-msgstr "Placeholder"
-
-#: classes/PDb_FormValidation.class.php:60
-msgid "Not Required"
-msgstr "Ikke påkrævet"
-
-#: classes/PDb_FormValidation.class.php:61
-msgid "Required"
-msgstr "Obligatorisk"
-
-#: classes/PDb_FormValidation.class.php:62
-msgid "Email"
-msgstr "E-mail"
-
-#: classes/PDb_FormValidation.class.php:63
-msgid "regex/match"
-msgstr "regex/match"
-
-#: classes/PDb_Init.class.php:786
+#: classes/PDb_Init.class.php:772
 msgid "Participant Info"
-msgstr "Deltager Info"
+msgstr "Deltagerinformation"
 
-#: classes/PDb_Init.class.php:787
+#: classes/PDb_Init.class.php:773
 msgid "Personal Info"
-msgstr "Personlig Info"
+msgstr "Personliginformation"
 
-#: classes/PDb_Init.class.php:788
+#: classes/PDb_Init.class.php:774
 msgid "Administrative Info"
-msgstr "Administrative Info"
+msgstr "Administrationsinformation"
 
-#: classes/PDb_Init.class.php:789
+#: classes/PDb_Init.class.php:775
 msgid "Record Info"
-msgstr "Post Info"
+msgstr "Postinformation"
 
-#: classes/PDb_List.class.php:492 templates/pdb-list-bootstrap.php:35
-#: templates/pdb-list-detailed.php:31 templates/pdb-list-responsive.php:17
-#: templates/pdb-search-default.php:22
+#: classes/PDb_List.class.php:790 templates/pdb-list-bootstrap.php:24
+#: templates/pdb-list-detailed.php:31 templates/pdb-search-default.php:22
 msgid "Please select a column to search in."
 msgstr "Vælg en kolonne at søge i."
 
-#: classes/PDb_List.class.php:493 templates/pdb-list-bootstrap.php:36
-#: templates/pdb-list-detailed.php:32 templates/pdb-list-responsive.php:18
-#: templates/pdb-search-default.php:23
+#: classes/PDb_List.class.php:791 templates/pdb-list-bootstrap.php:25
+#: templates/pdb-list-detailed.php:32 templates/pdb-search-default.php:23
 msgid "Please type in something to search for."
 msgstr "Indtast venligst noget at søge efter."
 
-#: classes/PDb_List.class.php:501 templates/pdb-list-bootstrap.php:46
-#: templates/pdb-list-detailed.php:47 templates/pdb-list-responsive.php:26
-#: templates/pdb-search-default.php:35
+#: classes/PDb_List.class.php:799 templates/pdb-list-bootstrap.php:35
+#: templates/pdb-list-detailed.php:47 templates/pdb-search-default.php:35
 msgid "Search"
 msgstr "Søg"
 
-#: classes/PDb_List.class.php:515 classes/PDb_List_Admin.class.php:821
-#: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:95
-#: templates/pdb-list-responsive.php:46 templates/pdb-search-default.php:63
+#: classes/PDb_List.class.php:814 classes/PDb_List_Admin.class.php:506
+#: templates/pdb-list-bootstrap.php:52 templates/pdb-list-detailed.php:75
+#: templates/pdb-search-default.php:63
 msgid "Sort by"
-msgstr "Sorter efter"
+msgstr "Sortér efter"
 
-#: classes/PDb_List.class.php:605
+#: classes/PDb_List.class.php:885
 msgid "select"
 msgstr "vælg"
 
-#: classes/PDb_List.class.php:750 classes/PDb_List_Admin.class.php:836
-#: classes/PDb_Settings.class.php:754 classes/PDb_Settings.class.php:1146
+#: classes/PDb_List.class.php:956 classes/PDb_List_Admin.class.php:521
+#: classes/PDb_Settings.class.php:810 classes/PDb_Settings.class.php:836
 msgid "Ascending"
 msgstr "Stigende"
 
-#: classes/PDb_List.class.php:751 classes/PDb_List_Admin.class.php:837
-#: classes/PDb_Settings.class.php:754 classes/PDb_Settings.class.php:1146
+#: classes/PDb_List.class.php:957 classes/PDb_List_Admin.class.php:522
+#: classes/PDb_Settings.class.php:810 classes/PDb_Settings.class.php:836
 msgid "Descending"
 msgstr "Faldende"
 
-#: classes/PDb_List.class.php:1291 classes/PDb_List_Admin.class.php:1438
+#: classes/PDb_List.class.php:1389 classes/PDb_List_Admin.class.php:914
 msgctxt "submit button label"
 msgid "Delete Checked"
-msgstr "Slet valgte"
+msgstr "Slet Valgte"
 
-#: classes/PDb_List.class.php:1292 classes/PDb_List_Admin.class.php:1439
+#: classes/PDb_List.class.php:1390 classes/PDb_List_Admin.class.php:915
 msgctxt "submit button label"
 msgid "Change"
-msgstr "Ændre"
+msgstr "Ændrer"
 
-#: classes/PDb_List.class.php:1293 classes/PDb_List_Admin.class.php:1440
+#: classes/PDb_List.class.php:1391 classes/PDb_List_Admin.class.php:916
 msgctxt "submit button label"
 msgid "Sort"
-msgstr "Sorter"
+msgstr "Sortér"
 
-#: classes/PDb_List.class.php:1294 classes/PDb_List_Admin.class.php:1441
+#: classes/PDb_List.class.php:1392 classes/PDb_List_Admin.class.php:917
 msgctxt "submit button label"
 msgid "Filter"
-msgstr "Filter"
+msgstr "Filtrer"
 
-#: classes/PDb_List.class.php:1295 classes/PDb_List_Admin.class.php:1442
+#: classes/PDb_List.class.php:1393 classes/PDb_List_Admin.class.php:918
 msgctxt "submit button label"
 msgid "Clear"
 msgstr "Ryd"
 
-#: classes/PDb_List.class.php:1296 classes/PDb_List_Admin.class.php:1443
+#: classes/PDb_List.class.php:1394 classes/PDb_List_Admin.class.php:919
 msgctxt "search button label"
 msgid "Search"
 msgstr "Søg"
 
-#: classes/PDb_List_Admin.class.php:124
-msgid "Do you really want to delete the selected record?"
-msgstr "Vil du slette den markerede post?"
-
-#: classes/PDb_List_Admin.class.php:125
-msgid "Do you really want to delete the selected records?"
-msgstr "Vil du virkelig slette de valgte poster?"
-
-#: classes/PDb_List_Admin.class.php:128
-msgid "Approve the selected record?"
-msgstr "Godkend den valgte post?"
-
-#: classes/PDb_List_Admin.class.php:129
-msgid "Approve the selected records?"
-msgstr "Godkend de valgte poster?"
-
-#: classes/PDb_List_Admin.class.php:132
-msgid "Unapprove the selected record?"
-msgstr "Afvise den valgte post?"
-
-#: classes/PDb_List_Admin.class.php:133
-msgid "Unapprove the selected records?"
-msgstr "Afvise de valgte poster?"
-
-#: classes/PDb_List_Admin.class.php:136
-msgid "Send the signup email to the selected record?"
-msgstr "Send tilmeldings e-mail til den valgte post?"
-
-#: classes/PDb_List_Admin.class.php:137
-msgid "Send the signup email to the selected records?"
-msgstr "Send tilmeldings e-mail til de valgte poster?"
-
-#: classes/PDb_List_Admin.class.php:140
-msgid "Send the \"resend link\" email to the selected record?"
-msgstr "Send \"gensend link\" e-mail til den valgte post?"
-
-#: classes/PDb_List_Admin.class.php:141
-msgid "Send the \"resend link\" email to the selected records?"
-msgstr "Send \"gensend link\" e-mail til de valgte poster?"
-
-#: classes/PDb_List_Admin.class.php:143
-#, php-format
-msgid ""
-"The number of selected records exceeds the %s email send limit.%s Only the first "
-"%s will be sent."
-msgstr ""
-"Antallet af markerede poster overstiger %s e-mail Send maksimum antal.%s Kun de "
-"første %s vil blive sendt."
-
-#: classes/PDb_List_Admin.class.php:395
+#: classes/PDb_List_Admin.class.php:215
 msgid "Record delete successful."
-msgstr "Vellykket Post slet."
+msgstr "Post slettet uden problemer."
 
-#: classes/PDb_List_Admin.class.php:414
-#, php-format
-msgctxt "number of records with approval statuses set"
-msgid "Approval status for %d records has been updated."
-msgstr "Godkendelsesstatus for %d poster er blevet opdateret."
+#: classes/PDb_List_Admin.class.php:373 participants-database.php:514
+msgid "Do you really want to delete the selected record?"
+msgstr "Er du sikker på, du vil slette den valgte post?"
 
-#: classes/PDb_List_Admin.class.php:438 classes/PDb_List_Admin.class.php:460
-#, php-format
-msgctxt "number of emails sent"
-msgid "%d email was sent."
-msgid_plural "%d emails were sent."
-msgstr[0] "%d e-mail blev sendt."
-msgstr[1] "%d e-mails blev sendt."
+#: classes/PDb_List_Admin.class.php:374 participants-database.php:515
+msgid "Do you really want to delete the selected records?"
+msgstr "Er du sikker på, du vil slette de valgte poster?"
 
-#: classes/PDb_List_Admin.class.php:721 participants-database.php:3378
+#: classes/PDb_List_Admin.class.php:439 participants-database.php:420
+#: participants-database.php:421
 msgid "List Participants"
-msgstr "List poste"
+msgstr "Vis deltagere"
 
-#: classes/PDb_List_Admin.class.php:759
+#: classes/PDb_List_Admin.class.php:440
+#, php-format
+msgid "%s record found, sorted by:"
+msgid_plural "%s records found, sorted by:"
+msgstr[0] "%s post fundet, sorteret efter:"
+msgstr[1] "%s poster fundet, sorteret efter:"
+
+#: classes/PDb_List_Admin.class.php:460
 msgid "Show only records with"
 msgstr "Vis kun poster med"
 
-#: classes/PDb_List_Admin.class.php:770
-msgctxt ""
-"joins two search terms, such as in \"Show only records with last name that is "
-"Smith\""
-msgid "that"
-msgstr "som"
+#: classes/PDb_List_Admin.class.php:478
+msgid "show all"
+msgstr "vis alle"
 
-#: classes/PDb_List_Admin.class.php:777
+#: classes/PDb_List_Admin.class.php:490
 msgid "is"
 msgstr "er"
 
-#: classes/PDb_List_Admin.class.php:778
+#: classes/PDb_List_Admin.class.php:491
 msgid "is not"
 msgstr "er ikke"
 
-#: classes/PDb_List_Admin.class.php:779
+#: classes/PDb_List_Admin.class.php:492
 msgid "contains"
 msgstr "indeholder"
 
-#: classes/PDb_List_Admin.class.php:780
+#: classes/PDb_List_Admin.class.php:493
 msgid "doesn&#39;t contain"
 msgstr "indeholder ikke"
 
-#: classes/PDb_List_Admin.class.php:781
+#: classes/PDb_List_Admin.class.php:494
 msgid "is greater than"
 msgstr "er større end"
 
-#: classes/PDb_List_Admin.class.php:782
+#: classes/PDb_List_Admin.class.php:495
 msgid "is less than"
 msgstr "er mindre end"
 
-#: classes/PDb_List_Admin.class.php:796
-msgid "and"
-msgstr "og"
-
-#: classes/PDb_List_Admin.class.php:797
-msgid "or"
-msgstr "eller"
-
-#: classes/PDb_List_Admin.class.php:816
-msgid "Number of filters to use: "
-msgstr "Antal filtre der kan benyttes: "
-
-#: classes/PDb_List_Admin.class.php:848
-#, php-format
-msgid "%s record found, sorted by: %s."
-msgid_plural "%s records found, sorted by: %s."
-msgstr[0] "%s post fundet, sorteret efter: %s."
-msgstr[1] "%s poster fundet, sorteret efter: %s."
-
-#: classes/PDb_List_Admin.class.php:879 classes/PDb_List_Admin.class.php:1381
-msgid "approve"
-msgstr "godkend"
-
-#: classes/PDb_List_Admin.class.php:880 classes/PDb_List_Admin.class.php:1382
-msgid "unapprove"
-msgstr "afvis"
-
-#: classes/PDb_List_Admin.class.php:918
+#: classes/PDb_List_Admin.class.php:561
 #, php-format
 msgid "Show %s items per page."
 msgstr "Vis %s elementer pr. side."
 
-#: classes/PDb_List_Admin.class.php:977
+#: classes/PDb_List_Admin.class.php:621
 msgid "Edit"
-msgstr "Rediger"
+msgstr "Ret"
 
-#: classes/PDb_List_Admin.class.php:1083
+#: classes/PDb_List_Admin.class.php:760
 msgid "No records found"
-msgstr "Ingen poster fundet"
+msgstr "Ingen resultater fundet"
 
-#: classes/PDb_List_Admin.class.php:1109
+#: classes/PDb_List_Admin.class.php:778
 msgid "Export CSV"
-msgstr "Eksporter CSV"
+msgstr "Eksportér CSV"
 
-#: classes/PDb_List_Admin.class.php:1119
+#: classes/PDb_List_Admin.class.php:790
 msgid "File Name"
 msgstr "Filnavn"
 
-#: classes/PDb_List_Admin.class.php:1121
+#: classes/PDb_List_Admin.class.php:792
 msgid "Download CSV for this list"
 msgstr "Hent CSV for denne liste"
 
-#: classes/PDb_List_Admin.class.php:1122
+#: classes/PDb_List_Admin.class.php:793
 msgid "Include field titles"
-msgstr "Inkluder felt titler"
+msgstr "Inkludér felt titler"
 
-#: classes/PDb_List_Admin.class.php:1125
-msgid ""
-"This will download the whole list of participants that match your search terms, "
-"and in the order specified by the sort. The export will include records on all "
-"list pages. The fields included in the export are defined in the \"CSV\" column "
-"on the Manage Database Fields page."
-msgstr ""
-"Dette vil downloade hele deltagerliste, der matcher dine søgeord, og i den "
-"rækkefølge angivet ved sortering. Eksporten vil indeholde poster fra alle liste-"
-"sider. De felter, der medtages i eksporten er defineret i \"CSV\" kolonnen på "
-"Administrer Database Fields siden."
+#: classes/PDb_List_Admin.class.php:796
+msgid "This will download the whole list of participants that match your search terms, and in the order specified by the sort. The export will include records on all list pages. The fields included in the export are defined in the \"CSV\" column on the Manage Database Fields page."
+msgstr "Dette vil downloade alle på deltagerlisten, der matcher dine søgeord i den rækkefølge angivet af den søgekriterierne. Eksporten vil indeholde poster fra alle liste-sider. De felter, der medtages i eksporten er defineret i &quot;CSV&quot; kolonnen på Administratorens side i manage database."
 
-#: classes/PDb_List_Admin.class.php:1378
-msgid "PDb Admin List With Selected: "
-msgstr "PDb Admin listen med valgte: "
-
-#: classes/PDb_List_Admin.class.php:1383
-msgid "send signup email"
-msgstr "send tilmeldings e-mail"
-
-#: classes/PDb_List_Admin.class.php:1444 participants-database.php:3283
-msgid "Apply"
-msgstr "Aktiver"
-
-#: classes/PDb_List_Admin.class.php:1445
-msgctxt "phrase used just before naming the action to perform on the selected items"
-msgid "With selected"
-msgstr "Med udvalgte"
-
-#: classes/PDb_Manage_Fields.class.php:86 participants-database.php:3393
-msgid "Manage Database Fields"
-msgstr "Administrere databasefelter"
-
-#: classes/PDb_Manage_Fields.class.php:88 classes/PDb_Manage_Fields.class.php:96
-msgid "Field Groups"
-msgstr "Feltgrupper"
-
-#: classes/PDb_Manage_Fields.class.php:97
-msgid "Help"
-msgstr "Hjælp"
-
-#: classes/PDb_Manage_Fields.class.php:192
-msgid "No fields in this group"
-msgstr "Ingen felter i denne gruppe"
-
-#: classes/PDb_Manage_Fields.class.php:222 classes/PDb_Manage_Fields.class.php:907
-msgid "field"
-msgstr "felt"
-
-#: classes/PDb_Manage_Fields.class.php:302
-msgid "Edit / Add / Remove Field Groups"
-msgstr "Rediger / Tilføj / Fjern feltgrupper"
-
-#: classes/PDb_Manage_Fields.class.php:333
-msgid "fields"
-msgstr "felter"
-
-#: classes/PDb_Manage_Fields.class.php:356 classes/PDb_Manage_Fields.class.php:906
-msgid "group"
-msgstr "gruppe"
-
-#: classes/PDb_Manage_Fields.class.php:626
-msgid "Cannot add a field with that name"
-msgstr "Kan ikke tilføje et felt med dette navn"
-
-#: classes/PDb_Manage_Fields.class.php:626
-msgid "This name is reserved; please choose another. Reserved names are"
-msgstr "Dette navn er reserveret; Vælg venligst en anden. Reserverede navne er"
-
-#: classes/PDb_Manage_Fields.class.php:633
-msgid "The name cannot begin with a number"
-msgstr "Navnet må ikke begynde med et tal"
-
-#: classes/PDb_Manage_Fields.class.php:633
-msgid "Please choose another."
-msgstr "Vælg venligst en anden."
-
-#: classes/PDb_Manage_Fields.class.php:686
-msgid "There was an error; the settings were not saved."
-msgstr "Der opstod en fejl; indstillingerne blev ikke gemt."
-
-#: classes/PDb_Manage_Fields.class.php:689 classes/PDb_Settings.class.php:587
-msgid "Your information has been updated"
-msgstr "Dine oplysninger er blevet opdateret"
-
-#: classes/PDb_Manage_Fields.class.php:824
-#, php-format
-msgid ""
-"The %1$s was not added. There is already a %1$s with that name, please choose "
-"another."
-msgstr ""
-"%1$s blev ikke tilføjet. Der er allerede en %1$s med det pågældende navn, skal du "
-"vælge en anden."
-
-#: classes/PDb_Manage_Fields.class.php:902
-msgid "Update Fields"
-msgstr "Opdatere felter"
-
-#: classes/PDb_Manage_Fields.class.php:903
-msgid "Update Groups"
-msgstr "Opdatere grupper"
-
-#: classes/PDb_Manage_Fields.class.php:904
-msgid "Add Field"
-msgstr "Tilføj felter"
-
-#: classes/PDb_Manage_Fields.class.php:905
-msgid "Add Group"
-msgstr "Tilføj gruppe"
-
-#: classes/PDb_Manage_Fields.class.php:908
-msgid "new field title"
-msgstr "nye feltet Titel"
-
-#: classes/PDb_Manage_Fields.class.php:909
-msgid "new group title"
-msgstr "ny gruppe titel"
-
-#: classes/PDb_Manage_Fields.class.php:910
-msgctxt "column name"
-msgid "Fields"
-msgstr "Felter"
-
-#: classes/PDb_Manage_Fields.class.php:911
-msgctxt "column name"
-msgid "Group"
-msgstr "Gruppe"
-
-#: classes/PDb_Manage_Fields.class.php:912
-msgctxt "column name"
-msgid "Order"
-msgstr "Rækkefølge"
-
-#: classes/PDb_Manage_Fields.class.php:913
-msgctxt "column name"
-msgid "Name"
-msgstr "Navn"
-
-#: classes/PDb_Manage_Fields.class.php:914
-msgctxt "column name"
-msgid "Title"
-msgstr "Titel"
-
-#: classes/PDb_Manage_Fields.class.php:915
-msgctxt "column name"
-msgid "Default"
-msgstr "Standard"
-
-#: classes/PDb_Manage_Fields.class.php:916
-msgctxt "column name"
-msgid "Help Text"
-msgstr "Hjælp-tekst"
-
-#: classes/PDb_Manage_Fields.class.php:917
-msgctxt "column name"
-msgid "Form Element"
-msgstr "Form-elementet"
-
-#: classes/PDb_Manage_Fields.class.php:918
-msgctxt "column name"
-msgid "Values"
-msgstr "Værdi"
-
-#: classes/PDb_Manage_Fields.class.php:919
-msgctxt "column name"
-msgid "Validation"
-msgstr "Validering"
-
-#: classes/PDb_Manage_Fields.class.php:920
-msgctxt "column name"
-msgid "Display Column"
-msgstr "Display kolonne"
-
-#: classes/PDb_Manage_Fields.class.php:921
-msgctxt "column name"
-msgid "Admin Column"
-msgstr "Admin Column"
-
-#: classes/PDb_Manage_Fields.class.php:922
-msgctxt "column name"
-msgid "Sortable"
-msgstr "Sorterbar"
-
-#: classes/PDb_Manage_Fields.class.php:923
-msgctxt "column name, acronym for \"comma separated values\""
-msgid "CSV"
-msgstr "CSV"
-
-#: classes/PDb_Manage_Fields.class.php:924
-msgctxt "column name"
-msgid "Persistent"
-msgstr "Vedholdende"
-
-#: classes/PDb_Manage_Fields.class.php:925
-msgctxt "column name"
-msgid "Signup"
-msgstr "Tilmelding"
-
-#: classes/PDb_Manage_Fields.class.php:926
-msgctxt "column name"
-msgid "Read Only"
-msgstr "Kun læse"
-
-#: classes/PDb_Manage_Fields.class.php:927
-msgctxt "column name"
-msgid "Admin"
-msgstr "Admin"
-
-#: classes/PDb_Manage_Fields.class.php:928
-msgctxt "column name"
-msgid "Delete"
-msgstr "Slet"
-
-#: classes/PDb_Manage_Fields.class.php:929
-msgctxt "column name"
-msgid "Display"
-msgstr "Vis"
-
-#: classes/PDb_Manage_Fields.class.php:930
-msgctxt "column name"
-msgid "Description"
-msgstr "Beskrivelse"
-
-#: classes/PDb_Pagination.class.php:366
+#: classes/PDb_Pagination.class.php:358
 msgid "First"
 msgstr "Første"
 
-#: classes/PDb_Pagination.class.php:377 participants-database.php:3285
+#: classes/PDb_Pagination.class.php:368 participants-database.php:2872
 msgid "Previous"
 msgstr "Forrige"
 
-#: classes/PDb_Pagination.class.php:396 participants-database.php:3284
+#: classes/PDb_Pagination.class.php:385 participants-database.php:2871
 msgid "Next"
 msgstr "Næste"
 
-#: classes/PDb_Pagination.class.php:409
+#: classes/PDb_Pagination.class.php:397
 msgid "Last"
 msgstr "Sidste"
 
-#: classes/PDb_Path.class.php:167 participants-database.php:3108
-#, php-format
-msgid "The uploads directory (%s) could not be created."
-msgstr "Kunne ikke oprettes uploads mappen (% s)."
+#: classes/PDb_Settings.class.php:18
+msgid "General Settings"
+msgstr "Generel opsætning"
 
-#: classes/PDb_Record.class.php:147
-msgid "back"
-msgstr "tilbage"
-
-#: classes/PDb_Settings.class.php:33
+#: classes/PDb_Settings.class.php:19
 msgid "Signup Form Settings"
-msgstr "Tilmeldingsformular Indstillinger"
+msgstr "Indstillinger til Tilmeldingsformular"
 
-#: classes/PDb_Settings.class.php:34
+#: classes/PDb_Settings.class.php:20
 msgid "Record Form Settings"
-msgstr "Post Form Settings"
+msgstr "Indstillinger til Poster"
 
-#: classes/PDb_Settings.class.php:35
+#: classes/PDb_Settings.class.php:21
 msgid "List Display Settings"
-msgstr "Skærmindstillinger for en list"
+msgstr "Indstillinger for Skærmvisning"
 
-#: classes/PDb_Settings.class.php:36
+#: classes/PDb_Settings.class.php:22
 msgid "Resend Link Settings"
-msgstr "Gensend Link Indstillinger"
+msgstr "Gensend link med Indstillinger"
 
-#: classes/PDb_Settings.class.php:37
-msgid "Admin Settings"
-msgstr "Administrations indstillinger"
-
-#: classes/PDb_Settings.class.php:38
+#: classes/PDb_Settings.class.php:23
 msgid "Advanced Settings"
 msgstr "Avancerede indstillinger"
 
-#: classes/PDb_Settings.class.php:39
+#: classes/PDb_Settings.class.php:24
 msgid "Custom CSS"
 msgstr "Brugerdefineret CSS"
 
-#: classes/PDb_Settings.class.php:43
-msgid ""
-"Settings for the [pdb_record] shortcode, which is used to show a user-editable "
-"form on the website."
-msgstr ""
-"Indstillinger for [pdb_record] shortcoden, som bruges til at vise en bruger-"
-"redigerbare formular på hjemmesiden."
+#: classes/PDb_Settings.class.php:28
+msgid "Settings for the [pdb_record] shortcode, which is used to show a user-editable form on the website."
+msgstr "Indstillinger til [pdb_record] kortkode, som bruges til at vise en bruger-redigerbar formular på hjemmesiden."
 
-#: classes/PDb_Settings.class.php:44
-msgid ""
-"Settings for the [pdb_list] shortcode, which is used to show a list of records "
-"from the database."
-msgstr ""
-"Indstillinger for [pdb_list] shortcoden, som bruges til at vise en liste over "
-"poster fra databasen."
+#: classes/PDb_Settings.class.php:29
+msgid "Settings for the [pdb_list] shortcode, which is used to show a list of records from the database."
+msgstr "Indstilling til [pdb_list] kortkode, som bruges til at vise en liste med poster fra databasen."
 
-#: classes/PDb_Settings.class.php:45
-msgid ""
-"Settings for the [pdb_signup] shortcode, which is used to show a signup or "
-"registration form on the website."
-msgstr ""
-"Indstillinger for [pdb_signup] shortcode, som bruges til at vise en tilmelding "
-"eller registrering på hjemmesiden."
+#: classes/PDb_Settings.class.php:30
+msgid "Settings for the [pdb_signup] shortcode, which is used to show a signup or registration form on the website."
+msgstr "Indstillinger til [pdb_signup] kortkode, som bruges til at vise en tilmelding eller registrering på hjemmesiden."
 
-#: classes/PDb_Settings.class.php:46
+#: classes/PDb_Settings.class.php:31
 msgid "Settings for the lost private link resend function."
-msgstr "Indstillinger for Gensend funktion for  mistet privat link."
+msgstr "Indstillinger til at gensende et mistet \"privat\"-adgangslink."
 
-#: classes/PDb_Settings.class.php:47
+#: classes/PDb_Settings.class.php:32
 msgid "Settings for special configurations."
-msgstr "Indstillinger for særlige konfigurationer."
+msgstr "Indstillinger til specielle konfigurationer."
 
-#: classes/PDb_Settings.class.php:48
-msgid "Settings for the plugin backend."
-msgstr "Indstillingerne for plugin backenden."
+#: classes/PDb_Settings.class.php:33
+msgid "User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try this tutorial to help you get started: <a href=\"http://www.ostraining.com/blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress Themes.</a></p>"
+msgstr "Bruger CSS regler for styling plugin viser.<p>Hvis du er ny bruger af CSS, så prøv denne tutorial til at hjælpe dig i gang: <a href=\"http://www.ostraining.com/blog/wordpress/firebug-wordpress-css/\">Brug Firebug for redigering af WordPress temaer.</a></p>"
 
-#: classes/PDb_Settings.class.php:49
-msgid ""
-"User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try this "
-"tutorial to help you get started: <a target=\"_blank\" href=\"http://shrsl.com/?"
-"dnf8\">Use Firebug for Editing WordPress Themes.</a></p>"
-msgstr ""
-"Bruger CSS regler for styling plugin viser.</h4><p>Hvis du er ny til CSS, prøv "
-"denne tutorial til at hjælpe dig i gang: <a target=\"_blank\" href=\"http://shrsl."
-"com/?dnf8\">Brug Firebug for redigering af WordPress temaer.</a></p>"
-
-#: classes/PDb_Settings.class.php:58
+#: classes/PDb_Settings.class.php:42
 msgid "Save Plugin Settings"
-msgstr "Gemme Plugin indstillinger"
+msgstr "Gem Plugin indstillinger"
 
-#: classes/PDb_Settings.class.php:125
+#: classes/PDb_Settings.class.php:82
 msgid "File Upload Location"
-msgstr "Fil Upload placering"
+msgstr "Placering af Uploaded Fil"
 
-#: classes/PDb_Settings.class.php:129
-msgid ""
-"This defines where the uploaded files will go, relative to the WordPress root. "
-"The default location is '/wp-content/uploads/participants-database'<br />Don't "
-"put it in the plugin folder, the images and files could get deleted when the "
-"plugin is updated."
-msgstr ""
-"Dette definerer hvor de uploadede filer vil blive placeret i forhold til "
-"WordPress root. Standardplaceringen er '/wp-content/uploads/participants-"
-"database'<br /> Placer ikke i plugin mappen, da billeder og filer kan blive "
-"slettet, når plugin opdateres."
+#: classes/PDb_Settings.class.php:86
+msgid "This defines where the uploaded files will go, relative to the WordPress root. The default location is '/wp-content/uploads/participants-database'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated."
+msgstr "Dette definerer hvor de uploadede filer vil ligge i forhold til WordPress rod. Standardplaceringen er &quot;/ wp-content / uploads / deltagere-database« <br /> Læg det IKKE i plugin mappen, så risikerer du billeder og filer bliver slettet, når plugin opdateres."
 
-#: classes/PDb_Settings.class.php:136
+#: classes/PDb_Settings.class.php:93
 msgid "File Upload Limit"
-msgstr "Fil Upload grænse"
+msgstr "Størrelsesbegrænsing Fil Upload"
 
-#: classes/PDb_Settings.class.php:140
+#: classes/PDb_Settings.class.php:97
 msgid "the maximum allowed file size (in kilobytes) for an uploaded file"
-msgstr "maksimalt tilladte filstørrelse (i kilobyte / kB) for en uploadet fil"
+msgstr "den maksimalt tilladte filstørrelse (i kilobyte) af en uploadet fil"
 
-#: classes/PDb_Settings.class.php:147
+#: classes/PDb_Settings.class.php:104
 msgid "Allowed File Types"
 msgstr "Tilladte filtyper"
 
-#: classes/PDb_Settings.class.php:151
-msgid ""
-"list of allowed file types by file extension. Please be aware that there are "
-"security risks in allowing file uploads."
-msgstr ""
-"liste over tilladte filtyper ved filtypenavnet. Vær opmærksom på at der er "
-"sikkerhedsrisici i at tillade filen uploads."
+#: classes/PDb_Settings.class.php:108
+msgid "list of allowed file types by file extension. Please be aware that there are security risks in allowing file uploads."
+msgstr "liste med tilladte filtyper sorteret efter filtypenavnet. Vær opmærksom på at der er sikkerhedsrisici ved at tillade filuploads."
 
-#: classes/PDb_Settings.class.php:158
+#: classes/PDb_Settings.class.php:115
 msgid "Default Image"
 msgstr "Standardbillede"
 
-#: classes/PDb_Settings.class.php:162
-msgid ""
-"Path (relative to WP root) of an image file to show if no image has been defined "
-"for an image field. Leave blank for no default image."
-msgstr ""
-"Sti (i forhold til WP root) af en billedfil for at vise, hvis der ikke er "
-"defineret et billede for et billedfelt. Efterlad blank for ingen standardbillede."
+#: classes/PDb_Settings.class.php:119
+msgid "Path (relative to WP root) of an image file to show if no image has been defined for an image field. Leave blank for no default image."
+msgstr "Sti (i forhold til WP rod) til  billedfil som vises, hvis der ikke er defineret et billede til et billedfelt. Lad feltet stå blank hvis der intet standardbillede er."
 
-#: classes/PDb_Settings.class.php:169
+#: classes/PDb_Settings.class.php:126
 msgid "Link Image to Fullsize"
-msgstr "Link billede til fuld størrelse"
+msgstr "Link til billede i fuld størrelse"
 
-#: classes/PDb_Settings.class.php:174
-msgid ""
-"place a link to the full-size image on images. This link will work with most "
-"\"lightbox\" plugins."
-msgstr ""
-"placer et link til billedet i fuld størrelse på billeder. Dette link vil arbejde "
-"med de fleste \"lightbox\" plugins."
+#: classes/PDb_Settings.class.php:131
+msgid "place a link to the full-size image on images. This link will work with most \"lightbox\" plugins."
+msgstr "placere et link til billedet i fuld størrelse på billeder. Dette link vil virke med de fleste &quot;lightbox&quot; plugins."
 
-#: classes/PDb_Settings.class.php:182
+#: classes/PDb_Settings.class.php:139
 msgid "Allow File Delete"
-msgstr "Tillad fil slet"
+msgstr "Tillad fil sletning"
 
-#: classes/PDb_Settings.class.php:187
-msgid ""
-"if checked, allows uploaded files and images to be deleted from storage when "
-"deleted from a record by a user"
-msgstr ""
-"hvis markeret, tillades uploadede filer og billeder at blive slettet fra lager/"
-"arkiv når slettet fra en post af en bruger"
+#: classes/PDb_Settings.class.php:144
+msgid "if checked, allows uploaded files and images to be deleted from storage when deleted from a record by a user"
+msgstr "hvis markeret, vil det tillades at uploadede filer og billeder bliver slettet, når en bruger sletter dem fra en post"
 
-#: classes/PDb_Settings.class.php:195
+#: classes/PDb_Settings.class.php:152
 msgid "Make Links Clickable"
 msgstr "Gør Links Klikbare"
 
-#: classes/PDb_Settings.class.php:200
-msgid ""
-"if a \"text-line\" field looks like a link (begins with \"http\" or is an email "
-"address) make it clickable"
-msgstr ""
-"hvis et  \"tekst-linje\" felt ligner en link (begynder med \"http\"  eller er en "
-"e-mailadresse) gøre det klikbart"
+#: classes/PDb_Settings.class.php:157
+msgid "if a \"text-line\" field looks like a link (begins with \"http\" or is an email address) make it clickable"
+msgstr "gør et felt klikbart, hvis &quot;tekst-line&quot; feltet ligner et link dvs. begynder med &quot;http&quot; eller er en e-mailadresse"
 
-#: classes/PDb_Settings.class.php:208
+#: classes/PDb_Settings.class.php:165
 msgid "Protect Email Addresses"
-msgstr "Beskyt e-mail adresser"
+msgstr "Beskyt e-mailadresser"
 
-#: classes/PDb_Settings.class.php:213
+#: classes/PDb_Settings.class.php:170
 msgid "protect email addresses in text-line fields with Javascript"
-msgstr "beskytte e-mail-adresser i tekst-linje felter med Javascript"
+msgstr "beskytte e-mailadresser i tekst-linje felter med Javascript"
 
-#: classes/PDb_Settings.class.php:221
+#: classes/PDb_Settings.class.php:178
 msgid "Missing Field Error Message"
-msgstr "Fejlmeddelelse for Manglende Felt"
+msgstr "Fejlmeddelelse for manglende feltinformationer"
 
-#: classes/PDb_Settings.class.php:225
+#: classes/PDb_Settings.class.php:182
 #, php-format
-msgid ""
-"the message shown when a field is required, but left empty (the %s is replaced by "
-"the name of the field)"
-msgstr ""
-"meddelelsen vises, når et felt er obligatorisk, men er tomt (% s er erstattet af "
-"navnet på feltet)"
+msgid "the message shown when a field is required, but left empty (the %s is replaced by the name of the field)"
+msgstr "meddelelsen vises, når et felt er påkrævet, men er tomt (%s erstattes af navnet på feltet)"
 
-#: classes/PDb_Settings.class.php:226
+#: classes/PDb_Settings.class.php:183
 #, php-format
 msgid "The %s field is required."
 msgstr "Feltet %s er obligatorisk."
 
-#: classes/PDb_Settings.class.php:232
+#: classes/PDb_Settings.class.php:189
 msgid "Invalid Field Error Message"
-msgstr "Ugyldig Felt fejlmeddelelse"
+msgstr "Fejlmeddelse for Ugyldigt felt"
 
-#: classes/PDb_Settings.class.php:236
+#: classes/PDb_Settings.class.php:193
 msgid "the message shown when a field's value does not pass the validation test"
-msgstr "meddelelsen vises, når et felts værdi ikke består validerings test"
+msgstr "meddelelsen vises, når et felts værdi ikke består valideringstesten"
 
-#: classes/PDb_Settings.class.php:237
+#: classes/PDb_Settings.class.php:194
 #, php-format
 msgid "The %s field appears to be incorrect."
 msgstr "Feltet %s synes at være forkert."
 
-#: classes/PDb_Settings.class.php:243
+#: classes/PDb_Settings.class.php:200
 msgid "Non-Matching Field Error Message"
-msgstr "Fejlmeddelelse for Ikke-Matching Felt"
+msgstr "Fejlmeddelse til Ikke-matchende felt"
 
-#: classes/PDb_Settings.class.php:247
+#: classes/PDb_Settings.class.php:204
 #, php-format
-msgid ""
-"the message shown when a field's value does match the value of another field. The "
-"first %s will show the name of the field, the second will show the name of the "
-"field it must match."
-msgstr ""
-"den besked vises, når et felts værdi svarer til værdien af et andet felt. Den "
-"første %s vil vise navnet på feltet, andet vil vise navnet på det felt, det skal "
-"stemme overens med."
+msgid "the message shown when a field's value does match the value of another field. The first %s will show the name of the field, the second will show the name of the field it must match."
+msgstr "denne besked vises, når et felts værdi svarer til værdien af et andet felt. Den første %s vil vise navnet på feltet, den anden vil vise navnet på det felt, det skal stemme overens med."
 
-#: classes/PDb_Settings.class.php:248
+#: classes/PDb_Settings.class.php:205
 #, php-format
 msgid "The %s field must match the %s field."
-msgstr "%s feltet skal stemme overens med %s feltet."
+msgstr "Feltet %s skal stemme overens med feltet %s."
 
-#: classes/PDb_Settings.class.php:255
+#: classes/PDb_Settings.class.php:212
 msgid "Failed CAPTCHA Message"
-msgstr "Besked for mislykkede CAPTCHA"
+msgstr "Mislykket CAPTCHA besked"
 
-#: classes/PDb_Settings.class.php:259
+#: classes/PDb_Settings.class.php:216
 msgid "the message shown when the CAPTCHA (verify human) test failed"
-msgstr "meddelelsen vises, når CAPTCHA (kontrollere menneskelige) test mislykkedes"
+msgstr "meddelelsen vises, når CAPTCHA'ens kontrol for menneskeliginput mislykkedes"
 
-#: classes/PDb_Settings.class.php:260
+#: classes/PDb_Settings.class.php:217
 #, php-format
 msgid "Pleast try the %s question again."
-msgstr "Prøve %s spørgsmålet igen."
+msgstr "Prøv venligst %s spørgsmålet igen."
 
-#: classes/PDb_Settings.class.php:266
+#: classes/PDb_Settings.class.php:223
 msgid "Field Error Style"
-msgstr "Stil for Felt Fejl"
+msgstr "Feltfejl Style"
 
-#: classes/PDb_Settings.class.php:270
-msgid ""
-"the CSS style applied to an input or text field that is missing or has not passed "
-"validation. This must be a valid CSS rule"
-msgstr ""
-"den anvendte CSS-stil til et input- eller tekstfelt, mangler eller har ikke "
-"bestået valideringen. Dette skal være en gyldig CSS regel"
+#: classes/PDb_Settings.class.php:227
+msgid "the CSS style applied to an input or text field that is missing or has not passed validation. This must be a valid CSS rule"
+msgstr "stilen i CSS anvendt på input eller tekstfelt, mangler eller har ikke passeret valideringen. Dette skal være en gyldig CSS regel"
 
-#: classes/PDb_Settings.class.php:277
+#: classes/PDb_Settings.class.php:234
 msgid "Mark Required Fields"
-msgstr "Marker Påkrævede felter"
+msgstr "Markér obligatoriske felter"
 
-#: classes/PDb_Settings.class.php:282
+#: classes/PDb_Settings.class.php:239
 msgid "mark the title of required fields?"
-msgstr "marker titlen for Påkrævede felter?"
+msgstr "markér feltnavn på obligatoriske felter?"
 
-#: classes/PDb_Settings.class.php:290
+#: classes/PDb_Settings.class.php:247
 msgid "Required Field Marker"
-msgstr "Obligatorisk felt markør"
+msgstr "Markør for obligatorisk felt"
 
-#: classes/PDb_Settings.class.php:294
+#: classes/PDb_Settings.class.php:251
 #, php-format
-msgid ""
-"html added to field title for required fields if selected above (the %s is "
-"replaced by the title of the field)"
-msgstr ""
-"html tilføjet til feltet titel for påkrævede felter hvis valgt ovenfor (% s "
-"erstattes af titlen for feltet)"
+msgid "html added to field title for required fields if selected above (the %s is replaced by the title of the field)"
+msgstr "html tilføjes til feltnavnet i obligatoriskefelter hvis det er valgt ovenfor (%s erstattes af titlen på feltet)"
 
-#: classes/PDb_Settings.class.php:319
+#: classes/PDb_Settings.class.php:276
 msgid "Signup Button Text"
-msgstr "Tilmeldings Knap Tekst"
+msgstr "Tekst på tilmeldingsknap"
 
-#: classes/PDb_Settings.class.php:323
+#: classes/PDb_Settings.class.php:280
 msgid "text shown on the button to sign up"
-msgstr "tekst, der vises på knappen for tilmelding"
+msgstr "tekst, der vises på tilmeldingsknappen"
 
-#: classes/PDb_Settings.class.php:324
+#: classes/PDb_Settings.class.php:281
 msgctxt "the text on a button to submit a signup form"
 msgid "Sign Up"
-msgstr "Tilmeld"
+msgstr "Tilmeld dig"
 
-#: classes/PDb_Settings.class.php:330
+#: classes/PDb_Settings.class.php:287
 msgid "Signup Thanks Page"
-msgstr "Side for Tak for tilmelding"
+msgstr "Siden med Tak for Tilmelding"
 
-#: classes/PDb_Settings.class.php:334
-msgid ""
-"after they register, send them to this page for a thank you message. This page is "
-"where you put the [pdb_signup_thanks] shortcode, but you don&#39;t have to do "
-"that if you have them go back to the same page. You can also use a Post ID for "
-"posts and custom post types."
+#: classes/PDb_Settings.class.php:291
+msgid "after they register, send them to this page for a thank you message. This page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t have to do that if you have them go back to the same page. You can also use a Post ID for posts and custom post types."
 msgstr ""
-"efter at de har tilmeldt sig, send dem til denne side for en takke-besked. Denne "
-"side er der, hvor du placerer [pdb_signup_thanks] shortcode, men du behøver det "
-"ikke, hvis du vil ha' dem til at gå tilbage til den samme side. Du kan også bruge "
-"et Post-ID for post og brugerdefinerede post typer."
+"når brugeren har sig, bliver han/hun sendt til denne side for en takke besked. \n"
+"Det er på denne side, du lægger short-kode til [pdb_signup_thanks], men du behøver ikke at gøre det, hvis du vil have dem tilbage til den samme side igen. Du kan også bruge postens id og brugerdefinerede post-typer."
 
-#: classes/PDb_Settings.class.php:343
+#: classes/PDb_Settings.class.php:300
 msgid "Show Field Groups"
 msgstr "Vis feltgrupper"
 
-#: classes/PDb_Settings.class.php:348
+#: classes/PDb_Settings.class.php:305
 msgid "Show groups and group descriptions in the signup form."
-msgstr "Vis grupper og gruppe beskrivelser i tilmeldingsformular."
+msgstr "Vis grupper og gruppebeskrivelser i tilmeldingsformularen."
 
-#: classes/PDb_Settings.class.php:356 upload_csv.php:156
+#: classes/PDb_Settings.class.php:313
 msgid "Duplicate Record Check Field"
-msgstr "Kopier Post tjek felt"
+msgstr "Checkfelt til dupleret post"
 
-#: classes/PDb_Settings.class.php:361
-msgid ""
-"when a signup is submitted or CSV record is imported, this field is checked for a "
-"duplicate"
-msgstr ""
-"når en tilmelding er indsendt eller CSV post er importeret, bliver dette felt "
-"kontrolleret for dubletter"
+#: classes/PDb_Settings.class.php:318
+msgid "when a signup is submitted or CSV record is imported, this field is checked for a duplicate"
+msgstr "når en tilmelding er indsendt eller en CSV liste eller post importeres, er det dette felt, der tjekkes imod for at se om det er en dublet"
 
-#: classes/PDb_Settings.class.php:368 upload_csv.php:137
+#: classes/PDb_Settings.class.php:325
 msgid "Duplicate Record Preference"
-msgstr "Præference for Kopier Post"
+msgstr "Preference for duplettjek"
 
-#: classes/PDb_Settings.class.php:373
-msgid ""
-"when the submission matches the Duplicate Record Check Field of an existing "
-"record. This also applies to importing records from a CSV file."
-msgstr ""
-"når afgivelsen matcher \"Post dublet tjek\" feltet for en eksisterende post. "
-"Dette gælder også for import af poster fra en CSV-fil."
+#: classes/PDb_Settings.class.php:330
+msgid "when the submission matches the Duplicate Record Check Field of an existing record. This also applies to importing records from a CSV file."
+msgstr "når indtastningen matcher checkfeltet på en eksisterende post. Dette gælder også for poster importeret fra en CSV-fil."
 
-#: classes/PDb_Settings.class.php:376 upload_csv.php:143
+#: classes/PDb_Settings.class.php:333
 msgid "Create a new record with the submission"
-msgstr "Opret en ny post med den afgivelse"
+msgstr "Opret en ny post med det indtastede"
 
-#: classes/PDb_Settings.class.php:377
+#: classes/PDb_Settings.class.php:334
 msgid "Overwrite matching record with new data"
-msgstr "Overskrive matchende post med nye data"
+msgstr "Overskriv en eksisterende post med nye data"
 
-#: classes/PDb_Settings.class.php:378
+#: classes/PDb_Settings.class.php:335
 msgid "Show a validation error message"
-msgstr "Vis en validerings fejlmeddelelse"
+msgstr "Vis en valideringsfejlbesked"
 
-#: classes/PDb_Settings.class.php:386
+#: classes/PDb_Settings.class.php:343
 msgid "Duplicate Record Error Message"
-msgstr " Fejlmeddelelse for Dublet post"
+msgstr "Fejlmeddelelse ved dupleret post"
 
-#: classes/PDb_Settings.class.php:390
-msgid ""
-"If \"Show a validation error message\" is selected above, this message will be "
-"shown if a signup is made with a \"check field\" that matches an existing record."
-msgstr ""
-"Hvis \"Vis en validerings fejlmeddelelse\" er valgt ovenfor, vil denne meddelelse "
-"blive vist, hvis en tilmelding er lavet med en \"valgt felt\", der matcher en "
-"eksisterende post."
+#: classes/PDb_Settings.class.php:347
+msgid "If \"Show a validation error message\" is selected above, this message will be shown if a signup is made with a \"check field\" that matches an existing record."
+msgstr "Hvis &quot;Vis en valideringsfejlmeddelelsen&quot; er valgt ovenfor, og såfremt en tilmelding er lavet med et &quot;kontrolfelt&quot;, der matcher en eksisterende post vil denne meddelelse blive vist."
 
-#: classes/PDb_Settings.class.php:391
+#: classes/PDb_Settings.class.php:348
 #, php-format
 msgid "A record with that %s already exists. Please choose another."
-msgstr "En post med den  %s findes allerede. Vælg venligst en anden."
+msgstr "Der findes allerede en post med %s. Vælg venligst en anden."
 
-#: classes/PDb_Settings.class.php:397
+#: classes/PDb_Settings.class.php:354
 msgid "Send Signup Response Email"
-msgstr "Send e-mail med kvittering for Tilmelding"
+msgstr "Send e-mail med svar på tilmelding"
 
-#: classes/PDb_Settings.class.php:401
+#: classes/PDb_Settings.class.php:358
 msgid "Send a receipt email to people who sign up"
-msgstr "Send en kvitterings e-mail til personer, der tilmelder sig"
+msgstr "Send en e-mail kvittering til personer, der tilmelder sig"
 
-#: classes/PDb_Settings.class.php:409
+#: classes/PDb_Settings.class.php:366
 msgid "Signup Email From Address"
-msgstr "Tilmeldings e-mail fra adresse"
+msgstr "Fra-adresse på tilmeldings e-mail"
 
-#: classes/PDb_Settings.class.php:413
-msgid ""
-"the \"From\" address on signup receipt emails. If the recipient hits \"reply\", "
-"their reply will go to this address. It is a good idea to use an email address "
-"from the same domain as this website."
-msgstr ""
-"\"Fra\" adressen på e-mail kvittering for tilmelding. Hvis modtageren trykker "
-"\"Svar\", vil deres svar blive sendt til denne adresse. Det er en god idé at "
-"bruge en e-mail-adresse fra samme domæne som hjemmesiden."
+#: classes/PDb_Settings.class.php:370
+msgid "the \"From\" address on signup receipt emails. If the recipient hits \"reply\", their reply will go to this address. It is a good idea to use an email address from the same domain as this website."
+msgstr "&quot;Fra-adressen&quot; på tilmelding modtaget e-mails. Hvis modtageren klikker på  &quot;svar&quot;, vil deres svar gå til denne adresse. Det er en god idé at bruge en e-mailadresse fra samme domæne som hjemmesiden."
 
-#: classes/PDb_Settings.class.php:420
+#: classes/PDb_Settings.class.php:377
 msgid "Signup Email From Name"
-msgstr "Tilmeldings e-mail \"Fra Navn\""
+msgstr "Navnet på bruger fra Tilmeldings e-mail"
 
-#: classes/PDb_Settings.class.php:424
+#: classes/PDb_Settings.class.php:381
 msgid "the \"From\" name on signup receipt emails."
-msgstr "\"Fra\" navnet i e-mail for kvittering for  tilmelding."
+msgstr "&quot;Fra-navn&quot; på tilmelding modtaget e-mails."
 
-#: classes/PDb_Settings.class.php:431
+#: classes/PDb_Settings.class.php:388
 msgid "Signup Response Email Subject"
-msgstr "Emne for e-mail for Tilmeldings svar"
+msgstr "Emne på e-mail med Tilmeldingssvar"
 
-#: classes/PDb_Settings.class.php:435
-msgid ""
-"subject line for the signup response email; placeholder tags can be used (see "
-"below)"
-msgstr ""
-"emnelinjen for e-mail ved tilmelding; placeholder tags kan anvendes (se nedenfor)"
+#: classes/PDb_Settings.class.php:392
+msgid "subject line for the signup response email; placeholder tags can be used (see below)"
+msgstr "emnelinjen for tilmelding svar e-mail; pladsholderelementer tags kan anvendes (se nedenfor)"
 
-#: classes/PDb_Settings.class.php:436
+#: classes/PDb_Settings.class.php:393
 #, php-format
 msgid "You've just signed up on %s"
-msgstr "Du har nu tilmeldt dig på %s"
+msgstr "Du har lige tilmeldt dig på%s"
 
-#: classes/PDb_Settings.class.php:442
+#: classes/PDb_Settings.class.php:399
 msgid "Signup Response Email"
-msgstr "E-mail  for Tilmeldings svar"
+msgstr "Tilmeldings e-mail"
 
-#: classes/PDb_Settings.class.php:446
-msgid ""
-"Body of the email a visitor gets when they sign up. It includes a link "
-"([record_link]) back to their record so they can fill it out. Can include HTML, "
-"placeholders:[first_name],[last_name],[email],[record_link]. You can only use "
-"placeholders for fields that are present in the signup form, including hidden "
-"fields."
-msgstr ""
-"Brødtekst for den e-mail en besøgende får, når de tilmelder sig. Det indeholder "
-"et link ([record_link]) tilbage til deres post, så de kan udfylde den. Kan "
-"indeholde HTML, placeholders: [first_name], [last_name], [email], [record_link]. "
-"Du kan kun bruge placeholders for de felter, der benyttes i "
-"tilmeldingsformularen, herunder også skjulte felter."
+#: classes/PDb_Settings.class.php:403
+msgid "Body of the email a visitor gets when they sign up. It includes a link ([record_link]) back to their record so they can fill it out. Can include HTML, placeholders:[first_name],[last_name],[email],[record_link]. You can only use placeholders for fields that are present in the signup form, including hidden fields."
+msgstr "Teksten i den e-mailen en besøgende får, når de tilmelder sig. Det indeholder et link ([record_link]) tilbage til deres post, så de kan udfylde den. Kan indeholde HTML, pladsholdere: [FIRST_NAME], [last_name], [e-mail] [record_link]. Du kan kun bruge pladsholdere for felter, der er til stede i tilmeldingsformular, men også skjulte felter."
 
-#: classes/PDb_Settings.class.php:448
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:405
 #, php-format
-msgid ""
-"<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete your "
-"registration with additional information or update your information by visiting "
-"this private link at any time: <a href=\"[record_link]\">[record_link]</a>.</p>"
-msgstr ""
-"<p> Tak, [first_name], for din tilmelding med% s. </p><p> Du kan til enhver tid "
-"fuldføre din registrering med yderligere oplysninger eller opdatere dine "
-"oplysninger ved at benytte denne private link: <a href="
-"\"[record_link]\">[record_link]</a>.</p>"
+msgid "<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete your registration with additional information or update your information by visiting this private link at any time: <a href=\"[record_link]\">[record_link]</a>.</p>"
+msgstr "<p> Tak, [FIRST_NAME], for at tilmelde dig med%s. </p><p> Du kan fuldføre din registrering med yderligere oplysninger eller opdatere dine oplysninger ved at besøge dette privat link til enhver tid: <a href=\"[record_link]\">[record_link]</a> . </p>"
 
-#: classes/PDb_Settings.class.php:454
+#: classes/PDb_Settings.class.php:411
 msgid "Signup Thanks Message"
-msgstr "Tak besked for Tilmelding"
+msgstr "Tak for Tilmelding besked"
 
-#: classes/PDb_Settings.class.php:458
-msgid ""
-"Note to display on the web page after someone has submitted a signup form. Can "
-"include HTML and placeholders (see above)"
-msgstr ""
-"Note der vises på websiden efter en person har indgivet en tilmeldingsformular. "
-"Kan indeholde HTML og placeholders (se ovenfor)"
+#: classes/PDb_Settings.class.php:415
+msgid "Note to display on the web page after someone has submitted a signup form. Can include HTML and placeholders (see above)"
+msgstr "Dette vises på hjemmesiden, når en person har udfyldt og indsendt en tilmeldingsformular. Kan indeholde HTML og pladsholdere (se ovenfor)"
 
-#: classes/PDb_Settings.class.php:459
-msgid ""
-"<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
-"acknowledgement shortly. You may complete your registration with additional "
-"information or update your information by visiting the link provided in the email."
-"</p>"
-msgstr ""
-"<p> Tak, [first_name] for din tilmelding! </p><p> Du vil om kort tid modtage en "
-"kvitterings e-mail . Du kan fuldføre din registrering med yderligere oplysninger "
-"eller opdatere dine oplysninger ved at benytte linket i e-mailen. </p>"
+#: classes/PDb_Settings.class.php:416
+msgid "<p>Thank you, [first_name] for signing up!</p><p>You will receive an email acknowledgement shortly. You may complete your registration with additional information or update your information by visiting the link provided in the email.</p>"
+msgstr "<p> Tak, [FIRST_NAME] for at tilmelde dig! </p><p> Du vil om kort tid modtage en e-mail kvittering. Du kan fuldføre din registrering med yderligere oplysninger eller opdatere dine oplysninger ved at besøge linket i e-mailen. </p>"
 
-#: classes/PDb_Settings.class.php:465
+#: classes/PDb_Settings.class.php:422
 msgid "Send Signup Notification Email"
-msgstr "Send Tilmeldings meddelelses e-mail"
+msgstr "Send e-mail med meddelse om tilmelding"
 
-#: classes/PDb_Settings.class.php:470
+#: classes/PDb_Settings.class.php:427
 msgid "Send an email notification that a signup has occurred."
 msgstr "Send en e-mail besked om, at en tilmelding er sket."
 
-#: classes/PDb_Settings.class.php:479
+#: classes/PDb_Settings.class.php:436
 msgid "Signup Notification Recipients"
-msgstr "Modtagere af tilmeldings meddelelse"
+msgstr "Modtagere af underretning om tilmelding"
 
-#: classes/PDb_Settings.class.php:483
+#: classes/PDb_Settings.class.php:440
 msgid "comma-separated list of email addresses to send signup notifications to"
-msgstr ""
-"kommasepareret (csv) liste af e-mail adresser til fremsendelse af  Tilmeldings "
-"meddelelser"
+msgstr "kommasepareret liste af e-mail adresser, der skal sendes tilmeldingsmeddelelser til"
 
-#: classes/PDb_Settings.class.php:490
+#: classes/PDb_Settings.class.php:447
 msgid "Signup Notification Email Subject"
-msgstr "Emne for Tilmelding e-mail"
+msgstr "Emne på tilmeldings e-mail"
 
-#: classes/PDb_Settings.class.php:494 classes/PDb_Settings.class.php:880
+#: classes/PDb_Settings.class.php:451 classes/PDb_Settings.class.php:565
 msgid "subject of the notification email; placeholder tags can be used (see above)"
-msgstr "emnet for e-mail meddelelse; placeholder tags kan benyttes (se ovenfor)"
+msgstr "titel på tilmeldingse-mail; der kan bruges \"placeholders\" (se ovenfor)"
 
-#: classes/PDb_Settings.class.php:496
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:453
 #, php-format
 msgid "New signup on %s"
-msgstr "Ny tilmelding på% s"
+msgstr "Ny tilmelding på%s"
 
-#: classes/PDb_Settings.class.php:502
+#: classes/PDb_Settings.class.php:459
 msgid "Signup Notification Email"
-msgstr "E-mail for Tilmeldings Meddelelse"
+msgstr "E-mail med tilmeldingsnotifikation"
 
-#: classes/PDb_Settings.class.php:506
-msgid ""
-"notification email body. The [admin_record_link] tag will supply the URL for "
-"editing the record in the admin."
-msgstr ""
-"e-mail, brødtekst. Den [admin_record_link] tag vil  medføre en URL til redigering "
-"af den pågældende post i admin."
+#: classes/PDb_Settings.class.php:463
+msgid "notification email body. The [admin_record_link] tag will supply the URL for editing the record in the admin."
+msgstr "e-mail teksten med notifikation om tilmelding. [admin_record_link] tag vil være den URL&#39, der kan bruges til redigering af posten i admin-panelet."
 
-#: classes/PDb_Settings.class.php:507
-msgid ""
-"<p>A new signup has been submitted</p><ul><li>Name: [first_name] [last_name]</"
-"li><li>Email: [email]</li></ul><p>Edit this new record here: <a href="
-"\"[admin_record_link]\">[admin_record_link]</a></p>"
-msgstr ""
-"<p> En ny tilmelding er indsendt </p><ul><li> Navn: [first_name] [last_name] </"
-"li><li> E-mail: [email] </li></ul><p> Rediger denne nye post her: <a href="
-"\"[admin_record_link]\">[admin_record_link]</a></p>"
+#: classes/PDb_Settings.class.php:464
+msgid "<p>A new signup has been submitted</p><ul><li>Name: [first_name] [last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a href=\"[admin_record_link]\">[admin_record_link]</a></p>"
+msgstr "<p> En ny tilmelding er indsendt </p><ul><li> Navn: [FIRST_NAME] [last_name] </li><li> Email: [e-mail] </li></ul><p> Rediger denne nye post her: <a href=\"[admin_record_link]\">[admin_record_link]</a> </p>"
 
-#: classes/PDb_Settings.class.php:532
+#: classes/PDb_Settings.class.php:476
+msgid "Enable Lost Private Link"
+msgstr "Muligør mistet Privat Link"
+
+#: classes/PDb_Settings.class.php:481
+msgid "Show a link on the signup form allowing users to have their private link emailed to them."
+msgstr "Vis et link på tilmelding formularen så brugere kan få deres eget link sendt til dem."
+
+#: classes/PDb_Settings.class.php:489
+msgid "Lost Private Link Text"
+msgstr "Tekst til mistet Privat Link"
+
+#: classes/PDb_Settings.class.php:493
+msgid "clickable text shown in the signup form"
+msgstr "klikbar tekst, som vises i tilmeldingsformularen"
+
+#: classes/PDb_Settings.class.php:494 templates/pdb-signup-bootstrap.php:56
+msgid "Forget your private link? Click here to have it emailed to you."
+msgstr "Har du mistet dit eget link? Klik her for at få det sendt til dig."
+
+#: classes/PDb_Settings.class.php:499
+msgid "Lost Private Link Page"
+msgstr "Mistet Privat Link side"
+
+#: classes/PDb_Settings.class.php:504
+msgid "send people to this page to request their private link."
+msgstr "send brugere til denne side så de kan anmode om deres private link."
+
+#: classes/PDb_Settings.class.php:513
+msgid "Lost Private Link ID Field"
+msgstr "Id-felt til mistet Privat Link"
+
+#: classes/PDb_Settings.class.php:517
+msgid "The field used to identify the user&#39;s account. This must be a unique identifier for the record"
+msgstr "Feltet bruges til at identificere brugeren&#39;s konto. Dette skal være et entydigt id for posten"
+
+#: classes/PDb_Settings.class.php:525
+msgid "Lost Private Link Email Subject"
+msgstr "E-mail-emne til mistet Privat Link"
+
+#: classes/PDb_Settings.class.php:529
+msgid "subject line for the lost private link email"
+msgstr "emnelinje for mistet privat link e-mail"
+
+#: classes/PDb_Settings.class.php:530
+#, php-format
+msgid "Here is your private link on %s"
+msgstr "Her er dit eget link til %s"
+
+#: classes/PDb_Settings.class.php:536
+msgid "Lost Private Link Email"
+msgstr "Mistet Privat Link e-mail"
+
+#: classes/PDb_Settings.class.php:540
+msgid "Body of the email sent when a lost private link is requested."
+msgstr "Teksten i den e-mailen der sendes, når der er anmodet om et mistet privat link."
+
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:542
+#, php-format
+msgid "Here is the private link you requested from %s:"
+msgstr "Her er linket du anmodede om fra %s:"
+
+#: classes/PDb_Settings.class.php:548
+msgid "Send Lost Private Link Notification Email"
+msgstr "Send tabt Privat Link E-mail"
+
+#: classes/PDb_Settings.class.php:553
+msgid "Send an email notification that a lost private link has been requested. This email will go to the \"Signup Notification Recipients.\""
+msgstr "Send en e-mail-besked om, at der er anmodet om privat link. Denne e-mail vil gå til \"Modtagere af tilmeldinger.\""
+
+#: classes/PDb_Settings.class.php:561
+msgid "Lost Private Link Notification Email Subject"
+msgstr "Emen på email om mistet Privat Link anmeldelse"
+
+#. translators: the %s will be the name of the website
+#: classes/PDb_Settings.class.php:567
+#, php-format
+msgid "A Lost Private Link has been requested on %s"
+msgstr "En mistet privat Link er blevet anmodet om på %s"
+
+#: classes/PDb_Settings.class.php:573
+msgid "Lost Private Link Notification Email"
+msgstr "Mistet Privat Link E-mail"
+
+#: classes/PDb_Settings.class.php:577
+msgid "notification email body"
+msgstr "anmeldelse e-mail krop"
+
+#: classes/PDb_Settings.class.php:578
+msgid "<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] [last_name]</li><li>Email: [email]</li></ul>"
+msgstr "<p>Denne bruger:</p><ul><li>Navn: [fornavn] [efternavn]</li><li>E-mail: [e-mail]</li></ul> har anmodet om gensendelse af privat link"
+
+#: classes/PDb_Settings.class.php:584
+msgid "Retrieve Private Link Error Message"
+msgstr "Hent fejl besked til Privat Link"
+
+#: classes/PDb_Settings.class.php:588
+msgid "Message shown when a record matching the retrieve link idenifier cannot be found"
+msgstr "Meddelelsen der vises, når en post matchende \"Hent link identifier\" ikke kan findes"
+
+#: classes/PDb_Settings.class.php:589
+#, php-format
+msgid "A record matching that %s cannot be found."
+msgstr "En post der matcher %s kan ikke findes."
+
+#: classes/PDb_Settings.class.php:601
 msgid "Participant Record Page"
-msgstr "Participant Post Page"
+msgstr "Deltagerpost side"
 
-#: classes/PDb_Settings.class.php:537
-msgid ""
-"The page where your participant record ([pdb_record] shortcode) is displayed. You "
-"can use a Post ID for posts and custom post types."
-msgstr ""
-"Den side, hvor din participant record ([pdb_record] shortcode) vises. Du kan "
-"bruge en post ID for post og brugerdefinerede post typer."
+#: classes/PDb_Settings.class.php:606
+msgid "The page where your participant record ([pdb_record] shortcode) is displayed. You can use a Post ID for posts and custom post types."
+msgstr "Den side, hvor din deltager rekord ([pdb_record] kortkode) vises. Du kan bruge en post ID for post- og brugerdefinerede typer."
 
-#: classes/PDb_Settings.class.php:545
+#: classes/PDb_Settings.class.php:614
 msgid "Show Group Descriptions"
-msgstr "Vis gruppe beskrivelser"
+msgstr "Vis gruppebeskrivelser"
 
-#: classes/PDb_Settings.class.php:550
+#: classes/PDb_Settings.class.php:619
 msgid "Show the group description under each group title in the record form."
-msgstr "Vis gruppens beskrivelse under hver gruppe titel i post formularen."
+msgstr "Vis gruppens beskrivelse under hver gruppetitel i post formularen."
 
-#: classes/PDb_Settings.class.php:558
+#: classes/PDb_Settings.class.php:627
 msgid "Save Changes Label"
-msgstr "Label for Gem ændringer"
+msgstr "Gem ændringer Label"
 
-#: classes/PDb_Settings.class.php:563
+#: classes/PDb_Settings.class.php:632
 msgid "label for the save changes button on the record form"
-msgstr "label for knappen til Gem ændringer for post formularen"
+msgstr "tekst til Gem ændringer knappen på postformularen"
 
-#: classes/PDb_Settings.class.php:564
+#: classes/PDb_Settings.class.php:633
 msgid "Save Your Changes"
 msgstr "Gem dine ændringer"
 
-#: classes/PDb_Settings.class.php:570
+#: classes/PDb_Settings.class.php:639
 msgid "Save Button Text"
-msgstr "Gem knap Text"
+msgstr "Tekst på Gem-knappen"
 
-#: classes/PDb_Settings.class.php:575
+#: classes/PDb_Settings.class.php:644
 msgid "text on the \"save\" button"
-msgstr "tekst på \"Gem\" knappen"
+msgstr "tekst på \"gem\" knappen"
 
-#: classes/PDb_Settings.class.php:576
+#: classes/PDb_Settings.class.php:645
 msgctxt "a label for a button to save a form"
 msgid "Save"
 msgstr "Gem"
 
-#: classes/PDb_Settings.class.php:582
+#: classes/PDb_Settings.class.php:651
 msgid "Record Updated Message"
-msgstr "Besked for Opdateret post"
+msgstr "Posten er opdateret besked"
 
-#: classes/PDb_Settings.class.php:586
+#: classes/PDb_Settings.class.php:655
 msgid "the message shown when a record form has been successfully submitted"
-msgstr "meddelelsen der vises, når en post formular er indsendt"
+msgstr "meddelelsen vises, når en postformular er sendt med succes"
 
-#: classes/PDb_Settings.class.php:593
+#: classes/PDb_Settings.class.php:656
+msgid "Your information has been updated"
+msgstr "Dine oplysninger er blevet opdateret"
+
+#: classes/PDb_Settings.class.php:662
 msgid "Record Not Found Error Message"
-msgstr "Fejl besked for \"Post ikke fundet\"."
+msgstr "Post ikke fundet Fejlbesked"
 
-#: classes/PDb_Settings.class.php:597
-msgid ""
-"message to show if the record page was accessed without a valid identifier. Leave "
-"this empty if you want nothing at all to show."
-msgstr ""
-"beskeden der vises, hvis post-siden blev åbnet uden en gyldig identifier. Lad "
-"være tomt, hvis du ikke vil vise noget overhovedet."
+#: classes/PDb_Settings.class.php:666
+msgid "message to show if the record page was accessed without a valid identifier. Leave this empty if you want nothing at all to show."
+msgstr "besked der vises, hvis en post er blev åbnet uden en gyldig identifikator. Lad dette være tomt, hvis du ikke vil vise noget."
 
-#: classes/PDb_Settings.class.php:598
+#: classes/PDb_Settings.class.php:667
 msgid "No record was found."
 msgstr "Ingen post fundet."
 
-#: classes/PDb_Settings.class.php:604
-msgid "Use Template for No Record Message"
-msgstr "Brug skabelonen til ingen post besked"
-
-#: classes/PDb_Settings.class.php:609
-msgid ""
-"If checked, use the record template to show the \"Record Not Found\" message. If "
-"unchecked, the message is shown without using the template."
-msgstr ""
-"Hvis markeret, skal du bruge postskabelonen til at vise meddelelsen \"Post ikke "
-"fundet\". Hvis markeringen er fjernet, vises meddelelsen uden at bruge skabelonen."
-
-#: classes/PDb_Settings.class.php:617
+#: classes/PDb_Settings.class.php:673
 msgid "Send Record Form Update Notification Email"
-msgstr "E-mail for besked om sendt opdatering af Post formular"
+msgstr "Send e-mail at posten er blevet opdateret"
 
-#: classes/PDb_Settings.class.php:622
-msgid ""
-"Send an email notification that a record has been updated. These will be sent to "
-"the email addresses listed in the \"Signup Notification Recipients\" setting."
-msgstr ""
-"Send en e-mail besked om, at en post er blevet opdateret. Disse vil blive sendt "
-"til de e-mail-adresser, der er anført i indstillingen for \"Tilmeld Modtagere "
-"Meddelelse\"."
+#: classes/PDb_Settings.class.php:678
+msgid "Send an email notification that a record has been updated. These will be sent to the email addresses listed in the \"Signup Notification Recipients\" setting."
+msgstr "Send en e-mail besked om, at en post er blevet opdateret. Disse vil blive sendt til den e-mail-adresse, der er anført i indstillingen &quot;signup Notification Modtagere&quot;."
 
-#: classes/PDb_Settings.class.php:630
+#: classes/PDb_Settings.class.php:686
 msgid "Record Update Email Subject"
-msgstr "Emne for E-mail for Post opdatering"
+msgstr "Emne til Post Opdaterings e-mail"
 
-#: classes/PDb_Settings.class.php:634
-msgid ""
-"subject line for the record update notification email; placeholders can be used."
-msgstr ""
-"emnelinjen for e-mail med  post opdatering meddelelsen; placeholder tags kan "
-"anvendes."
+#: classes/PDb_Settings.class.php:690
+msgid "subject line for the record update notification email; placeholders can be used."
+msgstr "emnelinjen for post opdaterings e-mail; pladsholdere kan anvendes."
 
-#: classes/PDb_Settings.class.php:635
+#: classes/PDb_Settings.class.php:691
 #, php-format
 msgid "A record has just been updated on %s"
-msgstr "En post  er netop blevet opdateret den %s"
+msgstr "En post er netop blevet opdateret på %s"
 
-#: classes/PDb_Settings.class.php:641
+#: classes/PDb_Settings.class.php:697
 msgid "Record Update Notification Email"
-msgstr "Post Update meddelelses e-mail"
+msgstr "Notifikations Email vedrørende post opdatering"
 
-#: classes/PDb_Settings.class.php:646
-msgid ""
-"Body of the the email sent when a user updates their record. Any field from the "
-"form can be included by using a replacement code of the form: [field_name]. For "
-"instance: [last_name],[address],[email] etc. (The field name is under the \"name"
-"\" column on the \"Manage Database Fields\" page.)  Also available is [date] "
-"which will show the date and time of the update and [admin_record_link] tag for a "
-"link to edit the record in the admin."
-msgstr ""
-"Brødtekst for den e-mail der sendes, når en bruger opdaterer sin post. Alle "
-"felter fra formularen kan inkluderes ved at bruge en erstatning kode af formen: "
-"[field_name]. For eksempel: [last_name],[address], [email] osv. (Felt-navnet "
-"under \"name\"kolonnen på \"Manage Database Fields\" side.)  Også [dato] er "
-"tilgængelig, som vil vise dato og klokkeslæt af opdateringen og "
-"[admin_record_link] tag for et link til at redigere posten i admin."
+#. translators: [date] and [admin_record_link] must not be translated, they must be used literally. The rest of the words enclosed in brackets can be defined by the user, they are used here only as examples.
+#: classes/PDb_Settings.class.php:702
+msgid "Body of the the email sent when a user updates their record. Any field from the form can be included by using a replacement code of the form: [field_name]. For instance: [last_name],[address],[email] etc. (The field name is under the \"name\" column on the \"Manage Database Fields\" page.)  Also available is [date] which will show the date and time of the update and [admin_record_link] tag for a link to edit the record in the admin."
+msgstr "Teksten i den e-mail der sendes, når en bruger opdaterer sine data. Ethvert felt fra formularen kan inkluderes ved at bruge en kode af formen: [FIELD_NAME]. For eksempel: [last_name], [adresse], [e-mail] etc. (Feltets navn er i kolonnen &quot;navn&quot; på &quot;Manage Database Fields&quot; side.) Det er også muligt at bruge [dato], som viser dato og klokkeslæt for opdateringen og [admin_record_link] tag for et link til at redigere posten i admin."
 
-#: classes/PDb_Settings.class.php:647
-msgid ""
-"<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
-"[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
-"li><li>Phone: [phone]</li><li>Email: [email]</li></ul><p>Edit this record <a href="
-"\"[admin_record_link]\">here.</a></p>"
-msgstr ""
-"<p> Følgende post blev opdateret den [dato]: </p><ul><li> Navn: [first_name] "
-"[last_name] </li><li> Adresse: [adresse] </li><li> [city], [state], [country] </"
-"li><li> Telefon: [phone] </li><li> E-mail: [email] </li></ul><p> Rediger denne "
-"post <a href=\"[admin_record_link]\">her.</a> </p>"
+#: classes/PDb_Settings.class.php:703
+msgid "<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] [last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</li><li>Phone: [phone]</li><li>Email: [email]</li></ul><p>Edit this record <a href=\"[admin_record_link]\">here.</a></p>"
+msgstr "<p> Følgende post blev opdateret den [dato]: </p><ul><li> Navn: [FIRST_NAME] [last_name] </li><li> Adresse: [adresse] </li><li> [By], [tilstand], [land] </li><li> Telefon: [telefon] </li><li> Email: [e-mail] </li></ul><p> Rediger denne post <a href=\"[admin_record_link]\">her.</a> </p>"
 
-#: classes/PDb_Settings.class.php:660
+#: classes/PDb_Settings.class.php:716
 msgid "Records per Page"
 msgstr "Poster pr. side"
 
-#: classes/PDb_Settings.class.php:664
+#: classes/PDb_Settings.class.php:720
 msgid "the number of records to show on each page"
 msgstr "antallet af poster der skal vises på hver side"
 
-#: classes/PDb_Settings.class.php:672
+#: classes/PDb_Settings.class.php:728
 msgid "Single Record Link Field"
-msgstr "Single Post Link Field"
+msgstr "Enkelt post Link felt"
 
-#: classes/PDb_Settings.class.php:677
-msgid ""
-"select the field on which to put a link to the [pdb_single] shortcode. Leave "
-"blank or set to \"none\" for no link."
-msgstr ""
-"vælge feltet som at sætte et link til [pdb_single] shortcode. Efterlad blank "
-"eller sat til \"none\"; for ingen link."
+#: classes/PDb_Settings.class.php:733
+msgid "select the field on which to put a link to the [pdb_single] shortcode. Leave blank or set to \"none\" for no link."
+msgstr "vælg det felt, hvor der skal være et link til [pdb_single] shortcode. Efterlad det tomt eller sat til &quot;ingen&quot; hvis link'et er udeladt."
 
-#: classes/PDb_Settings.class.php:684
+#: classes/PDb_Settings.class.php:740
 msgid "Single Record Page"
-msgstr "Single Post side"
+msgstr "Enkelt post side"
 
-#: classes/PDb_Settings.class.php:690
-msgid ""
-"this is the page where the [pdb_single] shortcode is located. If you want to "
-"assign a post or custom post type, select \"Post ID\" and enter the post ID in "
-"the \"other\" box."
-msgstr ""
-"dette er den side, hvor [pdb_single] shortcode er placeret. Hvis du vil tildele "
-"en post eller brugerdefineret post type, Vælg \"Post-ID\" og Indtast post ID i "
-"feltet \"andet\"."
+#: classes/PDb_Settings.class.php:746
+msgid "this is the page where the [pdb_single] shortcode is located. If you want to assign a post or custom post type, select \"Post ID\" and enter the post ID in the \"other\" box."
+msgstr "dette er den side, hvor [pdb_single] shortcode er placeret. Hvis du vil tildele en post eller brugerdefineret post type, Vælg \"Post-ID\" og Indtast stillingen ID i feltet \"andet\"."
 
-#: classes/PDb_Settings.class.php:697
+#: classes/PDb_Settings.class.php:753
 msgid "No Records Message"
-msgstr "Besked for Ingen poster"
+msgstr "Besked ved ingen poster"
 
-#: classes/PDb_Settings.class.php:701
+#: classes/PDb_Settings.class.php:757
 msgid "Message shown when no records are found."
-msgstr "Meddelelse vises, når der ikke bliver fundet nogen poster."
+msgstr "Meddelelse der vises, når ingen poster findes."
 
-#: classes/PDb_Settings.class.php:702
+#: classes/PDb_Settings.class.php:758
 msgid "No Records Found"
 msgstr "Ingen poster fundet"
 
-#: classes/PDb_Settings.class.php:707
+#: classes/PDb_Settings.class.php:763
 msgid "Show Count"
 msgstr "Vis antal"
 
-#: classes/PDb_Settings.class.php:712
+#: classes/PDb_Settings.class.php:768
 msgid "Show the list count on list displays. Can also be set in the shortcode."
-msgstr "Vis tæller i liste-visninger. Kan også angives i shortcode."
+msgstr "Vis antal ved listevisningr. Kan også angives i shortcode."
 
-#: classes/PDb_Settings.class.php:720
+#: classes/PDb_Settings.class.php:776
 msgid "List Count Template"
-msgstr "Template for Vis antal"
+msgstr "Skabelon for listetæller"
 
-#: classes/PDb_Settings.class.php:724
+#: classes/PDb_Settings.class.php:780
 #, php-format
-msgid ""
-"template for displaying the list count. %1$s - total number of records found, "
-"%2$s - number of records shown per page, %3$s - starting record number, %4$s - "
-"ending record number, %5$s - the current page number"
-msgstr ""
-"skabelon til at vise listens antal. %1$s - samlet antal poster fundet, %2$s - "
-"antallet af poster, der vises pr. side, %3$s - start post nummer, %4$s - slut "
-"post nummer, %5$s - det aktuelle sidenummer"
+msgid "template for displaying the list count. %1$s - total number of records found, %2$s - number of records shown per page, %3$s - starting record number, %4$s - ending record number, %5$s - the current page number"
+msgstr "skabelon til at vise antal. %1$s - samlet antal poster fundet, %2$s - antallet af poster, der vises pr. side, %3$s - første post nummer, %4$s - sidste post nummer, %5$s - det aktuelle sidenummer"
 
-#: classes/PDb_Settings.class.php:725
+#: classes/PDb_Settings.class.php:781
 #, php-format
 msgid "Total Records Found: %1$s, showing %2$s per page"
-msgstr "Antal poster ialt: %1$s . Viser %2$s poster pr. side"
+msgstr "Samlet antal poster fundet: %1$s, viser %2$s pr. side"
 
-#: classes/PDb_Settings.class.php:735
+#: classes/PDb_Settings.class.php:791
 msgid "List Default Sort"
 msgstr "Listen standardsortering"
 
-#: classes/PDb_Settings.class.php:741
-msgid ""
-"The record list shown by the list shortcode will be sorted by this field by "
-"default. (Field must be checked \"sortable.\")"
-msgstr ""
-"Listen over poster vist af den liste shortcode vil være sorteret efter feltet som "
-"standard. (Felt skal kontrolleres \"sorterbare.\")"
-
-#: classes/PDb_Settings.class.php:748
-msgid "List Default Sort Order"
-msgstr "Liste standardsorteringsrækkefølgen"
-
-#: classes/PDb_Settings.class.php:752
-msgid "Sets the default order of the records shown by the list shortcode."
-msgstr ""
-"Indstiller standardrækkefølgen af de poster, der vises af den liste shortcode."
-
-#: classes/PDb_Settings.class.php:761
-msgid "Allow Empty Search"
-msgstr "Tillad tom søgning"
-
-#: classes/PDb_Settings.class.php:766
-msgid "This allows frontend searches to find records with missing or blank data."
-msgstr ""
-"Dette giver mulighed for frontend søgninger til at finde poster med manglende "
-"eller blank data."
-
-#: classes/PDb_Settings.class.php:780
-msgid "Enable Lost Private Link"
-msgstr "Aktivere mistet Private Link"
-
-#: classes/PDb_Settings.class.php:785
-msgid ""
-"Show a link on the signup form allowing users to have their private link emailed "
-"to them."
-msgstr ""
-"Vis et link på tilmeldings formularen så brugere kan få deres private link "
-"tilsendt på e-mail."
-
-#: classes/PDb_Settings.class.php:793
-msgid "Lost Private Link Text"
-msgstr "Mistet Private Link tekst"
-
 #: classes/PDb_Settings.class.php:797
-msgid "clickable text shown in the signup form"
-msgstr "klikbar tekst, der vises i tilmeldings-formularen"
+msgid "The record list shown by the list shortcode will be sorted by this field by default. (Field must be checked \"sortable.\")"
+msgstr "Listen over poster valgt efter shortcode vil være sorteret efter dette felt som standard. (Felt \"sorterbare.\" skal være markeret)"
 
-#: classes/PDb_Settings.class.php:798
-msgid "Forget your private link? Click here to have it emailed to you."
-msgstr "Glemt dit private link? Klik her for at få det tilsendt på e-mail."
-
-#: classes/PDb_Settings.class.php:803
-msgid "Lost Private Link Page"
-msgstr "Side for Mistet Private Link"
+#: classes/PDb_Settings.class.php:804
+msgid "List Default Sort Order"
+msgstr "Listen standardsorteringsrækkefølgen"
 
 #: classes/PDb_Settings.class.php:808
-msgid "send people to this page to request their private link."
-msgstr "send bruger til denne side for at anmode om deres private link."
+msgid "Sets the default order of the records shown by the list shortcode."
+msgstr "Indstiller standardrækkefølgen af posterne baseret på shortcode."
 
 #: classes/PDb_Settings.class.php:817
-msgid "Lost Private Link ID Field"
-msgstr "Mistet Privat Link id-felt"
-
-#: classes/PDb_Settings.class.php:821
-msgid ""
-"The field used to identify the user&#39;s account. This must be a unique "
-"identifier for the record"
-msgstr ""
-"Feltet der bruges til at identificere brugerens konto. Dette skal være et "
-"entydigt id for posten"
-
-#: classes/PDb_Settings.class.php:829
-msgid "ID Field Help Text"
-msgstr "ID-felt hjælpetekst"
-
-#: classes/PDb_Settings.class.php:833
-msgid "help text for the record identification field"
-msgstr "hjælpetekst til feltet postidentifikation"
-
-#: classes/PDb_Settings.class.php:834
-#, php-format
-msgid "Type in your %s, your private link will be emailed to you."
-msgstr "Indtast din %s, dit eget private link vil blive sendt til dig på e-mail."
-
-#: classes/PDb_Settings.class.php:840
-msgid "Lost Private Link Email Subject"
-msgstr "Emne for e-mail for Mistet Private Link"
-
-#: classes/PDb_Settings.class.php:844
-msgid "subject line for the lost private link email"
-msgstr "emnelinje for e-mail for Mistet privat link"
-
-#: classes/PDb_Settings.class.php:845
-#, php-format
-msgid "Here is your private link on %s"
-msgstr "Her er dit private link på %s"
-
-#: classes/PDb_Settings.class.php:851
-msgid "Lost Private Link Email"
-msgstr "E-mail for Mistet Private Link"
-
-#: classes/PDb_Settings.class.php:855
-msgid "Body of the email sent when a lost private link is requested."
-msgstr ""
-"Brødtekst for den e-mailen der sendes, når der anmodes om at få tilsendt en "
-"Mistet privat link."
-
-#: classes/PDb_Settings.class.php:857
-#, php-format
-msgid "Here is the private link you requested from %s:"
-msgstr "Her er det private link, du har anmodet om fra % s:"
-
-#: classes/PDb_Settings.class.php:863
-msgid "Send Lost Private Link Notification Email"
-msgstr "Send e-mail for Mistet Private Link"
-
-#: classes/PDb_Settings.class.php:868
-msgid ""
-"Send an email notification that a lost private link has been requested. This "
-"email will go to the \"Signup Notification Recipients.\""
-msgstr ""
-"Send en e-mail-underretning, om et mistet privat link. Denne e-mail vil gå til "
-"\"Modtagere af Tilmeldings meddelelse.\""
-
-#: classes/PDb_Settings.class.php:876
-msgid "Lost Private Link Notification Email Subject"
-msgstr "Emne for Mistet Private Link e-mail meddelelse"
-
-#: classes/PDb_Settings.class.php:882
-#, php-format
-msgid "A Lost Private Link has been requested on %s"
-msgstr "Der er anmodet om et Mistet privat Link på %s"
-
-#: classes/PDb_Settings.class.php:888
-msgid "Lost Private Link Notification Email"
-msgstr "Mistet Private Link e-mail"
-
-#: classes/PDb_Settings.class.php:892
-msgid "notification email body"
-msgstr "meddelelse e-mail brødtekst"
-
-#: classes/PDb_Settings.class.php:893
-msgid ""
-"<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
-"[last_name]</li><li>Email: [email]</li></ul>"
-msgstr ""
-"<p>Der er anmodet om et mistet privat link fra:</p><ul><li>Navn: [first_name] "
-"[last_name]</li><li>E-mail: [email]</li></ul>"
-
-#: classes/PDb_Settings.class.php:899
-msgid "Retrieve Private Link Error Message"
-msgstr "Hent Fejl-besked for Private Link"
-
-#: classes/PDb_Settings.class.php:903
-msgid ""
-"Message shown when a record matching the retrieve link idenifier cannot be found"
-msgstr ""
-"Meddelelse der vises, når en matchende Hent link identifier post ikke kan findes"
-
-#: classes/PDb_Settings.class.php:904
-#, php-format
-msgid "A record matching that %s cannot be found."
-msgstr "En post som matcher %s kan ikke findes."
-
-#: classes/PDb_Settings.class.php:918
-msgid "Use the Plugin CSS"
-msgstr "Brug Plugin CSS"
-
-#: classes/PDb_Settings.class.php:923
-msgid "use the plugin's CSS to style the output of shortcodes"
-msgstr "bruge plugins CSS til at style  output af ​shortcodes"
-
-#: classes/PDb_Settings.class.php:931
-msgid "Use Rich Text Editor"
-msgstr "Brug Rich Text Editor"
-
-#: classes/PDb_Settings.class.php:936
-msgid ""
-"enable the rich text editor on \"rich-text\" fields for front-end users. If "
-"deselected, \"rich-text\" fields will appear as text-area fields. This does not "
-"affect admin users, who always have the use of the rich-text editor."
-msgstr ""
-"aktivere rich text editor på &quot;rich-text&quot; felter for front-end brugere. "
-"Hvis fravalgt, &quot;rich-text&quot; felter vises som tekst-området felter. Dette "
-"påvirker ikke admin brugere, som altid har brug for de rige-teksteditor."
-
-#: classes/PDb_Settings.class.php:944
-msgid "Use WordPress Auto Formatting"
-msgstr "Brug WordPress Auto formatering"
-
-#: classes/PDb_Settings.class.php:949
-msgid ""
-"Use WordPress&#39; \"the_content\" filter on rich text fields. This applies "
-"\"auto paragraphs\" and allows the use of shortcodes in rich text fields and HTML "
-"emails."
-msgstr ""
-"Bruge WordPress ' \"the_content\" filter på RTF-felter. Dette gælder \"auto "
-"afsnit.\" og tillader brug af shortcoder i RTF-felter og HTML e-mails."
-
-#: classes/PDb_Settings.class.php:960
-msgid "Remove Line Breaks"
-msgstr "Fjerne linjeskift"
-
-#: classes/PDb_Settings.class.php:965
-msgid "Remove line breaks from all plugin shortcode ouput."
-msgstr "Fjerne linjeskift fra alle plugin shortcode output."
-
-#: classes/PDb_Settings.class.php:977
-msgid "Use Pagination Scroll Anchors"
-msgstr "Bruge paginering rulle ankre"
-
-#: classes/PDb_Settings.class.php:982
-msgid ""
-"Uncheck this if your theme prevents pagination links with scroll anchors from "
-"working."
-msgstr ""
-"Afkryds denne hvis dit tema forhindrer paginering links med rulle ankre i at "
-"fungere."
-
-#: classes/PDb_Settings.class.php:990
-msgid "Primary Email Address Field"
-msgstr "Primær E-mail-adressefeltet"
-
-#: classes/PDb_Settings.class.php:995
-msgid "this field is the primary email address for the record"
-msgstr "dette felt er den primære e-mail-adresse for posten"
-
-#: classes/PDb_Settings.class.php:1003
-msgid "Send HTML Email"
-msgstr "Send HTML e-mail"
-
-#: classes/PDb_Settings.class.php:1008
-msgid ""
-"use rich text in plugin emails? If you turn this off, be sure to remove all HTML "
-"tags from the email body settings for the plugin."
-msgstr ""
-"bruge RTF i plugin emails? Hvis du slår denne funktion fra, skal du sørge for at "
-"fjerne alle HTML-tags fra indstillingerne for e-mail-brødtekst for \n"
-"plugin."
-
-#: classes/PDb_Settings.class.php:1017
-msgid "Strict Date Format"
-msgstr "Streng datoformat"
-
-#: classes/PDb_Settings.class.php:1023
-#, php-format
-msgid ""
-"This forces date inputs to be interpreted strictly according to the \"Input Date "
-"Format\" setting. You should tell your users what format you are expecting them "
-"to use. This also applies to date values used in [pdb_list] shortcode filters. "
-"The date with your current setting looks like this: <strong>%s</strong> %s"
-msgstr ""
-"Dette tvinger dato input skal fortolkes strengt ifølge indstillingen \"Input "
-"datoformat\". Du skal fortælle dine brugere, hvilket format de skal anvende. "
-"Dette gælder også for datoværdier der bruges i [pdb_list] shortcode filtre. Dato "
-"med din aktuelle indstilling ser sådan ud: <strong>%s</strong> %s"
-
-#: classes/PDb_Settings.class.php:1023
-msgid "Your current PHP installation does not support this setting."
-msgstr "Din nuværende PHP installation understøtter ikke denne indstilling."
-
-#: classes/PDb_Settings.class.php:1032
-msgid "Input Date Format"
-msgstr "Input datoformat"
-
-#: classes/PDb_Settings.class.php:1037
-msgid ""
-"date formatting string for all plugin date inputs when \"Strict Date Format\" is "
-"enabled. You should use this for all localized (non-American English) date "
-"formats."
-msgstr ""
-"dato formateringsstreng for alle plugin dato input når \"Streng datoformat\" er "
-"aktiveret. Du bør bruge for alle lokaliseret (ikke-amerikansk engelsk) "
-"datoformater."
-
-#: classes/PDb_Settings.class.php:1044
-msgid "Show Timestamp Time"
-msgstr "Vis tidsstemplet tid"
-
-#: classes/PDb_Settings.class.php:1049
-msgid "Show time with timestamp dates"
-msgstr "Vis tid med tidsstempel datoer"
-
-#: classes/PDb_Settings.class.php:1057
-msgid "Strict User Searching"
-msgstr "Konkret bruger søgning"
-
-#: classes/PDb_Settings.class.php:1062
-msgid ""
-"When checked, the frontend list search must match the whole field exactly. If "
-"unchecked, the search will match if the search term is found in part of the "
-"field. Searches are not case-sensitive either way."
-msgstr ""
-"Hvis markeret, skal frontend liste søgningen matcher hele området nøjagtigt. Hvis "
-"afkrydset, vil søgningen matcher hvis søgeordet er fundet i en del af området. "
-"Søgninger er ikke versalfølsomme."
-
-#: classes/PDb_Settings.class.php:1069
-msgid "Enable AJAX Search Functionality"
-msgstr "Aktiver AJAX Søge Funktionalitet"
-
-#: classes/PDb_Settings.class.php:1074
-msgid ""
-"This enables list search results that are updated without reloading the page. It "
-"requires Javascript, but search will still work if Javascript is disabled in the "
-"user's browser."
-msgstr ""
-"Dette muliggør liste søgeresultater, der opdateres uden at genindlæse siden. Det "
-"kræver Javascript, men søgning vil stadig fungere, hvis JavaScript er deaktiveret "
-"i brugerens browser."
-
-#: classes/PDb_Settings.class.php:1082
-msgid "Use PHP Sessions"
-msgstr "Brug PHP sessioner"
-
-#: classes/PDb_Settings.class.php:1087
-msgid "uncheck this if PHP sessions are not working."
-msgstr "afkryds denne hvis PHP sessioner ikke fungerer."
-
-#: classes/PDb_Settings.class.php:1095
-msgid "Cookie Name"
-msgstr "Navn på cookie"
-
-#: classes/PDb_Settings.class.php:1100
-msgid ""
-"Change the name of the cookie for compatibility with some web hosting setups."
-msgstr ""
-"Ændre navnet på cookien for kompatibilitet med nogle web-hosting-opsætninger."
-
-#: classes/PDb_Settings.class.php:1107
-msgid "Disable Backend Developer Ads"
-msgstr "Deaktivere Backend udvikler annoncer"
-
-#: classes/PDb_Settings.class.php:1112
-msgid "select this to disable developer ads in the admin."
-msgstr "vælg dette for at deaktivere udvikler annoncer i admin."
-
-#: classes/PDb_Settings.class.php:1127
 msgid "Admin List Default Sort"
 msgstr "Admin List Standard Sortering"
 
-#: classes/PDb_Settings.class.php:1133
-msgid ""
-"The record list shown in the admin section will be sorted by this field by "
-"default. (Field must be checked \"sortable.\")"
-msgstr ""
-"Listen over poster vist i afsnittet admin vil blive sorteret efter dette felt som "
-"standard. (Felt skal markeres \"kan sorteres.\")"
+#: classes/PDb_Settings.class.php:823
+msgid "The record list shown in the admin section will be sorted by this field by default. (Field must be checked \"sortable.\")"
+msgstr "Post-listen i admin vil som standard blive sorteret efter dette felt. (Feltet skal være markeret med \"kan sorteres\")"
 
-#: classes/PDb_Settings.class.php:1140
+#: classes/PDb_Settings.class.php:830
 msgid "Admin List Default Sort Order"
-msgstr "Admin List Standard sorteringsrækkefølge"
+msgstr "Standard sorteringsrækkefølge for Admin List"
 
-#: classes/PDb_Settings.class.php:1144
+#: classes/PDb_Settings.class.php:834
 msgid "Sets the default order of the record list in the admin."
-msgstr "Indstiller standard rækkefølge af post-listen i admin."
+msgstr "Indstiller standardrækkefølgen af post-listen i admin."
 
-#: classes/PDb_Settings.class.php:1152
+#: classes/PDb_Settings.class.php:842
 msgid "Show Image Thumbnails in Admin List"
 msgstr "Vise miniaturebilleder i Admin liste"
 
-#: classes/PDb_Settings.class.php:1167
-msgid "Plugin Admin Horizontal Scrolling"
-msgstr "Plugin Admin vandret rulning"
+#: classes/PDb_Settings.class.php:861
+msgid "Use the Plugin CSS"
+msgstr "Brug Plugin CSS"
 
-#: classes/PDb_Settings.class.php:1172
-msgid "use horizontal scrolling on list and fields management screens"
-msgstr "bruge vandret rulning på list og felt håndterings skærme"
+#: classes/PDb_Settings.class.php:866
+msgid "use the plugin's CSS to style the output of shortcodes"
+msgstr "brug pluginens CSS til at style generering af ​​kortkoder"
 
-#: classes/PDb_Settings.class.php:1180
+#: classes/PDb_Settings.class.php:874
+msgid "Use Rich Text Editor"
+msgstr "Brug Rich Text Editor"
+
+#: classes/PDb_Settings.class.php:879
+msgid "enable the rich text editor on \"rich-text\" fields for front-end users. If deselected, \"rich-text\" fields will appear as text-area fields. This does not affect admin users, who always have the use of the rich-text editor."
+msgstr "aktiver rich text editor på &quot;rich-text&quot; felter for front-end brugere. Hvis fravalgt vil &quot;rich-text&quot; felter vises som tekst-området felter. Dette påvirker ikke admin brugere, som altid har adgang til rich-text editor."
+
+#: classes/PDb_Settings.class.php:887
+msgid "Use WordPress Auto Formatting"
+msgstr "Brug WordPress Auto formatering"
+
+#: classes/PDb_Settings.class.php:892
+msgid "Use WordPress&#39; auto formatting on rich text fields."
+msgstr "Bruge WordPress &#39; automatisk formatering på rich-text-felter."
+
+#: classes/PDb_Settings.class.php:900
+msgid "Primary Email Address Field"
+msgstr "Primær e-mail-adressefeltet"
+
+#: classes/PDb_Settings.class.php:905
+msgid "this field is the primary email address for the record"
+msgstr "dette felt er den primære e-mail-adresse for posten"
+
+#: classes/PDb_Settings.class.php:913
+msgid "Send HTML Email"
+msgstr "Send HTML e-mail"
+
+#: classes/PDb_Settings.class.php:918
+msgid "use rich text in plugin emails? If you turn this off, be sure to remove all HTML tags from the email body settings for the plugin."
+msgstr "bruge RTF i plugin e-mails? Hvis du slår denne funktion fra, skal du sørge for at fjerne alle HTML-tags fra indstillingerne fra e-mail-tekst settings for plugin'en."
+
+#: classes/PDb_Settings.class.php:926
+msgid "Strict Date Format"
+msgstr "Strengt datoformat"
+
+#: classes/PDb_Settings.class.php:931
+#, php-format
+msgid "This forces date inputs to be interpreted strictly according to the \"Input Date Format\" setting. You should tell your users what format you are expecting them to use. This also applies to date values used in [pdb_list] shortcode filters. The date with your current setting looks like this: <strong>%s</strong> %s"
+msgstr "Dette tvinger dato input til  at blive fortolkes strengt i overensstemmelse med indstillingen \"Input datoformat\". Du skal fortælle dine brugere, hvilket format du forventer dem til at bruge. Dette gælder også for datoer, der bruges i [pdb_list] shortcode filtre. Datoen med din aktuelle indstilling ser sådan ud: <strong>%s</strong> %s"
+
+#: classes/PDb_Settings.class.php:931
+msgid "Your current PHP installation does not support this setting."
+msgstr "Din nuværende PHP installation understøtter ikke denne indstilling."
+
+#: classes/PDb_Settings.class.php:939
+msgid "Input Date Format"
+msgstr "Input datoformat"
+
+#: classes/PDb_Settings.class.php:944
+msgid "date formatting string for all plugin date inputs when \"Strict Date Format\" is enabled. You should use this for all localized (non-American English) date formats."
+msgstr "dato formateringsstreng for alle dato input når \"Strenge datoformat\" er aktiveret. Du skal bruge dette for alle datofomater, der ikke er amerikansk engelsk format."
+
+#: classes/PDb_Settings.class.php:951
+msgid "Show Timestamp Time"
+msgstr "Vis tiden ved tidsstemplingen"
+
+#: classes/PDb_Settings.class.php:956
+msgid "Show time with timestamp dates"
+msgstr "Vis tid med tidsstemplets datoer"
+
+#: classes/PDb_Settings.class.php:964
 msgid "Record Edit Access Level"
-msgstr "Post Edit adgangsniveau"
+msgstr "Post redigerings adgangsniveau"
 
-#: classes/PDb_Settings.class.php:1184
+#: classes/PDb_Settings.class.php:968
 msgid "sets the user access level for adding, editing and listing records."
-msgstr "indstiller brugeren adgang til at tilføje, redigere og liste over poster."
+msgstr "indstiller brugerens adgang til at tilføje, redigere og liste over poster."
 
-#: classes/PDb_Settings.class.php:1192
+#: classes/PDb_Settings.class.php:976
 msgid "Plugin Admin Access Level"
-msgstr "Plugin Admin adgangs niveau"
+msgstr "Plugin Admin adgangsniveau"
 
-#: classes/PDb_Settings.class.php:1196
-msgid ""
-"sets the user access level for fields management, plugin settings, deleting "
-"records and CSV operations."
-msgstr ""
-"angiver brugerens adgangsniveau for felt management, plugin indstillinger, slette "
-"poster og CSV-aktiviteter."
+#: classes/PDb_Settings.class.php:980
+msgid "sets the user access level for fields management, plugin settings, deleting records and CSV operations."
+msgstr "indstiller brugerens adgangsniveau for felthåndtering, plugin indstillinger, sletning af poster og CSV-operationer."
 
-#: classes/PDb_Settings.class.php:1204
-msgid "Editor can Export CSV Files"
-msgstr "Redaktør kan eksportere CSV-filer"
+#: classes/PDb_Settings.class.php:988
+msgid "Strict User Searching"
+msgstr "Streng brugersøgning"
 
-#: classes/PDb_Settings.class.php:1208
-msgid "If checked, users with the plugin editor role can export a CSV."
-msgstr ""
-"Hvis markeret, kan brugere med rollen plugin redaktør eksportere en CSV-fil."
+#: classes/PDb_Settings.class.php:993
+msgid "When checked, the frontend list search must match the whole field exactly. If unchecked, the search will match if the search term is found in part of the field. Searches are not case-sensitive either way."
+msgstr "Hvis markeret, skal frontend liste søgningen matche hele feltet nøjagtigt. Hvis ikke afkrydset, vil søgningen matche hvis søgeordet er fundet i en del af feltet. Søgninger er ikke case-sensitive."
 
-#: classes/PDb_Settings.class.php:1222
+#: classes/PDb_Settings.class.php:1000
+msgid "Enable AJAX Search Functionality"
+msgstr "Aktiver AJAX Søg Funktionalitet"
+
+#: classes/PDb_Settings.class.php:1005
+msgid "This enables list search results that are updated without reloading the page. It requires Javascript, but search will still work if Javascript is disabled in the user's browser."
+msgstr "Dette muliggør at vise søgeresultater, der opdateres uden at genindlæse siden. Det kræver Javascript, men søgning vil stadig fungere, hvis JavaScript er deaktiveret i brugerens browser."
+
+#: classes/PDb_Settings.class.php:1013
+msgid "Use PHP Sessions"
+msgstr "Brug PHP sessioner"
+
+#: classes/PDb_Settings.class.php:1018
+msgid "uncheck this if PHP sessions are not working."
+msgstr "afkryds denne hvis PHP sessioner ikke er i orden."
+
+#: classes/PDb_Settings.class.php:1032
 msgid "Custom Plugin Stylesheet"
-msgstr "Brugerdefineret Plugin Stilark"
+msgstr "Brugerdefineret Plugin Stylesheet"
 
-#: classes/PDb_Settings.class.php:1227
-msgid ""
-"use this to add your own styles or override styles applied to the output of all "
-"plugin shortcodes"
-msgstr ""
-"brug dette til at tilføje dine egne typografier eller tilsidesætte typografier "
-"anvendt til output af alle plugin kortkoder"
+#: classes/PDb_Settings.class.php:1037
+msgid "use this to add your own styles or override styles applied to the output of all plugin shortcodes"
+msgstr "brug dette til at tilføje dine egne typografier eller overskrive standard typografier anvendt til plugin'ens shortcode"
 
-#: classes/PDb_Settings.class.php:1237
+#: classes/PDb_Settings.class.php:1047
 msgid "Plugin Print Stylesheet"
-msgstr "Plugin Print stilark"
+msgstr "Plugin Print Stylesheet"
 
-#: classes/PDb_Settings.class.php:1242
+#: classes/PDb_Settings.class.php:1052
 msgid "use this to format the printed output of all plugin shortcodes"
-msgstr "bruges til at formatere det trykte output af alle plugin kortkoder"
+msgstr "bruge dette til at formatere det trykte output af alle plugin shortcodes"
 
-#: classes/PDb_Settings.class.php:1252
-msgid "Custom Admin Stylesheet"
-msgstr "Brugerdefineret Admin Stylesheet"
-
-#: classes/PDb_Settings.class.php:1257
-msgid ""
-"use this to add or modify CSS rules that are applied on all plugin pages in the "
-"WordPress backend."
-msgstr ""
-"brug dette til at tilføje eller redigere CSS regler, der anvendes på alle plugin "
-"sider i WordPress backend."
-
-#: classes/PDb_Settings.class.php:1280
+#: classes/PDb_Settings.class.php:1069
 msgid "Same Page"
 msgstr "Samme side"
 
-#: classes/PDb_Settings.class.php:1315
+#: classes/PDb_Settings.class.php:1097
 msgid "None"
 msgstr "Ingen"
 
-#: classes/PDb_Settings.class.php:1409
+#: classes/PDb_Settings.class.php:1161
 msgid "Contributor"
-msgstr "Bidragsyder"
+msgstr "Contributor"
 
-#: classes/PDb_Settings.class.php:1410
+#: classes/PDb_Settings.class.php:1162
 msgid "Author"
-msgstr "Artikelansvarlig"
+msgstr "Forfatter"
 
-#: classes/PDb_Settings.class.php:1411
+#: classes/PDb_Settings.class.php:1163
 msgid "Editor"
-msgstr "Redaktør"
+msgstr "Editor"
 
-#: classes/PDb_Settings.class.php:1412
+#: classes/PDb_Settings.class.php:1164
 msgid "Admin"
 msgstr "Admin"
 
-#: classes/PDb_Settings.class.php:1489 participants-database.php:3401
-#: participants-database.php:3472
+#: classes/PDb_Settings.class.php:1230 participants-database.php:456
+#: participants-database.php:457 participants-database.php:3031
 msgid "Settings"
 msgstr "Indstillinger"
 
-#: classes/PDb_Settings.class.php:1576 classes/PDb_Settings.class.php:1582
+#: classes/PDb_Settings.class.php:1320
 #, php-format
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr "Kun numeriske værdier kan bruges til indstillingen \"%s\"."
 
-#: classes/PDb_Shortcode.class.php:288
+#: classes/PDb_Shortcode.class.php:235
 #, php-format
 msgctxt "message to show if the plugin cannot find the template"
-msgid ""
-"<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is "
-"correct and the template file is in the correct location."
-msgstr ""
-"&lt;%1$s&gt; Template%2$s blev ikke fundet. </%1$s> Sørg for at navnet er "
-"korrekt, og skabelonen filen er i den rette folder."
+msgid "<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is correct and the template file is in the correct location."
+msgstr "&lt;%1$s&gt; Skabelonen %2$s blev ikke fundet. </%1$s> Sørg navnet er korrekt, og skabelonen filen er det rigtige sted."
 
-#: classes/PDb_Shortcode.class.php:1281
-msgid "next"
-msgstr "næste"
-
-#: classes/PDb_Update_Notices.class.php:218
-msgctxt "Plugin installer section title"
-msgid "Description"
-msgstr "Beskrivelse"
-
-#: classes/PDb_Update_Notices.class.php:219
-msgctxt "Plugin installer section title"
-msgid "Installation"
-msgstr "Installationen"
-
-#: classes/PDb_Update_Notices.class.php:220
-msgctxt "Plugin installer section title"
-msgid "FAQ"
-msgstr "FAQ"
-
-#: classes/PDb_Update_Notices.class.php:221
-msgctxt "Plugin installer section title"
-msgid "Screenshots"
-msgstr "Screenshots"
-
-#: classes/PDb_Update_Notices.class.php:222
-msgctxt "Plugin installer section title"
-msgid "Changelog"
-msgstr "Ændringslog"
-
-#: classes/PDb_Update_Notices.class.php:223
-msgctxt "Plugin installer section title"
-msgid "Reviews"
-msgstr "Brugeranmeldelser"
-
-#: classes/PDb_Update_Notices.class.php:224
-msgctxt "Plugin installer section title"
-msgid "Support"
-msgstr "Support"
-
-#: classes/PDb_Update_Notices.class.php:246
-msgid "Plugin Install"
-msgstr "Plugin installation"
-
-#: classes/PDb_Update_Notices.class.php:296
-msgid "Version:"
-msgstr "Version:"
-
-#: classes/PDb_Update_Notices.class.php:298
-msgid "Author:"
-msgstr "Forfatter:"
-
-#: classes/PDb_Update_Notices.class.php:300
-msgid "Last Updated:"
-msgstr "Sidst opdateret:"
-
-#: classes/PDb_Update_Notices.class.php:303
-#, php-format
-msgid "%s ago"
-msgstr "%s siden"
-
-#: classes/PDb_Update_Notices.class.php:308
-msgid "Requires WordPress Version:"
-msgstr "Kræver WordPress Version:"
-
-#: classes/PDb_Update_Notices.class.php:311
-#, php-format
-msgid "%s or higher"
-msgstr "%s eller større"
-
-#: classes/PDb_Update_Notices.class.php:315
-msgid "Compatible up to:"
-msgstr "Kompatibel op til:"
-
-#: classes/PDb_Update_Notices.class.php:317
-msgid "Active Installs:"
-msgstr "Aktive installationer:"
-
-#: classes/PDb_Update_Notices.class.php:319
-msgctxt "Active plugin installs"
-msgid "1+ Million"
-msgstr "1+  Million"
-
-#: classes/PDb_Update_Notices.class.php:325
-msgid "WordPress.org Plugin Page &#187;"
-msgstr "WordPress.org Plugin side &#187;"
-
-#: classes/PDb_Update_Notices.class.php:327
-msgid "Plugin Homepage &#187;"
-msgstr "Plugin Hjemmeside &#187;"
-
-#: classes/PDb_Update_Notices.class.php:329
-msgid "Add-Ons &amp; Extras &#187;"
-msgstr "Tilføjelser & tilbehør &#187;"
-
-#: classes/PDb_Update_Notices.class.php:331 classes/PDb_Update_Notices.class.php:386
-msgid "Donate to this plugin &#187;"
-msgstr "Donere til dette plugin &#187;"
-
-#: classes/PDb_Update_Notices.class.php:335
-msgid "Average Rating"
-msgstr "Gennemsnitlige bedømmelse"
-
-#: classes/PDb_Update_Notices.class.php:337
-#, php-format
-msgid "(based on %s rating)"
-msgid_plural "(based on %s ratings)"
-msgstr[0] "(baseret på %s bedømmelse)"
-msgstr[1] "(baseret på %s bedømmelser)"
-
-#: classes/PDb_Update_Notices.class.php:343
-msgid "Reviews"
-msgstr "Brugeranmeldelser"
-
-#: classes/PDb_Update_Notices.class.php:344
-msgid "Read all reviews on WordPress.org or write your own!"
-msgstr "Læs bedømmelser på WordPress.org eller skrive dine egne!"
-
-#: classes/PDb_Update_Notices.class.php:350
-#, php-format
-msgid "Reviews with %1$d star: %2$s. Opens in a new window."
-msgid_plural "Reviews with %1$d stars: %2$s. Opens in a new window."
-msgstr[0] "Anmeldelser med %1$ d stjerne: %2$s. Åbner i et nyt vindue."
-msgstr[1] "Anmeldelser med %1$d stjerner: %2$s. Åbner i et nyt vindue."
-
-#: classes/PDb_Update_Notices.class.php:355
-#, php-format
-msgid "%d star"
-msgid_plural "%d stars"
-msgstr[0] "%d stjerne"
-msgstr[1] "%d stjerner"
-
-#: classes/PDb_Update_Notices.class.php:366
-msgid "Contributors"
-msgstr "Bidragsydere"
-
-#: classes/PDb_Update_Notices.class.php:393
-msgid ""
-"<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with "
-"your current version of WordPress."
-msgstr ""
-"<strong>Advarsel:</strong> Dette plugin er <strong>ikke blevet testet</strong> "
-"med din aktuelle version af WordPress."
-
-#: classes/PDb_Update_Notices.class.php:395
-msgid ""
-"<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</"
-"strong> with your version of WordPress."
-msgstr ""
-"<strong>Advarsel:</strong> Dette plugin har <strong>ikke er mærket som "
-"kompatibelt</strong> med din version af WordPress."
-
-#: classes/PDb_Update_Notices.class.php:424
-msgid "Install Now"
-msgstr "Installer nu"
-
-#: classes/PDb_Update_Notices.class.php:429
-msgid "Install Update Now"
-msgstr "Installer opdatering nu"
-
-#: classes/PDb_Update_Notices.class.php:434
-#, php-format
-msgid "Newer Version (%s) Installed"
-msgstr "Nyere Version (%s) installeret"
-
-#: classes/PDb_Update_Notices.class.php:437
-msgid "Latest Version Installed"
-msgstr "Nyeste Version installeret"
-
-#: classes/aux-plugin-update/github-checker.php:119
-msgid "There is no changelog available."
-msgstr "Der findes ingen changelog."
-
-#: classes/aux-plugin-update/plugin-update-checker.php:763
-msgid "Check for updates"
-msgstr "Søg efter opdateringer"
-
-#: classes/aux-plugin-update/plugin-update-checker.php:807
-msgid "This plugin is up to date."
-msgstr "Dette plugin er opdateret til seneste version."
-
-#: classes/aux-plugin-update/plugin-update-checker.php:809
-msgid "A new version of this plugin is available."
-msgstr "Der findes en ny version af dette plugin."
-
-#: classes/aux-plugin-update/plugin-update-checker.php:811
-#, php-format
-msgid "Unknown update checker status \"%s\""
-msgstr "Ukendt update checker status \"%s\""
-
-#: classes/xnau_CSV_Import.class.php:95
+#: classes/xnau_CSV_Import.class.php:64
 #, php-format
 msgid "The file %s has been uploaded."
-msgstr "Filen% s er blevet uploadet."
+msgstr "Filen%s er blevet uploadet."
 
-#: classes/xnau_CSV_Import.class.php:101
+#: classes/xnau_CSV_Import.class.php:70
 #, php-format
 msgid "%s record added"
 msgid_plural "%s records added"
 msgstr[0] "%s post tilføjet"
-msgstr[1] "%s post tilføjet"
+msgstr[1] "%s poster tilføjet"
 
-#: classes/xnau_CSV_Import.class.php:105
+#: classes/xnau_CSV_Import.class.php:74
 #, php-format
 msgid "%s matching record updated"
 msgid_plural "%s matching records updated"
-msgstr[0] "%s matching post opdateret"
-msgstr[1] "%s matching post opdateret"
+msgstr[0] "%s matchende rekopost opdateret"
+msgstr[1] "%s matchende poster opdateret"
 
-#: classes/xnau_CSV_Import.class.php:110
+#: classes/xnau_CSV_Import.class.php:79
 #, php-format
 msgid "%s duplicate record skipped"
 msgid_plural "%s duplicate records skipped"
-msgstr[0] "%s Duplicate Post Fejlmeddelelse"
-msgstr[1] "%s Duplicate Post Fejlmeddelelse"
+msgstr[0] "%s Dupleret post sprunget over"
+msgstr[1] "%s Duplerede poster sprunget over"
 
-#: classes/xnau_CSV_Import.class.php:115
-#, php-format
-msgid "%s record skipped due to errors"
-msgid_plural "%s records skipped due to errors"
-msgstr[0] "%s post springes over på grund af fejl"
-msgstr[1] "%s poster springes over på grund af fejl"
-
-#: classes/xnau_CSV_Import.class.php:119
+#: classes/xnau_CSV_Import.class.php:83
 msgid "Zero records imported"
-msgstr "Ingen poste er importeret"
+msgstr "Ingen poster importeret"
 
-#: classes/xnau_CSV_Import.class.php:124
-msgid ""
-"There was an error uploading the file. This could be a problem with permissions "
-"on the uploads directory."
-msgstr ""
-"Der opstod en fejl under upload af filen. Dette kunne være et problem med "
-"tilladelser på uploads mappe."
+#: classes/xnau_CSV_Import.class.php:88
+msgid "There was an error uploading the file. This could be a problem with permissions on the uploads directory."
+msgstr "Der opstod en fejl under upload af filen. Dette kunne være et problem med tilladelser på uploads mappe."
 
-#: classes/xnau_CSV_Import.class.php:124 classes/xnau_CSV_Import.class.php:130
+#: classes/xnau_CSV_Import.class.php:88 classes/xnau_CSV_Import.class.php:94
 msgid "Destination"
 msgstr "Destination"
 
-#: classes/xnau_CSV_Import.class.php:130
-msgid ""
-"Target directory does not exist and could not be created. Try creating it "
-"manually."
-msgstr "Target findes ikke, og kunne ikke oprettes. Prøv at oprette den manuelt."
+#: classes/xnau_CSV_Import.class.php:94
+msgid "Target directory does not exist and could not be created. Try creating it manually."
+msgstr "Target directory findes ikke, og kunne ikke oprettes. Prøv at oprette den manuelt."
 
-#: classes/xnau_CSV_Import.class.php:184
+#: classes/xnau_CSV_Import.class.php:148
 msgid "Error occured while trying to add the data to the database"
 msgstr "Der opstod en fejl under forsøg på at føje data til databasen"
 
-#: classes/xnau_CSV_Import.class.php:184
+#: classes/xnau_CSV_Import.class.php:148
 #, php-format
 msgid "Input file does not exist or path is incorrect.<br />Attempted to load: %s"
-msgstr ""
-"Input fil findes ikke eller sti er forkert. <br /> Forsøgte at belastning:% s"
+msgstr "Input fil findes ikke eller sti er forkert. <br /> Forsøgte at loade:%s"
 
-#: classes/xnau_CSV_Import.class.php:234
+#: classes/xnau_CSV_Import.class.php:198
 #, php-format
-msgid ""
-"The number of items in line %s is incorrect.<br />There are %s and there should "
-"be %s."
-msgstr ""
-"Antallet af elementer i linje% s er forkert. <br /> Der er% s, og der bør være% s."
+msgid "The number of items in line %s is incorrect.<br />There are %s and there should be %s."
+msgstr "Antallet af elementer i linje %s er forkert. <br /> Der er %s, og der bør være %s."
 
-#: classes/xnau_CSV_Import.class.php:243
+#: classes/xnau_CSV_Import.class.php:207
 msgid "Number of values does not match number of columns"
 msgstr "Antal værdier svarer ikke antal kolonner"
 
-#: classes/xnau_FormElement.class.php:240
+#: classes/xnau_CSV_Import.class.php:308
+msgid "New columns imported from the CSV file."
+msgstr "Nye kolonner importeret fra CSV-filen."
+
+#: classes/xnau_FormElement.class.php:238
 msgctxt "indicates a write-in choice"
 msgid "other"
 msgstr "andet"
 
-#: classes/xnau_FormElement.class.php:241
+#: classes/xnau_FormElement.class.php:239
 msgctxt "indicates the text to be clicked to go to another web page"
 msgid "Link Text"
 msgstr "Link Tekst"
 
-#: edit_participant.php:21
+#: edit_participant.php:19
 msgid "Add New Participant Record"
-msgstr "Tilføj ny deltager Post"
+msgstr "Tilføj ny deltager post"
 
-#: edit_participant.php:26
+#: edit_participant.php:24
 msgid "Edit Existing Participant Record"
-msgstr "Rediger eksisterende deltager Post"
+msgstr "Rediger eksisterende deltager post"
 
-#: edit_participant.php:86
+#: edit_participant.php:83
 msgctxt "abbreviation for \"identification\""
 msgid "ID"
 msgstr "ID"
 
-#: edit_participant.php:86
+#: edit_participant.php:83
 msgctxt "indicates a new record is being entered"
 msgid "(new record)"
 msgstr "(nye post)"
 
-#: edit_participant.php:111
+#: edit_participant.php:105
 msgid "hidden"
 msgstr "skjult"
 
-#: edit_participant.php:128
+#: edit_participant.php:111
 msgid "read only"
-msgstr "kun læse"
+msgstr "skrivebeskyttet"
 
-#: edit_participant.php:234
+#: edit_participant.php:230
 msgid "Save the Record"
 msgstr "Gem posten"
 
-#: edit_participant.php:248
-msgid ""
-"<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
-"strong> save record and continue with same record<br><strong>Next:</strong> save "
-"record and then start a new one"
-msgstr ""
-"<strong>Indsend:</strong> gem post og tilbage til listen <br> <strong>Anvend:</"
-"strong> gem record og fortsætte med samme post <br> <strong>Næste:</strong> gem "
-"record og derefter starte en ny"
+#: edit_participant.php:243
+msgid "<strong>Submit:</strong> save record and return to list<br><strong>Apply:</strong> save record and continue with same record<br><strong>Next:</strong> save record and then start a new one"
+msgstr "<strong>Indsend:</strong> gem post og gå tilbage til listen <br> <strong>Gem:</strong> gem post og fortsætte med samme post <br> <strong>Næste:</strong> gem post og gå derefter til en ny/den næste"
 
-#: edit_participant.php:252
+#: edit_participant.php:245
 msgid "<strong>Previous:</strong> save and move to previous record"
-msgstr "<strong>Forrige:</strong> Gem og Flyt til forrige post"
+msgstr "<strong>Forrige:</strong> Gem og gå til forrige post"
+
+#: manage_fields.php:10
+msgid "Update Fields"
+msgstr "Opdatér felter"
+
+#: manage_fields.php:11
+msgid "Update Groups"
+msgstr "Opdatér grupper"
+
+#: manage_fields.php:12
+msgid "Add Field"
+msgstr "Tilføj felt"
+
+#: manage_fields.php:13
+msgid "Add Group"
+msgstr "Tilføj gruppe"
+
+#: manage_fields.php:14 manage_fields.php:359 manage_fields.php:714
+msgid "field"
+msgstr "felt"
+
+#: manage_fields.php:15 manage_fields.php:487 manage_fields.php:709
+msgid "group"
+msgstr "gruppe"
+
+#: manage_fields.php:16
+msgid "new field title"
+msgstr "nye felttitel"
+
+#: manage_fields.php:17
+msgid "new group title"
+msgstr "ny gruppetitel"
+
+#: manage_fields.php:18
+msgctxt "column name"
+msgid "Order"
+msgstr "Rækkefølge"
+
+#: manage_fields.php:19
+msgctxt "column name"
+msgid "Name"
+msgstr "Navn"
+
+#: manage_fields.php:20
+msgctxt "column name"
+msgid "Title"
+msgstr "Titel"
+
+#: manage_fields.php:21
+msgctxt "column name"
+msgid "Default"
+msgstr "Default"
+
+#: manage_fields.php:22
+msgctxt "column name"
+msgid "Group"
+msgstr "Gruppe"
+
+#: manage_fields.php:23
+msgctxt "column name"
+msgid "Help Text"
+msgstr "Hjælpetekst"
+
+#: manage_fields.php:24
+msgctxt "column name"
+msgid "Form Element"
+msgstr "Form-elementet"
+
+#: manage_fields.php:25
+msgctxt "column name"
+msgid "Values"
+msgstr "Værdi"
+
+#: manage_fields.php:26
+msgctxt "column name"
+msgid "Validation"
+msgstr "Validering"
+
+#: manage_fields.php:27
+msgctxt "column name"
+msgid "Display Column"
+msgstr "Display kolonne"
+
+#: manage_fields.php:28
+msgctxt "column name"
+msgid "Admin Column"
+msgstr "Admin Column"
+
+#: manage_fields.php:29
+msgctxt "column name"
+msgid "Sortable"
+msgstr "Sortérbar"
+
+#: manage_fields.php:30
+msgctxt "column name, acronym for \"comma separated values\""
+msgid "CSV"
+msgstr "CSV"
+
+#: manage_fields.php:31
+msgctxt "column name"
+msgid "Persistent"
+msgstr "Vedholdende"
+
+#: manage_fields.php:32
+msgctxt "column name"
+msgid "Signup"
+msgstr "Tilmelding"
+
+#: manage_fields.php:33
+msgctxt "column name"
+msgid "Read Only"
+msgstr "Read Only"
+
+#: manage_fields.php:34
+msgctxt "column name"
+msgid "Admin"
+msgstr "Admin"
+
+#: manage_fields.php:35
+msgctxt "column name"
+msgid "Delete"
+msgstr "Slet"
+
+#: manage_fields.php:36
+msgctxt "column name"
+msgid "Display"
+msgstr "Vis"
+
+#: manage_fields.php:37
+msgctxt "column name"
+msgid "Fields"
+msgstr "Felter"
+
+#: manage_fields.php:38
+msgctxt "column name"
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: manage_fields.php:156
+msgid "Cannot add a field with that name"
+msgstr "Kan ikke tilføje et felt med dette navn"
+
+#: manage_fields.php:156
+msgid "This name is reserved; please choose another. Reserved names are"
+msgstr "Dette navn er reserveret; Vælg venligst et andet. Reserverede navne er"
+
+#: manage_fields.php:240 participants-database.php:438
+#: participants-database.php:439
+msgid "Manage Database Fields"
+msgstr "Administrere databasefelter"
+
+#: manage_fields.php:250 manage_fields.php:258
+msgid "Field Groups"
+msgstr "Feltgrupper"
+
+#: manage_fields.php:259
+msgid "Help"
+msgstr "Hjælp"
+
+#: manage_fields.php:267
+msgid "Fields"
+msgstr "Felter"
+
+#: manage_fields.php:329
+msgid "No fields in this group"
+msgstr "Ingen felter i denne gruppe"
+
+#: manage_fields.php:433
+msgid "Edit / Add / Remove Field Groups"
+msgstr "Rediger / Tilføj / Fjern feltgrupper"
+
+#: manage_fields.php:464
+msgid "fields"
+msgstr "felter"
+
+#: manage_fields.php:720
+#, php-format
+msgid "The %1$s was not added. There is already a %1$s with that name, please choose another."
+msgstr "%1$s blev ikke tilføjet. Der er allerede en %1$s med det pågældende navn, du skal vælge en anden."
+
+#: manage_fields.php:783
+msgid "Not Required"
+msgstr "Ikke obligatorisk"
+
+#: manage_fields.php:784
+msgid "Required"
+msgstr "Obligatorisk"
+
+#: manage_fields.php:785
+msgid "Email"
+msgstr "E-mail"
 
 #: manage_fields_help.php:4
 msgid "Manage Fields Help"
-msgstr "Administrer Fields Hjælp"
+msgstr "Administrér felt hjælp"
 
 #: manage_fields_help.php:5
 #, php-format
-msgid ""
-"Please visit the %sParticipants Database help pages%s for up-to-date information "
-"on using this plugin."
-msgstr ""
-"Venligst besøg % sParticipants Database hjælpe sider %s for ajourførte "
-"oplysninger om at bruge dette plugin."
+msgid "Please visit the %sParticipants Database help pages%s for up-to-date information on using this plugin."
+msgstr "Venligst besøg %sParticipants Database hjælpesider %s for ajourførte oplysninger om at bruge denne plugin."
 
 #: manage_fields_help.php:6
 msgid "Defining Database Fields"
-msgstr "Definerer Database Felter"
+msgstr "Definere database felter"
 
 #: manage_fields_help.php:7
-msgid ""
-"The database stores information about people. On this page, you can determine "
-"what pieces of information are stored and how they are presented and interacted "
-"with. Take a look at the \"Add Participant\" page to see how the form is "
-"presented. You will be able to see your changes to how the fields are set up by "
-"checking this page."
-msgstr ""
-"Databasen gemmer oplysninger om folk. På denne side kan du bestemme, hvad "
-"informationer gemmes, og hvordan de bliver præsenteret og benyttet. Tag et kig på "
-"&quot;Tilføj deltager&quot; side for at se, hvordan formen er præsenteret. Du vil "
-"være i stand til at se dine ændringer, hvordan felterne er oprettet ved at "
-"kontrollere denne side."
+msgid "The database stores information about people. On this page, you can determine what pieces of information are stored and how they are presented and interacted with. Take a look at the \"Add Participant\" page to see how the form is presented. You will be able to see your changes to how the fields are set up by checking this page."
+msgstr "Databasen gemmer oplysninger om folk. På denne side kan du bestemme, hvilke informationer der gemmes, og hvordan de bliver præsenteret og brugt. Tag et kig på &quot;Tilføj deltager&quot; side for at se, hvordan de er præsenteret. Du vil være i stand til at se dine ændringer, hvordan felterne er oprettet ved at se på denne side."
 
 #: manage_fields_help.php:8
-msgid ""
-"<strong>Important:</strong> Some of the changes you can make here will affect "
-"existing records in the database. It is best to set up your database before you "
-"begin adding records, but it is possible to add fields to the database at any "
-"time. Any records that were entered before the new field was added will have no "
-"value for the field. This can be filled in by then editing the record."
-msgstr ""
-"<strong>Vigtigt:</strong> Nogle af de ændringer, du kan gøre her, vil påvirke de "
-"eksisterende poster i databasen. Det er bedst at oprette din database, før du "
-"begynder at tilføje poster, men det er muligt at tilføje felter til databasen til "
-"enhver tid. Eventuelle poster, der blev indlæst før det nye felt blev tilføjet "
-"vil ikke have nogen værdi for feltet. Dette kan udfyldes ved at redigere posten."
+msgid "<strong>Important:</strong> Some of the changes you can make here will affect existing records in the database. It is best to set up your database before you begin adding records, but it is possible to add fields to the database at any time. Any records that were entered before the new field was added will have no value for the field. This can be filled in by then editing the record."
+msgstr "<strong>Vigtigt:</strong> Nogle af de ændringer, du kan gøre her, vil påvirke de eksisterende poster i databasen. Det er bedst at oprette din database, før du begynder at tilføje poster, men det er muligt at tilføje felter til databasen til enhver tid. Eventuelle poster, der blev opført før det nye felt blev tilføjet vil ikke have nogen værdi for feltet. Dette kan udfyldes ved derefter redigere posten."
 
 #: manage_fields_help.php:9
 msgid "Delete"
 msgstr "Slet"
 
 #: manage_fields_help.php:10
-msgid ""
-"Click on the red \"X\" to delete a field. If there are existing records with this "
-"data field, that information will not be deleted from the database, but you will "
-"no longer be able to display or edit it."
-msgstr ""
-"Klik på det røde \"X\" for at slette et felt. Hvis der er eksisterende poster med "
-"dette datafelt, vil disse oplysninger ikke blive slettet fra databasen, men du "
-"vil ikke længere være i stand til at vise eller redigere den."
+msgid "Click on the red \"X\" to delete a field. If there are existing records with this data field, that information will not be deleted from the database, but you will no longer be able to display or edit it."
+msgstr "Klik på det røde &quot;X&quot; for at slette et felt. Hvis der er eksisterende poster med dette datafelt, vil disse oplysninger ikke blive slettet fra databasen, men du vil ikke længere være i stand til at vise eller redigere dem."
 
 #: manage_fields_help.php:11
 msgid "Order"
 msgstr "Rækkefølge"
 
 #: manage_fields_help.php:12
-msgid ""
-"Click and drag to reorder the fields. You do not need to click on \"Update\" for "
-"the change to take effect."
-msgstr ""
-"Klik og træk for at omarrangere felterne. Du behøver ikke at klikke på \"Opdater"
-"\" for at ændringen træder i kraft."
+msgid "Click and drag to reorder the fields. You do not need to click on \"Update\" for the change to take effect."
+msgstr "Klik og træk for at omarrangere felterne. Du behøver ikke at klikke på &quot;Opdater&quot; for at ændringen træder i kraft."
 
 #: manage_fields_help.php:13
 msgid "Title"
 msgstr "Titel"
 
 #: manage_fields_help.php:14
-msgid ""
-"This is the display title for your field. You can change it at any time, it "
-"won&#39;t affect the field in any way other than to change how it is labeled in "
-"forms.<p>"
-msgstr ""
-"Dette er den viste titel til dit felt. Du kan ændre det til enhver tid, vil det "
-"ikke påvirke feltet i andet end, hvordan det er navngivet i formularer. <p>"
+msgid "This is the display title for your field. You can change it at any time, it won&#39;t affect the field in any way other than to change how it is labeled in forms.<p>"
+msgstr "Dette er den viste titel til dit felt. Du kan ændre den til enhver tid, det vil ikke påvirke feltet  på andre måder end at ændre, hvordan det er mærket formularene. <p>"
 
 #: manage_fields_help.php:15
 msgid "Default"
-msgstr "Standard"
+msgstr "Default"
 
 #: manage_fields_help.php:16
 msgid "If you wish to pre-load a field with a value, you can put it here."
-msgstr "Hvis du ønsker at pre-indlæse et felt med en værdi, kan du sætte det her."
+msgstr "Hvis du ønsker at forudindlæse en værdi i et felt, kan du sætte værdien her."
 
 #: manage_fields_help.php:17
 msgid "Group"
 msgstr "Gruppe"
 
 #: manage_fields_help.php:18
-msgid ""
-"The database fields are organized into groups, and you can select which group the "
-"database field belongs to here. You can edit the groups under the \"Field Groups"
-"\" tab."
-msgstr ""
-"Database felterne er organiseret i grupper, og du kan vælge, hvilken gruppe "
-"databasefeltet tilhører. Du kan redigere de grupper, under fanen \"Felt grupper\"."
+msgid "The database fields are organized into groups, and you can select which group the database field belongs to here. You can edit the groups under the \"Field Groups\" tab."
+msgstr "De database felterne er organiseret i grupper, og du kan vælge, hvilken gruppe databasefeltet tilhører her. Du kan redigere grupperne under fanen &quot;Field grupper&quot;."
 
 #: manage_fields_help.php:19
 msgid "Help Text"
-msgstr "Hjælp-tekst"
+msgstr "Hjælpe-tekst"
 
 #: manage_fields_help.php:20
-msgid ""
-"When a form is displayed, sometimes it is a good idea to explain something about "
-"the information you want in a field. Any text you put in here will be displayed "
-"next to the field. HTML is allowed, but be careful with that, you can break "
-"things!"
-msgstr ""
-"Når en formular vises, er det nogle gange en god idé at forklare noget om de "
-"oplysninger, du ønsker i et felt. Al tekst du lægger ind her vises ved siden af ​​"
-"feltet. HTML er tilladt, men vær forsigtig med det, du kan lave rav i den!"
+msgid "When a form is displayed, sometimes it is a good idea to explain something about the information you want in a field. Any text you put in here will be displayed next to the field. HTML is allowed, but be careful with that, you can break things!"
+msgstr "Når en formular vises, kan det være en god idé at forklare noget om de oplysninger, du ønsker i et felt. Al tekst du lægger ind her vises ved siden af ​​eltet. HTML er tilladt, men vær forsigtig med det, du kan ødelægge ting!"
 
 #: manage_fields_help.php:21
 msgid "Form Element"
-msgstr "Formular-element"
+msgstr "Form-elementet"
 
 #: manage_fields_help.php:22
-msgid ""
-"If your piece of information is a simple line of text (like a name), it should be "
-"presented in the form as a text field. If a longer piece of text is called for, a "
-"text-field would be a better choice, and so forth. This is where you can "
-"determine what kind of form element this particular piece of information will be "
-"preseted with."
-msgstr ""
-"Hvis din oplysning er en simpel tekstlinje (ligesom et navn), skal det "
-"præsenteres i formularen som et tekstfelt. Hvis der er behov for en længere "
-"tekst, vil et tekst-felt være et bedre valg, og så videre. Det er her, du kan "
-"bestemme, hvilken slags formularelement denne oplysning vil blive for-udfyldt med."
+msgid "If your piece of information is a simple line of text (like a name), it should be presented in the form as a text field. If a longer piece of text is called for, a text-field would be a better choice, and so forth. This is where you can determine what kind of form element this particular piece of information will be preseted with."
+msgstr "Hvis din oplysning er en simpel tekstlinje (som fx. et navn), skal det præsenteres i formularen som tekst. Hvis der er brug for en længere tekst, vil en tekst-felt være et bedre valg, og så videre. Det er her, du kan bestemme, hvilken slags formularelement denne oplysning vil blive vist med."
 
 #: manage_fields_help.php:23
-msgid ""
-"Under the multiple-choice dropdown are the form elements you can choose from. It "
-"is really best to avoid changing this once you have begun adding records to the "
-"database using this field&hellip;unpredictable things can happen, and although "
-"you won&#39;t lose any data, it can make a mess! That said, it <em>is</em> "
-"possible to change between similar elements, like text/text-field or select/"
-"dropdown or select-other/dropdown-other. Be warned, it&#39;s safest to set this "
-"up before you start getting data for the field."
-msgstr ""
-"Under den multiple choice dropdown er de formular elementer, du kan vælge "
-"imellem. Det er bedst at undgå at ændre dette, når du først er begyndt at tilføje "
-"poster til databasen ved hjælp dette felt; uforudsigelige ting kan ske, og selvom "
-"du ikke mister data, kan det lave rod i tingene! Når det er sagt, <em> er </ em> "
-"det muligt at skifte mellem lignende elementer, ligesom tekst / tekst-feltet "
-"eller vælg / dropdown eller vælg-andet / dropdown-anden. Vær opmærksom på, at det "
-"er sikrest at sætte dette op, inden du begynder at få gemt data i feltet."
+msgid "Under the multiple-choice dropdown are the form elements you can choose from. It is really best to avoid changing this once you have begun adding records to the database using this field&hellip;unpredictable things can happen, and although you won&#39;t lose any data, it can make a mess! That said, it <em>is</em> possible to change between similar elements, like text/text-field or select/dropdown or select-other/dropdown-other. Be warned, it&#39;s safest to set this up before you start getting data for the field."
+msgstr "Under multiple choice dropdown findes de formelementer, du kan vælge imellem. Det er bedst at undgå at ændre dette, når du først er begyndt at tilføje poster til databasen ved hjælp dette felt & hellip; der kan ske uforudsigelige ting, og selvom du ikke mister data, kan det gøre en rod! Når det er sagt, er det <em> er </em> muligt at skifte mellem lignende elementer, såsom tekst / tekst-feltet eller vælg / dropdown eller vælg-andet / dropdown-anden. NB! det er det sikrest at sætte dette op, inden du begynder at skrive data i feltet."
 
 #: manage_fields_help.php:24
 msgid "Values"
-msgstr "Værdi"
+msgstr "Værdier"
 
 #: manage_fields_help.php:25
-msgid ""
-"For form elements that have multiple choices, you need to define those choices "
-"here. Type in a comma-separated list of the options you want to present."
-msgstr ""
-"For formular elementer, der har flere valgmuligheder, skal du definere disse "
-"muligheder her. Indtast en kommasepareret liste over de muligheder du vil vise."
+msgid "For form elements that have multiple choices, you need to define those choices here. Type in a comma-separated list of the options you want to present."
+msgstr "For formelementer, der har flere valgmuligheder, skal du definere valgene her. Indtast en kommasepareret liste over de muligheder du vil præsentere ."
 
 #: manage_fields_help.php:26
-msgid ""
-"Don&#39;t try to have a comma in one of your options, though! It&#39;s posiible "
-"to break things by trying to include other (mostly non-text and punctuation) "
-"characters, so test things, and if you get erratic behavior in the form, you may "
-"have characters here that are messing things up. Most international language "
-"characters should be fine, just type them in. Don&#39;t try to use HTML entities "
-"or codes, it just won&#39;t work."
-msgstr ""
-"Forsøg ikke at have et komma i en af ​​dine muligheder! Det er muligt at ødelægge "
-"tingene ved at forsøge at inkludere andre tegn (for det meste ikke-tekst og "
-"tegnsætning), så test tingene, og hvis du får uregelmæssig adfærd i formularen, "
-"kan det skyldes at du har tegn med, som giver rod i tingene. De fleste "
-"internationale sprogtegn bør fungere fint, så indtast dem bare. Forsøg ikke at "
-"bruge HTML-enheder eller -koder, det dur bare ikke."
+msgid "Don&#39;t try to have a comma in one of your options, though! It&#39;s posiible to break things by trying to include other (mostly non-text and punctuation) characters, so test things, and if you get erratic behavior in the form, you may have characters here that are messing things up. Most international language characters should be fine, just type them in. Don&#39;t try to use HTML entities or codes, it just won&#39;t work."
+msgstr "Undgå at have et komma i en af ​​dine muligheder. Det er muligt at bryde det op ved at forsøge at inkludere andre tegn (for det meste ikke-tekst og tegnsætning), så prøv det af. Hvis du får mærkeligt outpu, kan det være tegnene, der forårsager det. De fleste internationale sprogtegn bør være fine, så prøv dem i. Forsøg ikke at bruge HTML-enheder eller koder, det virker bare ikke."
 
 #: manage_fields_help.php:27
 msgid "Validation"
 msgstr "Validering"
 
 #: manage_fields_help.php:28
-msgid ""
-"If you wish certain fields to be required or have a specific kind of content, you "
-"can set that here. \"Not Required\" means you don&#39;t care if the field is "
-"filled in or not. \"Required\" simply means the field must have something in it. "
-"\"match/regex\" gives you some advanced options for validating a field. To match "
-"the field to the value of another field, put the name of that field in the box. "
-"You can also use a regex to validate the field, but it is for advanced users, so "
-"if you don&#39;t know what a regex is, get some help before trying to use this "
-"feature."
-msgstr ""
-"Hvis du ønsker bestemte obligatoriske felter, eller har en bestemt slags for "
-"indhold, kan du indstille det her. \"Ikke obligatorisk \" betyder, at feltet ikke "
-"behøver at blive udfyldt. \"Obligatorisk\" betyder, at feltet skal udfyldes. "
-"\"Match/regex \" giver dig nogle avancerede muligheder for validering af et felt. "
-"For at matche feltet til værdien af et andet felt, sæt da felt-navnet i feltet. "
-"Du kan også bruge en regex til at validere feltet, men det er for den avancerede "
-"bruger, så hvis du ikke ved hvad en regex er, find noget hjælp, før du anvender "
-"denne funktion."
+msgid "If you wish certain fields to be required or have a specific kind of content, you can set that here. \"Not Required\" means you don&#39;t care if the field is filled in or not. \"Required\" simply means the field must have something in it. \"match/regex\" gives you some advanced options for validating a field. To match the field to the value of another field, put the name of that field in the box. You can also use a regex to validate the field, but it is for advanced users, so if you don&#39;t know what a regex is, get some help before trying to use this feature."
+msgstr "Hvis du ønsker bestemte felter, der skal være obligatoriske eller at de har en bestemt form for indhold, kan du angive det her. \"Ikke påkrævet \" betyder, at du er ligeglad med om  feltet er udfyldt eller ej. \"Nødvendig\" betyder blot marken skal have noget i det. \"match/regex \" giver dig nogle avancerede muligheder for validering af et felt. For at matche feltet til værdien af et andet felt, skal du skrive feltnavnet i boxen. Du kan også bruge en regex til at validere feltet, men det er for avancerede brugere, så hvis du ikke ved hvad en regex er, så søg hjælp, før du prøver at bruge denne funktion."
 
 #: manage_fields_help.php:29
 msgid "Admin Column"
-msgstr "Admin kolonne"
+msgstr "Admin Column"
 
 #: manage_fields_help.php:30
-msgid ""
-"This only affects the \"List Participants\" page of the plugin. On that page, the "
-"database records are listed. Since it would be impractical to include every field "
-"as a column in this list, you can select which fields are shown here. \"0\" means "
-"don&#39;t display it, a number sets the order in which the column will appear. "
-"You have to make sure the numbers make sense, if you have multiple items with the "
-"same number (other than 0), only the last one with the number will appear."
-msgstr ""
-"Dette påvirker kun den \"List Deltagere\" siden for denne plugin. På den side, er "
-"databaseposterne opført. Da det ville være upraktisk at inkludere alle felter som "
-"en kolonne i listen, kan du vælge, hvilke felter der vises her. \"0\" betyder at "
-"det ikke vises, et tal sætter den rækkefølge, som kolonnen vises i. Du er nødt "
-"til at sikre, tallene giver mening, hvis du har flere elementer med samme nummer "
-"(andet end 0), vil kun det sidste felt med nummeret vises."
+msgid "This only affects the \"List Participants\" page of the plugin. On that page, the database records are listed. Since it would be impractical to include every field as a column in this list, you can select which fields are shown here. \"0\" means don&#39;t display it, a number sets the order in which the column will appear. You have to make sure the numbers make sense, if you have multiple items with the same number (other than 0), only the last one with the number will appear."
+msgstr "Dette påvirker kun siden &quot;deltagerlisten&quot;  af pluginen. På denne side, er databaseposterne opført. Da det ville være upraktisk at inkludere alle felter som en kolonne i denne liste, kan du vælge, hvilke felter der vises her. &quot;0&quot; betyder at det ikke vises, et tal angiver den rækkefølge, som kolonnerne vises i. Du er nødt til at sørge for tallene giver mening, hvis du har flere elementer med samme nummer (bortset 0), vil kun den sidste med nummeret vises."
 
 #: manage_fields_help.php:31
 msgid "Display Column"
-msgstr "Vis kolonne"
+msgstr "Display kolonne"
 
 #: manage_fields_help.php:32
-msgid ""
-"When using the [pdb_list] shortcode to display the list of records, this column "
-"determines whether the column will be shown and in what order."
-msgstr ""
-"Når du bruger [pdb_list] shortcode for at vise listen over poster, vil denne "
-"kolonne afgør, om kolonnen vises og i hvilken rækkefølge."
+msgid "When using the [pdb_list] shortcode to display the list of records, this column determines whether the column will be shown and in what order."
+msgstr "Når du bruger [pdb_list] kortkode at vise listen over poster, afgør denne kolonne, om kolonnen vises og i hvilken rækkefølge."
 
 #: manage_fields_help.php:33
 msgid "Switches"
-msgstr "Tjek boxe"
+msgstr "Skiftere/Switches"
 
 #: manage_fields_help.php:34
-msgid ""
-"<strong>Sortable</strong> means the list presented on the \"List Participants\" "
-"page can be sorted by this field. Of course, it must have a non-zero value in "
-"\"Column\" to be seen at all."
-msgstr ""
-"<strong>Kan Sorteres</strong> betyder, at listen der vises på \"List Deltagere\" "
-"siden, kan sorteres efter dette felt. Selvfølgelig skal det have en ikke-nul "
-"værdi i \"Kolonne\" for at kunne vises."
+msgid "<strong>Sortable</strong> means the list presented on the \"List Participants\" page can be sorted by this field. Of course, it must have a non-zero value in \"Column\" to be seen at all."
+msgstr "<strong>Sorterber</strong> betyder, at listen der vises på &quot;deltagerlisten&quot; kan sorteres efter dette felt. Selvfølgelig skal den have en ikke-nul værdi i &quot;kolonne&quot; for at ses overhovedet."
 
 #: manage_fields_help.php:35
-msgid ""
-"<strong>CSV</strong> means the field is one that can be imported or exported with "
-"a CSV file. If you are using CSV files to bring in records, you should set these "
-"switches based on which fields you are planning to import. When exporting a CSV, "
-"this switch determines whether the field will be exported.<p>"
-msgstr ""
-"<strong>CSV</strong> betyder feltet  kan importeres eller eksporteres med en CSV-"
-"fil. Hvis du bruger CSV-filer til at hente poster, skal du sætte denne tjek-box "
-"på baggrund af, hvilke felter du planlægger at importere. Ved eksport af en CSV-"
-"fil, afgør denne tjek-box  om feltet vil blive eksporteret.<p>"
+msgid "<strong>CSV</strong> means the field is one that can be imported or exported with a CSV file. If you are using CSV files to bring in records, you should set these switches based on which fields you are planning to import. When exporting a CSV, this switch determines whether the field will be exported.<p>"
+msgstr "<strong>CSV</strong> betyder feltet er et, der kan importeres eller eksporteres med en CSV-fil. Hvis du bruger CSV-filer til at indsætte poster, skal du indstille disse parametre alt efter hvilke felter du planlægger at importere. Ved eksport til  CSV, vil denne opsætning bestemme om feltet bliver eksporteret. <p>"
 
 #: manage_fields_help.php:36
-msgid ""
-"<strong>Persistent</strong> is a convenience feature helpful when you are "
-"manually entering a series of records in the admin. If set, it means the field "
-"will carry over to the next blank entry. For instance, if a group of records from "
-"the same city are being entered, set the \"city\" field to be persistent, then "
-"once a city value has been entered in the first record of the series, the next "
-"blank record will have this city pre-filled."
-msgstr ""
-"<strong>Vedvarende</strong> er en praktisk funktion, når du manuelt indtaster en "
-"række poster i admin. Hvis sat, betyder det, at feltet vil bære over til den "
-"næste tomme post. For eksempel, hvis der bliver indtastet en gruppe af poster fra "
-"samme by, skal du indstille \"byen\" for at være vedvarende, derefter når en by "
-"værdi er indtastet i den første post i serien, vil den næste tomme post have "
-"denne by udfyldt."
+msgid "<strong>Persistent</strong> is a convenience feature helpful when you are manually entering a series of records in the admin. If set, it means the field will carry over to the next blank entry. For instance, if a group of records from the same city are being entered, set the \"city\" field to be persistent, then once a city value has been entered in the first record of the series, the next blank record will have this city pre-filled."
+msgstr "<strong>Fastholdt</strong> er en praktisk funktion nyttig, når du manuelt indtaster en række poster i admin. Hvis sat, betyder det, at feltet vil bære over til den næste tomme post. For eksempel, hvis en gruppe af poster fra samme by er ved at blive optaget, skal du indstille &quot;byen&quot; til at være fastholdt, derefter vil der ske det, at hver en gang en værdi for by er indtastet i den første post i serien, vil den næste blanke post have feltet med by udfyldt med den værdi."
 
 #: manage_fields_help.php:37
-msgid ""
-"Persistent fields will also use their set default value in record edit forms "
-"where no value has been set in the record being edited"
-msgstr ""
-"Vedvarende felter vil også bruge standardværdien i post-redigerings formularer, "
-"idet der ikke er angivet en værdi i den post der redigeres"
+msgid "Persistent fields will also use their set default value in record edit forms where no value has been set in the record being edited"
+msgstr "Fastholdte  felter vil også bruge standardværdien i post ændringsformularer, hvor ingen værdi er angivet i den post der redigeres"
 
 #: manage_fields_help.php:38
-msgid ""
-"<strong>Signup</strong> selects this field for use in the brief signup form that "
-"is presented with the [pdb_signup] shortcode."
-msgstr ""
-"<strong>Tilmelding</strong> vælg dette felt til brug i den korte "
-"tilmeldingsformular, der angives med [pdb_signup] shortcoden."
+msgid "<strong>Signup</strong> selects this field for use in the brief signup form that is presented with the [pdb_signup] shortcode."
+msgstr "<strong>Tilmelding</strong> vælger dette felt til brug i den korte tilmeldingsformular, der vises med [pdb_signup] shortcode."
 
 #: manage_fields_help.php:39
-msgid ""
-"<strong>Readonly</strong> means that plugin users can see the value of the field, "
-"but cannot edit it. The field will be editable in the admin."
-msgstr ""
-"<strong>Readonly</strong> betyder, at plugin brugere kan se værdien af feltet, "
-"men kan ikke redigere det. Feltet kan redigeres i admin."
+msgid "<strong>Readonly</strong> means that plugin users can see the value of the field, but cannot edit it. The field will be editable in the admin."
+msgstr "<strong>Readonly</strong> betyder, at plugin brugere kan se værdien af feltet, men at de ikke kan redigere det. Feltet kan redigeres i admin."
 
-#. Plugin Name of the plugin/theme
-#: participants-database.php:435
+#: participants-database.php:338
 msgid "Participants Database"
-msgstr "Participants Database"
+msgstr "Deltagerdatabase"
 
-#: participants-database.php:577
+#: participants-database.php:429 participants-database.php:430
+msgid "Add Participant"
+msgstr "Tilføje deltager"
+
+#: participants-database.php:447 participants-database.php:448 upload_csv.php:8
+msgid "Import CSV File"
+msgstr "Importér CSV-databasefil"
+
+#: participants-database.php:465 participants-database.php:466
+msgid "Setup Guide"
+msgstr "Opsætningsguide"
+
+#: participants-database.php:474 participants-database.php:475
+msgid "Edit Record"
+msgstr "Redigér post"
+
+#. translators: don't translate the words in brackets {}
+#: participants-database.php:526
 msgid "You must remove all fields from the {name} group before deleting it."
-msgstr "Du skal fjerne alle felter fra {navn} gruppen før du sletter den."
+msgstr "Du skal fjerne alle felter fra gruppen {navn} før du sletter den."
 
-#: participants-database.php:579
+#: participants-database.php:527
 msgid "Delete the \"{name}\" {thing}?"
-msgstr "Slet \"{name}\" {thing}?"
+msgstr "Slet \"{navn}\" {noget}?"
 
-#: participants-database.php:580
-msgid "The changes you made will be lost if you navigate away from this page."
-msgstr "Ændringerne, du har lavet, mistes, hvis du navigerer væk fra denne side."
-
-#: participants-database.php:3004
+#: participants-database.php:2435
 msgid "There is something wrong with the file you tried to upload. Try another."
 msgstr "Der er noget galt med den fil, du har forsøgt at uploade. Prøv en anden."
 
-#: participants-database.php:3020 participants-database.php:3048
+#: participants-database.php:2451 participants-database.php:2479
 #, php-format
 msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
-msgstr "\"%s\", kan du kun uploade billed-filer som JPEG, GIF eller PNG."
+msgstr "\"%s\", kan du kun uploade billedfiler som JPEG, GIF eller png."
 
-#: participants-database.php:3022
+#: participants-database.php:2453
 #, php-format
 msgid "The file selected for \"%s\" must be one of these types: %s. "
 msgstr "Filen valgt til \"%s\" skal være af en af disse typer: %s. "
 
-#: participants-database.php:3055
+#: participants-database.php:2485
 #, php-format
-msgid ""
-"The file you tried to upload is too large. The file must be smaller than %sK."
-msgstr "Filen du forsøgte at uploade er for stor. Filen skal være mindre end % sK."
+msgid "The file you tried to upload is too large. The file must be smaller than %sK."
+msgstr "Filen du forsøgte at uploade er for stor. Filen skal være mindre end %sK."
 
-#: participants-database.php:3062
+#: participants-database.php:2492
 msgid "The file could not be saved."
 msgstr "Filen kunne ikke gemmes."
 
-#: participants-database.php:3282 templates/pdb-retrieve-bootstrap.php:69
-#: templates/pdb-retrieve-default.php:60
+#: participants-database.php:2520
+#, php-format
+msgid "The uploads directory (%s) could not be created."
+msgstr "Kunne ikke oprettes uploads mappen (%s)."
+
+#: participants-database.php:2779
+#, php-format
+msgid "The date for \"%s\" was invalid. Please input the date with the exact format shown"
+msgstr "Datoen for &quot;%s&quot; er ugyldig. Skriv venligst datoen med nøjagtige det viste format"
+
+#: participants-database.php:2869 templates/pdb-retrieve-default.php:45
 msgid "Submit"
 msgstr "Send"
 
-#: participants-database.php:3286
+#: participants-database.php:2870
+msgid "Apply"
+msgstr "Aktiver"
+
+#: participants-database.php:2873
 msgid "The record has been updated."
 msgstr "Posten er blevet opdateret."
 
-#: participants-database.php:3287
+#: participants-database.php:2874
 msgid "The new record has been added."
-msgstr "Den nye post er blevet tilføjet."
+msgstr "Den nye rekord er blevet tilføjet."
 
-#: participants-database.php:3288
-#, php-format
-msgid "No record was added on query: %s"
-msgstr "Ingen post blev tilføjet på forespørgsel: %s"
-
-#: participants-database.php:3289
-#, php-format
-msgid "Database Error: %2$s on query: %1$s"
-msgstr "Databasefejl: %2$s på forespørgslen: %1$s"
-
-#: participants-database.php:3389
-msgid "Add Participant"
-msgstr "Tilføje deltager"
-
-#: participants-database.php:3397 upload_csv.php:40
-msgid "Import CSV File"
-msgstr "Importér CSV-fil"
-
-#: participants-database.php:3405
-msgid "Setup Guide"
-msgstr "Opsætningsguide"
-
-#: participants-database.php:3430
+#: participants-database.php:2992
 msgid "WordPress Plugin"
 msgstr "WordPress Plugin"
 
-#: participants-database.php:3431
+#: participants-database.php:2993
 msgid "Helping organizations manage their volunteers, members and participants."
-msgstr ""
-"Hjælpe organisationer med at forvalte deres frivillige, medlemmer og deltagere."
+msgstr "Hjælp organisationer med at forvalte deres frivillige, medlemmer og deltagere."
 
-#: participants-database.php:3434
+#: participants-database.php:2996
 msgid "Developed by"
 msgstr "Udviklet af"
 
-#: participants-database.php:3435
-msgid "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
-msgstr "Forslag eller kritik af dette plugin? Jeg vil meget gerne høre dem: e-mail "
+#: participants-database.php:2997
+msgid "Suggestions or crticisms of this plugin? I&#39;d love to hear them: email "
+msgstr "Forslag eller kritik af dette plugin? Jeg vil elske at høre dem: e-mail "
 
-#: participants-database.php:3438
+#: participants-database.php:3000
 #, php-format
-msgid ""
-"Please consider contributing to the continued support and development of this "
-"software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin a "
-"%2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s Thanks!"
-msgstr ""
-"Venligst overvej at bidrage til den fortsatte støtte og udvikling af denne "
-"software ved at besøge%1$sdenne plugins side,%3$s og giv din %2$svurdering%3$s "
-"eller anmeldelse, eller smid  noget i%1$stip krukke .%3$s Tak!"
+msgid "Please consider contributing to the continued support and development of this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s Thanks!"
+msgstr "Venligst overveje at bidrage til den fortsatte støtte og udvikling af denne software ved at besøge%1$sthis plugin side,%3$s som giver plugin en%2$srating%3$s eller en anmeldelse, eller du kan lægge noget i %1$s drikkepengekrukken .%3$s Tak!"
 
-#: participants-database.php:3494
-msgid "Free tech support and continued development relies on your support:"
-msgstr "Gratis teknisk support og fortsatte udvikling er afhængig af din støtte:"
-
-#: participants-database.php:3494
-msgid "contribute"
-msgstr "støt"
-
-#: participants-database.php:3542
-#, php-format
-msgid ""
-"Participants Database requires PHP version %s to function properly, you have PHP "
-"version %s. Please upgrade PHP. The Plugin has been auto-deactivated."
-msgstr ""
-"Participants Database kræver PHP version %s for at fungere ordentligt, du har PHP "
-"version %s. Opgrader PHP.  Denne plugin er blevet auto-deaktiveret."
-
-#: templates/pdb-retrieve-bootstrap.php:10 templates/pdb-retrieve-default.php:10
+#: templates/pdb-retrieve-default.php:10
 msgid "Request your Private Link"
 msgstr "Anmod om dit Private Link"
 
-#: templates/pdb-retrieve-bootstrap.php:19 templates/pdb-retrieve-default.php:17
+#: templates/pdb-retrieve-default.php:17
 msgid "Success: your private link has been emailed to you."
-msgstr "Succes: dit eget link er blevet sendt til dig på e-mail."
+msgstr "Succes: dit eget link er blevet sendt til dig."
 
-#: upload_csv.php:61
+#: templates/pdb-retrieve-default.php:37
+#, php-format
+msgid "Type in your %s, your private link will be emailed to you."
+msgstr "Skriv dit %s og dit eget link vil blive sendt til dig."
+
+#: upload_csv.php:28
 msgid "Prepare a spreadsheet file with the correct format:"
-msgstr "Forbered en regnearks-fil med det korrekte format:"
+msgstr "Forbered en regnearksfil med det korrekte format:"
+
+#: upload_csv.php:30
+msgid "To properly import your membership data, the columns in your spreadsheet must match exactly the columns in the database. Currently, the CSV import columns are as follows:"
+msgstr "For at kunne importere dine medlemmers data skal kolonnerne i regnearket matche præcis kolonnerne i databasen præcist. CSV-import kolonner er som følger:"
+
+#: upload_csv.php:45
+#, php-format
+msgid "This means your spreadsheet needs to have %s columns, and the heading in each of those columns needs to match exactly the names above. If there is no data for a particular column, you can include it and leave it blank, or leave it out entirely. The order of the columns doesn&#39;t matter."
+msgstr "Det betyder regnearket skal have %s søjler, og overskriften i hver af disse kolonner er nødt til præcist at matche navnene ovenfor. Hvis der ikke er data hørende til en bestemt kolonne, kan du medtage den og lade den stå tomt, eller du kan udelade det helt. Rækkefølgen af ​​kolonnerne er ligegyldig."
+
+#: upload_csv.php:46
+msgid "If the imported CSV file has a different column set, that column set will be imported and used. If a column name does not match a defined column in the database, the data from that column will be discarded"
+msgstr "Hvis den importerede CSV-fil har et andet kolonne sæt, vil dette kolonne sæt importeres og bruges. Hvis et kolonnenavn ikke matcher en defineret kolonne i databasen, vil data fra den pågældende kolonne kasseres"
+
+#: upload_csv.php:47
+msgid "Get Blank CSV File"
+msgstr "Hent en tom CSV-fil"
+
+#: upload_csv.php:47
+msgid "You can download this file, then open it in Open Office, Excel or Google Docs."
+msgstr "Du kan hente denne fil og derefter åbne det i Open Office, Excel eller Google Docs."
+
+#: upload_csv.php:52
+msgid "Export the .csv file"
+msgstr "Eksporter .csv-fil"
+
+#: upload_csv.php:54
+msgid "When you have your spreadsheet properly set up and filled with data, export it as any of the following: \"comma-delimited csv\", or just \"csv\". Save it to your computer then upload it here."
+msgstr "Når du har dit regneark sat rigtigt op og fyldt med data, kan du eksportere det som en af ​​følgende: &quot;kommasepareret csv&quot;, eller bare &quot;csv&quot;. Gem filen til din computer. Der efter kan du uploade den her."
+
+#: upload_csv.php:55
+msgid "Exported CSV files should be comma-delimited and enclosed with double-quotes (\"). Encoding should be \"UTF-8.\""
+msgstr "Eksporterede CSV-filer skal være kommasepareret og lukket med dobbelte anførselstegn (\"). Encoding bør være \"UTF-8.\""
+
+#: upload_csv.php:59
+msgid "Upload the .csv file"
+msgstr "Upload .csv-filen"
 
 #: upload_csv.php:62
-msgid ""
-"To properly import your membership data, the columns in your spreadsheet must "
-"match exactly the columns in the database. Currently, the CSV export columns are "
-"as follows:"
-msgstr ""
-"For at kunne importere dine data, skal kolonnerne i regnearket matche præcis med "
-"kolonnerne i databasen. I øjeblikket er kolonnerne for  CSV-import som følger:"
+msgid "<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" setting, imported records are checked against existing records by the field set in the \"Duplicate Record Check Field\" setting. If a record matching an existing record is imported, one of three things can happen, based on the \"Duplicate Record Preference\" setting:"
+msgstr "<strong>Bemærk:</strong> Afhængigt af indstillingen &quot;Duplicate Record Preference&quot;, kontrolleres de poster, der importeres, mod eksisterende poster ved at tjekke feltet sat i \"Duplicate Record Check Field\". Hvis en post der matcher en eksisterende post importeres, kan der ske tre forskellige ting afhængigt af indstillingen i&quot;Duplicate Record Preference&quot;:"
 
-#: upload_csv.php:77
-#, php-format
-msgid ""
-"This means your spreadsheet needs to have %s columns, and the heading in each of "
-"those columns needs to match exactly the names above. If there is no data for a "
-"particular column, you can include it and leave it blank, or leave it out "
-"entirely. The order of the columns doesn&#39;t matter."
-msgstr ""
-"Det betyder regnearket skal have %s kolonner, og overskriften for hver af disse "
-"kolonner er nødt til præcist at matche navnene ovenfor. Hvis der ikke er data for "
-"en bestemt kolonne, kan du medtage den og så lade den stå tom, eller undlade den "
-"helt. Rækkefølgen af ​​kolonnerne er ligegyldig."
-
-#: upload_csv.php:78
-msgid ""
-"If the imported CSV file has a different column set, that column set will be "
-"imported and used. If a column name does not match a defined column in the "
-"database, the data from that column will be discarded"
-msgstr ""
-"Hvis den importerede CSV-fil har et andet kolonne sæt, vil dette kolonne-sæt "
-"blive importeret og brugt. Hvis et kolonnenavn ikke matcher en defineret kolonne "
-"i databasen, vil data fra den pågældende kolonne kasseres."
-
-#: upload_csv.php:79
-msgid "Get Blank CSV File"
-msgstr "Hent Tom CSV-fil"
-
-#: upload_csv.php:79
-msgid ""
-"You can download this file, then open it in Open Office, Excel or Google Docs."
-msgstr ""
-"Du kan downloade denne fil og derefter åbne den i Open Office, MS Excel eller "
-"Google Docs."
-
-#: upload_csv.php:85
-msgid "Export the .csv file"
-msgstr "Eksporter .CSV-filen"
-
-#: upload_csv.php:86
-msgid ""
-"When you have your spreadsheet properly set up and filled with data, export it as "
-"any of the following: \"comma-delimited csv\", or just \"csv\". Save it to your "
-"computer then upload it here."
-msgstr ""
-"Når du har dit regneark sat rigtigt op og fyldt med data, eksportere det som en "
-"af ​​følgende: \"kommasepareret CSV\", eller bare \"CSV\". Gem filen på din "
-"computer og uploade den herefter her."
-
-#: upload_csv.php:87
-msgid ""
-"Exported CSV files should be comma-delimited and enclosed with double-quotes "
-"(\"). Encoding should be \"UTF-8.\""
-msgstr ""
-"Eksporterede CSV-filer skal være kommasepareret og lukket med dobbelte "
-"anførselstegn (\";). Encoding bør være \"UTF-8\"."
-
-#: upload_csv.php:92
-msgid "Upload the .csv file"
-msgstr "Uploade .CSV-filen"
-
-#: upload_csv.php:99
-msgid "Enclosure character"
-msgstr "Omsluttende karakter"
-
-#: upload_csv.php:105 upload_csv.php:121
-msgid "Auto"
-msgstr "Auto"
-
-#: upload_csv.php:115
-msgid "Delimiter character"
-msgstr "Afgrænsningstegn"
-
-#: upload_csv.php:124
-msgid "tab"
-msgstr "tab"
-
-#: upload_csv.php:144
-msgid "Update matching record with new data"
-msgstr "Opdater matchende post med nye data"
-
-#: upload_csv.php:145
-msgid "Don't import the record"
-msgstr "Importer IKKE posten"
-
-#: upload_csv.php:168
-msgid ""
-"<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" setting, "
-"imported records are checked against existing records by the field set in the "
-"\"Duplicate Record Check Field\" setting. If a record matching an existing record "
-"is imported, one of three things can happen, based on the \"Duplicate Record "
-"Preference\" setting:"
-msgstr ""
-"<strong>Bemærk:</strong> Afhængigt af indstillingen &quot;Duplicate Post "
-"Preference&quot;, der importeres poster kontrolleres mod eksisterende registre af "
-"feltet sat i &quot;Duplicate Post Check Field&quot; indstilling. Hvis en post der "
-"matcher en eksisterende post importeres, kan en af ​​tre ting til at ske på "
-"grundlag af indstillingen &quot;Duplicate Post Preference&quot;:"
-
-#: upload_csv.php:169
+#: upload_csv.php:63
 msgid "Current Setting"
-msgstr "Aktuel indstilling"
+msgstr "Nuværende indstillinger"
 
-#: upload_csv.php:172
+#: upload_csv.php:67
 #, php-format
-msgid ""
-"%sCreate New%s adds all imported records as new records without checking for a "
-"match."
-msgstr ""
-"%sLav Ny%s tilføjer alle importerede poster som nye poster uden at kontrollere "
-"for en kamp."
+msgid "%sOverwrite%s an existing record with a matching %s will be updated with the data from the imported record. Blank or missing fields will not overwrite existing data."
+msgstr "%sOverskriv%s en eksisterende post med en matchende; %s vil blive opdateret med data fra den importerede post. Blanke eller manglende felter vil ikke overskrive eksisterende data."
 
-#: upload_csv.php:173
-#, fuzzy, php-format
-msgid ""
-"%sOverwrite%s an existing record with a matching %s will be updated with the data "
-"from the imported record. Blank or missing fields will not overwrite existing "
-"data."
-msgstr ""
-"%Overskriv%s en eksisterende post med en matchende %s vil blive opdateret med "
-"data fra den importerede post. Blanke eller manglende felter vil ikke overskrive "
-"eksisterende data."
-
-#: upload_csv.php:174
+#: upload_csv.php:70
 #, php-format
-msgid ""
-"%sDon&#39;t Import%s does not import the new record if it matches the %s of an "
-"existing one."
-msgstr ""
-"%sDon&#39;t Import%s importerer ikke den nye post, hvis det passer til% s af en "
-"eksisterende."
+msgid "%sCreate New%s adds all imported records as new records without checking for a match."
+msgstr "%s Lav Ny%s tilføjer alle importerede poster som nye poster uden at kontrollere for dupletter."
 
-#: upload_csv.php:183
+#: upload_csv.php:73
+#, php-format
+msgid "%sDon&#39;t Import%s does not import the new record if it matches the %s of an existing one."
+msgstr "%sDon&#39;t Import%s importerer ikke den nye post, hvis den matcher til %s af en eksisterende post."
+
+#: upload_csv.php:83
 msgid "Choose .csv file to import:"
-msgstr "Vælge .csv-fil til at importere:"
+msgstr "Vælge .csv-fil til import:"
 
-#: upload_csv.php:184
+#: upload_csv.php:84
 msgid "Upload File"
 msgstr "Overfør fil"
-
-#. Plugin URI of the plugin/theme
-msgid "https://xnau.com/wordpress-plugins/participants-database"
-msgstr "https://xnau.com/WordPress-plugins/participants-database"
-
-#. Description of the plugin/theme
-msgid "Plugin for managing a database of participants, members or volunteers"
-msgstr "Plugin til at forvalte en database af deltagere, medlemmer eller frivillige"
-
-#. Author of the plugin/theme
-msgid "Roland Barker, xnau webdesign"
-msgstr "Roland Barker, xnau webdesign"
-
-#. Author URI of the plugin/theme
-msgid "https://xnau.com"
-msgstr "https://xnau.com"
-
-#~ msgid "%s record found, sorted by:"
-#~ msgid_plural "%s records found, sorted by:"
-#~ msgstr[0] "%s post fundet, sorteret efter:"
-#~ msgstr[1] "%s poste fundet, sorteret efter:"
-
-#~ msgid "show all"
-#~ msgstr "vis alle"
-
-#~ msgid ""
-#~ "User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try "
-#~ "this tutorial to help you get started: <a href=\"http://www.ostraining.com/"
-#~ "blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress "
-#~ "Themes.</a></p>"
-#~ msgstr ""
-#~ "Bruger CSS regler for styling af plugin visninger. </h4><p>Hvis du er ny til "
-#~ "CSS, prøv denne tutorial til at hjælpe dig i gang: <a href=\"http://www."
-#~ "ostraining.com/blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing "
-#~ "WordPress Themes.</a></p>"
-
-#~ msgid "Use WordPress&#39; auto formatting on rich text fields."
-#~ msgstr "Bruge WordPress &#39; automatisk formatering på RTF-felter."
-
-#~ msgid "Fields"
-#~ msgstr "Felter"
-
-#~ msgid "Edit Record"
-#~ msgstr "Redigér post"
-
-#~ msgid ""
-#~ "The date for \"%s\" was invalid. Please input the date with the exact format "
-#~ "shown"
-#~ msgstr ""
-#~ "Datoen for &quot;% s&quot; er ugyldig. Skriv venligst datoen med den nøjagtige "
-#~ "viste format"
-
-#~ msgid ""
-#~ "Suggestions or crticisms of this plugin? I&#39;d love to hear them: email "
-#~ msgstr ""
-#~ "Forslag eller crticisms af dette plugin? Jeg ville elske at høre dem: e-mail"
-
-#~ msgid ""
-#~ "To properly import your membership data, the columns in your spreadsheet must "
-#~ "match exactly the columns in the database. Currently, the CSV import columns "
-#~ "are as follows:"
-#~ msgstr ""
-#~ "For at kunne importere dit medlemskab data, skal kolonnerne i regnearket "
-#~ "matcher præcis de kolonner i databasen. I øjeblikket er de CSV-import kolonner "
-#~ "er som følger:"
