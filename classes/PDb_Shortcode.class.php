@@ -459,7 +459,7 @@ abstract class PDb_Shortcode {
   /**
    * gets the current errors
    * 
-   * @return mixed an array of error messages, or bool false if no errors
+   * @return array of PDb_Validation_Error_Message objects
    */
   public function get_errors()
   {
@@ -467,11 +467,11 @@ abstract class PDb_Shortcode {
     if ( is_object( Participants_Db::$validation_errors ) ) {
 
       $errors = Participants_Db::$validation_errors->get_validation_errors();
-      if ( $this->_empty( $errors ) )
-        return false;
-      else
+      if ( ! $this->_empty( $errors ) ) {
         return $errors;
+      }
     }
+    return false;
   }
 
   /*   * **************
