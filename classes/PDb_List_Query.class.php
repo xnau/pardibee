@@ -979,18 +979,22 @@ class PDb_List_Query {
       /*
        * change the operator if whole word match is enabled
        */
-      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) ) {
+      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', Participants_Db::plugin_setting_is_true( 'strict_search' ) ) ) {
         
         switch ( $operator ) {
           
           case 'LIKE':
           case '~':
+          case '=':
+          case 'eq':
             
             $operator = 'WORD';
             break;
           
           case 'NOT LIKE':
           case '!':
+          case '!=':
+          case 'ne':
             
             $operator = 'NOT WORD';
             break;
