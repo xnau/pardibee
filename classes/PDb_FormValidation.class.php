@@ -74,10 +74,14 @@ class PDb_FormValidation extends xnau_FormValidation {
 
     $messages = '';
 
-    foreach ( $this->errors as &$error ) {
+    foreach ( $this->errors as $error ) {
       /* @var $error PDb_Validation_Error_Message */
 
-      $messages .= sprintf( $this->error_html_wrap[1], $error->error_message(), $error->element_attributes() );
+      $messages .= sprintf( 
+              $this->error_html_wrap[1], 
+              $error->error_message(), 
+              $error->element_attributes()
+              );
     }
 
     $output .= sprintf( $this->error_html_wrap[0], $this->error_class, $messages );
@@ -259,7 +263,7 @@ class PDb_FormValidation extends xnau_FormValidation {
         }
       }
     }
-
+    
     if ( $field->is_not_valid() ) {
       $this->_add_error( $name, $field->error_type, false );
     }
@@ -339,11 +343,11 @@ class PDb_FormValidation extends xnau_FormValidation {
           $this->error_class = empty( $field ) ? Participants_Db::$prefix . 'message' : Participants_Db::$prefix . 'error';
         }
       } else {
-        $error_message = $error;
+        $error_message = $error->slug;
         $this->error_class = Participants_Db::$prefix . 'message';
       }
       $error->set_error_message( $error_message );
-      $error->set_message_class( $this->error_class );
+      $error->add_message_class( $this->error_class . '-' . $field );
     } 
   }
 
@@ -595,7 +599,7 @@ class PDb_Validation_Error_Message {
   /**
    * @var string the error message
    */
-  private $error_message;
+  private $error_message = '';
 
   /**
    * @var string the field CSS selector
@@ -610,7 +614,7 @@ class PDb_Validation_Error_Message {
   /**
    * @var string the message class
    */
-  private $class;
+  private $class = '';
 
   /**
    * 
@@ -639,7 +643,7 @@ class PDb_Validation_Error_Message {
    */
   public function element_attributes()
   {
-    return sprintf( ' data-field-group="%s" data-field-name="%s" ', $this->field_def->group, $this->fieldname );
+    return sprintf( ' data-field-group="%s" data-field-name="%s" class="%s" ', ( $this->field_def ? $this->field_def->group : '' ), $this->fieldname, $this->class );
   }
 
   /**
@@ -647,7 +651,9 @@ class PDb_Validation_Error_Message {
    */
   private function setup_field_def()
   {
-    $this->field_def = Participants_Db::$fields[$this->fieldname];
+    if ( !empty($this->fieldname) ) {
+      $this->field_def = Participants_Db::$fields[$this->fieldname];
+    }
   }
 
   /**
@@ -667,7 +673,7 @@ class PDb_Validation_Error_Message {
           return $this->field_def->{$name};
         }
     }
-    return null;
+    return '';
   }
 
   /**
@@ -688,6 +694,16 @@ class PDb_Validation_Error_Message {
   public function set_message_class( $class )
   {
     $this->class = $class;
+  }
+
+  /**
+   * adds a class to the error message css class
+   * 
+   * @param string $class
+   */
+  public function add_message_class( $class )
+  {
+    $this->class .= ' ' . $class;
   }
 
   /**
