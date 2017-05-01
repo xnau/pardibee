@@ -465,13 +465,13 @@ class PDb_List_Query {
       }
       if ( is_array( $input['search_field'] ) ) {
         foreach ( $input['search_field'] as $i => $search_field ) { // for ($i = 0; $i < count($input['search_field']); $i++) {
-          if ( strlen( $input['value'][$i] ) === 0 )
+          if ( ! $this->search_term_is_valid( $input['value'][$i] ) )
             continue;
           $logic = isset( $input['logic'][$i] ) ? $input['logic'][$i] : $set_logic;
           $this->_add_search_field_filter( $input['search_field'][$i], $input['operator'][$i], $input['value'][$i], $logic );
         }
         $this->is_search_result = true;
-      } elseif ( !empty( $input['search_field'] ) ) {
+      } elseif ( !empty( $input['search_field'] ) && $this->search_term_is_valid( $input['value'] ) ) {
         $logic = isset( $input['logic'] ) ? $input['logic'] : $set_logic;
         $this->_add_search_field_filter( $input['search_field'], $input['operator'], $input['value'], $logic );
       } elseif ( $input['submit'] !== 'clear' && empty( $input['value'] ) ) {
@@ -484,6 +484,16 @@ class PDb_List_Query {
       
       $this->_save_query_session();
     }
+  }
+  
+  /**
+   * tests a search term for validity, ckecking against empty or wildcard-only terms
+   * 
+   * @param string $term the search term
+   * @return bool true if the search term is valid
+   */
+  private function search_term_is_valid( $term ) {
+    return Participants_Db::apply_filters( 'search_term_tests_valid', strlen( trim( $term, '*?_%.' ) ) > 0, $term );
   }
 
   /**
