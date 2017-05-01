@@ -153,7 +153,6 @@ class xnau_FormValidation {
    */
   public function add_error($name, $message, $overwrite = true)
   {
-
     $this->_add_error($name, $message, $overwrite);
   }
 
@@ -337,7 +336,6 @@ class xnau_FormValidation {
    */
   protected function _add_error($field, $error, $overwrite = false)
   {
-
     if ($overwrite === true || !isset($this->errors[$field]) || empty($this->errors[$field])) {
       $this->errors[$field] = $error;
     }
