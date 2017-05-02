@@ -160,7 +160,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
        * @version 1.6.3
        */
       if ( apply_filters( 'pdbaux-enable_auto_updates', true ) ) {
-        require_once plugin_dir_path( __FILE__ ) . 'aux-plugin-update/plugin-update-checker.php';
+        
+        require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
+        
         PucFactory::buildUpdateChecker(
                 self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name, $plugin_file, $this->aux_plugin_name
         );

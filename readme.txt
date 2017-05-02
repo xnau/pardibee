@@ -90,7 +90,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Estonian: Laura Vunk
 
-* French: Dominique Chapelle
+* French: Christian Ries
 
 * Farsi: Mohsen Azarteymoor [CodHa](http://www.codha.ir)
 

@@ -2,27 +2,27 @@
 /**
  * WordPress session managment.
  *
- * Standardizes WordPress session data using database-backed options for storage
+ * Standardizes WordPress session data using database-backed options for storage.
  * for storing user session information.
- *
- * adapted from https://github.com/ericmann/wp-session-manager by Eric Mann
  *
  * @package WordPress
  * @subpackage Session
  * @since   3.7.0
  */
-if ( ! defined( 'ABSPATH' ) ) die;
+
 /**
  * WordPress Session class for managing user session data.
  *
+ * @package WordPress
+ * @since   3.7.0
  */
-final class WP_Session extends Recursive_ArrayAccess implements Iterator, Countable {
+final class WP_Session extends Recursive_ArrayAccess {
 	/**
 	 * ID of the current session.
 	 *
 	 * @var string
 	 */
-	protected $session_id;
+	public $session_id;
 
 	/**
 	 * Unix timestamp when session expires.
@@ -73,17 +73,18 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 			$cookie = stripslashes( $_COOKIE[WP_SESSION_COOKIE] );
 			$cookie_crumbs = explode( '||', $cookie );
 
-			$this->session_id = $cookie_crumbs[0];
-			$this->expires = $cookie_crumbs[1];
-			$this->exp_variant = $cookie_crumbs[2];
+            $this->session_id = preg_replace("/[^A-Za-z0-9_]/", '', $cookie_crumbs[0] );
+            $this->expires = absint( $cookie_crumbs[1] );
+            $this->exp_variant = absint( $cookie_crumbs[2] );
 
 			// Update the session expiration if we're past the variant time
 			if ( time() > $this->exp_variant ) {
 				$this->set_expiration();
-				update_option( "_wp_session_expires_{$this->session_id}", $this->expires );
+				delete_option( "_wp_session_expires_{$this->session_id}" );
+				add_option( "_wp_session_expires_{$this->session_id}", $this->expires, '', 'no' );
 			}
 		} else {
-			$this->session_id = $this->generate_id();
+			$this->session_id = WP_Session_Utils::generate_id();
 			$this->set_expiration();
 		}
 
@@ -117,22 +118,14 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 	}
 
 	/**
-	 * Set the session cookie
-	 */
+	* Set the session cookie
+     	* @uses apply_filters Calls `wp_session_cookie_secure` to set the $secure parameter of setcookie()
+     	* @uses apply_filters Calls `wp_session_cookie_httponly` to set the $httponly parameter of setcookie()
+     	*/
 	protected function set_cookie() {
-		setcookie( WP_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN );
-	}
-
-	/**
-	 * Generate a cryptographically strong unique ID for the session token.
-	 *
-	 * @return string
-	 */
-	protected function generate_id() {
-		require_once( ABSPATH . 'wp-includes/class-phpass.php');
-		$hasher = new PasswordHash( 8, false );
-
-		return md5( $hasher->get_random_bytes( 32 ) );
+        	$secure = apply_filters('wp_session_cookie_secure', false);
+        	$httponly = apply_filters('wp_session_cookie_httponly', false);
+		setcookie( WP_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN, $secure, $httponly );
 	}
 
 	/**
@@ -153,15 +146,13 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 	 */
 	public function write_data() {
 		$option_key = "_wp_session_{$this->session_id}";
-
-		// Only write the collection to the DB if it's changed.
-		if ( $this->dirty ) {
-			if ( false === get_option( $option_key ) ) {
-				add_option( "_wp_session_{$this->session_id}", $this->container, '', 'no' );
-				add_option( "_wp_session_expires_{$this->session_id}", $this->expires, '', 'no' );
-			} else {
-				update_option( "_wp_session_{$this->session_id}", $this->container );
-			}
+		
+		if ( false === get_option( $option_key ) ) {
+			add_option( "_wp_session_{$this->session_id}", $this->container, '', 'no' );
+			add_option( "_wp_session_expires_{$this->session_id}", $this->expires, '', 'no' );
+		} else {
+			delete_option( "_wp_session_{$this->session_id}" );
+			add_option( "_wp_session_{$this->session_id}", $this->container, '', 'no' );
 		}
 	}
 
@@ -202,7 +193,7 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 			delete_option( "_wp_session_{$this->session_id}" );
 		}
 
-		$this->session_id = $this->generate_id();
+		$this->session_id = WP_Session_Utils::generate_id();
 
 		$this->set_cookie();
 	}
@@ -230,79 +221,5 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 	 */
 	public function reset() {
 		$this->container = array();
-	}
-
-	/*****************************************************************/
-	/*                     Iterator Implementation                   */
-	/*****************************************************************/
-
-	/**
-	 * Current position of the array.
-	 *
-	 * @link http://php.net/manual/en/iterator.current.php
-	 *
-	 * @return mixed
-	 */
-	public function current() {
-		return current( $this->container );
-	}
-
-	/**
-	 * Key of the current element.
-	 *
-	 * @link http://php.net/manual/en/iterator.key.php
-	 *
-	 * @return mixed
-	 */
-	public function key() {
-		return key( $this->container );
-	}
-
-	/**
-	 * Move the internal point of the container array to the next item
-	 *
-	 * @link http://php.net/manual/en/iterator.next.php
-	 *
-	 * @return void
-	 */
-	public function next() {
-		next( $this->container );
-	}
-
-	/**
-	 * Rewind the internal point of the container array.
-	 *
-	 * @link http://php.net/manual/en/iterator.rewind.php
-	 *
-	 * @return void
-	 */
-	public function rewind() {
-		reset( $this->container );
-	}
-
-	/**
-	 * Is the current key valid?
-	 *
-	 * @link http://php.net/manual/en/iterator.rewind.php
-	 *
-	 * @return bool
-	 */
-	public function valid() {
-		return $this->offsetExists( $this->key() );
-	}
-
-	/*****************************************************************/
-	/*                    Countable Implementation                   */
-	/*****************************************************************/
-
-	/**
-	 * Get the count of elements in the container array.
-	 *
-	 * @link http://php.net/manual/en/countable.count.php
-	 *
-	 * @return int
-	 */
-	public function count() {
-		return count( $this->container );
 	}
 }

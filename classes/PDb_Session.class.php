@@ -16,24 +16,25 @@
  * https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/includes/class-edd-session.php
  * 
  */
-if ( ! defined( 'ABSPATH' ) ) die;
+if ( !defined( 'ABSPATH' ) )
+  die;
+
 class PDb_Session {
 
-	/**
-	 * Holds the session data
-	 *
-	 * @var array
-	 */
-	private $session = array();
+  /**
+   * Holds the session data
+   *
+   * @var array
+   */
+  private $session = array();
 
+  /**
+   * Whether to use PHP $_SESSION or WP_Session
+   *
+   * @var bool
+   */
+  private $use_php_sessions = false;
 
-	/**
-	 * Whether to use PHP $_SESSION or WP_Session
-	 *
-	 * @var bool
-	 */
-	private $use_php_sessions = false;
-  
   /**
    * a name for our session array
    * 
@@ -50,177 +51,201 @@ class PDb_Session {
    */
   public $no_user_cookie = false;
 
-
-	/**
-	 * construct the class
+  /**
+   * construct the class
    * 
    * we check the setting for using PHP session, if false, we use a WP Transient-based session
    * 
    * we are just using this alternate form of session mnagement instead of PHP 
    * sessions for now
-	 */
-	public function __construct() {
+   */
+  public function __construct()
+  {
 
-		$this->use_php_sessions = Participants_Db::plugin_setting_is_true('use_php_sessions');
-    
+    $this->use_php_sessions = Participants_Db::plugin_setting_is_true( 'use_php_sessions' );
+
     $this->session_name = Participants_Db::$prefix . 'session';
 
-		if( $this->use_php_sessions ) {
+    if ( $this->use_php_sessions ) {
 
-			if( ! session_id() ) {
-				session_start();
+      if ( !session_id() ) {
+        session_start();
       }
+    } else {
 
-		} else {
+      
+      $wp_session_path = Participants_Db::$plugin_path . '/vendor/wp-session-manager/';
 
-			// Use WP_Session (default)
-      require_once plugin_dir_path(__FILE__) . 'wp-session.inc.php';
-
-			if ( ! defined( 'WP_SESSION_COOKIE' ) ) {
+      if ( !defined( 'WP_SESSION_COOKIE' ) ) {
         /**
          * @version 1.6.2.6
          * 
          * for compatibility with servers using varnish cache
          */
-				define( 'WP_SESSION_COOKIE', apply_filters( 'pdb-cookie_name', Participants_Db::plugin_setting('cookie_name', 'pdb_wp_session') ) );
+        define( 'WP_SESSION_COOKIE', apply_filters( 'pdb-cookie_name', Participants_Db::plugin_setting( 'cookie_name', 'pdb_wp_session' ) ) );
       }
-		}
+
+      if ( !class_exists( 'Recursive_ArrayAccess' ) ) {
+        include $wp_session_path . 'class-recursive-arrayaccess.php';
+      }
+
+      // Include utilities class
+      if ( !class_exists( 'WP_Session_Utils' ) ) {
+        include $wp_session_path . 'class-wp-session-utils.php';
+      }
+
+      // Include WP_CLI routines early
+      if ( defined( 'WP_CLI' ) && WP_CLI ) {
+        include $wp_session_path . 'wp-cli.php';
+      }
+
+      // Only include the functionality if it's not pre-defined.
+      if ( !class_exists( 'WP_Session' ) ) {
+        include $wp_session_path . 'class-wp-session.php';
+        include $wp_session_path . 'wp-session.php';
+      }
+    }
 
     //add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
     $this->init();
-    
-	}
+  }
 
-
-	/**
-	 * Setup the WP_Session instance
+  /**
+   * Setup the WP_Session instance
    * 
-	 * @return void
-	 */
-	public function init() {
+   * @return void
+   */
+  public function init()
+  {
 
-		if( $this->use_php_sessions ){
-			$this->session = isset( $_SESSION[$this->session_name] ) && is_array( $_SESSION[$this->session_name] ) ? $_SESSION[$this->session_name] : array();
+    if ( $this->use_php_sessions ) {
+      $this->session = isset( $_SESSION[$this->session_name] ) && is_array( $_SESSION[$this->session_name] ) ? $_SESSION[$this->session_name] : array();
     } else {
-      
-			$this->session = WP_Session::get_instance();
+
+      $this->session = WP_Session::get_instance();
     }
 
-		return $this->session;
-	}
+    return $this->session;
+  }
 
-
-	/**
-	 * get the session ID
+  /**
+   * get the session ID
    * 
-	 * @return string Session ID
-	 */
-	public function get_id() {
-		return $this->session->session_id;
-	}
+   * @return string Session ID
+   */
+  public function get_id()
+  {
+    return $this->session->session_id;
+  }
 
-
-	/**
-	 * get a session variable
+  /**
+   * get a session variable
    * 
-	 * @param string $key Session key
+   * @param string $key Session key
    * @param string|array|bool $default the value to return if none is found in the session
-	 * @return string Session variable or $default value
-	 */
-	public function get( $key, $default = false ) {
-		$key = sanitize_key( $key );
-		return isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : $default;
-	}
+   * @return string Session variable or $default value
+   */
+  public function get( $key, $default = false )
+  {
+    $key = sanitize_key( $key );
+    return isset( $this->session[$key] ) ? maybe_unserialize( $this->session[$key] ) : $default;
+  }
 
-  
-	/**
-	 * get a session variable array
+  /**
+   * get a session variable array
    * 
-	 * @param string $key Session key
+   * @param string $key Session key
    * @param string|array|bool $default the value to return if none is found in the session
-	 * @return array Session variable or $default value
-	 */
-	public function getArray( $key, $default = false ) {
-    
-		$key = sanitize_key( $key );
-    $array_object = isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
-    
-    switch ($this->use_php_sessions) {
+   * @return array Session variable or $default value
+   */
+  public function getArray( $key, $default = false )
+  {
+
+    $key = sanitize_key( $key );
+    $array_object = isset( $this->session[$key] ) ? maybe_unserialize( $this->session[$key] ) : false;
+
+    switch ( $this->use_php_sessions ) {
       case true:
-        return is_array($array_object) ? $array_object : $default;
+        return is_array( $array_object ) ? $array_object : $default;
       case false:
         return is_object( $array_object ) ? $array_object->toArray() : $default;
     }
-	}
+  }
 
-	/**
-	 * Set a session variable
-	 *
-	 * @param $key Session key
-	 * @param $value Session variable
-	 * @return mixed Session variable
-	 */
-	public function set( $key, $value ) {
-    
-		$key = sanitize_key( $key );
-		
-		$this->session[ $key ] = $value;
+  /**
+   * Set a session variable
+   *
+   * @param $key Session key
+   * @param $value Session variable
+   * @return mixed Session variable
+   */
+  public function set( $key, $value )
+  {
 
-		if( $this->use_php_sessions )
-			$_SESSION[$this->session_name] = $this->session;
+    $key = sanitize_key( $key );
 
-		return $this->session[ $key ];
-	}
+    $this->session[$key] = $value;
 
-	/**
-	 * update a session variable
+    if ( $this->use_php_sessions )
+      $_SESSION[$this->session_name] = $this->session;
+
+    return $this->session[$key];
+  }
+
+  /**
+   * update a session variable
    * 
    * if the incoming value is an array, it is merged with the stored value if it 
    * is also an array; if not, it stores the value, overwriting the stored value
-	 *
-	 * @param $key Session key
-	 * @param $value Session variable
-	 * @return mixed Session variable
-	 */
-	public function update( $key, $value ) {
-    
-		$key = sanitize_key( $key );
-    $stored = $this->getArray($key);
+   *
+   * @param $key Session key
+   * @param $value Session variable
+   * @return mixed Session variable
+   */
+  public function update( $key, $value )
+  {
 
-		if (is_array($value) && is_array($stored) )
-			$this->session[ $key ] = self::deep_merge($value, $stored);
-		else
-			$this->session[ $key ] = $value;
+    $key = sanitize_key( $key );
+    $stored = $this->getArray( $key );
 
-		if( $this->use_php_sessions )
-			$_SESSION[$this->session_name] = $this->session;
+    if ( is_array( $value ) && is_array( $stored ) )
+      $this->session[$key] = self::deep_merge( $value, $stored );
+    else
+      $this->session[$key] = $value;
 
-		return $this->session[ $key ];
-	}
+    if ( $this->use_php_sessions )
+      $_SESSION[$this->session_name] = $this->session;
+
+    return $this->session[$key];
+  }
+
   /**
    * clears a session variable
    * 
    * @param string $name the name of the variable to delete
    * @return null
    */
-  public function clear($name) {
+  public function clear( $name )
+  {
     //error_log(__METHOD__.' clearing: '.$name);
-    
-		$key = sanitize_key( $name );
-		
-		unset($this->session[ $key ]);
 
-		if( $this->use_php_sessions )
-			$_SESSION[$this->session_name] = $this->session;
-    
-	}
+    $key = sanitize_key( $name );
+
+    unset( $this->session[$key] );
+
+    if ( $this->use_php_sessions )
+      $_SESSION[$this->session_name] = $this->session;
+  }
+
   /**
    * displays all session object values
    * 
    */
-  public function value_dump() {
-    return print_r($this,1);
-	}
+  public function value_dump()
+  {
+    return print_r( $this, 1 );
+  }
+
   /**
    * merges two arrays recursively
    * 
@@ -232,19 +257,21 @@ class PDb_Session {
    * @param array $b
    * @return array
    */
-  public static function deep_merge($a, $b) {
-    $a = (array)$a;
-    $b = (array)$b;
+  public static function deep_merge( $a, $b )
+  {
+    $a = (array) $a;
+    $b = (array) $b;
     $c = $b;
-      foreach ($a as $k => $v) {
+    foreach ( $a as $k => $v ) {
       if ( isset( $b[$k] ) ) {
         if ( is_array( $v ) && is_array( $b[$k] ) ) {
           $c[$k] = self::deep_merge( $v, $b[$k] );
-          }
-        } else {
-          $c[$k] = $v;
         }
+      } else {
+        $c[$k] = $v;
       }
+    }
     return $c;
   }
+
 }
