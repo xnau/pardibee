@@ -850,6 +850,20 @@ class PDb_FormElement extends xnau_FormElement {
      */
     return Participants_Db::apply_filters( 'set_form_element_types', $types );
   }
+  
+  /**
+   *  tells if a field stores it's value as an array
+   * 
+   * any new form element that does this is expected to register with this list
+   * 
+   * @param string  $form_element the name of the form element
+   * 
+   * @return bool true if the element is stored as an array
+   */
+  public static function is_multi( $form_element )
+  {
+    return in_array( $form_element, Participants_Db::apply_filters( 'multi_form_elements_list', array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
+  }
 
   /**
    * determines if a field type is "linkable"
