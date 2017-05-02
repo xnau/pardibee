@@ -138,9 +138,9 @@ class PDb_List_Query {
     $this->_set_columns( $List->display_columns );
     $this->suppress = filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
     $this->_add_filter_from_shortcode_filter( $List->shortcode_atts['filter'] );
-    
+
 //    error_log(__METHOD__.' session query: '.print_r(Participants_Db::$session,1));
-    
+
     /*
      * at this point, the object has been instantiated with the properties provided 
      * in the shortcode
@@ -465,7 +465,7 @@ class PDb_List_Query {
       }
       if ( is_array( $input['search_field'] ) ) {
         foreach ( $input['search_field'] as $i => $search_field ) { // for ($i = 0; $i < count($input['search_field']); $i++) {
-          if ( ! $this->search_term_is_valid( $input['value'][$i] ) )
+          if ( !$this->search_term_is_valid( $input['value'][$i] ) )
             continue;
           $logic = isset( $input['logic'][$i] ) ? $input['logic'][$i] : $set_logic;
           $this->_add_search_field_filter( $input['search_field'][$i], $input['operator'][$i], $input['value'][$i], $logic );
@@ -481,18 +481,19 @@ class PDb_List_Query {
       if ( !empty( $input['sortstring'] ) ) {
         $this->set_sort( $input['sortstring'], $input['orderstring'] );
       }
-      
+
       $this->_save_query_session();
     }
   }
-  
+
   /**
    * tests a search term for validity, ckecking against empty or wildcard-only terms
    * 
    * @param string $term the search term
    * @return bool true if the search term is valid
    */
-  private function search_term_is_valid( $term ) {
+  private function search_term_is_valid( $term )
+  {
     return Participants_Db::apply_filters( 'search_term_tests_valid', strlen( trim( $term, '*?_%.' ) ) > 0, $term );
   }
 
@@ -852,6 +853,7 @@ class PDb_List_Query {
       return false; // no valid operator; skip to the next statement
 
 
+
       
 // get the parts
     list( $string, $column, $op_char, $search_term ) = $matches;
@@ -923,6 +925,8 @@ class PDb_List_Query {
      * 
      */
     $is_numeric = PDb_FormElement::is_numeric_datatype( $column );
+    // is the field value stored as an array?
+    $is_multi = PDb_FormElement::is_multi( $field_atts->form_element );
 
     /*
      * set up special-case field types
@@ -964,48 +968,60 @@ class PDb_List_Query {
 
       if ( $operator === NULL )
         $operator = 'LIKE';
-      
+
       /*
        * don't use string operators on numeric values
        */
       if ( $is_numeric ) {
-        
+
         switch ( $operator ) {
-          
+
           case 'LIKE':
           case '~':
-            
+
             $operator = '=';
             break;
-          
+
           case 'NOT LIKE':
           case '!':
-            
+
             $operator = '<>';
             break;
         }
       }
-      
+
       /*
        * change the operator if whole word match is enabled
+       * 
+       * or if the field value is stored as an array and strict search is enabled
        */
-      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', Participants_Db::plugin_setting_is_true( 'strict_search' ) ) ) {
-        
+      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) || ( $is_multi && Participants_Db::plugin_setting_is_true('strict_search') ) ) {
+
+        // fields with values stored as arrays use word search if strict 
+        if ( $is_multi ) {
+          switch ( $operator ) {
+            case '=':
+            case 'eq':
+              $operator = 'LIKE';
+              break;
+            case '!=':
+            case 'ne':
+              $operator = 'NOT LIKE';
+              break;
+          }
+        }
+
         switch ( $operator ) {
-          
+
           case 'LIKE':
           case '~':
-          case '=':
-          case 'eq':
-            
+
             $operator = 'WORD';
             break;
-          
+
           case 'NOT LIKE':
           case '!':
-          case '!=':
-          case 'ne':
-            
+
             $operator = 'NOT WORD';
             break;
         }
@@ -1017,7 +1033,7 @@ class PDb_List_Query {
        * set the operator and delimiters
        */
       switch ( $operator ) {
-        
+
         case '~':
         case 'LIKE':
 
@@ -1061,7 +1077,7 @@ class PDb_List_Query {
            * serialized array), we must prepare a special statement to search 
            * for the double quotes surrounding the value in the serialization
            */
-          if ( in_array( $field_atts->form_element, array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) ) {
+          if ( $is_multi ) {
             $delimiter = array('\'%"', '"%\'');
             $operator = 'LIKE';
             /*
@@ -1108,7 +1124,7 @@ class PDb_List_Query {
           // invalid operator: don't add the statement
           return false;
       }
-      
+
       $statement = sprintf( 'p.%s %s %s%s%s', $column, $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
     }
     if ( $statement ) {
