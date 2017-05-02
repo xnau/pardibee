@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Participants Database 1.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/participants-database\n"
 "POT-Creation-Date: 2015-02-08 18:28:00+00:00\n"
-"PO-Revision-Date: 2017-04-29 18:57-1000\n"
+"PO-Revision-Date: 2017-05-01 22:44-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: ChameleonJohn.com\n"
 "Language: id\n"
@@ -1420,7 +1420,7 @@ msgstr "Daftar Template Hitungan"
 #: classes/PDb_Settings.class.php:804
 #, c-format
 msgid "Total Records Found: %1$s, showing %2$s per page"
-msgstr "Total Catatan Ditemukan:%1$s, menunjukkan%2$s per halaman"
+msgstr "Total Catatan Ditemukan:%1$s, menunjukkan %2$s per halaman"
 
 #: classes/PDb_Settings.class.php:814
 msgid "List Default Sort"
