@@ -718,7 +718,7 @@ class PDb_List_Admin {
       <?php do_action('pdb-list_admin_head'); ?>
       <div id="poststuff">
         <div class="post-body">
-          <h2><?php _e( 'List Participants', 'participants-database' ) ?></h2>
+          <h2><?php echo Participants_Db::plugin_label( 'list_participants_title' ) ?></h2>
           <?php
         }
 
@@ -1106,7 +1106,7 @@ class PDb_List_Admin {
 
           <div class="postbox">
             <div class="inside">
-              <h3><?php _e( 'Export CSV', 'participants-database' ) ?></h3>
+              <h3><?php echo Participants_Db::plugin_label( 'export_csv_title' ) ?></h3>
               <form method="post" class="csv-export">
                 <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
                 <input type="hidden" name="action" value="output CSV" />
