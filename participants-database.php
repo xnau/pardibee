@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.3
+ * Version: 1.7.3.1
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -303,8 +303,10 @@ class Participants_Db extends PDb_Base {
     register_deactivation_hook( __FILE__, array('PDb_Init', 'on_deactivate') );
     register_uninstall_hook( __FILE__, array('PDb_Init', 'on_uninstall') );
 
+    // admin plugin list display
     add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array(__CLASS__, 'add_plugin_action_links') );
     add_filter( 'plugin_row_meta', array(__CLASS__, 'add_plugin_meta_links'), 10, 2 );
+    add_filter( 'all_plugins', array( __CLASS__, 'filter_plugin_data' ) );
 
     // set the WP hooks to finish setting up the plugin
     add_action( 'plugins_loaded', array(__CLASS__, 'setup_source_names'), 1 );
@@ -435,7 +437,7 @@ class Participants_Db extends PDb_Base {
 
     self::load_plugin_textdomain( __FILE__ );
 
-    self::$plugin_title = __( 'Participants Database', 'participants-database' );
+    self::$plugin_title = self::apply_filters( 'plugin_title', __( 'Participants Database', 'participants-database' ) );
 
     self::_set_i18n();
     /**
@@ -2801,7 +2803,17 @@ class Participants_Db extends PDb_Base {
      * @param string  $context  a context identifier for the filter
      */
     $filtered_string = self::apply_filters( 'rich_text_auto_formatting', $string, $context );
-    return Participants_Db::$plugin_options['enable_wpautop'] ? self::rich_text_filter( $string ) : $filtered_string; // wpautop($string)
+    switch ( Participants_Db::$plugin_options['enable_wpautop'] ) {
+      case '1':
+      case 'the_content':
+        return self::rich_text_filter( $string );
+      case 'wpautop':
+        return wpautop($string);
+      case '0':
+      case 'none':
+      default:
+        return $string;
+    }
   }
 
   /**
@@ -3394,7 +3406,7 @@ class Participants_Db extends PDb_Base {
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, __( 'List Participants', 'participants-database' ), __( 'List Participants', 'participants-database' ), self::plugin_capability( 'record_edit_capability', 'list participants' ), self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
+            self::PLUGIN_NAME, self::plugin_label( 'list_participants' ), self::plugin_label( 'list_participants' ), self::plugin_capability( 'record_edit_capability', 'list participants' ), self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
             array($list_admin_classname, 'initialize')
     );
     /**
@@ -3405,23 +3417,23 @@ class Participants_Db extends PDb_Base {
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, __( 'Add Participant', 'participants-database' ), __( 'Add Participant', 'participants-database' ), self::plugin_capability( 'record_edit_capability', 'add participant' ), self::$plugin_page . '-add_participant', array(__CLASS__, 'include_admin_file')
+            self::PLUGIN_NAME, self::plugin_label( 'add_participant' ), self::plugin_label( 'add_participant' ), self::plugin_capability( 'record_edit_capability', 'add participant' ), self::$plugin_page . '-add_participant', array(__CLASS__, 'include_admin_file')
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, __( 'Manage Database Fields', 'participants-database' ), __( 'Manage Database Fields', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'manage fields' ), self::$plugin_page . '-manage_fields', array(__CLASS__, 'include_admin_file')
+            self::PLUGIN_NAME, self::plugin_label( 'manage_fields' ), self::plugin_label( 'manage_fields' ), self::plugin_capability( 'plugin_admin_capability', 'manage fields' ), self::$plugin_page . '-manage_fields', array(__CLASS__, 'include_admin_file')
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, __( 'Import CSV File', 'participants-database' ), __( 'Import CSV File', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'upload csv' ), self::$plugin_page . '-upload_csv', array(__CLASS__, 'include_admin_file')
+            self::PLUGIN_NAME, self::plugin_label( 'upload_csv' ), self::plugin_label( 'upload_csv' ), self::plugin_capability( 'plugin_admin_capability', 'upload csv' ), self::$plugin_page . '-upload_csv', array(__CLASS__, 'include_admin_file')
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, __( 'Settings', 'participants-database' ), __( 'Settings', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'plugin settings' ), self::$plugin_page . '_settings_page', array(self::$Settings, 'show_settings_form')
+            self::PLUGIN_NAME, self::plugin_label( 'plugin_settings' ), self::plugin_label( 'plugin_settings' ), self::plugin_capability( 'plugin_admin_capability', 'plugin settings' ), self::$plugin_page . '_settings_page', array(self::$Settings, 'show_settings_form')
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, __( 'Setup Guide', 'participants-database' ), __( 'Setup Guide', 'participants-database' ), self::plugin_capability( 'plugin_admin_capability', 'setup guide' ), self::$plugin_page . '-setup_guide', array(__CLASS__, 'include_admin_file')
+            self::PLUGIN_NAME, self::plugin_label( 'setup_guide' ), self::plugin_label( 'setup_guide' ), self::plugin_capability( 'plugin_admin_capability', 'setup guide' ), self::$plugin_page . '-setup_guide', array(__CLASS__, 'include_admin_file')
     );
   }
 
@@ -3444,6 +3456,7 @@ class Participants_Db extends PDb_Base {
       <?php echo wpautop( $greeting ); ?>
       </div>
       <?php endif; ?>
+    <?php if ( self::apply_filters( 'show_plugin_colophon', true ) ) : ?>
     <div id="PDb_footer" class="pdb-footer widefat redfade postbox">
       <div class="section">
         <h4><?php echo 'Participants Database ', self::$plugin_version ?><br /><?php _e( 'WordPress Plugin', 'participants-database' ) ?></h4>
@@ -3458,6 +3471,30 @@ class Participants_Db extends PDb_Base {
       </div>
     </div>
     <?php
+    endif;
+  }
+  
+  /**
+   * provides translated strings for plugin labels
+   * 
+   * @param string  $key  the key string for the label to get
+   * @return  string the translated string or the key string if not found
+   */
+  public static function plugin_label( $key )
+  {
+    $labels = self::apply_filters('plugin_labels', array(
+        'add_participant' => __( 'Add Participant', 'participants-database' ),
+        'list_participants' => __( 'List Participants', 'participants-database' ),
+        'manage_fields' => __( 'Manage Database Fields', 'participants-database' ),
+        'upload_csv' => __( 'Import CSV File', 'participants-database' ),
+        'plugin_settings' => __( 'Settings', 'participants-database' ),
+        'setup_guide' => __( 'Setup Guide', 'participants-database' ),
+        'add_record_title' => __( 'Add New Participant Record', 'participants-database' ),
+        'edit_record_title' => __( 'Edit Existing Participant Record', 'participants-database' ),
+        'list_participants_title' => __( 'List Participants', 'participants-database' ),
+        'export_csv_title' => __( 'Export CSV', 'participants-database' ),
+    ) );
+    return isset( $labels[$key] ) ? $labels[$key] : $key;
   }
 
   /**
@@ -3477,6 +3514,28 @@ class Participants_Db extends PDb_Base {
     $plugin_data = get_plugin_data( __FILE__ );
 
     return $plugin_data[$key];
+  }
+  
+  /**
+   * fiters the plugin data
+   * 
+   * @param array $plugins
+   * @return array
+   */
+  public static function filter_plugin_data( $plugins )
+  {
+    $key = plugin_basename( __FILE__ );
+    $plugin_data = $plugins[$key];
+    $filtered_data = array(
+        'Name' => self::apply_filters( 'plugin_title', $plugin_data['Name'] ),
+        'Title' => self::apply_filters( 'plugin_title', $plugin_data['Title'] ),
+        'Description' => self::apply_filters( 'plugin_description', $plugin_data['Description'] ),
+        'Author' => self::apply_filters( 'plugin_author', $plugin_data['Author'] ),
+        'AuthorName' => self::apply_filters( 'plugin_author', $plugin_data['AuthorName'] ),
+        'AuthorURI' => self::apply_filters( 'plugin_author_uri', $plugin_data['AuthorURI'] ),
+    );
+    $plugins[$key] = array_merge( $plugin_data, $filtered_data );
+    return $plugins;
   }
 
   /**
@@ -3501,16 +3560,14 @@ class Participants_Db extends PDb_Base {
   public static function add_plugin_meta_links( $links, $file )
   {
 
-    $plugin = plugin_basename( __FILE__ );
-
     // create link
-    if ( $file == $plugin ) {
+    if ( $file == plugin_basename( __FILE__ ) ) {
 
       //error_log( ' meta links: '.print_r( $links,1 ));
 
-      $links[1] = str_replace( self::_get_plugin_data( 'Author' ), '<span class="icon-xnau-glyph"></span> xn*au webdesign', $links[1] );
-      $links[] = '<a href="http://wordpress.org/support/view/plugin-reviews/participants-database">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
-      $links[] = '<span style="color:#6B4001;">' . __( 'Free tech support and continued development relies on your support:', 'participants-database' ) . ' <a class="button xnau-contribute" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6C7FSX2DQFWY4">' . __( 'contribute', 'participants-database' ) . '</a></span>';
+      $links[1] = str_replace( self::_get_plugin_data( 'Author' ), 'xn*au webdesign', $links[1] );
+//      $links[] = '<a href="http://wordpress.org/support/view/plugin-reviews/participants-database">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
+//      $links[] = '<span style="color:#6B4001;">' . __( 'Free tech support and continued development relies on your support:', 'participants-database' ) . ' <a class="button xnau-contribute" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6C7FSX2DQFWY4">' . __( 'contribute', 'participants-database' ) . '</a></span>';
     }
     return $links;
   }
