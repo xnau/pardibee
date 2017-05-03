@@ -18,12 +18,12 @@ if ( !Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id
 if ( false === $participant_id ) {
 
   $action = 'insert';
-  $page_title = __( 'Add New Participant Record', 'participants-database' );
+  $page_title = Participants_Db::plugin_label('add_record_title');
   $participant_values = Participants_Db::get_default_record();
 } else {
 
   $action = 'update';
-  $page_title = __( 'Edit Existing Participant Record', 'participants-database' );
+  $page_title = Participants_Db::plugin_label('edit_record_title');
   $participant_values = Participants_Db::get_participant( $participant_id );
 }
 
