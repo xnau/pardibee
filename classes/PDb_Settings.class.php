@@ -939,16 +939,25 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    /**
+     * @version 1.7.3.1
+     * 
+     * modified this setting for multiple modes
+     */
     $this->plugin_settings[] = array(
         'name' => 'enable_wpautop',
         'title' => __( 'Use WordPress Auto Formatting', 'participants-database' ),
         'group' => 'pdb-advanced',
         'options' => array
             (
-            'type' => 'checkbox',
-            'help_text' => __( 'Use WordPress&#39; "the_content" filter on rich text fields. This applies "auto paragraphs" and allows the use of shortcodes in rich text fields and HTML emails.', 'participants-database' ),
-            'value' => 1,
-            'options' => array(1, 0),
+            'type' => 'dropdown',
+            'help_text' => __( 'Select the filter mode for all rich text outputs, including HTML emails.', 'participants-database' ),
+            'value' => 'the_content',
+            'options' => array( 
+                __( 'global content filter', 'participants-database' ) =>'the_content', 
+                __( 'WordPress auto paragraphs', 'participants-database' ) => 'wpautop', 
+                __( 'none', 'participants-database' ) => 'none' 
+                ),
         ),
     );
 
