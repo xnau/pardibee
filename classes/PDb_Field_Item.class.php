@@ -82,8 +82,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function __construct( $field, $id = false )
   {
-    
-    //error_log(__METHOD__.' with: '.print_r($field,1));
 
     if ( is_string( $field ) ) {
       $field = (object) array('name' => $field);
@@ -93,11 +91,9 @@ class PDb_Field_Item extends PDb_Template_Item {
 
     $this->assign_props( $field, __CLASS__ );
 
-    $this->record_id = $id;
+    if ( $id ) $this->record_id = $id;
     
     $this->set_link_field_value();
-
-    //error_log(__METHOD__.' instantiated:'.print_r($this,1));
   }
 
   // template methods
@@ -127,10 +123,11 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function print_value( $print = true )
   {
 
-    if ( $print )
+    if ( $print ) {
       echo $this->get_value();
-    else
+    } else {
       return $this->get_value();
+    }
   }
 
   /**
@@ -141,7 +138,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function get_value()
   {
-
     return PDb_FormElement::get_field_value_display( $this, $this->html_output );
   }
 
