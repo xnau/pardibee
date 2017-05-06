@@ -245,7 +245,7 @@ class Participants_Db extends PDb_Base {
   /**
    * holds the WP session object
    * 
-   * @var object
+   * @var PDb_Session
    */
   public static $session;
 
