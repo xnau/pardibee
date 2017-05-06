@@ -253,15 +253,11 @@ abstract class PDb_Shortcode {
      */
     if ( $this->shortcode_atts['filtering'] != 1 ) {
 
-      static $clear = true;
-      if ( is_null( $clear ) && filter_input( INPUT_GET, 'shortcode_clear' ) === 'true' ) {
-        $clear = true;
-      }
-      if ( $clear ) {
+      if ( filter_input( INPUT_GET, 'pdb-shortcode_clear', FILTER_SANITIZE_STRING ) ) {
         Participants_Db::$session->clear( 'shortcode_atts' );
-        $clear = false;
       }
       Participants_Db::$session->update( 'shortcode_atts', $this->shortcode_session() );
+      
     }
 
     $this->wrap_class = $this->prefix . $this->module . ' ' . $this->prefix . 'instance-' . $this->instance_index;
