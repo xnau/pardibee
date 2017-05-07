@@ -23,29 +23,24 @@ class PDb_Record_Item extends PDb_Template_Item {
     
     $this->module = $module;
     
-    // set up the common properties (currently does nothing)
-    parent::__construct( $record );
-    
     // get rid of unneeded properties
     unset( $this->name, $this->title );
     
-    // add the record field objects
-    // this needs to by typed as array for the iterators to work
-    $this->fields = (array) $record;
-    
     $this->record_id = $id;
     
-    $this->setup_values();
-    
-    
-//    $this->values = Participants_Db::get_participant($id);
+    $this->assign_props( $record );
     
   }
   
   /**
    * sets up the values property
    */
-  private function setup_values() {
+  protected function assign_props( $record ) {
+    
+    // add the record field objects
+    // this needs to by typed as array for the iterators to work
+    $this->fields = (array) $record;
+    
     foreach($this->fields as $name => $field) {
     
       // get the field attributes

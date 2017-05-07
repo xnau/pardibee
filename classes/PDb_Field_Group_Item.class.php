@@ -35,11 +35,8 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
    */
   public function __construct( $group, $module ) {
     
-    // set up the common porperties
-    parent::__construct( $group );
-    
     // load the object properties
-    $this->assign_props( $group, __CLASS__ );
+    $this->assign_props( $group );
     
     // set the field count for the group
     $this->_field_count = count( (array) $group->fields );

@@ -82,14 +82,12 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function __construct( $field, $id = false )
   {
-
     if ( is_string( $field ) ) {
       $field = (object) array('name' => $field);
     }
-
-    parent::__construct( $field );
-
-    $this->assign_props( $field, __CLASS__ );
+    
+    // load the object properties
+    $this->assign_props( $field );
 
     if ( $id ) $this->record_id = $id;
     
@@ -122,7 +120,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function print_value( $print = true )
   {
-
     if ( $print ) {
       echo $this->get_value();
     } else {
