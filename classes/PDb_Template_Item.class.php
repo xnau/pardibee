@@ -53,19 +53,12 @@ class PDb_Template_Item {
   /**
    * @var array holds an array of class strings
    */
-  var $class = array();
+  private $class = array();
   
   /**
    * @var bool true if the item is a Participants Database field
    */
   private $is_pdb_field = false;
-  
-  /**
-   * constructs a Template Item object
-   *
-   * @param object $properties an object with the item's properties
-   */
-  public function __construct() {}
   
   /**
    * tests a value for emptiness, includinf arrays with empty elements
@@ -78,6 +71,16 @@ class PDb_Template_Item {
     if (is_array($value)) $value = implode('', $value);
     
     return empty($value);
+  }
+  
+  /**
+   * adds a CSS class name
+   * 
+   * @param string $class class the classname to add 
+   */
+  public function add_class( $class )
+  {
+    $this->class[] = esc_attr( $class );
   }
 
   /**
@@ -151,18 +154,23 @@ class PDb_Template_Item {
   /**
    * assigns the object properties that match properties in the supplied object
    * 
-   * @param object $item the supplied object
-   * @param string $class the classname of the instantiating class
+   * @param object $item the supplied object or config array
    */
-  protected function assign_props( $item, $class = __CLASS__ ) {
+  protected function assign_props( $item ) {
     
     $item = (object) $item;
     
-    $class_properties = array_keys( get_class_vars( $class ) );
+    $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
       
-    if (isset(Participants_Db::$fields[$item->name]) && is_object(Participants_Db::$fields[$item->name])) {
-      $field = clone Participants_Db::$fields[$item->name];
+    $item_def = new stdClass;
+    if ( isset(Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
+      $item_def = clone Participants_Db::$fields[$item->name];
       $this->is_pdb_field = true;
+    } else {
+      $groups = Participants_Db::get_groups();
+      if ( in_array( $item->name, $groups ) ) {
+        $item_def = (object) $groups[$item-name];
+      }
     }
     
     // grab and assign the class properties from the provided object
@@ -172,9 +180,9 @@ class PDb_Template_Item {
         
         $this->$property = $item->$property;
       
-      } elseif (isset($field->$property)) {
+      } elseif ( isset( $item_def->$property ) ) {
         
-        $this->$property = $field->$property;
+        $this->$property = $item_def->$property;
         
       }
       
@@ -186,7 +194,17 @@ class PDb_Template_Item {
    * prints an HTML class value
    */
   public function print_class() {
-    echo implode(' ', $this->class);
+    echo $this->get_class();
+  }
+  
+  /**
+   * supplies the full calss name
+   * 
+   * @return string class name
+   */
+  public function get_class()
+  {
+    return implode(' ', $this->class);
   }
   
   /**
