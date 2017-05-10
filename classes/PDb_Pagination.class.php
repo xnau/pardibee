@@ -348,13 +348,13 @@ class PDb_Pagination {
     }
 
     $button_pattern = '<' . $button_wrap_tag . ' class="%2$s"><a href="%1$s" data-page="%4$s" >%3$s</a></' . $button_wrap_tag . '>';
-    $glyph_pattern = '<' . $button_wrap_tag . ' class="%2$s"><a title="%3$s" href="%1$s" data-page="%5$s" ><span class="glyphicon glyphicon-%4$s"></span></a></' . $button_wrap_tag . '>';
+    $glyph_pattern = '<' . $button_wrap_tag . ' class="%2$s"><a title="%3$s" href="%1$s" data-page="%5$s" ><span class="dashicons dashicons-%4$s"></span></a></' . $button_wrap_tag . '>';
     $disabled_pattern = $this->anchor_wrap ?
             '<' . $button_wrap_tag . ' class="%2$s"><a href="#">%3$s</a></' . $button_wrap_tag . '> ' :
             '<' . $button_wrap_tag . ' class="%2$s"><span>%3$s</span></' . $button_wrap_tag . '> ';
     $disabled_glyph_pattern = $this->anchor_wrap ?
-            '<' . $button_wrap_tag . ' class="%2$s"><a title="%3$s" href="#"><span class="glyphicon glyphicon-%4$s"></span></a></' . $button_wrap_tag . '>' :
-            '<' . $button_wrap_tag . ' class="%2$s"><span><span title="%3$s" class="glyphicon glyphicon-%4$s"></span></span></' . $button_wrap_tag . '> ';
+            '<' . $button_wrap_tag . ' class="%2$s"><a title="%3$s" href="#"><span class="dashicons dashicons-%4$s"></span></a></' . $button_wrap_tag . '>' :
+            '<' . $button_wrap_tag . ' class="%2$s"><span><span title="%3$s" class="dashicons dashicons-%4$s"></span></span></' . $button_wrap_tag . '> ';
 
     // add the first page link
     if ($this->first_last) {
