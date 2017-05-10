@@ -974,7 +974,7 @@ class PDb_List_Admin {
                             <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
                               <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value['id'] ?>" />
                             <?php endif ?>
-                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
                           </td>
                           <?php
                           foreach ( self::$display_columns as $column ) {
@@ -1159,7 +1159,7 @@ class PDb_List_Admin {
     <th scope="col" style="width:3em">
       <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
         <?php /* translators: uses the check symbol in a phrase that means "check all"  printf('<span class="checkmark" >&#10004;</span>%s', __('all', 'participants-database'))s */ ?>
-        <input type="checkbox" name="checkall" id="checkall" ><span class="glyphicon glyphicon-edit" style="opacity: 0"></span>
+        <input type="checkbox" name="checkall" id="checkall" ><span class="dashicons dashicons-edit" style="opacity: 0"></span>
       <?php endif ?>
     </th>
     <?php
