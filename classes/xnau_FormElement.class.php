@@ -990,7 +990,7 @@ abstract class xnau_FormElement {
 
     $name = preg_replace( '#(\[.*\])#', '', $this->name );
 
-    $this->_addline( '<a id="' . $name . '" class="dragger" href="#" ><span class="glyphicon glyphicon-sort"></span></a>' ); // &uarr;&darr;
+    $this->_addline( '<a id="' . $name . '" class="dragger" href="#" ><span class="dashicons dashicons-sort"></span></a>' ); // &uarr;&darr;
   }
 
   /**
