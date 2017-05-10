@@ -1349,7 +1349,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_form( $post, $action, $participant_id = false, $column_names = false )
   {
-
     /**
      * reject submissions that aren't properly tagged
      */
@@ -1577,7 +1576,7 @@ class Participants_Db extends PDb_Base {
     }
 
     $columns = self::get_column_atts( $column_set );
-
+    
     // gather the submit values and add them to the query
     foreach ( $columns as $column ) {
 
