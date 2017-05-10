@@ -219,7 +219,7 @@ class PDb_Manage_Fields {
                             ) );
                             if ( !$internal_group ) :
                               ?>
-                              <a href="javascript:return false" title="<?php echo $database_row['id'] ?>" data-thing-name="delete_<?php echo $database_row['id'] ?>" class="delete" data-thing="<?php _e( 'field', 'participants-database' ) ?>"><span class="glyphicon glyphicon-remove"></span></a>
+                              <a href="javascript:return false" title="<?php echo $database_row['id'] ?>" data-thing-name="delete_<?php echo $database_row['id'] ?>" class="delete" data-thing="<?php _e( 'field', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
                             </td>
                             <?php
                           endif; // internal group test
@@ -353,7 +353,7 @@ class PDb_Manage_Fields {
                   ?>
                   <tr>
                     <td id="field_count_<?php echo $group ?>"><?php echo $group_count ?></td>
-                    <td><a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
+                    <td><a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a></td>
                     <?php
                     foreach ( $group_values as $column => $value ) {
 
