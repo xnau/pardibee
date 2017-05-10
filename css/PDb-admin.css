@@ -2,15 +2,9 @@
 
 /*
 Participants DB Admin CSS 
-version 1.4 
-date 7-16
+version 1.5 
+date 5-2017
 */
-.has-dashicons .glyphicon {
-  font-size: 18px;
-}
-.dashicons-warning::before {
-    color: #d54e21;
-}
 
 /*** PARTICIPANT LIST ***/
 body[class*='participants-database'] .widefat td {
@@ -287,7 +281,7 @@ body[class*='participants-database'] a.delete {
 body[class*='participants-database'] .form-table {
   /*  margin-bottom:4em;*/
 }
-#manage_main_fields .glyphicon {
+#manage_main_fields .dashicons {
   font-size: 140%;
 }
 .pdb-list .image-field-wrap img {
@@ -440,7 +434,7 @@ body[class*='participants-database'] .text-block li {
   top:-5em;
 }
 .participants_db .pdb-list td > input[type="checkbox"] {
-  margin-top: -10px;
+  margin-top: -3px;
 }
 .edit-participant textarea, .participants_db textarea, .edit-participant select, .participants_db select, .participants_db input, .edit-participant input, .link-element label {
   /*  vertical-align: top;*/
@@ -607,35 +601,15 @@ td.order {
 a.dragger {
   cursor: move;
 }
-.branch-3-7 .glyphicon.glyphicon-sort:after, 
-.branch-3-6 .glyphicon.glyphicon-sort:after, 
-.branch-3-5 .glyphicon.glyphicon-sort:after {
-  content: "↕";
-}
-.branch-3-7 .glyphicon.glyphicon-remove:after, 
-.branch-3-6 .glyphicon.glyphicon-remove:after, 
-.branch-3-5 .glyphicon.glyphicon-remove:after {
-  content: "☓";
-}
-.branch-3-7 .glyphicon.glyphicon-edit:after, 
-.branch-3-6 .glyphicon.glyphicon-edit:after, 
-.branch-3-5 .glyphicon.glyphicon-edit:after {
-  content: "✎";
-}
-.glyphicon.glyphicon-sort:after {
-  content: "\f156";
+.dashicons.dashicons-sort:after {
   white-space: nowrap;
 }
-.glyphicon.glyphicon-remove:after {
+.dashicons.dashicons-no:after {
   color: #D64E07;
-  content: "\f158";
 }
-.glyphicon.glyphicon-edit:after {
-  content: "\f327";
-}
-.widefat.pdb-list .glyphicon {
+.widefat.pdb-list .dashicons {
   line-height: 18px;
-  font-size: 18px;
+  font-size: 22px;
 }
 .mirror {
   display:block; 
