@@ -10,12 +10,6 @@
 [class|="pdb"] .selectother + .helptext {
   display: block;
 }
-.glyphicon {
-  font: 400 20px/1 dashicons, sans-serif;
-}
-.has-dashicons .glyphicon {
-  font: 400 100%/1 dashicons;
-}
 
 /* SIGNUP FORM */
 
@@ -321,41 +315,41 @@ input.otherfield[type=text] {
   float: left;
   margin: 8px 6px 0 0;
 }
-.pdb-list .pagination .glyphicon,
-.pdb-pagination .glyphicon  {
-  vertical-align: -0.15em;
-}
-.wp-admin .pdb-list .pagination .glyphicon {
+.wp-admin .pdb-list .pagination .dashicons, 
+.wp-admin.has-dashicons .pagination .dashicons.dashicons-last-page,
+.wp-admin.has-dashicons .pagination .dashicons.dashicons-first-page {
   vertical-align: -0.1em;
   font-size: 13px;
+  margin-bottom: -4px;
 }
-.pagination .glyphicon.glyphicon-first-page:after {
+.pagination .dashicons.dashicons-first-page:after {
   content: "❬❬";
 }
-.pagination .glyphicon.glyphicon-previous-page:after {
+.pagination .dashicons.dashicons-previous-page:after {
   content: "❬";
 }
-.pagination .glyphicon.glyphicon-next-page:after {
+.pagination .dashicons.dashicons-next-page:after {
   content: "❭";
 }
-.pagination .glyphicon.glyphicon-last-page:after {
+.pagination .dashicons.dashicons-last-page:after {
   content: "❭❭";
 }
-.has-dashicons .pagination .glyphicon.glyphicon-first-page,
-.has-dashicons .pagination .glyphicon.glyphicon-last-page {
+.has-dashicons .pagination .dashicons.dashicons-first-page,
+.has-dashicons .pagination .dashicons.dashicons-last-page {
   letter-spacing: -0.5em;
-  padding-right: 9px;
+  white-space: nowrap;
+  margin: 0 3px 0 -3px;
 }
-.has-dashicons .pagination .glyphicon.glyphicon-first-page:after {
+.has-dashicons .pagination .dashicons.dashicons-first-page:after {
   content: "\f341\f341";
 }
-.has-dashicons .pagination .glyphicon.glyphicon-previous-page:after {
+.has-dashicons .pagination .dashicons.dashicons-previous-page:after {
   content: "\f341";
 }
-.has-dashicons .pagination .glyphicon.glyphicon-next-page:after {
+.has-dashicons .pagination .dashicons.dashicons-next-page:after {
   content: "\f345";
 }
-.has-dashicons .pagination .glyphicon.glyphicon-last-page:after {
+.has-dashicons .pagination .dashicons.dashicons-last-page:after {
   content: "\f345\f345";
 }
 
@@ -438,17 +432,15 @@ input.otherfield[type=text] {
 .pdb-error p, .pdb-message p {
   margin:0;
 }
-.glyphicon.glyphicon-sort:after {
-  content: "↕";
+.dashicons.dashicons-sort:before {
   white-space: nowrap;
 }
-.glyphicon.glyphicon-remove:after {
+.dashicons.dashicons-no:before {
   color: #D64E07;
-  content: "☓";
 }
-.glyphicon.glyphicon-remove:hover:after {
+.dashicons.dashicons-no:hover:before {
   color: white;
 }
-.glyphicon.glyphicon-remove:hover {
+.dashicons.dashicons-no:hover:before {
   background-color: #D64E07;
 }
