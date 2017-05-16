@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -464,7 +464,12 @@ class PDb_Manage_Fields {
         $this->attribute_columns[$group] = $wpdb->get_col_info( 'name' );
 
         $group_title = $wpdb->get_var( 'SELECT `title` FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "' . $group . '"' );
-        $this->group_titles[$group] = empty( $group_title ) ? ucwords( str_replace( '_', ' ', $group ) ) : $group_title;
+        /**
+         * @since 1.7.3.2
+         * group titles on tabs and such are limited to 30 characters to preserve layout
+         */
+        $title_limit = Participants_Db::apply_filters('admin_group_title_length_limit', 30 );
+        $this->group_titles[$group] = empty( $group_title ) || strlen( $group_title ) > $title_limit ? ucwords( str_replace( '_', ' ', $group ) ) : $group_title;
 
 
         // remove read-only fields
