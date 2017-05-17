@@ -23,7 +23,6 @@ $exclude = array();
 ?>
 
 <div class="wrap <?php echo $this->wrap_class ?>">
-
 	
   <?php while ( $this->have_groups() ) : $this->the_group(); ?>
   
