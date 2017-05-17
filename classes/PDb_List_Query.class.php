@@ -236,14 +236,19 @@ class PDb_List_Query {
    */
   public function set_sort( $fields, $ascdesc )
   {
+    $esc_ascdesc = function ( $asd ) {
+      return strtolower( $asd ) === 'desc' ? 'DESC' : 'ASC';
+    };
     $this->sort = array();
     $fields = $this->_to_array( $fields );
     $ascdesc = $this->_to_array( $ascdesc );
+    $ascdesc_value = $esc_ascdesc('asc');
     for ( $i = 0; $i < count( $fields ); $i++ ) {
       if ( !empty( $fields[$i] ) ) {
+        $ascdesc_value = isset( $ascdesc[$i] ) ? $esc_ascdesc($ascdesc[$i]) : $ascdesc_value;
         $this->sort[$fields[$i]] = array(
             'field' => $fields[$i],
-            'ascdesc' => (strtolower( $ascdesc[$i] ) === 'asc' ? 'ASC' : 'DESC')
+            'ascdesc' => $ascdesc_value,
         );
       }
     }
