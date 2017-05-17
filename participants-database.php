@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.3.1
+ * Version: 1.7.3.2
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -2503,12 +2503,10 @@ class Participants_Db extends PDb_Base {
 
       case 'output CSV':
 
-        $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'editor' : 'admin';
-
-
-        if ( !Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' ) ) {
+        if ( ! self::csv_export_allowed() ) {
           die();
         }
+        
         $header_row = array();
         $title_row = array();
         $data = array();
@@ -2536,25 +2534,39 @@ class Participants_Db extends PDb_Base {
 
             global $wpdb;
 
-            $import_columns = '';
+            // gets the export field list from the session value or the default set for CSV exports
+            $csv_columns = self::get_column_atts( self::$session->getArray( 'csv_export_fields', 'CSV' ) );
+            $export_columns = array();
 
-            foreach ( self::get_column_atts( 'CSV' ) as $column ) {
-
-              $import_columns .= sprintf( '`%s`,', $column->name );
+            foreach ( $csv_columns as $column ) {
+              $export_columns[] = sprintf( 'p.%s', $column->name );
               $header_row[] = $column->name;
               $title_row[] = $column->title;
             }
+            
+            $export_columns = implode( ', ', $export_columns );
 
             $data['header'] = $header_row;
 
             if ( $post_input['include_csv_titles'] )
               $data['titles'] = $title_row;
 
-            global $current_user;
-            $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID );
+            $query = false;
+            
+            if ( is_admin() ) {
+              global $current_user;
+              $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID );
+              $query = str_replace( '*', ' ' . $export_columns . ' ', $query );
+            } else {
+              $query = self::$session->get('csv_export_query');
+              if ( $query ) {
+                $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_columns . ' FROM', $query );
+              }
+              self::$session->clear('csv_export_query');
+              self::$session->clear('csv_export_fields');
+            }
 
             if ( $query ) {
-              $query = str_replace( '*', ' ' . trim( $import_columns, ',' ) . ' ', $query );
               $data += self::_prepare_CSV_rows( $wpdb->get_results( $query, ARRAY_A ) );
             }
 
