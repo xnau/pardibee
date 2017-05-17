@@ -1213,7 +1213,7 @@ abstract class PDb_Shortcode {
    */
   public function template_basename()
   {
-    if ( WP_DEBUG ) {
+    if ( PDB_DEBUG ) {
       $path = $this->template;
     } else {
       $path = '';
