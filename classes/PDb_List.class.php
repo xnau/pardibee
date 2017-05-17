@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -27,7 +27,7 @@ class PDb_List extends PDb_Shortcode {
 
   /**
    *
-   * @var object the List Query object
+   * @var PDb_List_Query
    */
   private $list_query;
 
@@ -1200,6 +1200,54 @@ class PDb_List extends PDb_Shortcode {
   private function _set_record_edit_url()
   {
     $this->registration_page_url = get_bloginfo( 'url' ) . '/' . Participants_Db::plugin_setting( 'registration_page', '' );
+  }
+  
+  /**
+   * prints the CSV download form
+   * 
+   * @param array $config
+   *          'title' => string the title for the export control
+   *          'helptext' => string helptext to show with the control
+   *          'filename'  => string initial name of the file
+   *          'allow_user_filename' => bool  if false, user cannot set filename
+   *          'export_fields' => array of field names to include in the export
+   * 
+   * @return null
+   */
+  public function csv_export_form( $config )
+  {
+    extract( shortcode_atts( array(
+        'title'         => Participants_Db::plugin_label( 'export_csv_title' ),
+        'helptext'      => '<p>' . __( 'This will download the whole list of participants that match your search terms.', 'participants-database' ) . '</p>',
+        'filename'      => Participants_Db::PLUGIN_NAME . PDb_List_Admin::filename_datestamp(),
+        'export_fields' => false,
+        'allow_user_filename' => true,
+    ), $config ) );
+    
+    $suggested_filename = esc_attr( $filename )  . '.csv';
+    
+    Participants_Db::$session->set( 'csv_export_query', $this->list_query->get_list_query() );
+    Participants_Db::$session->set( 'csv_export_fields', $export_fields );
+    ?>
+    <div class="pdb-pagination csv-export-box">
+        <?php if ($title !== false ) : ?>
+        <h3><?php echo $title ?></h3>
+        <?php endif ?>
+        <form method="post" class="csv-export">
+          <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
+          <input type="hidden" name="action" value="output CSV" />
+          <input type="hidden" name="CSV type" value="participant list" />
+          <?php wp_nonce_field( PDb_Base::csv_export_nonce() ); ?>
+          <fieldset class="inline-controls">
+<?php if ( $allow_user_filename ) echo __( 'File Name', 'participants-database' ) . ':' ?>
+            <input type="<?php echo ( $allow_user_filename ? 'text' : 'hidden' ) ?>" name="filename" value="<?php echo $suggested_filename ?>" />
+            <input type="submit" name="submit-button" value="<?php _e( 'Download CSV for this list', 'participants-database' ) ?>" class="button button-primary" />
+            <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php _e( 'Include field titles', 'participants-database' ) ?></label>
+          </fieldset>
+          <?php echo $helptext ?>
+        </form>
+    </div>
+    <?php
   }
 
   /**
