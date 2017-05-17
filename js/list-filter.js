@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.1
+ * version: 1.2
  * 
  * xnau webdesign xnau.com
  * 
@@ -114,7 +114,7 @@ PDbListFilter = (function ($) {
   var scroll_to_top = function () {
     var instance = submission.instance_index;
     $('html, body').animate({
-      scrollTop : $("#participants-list-"+instance).offset().top
+      scrollTop : $("#participants-list-" + instance).offset().top
     }, 200);
   }
   var add_value_to_submission = function (el, submission) {
@@ -157,16 +157,12 @@ PDbListFilter = (function ($) {
           $(this).PDb_email_obfuscate();
         });
         container.find('.list-container').replaceWith(replaceContent);
+        pagination.remove();
         if (replacePagination.length) {
-          if (pagination.length) {
-            pagination.each(function (i) {
-              $(this).replaceWith(replacePagination.get(i));
-            });
-          } else {
-            container.find('.list-container').after(replacePagination);
-          }
-        } else {
-          pagination.remove();
+          replacePagination.each(function () {
+            var builtContent = container.find('.list-container + .pdb-pagination').length ? container.find('.list-container + .pdb-pagination').last() : container.find('.list-container');
+            builtContent.after(this);
+          });
         }
         spinner.remove();
         // trigger a general-purpose event
@@ -222,7 +218,7 @@ PDbListFilter = (function ($) {
       filterform.on('click', '[type="submit"]', submit_search);
       remoteform.on('click', '[type="submit"]', submit_remote_search);
       $('.pdb-list').on('click', '.pdb-pagination a', get_page);
-      $('html').on( 'pdbListAjaxComplete', scroll_to_top );
+      $('html').on('pdbListAjaxComplete', scroll_to_top);
     }
   };
 }(jQuery));
