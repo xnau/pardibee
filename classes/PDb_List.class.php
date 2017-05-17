@@ -1219,6 +1219,7 @@ class PDb_List extends PDb_Shortcode {
     extract( shortcode_atts( array(
         'title'         => Participants_Db::plugin_label( 'export_csv_title' ),
         'helptext'      => '<p>' . __( 'This will download the whole list of participants that match your search terms.', 'participants-database' ) . '</p>',
+        'button_text'   => __( 'Download CSV for this list', 'participants-database' ),
         'filename'      => Participants_Db::PLUGIN_NAME . PDb_List_Admin::filename_datestamp(),
         'export_fields' => false,
         'allow_user_filename' => true,
@@ -1241,7 +1242,7 @@ class PDb_List extends PDb_Shortcode {
           <fieldset class="inline-controls">
 <?php if ( $allow_user_filename ) echo __( 'File Name', 'participants-database' ) . ':' ?>
             <input type="<?php echo ( $allow_user_filename ? 'text' : 'hidden' ) ?>" name="filename" value="<?php echo $suggested_filename ?>" />
-            <input type="submit" name="submit-button" value="<?php _e( 'Download CSV for this list', 'participants-database' ) ?>" class="button button-primary" />
+            <input type="submit" name="submit-button" value="<?php echo $button_text  ?>" class="button button-primary" />
             <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php _e( 'Include field titles', 'participants-database' ) ?></label>
           </fieldset>
           <?php echo $helptext ?>
