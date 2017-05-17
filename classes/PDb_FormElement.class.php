@@ -196,7 +196,7 @@ class PDb_FormElement extends xnau_FormElement {
       // provided for backward-compatibility
       $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value, $field->form_element );
     }
-
+    
     if ( empty( $return ) ) {
 
       switch ( $field->form_element ) :
