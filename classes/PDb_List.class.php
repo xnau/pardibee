@@ -284,7 +284,7 @@ class PDb_List extends PDb_Shortcode {
      */
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
 
-    if ( WP_DEBUG )
+    if ( PDB_DEBUG )
       error_log( __METHOD__ .' list query: ' . $list_query );
 
     // get the $wpdb object

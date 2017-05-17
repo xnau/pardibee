@@ -127,7 +127,7 @@ class xnau_Template_Email {
    */
   protected function _mail( $recipients, $subject, $body )
   {
-    if ( WP_DEBUG )
+    if ( PDB_DEBUG )
       error_log( __METHOD__ . '
       
 context: '. $this->context . '

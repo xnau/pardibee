@@ -202,7 +202,7 @@ abstract class xnau_CSV_Import {
     $this->CSV->enclosure = $this->_detect_enclosure($src_file);
     $this->CSV->parse($src_file);
 
-    if (WP_DEBUG and $this->CSV->error)
+    if (PDB_DEBUG and $this->CSV->error)
       error_log(__METHOD__ . ' CSV parse error:' . print_r($this->CSV->error_info, 1));
 
     /*
@@ -215,7 +215,7 @@ abstract class xnau_CSV_Import {
 
     foreach ($this->CSV->data as $csv_line) {
 
-      if (WP_DEBUG) error_log( __METHOD__.'
+      if (PDB_DEBUG) error_log( __METHOD__.'
         
 columns:'.implode(', ',$this->column_names).'
   

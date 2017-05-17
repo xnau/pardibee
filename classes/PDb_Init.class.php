@@ -290,7 +290,7 @@ class PDb_Init {
     // determine the actual version status of the database
     self::set_database_real_version();
 
-    if ( WP_DEBUG )
+    if ( PDB_DEBUG )
       error_log( 'participants database db version determined to be: ' . get_option( Participants_Db::$db_version_option ) );
 
     if ( false === get_option( Participants_Db::$db_version_option ) || '0.1' == get_option( Participants_Db::$db_version_option ) ) {
@@ -687,7 +687,7 @@ class PDb_Init {
       }
     }
 
-    if ( WP_DEBUG )
+    if ( PDB_DEBUG )
       error_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . get_option( Participants_Db::$db_version_option ) );
   }
 

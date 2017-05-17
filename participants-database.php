@@ -1839,7 +1839,7 @@ class Participants_Db extends PDb_Base {
     // add the WHERE clause
     $sql .= $where;
 
-    if ( WP_DEBUG )
+    if ( PDB_DEBUG )
       error_log( __METHOD__ . ' storing record: ' . $wpdb->prepare( $sql, $new_values ) );
 
     $result = $wpdb->query( $wpdb->prepare( $sql, $new_values ) );
@@ -2275,7 +2275,7 @@ class Participants_Db extends PDb_Base {
 
     if ( $wpdb->last_error ) {
 
-      if ( WP_DEBUG )
+      if ( PDB_DEBUG )
         error_log( __METHOD__ . ' failed to add row ' . $atts['name'] );
 
       return false;
@@ -2286,7 +2286,7 @@ class Participants_Db extends PDb_Base {
 
       if ( false === ( self::_add_db_column( $defaults ) ) ) {
 
-        if ( WP_DEBUG )
+        if ( PDB_DEBUG )
           error_log( __METHOD__ . ' failed to add column:' . print_r( $defaults, true ) );
 
         return false;

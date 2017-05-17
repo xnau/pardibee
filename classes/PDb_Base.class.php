@@ -1422,7 +1422,7 @@ class PDb_Base {
   protected static function set_debug_mode()
   {
     if ( ! defined( 'PDB_DEBUG' ) ) {
-      define( 'PDB_DEBUG', false );
+      define( 'PDB_DEBUG', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) );
     }
   }
   
