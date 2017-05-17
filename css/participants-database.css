@@ -315,6 +315,9 @@ input.otherfield[type=text] {
   float: left;
   margin: 8px 6px 0 0;
 }
+.pdb-pagination.csv-export-box label {
+    float: none;
+}
 .wp-admin .pdb-list .pagination .dashicons, 
 .wp-admin.has-dashicons .pagination .dashicons.dashicons-last-page,
 .wp-admin.has-dashicons .pagination .dashicons.dashicons-first-page {
