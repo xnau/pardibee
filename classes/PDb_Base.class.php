@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -589,6 +589,33 @@ class PDb_Base {
     $role = $role === 'admin' ? 'plugin_admin_capability' : 'record_edit_capability';
 
     return current_user_can( self::plugin_capability( $role, $context ) );
+  }
+  
+  /**
+   * checks if a CSV export is allowed
+   * 
+   * first checks for a valid nonce, if that fails, checks the current user's capabilities
+   * 
+   * @return bool true if the export is allowed under the current circumstances
+   */
+  public static function csv_export_allowed()
+  {
+    $nonce = array_key_exists( '_wpnonce', $_POST ) ? filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING ) : false;
+    if ( $nonce && wp_verify_nonce( $nonce, self::csv_export_nonce() ) ) {
+      return true;
+    }
+    $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'editor' : 'admin';
+    return Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' );
+  }
+  
+  /**
+   * supplies a nonce tag for the CSV export
+   * 
+   * @return string
+   */
+  public  static function csv_export_nonce()
+  {
+    return 'pdb-csv_export';
   }
 
   /**
