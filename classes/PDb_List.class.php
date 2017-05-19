@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.0
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1208,6 +1208,7 @@ class PDb_List extends PDb_Shortcode {
    * @param array $config
    *          'title' => string the title for the export control
    *          'helptext' => string helptext to show with the control
+   *          'button_text' => string the text shown on the download button
    *          'filename'  => string initial name of the file
    *          'allow_user_filename' => bool  if false, user cannot set filename
    *          'export_fields' => array of field names to include in the export
@@ -1223,6 +1224,8 @@ class PDb_List extends PDb_Shortcode {
         'filename'      => Participants_Db::PLUGIN_NAME . PDb_List_Admin::filename_datestamp(),
         'export_fields' => false,
         'allow_user_filename' => true,
+        'field_titles_checkbox' => true,
+        'field_titles_checkbox_label' => __( 'Include field titles', 'participants-database' ),
     ), $config ) );
     
     $suggested_filename = esc_attr( $filename )  . '.csv';
@@ -1243,7 +1246,9 @@ class PDb_List extends PDb_Shortcode {
 <?php if ( $allow_user_filename ) echo __( 'File Name', 'participants-database' ) . ':' ?>
             <input type="<?php echo ( $allow_user_filename ? 'text' : 'hidden' ) ?>" name="filename" value="<?php echo $suggested_filename ?>" />
             <input type="submit" name="submit-button" value="<?php echo $button_text  ?>" class="button button-primary" />
-            <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php _e( 'Include field titles', 'participants-database' ) ?></label>
+            <?php if ( $field_titles_checkbox ) : ?>
+            <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php echo $field_titles_checkbox_label ?></label>
+            <?php endif ?>
           </fieldset>
           <?php echo $helptext ?>
         </form>
