@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.3.2
+ * Version: 1.7.3.2multisite
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -327,6 +327,15 @@ class Participants_Db extends PDb_Base {
     // this is only fired if there is a plugin shortcode on the page
     add_action( 'pdb-shortcode_present', array(__CLASS__, 'add_shortcode_includes') );
 
+    /**
+     * MULTISITE
+     * 
+     * this is so the Participants Database table names are in sync with the current network blog
+     */
+    add_action( 'switch_blog', array(__CLASS__, 'setup_source_names' ) );
+    // set up the database for any new blogs
+    add_action( 'wpmu_new_blog', array('PDb_Init', 'new_blog' ) );
+
     add_filter( 'wp_headers', array(__CLASS__, 'control_caching') );
     /**
      * @since 1.6.3
@@ -372,6 +381,8 @@ class Participants_Db extends PDb_Base {
    * sets up the database and options source names
    * 
    * fired early on the 'plugins_loaded' hook
+   * 
+   * @global wpdb $wpdb
    */
   public static function setup_source_names()
   {
@@ -383,6 +394,7 @@ class Participants_Db extends PDb_Base {
      * this must be in a plugin, a theme functions file will be too late!
      */
     global $wpdb;
+    error_log(__METHOD__.' setting up names for: '.$wpdb->prefix);
     $table_basename = $wpdb->prefix . str_replace( '-', '_', self::PLUGIN_NAME );
     self::$participants_table = self::apply_filters( 'select_database_table', $table_basename );
     self::$fields_table = self::apply_filters( 'select_database_table', $table_basename . '_fields' );
