@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.3.2multisite
+ * Version: 1.7.4b1
  * Author URI: https://xnau.com
  * License: GPL2
  * Text Domain: participants-database
@@ -386,6 +386,9 @@ class Participants_Db extends PDb_Base {
    */
   public static function setup_source_names()
   {
+    if ( !is_null( self::$participants_table ) ) {
+      return;
+    }
     /*
      * these can be modified later with a filter hook
      * 
@@ -394,7 +397,6 @@ class Participants_Db extends PDb_Base {
      * this must be in a plugin, a theme functions file will be too late!
      */
     global $wpdb;
-    error_log(__METHOD__.' setting up names for: '.$wpdb->prefix);
     $table_basename = $wpdb->prefix . str_replace( '-', '_', self::PLUGIN_NAME );
     self::$participants_table = self::apply_filters( 'select_database_table', $table_basename );
     self::$fields_table = self::apply_filters( 'select_database_table', $table_basename . '_fields' );
