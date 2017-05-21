@@ -279,6 +279,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.4 =
+* added multisite support
+
 = 1.7.3.2 =
 * improved response to searches on multi select-type fields when using strict search
 * added frontend CSV download feature
@@ -809,8 +812,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.3.2 =
-Version 1.7.3.2 is a minor feature and bugfix release
+= 1.7.4 =
+Version 1.7.4 adds multisite compatibility
 
 == Plugin Support ==
 
