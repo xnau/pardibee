@@ -163,9 +163,16 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         
         require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
         
-        PucFactory::buildUpdateChecker(
-                self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name, $plugin_file, $this->aux_plugin_name
-        );
+        $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
+        
+        $urlcheck = get_headers($update_url);
+        
+        if ( strpos( $urlcheck[0], '200' ) !== false ) {
+        
+          Puc_v4_Factory::buildUpdateChecker(
+                  $update_url, $plugin_file, $this->aux_plugin_name
+          );
+        }
       }
     }
 
