@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.2
+ * version: 1.3
  * 
  * xnau webdesign xnau.com
  * 
@@ -49,10 +49,6 @@ PDbListFilter = (function ($) {
           errormsg.show();
           return;
         }
-        if (remote) {
-          $submitButton.closest('form').submit();
-          return;
-        }
         break;
 
       case 'clear':
@@ -70,6 +66,10 @@ PDbListFilter = (function ($) {
 
       default:
         return;
+    }
+    if (remote) {
+      $submitButton.closest('form').submit();
+      return;
     }
     $submitButton.PDb_processSubmission();
     // trigger a general-purpose event
@@ -147,7 +147,15 @@ PDbListFilter = (function ($) {
       success : function (html, status) {
         if (/^failed/.test(html)) {
           // if the call fails, submit synchronously to reset form
-          filterform.append('<input type="hidden" name="submit_button" value="' + submission.submit + '" /> ').submit();
+          switch (submission.submit) {
+            case 'page':
+              var parser = document.createElement('a');
+              parser.href = window.location.href;
+              window.location.href = parser.protocol + '//' + parser.hostname + button.attr('href');
+              break;
+            default:
+              filterform.append('<input type="hidden" name="submit_button" value="' + submission.submit + '" /> ').submit();
+          }
         }
         var newContent = $(html);
         var replacePagination = newContent.find('.pdb-pagination');
