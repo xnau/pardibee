@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -265,12 +265,29 @@ class PDb_Field_Item extends PDb_Template_Item {
 
     $label = $this->prepare_display_value( $this->title );
 
-    if ( Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && in_array( $this->module, array('signup', 'record') ) ) {
+    if ( $this->place_required_mark() ) {
 
       $label = sprintf( Participants_Db::$plugin_options['required_field_marker'], $label );
     }
 
     return $label;
+  }
+  
+  /**
+   * tells if the field should have the required field marker added to the label
+   * 
+   * 
+   * @return bool true if the marker should be added
+   */
+  public function place_required_mark()
+  {
+    /**
+     * @filter pdb-add_required_mark
+     * @param bool
+     * @param PDb_Field_Item
+     * @return bool
+     */
+    return Participants_Db::apply_filters('add_required_mark', Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && in_array( $this->module, array('signup', 'record') ), $this );
   }
 
   /**
