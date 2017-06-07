@@ -287,7 +287,7 @@ class PDb_Field_Item extends PDb_Template_Item {
      * @param PDb_Field_Item
      * @return bool
      */
-    return Participants_Db::apply_filters('add_required_mark', Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && in_array( $this->module, array('signup', 'record') ), $this );
+    return Participants_Db::apply_filters('add_required_mark', Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && ! in_array( $this->module, array('list', 'search', 'total', 'single' ) ), $this );
   }
 
   /**
