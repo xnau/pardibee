@@ -963,7 +963,7 @@ class PDb_List_Query {
       }
     } elseif ( $filter->is_empty_search() ) {
 
-      if ( $operator === 'NOT LIKE' or $operator === '!' ) {
+      if (  in_array( $operator, array('NOT LIKE','!','!=') ) ) {
         $pattern = $is_numeric ? 'p.%1$s IS NOT NULL' : '(p.%1$s IS NOT NULL AND p.%1$s <> "")';
       } else {
         $pattern = $is_numeric ? 'p.%1$s IS NULL' : '(p.%1$s IS NULL OR p.%1$s = "")';
