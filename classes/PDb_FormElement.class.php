@@ -246,7 +246,7 @@ class PDb_FormElement extends xnau_FormElement {
               $return = $field->value;
             } elseif ( !empty( $field->value ) && Participants_Db::is_allowed_file_extension( $field->value, $field->values ) ) {
               $field->link = filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL );
-              if ( ( ! is_admin() || ( defined('DOUNG_AJAX') && DOING_AJAX ) ) && $field->link && strlen( $field->default ) > 0 ) {
+              if ( ( ! is_admin() || ( defined('DOING_AJAX') && DOING_AJAX ) ) && $field->link && strlen( $field->default ) > 0 ) {
                 $field->value = $field->default;
               }
               $return = self::make_link( $field );
