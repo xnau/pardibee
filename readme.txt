@@ -279,6 +279,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.5 =
+* fallback methods when using AJAX searches and session not available
+
 = 1.7.3.2 =
 * improved response to searches on multi select-type fields when using strict search
 * added frontend CSV download feature
