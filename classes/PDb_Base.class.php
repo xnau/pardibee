@@ -855,11 +855,25 @@ class PDb_Base {
    * 
    * relative to WP root
    * 
+   * @global  wpdb  $wpdb
+   * 
    * @return string realtive path to the plugin files location
    */
   public static function files_location()
   {
-    return Participants_Db::apply_filters( 'files_location', Participants_Db::plugin_setting( 'image_upload_location', 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' ) );
+    $base_path = Participants_Db::plugin_setting( 'image_upload_location', 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' );
+    global $wpdb;
+    if ( isset($wpdb->blogid) && $wpdb->blogid > 1 ) {
+      $base_path = str_replace( Participants_Db::PLUGIN_NAME, 'sites/' . $wpdb->blogid . '/' . Participants_Db::PLUGIN_NAME, $base_path );
+    }
+    
+    /**
+     * @version 1.6.0
+     * filter: pdb-files_location
+     * 
+     * allows access to the "image_upload_location" plugin setting value
+     */
+    return Participants_Db::apply_filters( 'files_location', $base_path );
   }
 
   /**
