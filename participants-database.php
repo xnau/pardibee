@@ -1374,7 +1374,7 @@ class Participants_Db extends PDb_Base {
       return false;
             }
 
-    //error_log(__METHOD__.' post: '.print_r($post,1));
+//    error_log(__METHOD__.' post: '.print_r($post,1));
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
 
@@ -3270,7 +3270,7 @@ class Participants_Db extends PDb_Base {
 
     $shortcode_atts = isset( $session[$post->ID]['list'] ) ? $session[$post->ID]['list'][$instance] : false;
 
-    if ( !is_array( $shortcode_atts ) ) {
+    if ( ! is_array( $shortcode_atts ) ) {
       printf( 'failed to get session for list instance %s', $instance );
       return;
     }
