@@ -177,7 +177,7 @@ class PDb_Init {
    * checks if the current operation is networkwide
    * 
    */
-  private static function is_network()
+  public static function is_network()
   {
     return function_exists( 'is_multisite' ) && is_multisite();
   }
