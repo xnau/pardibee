@@ -227,7 +227,7 @@ class PDb_Date_Parse {
       $the_Date = new DateTime();
       $the_Date->setTimestamp( $timestamp );
     } elseif ( PDB_DEBUG ) {
-      error_log( __METHOD__ . '(' .$this->context . ') ' .' IntlDateFormatter error: format string: ' . $this->icu_format() . ' input: ' . $this->input . ' formatter error: ' . $DateFormat->getErrorMessage() );
+      //error_log( __METHOD__ . '(' .$this->context . ') ' .' IntlDateFormatter error: format string: ' . $this->icu_format() . ' input: ' . $this->input . ' formatter error: ' . $DateFormat->getErrorMessage() );
     }
     if ( is_a( $the_Date, 'DateTime' ) ) {
       $this->set_timestamp_from_datetime( $the_Date );

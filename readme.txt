@@ -279,7 +279,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.7.4 =
+= 1.7.4b2 =
+* site-specific file-upload locations
+
+= 1.7.4b1 =
 * added multisite support
 
 = 1.7.3.2 =
