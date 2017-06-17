@@ -75,12 +75,6 @@ class PDb_Signup extends PDb_Shortcode {
 
   /**
    *
-   * @var string thank message body
-   */
-  var $thanks_message;
-
-  /**
-   *
    * @var string header added to receipts and notifications
    */
   private $email_header;
@@ -137,15 +131,15 @@ class PDb_Signup extends PDb_Shortcode {
     } elseif ( $shortcode_atts['module'] === 'signup' && $this->participant_id === false ) {
       $this->_clear_multipage_session();
     }
-    
+
     /*
      * if no ID is set, no submission has been received
      */
     if ( $this->participant_id === false ) {
-      
+
       // override read-only in signup and link recovery forms
       add_action( 'pdb-before_field_added_to_iterator', array($this, 'allow_readonly_fields_in_form') );
-      
+
       if ( filter_input( INPUT_GET, 'm' ) === 'r' || $shortcode_atts['module'] == 'retrieve' ) {
         /*
          * we're proceesing a link retrieve request
@@ -214,12 +208,14 @@ class PDb_Signup extends PDb_Shortcode {
 
       $this->_send_email();
 
-      $this->_clear_multipage_session();
       $this->_clear_captcha_session();
     }
-
+    
     // print the shortcode output
     $this->_print_from_template();
+    if ( $this->submitted ) {
+      $this->_clear_multipage_session();
+    }
   }
 
   /**
@@ -276,11 +272,10 @@ class PDb_Signup extends PDb_Shortcode {
     $this->notify_body = Participants_Db::plugin_setting( 'email_signup_notify_body' );
     $this->receipt_subject = Participants_Db::plugin_setting( 'signup_receipt_email_subject' );
     $this->receipt_body = Participants_Db::plugin_setting( 'signup_receipt_email_body' );
-    $this->thanks_message = Participants_Db::plugin_setting( 'signup_thanks' );
     $this->email_header = Participants_Db::$email_headers;
     $this->recipient = @$this->participant_values[Participants_Db::plugin_setting( 'primary_email_address_field' )];
   }
-  
+
   /**
    * tells if the signup receipt email is enabled
    * 
@@ -290,7 +285,7 @@ class PDb_Signup extends PDb_Shortcode {
    */
   public function send_receipt()
   {
-    return (bool) Participants_Db::apply_filters('send_signup_receipt', Participants_Db::plugin_setting_is_true( 'send_signup_receipt_email' ) );
+    return (bool) Participants_Db::apply_filters( 'send_signup_receipt', Participants_Db::plugin_setting_is_true( 'send_signup_receipt_email' ) );
   }
 
   /**
@@ -389,15 +384,31 @@ class PDb_Signup extends PDb_Shortcode {
   protected function get_thanks_message( $template = '' )
   {
     $data = $this->participant_values;
-    $template = empty( $template ) ? $this->thanks_message : $template;
+
+    switch ( $this->get_form_status() ) {
+      case 'multipage-update':
+        $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', '' );
+        break;
+      default:
+        if ( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING ) === 'update' ) {
+          // this is a record form using a thanks page
+          $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', '' );
+        } else {
+          // this is a normal signup form
+          $thanks_message = Participants_Db::plugin_setting( 'signup_thanks' );
+        }
+    }
+
+    $template = empty( $template ) ? ( empty( $this->shortcode_atts['content'] ) ? $thanks_message : $this->shortcode_atts['content'] ) : $template;
+
 
     // add the "record_link" tag
     if ( isset( $data['private_id'] ) ) {
       $data['record_link'] = Participants_Db::get_record_link( $data['private_id'] );
     }
-    
+
     $this->output = '';
-    if ( ! empty( $this->participant_values ) ) {
+    if ( !empty( $this->participant_values ) ) {
       $this->output = PDb_Tag_Template::replaced_rich_text( $template, $data );
       unset( $_POST );
     }
@@ -412,12 +423,10 @@ class PDb_Signup extends PDb_Shortcode {
    */
   private function _send_email()
   {
-    $status = $this->get_form_status();
-
-    switch ( $status ) {
+    switch ( $this->get_form_status() ) {
       case 'multipage-update':
         // this is a multipage record form
-        if ( $this->send_notification ) {
+        if ( Participants_Db::plugin_setting_is_true( 'send_record_update_notify_email' ) ) {
           $this->_do_update_notify();
         }
         break;
@@ -499,11 +508,10 @@ class PDb_Signup extends PDb_Shortcode {
    */
   private function _do_update_notify()
   {
-
     PDb_Template_Email::send( array(
         'to' => $this->notify_recipients,
-        'subject' => $this->notify_subject,
-        'template' => $this->notify_body,
+        'subject' => Participants_Db::plugin_setting( 'record_update_email_subject' ),
+        'template' => Participants_Db::plugin_setting( 'record_update_email_body' ),
         'context' => __METHOD__,
             ), $this->participant_values );
   }
