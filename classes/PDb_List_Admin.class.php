@@ -265,6 +265,16 @@ class PDb_List_Admin {
     
     return Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' );
   }
+  
+  /**
+   * provides a default admin list query
+   * 
+   * @return string
+   */
+  public static function default_query() {
+    global $wpdb;
+    return 'SELECT * FROM ' . $wpdb->prefix . 'participants_database p ORDER BY p.date_recorded desc';
+  }
 
   /**
    * updates the filter property
