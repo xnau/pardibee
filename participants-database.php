@@ -355,6 +355,7 @@ class Participants_Db extends PDb_Base {
     add_shortcode( 'pdb_record', array(__CLASS__, 'print_shortcode') );
     add_shortcode( 'pdb_signup', array(__CLASS__, 'print_shortcode') );
     add_shortcode( 'pdb_signup_thanks', array(__CLASS__, 'print_shortcode') );
+    add_shortcode( 'pdb_update_thanks', array(__CLASS__, 'print_shortcode') );
     add_shortcode( 'pdb_request_link', array(__CLASS__, 'print_shortcode') );
     add_shortcode( 'pdb_list', array(__CLASS__, 'print_shortcode') );
     add_shortcode( 'pdb_single', array(__CLASS__, 'print_shortcode') );
@@ -764,19 +765,24 @@ class Participants_Db extends PDb_Base {
    * common function for printing all shortcodes
    * 
    * @param array $params array of paramters passed in from the shortcode
-   * @param string $content the content of the enclosure (empty string; we don't use enclosure tags)
+   * @param string $content the content of the enclosure
    * @param string $tag the shortcode identification string
    * @return null 
    */
   public static function print_shortcode( $params, $content, $tag )
   {
+    // $params will be an empty string for an empty shortcode, make sure it's an array
+    $params = (array) $params; 
+    if ( ! empty( $content ) ) {
+      $params['content'] = $content;
+    }
     /**
      * @version 1.6
      * 
      * 'pdb-shortcode_call_{$tag}' filter allows the shortcode atrributes to be 
      * altered before instantiating the shortcode object
      */
-    $shortcode_parameters = self::apply_filters( 'shortcode_call_' . $tag, (array) $params );
+    $shortcode_parameters = self::apply_filters( 'shortcode_call_' . $tag, $params );
 
     switch ( $tag ) {
       case 'pdb_record':
@@ -786,6 +792,7 @@ class Participants_Db extends PDb_Base {
         return self::print_signup_form( $shortcode_parameters );
         break;
       case 'pdb_signup_thanks':
+      case 'pdb_update_thanks':
         return self::print_signup_thanks_form( $shortcode_parameters );
         break;
       case 'pdb_request_link':
@@ -2556,7 +2563,7 @@ class Participants_Db extends PDb_Base {
             
             if ( is_admin() ) {
               global $current_user;
-              $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID );
+              $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID, PDb_List_Admin::default_query() );
               $query = str_replace( '*', ' ' . $export_columns . ' ', $query );
             } else {
               $query = self::$session->get('csv_export_query');
@@ -2820,6 +2827,8 @@ class Participants_Db extends PDb_Base {
         return self::rich_text_filter( $string );
       case 'wpautop':
         return wpautop($string);
+      case 'wpautop+shortcodes':
+        return do_shortcode( wpautop($string) );
       case '0':
       case 'none':
       default:
