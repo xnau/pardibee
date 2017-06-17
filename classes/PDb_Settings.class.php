@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -956,6 +956,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array( 
                 __( 'global content filter', 'participants-database' ) =>'the_content', 
                 __( 'WordPress auto paragraphs', 'participants-database' ) => 'wpautop', 
+                __( 'auto paragraphs + shortcodes', 'participants-database' ) => 'wpautop+shortcodes', 
                 __( 'none', 'participants-database' ) => 'none' 
                 ),
         ),
