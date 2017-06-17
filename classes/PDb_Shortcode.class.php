@@ -235,6 +235,7 @@ abstract class PDb_Shortcode {
         'autocomplete' => 'off',
         'submit_button' => Participants_Db::plugin_setting( 'signup_button_text' ),
         'post_id' => is_object( $post ) ? $post->ID : '',
+        'content' => '',
     );
 
     // error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
