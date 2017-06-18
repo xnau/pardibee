@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -863,6 +863,20 @@ class PDb_FormElement extends xnau_FormElement {
   public static function is_multi( $form_element )
   {
     return in_array( $form_element, Participants_Db::apply_filters( 'multi_form_elements_list', array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
+  }
+  
+  /**
+   *  tells if a field is represented as a set of values, such as a dropdown, checkbox or radio control
+   * 
+   * any new form element that does this is expected to register with this list
+   * 
+   * @param string  $form_element the name of the form element
+   * 
+   * @return bool true if the element is represented as a set of values
+   */
+  public static function is_value_set( $form_element )
+  {
+    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array('dropdown','radio','checkbox','dropdown-other','select-other', 'multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
   }
 
   /**
