@@ -169,7 +169,7 @@ class PDb_Template_Item {
     } else {
       $groups = Participants_Db::get_groups();
       if ( in_array( $item->name, $groups ) ) {
-        $item_def = (object) $groups[$item-name];
+        $item_def = (object) $groups[$item->name];
       }
     }
     
