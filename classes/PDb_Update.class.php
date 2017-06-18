@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * 
  * adapted from: http://wp.tutsplus.com/tutorials/plugins/a-guide-to-the-wordpress-http-api-automatic-plugin-updates/
@@ -140,7 +140,7 @@ class PDb_Update {
   {
     $request = wp_remote_post($this->update_path, array('body' => array('action' => 'info')));
     if (!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) {
-      return unserialize($request['body']);
+      return maybe_unserialize($request['body']);
     }
     return false;
   }
