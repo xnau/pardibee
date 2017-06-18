@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.3
+ * @version    Release: 1.9.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -990,6 +990,7 @@ class PDb_List_Admin {
                           foreach ( self::$display_columns as $column ) {
                             
                             $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id']) ) );
+                            $display_value = '';
 
                             // this is where we place form-element-specific text transformations for display
                             switch ( $column->form_element ) {
@@ -1045,10 +1046,9 @@ class PDb_List_Admin {
 
                               case 'rich-text':
 
-                                if ( !empty( $value[$column->name] ) )
+                                if ( !empty( $value[$column->name] ) ) {
                                   $display_value = '<span class="textarea">' . $value[$column->name] . '</span>';
-                                else
-                                  $display_value = '';
+                                }
                                 break;
 
                               case 'text-line':
@@ -1058,14 +1058,14 @@ class PDb_List_Admin {
                                   $template = '<a href="%1$s" >%2$s</a>';
                                   $display_value = sprintf( $template, $url, $value[$column->name] );
                                 } elseif ( Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
-
-                                  $field = new stdClass();
-                                  $field->value = $value[$column->name];
-                                  $display_value = PDb_FormElement::make_link( $field );
+                                  if ( ! empty( $value[$column->name] ) ) {
+                                    $field = new stdClass();
+                                    $field->value = $value[$column->name];
+                                    $display_value = PDb_FormElement::make_link( $field );
+                                  }
                                 } else {
                                   $display_value = $value[$column->name] === '' ? $column->default : esc_html( $value[$column->name] );
                                 }
-
                                 break;
                               case 'hidden':
                                 $display_value = $value[$column->name] === '' ? '' : esc_html( $value[$column->name] );
