@@ -210,6 +210,65 @@ class PDb_Field_Item extends PDb_Template_Item {
   }
   
   /**
+   * assigns the object properties that match properties in the supplied object
+   * 
+   * @param object $item the supplied object or config array
+   */
+  protected function assign_props( $item ) {
+    
+    $item = (object) $item;
+    
+    $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
+      
+    $item_def = new stdClass;
+    if ( isset(Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
+      $item_def = clone Participants_Db::$fields[$item->name];
+      $this->is_pdb_field = true;
+    } else {
+      $groups = Participants_Db::get_groups();
+      if ( in_array( $item->name, $groups ) ) {
+        $item_def = (object) $groups[$item->name];
+      }
+    }
+    
+    // grab and assign the class properties from the provided object
+    foreach( $class_properties as $property ) {
+      
+      if ( isset( $item->$property ) ) {
+        
+        $this->_assign_prop($item,  $property );
+      
+      } elseif ( isset( $item_def->$property ) ) {
+        
+        $this->_assign_prop($item_def,  $property );
+        
+      }
+      
+    }
+    
+  }
+  
+  /**
+   * assigns a class property
+   * 
+   * @param object  $item
+   * @param string  $property name of the property
+   */
+  private function _assign_prop( $item, $property )
+  {
+      if ( $property === 'values' && isset( $item->values )  ) {
+        $item->values = maybe_unserialize( $item->values );
+        if ( isset( $item->form_element ) && PDb_FormElement::is_value_set( $item->form_element ) ) {
+          $this->values = $item->values;
+        } else {
+          $this->attributes = $item->values;
+        }
+      } else {
+        $this->$property = $item->$property;
+      }
+  }
+  
+  /**
    * assigns the values for the special case of the "link" field 
    */
   private function set_link_field_value()
