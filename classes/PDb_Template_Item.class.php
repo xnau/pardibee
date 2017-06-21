@@ -58,7 +58,7 @@ class PDb_Template_Item {
   /**
    * @var bool true if the item is a Participants Database field
    */
-  private $is_pdb_field = false;
+  protected $is_pdb_field = false;
   
   /**
    * tests a value for emptiness, includinf arrays with empty elements
