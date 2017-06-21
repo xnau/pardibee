@@ -49,7 +49,6 @@ class PDb_Image extends xnau_Image_Handler {
    */
   public function get_image_html()
   {
-
     switch ($this->display_mode) {
       case 'both':
         $pattern = $this->image_wrap[0] . '<img src="%5$s" %7$s /><span class="image-filename">%6$s</span>' . $this->image_wrap[1];
