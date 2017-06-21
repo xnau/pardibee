@@ -280,7 +280,7 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.5 =
-* fallback methods when using AJAX searches and session not available
+* provides fallback methods when using AJAX searches and session not available
 * improved "thanks" shortcodes for signup and record forms
 * shortcodes and auto paragraphs option for rich text
 
