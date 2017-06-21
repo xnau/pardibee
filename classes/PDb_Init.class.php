@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * plugin initialization class
  *
- * version 1.5.4.6
+ * @version 1.6
  *
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the "delta"
@@ -25,16 +25,25 @@ class PDb_Init {
   public static $personal_fields;
   public static $field_groups;
 
-  function __construct( $mode = false )
+  //
+
+  /**
+   * 
+   * @param string $mode the initialization mode
+   * @param mixed $arg passed-in argument
+   */
+  function __construct( $mode = false, $arg = false )
   {
     if ( !$mode )
       wp_die( 'class must be called on the activation hooks', 'object not correctly instantiated' );
 
-    // error_log( __METHOD__.' called with '.$mode );
-
     switch ( $mode ) {
       case 'activate' :
         $this->_activate();
+        break;
+
+      case 'network_activate' :
+        $this->_network_activate();
         break;
 
       case 'deactivate' :
@@ -44,15 +53,25 @@ class PDb_Init {
       case 'uninstall' :
         $this->_uninstall();
         break;
+
+      case 'network_uninstall' :
+        $this->_network_uninstall();
+        break;
+
+      case 'new_blog':
+        $this->_new_blog( $arg );
     }
   }
 
   /**
    * set up database, defaults
+   * 
+   * @param bool $networkwide
    */
-  public static function on_activate()
+  public static function on_activate( $networkwide = false )
   {
-    new PDb_Init( 'activate' );
+    $mode = $networkwide && self::is_network() ? 'network_activate' : 'activate';
+    new PDb_Init( $mode );
   }
 
   /**
@@ -68,23 +87,102 @@ class PDb_Init {
    */
   public static function on_uninstall()
   {
-    new PDb_Init( 'uninstall' );
+    $mode = self::is_network() ? 'network_uninstall' : 'uninstall';
+    new PDb_Init( $mode );
   }
 
+  /**
+   * remove all plugin settings and database tables
+   */
+  public static function new_blog( $blog_id )
+  {
+    new PDb_Init( 'new_blog', $blog_id );
+  }
+
+  /**
+   * performs the activation
+   * 
+   * @global wpdb $wpdb
+   */
   private function _activate()
   {
     global $wpdb;
 
     Participants_Db::setup_source_names();
 
-    // fresh install: install the tables if they don't exist
-    if ( $wpdb->get_var( 'show tables like "' . Participants_Db::$participants_table . '"' ) != Participants_Db::$participants_table ) {
-      $this->_fresh_install();
-    }
+    // install the db tables if needed
+    $this->maybe_install();
+
+    do_action( 'pdb-plugin_activation' );
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin activated' );
   }
 
+  /**
+   * performs the activation on a network
+   * 
+   * @global wpdb $wpdb
+   */
+  private function _network_activate()
+  {
+    self::do_network_operation( array( $this, 'maybe_install' ) );
+
+    do_action( 'pdb-plugin_network_activation' );
+
+    error_log( Participants_Db::PLUGIN_NAME . ' plugin activated' );
+  }
+
+  /**
+   * install tables when a new blog is created
+   * 
+   * @global  wpdb  $wpdb
+   * @param int $blog_id the id of the new blog
+   */
+  private function _new_blog( $blog_id )
+  {
+    global $wpdb;
+
+    if ( is_plugin_active_for_network( 'participants-database/participants-database.php' ) ) {
+      $current_blog = $wpdb->blogid;
+      switch_to_blog( $blog_id );
+      $this->maybe_install();
+      switch_to_blog( $current_blog );
+    }
+  }
+
+  /**
+   * triggers a database install if needed
+   */
+  public function maybe_install()
+  {
+    if ( $this->needs_install() ) {
+      $this->_install_database();
+    }
+  }
+
+  /**
+   * checks for the need to install the tables
+   * 
+   * @return bool true if the tables do not exist
+   */
+  private function needs_install()
+  {
+    global $wpdb;
+    return $wpdb->get_var( 'SHOW TABLES LIKE "' . Participants_Db::$participants_table . '"' ) != Participants_Db::$participants_table;
+  }
+
+  /**
+   * checks if multisite is active
+   * 
+   */
+  public static function is_network()
+  {
+    return function_exists( 'is_multisite' ) && is_multisite();
+  }
+
+  /**
+   * deactivates the plugin; does a litle housekeeping
+   */
   private function _deactivate()
   {
     /*
@@ -93,8 +191,43 @@ class PDb_Init {
      * that bug was fixed, though, so maybe not much call for it
      */
     self::delete_user_sessions();
-    
+
     error_log( Participants_Db::PLUGIN_NAME . ' plugin deactivated' );
+  }
+
+  /**
+   * uninstalls the plugin network-wide
+   * 
+   * @global wpdb $wpdb
+   */
+  private function _network_uninstall()
+  {
+    self::do_network_operation( array( $this, '_uninstall' ) );
+
+    do_action( 'pdb-plugin_network_uninstall' );
+  }
+
+  /**
+   * performs a network-wide operation
+   * 
+   * @param array|string $callback a PHP callable to execute on each blog
+   */
+  public static function do_network_operation( callable $callback )
+  {
+    global $wpdb;
+
+    // store the currently active blog id
+    $current_blog = $wpdb->blogid;
+
+    // Get all blog ids
+    $blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+    // cycle through all the blogs and make the callback on each one
+    foreach ( $blogids as $blog_id ) {
+      switch_to_blog( $blog_id );
+      call_user_func( $callback );
+    }
+    // return to the current blog selection
+    switch_to_blog( $current_blog );
   }
 
   /**
@@ -104,24 +237,23 @@ class PDb_Init {
    */
   private function _uninstall()
   {
-
     global $wpdb;
 
-    // delete tables
+// delete tables
     $sql = 'DROP TABLE `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
     $wpdb->query( $sql );
 
-    // remove options
+// remove options
     delete_option( Participants_Db::$participants_db_options );
     delete_option( Participants_Db::$db_version_option );
     delete_option( Participants_Db::$default_options );
 
-    // clear transients
-    delete_transient(Participants_Db::$last_record);
+// clear transients
+    delete_transient( Participants_Db::$last_record );
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "%' . Participants_Db::$prefix . 'retrieve-count-%" OR `option_name` LIKE "%' . PDb_List_Admin::$user_settings . '%" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'captcha_key" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'signup-email-sent" OR `option_name` LIKE "%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%" ';
-    $transients = $wpdb->get_col($sql);
-    foreach ($transients as $name) {
-      delete_transient($name);
+    $transients = $wpdb->get_col( $sql );
+    foreach ( $transients as $name ) {
+      delete_transient( $name );
     }
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin uninstalled' );
@@ -138,7 +270,7 @@ class PDb_Init {
   public static function delete_user_sessions()
   {
     global $wpdb;
-    // clear session transients
+// clear session transients
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE ( `option_name` LIKE "_wp_session_%" AND `option_name` NOT LIKE "_wp_session_expires_%" )';
     $transients = $wpdb->get_col( $sql );
     foreach ( $transients as $name ) {
@@ -149,14 +281,14 @@ class PDb_Init {
   /**
    * installs the plugin database tables and default fields
    */
-  private function _fresh_install()
+  private function _install_database()
   {
 
     global $wpdb;
-    // define the arrays for loading the initial db records
+// define the arrays for loading the initial db records
     $this->_define_init_arrays();
 
-    // create the field values table
+// create the field values table
     $sql = 'CREATE TABLE ' . Participants_Db::$fields_table . ' (
           `id` INT(3) NOT NULL AUTO_INCREMENT,
           `order` INT(3) NOT NULL DEFAULT 0,
@@ -186,7 +318,7 @@ class PDb_Init {
           ';
     $wpdb->query( $sql );
 
-    // create the groups table
+// create the groups table
     $sql = 'CREATE TABLE ' . Participants_Db::$groups_table . ' (
           `id` INT(3) NOT NULL AUTO_INCREMENT,
           `order` INT(3) NOT NULL DEFAULT 0,
@@ -204,7 +336,7 @@ class PDb_Init {
           ';
     $wpdb->query( $sql );
 
-    // create the main data table
+// create the main data table
     $sql = 'CREATE TABLE ' . Participants_Db::$participants_table . ' (
           `id` int(6) NOT NULL AUTO_INCREMENT,
           `private_id` VARCHAR(9) NULL,
@@ -237,11 +369,11 @@ class PDb_Init {
 
     $wpdb->query( $sql );
 
-    // save the db version
+// save the db version
     add_option( Participants_Db::$db_version_option );
     update_option( Participants_Db::$db_version_option, Participants_Db::$db_version );
 
-    // now load the default values into the database
+// now load the default values into the database
     $i = 0;
     unset( $defaults );
     foreach ( array_keys( self::$field_groups ) as $group ) {
@@ -264,7 +396,7 @@ class PDb_Init {
       }
     }
 
-    // put in the default groups
+// put in the default groups
     $i = 1;
     $defaults = array();
     foreach ( self::$field_groups as $group => $title ) {
@@ -287,7 +419,7 @@ class PDb_Init {
 
     global $wpdb;
 
-    // determine the actual version status of the database
+// determine the actual version status of the database
     self::set_database_real_version();
 
     if ( PDB_DEBUG )
@@ -707,47 +839,47 @@ class PDb_Init {
 
     global $wpdb;
 
-    // set up the option starting with the first version
+// set up the option starting with the first version
     add_option( Participants_Db::$db_version_option );
     update_option( Participants_Db::$db_version_option, '0.1' );
 
-    // check to see if the update to 0.2 has been performed
+// check to see if the update to 0.2 has been performed
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$fields_table . ' LIKE "column"' );
     if ( empty( $column_test ) )
       update_option( Participants_Db::$db_version_option, '0.2' );
     else
       return;
 
-    // check for version 0.4
+// check for version 0.4
     $column_test = $wpdb->get_results( 'SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "values"' );
     if ( strtolower( $column_test[0]->DATA_TYPE ) == 'longtext' )
-    // we're skipping update 3 because all it does is insert default values
+// we're skipping update 3 because all it does is insert default values
       update_option( Participants_Db::$db_version_option, '0.4' );
     else
       return;
 
-    // check for version 0.51
+// check for version 0.51
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$fields_table . ' LIKE "import"' );
     if ( empty( $column_test ) )
       update_option( Participants_Db::$db_version_option, '0.51' );
     else
       return;
 
-    // check for version 0.55
+// check for version 0.55
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$fields_table . ' LIKE "readonly"' );
     if ( !empty( $column_test ) )
       update_option( Participants_Db::$db_version_option, '0.55' );
     else
       return;
 
-    // check for version 0.6
+// check for version 0.6
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$participants_table . ' LIKE "last_accessed"' );
     if ( !empty( $column_test ) )
       update_option( Participants_Db::$db_version_option, '0.6' );
     else
       return;
 
-    // check for version 0.65
+// check for version 0.65
     $value_test = $wpdb->get_var( 'SELECT `form_element` FROM ' . Participants_Db::$fields_table . ' WHERE `name` = "date_recorded"' );
 
 
@@ -756,7 +888,7 @@ class PDb_Init {
     else
       return;
 
-    // check for version 0.7
+// check for version 0.7
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$groups_table . ' LIKE "admin"' );
 
 
@@ -765,7 +897,7 @@ class PDb_Init {
     else
       return;
 
-    // check for version 0.9
+// check for version 0.9
     $column_test = $wpdb->get_results( 'SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "name"' );
     if ( $column_test[0]->CHARACTER_MAXIMUM_LENGTH == '64' )
       update_option( Participants_Db::$db_version_option, '0.9' );
@@ -781,7 +913,7 @@ class PDb_Init {
   private function _define_init_arrays()
   {
 
-    // define the default field groups
+// define the default field groups
     self::$field_groups = array(
         'main' => __( 'Participant Info', 'participants-database' ),
         'personal' => __( 'Personal Info', 'participants-database' ),
@@ -789,7 +921,7 @@ class PDb_Init {
         'internal' => __( 'Record Info', 'participants-database' ),
     );
 
-    // fields for keeping track of records; not manually edited, but they can be displayed
+// fields for keeping track of records; not manually edited, but they can be displayed
     self::$internal_fields = array(
         'id' => array(
             'title' => 'Record ID',

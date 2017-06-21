@@ -61,20 +61,12 @@ class PDb_Path {
     return self::trim_slash(str_replace(self::app_base_path(), '', ABSPATH));
   }
   /**
-   * supplies an image/file upload location
+   * supplies the plugin's files location path as defined in the settings relative to the WP root
    * 
-   * relative to WP root
-   * 
-   * @return string relative path to the plugin files location
+   * this value is filtered by pdb-files_location
    */
   public static function files_location() {
-    /**
-     * @version 1.6.0
-     * filter: pdb-files_location
-     * 
-     * allows access to the "image_upload_location" plugin setting value
-     */
-    return Participants_Db::set_filter('files_location', Participants_Db::plugin_setting('image_upload_location'));
+    return Participants_Db::files_location();
   }
   /**
    * supplies the absolute path to the files location

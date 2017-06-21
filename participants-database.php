@@ -327,6 +327,15 @@ class Participants_Db extends PDb_Base {
     // this is only fired if there is a plugin shortcode on the page
     add_action( 'pdb-shortcode_present', array(__CLASS__, 'add_shortcode_includes') );
 
+    /**
+     * MULTISITE
+     * 
+     * this is so the Participants Database table names are in sync with the current network blog
+     */
+    add_action( 'switch_blog', array(__CLASS__, 'setup_source_names' ) );
+    // set up the database for any new blogs
+    add_action( 'wpmu_new_blog', array('PDb_Init', 'new_blog' ) );
+
     add_filter( 'wp_headers', array(__CLASS__, 'control_caching') );
     /**
      * @since 1.6.3
@@ -373,9 +382,14 @@ class Participants_Db extends PDb_Base {
    * sets up the database and options source names
    * 
    * fired early on the 'plugins_loaded' hook
+   * 
+   * @global wpdb $wpdb
    */
   public static function setup_source_names()
   {
+    if ( !is_null( self::$participants_table ) ) {
+      return;
+    }
     /*
      * these can be modified later with a filter hook
      * 
@@ -1367,7 +1381,7 @@ class Participants_Db extends PDb_Base {
       return false;
             }
 
-    //error_log(__METHOD__.' post: '.print_r($post,1));
+//    error_log(__METHOD__.' post: '.print_r($post,1));
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
 
@@ -3265,7 +3279,7 @@ class Participants_Db extends PDb_Base {
 
     $shortcode_atts = isset( $session[$post->ID]['list'] ) ? $session[$post->ID]['list'][$instance] : false;
 
-    if ( !is_array( $shortcode_atts ) ) {
+    if ( ! is_array( $shortcode_atts ) ) {
       printf( 'failed to get session for list instance %s', $instance );
       return;
     }
