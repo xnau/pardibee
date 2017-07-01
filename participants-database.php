@@ -1824,6 +1824,7 @@ class Participants_Db extends PDb_Base {
         $column_data[] = "`" . $column->name . "` = " . ( $new_value === null ? "NULL" : "%s" );
       }
     } // columns
+
     // if the validation object exists and there are errors, stop here
     if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
 
