@@ -360,7 +360,6 @@ class PDb_FormValidation extends xnau_FormValidation {
    */
   protected function _add_error( $field, $error, $overwrite = false )
   {
-
     if ( $overwrite === true || !isset( $this->errors[$field] ) || empty( $this->errors[$field] ) ) {
       $this->errors[$field] = new PDb_Validation_Error_Message( $field, array('slug' => $error) );
     }
@@ -615,9 +614,11 @@ class PDb_Validation_Error_Message {
    * @var string the message class
    */
   private $class = '';
-
+  
   /**
    * 
+   * @param string $fieldname
+   * @param array $config
    */
   public function __construct( $fieldname, $config )
   {
