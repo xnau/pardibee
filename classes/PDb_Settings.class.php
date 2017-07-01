@@ -954,8 +954,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'help_text' => __( 'Select the filter mode for all rich text outputs, including HTML emails.', 'participants-database' ),
             'value' => 'the_content',
             'options' => array( 
-                __( 'global content filter', 'participants-database' ) =>'the_content', 
-                __( 'WordPress auto paragraphs', 'participants-database' ) => 'wpautop', 
+                __( 'global content filter', 'participants-database' ) . ' (the_content)' =>'the_content', 
+                __( 'WordPress auto paragraphs', 'participants-database' ) . ' (wpautop)' => 'wpautop', 
                 __( 'auto paragraphs + shortcodes', 'participants-database' ) => 'wpautop+shortcodes', 
                 __( 'none', 'participants-database' ) => 'none' 
                 ),
