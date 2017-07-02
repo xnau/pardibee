@@ -283,7 +283,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function initialize()
   {
-    
     // set the debug global if not already
     self::set_debug_mode();
 
@@ -361,21 +360,68 @@ class Participants_Db extends PDb_Base {
     add_action( 'wp_ajax_nopriv_pdb_list_filter', array(__CLASS__, 'pdb_list_filter') );
 
     // define our shortcodes
-    add_shortcode( 'pdb_record', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_signup', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_signup_thanks', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_update_thanks', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_request_link', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_list', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_single', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_search', array(__CLASS__, 'print_shortcode') );
-    add_shortcode( 'pdb_total', array(__CLASS__, 'print_shortcode') );
+    foreach( self::plugin_shortcode_list() as $tag ) {
+      add_shortcode( $tag, array(__CLASS__, 'print_shortcode') );
+    }
+    
+    // if we have a PDB shortcode in the content, set up a filter
+    add_action( 'pdb-shortcode_present', function () {
+      add_filter( 'the_content', array( 'Participants_Db', 'fix_shortcode_special_chars' ), 5 );
+    } );
 
     /*
      * any plugins that require Participants Database should initialize on this action
      * 'participants-database_activated'
      */
     do_action( self::PLUGIN_NAME . '_activated' );
+  }
+  
+  /**
+   * provides a list of all plugin shortcodes
+   * 
+   * @filter 'pdb-plugin_sjortcode_list' array
+   * 
+   * @return  array list of shortcode tags
+   */
+  public static function plugin_shortcode_list()
+  {
+    return self::apply_filters( 'plugin_shortcode_list', array(
+        'pdb_record',
+        'pdb_signup',
+        'pdb_signup_thanks',
+        'pdb_update_thanks',
+        'pdb_request_link',
+        'pdb_list',
+        'pdb_single',
+        'pdb_search',
+        'pdb_total',
+    ) );
+  }
+  
+  /**
+   * performs some needed character replacements
+   * 
+   * this is to prevent wptexturize from thinking the < or > characters designate an HTML tag
+   * 
+   * @version 1.7.5
+   * @see https://core.trac.wordpress.org/ticket/29608
+   * @see https://codex.wordpress.org/Shortcode_API#HTML
+   * 
+   * @param string  $content_page content
+   * @return string
+   */
+  public static function fix_shortcode_special_chars( $content )
+  {
+    if ( strpos( $content, '[pdb_list' ) !== false || strpos( $content, '[pdb_total' ) !== false ) {
+      // one of the two shortcodes are present, now do the replacements
+      $content = preg_replace_callback( 
+              '/\[pdb_(?:list|total)(.+)\]/', 
+              function ($atts) { 
+        return str_replace( array('<','>'), array('&lt;', '&gt;'), $atts[0] );
+              }, 
+                              $content );
+    }
+    return $content;
   }
 
   /**
@@ -785,7 +831,10 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_shortcode( $params, $content, $tag )
   {
-    // $params will be an empty string for an empty shortcode, make sure it's an array
+    /*
+     * $params will be an empty string for a shortcode with no attributes, make 
+     * sure it's an array
+     */
     $params = (array) $params; 
     if ( ! empty( $content ) ) {
       $params['content'] = $content;
@@ -3634,7 +3683,9 @@ function PDb_class_loader( $class )
  * PHP version checks and notices before initializing the plugin
  */
 if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
-  Participants_Db::initialize();
+  if ( ! defined( 'PDB_DEBUG' ) ) { // this is so we only initilize once per page load
+    Participants_Db::initialize();
+  }
 } else {
 
   add_action( 'admin_notices', 'pdb_handle_php_version_error' );
