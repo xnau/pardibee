@@ -175,6 +175,10 @@ This form appears on the page where you have placed the `[pdb_record]` shortcode
 
 An individual record can be edited on the frontend of your website by someone who has the private link to that record. The purpose here is to let people maintain their own records. It's also possible to put things like survey questions in the form so you can get feedback from people. You have complete control over what fields appear on this form. Fields can be designated as showing up on the signup form, on the frontend user's form, and on the backend admin form.
 
+= The email goes out to the person when they register, but the "edit link" is blank =
+
+This means your "Participant Record Page" is not configured. First, you need a page for the record edit form. On that page, place the [pdb_record] shortcode. Then, look under the "Record Form" tab in the plugin settings, make sure the page where you have the [pdb_record] shortcode is selected in the Participant Record Page setting.
+
 = How do I delete all the records but leave everything else in place? =
 
 The best way to do this is to perform a "truncate" on the table. You'll need to get direct access to the database to do this, usually using phpMyAdmin, which is typically found in your hosting control panel. Open the database and find the main participants database table...usually called "wp_participants_database". Perform a truncate on that table only. The truncate command is found by selecting the table, then under the "operations" tab in the lower right. 
