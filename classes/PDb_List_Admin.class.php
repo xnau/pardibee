@@ -412,7 +412,7 @@ class PDb_List_Admin {
               if ( $selected_count > 0 ) {
                 $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
                 $approval_field = Participants_Db::$fields[$approval_field_name];
-                list ( $yes, $no ) = unserialize( $approval_field->values );
+                list ( $yes, $no ) = maybe_unserialize( $approval_field->values );
                 $set_value = $selected_action === 'approve' ? $yes : $no;
 
                 $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= "%s"';
