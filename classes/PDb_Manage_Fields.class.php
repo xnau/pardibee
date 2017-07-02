@@ -492,7 +492,7 @@ class PDb_Manage_Fields {
     /**
      * processes the form submission
      * 
-     * @global object $wpdb
+     * @global wpdb $wpdb
      * @return null 
      */
     protected function process_submit()
@@ -538,10 +538,7 @@ class PDb_Manage_Fields {
 
               $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
 
-              if ( !empty( $row['values'] ) ) {
-
-                $row['values'] = serialize( $this->prep_values_array( $row['values'] ) );
-              }
+              $row['values'] = $this->prep_values_array( $row['values'] );
 
               if ( !empty( $row['validation'] ) && !in_array( $row['validation'], array('yes', 'no') ) ) {
 
@@ -559,21 +556,36 @@ class PDb_Manage_Fields {
                 $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $row['name'] ) );
                 $new_type = PDb_FormElement::get_datatype( $row );
                 $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
-                if ( $new_type != $current_type and ! ($new_type == 'tinytext' and $current_type == 'text') ) {
-
-                  $sql = "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type;
-
-                  $result = $wpdb->get_results( $sql );
+                if ( $new_type !== $current_type and ! ($new_type === 'tinytext' and $current_type === 'text') ) {
+                  $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
                 }
               }
+              
               /*
-               * enforce the values for a captcha field
+               * add some form-element-specific processing
                */
+              switch ( $row['form_element'] ) {
+                case 'captcha':
+                  $row['validation'] = 'captcha';
+                  foreach ( array('display_column', 'admin_column', 'CSV', 'persistent', 'sortable') as $c )
+                    $row[$c] = 0;
+                  $row['readonly'] = 1;
+                  break;
+                case 'decimal':
+                  if ( !isset( $row['values']['step'] ) ) {
+                    $row['values']['step'] = 'any';
+                  }
+                  if ( !isset( $row['values']['decimal'] ) ) {
+                    preg_match('/.+\((.+)\)/', PDb_FormElement::get_datatype($row), $matches);
+                    $decimal_setting = str_replace( ',', '/', $matches[1] );
+                    $row['values']['decimal'] = $decimal_setting;
+                  }
+                  break;
+              }
+              
+              
+              
               if ( isset( $row['form_element'] ) && $row['form_element'] === 'captcha' ) {
-                $row['validation'] = 'captcha';
-                foreach ( array('display_column', 'admin_column', 'CSV', 'persistent', 'sortable') as $c )
-                  $row[$c] = 0;
-                $row['readonly'] = 1;
               }
 
               foreach ( array('title', 'help_text', 'default') as $field ) {
@@ -583,6 +595,12 @@ class PDb_Manage_Fields {
 
               // remove the fields we won't be updating
               unset( $row['status'], $row['id'], $row['name'] );
+              
+              foreach( $row as $name => $row_item ) {
+                if ( is_array( $row_item ) ) {
+                  $row[$name] = serialize( $row[$name] );
+                }
+              }
 
               $result = $wpdb->update( Participants_Db::$fields_table, $row, array('id' => $id) );
             }
@@ -747,7 +765,6 @@ class PDb_Manage_Fields {
      */
     function prep_values_array( $values )
     {
-
       /* we can do this because if the matching string is in position 0, it's not 
        * valid syntax anyway
        */
@@ -778,7 +795,7 @@ class PDb_Manage_Fields {
         }
       }
 
-      return $array;
+      return array_filter( $array );
     }
 
     /**
