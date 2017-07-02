@@ -285,6 +285,7 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.7.5 =
 * added multisite support
+* new "decimal" form element
 * provides fallback methods when using AJAX searches and session not available
 * improved "thanks" shortcodes for signup and record forms
 * shortcodes and auto paragraphs option for rich text
