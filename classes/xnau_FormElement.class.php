@@ -368,6 +368,10 @@ abstract class xnau_FormElement {
         $this->_numeric();
         break;
 
+      case 'decimal':
+        $this->_numeric( true );
+        break;
+
       default:
 
     endswitch;
@@ -584,7 +588,7 @@ abstract class xnau_FormElement {
   /**
    * builds a numeric input element
    */
-  protected function _numeric()
+  protected function _numeric( $decimal = false )
   {
 
     if ( is_array( $this->value ) ) {
@@ -1716,25 +1720,23 @@ abstract class xnau_FormElement {
     switch ( $form_element ) {
 
       case 'timestamp':
-        $datatype = 'TIMESTAMP';
+        $datatype = 'timestamp';
         break;
 
       case 'date':
-        $datatype = 'BIGINT';
+        $datatype = 'bigint';
         break;
 
       case 'numeric':
-        $datatype = 'BIGINT';
-        /*
-         * we need to change the input element to include the step="any" attribute to implement floats
-         */
-//        if ( $values && stripos( current( $values ), 'float' ) !== false ) {
-//          $datatype = 'FLOAT';
-//        }
+        $datatype = 'bigint';
+        break;
+
+      case 'decimal':
+        $datatype = 'decimal(' . self::decimal_values( $values ) . ')';
         break;
 
       case 'text-line':
-        $datatype = 'TINYTEXT';
+        $datatype = 'tinytext';
         break;
 
       case 'checkbox':
@@ -1745,10 +1747,28 @@ abstract class xnau_FormElement {
       case 'rich-text':
       case 'dropdown':
       default :
-        $datatype = 'TEXT';
+        $datatype = 'text';
     }
 
     return $datatype;
+  }
+  
+  /**
+   * provides the decimal dataype values
+   * 
+   * @param array  $values the field def values setting
+   * @return string
+   */
+  protected static function decimal_values( $values )
+  {
+    $values_setting = '8,2'; // default value
+    if ( isset( $values['decimal'] ) && strpos( $values['decimal'], '/' ) ) {
+      list( $int, $frac ) = explode('/', $values['decimal'] );
+      if ( is_numeric( $int ) && is_numeric( $frac ) ) {
+        $values_setting = ( $int + $frac ) . ',' . $frac;
+      }
+    }
+    return $values_setting;
   }
 
   /**
