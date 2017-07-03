@@ -831,6 +831,7 @@ class PDb_FormElement extends xnau_FormElement {
         'date'                => __( 'Date Field', 'participants-database' ),
         'numeric'             => __( 'Numeric', 'participants-database' ),
         'decimal'             => __( 'Decimal', 'participants-database' ),
+        'currency'            => __( 'Currency', 'participants-database' ),
         'dropdown-other'      => __( 'Dropdown/Other', 'participants-database' ),
         'multi-checkbox'      => __( 'Multiselect Checkbox', 'participants-database' ),
         'multi-dropdown'      => __( 'Multiselect Dropdown', 'participants-database' ),
