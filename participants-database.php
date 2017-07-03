@@ -643,7 +643,10 @@ class Participants_Db extends PDb_Base {
           'must_remove' => '<h4>' . __( 'You must remove all fields from the {name} group before deleting it.', 'participants-database' ) . '</h4>',
           /* translators: don't translate the words in brackets {} */
           'delete_confirm' => '<h4>' . __( 'Delete the "{name}" {thing}?', 'participants-database' ) . '</h4>',
-          'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page." )
+          'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
+          'datatype_confirm' => '<h4 class="dashicons-before dashicons-info warning">' . __( 'Changing the form element on a field that has stored data can result in data loss.', 'participants-database' ) .'</h4><p><a href="https://wp.me/p48Sj5-Zb" target="_blank">' . __( 'More information here…', 'participants-database' ) . '</a></p>',
+          'datatype_confirm_button' => __( 'Yes, change the form element', 'participants-database' ),
+          'datatype_cancel_button' => __( 'No, don\'t change the form element', 'participants-database' ),
       ) );
       wp_enqueue_script( self::$prefix . 'manage_fields' );
     }
