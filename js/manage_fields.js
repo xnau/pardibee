@@ -79,6 +79,39 @@ PDbManageFields = (function ($) {
     confirmationBox.dialog('open'); //Display confirmation dialog when user clicks on "delete Image"
     return false;
   };
+  var form_element_change_confirm = function () {
+    var target = $(this);
+    var confirmationBox = $('#confirmation-dialog');
+    confirmationBox.html(PDb_L10n.datatype_confirm);
+    // initialize the dialog action
+    confirmationBox.dialog(dialogOptions, {
+      buttons : [
+        {
+          text: PDb_L10n.datatype_confirm_button,
+          icon: 'ui-icon-check',
+          class: 'confirm-button dashicons-before dashicons-yes',
+          click: function () { 
+            $(this).dialog('close');
+            target.after( $('<input>', {
+              name: target.prop('name').replace(/\[(.+)\]/, '[datatype_warning]'),
+              type: 'hidden',
+              value: 'accepted'
+            }) );
+          }
+        },
+        {
+          text: PDb_L10n.datatype_cancel_button,
+          icon: 'ui-icon-cancel',
+          class: 'cancel-button dashicons-before dashicons-no',
+          click: function () { 
+            $(this).dialog('close'); // Close the Confirmation Box
+          }
+        }
+    ] // buttons
+    });// dialog 
+    confirmationBox.dialog('open'); //Display confirmation dialog when user clicks on "delete Image"
+    return false;  
+  };
   var captchaPreset = function () {
     var el = $(this);
     var row = el.closest('tr');
@@ -240,6 +273,8 @@ PDbManageFields = (function ($) {
       tabcontrols.find('table.manage-fields select, table.manage-fields input[type=checkbox]').on('change', setChangedFlag);
       // defeat return key submit behavior
       tabcontrols.on("keypress", 'form', cancelReturn);
+      // set the form element change warning
+      tabcontrols.on('change', 'select.column-has-values', form_element_change_confirm);
       // pre-set CAPTCHA settings
       $('.manage-fields-wrap').on('change', '.manage-fields tbody td.form_element select', captchaPreset);
       // set up the delete functionality
