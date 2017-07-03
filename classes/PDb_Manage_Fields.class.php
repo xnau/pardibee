@@ -230,10 +230,16 @@ class PDb_Manage_Fields {
 
                             if ( $internal_group && in_array( $attribute_column, array('order') ) )
                               continue;
+                            
+                            if ( $attribute_column === 'form_element' ) {
+                              if ( $this->column_has_data( $database_row['name'] ) ) {
+                                $edit_field_type['class'] = 'column-has-values';
+                              }
+                            }
 
                             // fix old validation method name from 'email' to 'email-regex'
-                            if ( $attribute_column == 'validation' ) {
-                              if ( $database_row['name'] == 'email' && $database_row[$attribute_column] == 'email' )
+                            if ( $attribute_column === 'validation' ) {
+                              if ( $database_row['name'] === 'email' && $database_row[$attribute_column] === 'email' )
                                 $database_row[$attribute_column] = 'email-regex';
                             }
                             // convert arrays to string notation
@@ -353,7 +359,9 @@ class PDb_Manage_Fields {
                   ?>
                   <tr>
                     <td id="field_count_<?php echo $group ?>"><?php echo $group_count ?></td>
-                    <td><a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a></td>
+                    <td>
+                      <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
+                    </td>
                     <?php
                     foreach ( $group_values as $column => $value ) {
 
@@ -544,53 +552,43 @@ class PDb_Manage_Fields {
 
                 $row['validation'] = str_replace( '\\\\', '\\', $row['validation'] );
               }
-
+              
               /*
                * modify the datatype if necessary
                * 
                * we prevent the datatype from being changed to a smaller type to protect 
                * data. If the user really wants to do this, they will have to do it manually
                */
-              if ( isset( $row['group'] ) && $row['group'] != 'internal' ) {
-                $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . ' WHERE `field` = "%s"';
-                $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $row['name'] ) );
-                $new_type = PDb_FormElement::get_datatype( $row );
-                $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
-                if ( $new_type !== $current_type and ! ($new_type === 'tinytext' and $current_type === 'text') ) {
+              if ( $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
+                if (isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) {
                   $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
+                  unset($row['datatype_warning']);
+                } else {
+                  unset( $row['form_element'] ); // prevent this from getting changed
                 }
               }
               
               /*
                * add some form-element-specific processing
                */
-              switch ( $row['form_element'] ) {
-                case 'captcha':
-                  $row['validation'] = 'captcha';
-                  foreach ( array('display_column', 'admin_column', 'CSV', 'persistent', 'sortable') as $c )
-                    $row[$c] = 0;
-                  $row['readonly'] = 1;
-                  break;
-                case 'decimal':
-                  if ( !isset( $row['values']['step'] ) ) {
-                    $row['values']['step'] = 'any';
-                  }
-                  if ( !isset( $row['values']['decimal'] ) ) {
-                    preg_match('/.+\((.+)\)/', PDb_FormElement::get_datatype($row), $matches);
-                    $decimal_setting = str_replace( ',', '/', $matches[1] );
-                    $row['values']['decimal'] = $decimal_setting;
-                  }
-                  break;
-              }
-              
-              
-              
-              if ( isset( $row['form_element'] ) && $row['form_element'] === 'captcha' ) {
-              }
-
-              foreach ( array('title', 'help_text', 'default') as $field ) {
-                if ( isset( $row[$field] ) )
-                  $row[$field] = stripslashes( $row[$field] );
+              if ( isset( $row['form_element']) ) {
+                switch ( $row['form_element'] ) {
+                  case 'captcha':
+                    foreach ( array('title', 'help_text', 'default') as $field ) {
+                      if ( isset( $row[$field] ) )
+                        $row[$field] = stripslashes( $row[$field] );
+                    }
+                    $row['validation'] = 'captcha';
+                    foreach ( array('display_column', 'admin_column', 'CSV', 'persistent', 'sortable') as $c )
+                      $row[$c] = 0;
+                    $row['readonly'] = 1;
+                    break;
+                  case 'decimal':
+                    if ( !isset( $row['values']['step'] ) ) {
+                      $row['values']['step'] = 'any';
+                    }
+                    break;
+                }
               }
 
               // remove the fields we won't be updating
@@ -726,6 +724,39 @@ class PDb_Manage_Fields {
       $string = isset( $this->i18n[$string] ) ? $this->i18n[$string] : $string;
 
       return str_replace( array('_'), array(" "), $string );
+    }
+    
+    /**
+     * checks for the need to change the field datatype
+     * 
+     * @global wpdb $wpdb
+     * @param string  $fieldname
+     * @param array $field_values the new values definition
+     * @param string $form_element the field form element
+     * @return string|bool false if no change, new datatype if changed
+     */
+    protected function new_datatype( $fieldname, $field_values, $form_element )
+    {
+      global $wpdb;
+      $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . ' WHERE `field` = "%s"';
+      $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
+      $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'values' => $field_values, 'form_element' => $form_element ) );
+      $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
+      return $new_type !== $current_type ? $new_type : false;
+    }
+    
+    /**
+     * tells if a field column has data
+     * 
+     * @global wpdb $wpdb
+     * @param string $fieldname name of the field to check
+     * @return bool true if the column has data
+     */
+    protected function column_has_data( $fieldname )
+    {
+      global $wpdb;
+      $result = $wpdb->get_col( 'SELECT `' . $fieldname . '` FROM ' . Participants_Db::$participants_table );
+      return count( array_filter( $result ) ) > 0;
     }
 
     /**
@@ -891,7 +922,7 @@ class PDb_Manage_Fields {
         // drop-down fields
         case 'form_element':
           // populate the dropdown with the available field types from the xnau_FormElement class
-          return array('type' => 'dropdown', 'options' => array_flip( PDb_FormElement::get_types() ) + array('null_select' => false));
+          return array('type' => 'dropdown', 'options' => array_flip( PDb_FormElement::get_types() ) + array('null_select' => false) );
 
         case 'validation':
           return array(
