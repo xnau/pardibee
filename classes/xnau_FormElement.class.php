@@ -1732,7 +1732,11 @@ abstract class xnau_FormElement {
         break;
 
       case 'decimal':
-        $datatype = 'decimal(' . self::decimal_values( $values ) . ')';
+        $datatype = 'decimal(14,4)';
+        break;
+
+      case 'currency':
+        $datatype = 'decimal(10,2)';
         break;
 
       case 'text-line':
@@ -1751,24 +1755,6 @@ abstract class xnau_FormElement {
     }
 
     return $datatype;
-  }
-  
-  /**
-   * provides the decimal dataype values
-   * 
-   * @param array  $values the field def values setting
-   * @return string
-   */
-  protected static function decimal_values( $values )
-  {
-    $values_setting = '8,2'; // default value
-    if ( isset( $values['decimal'] ) && strpos( $values['decimal'], '/' ) ) {
-      list( $int, $frac ) = explode('/', $values['decimal'] );
-      if ( is_numeric( $int ) && is_numeric( $frac ) ) {
-        $values_setting = ( $int + $frac ) . ',' . $frac;
-      }
-    }
-    return $values_setting;
   }
 
   /**
