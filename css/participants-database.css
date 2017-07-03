@@ -435,15 +435,31 @@ input.otherfield[type=text] {
 .pdb-error p, .pdb-message p {
   margin:0;
 }
-.dashicons.dashicons-sort:before {
+.dashicons-sort:before {
   white-space: nowrap;
 }
-.dashicons.dashicons-no:before {
+.dashicons-no:before,
+.dashicons-info.warning:before {
   color: #D64E07;
 }
-.dashicons.dashicons-no:hover:before {
+.dashicons-no:hover:before {
   color: white;
 }
-.dashicons.dashicons-no:hover:before {
+.dashicons-no:hover:before {
   background-color: #D64E07;
+}
+.dashicons-yes:before {
+  color: #02ba02;
+}
+.dashicons-yes:hover:before {
+  color: white;
+}
+.dashicons-yes:hover:before {
+  background-color: #02ba02;
+}
+.ui-dialog button.dashicons-before:before {
+  margin-top: 3px;
+}
+.dashicons-info.warning:before {
+  transform: rotate(180deg);
 }
