@@ -44,7 +44,7 @@ class PDb_FormElement extends xnau_FormElement {
   public function __construct( $parameters )
   {
     $this->prefix = Participants_Db::$prefix;
-    
+
     parent::__construct( $parameters );
   }
 
@@ -177,7 +177,7 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     $return = '';
-    
+
 //    error_log(__METHOD__.' field: '.print_r($field,1));
 
     /**
@@ -196,7 +196,7 @@ class PDb_FormElement extends xnau_FormElement {
       // provided for backward-compatibility
       $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value, $field->form_element );
     }
-    
+
     if ( empty( $return ) ) {
 
       switch ( $field->form_element ) :
@@ -246,7 +246,7 @@ class PDb_FormElement extends xnau_FormElement {
               $return = $field->value;
             } elseif ( !empty( $field->value ) && Participants_Db::is_allowed_file_extension( $field->value, $field->values ) ) {
               $field->link = filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL );
-              if ( ( ! is_admin() || ( defined('DOING_AJAX') && DOING_AJAX ) ) && $field->link && strlen( $field->default ) > 0 ) {
+              if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $field->link && strlen( $field->default ) > 0 ) {
                 $field->value = $field->default;
               }
               $return = self::make_link( $field );
@@ -359,6 +359,18 @@ class PDb_FormElement extends xnau_FormElement {
           $return = '';
           break;
 
+        case 'currency':
+        case 'numeric':
+        case 'decimal':
+
+          if ( isset( $field->attributes['data-before'] ) ) {
+            $field->value = '<span class="pdb-before-content">' . $field->attributes['data-before'] . '</span>' . $field->value;
+          } elseif ( isset( $field->attributes['data-after'] ) ) {
+            $field->value = $field->value . '<span class="pdb-after-content">' . $field->attributes['data-before'] . '</span>';
+          }
+          $return = $field->value;
+          break;
+
         case 'hidden':
 
           if ( Participants_Db::is_dynamic_value( $field->default ) && $field->value === $field->default ) {
@@ -375,7 +387,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       endswitch;
     }
-    
+
     return $return;
   }
 
@@ -502,6 +514,21 @@ class PDb_FormElement extends xnau_FormElement {
   }
 
   /**
+   * builds a numeric input element
+   */
+  protected function _numeric()
+  {
+
+    if ( is_array( $this->value ) ) {
+      $this->value = current( $this->value );
+    }
+
+    $this->add_options_to_attributes();
+
+    $this->_addline( $this->_input_tag( 'number' ) );
+  }
+
+  /**
    * builds a date field
    */
   protected function _date_field()
@@ -543,10 +570,10 @@ class PDb_FormElement extends xnau_FormElement {
     if ( !isset( $this->attributes['readonly'] ) ) {
 
       $this->_addline( $this->_input_tag( 'file' ) );
-      
+
       // add the delete checkbox if there is a file defined
       if ( $this->value !== $field_def->default && $this->module !== 'signup' )
-        $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile" ' . $this->_attributes('no validate') . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
+        $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
     }
 
     $this->_addline( '</div>' );
@@ -648,7 +675,7 @@ class PDb_FormElement extends xnau_FormElement {
     $linktemplate = $template === false ? '<a href="%1$s" %3$s >%2$s</a>' : $template;
 
     $linktext = empty( $linktext ) ? str_replace( array('http://', 'https://'), '', $URI ) : $linktext;
-    
+
     $target = isset( $field->attributes['target'] ) ? 'target="' . $field->attributes['target'] . '"' : '';
 
     //construct the link
@@ -799,7 +826,7 @@ class PDb_FormElement extends xnau_FormElement {
      * @param array the attributes array in name=>value format
      * @param string the name of the filter called
      */
-    $attributes_array = Participants_Db::apply_filters('form_element_attributes_filter', $this->attributes, $filter );
+    $attributes_array = Participants_Db::apply_filters( 'form_element_attributes_filter', $this->attributes, $filter );
     switch ( $filter ) {
       case 'none':
         break;
@@ -808,7 +835,7 @@ class PDb_FormElement extends xnau_FormElement {
           unset( $attributes_array[$att] );
         }
         break;
-        // any more filters...add them here
+      // any more filters...add them here
     }
 
     return parent::_attributes( $attributes_array );
@@ -822,28 +849,28 @@ class PDb_FormElement extends xnau_FormElement {
   public static function get_types()
   {
     $types = array(
-        'text-line'           => __( 'Text-line', 'participants-database' ),
-        'text-area'           => __( 'Text Area', 'participants-database' ),
-        'rich-text'           => __( 'Rich Text', 'participants-database' ),
-        'checkbox'            => __( 'Checkbox', 'participants-database' ),
-        'radio'               => __( 'Radio Buttons', 'participants-database' ),
-        'dropdown'            => __( 'Dropdown List', 'participants-database' ),
-        'date'                => __( 'Date Field', 'participants-database' ),
-        'numeric'             => __( 'Numeric', 'participants-database' ),
-        'decimal'             => __( 'Decimal', 'participants-database' ),
-        'currency'            => __( 'Currency', 'participants-database' ),
-        'dropdown-other'      => __( 'Dropdown/Other', 'participants-database' ),
-        'multi-checkbox'      => __( 'Multiselect Checkbox', 'participants-database' ),
-        'multi-dropdown'      => __( 'Multiselect Dropdown', 'participants-database' ),
-        'select-other'        => __( 'Radio Buttons/Other', 'participants-database' ),
-        'multi-select-other'  => __( 'Multiselect/Other', 'participants-database' ),
-        'link'                => __( 'Link Field', 'participants-database' ),
-        'image-upload'        => __( 'Image Upload Field', 'participants-database' ),
-        'file-upload'         => __( 'File Upload Field', 'participants-database' ),
-        'hidden'              => __( 'Hidden Field', 'participants-database' ),
-        'password'            => __( 'Password Field', 'participants-database' ),
-        'captcha'             => __( 'CAPTCHA', 'participants-database' ),
-        'placeholder'         => __( 'Placeholder', 'participants-database' ),
+        'text-line' => __( 'Text-line', 'participants-database' ),
+        'text-area' => __( 'Text Area', 'participants-database' ),
+        'rich-text' => __( 'Rich Text', 'participants-database' ),
+        'checkbox' => __( 'Checkbox', 'participants-database' ),
+        'radio' => __( 'Radio Buttons', 'participants-database' ),
+        'dropdown' => __( 'Dropdown List', 'participants-database' ),
+        'date' => __( 'Date Field', 'participants-database' ),
+        'numeric' => __( 'Numeric', 'participants-database' ),
+        'decimal' => __( 'Decimal', 'participants-database' ),
+        'currency' => __( 'Currency', 'participants-database' ),
+        'dropdown-other' => __( 'Dropdown/Other', 'participants-database' ),
+        'multi-checkbox' => __( 'Multiselect Checkbox', 'participants-database' ),
+        'multi-dropdown' => __( 'Multiselect Dropdown', 'participants-database' ),
+        'select-other' => __( 'Radio Buttons/Other', 'participants-database' ),
+        'multi-select-other' => __( 'Multiselect/Other', 'participants-database' ),
+        'link' => __( 'Link Field', 'participants-database' ),
+        'image-upload' => __( 'Image Upload Field', 'participants-database' ),
+        'file-upload' => __( 'File Upload Field', 'participants-database' ),
+        'hidden' => __( 'Hidden Field', 'participants-database' ),
+        'password' => __( 'Password Field', 'participants-database' ),
+        'captcha' => __( 'CAPTCHA', 'participants-database' ),
+        'placeholder' => __( 'Placeholder', 'participants-database' ),
 //         'timestamp'          => __('Timestamp', 'participants-database'),
     );
     /*
@@ -852,7 +879,7 @@ class PDb_FormElement extends xnau_FormElement {
      */
     return Participants_Db::apply_filters( 'set_form_element_types', $types );
   }
-  
+
   /**
    *  tells if a field stores it's value as an array
    * 
@@ -866,7 +893,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
     return in_array( $form_element, Participants_Db::apply_filters( 'multi_form_elements_list', array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
   }
-  
+
   /**
    *  tells if a field is represented as a set of values, such as a dropdown, checkbox or radio control
    * 
@@ -878,7 +905,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function is_value_set( $form_element )
   {
-    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array('dropdown','radio','checkbox','dropdown-other','select-other', 'multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
+    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array('dropdown', 'radio', 'checkbox', 'dropdown-other', 'select-other', 'multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
   }
 
   /**

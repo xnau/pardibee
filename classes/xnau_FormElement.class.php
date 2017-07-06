@@ -365,11 +365,9 @@ abstract class xnau_FormElement {
         break;
 
       case 'numeric':
-        $this->_numeric();
-        break;
-
       case 'decimal':
-        $this->_numeric( true );
+      case 'currency':
+        $this->_numeric();
         break;
 
       default:
@@ -588,7 +586,7 @@ abstract class xnau_FormElement {
   /**
    * builds a numeric input element
    */
-  protected function _numeric( $decimal = false )
+  protected function _numeric()
   {
 
     if ( is_array( $this->value ) ) {

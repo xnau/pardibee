@@ -1,5 +1,17 @@
 // participants-database admin support scripts
-PDbAdmin = (function($) {
+PDbAdmin = (function ($) {
+  var precontent = function (el) {
+    el.before($('<span />', {
+      html : el.data('before'),
+      class : 'pdb-precontent'
+    }));
+  }
+  var postcontent = function (el) {
+    el.after($('<span />', {
+      html : el.data('after'),
+      class : 'pdb-postcontent'
+    }));
+  }
   $.fn.PDb_email_obfuscate = function () {
     var address, link;
     var el = this;
@@ -12,12 +24,12 @@ PDbAdmin = (function($) {
     el.attr('href', 'mailto:' + link).html(link).addClass('obfuscated');
   }
   return {
-    init: function() {
+    init : function () {
       $('input[placeholder], textarea[placeholder]').placeholder();
       $('.participants_db .ui-tabs-nav li').append($('<span class="mask"/>'));
-      $('.manage-fields-wrap').on('focus', '[name*=title], [name*=default] ', function() {
+      $('.manage-fields-wrap').on('focus', '[name*=title], [name*=default] ', function () {
         $(this).addClass('focused').closest('td').addClass('focused');
-      }).on('blur', '.manage-fields input[type="text"]', function() {
+      }).on('blur', '.manage-fields input[type="text"]', function () {
         $(this).removeClass('focused').closest('td').removeClass('focused');
       });
       // place email obfuscation
@@ -25,10 +37,16 @@ PDbAdmin = (function($) {
         $(this).PDb_email_obfuscate();
       });
       $('.pdb-horiz-scroll-scroller').doubleScroll();
+      $('[data-before]').each(function () {
+        precontent($(this));
+      });
+      $('[data-after]').each(function () {
+        postcontent($(this));
+      });
     }
   }
 })(jQuery);
-jQuery(function() {
+jQuery(function () {
   PDbAdmin.init();
 });
 /*!
@@ -50,8 +68,8 @@ jQuery(function() {
  *
  *  Copyright (c) 2011, Nobu Funaki @zuzara
  */
-(function($) {
-  $.versioncompare = function(version1, version2) {
+(function ($) {
+  $.versioncompare = function (version1, version2) {
     if ('undefined' === typeof version1) {
       throw new Error("$.versioncompare needs at least one parameter.");
     }
@@ -72,8 +90,8 @@ jQuery(function() {
     }
     return 0;
   };
-  function normalize(version) {
-    return $.map(version.split('.'), function(value) {
+  function normalize (version) {
+    return $.map(version.split('.'), function (value) {
       return parseInt(value, 10);
     });
   }
