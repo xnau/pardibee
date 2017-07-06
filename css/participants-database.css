@@ -192,6 +192,17 @@ input.otherfield[type=text] {
 .dropdown-other input[name=temp] {
   /*  display:none;*/
 }
+.pdb-precontent, 
+.pdb-postcontent {
+  display: inline-block;
+}
+.pdb-precontent
+{
+  margin-right: 3px;
+}
+.pdb-postcontent {
+  margin-left: 3px;
+}
 
 /* LIST */
 
