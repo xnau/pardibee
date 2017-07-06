@@ -1,15 +1,15 @@
 /*
  * Participants Database Plugin
  * 
- * @version 0.8
+ * @version 0.9
  * 
  * xnau webdesign xnau.com
  * 
- * handles form submissions
  * 
  *  functionality added here:
  *    disable submit after submit to prevent multiple submits
  *    perform email obfuscation if enabled
+ *    before and after content
  */
 PDbShortcodes = (function ($) {
   var submitOnce = function (e) {
@@ -19,6 +19,18 @@ PDbShortcodes = (function ($) {
     }
     $(this).addClass('pdb-disabled');
     return true;
+  }
+  var precontent = function (el) {
+    el.before($('<span />', {
+      html : el.data('before'),
+      class : 'pdb-precontent'
+    }));
+  }
+  var postcontent = function (el) {
+    el.after($('<span />', {
+      html : el.data('after'),
+      class : 'pdb-postcontent'
+    }));
   }
   $.fn.PDb_email_obfuscate = function () {
     var address, link,
@@ -43,6 +55,12 @@ PDbShortcodes = (function ($) {
       // place email obfuscation
       $('a.obfuscate[data-email-values]').each(function () {
         $(this).PDb_email_obfuscate();
+      });
+      $('[data-before]').each(function () {
+        precontent($(this));
+      });
+      $('[data-after]').each(function () {
+        postcontent($(this));
       });
     }
   }
