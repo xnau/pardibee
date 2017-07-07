@@ -3595,8 +3595,9 @@ class Participants_Db extends PDb_Base {
     if ( !defined( 'ABSPATH' ) )
       return '';
 
-    if ( !function_exists( 'get_plugin_data' ) )
-      include ABSPATH . '/wp-admin/includes/plugin.php';
+    if ( ! function_exists( 'get_plugin_data' ) ) {
+      include_once ABSPATH . '/wp-admin/includes/plugin.php';
+    }
 
     $plugin_data = get_plugin_data( __FILE__ );
 
