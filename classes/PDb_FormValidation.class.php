@@ -274,7 +274,7 @@ class PDb_FormValidation extends xnau_FormValidation {
       Participants_Db::$session->set( 'captcha_result', $field->error_type );
     }
 
-    if ( PDB_DEBUG ) {
+    if ( false ) {
       error_log( __METHOD__ . '
   field: ' . $name . '
   element: ' . $field->form_element . '
