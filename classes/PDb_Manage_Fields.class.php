@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -556,17 +556,16 @@ class PDb_Manage_Fields {
               /*
                * modify the datatype if necessary
                * 
-               * we prevent the datatype from being changed to a smaller type to protect 
-               * data. If the user really wants to do this, they will have to do it manually
+               * the 'datatype_warning' needs to be accepted for this to take place
                */
-              if ( $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
-                if (isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) {
+              if ( $row['group'] != 'internal' && isset( $row['datatype_warning'] ) && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
+                if ( $row['datatype_warning'] === 'accepted' ) {
                   $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
-                  unset($row['datatype_warning']);
                 } else {
                   unset( $row['form_element'] ); // prevent this from getting changed
                 }
               }
+              unset($row['datatype_warning']);
               
               /*
                * add some form-element-specific processing
