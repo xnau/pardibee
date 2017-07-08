@@ -81,36 +81,37 @@ PDbManageFields = (function ($) {
   };
   var form_element_change_confirm = function () {
     var target = $(this);
+    var warning_name = target.prop('name').replace(/\[(.+)\]/, '[datatype_warning]');
+    var warning = $('[name="' + warning_name + '"]').length ? $('[name="' + warning_name + '"]') : $('<input>', {
+      name : warning_name,
+      type : 'hidden',
+      value : ''
+    }).insertAfter(target);
     var confirmationBox = $('#confirmation-dialog');
     confirmationBox.html(PDb_L10n.datatype_confirm);
     // initialize the dialog action
     confirmationBox.dialog(dialogOptions, {
       buttons : [
         {
-          text: PDb_L10n.datatype_confirm_button,
-          icon: 'ui-icon-check',
-          class: 'confirm-button dashicons-before dashicons-yes',
-          click: function () { 
+          text : PDb_L10n.datatype_confirm_button,
+          class : 'confirm-button dashicons-before dashicons-yes',
+          click : function () {
+            warning.val('accepted');
             $(this).dialog('close');
-            target.after( $('<input>', {
-              name: target.prop('name').replace(/\[(.+)\]/, '[datatype_warning]'),
-              type: 'hidden',
-              value: 'accepted'
-            }) );
           }
         },
         {
-          text: PDb_L10n.datatype_cancel_button,
-          icon: 'ui-icon-cancel',
-          class: 'cancel-button dashicons-before dashicons-no',
-          click: function () { 
+          text : PDb_L10n.datatype_cancel_button,
+          class : 'cancel-button dashicons-before dashicons-no',
+          click : function () {
+            warning.val('rejected');
             $(this).dialog('close'); // Close the Confirmation Box
           }
         }
-    ] // buttons
+      ] // buttons
     });// dialog 
     confirmationBox.dialog('open'); //Display confirmation dialog when user clicks on "delete Image"
-    return false;  
+    return false;
   };
   var captchaPreset = function () {
     var el = $(this);
