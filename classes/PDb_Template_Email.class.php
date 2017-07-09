@@ -40,6 +40,7 @@ class PDb_Template_Email extends xnau_Template_Email {
     if ( !isset( $config['from'] ) || empty( $config['from'] ) ) {
       $config['from'] = self::email_from_name();
     }
+    add_action( 'phpmailer_init', array( $this, 'set_return_path' ) );
     $this->setup_data( $data );
     parent::__construct( $config, $this->data );
     Participants_Db::$sending_email = true;
@@ -111,6 +112,17 @@ class PDb_Template_Email extends xnau_Template_Email {
 
 //    error_log(__METHOD__.' tag map: '.print_r($this->data,1));
   }
+  
+  /**
+   * sets the return path to match the "from" header
+   * 
+   * @param object $phpmailer
+   */
+  public function set_return_path( $phpmailer ) {
+    if ( Participants_Db::apply_filters( 'set_return_path_to_sender', true ) ) {
+	  	$phpmailer->Sender = Participants_Db::apply_filters('return_path_email_header', $phpmailer->From );
+    }
+	}
 
   /**
    * supplies an email header
@@ -125,7 +137,7 @@ class PDb_Template_Email extends xnau_Template_Email {
      * the main script has already built an email header that consists of the From 
      * and the Content-Type lines
      */
-    return Participants_Db::apply_filters( 'template_email_header', $this->base_header() . "\n" . 'Return-Path:' . $this->return_path() . "\n" . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
+    return Participants_Db::apply_filters( 'template_email_header', $this->base_header() . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
   }
   
   /**
@@ -140,17 +152,6 @@ class PDb_Template_Email extends xnau_Template_Email {
      $base_header = preg_replace('/^From: .+$/m', 'From: ' . $this->email_from, $base_header );
     }
     return $base_header;
-  }
-
-
-  /**
-   * provides the return-path address
-   * 
-   * @return string
-   */
-  protected function return_path()
-  {
-    return Participants_Db::apply_filters('return_path_email_header', '<' . Participants_Db::plugin_setting( 'receipt_from_address' ) . '>' );
   }
 
   /**
