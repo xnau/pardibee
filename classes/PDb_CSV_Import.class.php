@@ -114,7 +114,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $post['match_preference'] = $this->match_preference;
     
     // add the record data to the database
-		$id = Participants_Db::process_form( $post, 'insert' );
+		$id = Participants_Db::process_form( $post, 'insert', false, $this->column_names );
 		
 		// count the insert type for the record
 		switch ( Participants_Db::$insert_status ) {
