@@ -291,6 +291,7 @@ You can define a "captcha" form element which will show a simple math question f
 * improved "thanks" shortcodes for signup and record forms
 * shortcodes and auto paragraphs option for rich text
 * site-specific file-upload locations in multisite
+* email return-path header now set to match sender address for better deliverability
 
 = 1.7.3.2 =
 * improved response to searches on multi select-type fields when using strict search
