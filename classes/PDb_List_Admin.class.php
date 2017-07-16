@@ -372,7 +372,7 @@ class PDb_List_Admin {
         case self::$i18n['apply']:
           /**
            * @version 1.7.1
-           * @filter  'before_list_admin_with_selected_action'
+           * @filter  'pdb-before_list_admin_with_selected_action'
            * @param array $selected_ids list of ids to apply the list action to
            */
           $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input_array( INPUT_POST, array(
