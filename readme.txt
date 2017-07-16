@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 4.7.5
+Tested up to: 4.8
 Stable tag: 1.7.3.1
 License: GPLv2
 
@@ -286,7 +286,7 @@ You can define a "captcha" form element which will show a simple math question f
 = 1.7.5 =
 * added multisite support
 * new "decimal" and "currency" form elements
-* before and after characters on numeric fields
+* before and after characters on numeric fields for units or denominations
 * provides fallback methods when using AJAX searches and session not available
 * improved "thanks" shortcodes for signup and record forms
 * shortcodes and auto paragraphs option for rich text
