@@ -24,9 +24,9 @@ class PDb_Session {
   /**
    * Holds the session data
    *
-   * @var array
+   * @var array|WP_Session
    */
-  private $session = array();
+  private $session;
 
   /**
    * Whether to use PHP $_SESSION or WP_Session
@@ -135,7 +135,8 @@ class PDb_Session {
    */
   public function get_id()
   {
-    return $this->session->session_id;
+    $sessid = isset( $this->session->session_id ) ? $this->session->session_id : session_id();
+    return $sessid;
   }
 
   /**
