@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -88,7 +88,7 @@ class PDb_Base {
     if ( is_numeric( $id ) ) {
       $action = Participants_Db::get_participant($id) === false ? 'insert' : 'update';
     }
-    return Participants_Db::process_form($post, $action, $id);
+    return Participants_Db::process_form($post, $action, $id, array_keys( $post ) );
   }
 
   /**
