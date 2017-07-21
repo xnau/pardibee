@@ -703,7 +703,7 @@ class PDb_List_Admin {
         case 'LIKE':
         case '=':
         default:
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) . ')';
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' = ""' ) . ')';
           break;
       }
     } else {
