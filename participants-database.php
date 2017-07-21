@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.5
+ * Version: 1.7.5.1
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -778,9 +778,15 @@ class Participants_Db extends PDb_Base {
     /*
      * get the id from the SESSION array. This will be present if the user has come 
      * from a form that is in a multi-page series
+     * 
+     * we don't use the PDb_Session::record_id method because that would compromize 
+     * the security of the record edit form. Multi-page forms MUST have working 
+     * sessions in order to function, the pdb-record_id_in_get_var filter can't 
+     * be used to pass the ID in the GET var.
+     * 
      */
-    if ( $record_id === false && self::$session->get( 'pdbid' ) ) {
-      $record_id = self::get_record_id_by_term( 'id', self::$session->get( 'pdbid' ) );
+    if ( $record_id === false ) {
+      $record_id = self::get_record_id_by_term( 'id', self::$session->get('pdbid') );
     }
 
     if ( $record_id === false && (isset( $atts['id'] ) || isset( $atts['record_id'] )) ) {
@@ -2533,17 +2539,20 @@ class Participants_Db extends PDb_Base {
 
             self::$session->set( 'pdbid', $post_data['id'] );
             self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
+            
+            $query_args = apply_filters( 'pdb-record_id_in_get_var', false ) ? array( self::$single_query => $post_data['id'] ) : array();
 
             $redirect = $post_data['thanks_page'];
             /**
-             * this is to handle the sepcial case where the frontend record form uses a separate 
+             * this is to handle the special case where the frontend record form uses a separate 
              * thanks page using the [pdb_signup_thanks] shortcode
              */
             if ( $post_input['action'] == 'insert' && !self::is_multipage_form() ) {
-              self::add_uri_conjunction( $redirect ) . 'action=update';
+              $query_args = array_merge( $query_args, array( 'action' => 'update' ) );
+              //self::add_uri_conjunction( $redirect ) . 'action=update';
             }
 
-            wp_redirect( $redirect );
+            wp_redirect( add_query_arg( $query_args, $redirect ) );
 
             exit;
           }
@@ -2709,12 +2718,12 @@ class Participants_Db extends PDb_Base {
          * the signup form should update the current record if it is revisited during a multipage form session
          */
         $submit_action = 'insert';
-        if ( self::$session->get( 'pdbid' ) !== false ) {
+        if ( self::$session->record_id() !== false ) {
           $submit_action = 'update';
         }
 
         // submit the data
-        $post_data['id'] = self::process_form( $post_data, $submit_action, self::$session->get( 'pdbid' ), $columns );
+        $post_data['id'] = self::process_form( $post_data, $submit_action, self::$session->record_id(), $columns );
 
         if ( false !== $post_data['id'] ) {
 
@@ -2724,7 +2733,9 @@ class Participants_Db extends PDb_Base {
           $wp_hook = self::$prefix . 'after_submit_signup';
           do_action( $wp_hook, self::get_participant( $post_data['id'] ) );
 
-          $redirect = $post_data['thanks_page'];
+          $redirect = apply_filters( 'pdb-record_id_in_get_var', false ) 
+                  ? add_query_arg( Participants_Db::$single_query, $post_data['id'], $post_data['thanks_page'] ) 
+                  : $post_data['thanks_page'];
 
           self::$session->set( 'pdbid', $post_data['id'] );
           self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
