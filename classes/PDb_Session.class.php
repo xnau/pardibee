@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    FormElement class, Shortcode class
  * 
@@ -150,6 +150,20 @@ class PDb_Session {
   {
     $key = sanitize_key( $key );
     return isset( $this->session[$key] ) ? maybe_unserialize( $this->session[$key] ) : $default;
+  }
+  
+  /**
+   * supplies the current record ID if available
+   * 
+   * @return  int|bool the ID or bool false
+   */
+  public function record_id()
+  {
+    if ( apply_filters( 'pdb-record_id_in_get_var', false ) && $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT ) ) {
+      error_log(__METHOD__.' getting id from GET: '.$id);
+      return $id;
+    }
+    return $this->get( 'pdbid' );
   }
 
   /**
