@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.3
+ * @version    4.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -165,9 +165,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         
         $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
         
-        $urlcheck = get_headers($update_url);
+        $urlcheck = @get_headers($update_url);
         
-        if ( strpos( $urlcheck[0], '200' ) !== false ) {
+        if ( is_array( $urlcheck ) && strpos( $urlcheck[0], '200' ) !== false ) {
         
           Puc_v4_Factory::buildUpdateChecker(
                   $update_url, $plugin_file, $this->aux_plugin_name
