@@ -155,12 +155,13 @@ class PDb_Session {
   /**
    * supplies the current record ID if available
    * 
+   * @param bool  $get_var set to true to also check the get var for the ID
+   * 
    * @return  int|bool the ID or bool false
    */
-  public function record_id()
+  public function record_id( $get_var = false )
   {
-    if ( apply_filters( 'pdb-record_id_in_get_var', false ) && $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT ) ) {
-      error_log(__METHOD__.' getting id from GET: '.$id);
+    if ( apply_filters( 'pdb-record_id_in_get_var', $get_var ) && $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT ) ) {
       return $id;
     }
     return $this->get( 'pdbid' );
