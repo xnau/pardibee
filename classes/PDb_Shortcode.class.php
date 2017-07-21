@@ -236,9 +236,10 @@ abstract class PDb_Shortcode {
         'submit_button' => Participants_Db::plugin_setting( 'signup_button_text' ),
         'post_id' => is_object( $post ) ? $post->ID : '',
         'content' => '',
+        'id' => 0,
     );
 
-    // error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
+//     error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
     // set up the shortcode_atts property
     $this->_setup_shortcode_atts( $shortcode_atts, $subclass_shortcode_defaults );
 
