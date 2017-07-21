@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -35,9 +35,13 @@ class PDb_CAPTCHA {
    */
   var $value;
   /**
-   * @var string the field options string
+   * @var array the field options array
    */
   var $options;
+  /**
+   * @var array the field attributes array
+   */
+  var $attributes;
   /**
    * @var string the type of captcha
    */
@@ -88,8 +92,6 @@ class PDb_CAPTCHA {
     $this->_set_types();
     $this->_set_type();
     $this->captcha_setup();
-    
-    //error_log(__METHOD__.' '.print_r($this,1).' decrypted nonce: '.  PDb_FormValidation::xcrypt($this->info['nonce'], $this->key));
   }
   /**
    * supplies the captcha element HTML
@@ -254,12 +256,14 @@ class PDb_CAPTCHA {
   /**
    * sets up the types of captcha that can be used
    * 
+   * @filter pdb-captcha_types_selector
+   * 
    * @return null
    */
   private function _set_types() {
-    $this->captcha_types = array(
+    $this->captcha_types = Participants_Db::apply_filters('captcha_types_selector', array(
         'math' => 'math'
-    );
+    ) );
   }
   /**
    * sets the type of the current captcha. It checks the defined list of catcha 
@@ -277,6 +281,8 @@ class PDb_CAPTCHA {
   private function _set_type() {
     if (is_array($this->options)) {
       $this->captcha_type = current($this->options);
+    } elseif (is_array($this->attributes)) {
+      $this->captcha_type = current($this->attributes);
     } else {
       $this->captcha_type = current($this->captcha_types);
     }
