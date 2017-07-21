@@ -118,7 +118,7 @@ class PDb_Signup extends PDb_Shortcode {
     /*
      * get the record ID from the last submission or current multiform
      */
-    $this->participant_id = Participants_Db::$session->get( 'pdbid' );
+    $this->participant_id = Participants_Db::$session->record_id();
 
     /*
      * if we've opened a regular signup form while in a multipage session, treat it 
@@ -140,7 +140,7 @@ class PDb_Signup extends PDb_Shortcode {
       // override read-only in signup and link recovery forms
       add_action( 'pdb-before_field_added_to_iterator', array($this, 'allow_readonly_fields_in_form') );
 
-      if ( filter_input( INPUT_GET, 'm' ) === 'r' || $shortcode_atts['module'] == 'retrieve' ) {
+      if ( filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING ) === 'r' || $shortcode_atts['module'] == 'retrieve' ) {
         /*
          * we're proceesing a link retrieve request
          */
@@ -173,6 +173,8 @@ class PDb_Signup extends PDb_Shortcode {
 
     // run the parent class initialization to set up the $shortcode_atts property
     parent::__construct( $shortcode_atts, $shortcode_defaults );
+    
+//    error_log(__METHOD__.' shortcode atts: '. print_r($this->shortcode_atts,1));
 
     $record_edit_page = Participants_Db::find_permalink( $this->shortcode_atts['edit_record_page'] );
     add_filter( 'pdb-record_edit_page', function() use ( $record_edit_page ) {
