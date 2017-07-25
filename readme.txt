@@ -283,6 +283,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.5.2 =
+* updated Danish translation
+* fixed missing captcha bug #1544
+
 = 1.7.5.1 =
 * fixed bug when filtering for blank values in the backend list
 * fixed issue with the recaptcha not appearing in some cases
