@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -262,7 +262,8 @@ class PDb_CAPTCHA {
    */
   private function _set_types() {
     $this->captcha_types = Participants_Db::apply_filters('captcha_types_selector', array(
-        'math' => 'math'
+        'math', 
+        'recaptcha',
     ) );
   }
   /**
@@ -279,12 +280,18 @@ class PDb_CAPTCHA {
    * @return null
    */
   private function _set_type() {
+    $this->captcha_type = 'math';
     if (is_array($this->options)) {
-      $this->captcha_type = current($this->options);
-    } elseif (is_array($this->attributes)) {
-      $this->captcha_type = current($this->attributes);
-    } else {
-      $this->captcha_type = current($this->captcha_types);
+      if ( isset( $this->options['captcha'] ) ) {
+        $captcha_type = $this->options['captcha'];
+      } else {
+        $captcha_type = current($this->options);
+      }
+      if ( in_array( $captcha_type, $this->captcha_types ) ) {
+        $this->captcha_type =  $captcha_type;
+      }
+    } elseif (is_array($this->attributes) && isset( $this->attributes[0] )) {
+      $this->captcha_type = $this->attributes[0];
     }
   }
   /**
