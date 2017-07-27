@@ -1041,7 +1041,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_field_atts( $field = false, $atts = '*' )
   {
-
     return self::get_column( $field );
   }
 
@@ -3138,10 +3137,10 @@ class Participants_Db extends PDb_Base {
     /* get the allowed file types and test the uploaded file for an allowed file 
      * extension
      */
-    $extensions = empty( $field_atts->values ) ? self::$plugin_options['allowed_file_types'] : implode( ',', self::unserialize_array( $field_atts->values ) );
+    $field_allowed_extensions = implode( ',', array_filter( self::unserialize_array( $field_atts->values ) ) );
+    $extensions = empty( $field_allowed_extensions ) ? self::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
+    
     $test = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $file['name'] ), $matches );
-
-//    error_log(__METHOD__.' extensions: '.$extensions.' test:'. $test.' matches:'.print_r($matches,1));
 
     if ( 0 === $test ) {
 
