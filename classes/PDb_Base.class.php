@@ -358,7 +358,6 @@ class PDb_Base {
    */
   public static function unserialize_array( $string )
   {
-
     return maybe_unserialize( $string );
   }
 
@@ -400,21 +399,16 @@ class PDb_Base {
    * tests a filename for allowed file extentions
    * 
    * @param string  $filename the filename to test
-   * @param string $allowed comma-separated list of allowd extensions to use instead of the globally-defined setting
+   * @param string $allowed serialized array of allowed file extensions
    * 
    * @return bool true if the extension is allowed
    */
   public static function is_allowed_file_extension( $filename, $allowed = '' )
   {
-    $allowed = maybe_unserialize($allowed);
-    if ( is_string($allowed) && empty($allowed) ) {
-      $allowed = Participants_Db::$plugin_options['allowed_file_types'];
-    } elseif ( is_array( $allowed ) ) {
-      $allowed = implode( ',', $allowed );
-    }
-    $regex = '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $allowed ) ) ) ) ) . ')$#';
+    $field_allowed_extensions = implode( ',', (array) array_filter( self::unserialize_array( $allowed ) ) );
+    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
     
-    return preg_match( $regex, strtolower( $filename ), $matches ) === 1;
+    return preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches ) !== 0;
   }
 
   /**
