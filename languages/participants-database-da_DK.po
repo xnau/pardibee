@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database\n"
 "POT-Creation-Date: 2017-07-21 13:49+0200\n"
-"PO-Revision-Date: 2017-07-21 14:12+0200\n"
+"PO-Revision-Date: 2017-07-25 12:10+0200\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Lars Hdg\n"
 "Language: da_DK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -428,7 +428,7 @@ msgstr "Med udvalgte"
 
 #: classes/PDb_Manage_Fields.class.php:86 participants-database.php:3575
 msgid "Manage Database Fields"
-msgstr "Administrere databasefelter"
+msgstr "Administrer databasefelter"
 
 #: classes/PDb_Manage_Fields.class.php:88 classes/PDb_Manage_Fields.class.php:96
 msgid "Field Groups"
@@ -550,7 +550,7 @@ msgstr "Standard"
 #: classes/PDb_Manage_Fields.class.php:968
 msgctxt "column name"
 msgid "Help Text"
-msgstr "Hjælp-tekst"
+msgstr "Hjælpe tekst"
 
 #: classes/PDb_Manage_Fields.class.php:969
 msgctxt "column name"
@@ -783,8 +783,8 @@ msgid ""
 "place a link to the full-size image on images. This link will work with most "
 "\"lightbox\" plugins."
 msgstr ""
-"placer et link til billedet i fuld størrelse på billeder. Dette link vil "
-"arbejde med de fleste \"lightbox\" plugins."
+"placer et link til fuld-størrelse billedet i Billeder. Dette link vil fungere "
+"med de fleste \"lightbox\" plugins."
 
 #: classes/PDb_Settings.class.php:182
 msgid "Allow File Delete"
@@ -820,7 +820,7 @@ msgstr "beskytte e-mail-adresser i tekst-linje felter med Javascript"
 
 #: classes/PDb_Settings.class.php:221
 msgid "Missing Field Error Message"
-msgstr "Fejlmeddelelse for Manglende Felt"
+msgstr "Manglende Felt fejlmeddelelse"
 
 #: classes/PDb_Settings.class.php:225
 #, php-format
@@ -851,7 +851,7 @@ msgstr "Feltet %s synes at være forkert."
 
 #: classes/PDb_Settings.class.php:243
 msgid "Non-Matching Field Error Message"
-msgstr "Fejlmeddelelse for Ikke-Matching Felt"
+msgstr "Ikke-Matching Felt fejlmeddelelse"
 
 #: classes/PDb_Settings.class.php:247
 #, php-format
@@ -860,9 +860,9 @@ msgid ""
 "The first %s will show the name of the field, the second will show the name of "
 "the field it must match."
 msgstr ""
-"den besked vises, når et felts værdi svarer til værdien af et andet felt. Den "
-"første %s vil vise navnet på feltet, andet vil vise navnet på det felt, det "
-"skal stemme overens med."
+"den meddelelse vises, når et felts værdi svarer til værdien af et andet felt. "
+"Den første %s vil vise navnet på feltet, andet vil vise navnet på det felt, "
+"det skal stemme overens med."
 
 #: classes/PDb_Settings.class.php:248
 #, php-format
@@ -871,12 +871,13 @@ msgstr "%s feltet skal stemme overens med %s feltet."
 
 #: classes/PDb_Settings.class.php:255
 msgid "Failed CAPTCHA Message"
-msgstr "Besked for mislykkede CAPTCHA"
+msgstr "Mislykket CAPTCHA meddelelse"
 
 #: classes/PDb_Settings.class.php:259
 msgid "the message shown when the CAPTCHA (verify human) test failed"
 msgstr ""
-"meddelelsen vises, når CAPTCHA (kontrollere menneskelige) test mislykkedes"
+"meddelelsen vises, når CAPTCHA (verificerer menneskelig aktivitet) test "
+"mislykkedes"
 
 #: classes/PDb_Settings.class.php:260
 #, php-format
@@ -922,12 +923,12 @@ msgstr "Tilmeldings Knap Tekst"
 
 #: classes/PDb_Settings.class.php:323
 msgid "text shown on the button to sign up"
-msgstr "tekst, der vises på knappen for tilmelding"
+msgstr "tekst, der vises på knappen for tilmelding/oprettelse"
 
 #: classes/PDb_Settings.class.php:324
 msgctxt "the text on a button to submit a signup form"
 msgid "Sign Up"
-msgstr "Tilmeld"
+msgstr "Tilmeld/Opret"
 
 #: classes/PDb_Settings.class.php:330
 msgid "Signup Thanks Page"
@@ -940,7 +941,7 @@ msgid ""
 "do that if you have them go back to the same page. You can also use a Post ID "
 "for posts and custom post types."
 msgstr ""
-"efter at de har tilmeldt sig, send dem til denne side for en takke-besked. "
+"efter at de har tilmeldt sig, send dem til denne side for en takke-meddelelse. "
 "Denne side er der, hvor du placerer [pdb_signup_thanks] shortcode, men du "
 "behøver det ikke, hvis du vil ha' dem til at gå tilbage til den samme side. Du "
 "kan også bruge et Post-ID for post og brugerdefinerede post typer."
@@ -991,7 +992,7 @@ msgstr "Vis en validerings fejlmeddelelse"
 
 #: classes/PDb_Settings.class.php:386
 msgid "Duplicate Record Error Message"
-msgstr "Fejlmeddelelse for Dublet post"
+msgstr "Dublet Post fejlmeddelelse"
 
 #: classes/PDb_Settings.class.php:390
 msgid ""
@@ -1014,7 +1015,8 @@ msgstr "Send e-mail med kvittering for Tilmelding"
 
 #: classes/PDb_Settings.class.php:401
 msgid "Send a receipt email to people who sign up"
-msgstr "Send en kvitterings e-mail til personer, der tilmelder sig"
+msgstr ""
+"Send en kvitterings e-mail til personer, der tilmelder sig / opretter en post"
 
 #: classes/PDb_Settings.class.php:409
 msgid "Signup Email From Address"
@@ -1067,11 +1069,11 @@ msgid ""
 "only use placeholders for fields that are present in the signup form, "
 "including hidden fields."
 msgstr ""
-"Brødtekst for den e-mail en besøgende får, når de tilmelder sig. Det "
-"indeholder et link ([record_link]) tilbage til deres post, så de kan udfylde "
-"den. Kan indeholde HTML, placeholders: [first_name], [last_name], [email], "
-"[record_link]. Du kan kun bruge placeholders for de felter, der benyttes i "
-"tilmeldingsformularen, herunder også skjulte felter."
+"Brødtekst for den e-mail en besøgende får, når de tilmelder sig / opretter en "
+"post. Det indeholder et link ([record_link]) tilbage til deres post, så den "
+"kan udfyldes. Kan indeholde HTML, placeholders: [first_name], [last_name], "
+"[email], [record_link]. Du kan kun bruge placeholders for de felter, der "
+"benyttes i tilmeldingsformularen, herunder også skjulte felter."
 
 #: classes/PDb_Settings.class.php:448
 #, php-format
@@ -1088,7 +1090,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:454
 msgid "Signup Thanks Message"
-msgstr "Tak besked for Tilmelding"
+msgstr "Tak for Tilmelding meddelelse"
 
 #: classes/PDb_Settings.class.php:458
 msgid ""
@@ -1116,7 +1118,7 @@ msgstr "Send Tilmeldings meddelelses e-mail"
 
 #: classes/PDb_Settings.class.php:470
 msgid "Send an email notification that a signup has occurred."
-msgstr "Send en e-mail besked om, at en tilmelding er sket."
+msgstr "Send en e-mail meddelelse om, at en tilmelding er sket."
 
 #: classes/PDb_Settings.class.php:479
 msgid "Signup Notification Recipients"
@@ -1166,7 +1168,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:532
 msgid "Participant Record Page"
-msgstr "Participant Post Page"
+msgstr "Participant Post side"
 
 #: classes/PDb_Settings.class.php:537
 msgid ""
@@ -1211,7 +1213,7 @@ msgstr "Gem"
 
 #: classes/PDb_Settings.class.php:582
 msgid "Record Updated Message"
-msgstr "Besked for Opdateret post"
+msgstr "Post Opdateret meddelelse"
 
 #: classes/PDb_Settings.class.php:586
 msgid "the message shown when a record form has been successfully submitted"
@@ -1219,7 +1221,7 @@ msgstr "meddelelsen der vises, når en post formular er indsendt"
 
 #: classes/PDb_Settings.class.php:593
 msgid "Record Not Found Error Message"
-msgstr "Fejl besked for <il>Post ikke fundet</il>"
+msgstr "<il>Post ikke fundet</il> fejlmeddelelse"
 
 #: classes/PDb_Settings.class.php:597
 msgid ""
@@ -1235,7 +1237,7 @@ msgstr "Ingen post fundet."
 
 #: classes/PDb_Settings.class.php:604
 msgid "Use Template for No Record Message"
-msgstr "Brug skabelonen til ingen post besked"
+msgstr "Brug skabelon til \"Ingen post\" meddelelse"
 
 #: classes/PDb_Settings.class.php:609
 msgid ""
@@ -1248,7 +1250,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:617
 msgid "Send Record Form Update Notification Email"
-msgstr "E-mail for besked om sendt opdatering af Post formular"
+msgstr "E-mail for meddelelse om sendt opdatering af Post formular"
 
 #: classes/PDb_Settings.class.php:622
 msgid ""
@@ -1256,7 +1258,7 @@ msgid ""
 "to the email addresses listed in the \"Signup Notification Recipients\" "
 "setting."
 msgstr ""
-"Send en e-mail besked om, at en post er blevet opdateret. Disse vil blive "
+"Send en e-mail meddelelse om, at en post er blevet opdateret. Disse vil blive "
 "sendt til de e-mail-adresser, der er anført i indstillingen for \"Tilmeld "
 "Modtagere Meddelelse\"."
 
@@ -1345,7 +1347,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:697
 msgid "No Records Message"
-msgstr "Besked for Ingen poster"
+msgstr "Ingen poster meddelelse"
 
 #: classes/PDb_Settings.class.php:701
 msgid "Message shown when no records are found."
@@ -1538,15 +1540,14 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:899
 msgid "Retrieve Private Link Error Message"
-msgstr "Hent Fejl-besked for Private Link"
+msgstr "Hent Private Link fejlmeddelse"
 
 #: classes/PDb_Settings.class.php:903
 msgid ""
 "Message shown when a record matching the retrieve link idenifier cannot be "
 "found"
 msgstr ""
-"Meddelelse der vises, når en matchende Hent link identifier post ikke kan "
-"findes"
+"Meddelelse der vises, når en matchende Hent link for given post ikke kan findes"
 
 #: classes/PDb_Settings.class.php:904
 #, php-format
@@ -1733,7 +1734,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:1117
 msgid "Disable Backend Developer Ads"
-msgstr "Deaktivere Backend udvikler annoncer"
+msgstr "Deaktiver annoncer fra Backend udvikler"
 
 #: classes/PDb_Settings.class.php:1122
 msgid "select this to disable developer ads in the admin."
@@ -1804,7 +1805,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:1232
 msgid "Custom Plugin Stylesheet"
-msgstr "Brugerdefineret Plugin Stilark"
+msgstr "Brugerdefineret Plugin Stylesheet"
 
 #: classes/PDb_Settings.class.php:1237
 msgid ""
@@ -1816,7 +1817,7 @@ msgstr ""
 
 #: classes/PDb_Settings.class.php:1247
 msgid "Plugin Print Stylesheet"
-msgstr "Plugin Print stilark"
+msgstr "Plugin Print Stylesheet"
 
 #: classes/PDb_Settings.class.php:1252
 msgid "use this to format the printed output of all plugin shortcodes"
@@ -2600,11 +2601,11 @@ msgstr ""
 
 #: participants-database.php:3573
 msgid "Add Participant"
-msgstr "Tilføje deltager"
+msgstr "Tilføj ny post til DB"
 
 #: participants-database.php:3574 participants-database.php:3581
 msgid "List Participants"
-msgstr "List poste"
+msgstr "List DB poster"
 
 #: participants-database.php:3576 upload_csv.php:40
 msgid "Import CSV File"
