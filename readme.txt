@@ -286,7 +286,7 @@ You can define a "captcha" form element which will show a simple math question f
 = 1.7.5.3 =
 * fixed file upload field display #1546
 * field extension now correctly validated for file and image uploads #1547
-* updated Dutch translation
+* updated Danish translation
 
 = 1.7.5.2 =
 * updated Danish translation
