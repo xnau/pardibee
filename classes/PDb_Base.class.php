@@ -405,7 +405,7 @@ class PDb_Base {
    */
   public static function is_allowed_file_extension( $filename, $allowed = '' )
   {
-    $field_allowed_extensions = implode( ',', (array) array_filter( self::unserialize_array( $allowed ) ) );
+    $field_allowed_extensions = implode( ',', array_filter( (array) self::unserialize_array( $allowed ) ) );
     $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
     
     return preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches ) !== 0;
