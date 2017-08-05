@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class, CSV_Import
  *
@@ -147,8 +147,15 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    */
   protected function _detect_enclosure($csv_file) {
     $post_enclosure = filter_input(INPUT_POST, 'enclosure_character', FILTER_SANITIZE_STRING);
-    if (empty($post_enclosure) && $post_enclosure !== 'auto' ) {
-      return $post_enclosure;
+    
+    if (!empty($post_enclosure) && $post_enclosure !== 'auto' ) {
+      switch ( $post_enclosure ) {
+        case '&#39;':
+        case "'":
+          return "'";
+        default:
+          return '"';
+      }
     } else {
       return parent::_detect_enclosure($csv_file);
     }
@@ -162,7 +169,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    */
   protected function _detect_delimiter($csv_file) {
     $post_delimiter = filter_input(INPUT_POST, 'delimiter_character', FILTER_SANITIZE_STRING);
-    if (empty($post_delimiter) && $post_delimiter !== 'auto' ) {
+    if (!empty($post_delimiter) && $post_delimiter !== 'auto' ) {
       return $post_delimiter;
     } else {
       return parent::_detect_delimiter($csv_file);
