@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -74,6 +74,11 @@ abstract class xnau_CSV_Import {
    * @var object the parseCSV instance
    */
   var $CSV;
+  
+  /**
+   * @var string name of the nonce
+   */
+  const nonce = 'pdb_csv_import';
 
   /**
    * instantiates the object
@@ -84,7 +89,7 @@ abstract class xnau_CSV_Import {
 
     $this->_set_root_path();
 
-    if (isset($_POST[$file_field])) {
+    if ( isset($_POST[$file_field]) && $this->check_submission() ) {
 
       if ($this->_set_upload_dir()) {
 
@@ -131,6 +136,27 @@ abstract class xnau_CSV_Import {
         );
       }
     }
+  }
+  
+  /**
+   * checks for a valid submission
+   * 
+   * @return bool true if the submission checks out
+   */
+  protected function check_submission()
+  {
+    $nonce = filter_input(INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+    if ( ! wp_verify_nonce( $nonce, self::nonce ) ) {
+      return false;
+    }
+    $filename = filter_var( $_FILES['uploadedfile']['name'], FILTER_SANITIZE_STRING );
+    $mimetype = filter_var( $_FILES['uploadedfile']['type'], FILTER_SANITIZE_STRING );
+    $check =  pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv' && $mimetype === 'text/csv';
+    if ( $check ) {
+      return true;
+    }
+    $this->set_error_heading( __('Invalid file for import.', 'participants-database') );
+    return false;
   }
 
   /**
@@ -266,18 +292,15 @@ csv line= '.print_r( $csv_line, true ) );
   /**
    * trims enclosure characters from the csv field
    *
-   * @param string $value raw value from CSV file; passed by reference
+   * @param string $value raw value from CSV file
    * @param string $key column key
    * @param string $enclosure the enclosure character
    * 
    * @access public because PHP callback uses it
    * @return string the trimmed value
    */
-  public function _enclosure_trim(&$value, $key, $enclosure) {
-
-    $value = preg_replace("#^(" . preg_quote($enclosure) . ")(.*)\\1$#", '$2', $value);
-
-    return $value;
+  public function _enclosure_trim( $value, $key, $enclosure) {
+    return trim( $value, $enclosure );
   }
 
   /**
@@ -292,7 +315,7 @@ csv line= '.print_r( $csv_line, true ) );
 
     $csv_text = file_get_contents($csv_file);
 
-    $assay = preg_match( "/([\"\'])([^\1]+)\1" . $this->CSV->delimiter . "/U", $csv_text, $matches);
+    $assay = preg_match( '#(["\'])([^\1]+?)\1' . $this->CSV->delimiter . '#', $csv_text, $matches);
 
     return isset($matches[1]) ? $matches[1] : '"';
   }
