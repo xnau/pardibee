@@ -5,6 +5,7 @@ if ( !Participants_Db::current_user_has_plugin_role( 'admin', 'upload csv' ) )
   exit;
 
 $CSV_import = new PDb_CSV_Import( 'csv_file_upload' );
+
 $csv_paramdefaults = array(
       'delimiter_character' => 'auto',
       'enclosure_character' => 'auto',
@@ -91,6 +92,7 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
         <div class="inside">
           <h3><?php _e( 'Upload the .csv file', 'participants-database' ) ?></h3>
           <form enctype="multipart/form-data" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="POST">
+            <?php wp_nonce_field(PDb_CSV_Import::nonce) ?>
             <input type="hidden" name="csv_file_upload" id="file_upload" value="true" />
             <fieldset class="widefat inline-controls">
               <p>
