@@ -283,6 +283,11 @@ class Participants_Db extends PDb_Base {
    */
   public static function initialize()
   {
+    // initalize PHP sessions if needed
+    if ( !session_id() && !headers_sent() ) {
+      session_start();
+    }
+    
     // set the debug global if not already
     self::set_debug_mode();
 
