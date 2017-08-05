@@ -68,9 +68,10 @@ class PDb_Session {
 
     if ( $this->use_php_sessions ) {
 
-      if ( !session_id() ) {
+      if ( !session_id() && !headers_sent() ) {
         session_start();
       }
+      
     } else {
 
       
