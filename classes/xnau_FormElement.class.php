@@ -1106,6 +1106,7 @@ abstract class xnau_FormElement {
 
     $value_att = in_array( $type, array('file', 'image') ) ? '' : 'value="' . $value . '"';
     $html = '<input name="' . $this->name . ( $this->group ? '[]' : '' ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes() . $this->_class() . '  ' . $value_att . ' />';
+    
     // unset the type attribute so it doesn't carry over to the next element
     unset( $this->attributes['type'] );
     return $html;
