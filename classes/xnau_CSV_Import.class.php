@@ -150,8 +150,7 @@ abstract class xnau_CSV_Import {
       return false;
     }
     $filename = filter_var( $_FILES['uploadedfile']['name'], FILTER_SANITIZE_STRING );
-    $mimetype = filter_var( $_FILES['uploadedfile']['type'], FILTER_SANITIZE_STRING );
-    $check =  pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv' && $mimetype === 'text/csv';
+    $check =  pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv';
     if ( $check ) {
       return true;
     }
