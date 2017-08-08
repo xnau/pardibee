@@ -1646,8 +1646,8 @@ class Participants_Db extends PDb_Base {
     $column_data = array();
 
     if ( is_array( $column_names ) ) {
-
-      $column_set = $column_names;
+      $default_cols = ( $action === 'insert' ? array('private_id') : array() );
+      $column_set = $column_names + $default_cols;
     } else {
 
       if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'signup' ) {
@@ -1658,7 +1658,7 @@ class Participants_Db extends PDb_Base {
         $column_set = $action == 'update' ? ( is_admin() ? 'backend' : 'frontend' ) : ( $participant_id ? 'all' : 'new' );
       }
     }
-
+    
     $columns = self::get_column_atts( $column_set );
     
     // gather the submit values and add them to the query
@@ -1734,8 +1734,14 @@ class Participants_Db extends PDb_Base {
 
 
         case 'private_id':
-
-          if ( isset( $post['private_id'] ) && strlen( $post['private_id'] ) == self::$private_id_length && self::get_participant_id( $post['private_id'] ) === false ) {
+          /*
+           * supplied private ID is tested for validity and rejected if not valid
+           * 
+           * @filter pdb-private_id_validity
+           * @param bool  test result using the regex
+           * @return bool true if valid
+           */
+          if ( isset( $post['private_id'] ) && self::apply_filters( 'private_id_validity', preg_match( '#^\w{' . self::$private_id_length . ',}$#', $post['private_id'] ) === 1 ) && self::get_participant_id( $post['private_id'] ) === false ) {
             $new_value = $post['private_id'];
           } else {
             $new_value = $action == 'insert' ? self::generate_pid() : false;
