@@ -546,7 +546,7 @@ class PDb_Manage_Fields {
 
               $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
 
-              $row['values'] = $this->prep_values_array( $row['values'] );
+              $row['values'] = self::prep_values_array( $row['values'] );
 
               if ( !empty( $row['validation'] ) && !in_array( $row['validation'], array('yes', 'no') ) ) {
 
@@ -793,7 +793,7 @@ class PDb_Manage_Fields {
      * @param string $values
      * @return array
      */
-    function prep_values_array( $values )
+    public static function prep_values_array( $values )
     {
       /* we can do this because if the matching string is in position 0, it's not 
        * valid syntax anyway
@@ -812,16 +812,16 @@ class PDb_Manage_Fields {
              * optgroup label. In most cases it will be unnoticed.
              */
             $array_key = in_array( $value, array('false', 'optgroup', false) ) ? trim( $key ) . ' ' : trim( $key );
-            $array[$array_key] = $this->prep_value( trim( $value ), true );
+            $array[$array_key] = self::prep_value( trim( $value ), true );
           } else {
             // strip out the double colon in case it is present
             $term = str_replace( array('::'), '', $term );
-            $array[$this->prep_value( $term, true )] = $this->prep_value( $term, true );
+            $array[self::prep_value( $term, true )] = self::prep_value( $term, true );
           }
         }
       } else {
         foreach ( $term_list as $term ) {
-          $array[] = $this->prep_value( $term, true );
+          $array[] = self::prep_value( $term, true );
         }
       }
 
@@ -835,7 +835,7 @@ class PDb_Manage_Fields {
      * @param bool $single_encode if true, don't encode entities 
      * @return string
      */
-    function prep_value( $value, $single_encode = false )
+    private static function prep_value( $value, $single_encode = false )
     {
       if ( $single_encode )
         return trim( stripslashes( $value ) );
