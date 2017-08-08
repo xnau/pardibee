@@ -4,7 +4,7 @@ Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 4.8.1
-Stable tag: 1.7.5.3
+Stable tag: 1.7.5.4
 License: GPLv2
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -282,6 +282,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.5.5 =
+* new record imported vis CSV now have private IDs #1554
+* CSV are no longer validated by mime type #1553
+* fixed 'Cannot unset string offsets' issue #1555
 
 = 1.7.5.4 =
 * added security check to CSV import #1549
@@ -841,8 +846,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.5.4 =
-Version 1.7.5.4 is an important security update
+= 1.7.5.5 =
+Version 1.7.5.5 is a minor bugfix update
 
 == Plugin Support ==
 
