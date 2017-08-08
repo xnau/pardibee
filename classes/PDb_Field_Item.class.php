@@ -257,7 +257,7 @@ class PDb_Field_Item extends PDb_Template_Item {
   private function _assign_prop( $item, $property )
   {
       if ( $property === 'values' && isset( $item->values )  ) {
-        $item->values = maybe_unserialize( $item->values );
+        $item->values = (array) maybe_unserialize( $item->values );
         if ( isset( $item->form_element ) && PDb_FormElement::is_value_set( $item->form_element ) ) {
           $this->values = $item->values;
         } else {
