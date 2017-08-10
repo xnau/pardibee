@@ -715,7 +715,7 @@ abstract class PDb_Shortcode {
     return is_array( $fields ) ? $result : current( $result );
   }
 
-  /*   * **************
+  /*
    * FIELD GROUPS
    */
 
@@ -727,37 +727,11 @@ abstract class PDb_Shortcode {
    */
   private function _get_group_fields( $group )
   {
-
-    $return = array();
     foreach ( $this->fields as $field ) {
-      if ( $field->group == $group ) {
-        switch ( $this->module ) {
-
-          case 'signup':
-          case 'thanks':
-          case 'retrieve':
-
-            if ( !in_array( $field->form_element, array('placeholder') ) ) {
-              $return[$field->name] = clone $field;
-            }
-            break;
-
-          case 'record':
-
-            if ( $field->form_element !== 'placeholder' ) {
-              $return[$field->name] = clone $field;
-            }
-            break;
-
-          default:
-
-            if ( !in_array( $field->form_element, array('placeholder', 'captcha') ) ) {
-              $return[$field->name] = clone $field;
-            }
-        }
+      if ( $field->group == $group && in_array( $field->name, $this->display_columns ) ) {
+        $return[$field->name] = clone $field;
       }
     }
-
     return $return;
   }
 
