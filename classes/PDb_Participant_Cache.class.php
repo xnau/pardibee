@@ -164,7 +164,7 @@ class PDb_Participant_Cache {
   {
     $staleness = wp_cache_get( self::stale_flags );
     
-    $this->staleness = $staleness === false || ! isset($staleness[$this->cache_key]) ? true : $staleness[$this->cache_key];
+    $this->staleness = $staleness === false || ( ! isset($staleness[$this->cache_key]) ? true : $staleness[$this->cache_key] );
   }
 
   /**
@@ -207,11 +207,11 @@ class PDb_Participant_Cache {
 
     $result = $wpdb->get_results( $sql, OBJECT_K );
     
-    //error_log(__METHOD__.' query: '.$wpdb->last_query);
+//    error_log(__METHOD__.' query: '.$wpdb->last_query);
 
     $this->data = (array) $result;
     
-    //error_log(__METHOD__.' data: '.print_r($this->data,1));
+//    error_log(__METHOD__.' data: '.print_r($this->data,1));
 
     wp_cache_set( $this->cache_key, $this->data, self::group, Participants_Db::apply_filters( 'participant_cache_time', 0) );
     
