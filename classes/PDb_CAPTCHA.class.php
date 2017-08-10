@@ -83,7 +83,7 @@ class PDb_CAPTCHA {
   var $HTML;
   /**
    * 
-   * @param PDb_Form_element $element
+   * @param PDb_FormElement $element
    */
   function __construct( $element )
   {
@@ -290,7 +290,7 @@ class PDb_CAPTCHA {
       if ( in_array( $captcha_type, $this->captcha_types ) ) {
         $this->captcha_type =  $captcha_type;
       }
-    } elseif (is_array($this->attributes) && isset( $this->attributes[0] )) {
+    } elseif (is_array($this->attributes) && isset( $this->attributes[0] ) && in_array( $this->attributes[0], $this->captcha_types ) ) {
       $this->captcha_type = $this->attributes[0];
     }
   }
