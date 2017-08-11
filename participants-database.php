@@ -1647,7 +1647,7 @@ class Participants_Db extends PDb_Base {
 
     if ( is_array( $column_names ) ) {
       $default_cols = ( $action === 'insert' ? array('private_id') : array() );
-      $column_set = $column_names + $default_cols;
+      $column_set = array_merge( $column_names, $default_cols );
     } else {
 
       if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'signup' ) {
