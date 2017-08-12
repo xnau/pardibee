@@ -350,15 +350,15 @@ class PDb_Base {
   }
 
   /**
-   * unserializes an array if necessary
+   * unserializes an array if necessary, provides an array in all cases
    * 
    * @param string $string the string to unserialize; does nothing if it is not 
    *                       a serialization
-   * @return array or string if not a serialization
+   * @return array
    */
   public static function unserialize_array( $string )
   {
-    return maybe_unserialize( $string );
+    return (array) maybe_unserialize( $string );
   }
 
   /**
