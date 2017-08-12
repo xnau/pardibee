@@ -936,7 +936,7 @@ class PDb_List extends PDb_Shortcode {
   public function show_array( $value, $glue = ', ', $print = true )
   {
 
-    $array = array_filter( (array) Participants_Db::unserialize_array( $value ), array('PDb_FormElement', 'is_displayable') );
+    $array = array_filter( Participants_Db::unserialize_array( $value ), array('PDb_FormElement', 'is_displayable') );
 
     $output = implode( $glue, $array );
 
