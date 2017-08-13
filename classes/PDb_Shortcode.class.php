@@ -258,6 +258,7 @@ abstract class PDb_Shortcode {
       if ( filter_input( INPUT_GET, 'pdb-shortcode_clear', FILTER_SANITIZE_STRING ) ) {
         Participants_Db::$session->clear( 'shortcode_atts' );
       }
+      
       Participants_Db::$session->update( 'shortcode_atts', $this->shortcode_session() );
       
     }
