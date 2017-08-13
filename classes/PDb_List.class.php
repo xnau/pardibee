@@ -313,7 +313,7 @@ class PDb_List extends PDb_Shortcode {
      * this gives us an array of objects, each one a set of field->value pairs
      */
     $records = $wpdb->get_results( $list_query . ' ' . $this->pagination->getLimitSql(), OBJECT );
-
+    
     /*
      * build an array of record objects, indexed by ID
      */
