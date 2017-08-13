@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    FormElement class, Shortcode class
  * 
@@ -71,10 +71,9 @@ class PDb_Session {
       if ( !session_id() && !headers_sent() ) {
         session_start();
       }
-      
     } else {
 
-      
+
       $wp_session_path = Participants_Db::$plugin_path . '/vendor/wp-session-manager/';
 
       if ( !defined( 'WP_SESSION_COOKIE' ) ) {
@@ -152,7 +151,7 @@ class PDb_Session {
     $key = sanitize_key( $key );
     return isset( $this->session[$key] ) ? maybe_unserialize( $this->session[$key] ) : $default;
   }
-  
+
   /**
    * supplies the current record ID if available
    * 
@@ -221,18 +220,17 @@ class PDb_Session {
    */
   public function update( $key, $value )
   {
-
     $key = sanitize_key( $key );
     $stored = $this->getArray( $key );
 
     if ( is_array( $value ) && is_array( $stored ) )
-      $this->session[$key] = self::deep_merge( $value, $stored );
+      $this->session[$key] = self::deep_merge( $stored, $value );
     else
       $this->session[$key] = $value;
 
     if ( $this->use_php_sessions )
       $_SESSION[$this->session_name] = $this->session;
-
+    
     return $this->session[$key];
   }
 
@@ -274,21 +272,38 @@ class PDb_Session {
    * @param array $b
    * @return array
    */
-  public static function deep_merge( $a, $b )
+  public static function deep_merge( array $array1, array $array2 )
   {
-    $a = (array) $a;
-    $b = (array) $b;
-    $c = $b;
-    foreach ( $a as $k => $v ) {
-      if ( isset( $b[$k] ) ) {
-        if ( is_array( $v ) && is_array( $b[$k] ) ) {
-          $c[$k] = self::deep_merge( $v, $b[$k] );
-        }
-      } else {
-        $c[$k] = $v;
-      }
+    $merged = $array1;
+
+    foreach ( $array2 as $key => $value ) {
+      if ( is_array( $value ) && isset( $merged[$key] ) && is_array( $merged[$key] ) ) {
+        $merged[$key] = self::deep_merge( $merged[$key], $value );
+      } else if ( is_numeric( $key ) ) {
+        if ( !in_array( $value, $merged ) )
+          $merged[] = $value;
+      } else
+        $merged[$key] = $value;
     }
-    return $c;
+
+    return $merged;
   }
+
+//  public static function deep_merge( $a, $b )
+//  {
+//    $a = (array) $a;
+//    $b = (array) $b;
+//    $c = $b;
+//    foreach ( $a as $k => $v ) {
+//      if ( isset( $b[$k] ) ) {
+//        if ( is_array( $v ) && is_array( $b[$k] ) ) {
+//          $c[$k] = self::deep_merge( $v, $b[$k] );
+//        }
+//      } else {
+//        $c[$k] = $v;
+//      }
+//    }
+//    return $c;
+//  }
 
 }
