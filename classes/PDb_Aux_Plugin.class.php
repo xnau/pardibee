@@ -216,7 +216,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     private function update_check_ok()
     {
-      return ! (bool) get_transient( $this->throttler_name() );
+      return ! (bool) get_transient( $this->timeout_key() );
     }
     
     /**
@@ -226,7 +226,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     private function set_update_check_timeout()
     {
-      set_transient( $this->throttler_name(), 1, apply_filters( 'pdbaux-update_throttler_timeout', 12 * HOUR_IN_SECONDS ) ); // check for updates maximum once per 12 hours
+      set_transient( $this->timeout_key(), 1, apply_filters( 'pdbaux-update_throttler_timeout', 12 * HOUR_IN_SECONDS ) ); // check for updates maximum once per 12 hours
     }
     
     /**
@@ -234,7 +234,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * 
      * @return string
      */
-    private function throttler_name()
+    private function timeout_key()
     {
       return self::throttler . $this->aux_plugin_name;
     }
@@ -845,13 +845,5 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     }
 
   }
-
-  
-
-  
-
-      
-
-  
 
   endif;
