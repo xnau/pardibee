@@ -110,7 +110,6 @@ class PDb_Template_Email extends xnau_Template_Email {
      */
     $this->data = Participants_Db::apply_filters( 'template_email_tag_map', $this->data, $this->context );
 
-//    error_log(__METHOD__.' tag map: '.print_r($this->data,1));
   }
   
   /**
