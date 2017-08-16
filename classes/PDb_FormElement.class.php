@@ -152,7 +152,7 @@ class PDb_FormElement extends xnau_FormElement {
      * @action pdb-form_element_build_{$type}
      */
     Participants_Db::do_action( 'form_element_build_' . $this->type, $this );
-
+    
     if ( empty( $this->output ) ) {
       $this->call_element_method();
     }

@@ -32,7 +32,7 @@ if ( false === $participant_id ) {
  */
 if ( $participant_values ) :
 
-//error_log( basename( __FILE__).' default record:'.print_r( $participant_values,1));
+//error_log( basename( __FILE__).' record values:'.print_r( $participant_values,1));
 //get the groups info
   $groups = Participants_Db::get_groups();
 
@@ -135,6 +135,8 @@ if ( $participant_values ) :
                * get the value from the record; if it is empty, use the default value if the 
                * "persistent" flag is set.
                */
+              
+              
               if ( empty( $participant_values[$column->name] ) ) {
                 $column->value = $column->persistent == '1' ? $column->default : ''; 
               } else {
@@ -222,6 +224,7 @@ if ( $participant_values ) :
                     'attributes' => $attributes,
                     'module' => 'admin-edit',
                 );
+                
                 PDb_FormElement::print_element( $params );
               }
 
