@@ -135,7 +135,14 @@ if ( $participant_values ) :
                * get the value from the record; if it is empty, use the default value if the 
                * "persistent" flag is set.
                */
-              $column->value = empty( $participant_values[$column->name] ) ? ($column->persistent == '1' ? $column->default : '') : Participants_Db::unserialize_array( $participant_values[$column->name] );
+              if ( empty( $participant_values[$column->name] ) ) {
+                $column->value = $column->persistent == '1' ? $column->default : ''; 
+              } else {
+                $column->value = $participant_values[$column->name];
+                if ( is_array( maybe_unserialize( $participant_values[$column->name] ) ) ) {
+                  $column->value = Participants_Db::unserialize_array( $participant_values[$column->name] );
+                }
+              }
 
               // get the existing value if any
               //$column->value = isset($participant_values[$column->name]) ? Participants_Db::unserialize_array($participant_values[$column->name]) : '';
