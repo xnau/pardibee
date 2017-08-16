@@ -200,7 +200,7 @@ class PDb_Tag_Template {
   protected function prepare_display_values()
   {
     foreach ( $this->data as $fieldname => &$value ) {
-      $field = new PDb_Field_Item( array( 'name' => $fieldname, 'value' => $value, 'module' => 'tag-template' ) );
+      $field = new PDb_Field_Item( array( 'name' => $fieldname, 'value' => $value, 'module' => 'tag-template' ), isset( $this->data['id'] ) ? $this->data['id'] : null );
       /**
        * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
        * 
