@@ -283,6 +283,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.7.5.6 =
+* better handling of allowed field types in file/image uploads
+* aux plugin update checks optimized
+
 = 1.7.5.5 =
 * new record imported vis CSV now have private IDs #1554
 * CSV are no longer validated by mime type #1553
