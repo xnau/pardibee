@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.4
+ * @version    4.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -118,6 +118,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var string  URL for the aux plugin updater
      */
     const update_url = 'https://xnau.com/xnau-updates/';
+    
+    /**
+     * @var string basename of the request throttling transient
+     */
+    const throttler = 'pdbaux-request_throttler_';
 
     /**
      * 
@@ -159,7 +164,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
        * 
        * @version 1.6.3
        */
-      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) ) {
+      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) && $this->update_check_ok() ) {
         
         require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
         
@@ -172,6 +177,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           Puc_v4_Factory::buildUpdateChecker(
                   $update_url, $plugin_file, $this->aux_plugin_name
           );
+          
+          $this->set_update_check_timeout();
+          
         }
       }
     }
@@ -199,6 +207,36 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         }
       }
       return false;
+    }
+    
+    /**
+     * checks the throttling transient
+     * 
+     * @return bool true if the wait period is over
+     */
+    private function update_check_ok()
+    {
+      return ! (bool) get_transient( $this->throttler_name() );
+    }
+    
+    /**
+     * sets the throttling timer
+     * 
+     * @return null
+     */
+    private function set_update_check_timeout()
+    {
+      set_transient( $this->throttler_name(), 1, apply_filters( 'pdbaux-update_throttler_timeout', 12 * HOUR_IN_SECONDS ) ); // check for updates maximum once per 12 hours
+    }
+    
+    /**
+     * provides a name for the throttler transient
+     * 
+     * @return string
+     */
+    private function throttler_name()
+    {
+      return self::throttler . $this->aux_plugin_name;
     }
 
     /**
