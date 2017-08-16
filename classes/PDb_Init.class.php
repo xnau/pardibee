@@ -250,7 +250,14 @@ class PDb_Init {
 
 // clear transients
     delete_transient( Participants_Db::$last_record );
-    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "%' . Participants_Db::$prefix . 'retrieve-count-%" OR `option_name` LIKE "%' . PDb_List_Admin::$user_settings . '%" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'captcha_key" OR `option_name` LIKE "%' . Participants_Db::$prefix . 'signup-email-sent" OR `option_name` LIKE "%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%" ';
+    $transient_delete_keys = array(
+        '%' . PDb_List_Admin::$user_settings . '%',
+        '%' . Participants_Db::$prefix . 'captcha_key',
+        '%' . Participants_Db::$prefix . 'signup-email-sent',
+        '%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%',
+        '%' . PDb_Aux_Plugin::throttler . '%'
+        );
+    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $transient_delete_keys ) . '"';
     $transients = $wpdb->get_col( $sql );
     foreach ( $transients as $name ) {
       delete_transient( $name );
