@@ -219,7 +219,9 @@ class PDb_Date_Parse {
     }
     $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, NULL, NULL, $this->icu_format() );
     $DateFormat->setLenient( false ); // we want it strict
-    $timestamp = $DateFormat->parse( $this->input );
+    try {
+      $timestamp = $DateFormat->parse( $this->input );
+    } catch (Exception $e) { }
 
     $the_Date = '';
     
