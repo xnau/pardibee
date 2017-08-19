@@ -21,7 +21,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -728,12 +728,13 @@ abstract class PDb_Shortcode {
    */
   private function _get_group_fields( $group )
   {
+    $group_fields = array();
     foreach ( $this->fields as $field ) {
       if ( $field->group == $group && in_array( $field->name, $this->display_columns ) ) {
-        $return[$field->name] = clone $field;
+        $group_fields[$field->name] = clone $field;
       }
     }
-    return $return;
+    return $group_fields;
   }
 
   /**
