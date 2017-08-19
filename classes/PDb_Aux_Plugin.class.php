@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.5
+ * @version    4.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -108,7 +108,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var string holds the plugin version number and author attribution
      */
     public $attribution;
-    
+
     /**
      * @var array of registered aux_plugin events as $tag => $title
      */
@@ -118,7 +118,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var string  URL for the aux plugin updater
      */
     const update_url = 'https://xnau.com/xnau-updates/';
-    
+
     /**
      * @var string basename of the request throttling transient
      */
@@ -152,7 +152,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       add_action( 'admin_enqueue_scripts', array($this, 'enqueues'), 1 );
       add_action( 'plugins_loaded', array($this, 'set_plugin_options'), 1 );
       add_action( 'init', array($this, 'load_textdomain'), 1 );
-      add_action( 'init', array($this, 'initialize_updater'), 50 );
+      //add_action( 'init', array($this, 'initialize_updater'), 50 );
       add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
       add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
 
@@ -164,23 +164,22 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
        * 
        * @version 1.6.3
        */
-      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) && $this->update_check_ok() ) {
-        
-        require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
+      require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
+
+      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) /* && $this->update_check_ok() */ ) {
         
         $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
-        
-        $urlcheck = @get_headers($update_url);
-        
-        if ( is_array( $urlcheck ) && strpos( $urlcheck[0], '200' ) !== false ) {
-        
+
+        //$urlcheck = @get_headers( $update_url );
+
+        //if ( is_array( $urlcheck ) && strpos( $urlcheck[0], '200' ) !== false ) {
+
           Puc_v4_Factory::buildUpdateChecker(
                   $update_url, $plugin_file, $this->aux_plugin_name
           );
-          
-          $this->set_update_check_timeout();
-          
-        }
+
+         // $this->set_update_check_timeout();
+        //}
       }
     }
 
@@ -208,7 +207,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       }
       return false;
     }
-    
+
     /**
      * checks the throttling transient
      * 
@@ -216,9 +215,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     private function update_check_ok()
     {
-      return ! (bool) get_transient( $this->timeout_key() );
+      if ( filter_input( INPUT_GET, 'force-check', FILTER_SANITIZE_NUMBER_INT ) === '1' ) {
+        return true;
+      }
+      return !(bool) get_transient( $this->timeout_key() );
     }
-    
+
     /**
      * sets the throttling timer
      * 
@@ -228,7 +230,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       set_transient( $this->timeout_key(), 1, apply_filters( 'pdbaux-update_throttler_timeout', 12 * HOUR_IN_SECONDS ) ); // check for updates maximum once per 12 hours
     }
-    
+
     /**
      * provides a name for the throttler transient
      * 
@@ -254,10 +256,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public function plugin_option( $option_name, $default = false )
     {
       return Participants_Db::apply_filters(
-                      'translate_string', apply_filters( 
-                              $this->aux_plugin_shortname . '-' . $option_name, 
-                              isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default  
-                              )
+                      'translate_string', apply_filters(
+                              $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default
+                      )
       );
     }
 
@@ -301,7 +302,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       }
       $this->plugin_options = get_option( $this->settings_name() );
     }
-    
+
     /**
      * gathers all the registered events
      * 
@@ -450,100 +451,100 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( count( $this->settings_sections ) > 1 ) :
         ?>
         <ul class="ui-tabs-nav">
-          <?php
-          foreach ( $this->settings_sections as $section )
-            printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $section['slug'] ), $section['title'] );
-          ?>
-        </ul>
         <?php
-      endif;
-    }
+        foreach ( $this->settings_sections as $section )
+          printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $section['slug'] ), $section['title'] );
+        ?>
+        </ul>
+          <?php
+        endif;
+      }
 
-    /**
-     * registers the settings sections
-     * 
-     * @version 1.6.3 added $settings_sections property; making the parameter optional
-     * 
-     * @param array $sections
-     */
-    public function _add_settings_sections( $sections = false )
-    {
-      if ( $sections ) {
-        $this->settings_sections = $sections;
+      /**
+       * registers the settings sections
+       * 
+       * @version 1.6.3 added $settings_sections property; making the parameter optional
+       * 
+       * @param array $sections
+       */
+      public function _add_settings_sections( $sections = false )
+      {
+        if ( $sections ) {
+          $this->settings_sections = $sections;
+        }
+        // enqueue the settings tabs script of there is more than one section
+        if ( count( $this->settings_sections ) > 1 ) {
+          add_action( 'admin_enqueue_scripts', function() {
+            wp_enqueue_script( Participants_Db::$prefix . 'aux_plugin_settings_tabs' );
+          }, 50 );
+        }
+        foreach ( $this->settings_sections as $section ) {
+          // Add the section to reading settings so we can add our
+          // fields to it
+          add_settings_section(
+                  $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name
+          );
+        }
       }
-      // enqueue the settings tabs script of there is more than one section
-      if ( count( $this->settings_sections ) > 1 ) {
-        add_action( 'admin_enqueue_scripts', function() {
-          wp_enqueue_script( Participants_Db::$prefix . 'aux_plugin_settings_tabs' );
-        }, 50 );
-      }
-      foreach ( $this->settings_sections as $section ) {
-        // Add the section to reading settings so we can add our
-        // fields to it
-        add_settings_section(
-                $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name
+
+      /**
+       * adds a setting to the Settings API
+       * 
+       * @param array $atts an array of settings parameters
+       * @return null
+       * 
+       */
+      protected function add_setting( $atts )
+      {
+
+        $default = array(
+            'type' => 'text',
+            'name' => '',
+            'title' => '',
+            'default' => '',
+            'help' => '',
+            'options' => '',
+            'style' => '',
+            'class' => '',
+            'section' => $this->aux_plugin_shortname . '_setting_section'
+        );
+        $params = shortcode_atts( $default, $atts );
+
+        add_settings_field(
+                $params['name'], $params['title'], array($this, 'setting_callback_function'), $this->aux_plugin_name, $params['section'], array(
+            'type' => $params['type'],
+            'name' => $params['name'],
+            'value' => isset( $this->plugin_options[$params['name']] ) ? $this->plugin_options[$params['name']] : $params['default'],
+            'title' => $params['title'],
+            'help' => $params['help'],
+            'options' => $params['options'],
+            'style' => $params['style'],
+            'class' => $params['class'],
+                )
         );
       }
-    }
 
-    /**
-     * adds a setting to the Settings API
-     * 
-     * @param array $atts an array of settings parameters
-     * @return null
-     * 
-     */
-    protected function add_setting( $atts )
-    {
-
-      $default = array(
-          'type' => 'text',
-          'name' => '',
-          'title' => '',
-          'default' => '',
-          'help' => '',
-          'options' => '',
-          'style' => '',
-          'class' => '',
-          'section' => $this->aux_plugin_shortname . '_setting_section'
-      );
-      $params = shortcode_atts( $default, $atts );
-
-      add_settings_field(
-              $params['name'], $params['title'], array($this, 'setting_callback_function'), $this->aux_plugin_name, $params['section'], array(
-          'type' => $params['type'],
-          'name' => $params['name'],
-          'value' => isset( $this->plugin_options[$params['name']] ) ? $this->plugin_options[$params['name']] : $params['default'],
-          'title' => $params['title'],
-          'help' => $params['help'],
-          'options' => $params['options'],
-          'style' => $params['style'],
-          'class' => $params['class'],
-              )
-      );
-    }
-
-    /**
-     * renders the plugin settings page
-     * 
-     * this generic rendering is expected to be overridden in the subclass
-     */
-    public function render_settings_page()
-    {
-      ?>
+      /**
+       * renders the plugin settings page
+       * 
+       * this generic rendering is expected to be overridden in the subclass
+       */
+      public function render_settings_page()
+      {
+        ?>
       <div class="wrap pdb-admin-settings participants_db" >
 
-        <?php Participants_Db::admin_page_heading() ?>  
+      <?php Participants_Db::admin_page_heading() ?>  
         <h2><?php echo $this->aux_plugin_title ?></h2>
 
-        <?php settings_errors(); ?>  
+      <?php settings_errors(); ?>  
 
         <form method="post" action="options.php">  
-          <?php
-          settings_fields( $this->aux_plugin_name . '_settings' );
-          do_settings_sections( $this->aux_plugin_name );
-          submit_button();
-          ?>  
+      <?php
+      settings_fields( $this->aux_plugin_name . '_settings' );
+      do_settings_sections( $this->aux_plugin_name );
+      submit_button();
+      ?>  
         </form>  
 
         <aside class="attribution"><?php echo $this->attribution ?></aside>
@@ -845,5 +846,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     }
 
   }
+
+  
 
   endif;
