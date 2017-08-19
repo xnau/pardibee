@@ -52,7 +52,7 @@ class PDb_Update {
    * @param string $current_version of the plugin
    * @param string $update_path
    */
-  function __construct($plugin_file, $current_version, $update_path = 'http://xnau.com/plugin_updates.php')
+  function __construct($plugin_file, $current_version, $update_path = 'https://xnau.com/plugin_updates.php')
   {
     // Set the class public variables
     $this->current_version = $current_version;
