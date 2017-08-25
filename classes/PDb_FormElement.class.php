@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -769,7 +769,7 @@ class PDb_FormElement extends xnau_FormElement {
         } else {
           /*
            * we still haven't located the corresponding value, maybe we're looking for 
-           * a match within the title
+           * a match within the title or for a case-insensitive match
            * 
            * this is necessary when titles are tagged with translations: the search 
            * can take place in multiple languages, and a match will still happen
@@ -777,7 +777,8 @@ class PDb_FormElement extends xnau_FormElement {
            * we're expecting a title with translations to look like this:
            * [en:]English[de:]Deutsch[es:]Espanol[:]
            * 
-           * we use a regex to pick out the titles and attempt a match
+           * this will match the title within any of the defined title values of 
+           * the field options
            * 
            */
           /**
@@ -785,14 +786,8 @@ class PDb_FormElement extends xnau_FormElement {
            * 
            * added filter: pdb-value_title_match_pattern
            */
-          $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', '/.*?\]([^[]+?)\[[^]]*/' );
-          foreach ( $options_array as $key => $option ) {
-            preg_match_all( $title_pattern, $key, $matches );
-            if ( is_array( $matches[1] ) && in_array( $title, $matches[1] ) ) {
-              $value = $option;
-              break;
-            }
-          }
+          $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
+          $value = $options_array[ current( preg_grep( sprintf( $title_pattern, $title ), array_keys( $options_array ) ) ) ];
         }
       }
     }
