@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.8
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    FormElement class, Shortcode class
  * 
@@ -279,13 +279,10 @@ class PDb_Session {
     foreach ( $array2 as $key => $value ) {
       if ( is_array( $value ) && isset( $merged[$key] ) && is_array( $merged[$key] ) ) {
         $merged[$key] = self::deep_merge( $merged[$key], $value );
-      } else if ( is_numeric( $key ) ) {
-        if ( !in_array( $value, $merged ) )
-          $merged[] = $value;
-      } else
+      } else {
         $merged[$key] = $value;
+      }
     }
-
     return $merged;
   }
 
