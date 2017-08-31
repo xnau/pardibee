@@ -118,7 +118,7 @@ class PDb_FormValidation extends xnau_FormValidation {
      * by the filter callback, no further processing will be applied.
      * 
      * @action pdb-before_validate_field
-     * @param PDb_Validating_field object $field
+     * @param PDb_Validating_Field $field
      * 
      */
     Participants_Db::do_action( 'before_validate_field', $field );
