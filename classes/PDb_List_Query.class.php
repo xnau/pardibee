@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -406,10 +406,10 @@ class PDb_List_Query {
    */
   private function _add_filter_from_post()
   {
-
-    if ( !Participants_Db::nonce_check( filter_input( INPUT_POST, 'filterNonce', FILTER_SANITIZE_STRING ), PDb_List::$list_filter_nonce_key ) ) {
-      return null;
-    }
+// no longer checking nonces here #1575
+//    if ( !Participants_Db::nonce_check( filter_input( INPUT_POST, 'filterNonce', FILTER_SANITIZE_STRING ), PDb_List::$list_filter_nonce_key ) ) {
+//      return null;
+//    }
 
     // look for the identifier of the list search submission
     if ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' ) {
