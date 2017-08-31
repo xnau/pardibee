@@ -576,7 +576,13 @@ class Participants_Db extends PDb_Base {
   public static function check_for_shortcode()
   {
     global $post;
-    if ( is_object( $post ) && preg_match( '/\[pdb_/', $post->post_content ) > 0 ) {
+    /**
+     * @filter pdb-shortcode_in_content
+     * @param bool true if a plugin shortcode has been detected
+     * @param WP_Post object the current post
+     * @return bool true if plugin content is present
+     */
+    if ( is_object( $post ) && self::apply_filters( 'shortcode_in_content', preg_match( '/\[pdb_/', $post->post_content ) > 0, $post ) ) {
       do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
   }
@@ -3351,7 +3357,7 @@ class Participants_Db extends PDb_Base {
      * the Shortcode class when it was instantiated
      */
     $session = self::$session->getArray( 'shortcode_atts' );
-
+    
     $shortcode_atts = isset( $session[$post->ID]['list'] ) ? $session[$post->ID]['list'][$instance] : false;
 
     if ( ! is_array( $shortcode_atts ) ) {
