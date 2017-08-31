@@ -701,7 +701,12 @@ class PDb_Base {
    */
   public static function plugin_setting( $name, $default = false )
   {
-    $setting = isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default;
+    /**
+     * @filter pdb-{$setting_name}_setting_value
+     * @param mixed the setting value
+     * @return mixed setting value
+     */
+    $setting = self::apply_filters($name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
     return Participants_Db::apply_filters( 'translate_string', $setting );
   }
 
