@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.3
+ * version: 1.4
  * 
  * xnau webdesign xnau.com
  * 
@@ -132,7 +132,7 @@ PDbListFilter = (function ($) {
     }
   };
   var post_submission = function (button) {
-    var target_instance = $('.pdb-list.pdb-instance-' + submission.target_instance);
+    var target_instance = $('.pdb-list.pdb-instance-' + submission.instance_index);
     var container = target_instance.length ? target_instance : $('.pdb-list').first();
     var pagination = container.find('.pdb-pagination');
     var buttonParent = button.closest('fieldset, ul, div');
