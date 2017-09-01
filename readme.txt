@@ -288,6 +288,7 @@ You can define a "captcha" form element which will show a simple math question f
 * addressed issue with blank lists after search #1575 
 * password fields won't require password entry if a password has already been set #1572
 * addressed issue of case-mismatched value titles not finding a value #1569
+* addressed PHP 7.0 incompatibility #1573
 
 = 1.7.5.8 =
 * fixed warning on shortcode class #1564
