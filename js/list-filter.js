@@ -14,8 +14,8 @@ PDbListFilter = (function ($) {
   var filterform = $('.sort_filter_form[data-ref="update"]');
   var remoteform = $('.sort_filter_form[data-ref="remote"]');
   var submission = {
-    filterNonce : PDb_ajax.filterNonce,
-    postID : PDb_ajax.postID
+      filterNonce : PDb_ajax.filterNonce,
+      postID : PDb_ajax.postID
   },
   submit_search = function (event, remote) {
     remote = remote || false;
@@ -24,13 +24,17 @@ PDbListFilter = (function ($) {
     } else {
       event.returnValue = false;
     }
+    var list_instance = $(event.target).PDb_event_instance();
+    errormsg = list_instance.find('.pdb-searchform .pdb-error');
+    filterform = list_instance.find('.sort_filter_form[data-ref="update"]');
+    remoteform = list_instance.find('.sort_filter_form[data-ref="remote"]');
     clear_error_messages();
     // validate and process form here
     var $pageButton = get_page_button(event.target);
     var $submitButton = $(event.target);
     var search_field_error = $submitButton.closest('.' + PDb_ajax.prefix + 'searchform').find('.search_field_error');
     var value_error = $submitButton.closest('.' + PDb_ajax.prefix + 'searchform').find('.value_error');
-
+    submission.target_instance = submission.instance_index || ''; // clear this for lists with no search form
     submission.submit = $submitButton.data('submit');
 
     switch (submission.submit) {
@@ -113,9 +117,11 @@ PDbListFilter = (function ($) {
   };
   var scroll_to_top = function () {
     var instance = submission.instance_index;
-    $('html, body').animate({
-      scrollTop : $("#participants-list-" + instance).offset().top
-    }, 200);
+    if ( instance ) {
+      $('html, body').animate({
+        scrollTop : $("#participants-list-" + instance).offset().top
+      }, 200);
+    }
   }
   var add_value_to_submission = function (el, submission) {
     var value = encodeURI(el.val());
@@ -216,6 +222,9 @@ PDbListFilter = (function ($) {
     });
     post_submission(this);
   };
+  $.fn.PDb_event_instance = function() {
+    return $(this).closest('div[id^=participants-list-]')
+  }
   return {
     run : function () {
 
