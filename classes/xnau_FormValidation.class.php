@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( ! defined( 'ABSPATH' ) ) die;
@@ -65,13 +65,14 @@ class xnau_FormValidation {
    *                            validation key can be NULL, 'yes', 'email-regex', a field name, regex
    * @param array  $post        the post array with all submitted values, defaults 
    *                            to $this->post_array as instantiated
+   * @param int    $participant_id  id of the currently processed participant (if any)
    */
-  public function validate($value, $column_atts, $post = false)
+  public function validate($value, $column_atts, $post = false, $participant_id )
   {
     if ($post)
       $this->post_array = $post;
 
-    $this->_validate_field($value, $column_atts->name, $column_atts->validation, $column_atts->form_element);
+    $this->_validate_field( $value, $column_atts->name, $column_atts->validation, $column_atts->form_element, $participant_id );
   }
 
   /**
@@ -241,14 +242,15 @@ class xnau_FormValidation {
    *                             'no', 'yes', 'email', 'other' (for regex or match
    *                             another field value)
    * @param string $form_element the form element type of the field
+   * @param int    $record_id    the current record ID
    * @return NULL
    */
-  protected function _validate_field($value, $name, $validation = NULL, $form_element = false)
+  protected function _validate_field($value, $name, $validation = NULL, $form_element = false, $record_id = false )
   {
 
     $error_type = false;
 
-    $field = (object) compact('value', 'name', 'validation', 'form_element', 'error_type');
+    $field = (object) compact( 'value', 'name', 'validation', 'form_element', 'error_type', 'record_id' );
     
     /*
      * if there is no validation method defined, exit here
