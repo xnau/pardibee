@@ -284,10 +284,10 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.5.9 =
+* multiple lists on a page work more reliably #1576
 * addressed issue with blank lists after search #1575 
 * password fields won't require password entry if a password has already been set #1572
-* multiple lists on a page work more reliably #1576
-* addressed issue of case-sensitive searches #1569
+* addressed issue of case-mismatched value titles not finding a value #1569
 
 = 1.7.5.8 =
 * fixed warning on shortcode class #1564
