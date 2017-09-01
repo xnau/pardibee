@@ -3358,7 +3358,7 @@ class Participants_Db extends PDb_Base {
      */
     $session = self::$session->getArray( 'shortcode_atts' );
     
-    $shortcode_atts = isset( $session[$post->ID]['list'] ) ? $session[$post->ID]['list'][$instance] : false;
+    $shortcode_atts = isset( $session[$post->ID]['list'][$instance] ) ? $session[$post->ID]['list'][$instance] : false;
 
     if ( ! is_array( $shortcode_atts ) ) {
       printf( 'failed to get session for list instance %s', $instance );
