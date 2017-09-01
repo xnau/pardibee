@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -781,13 +781,16 @@ class PDb_FormElement extends xnau_FormElement {
            * the field options
            * 
            */
+//          error_log(__METHOD__.' title: '.$title.' options array: '.print_r($options_array,1));
           /**
            * @version 1.6.2.6
            * 
            * added filter: pdb-value_title_match_pattern
            */
           $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
-          $value = $options_array[ current( preg_grep( sprintf( $title_pattern, $title ), array_keys( $options_array ) ) ) ];
+          if ( $match = current( preg_grep( sprintf( $title_pattern, $title ), array_keys( $options_array ) ) ) ) {
+            $value = $options_array[ $match ];
+          }
         }
       }
     }
