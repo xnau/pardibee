@@ -166,7 +166,7 @@ class Participants_Db extends PDb_Base {
 
   /**
    * the PDb_FormValidation object
-   * @var object
+   * @var PDb_FormValidation
    */
   public static $validation_errors;
 
@@ -1673,7 +1673,7 @@ class Participants_Db extends PDb_Base {
       // the validation object is only instantiated when this method is called
       // by a form submission
       if ( is_object( self::$validation_errors ) ) {
-        self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post );
+        self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post, $participant_id );
       }
 
       /**
