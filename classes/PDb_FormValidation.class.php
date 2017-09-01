@@ -36,8 +36,8 @@ class PDb_FormValidation extends xnau_FormValidation {
 
     // set the default error wrap HTML for the validation error feedback display
     $this->error_html_wrap = is_admin() ?
-            Participants_Db::apply_filters('admin_validation_errors_template', array('<div class="error below-h2 %s">%s</div>', '<p %2$s >%1$s</p>' ) ) :
-            Participants_Db::apply_filters('validation_errors_template', array('<div class="%s">%s</div>', '<p %2$s >%1$s</p>' ) );
+            Participants_Db::apply_filters( 'admin_validation_errors_template', array('<div class="error below-h2 %s">%s</div>', '<p %2$s >%1$s</p>') ) :
+            Participants_Db::apply_filters( 'validation_errors_template', array('<div class="%s">%s</div>', '<p %2$s >%1$s</p>') );
   }
 
   /**
@@ -67,7 +67,7 @@ class PDb_FormValidation extends xnau_FormValidation {
 
     if ( empty( $this->errors ) )
       return '';
-    
+
     $this->build_validation_errors();
 
     $output = $this->get_error_CSS();
@@ -77,11 +77,11 @@ class PDb_FormValidation extends xnau_FormValidation {
     foreach ( $this->errors as $error ) {
       /* @var $error PDb_Validation_Error_Message */
 
-      $messages .= sprintf( 
+      $messages .= sprintf(
               $this->error_html_wrap[1], 
               $error->error_message(), 
               $error->element_attributes()
-              );
+      );
     }
 
     $output .= sprintf( $this->error_html_wrap[0], $this->error_class, $messages );
@@ -101,12 +101,14 @@ class PDb_FormValidation extends xnau_FormValidation {
    *                             'no', 'yes', 'email-regex', 'other' (for regex or match
    *                             another field value)
    * @param string $form_element the form element type of the field
+   * @param int    $record_id    the current record ID
+   * 
    * @return mixed field value
    */
-  protected function _validate_field( $value, $name, $validation = NULL, $form_element = false )
+  protected function _validate_field( $value, $name, $validation = NULL, $form_element = false, $record_id = false )
   {
     //$field = (object) compact( 'value', 'name', 'validation', 'form_element', 'error_type' );
-    $field = new PDb_Validating_Field( $value, $name, $validation, $form_element );
+    $field = new PDb_Validating_Field( $value, $name, $validation, $form_element, false, $record_id );
 
     /**
      * this filter sends the $field object through a filter to allow a custom 
@@ -174,6 +176,22 @@ class PDb_FormValidation extends xnau_FormValidation {
             $field->validation_state_is( 'empty' );
           } elseif ( $field->validation === 'yes' ) {
             $field->validation_state_is( 'valid' );
+          }
+          break;
+        case 'password':
+          if ( $field->record_id ) {
+            $record = Participants_Db::get_participant( $field->record_id );
+            if ( isset( $record[$field->name] ) && !empty( $record[$field->name] ) ) {
+              // we don't require the password if it is already set
+              $field->validation_state_is( 'valid' );
+            }
+          }
+          if ( $field->has_not_been_validated() ) {
+            if ( $this->is_empty( $field->value ) && !self::is_regex( $field->validation ) ) {
+              $field->validation_state_is( 'empty' );
+            } elseif ( $field->validation === 'yes' ) {
+              $field->validation_state_is( 'valid' );
+            }
           }
           break;
         default:
@@ -263,9 +281,9 @@ class PDb_FormValidation extends xnau_FormValidation {
         }
       }
     }
-    
+
     if ( $field->is_not_valid() ) {
-      $this->_add_error( $name, $field->error_type, false );
+      $this->_add_error( $field->name, $field->error_type, false );
     }
     /*
      * the result of a captcha validation are stored in a session variable
@@ -287,13 +305,14 @@ class PDb_FormValidation extends xnau_FormValidation {
 
     return $field->value;
   }
-  
+
   /**
    * provides the validation errors array
    * 
    * @return  array of PDb_Validation_Error_Message instances
    */
-  public function get_validation_errors() {
+  public function get_validation_errors()
+  {
     $this->build_validation_errors();
     return $this->errors;
   }
@@ -348,7 +367,7 @@ class PDb_FormValidation extends xnau_FormValidation {
       }
       $error->set_error_message( $error_message );
       $error->add_message_class( $this->error_class . '-' . $field );
-    } 
+    }
   }
 
   /**
@@ -474,9 +493,14 @@ class PDb_Validating_Field {
   private $error_type;
 
   /**
+   * @var int|bool  the record id or bool false if not known
+   */
+  private $record_id;
+
+  /**
    * set it up
    */
-  public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false )
+  public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false, $record_id = false )
   {
     foreach ( get_object_vars( $this ) as $prop => $val ) {
       $this->{$prop} = $$prop;
@@ -614,7 +638,7 @@ class PDb_Validation_Error_Message {
    * @var string the message class
    */
   private $class = '';
-  
+
   /**
    * 
    * @param string $fieldname
@@ -652,7 +676,7 @@ class PDb_Validation_Error_Message {
    */
   private function setup_field_def()
   {
-    if ( !empty($this->fieldname) ) {
+    if ( !empty( $this->fieldname ) ) {
       $this->field_def = Participants_Db::$fields[$this->fieldname];
     }
   }
