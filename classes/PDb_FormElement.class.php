@@ -310,10 +310,12 @@ class PDb_FormElement extends xnau_FormElement {
 
             $field->value = self::get_value_title( $field->value, $field->name );
             $return = self::make_link( $field );
+            
             break;
           } else {
 
-            $return = $field->value;
+            $return = esc_html( $field->value );
+            
             break;
           }
 
@@ -321,7 +323,7 @@ class PDb_FormElement extends xnau_FormElement {
         case 'textarea':
 
           $pattern = $html ? '<span ' . self::class_attribute( 'textarea' ) . '>%s</span>' : '%s';
-          $return = sprintf( $pattern, $field->value );
+          $return = sprintf( $pattern, esc_textarea( $field->value ) );
           break;
 
         case 'rich-text':
@@ -329,7 +331,7 @@ class PDb_FormElement extends xnau_FormElement {
           if ( $html ) {
             $return = sprintf( '<span ' . self::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $field->value, 'rich-text field' ) );
           } else {
-            $return = strip_tags( $field->value );
+            $return = strip_tags( esc_textarea( $field->value ) );
           }
           break;
 
@@ -364,9 +366,9 @@ class PDb_FormElement extends xnau_FormElement {
         case 'decimal':
 
           if ( isset( $field->attributes['data-before'] ) ) {
-            $field->value = '<span class="pdb-precontent">' . $field->attributes['data-before'] . '</span>' . $field->value;
+            $field->value = '<span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value );
           } elseif ( isset( $field->attributes['data-after'] ) ) {
-            $field->value = $field->value . '<span class="pdb-postcontent">' . $field->attributes['data-after'] . '</span>';
+            $field->value = esc_html( $field->value ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span>';
           }
           $return = $field->value;
           break;
@@ -430,14 +432,14 @@ class PDb_FormElement extends xnau_FormElement {
           $this->_addline( '</fieldset>' );
         }
         $id = $this->legal_name( $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_key ) )) );
-        $this->_addline( '<fieldset class="' . $type . '-subgroup ' . $this->name . '-subgroup" id="' . $id . '"><legend>' . $option_key . '</legend>' );
+        $this->_addline( '<fieldset class="' . esc_attr( $type . '-subgroup ' . $this->name . '-subgroup' ) . '" id="' . esc_attr( $id ) . '"><legend>' . esc_html( $option_key ) . '</legend>' );
         $optgroup = true;
       } else {
         $id = $this->element_id();
         $this->attributes['id'] = $this->legal_name( $this->prefix . $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_value ) )) );
-        $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
+        $this->_addline( '<label ' . $this->_class() . ' for="' . esc_attr( $this->attributes['id'] ) . '">' );
         $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
-        $this->_addline( $option_key . '</label>' );
+        $this->_addline( esc_html( $option_key ) . '</label>' );
         $this->attributes['id'] = $id;
       }
     }
@@ -451,11 +453,11 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline( '<div class="othercontrol">' );
       $id = $this->element_id();
       $this->attributes['id'] = $id . '_otherselect';
-      $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
-      $this->_addline( sprintf( '<input type="%s" name="%s"  value="%s" %s %s />', $type, $type === 'radio' ? $this->name : 'pdb-otherselector', $otherlabel, $this->_set_selected( $this->options, $value, 'checked', $value === '' ), $this->_attributes() . $this->_class( 'otherselect' )
+      $this->_addline( '<label ' . $this->_class() . ' for="' . esc_attr( $this->attributes['id'] ) . '">' );
+      $this->_addline( sprintf( '<input type="%s" name="%s"  value="%s" %s %s />', esc_attr( $type ), $type === 'radio' ? esc_attr( $this->name ) : 'pdb-otherselector', esc_attr( $otherlabel ), $this->_set_selected( $this->options, $value, 'checked', $value === '' ), $this->_attributes() . $this->_class( 'otherselect' )
               ), 1 );
       $this->attributes['id'] = $id;
-      $this->_addline( $otherlabel . ':' );
+      $this->_addline( esc_html( $otherlabel ) . ':' );
       $this->_addline( '</label>', -1 );
       $this->_addline( '</div>', -1 );
     }
@@ -484,7 +486,7 @@ class PDb_FormElement extends xnau_FormElement {
     foreach ( $multivalues as $value ) {
       $titles[] = self::get_value_title( $value, $field->name );
     }
-    return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
+    return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
   }
 
   /*   * *********************** 
@@ -573,7 +575,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       // add the delete checkbox if there is a file defined
       if ( $this->value !== $field_def->default && $this->module !== 'signup' )
-        $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
+        $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) .'" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
     }
 
     $this->_addline( '</div>' );
@@ -639,7 +641,7 @@ class PDb_FormElement extends xnau_FormElement {
        * set, which becomes our href
        */
       $URI = $field->link;
-      $linktext = $field->value;
+      $linktext = esc_html( $field->value );
     } elseif ( filter_var( $URI, FILTER_VALIDATE_URL ) !== false && Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
 
       // convert the get array to a get string and add it to the URI
@@ -668,7 +670,7 @@ class PDb_FormElement extends xnau_FormElement {
        */
       return $URI;
     } else {
-      return $field->value; // if it is neither URL nor email address and we're not formatting it as html
+      return esc_html( $field->value ); // if it is neither URL nor email address and we're not formatting it as html
     }
 
     // default template for links
