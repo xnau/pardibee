@@ -73,11 +73,11 @@ class PDb_Image extends xnau_Image_Handler {
      */
     return sprintf( Participants_Db::apply_filters( 'image_wrap_template', $pattern, $this ), 
                     $this->wrap_class(), 
-                    $this->link, 
+                    esc_attr($this->link), 
                     basename($this->image_uri), 
                     $this->attribute_string( $this->attributes ),
-                    $this->image_uri,
-                    $this->image_file,
+                    esc_url($this->image_uri),
+                    esc_attr($this->image_file),
                     $this->attribute_string( $this->image_attributes )
           );
   }
