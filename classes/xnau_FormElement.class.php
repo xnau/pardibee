@@ -1104,8 +1104,8 @@ abstract class xnau_FormElement {
       unset( $this->attributes['readonly'] );
     }
 
-    $value_att = in_array( $type, array('file', 'image') ) ? '' : 'value="' . $value . '"';
-    $html = '<input name="' . $this->name . ( $this->group ? '[]' : '' ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes() . $this->_class() . '  ' . $value_att . ' />';
+    $value_att = in_array( $type, array('file', 'image') ) ? '' : 'value="' . esc_attr( $value ) . '"';
+    $html = '<input name="' . esc_attr( $this->name . ( $this->group ? '[]' : '' ) ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes() . $this->_class() . '  ' . $value_att . ' />';
     
     // unset the type attribute so it doesn't carry over to the next element
     unset( $this->attributes['type'] );
@@ -1225,7 +1225,7 @@ abstract class xnau_FormElement {
       } elseif ( $value === 'other' ) {
         $otherlabel = $title;
       } elseif ( strlen( $value ) > 0 ) {
-        $this->_addline( '<option value="' . $value . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . Participants_Db::apply_filters( 'translate_string', stripslashes( $title ) ) . '</option>', -1 );
+        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . Participants_Db::apply_filters( 'translate_string', esc_html( $title ) ) . '</option>', -1 );
       }
     }
     // add the "other" option
@@ -1369,7 +1369,7 @@ abstract class xnau_FormElement {
       } elseif ( $value === true ) {
         $value = $name;
       }
-      $output .= sprintf( $pattern, $name, $value );
+      $output .= sprintf( $pattern, esc_attr( $name ), esc_attr( $value ) );
     }
 
     return $output;
@@ -1412,7 +1412,7 @@ abstract class xnau_FormElement {
       $classes[] = $add_class;
     }
     $class_string = implode( ' ', $classes );
-    return empty( $class_string ) ? '' : ' class="' . $class_string . '"';
+    return empty( $class_string ) ? '' : ' class="' . esc_attr( $class_string ) . '"';
   }
 
   /**
@@ -1526,7 +1526,7 @@ abstract class xnau_FormElement {
 
     if ( $null_select !== false ) {
       $selected = $this->value === '' ? $this->_set_selected( true, true, 'selected' ) : '';
-      $this->_addline( '<option value="" ' . $selected . '  >' . $null_select_label . '</option>' );
+      $this->_addline( '<option value="" ' . esc_attr( $selected ) . '  >' . esc_html( $null_select_label ) . '</option>' );
     }
   }
 
@@ -1543,7 +1543,7 @@ abstract class xnau_FormElement {
       $divider = '</optgroup>' . self::BR;
       $this->inside = false;
     }
-    $divider .= sprintf( '<optgroup label="%s">', $title );
+    $divider .= sprintf( '<optgroup label="%s">', esc_attr( $title ) );
     $this->inside = true;
     $this->_addline( $divider );
   }
