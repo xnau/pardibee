@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2017-07-21 13:49+0200\n"
-"PO-Revision-Date: 2017-07-25 12:10+0200\n"
+"POT-Creation-Date: 2017-07-10 17:10-1000\n"
+"PO-Revision-Date: 2017-09-17 18:31+0200\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Lars Hdg\n"
 "Language: da_DK\n"
@@ -155,7 +155,7 @@ msgstr "regex/match"
 
 #: classes/PDb_Init.class.php:918
 msgid "Participant Info"
-msgstr "Deltager Info"
+msgstr "DB Post Info"
 
 #: classes/PDb_Init.class.php:919
 msgid "Personal Info"
@@ -956,7 +956,7 @@ msgstr "Vis grupper og gruppe beskrivelser i tilmeldingsformular."
 
 #: classes/PDb_Settings.class.php:356 upload_csv.php:156
 msgid "Duplicate Record Check Field"
-msgstr "Kopier Post tjek felt"
+msgstr "Tjek-felt for Kopier Post"
 
 #: classes/PDb_Settings.class.php:361
 msgid ""
@@ -1849,7 +1849,7 @@ msgstr "Bidragsyder"
 
 #: classes/PDb_Settings.class.php:1420
 msgid "Author"
-msgstr "Artikelansvarlig"
+msgstr "Forfatter:"
 
 #: classes/PDb_Settings.class.php:1421
 msgid "Editor"
@@ -2071,7 +2071,7 @@ msgstr[1] "%s matching post opdateret"
 #, php-format
 msgid "%s duplicate record skipped"
 msgid_plural "%s duplicate records skipped"
-msgstr[0] "%s Duplicate Post Fejlmeddelelse"
+msgstr[0] "%s dublet af Post udeladt"
 msgstr[1] "%s Duplicate Post Fejlmeddelelse"
 
 #: classes/xnau_CSV_Import.class.php:115
