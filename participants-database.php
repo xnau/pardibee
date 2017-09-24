@@ -582,7 +582,7 @@ class Participants_Db extends PDb_Base {
      * @param WP_Post object the current post
      * @return bool true if plugin content is present
      */
-    if ( is_object( $post ) && self::apply_filters( 'shortcode_in_content', preg_match( '/\[pdb_/', $post->post_content ) > 0, $post ) ) {
+    if ( is_object( $post ) && self::apply_filters( 'shortcode_in_content', preg_match( '/(?<!\[)\[pdb_/', $post->post_content ) > 0, $post ) ) {
       do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
   }
@@ -1423,7 +1423,7 @@ class Participants_Db extends PDb_Base {
    *
    * this processes all record form submissions front-end and back-
    * 
-   * @global object $wpdb
+   * @global wpdb $wpdb
    * 
    * @param array       $post           the array of new values (typically the $_POST array)
    * @param string      $action         the db action to be performed: insert or update
@@ -1642,8 +1642,6 @@ class Participants_Db extends PDb_Base {
       // do nothing, this record won't be saved because there is a duplicate error
     }
 
-
-
     /*
      * determine the set of columns to process
      * 
@@ -1689,6 +1687,7 @@ class Participants_Db extends PDb_Base {
         $post[$column->name] = '';
       }
       $new_value = false;
+          
       // we can process individual submit values here
       switch ( $column->name ) {
 
@@ -1747,7 +1746,7 @@ class Participants_Db extends PDb_Base {
            * @param bool  test result using the regex
            * @return bool true if valid
            */
-          if ( isset( $post['private_id'] ) && self::apply_filters( 'private_id_validity', preg_match( '#^\w{' . self::$private_id_length . ',}$#', $post['private_id'] ) === 1 ) && self::get_participant_id( $post['private_id'] ) === false ) {
+          if ( isset( $post['private_id'] ) && self::apply_filters( 'private_id_validity', preg_match( '#^\w{' . self::private_id_length() . ',}$#', $post['private_id'] ) === 1 ) && self::get_participant_id( $post['private_id'] ) === false ) {
             $new_value = $post['private_id'];
           } else {
             $new_value = $action == 'insert' ? self::generate_pid() : false;
@@ -2210,6 +2209,16 @@ class Participants_Db extends PDb_Base {
 
     return $single ? current( $output ) : $output;
   }
+  
+  /**
+   * provides the length of the private ID
+   * 
+   * @return int
+   */
+  public static function private_id_length()
+  {
+    return self::apply_filters( 'private_id_length', self::$private_id_length );
+  }
 
   /**
    * generates a 5-character private ID
@@ -2227,7 +2236,7 @@ class Participants_Db extends PDb_Base {
 
     $chr_source = str_split('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
-    for ( $i = 0; $i < self::$private_id_length; $i++ ) {
+    for ( $i = 0; $i < self::private_id_length(); $i++ ) {
 
       $pid .= $chr_source[array_rand( $chr_source )];
     }
@@ -2549,6 +2558,7 @@ class Participants_Db extends PDb_Base {
                     ), $participant_id
             );
           }
+          
           /*
            * if the "thanks page" is defined as another page, save the ID in a session variable and move to that page.
            */
