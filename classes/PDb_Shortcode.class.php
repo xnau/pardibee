@@ -864,7 +864,6 @@ abstract class PDb_Shortcode {
     
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
-      
       $value = isset( $_POST[$field->name] ) ? $this->_esc_submitted_value( $_POST[$field->name] ) : $value;
     }
 
