@@ -182,7 +182,7 @@ class PDb_List extends PDb_Shortcode {
 
     $ajax_params = array(
         'ajaxurl' => admin_url( 'admin-ajax.php' ),
-        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
+//        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
         'postID' => ( isset( $wp_query->post ) ? $wp_query->post->ID : '' ),
         'prefix' => Participants_Db::$prefix,
         'loading_indicator' => Participants_Db::get_loading_spinner()
@@ -565,7 +565,7 @@ class PDb_List extends PDb_Shortcode {
         'pagelink' => $this->prepare_page_link( $_SERVER['REQUEST_URI'] ),
         'sortstring' => $this->filter['sortstring'],
         'orderstring' => $this->filter['orderstring'],
-        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
+//        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
     );
     if ( $ref === 'remote' ) {
       $hidden_fields['submit_button'] = 'search';
@@ -1049,7 +1049,7 @@ class PDb_List extends PDb_Shortcode {
           'orderstring',
           'postID',
           'action',
-          'filterNonce',
+//          'filterNonce',
           'instance',
       );
       foreach ( $filter_atts as $att )
