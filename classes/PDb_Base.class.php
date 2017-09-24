@@ -305,7 +305,7 @@ class PDb_Base {
   {
     $name = is_object( $field ) ? $field->name : $field;
     $page = Participants_Db::plugin_setting( 'single_record_page' );
-    return $name === Participants_Db::plugin_setting( 'single_record_link_field' ) && !empty( $page );
+    return !empty( $page ) && in_array( $name, self::apply_filters('single_record_link_field', (array) Participants_Db::plugin_setting( 'single_record_link_field' ) ) );
   }
 
   /*
