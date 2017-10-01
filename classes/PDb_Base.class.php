@@ -176,7 +176,7 @@ class PDb_Base {
   }
 
   /**
-   * supplies an object comprised of the componenets of a filter statement
+   * supplies an object comprised of the components of a filter statement
    * 
    * @param type $statement
    * @return array
@@ -291,6 +291,33 @@ class PDb_Base {
     if ( $id )
       $permalink = get_permalink( $id );
     return $permalink;
+  }
+  
+  /**
+   * supplies the current participant ID
+   * 
+   * there are several possibilities (depending on the context) for the location 
+   * of this information, we need to check each one
+   * 
+   * @param string $id the id (if known)
+   * @return string the ID, empty if not determined
+   */
+  public static function get_record_id ( $id = '' )
+  {
+    if ( empty( $id ) ) {
+      // this is for backward compatibility
+      $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT );
+    }
+    if ( empty( $id ) ) {
+      $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING ) );
+    }
+    if ( empty( $id ) && is_admin() ) {
+      $id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+    }
+    if ( empty( $id ) ) {
+      $id = Participants_Db::$session->get( 'pdbid' );
+    }
+    return $id;
   }
 
   /**
