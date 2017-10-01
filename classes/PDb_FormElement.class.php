@@ -172,7 +172,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
 
     if ( !is_a( $field, 'PDb_Field_Item' ) ) {
-      // now we can use our field classs methods
+      // now we can use our field class methods
       $field = new PDb_Field_Item( $field );
     }
 
