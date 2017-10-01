@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.4
+ * @version    Release: 1.9.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -663,6 +663,22 @@ class PDb_List_Admin {
           self::$list_query .= ' ' . $stored_date . ' ' . $operator . ' DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
         }
       }
+    } elseif ( $filter_set['value'] === 'null' ) {
+
+      $is_numeric = PDb_FormElement::is_numeric_datatype( $filter_set['search_field'] );
+
+      switch ( $filter_set['operator'] ) {
+        case '<>':
+        case '!=':
+        case 'NOT LIKE':
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL' . ( $is_numeric ? '' : ' AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) . ')';
+          break;
+        case 'LIKE':
+        case '=':
+        default:
+          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' = ""' ) . ')';
+          break;
+      }
     } elseif ( $field_atts->form_element == 'date' ) {
 
       $value = $filter_set['value'];
@@ -689,22 +705,6 @@ class PDb_List_Admin {
 
           self::$list_query .= " " . $stored_date . " " . $operator . " CAST(" . esc_sql( $value ) . " AS SIGNED)";
         }
-      }
-    } elseif ( $filter_set['value'] === 'null' ) {
-
-      $is_numeric = PDb_FormElement::is_numeric_datatype( $filter_set['search_field'] );
-
-      switch ( $filter_set['operator'] ) {
-        case '<>':
-        case '!=':
-        case 'NOT LIKE':
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL' . ( $is_numeric ? '' : ' AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) . ')';
-          break;
-        case 'LIKE':
-        case '=':
-        default:
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' = ""' ) . ')';
-          break;
       }
     } else {
 
