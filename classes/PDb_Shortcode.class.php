@@ -21,7 +21,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -528,15 +528,17 @@ abstract class PDb_Shortcode {
   {
     // the first time through, use current()
     if ( $this->current_field_pointer == 1 ) {
-      if ( is_object( $this->group ) )
-        $this->field = new PDb_Field_Item( current( $this->group->fields ) );
-      else
-        $this->field = new PDb_Field_Item( current( $this->record->fields ), $this->record->record_id );
+      if ( is_object( $this->group ) ) {
+          $this->field = new PDb_Field_Item( current( $this->group->fields ), $this->participant_id );
+      } else {
+          $this->field = new PDb_Field_Item( current( $this->record->fields ), $this->record->record_id );
+      }
     } else {
-      if ( is_object( $this->group ) )
-        $this->field = new PDb_Field_Item( next( $this->group->fields ) );
-      else
+      if ( is_object( $this->group ) ) {
+        $this->field = new PDb_Field_Item( next( $this->group->fields ), $this->participant_id );
+      } else {
         $this->field = new PDb_Field_Item( next( $this->record->fields ), $this->record->record_id );
+      }
     }
 
     $this->field->module = $this->module;
