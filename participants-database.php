@@ -1667,6 +1667,15 @@ class Participants_Db extends PDb_Base {
     
     // gather the submit values and add them to the query
     foreach ( $columns as $column ) {
+      
+      /**
+       * @action pdb-process_form_submission_column_{$fieldname}
+       * 
+       * @param object  $column the current column
+       * @param array   $post   the current post array
+       * 
+       */
+      do_action( 'pdb-process_form_submission_column_' . $column->name, $column, $post );
 
       // the validation object is only instantiated when this method is called
       // by a form submission
