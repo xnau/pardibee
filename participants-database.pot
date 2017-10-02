@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2017-08-05 08:20-1000\n"
+"POT-Creation-Date: 2017-10-01 20:13-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
@@ -20,23 +20,23 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: classes/PDb_Aux_Plugin.class.php:332
+#: classes/PDb_Aux_Plugin.class.php:371
 msgid "Support"
 msgstr ""
 
-#: classes/PDb_Aux_Plugin.class.php:343
+#: classes/PDb_Aux_Plugin.class.php:382
 #, php-format
 msgctxt "displays the name and version of the plugin"
 msgid "%s version %s"
 msgstr ""
 
-#: classes/PDb_Aux_Plugin.class.php:344
+#: classes/PDb_Aux_Plugin.class.php:383
 #, php-format
 msgctxt "displays the plugin author name"
 msgid "Authored by %s"
 msgstr ""
 
-#: classes/PDb_Aux_Plugin.class.php:362 classes/PDb_Settings.class.php:32
+#: classes/PDb_Aux_Plugin.class.php:401 classes/PDb_Settings.class.php:32
 msgid "General Settings"
 msgstr ""
 
@@ -44,7 +44,7 @@ msgstr ""
 msgid "New columns imported from the CSV file."
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:576 classes/PDb_List_Admin.class.php:888
+#: classes/PDb_FormElement.class.php:578 classes/PDb_List_Admin.class.php:888
 #: classes/PDb_List_Admin.class.php:1391
 #: classes/PDb_Manage_Fields.class.php:340
 #: classes/xnau_FormElement.class.php:1056
@@ -155,19 +155,19 @@ msgstr ""
 msgid "regex/match"
 msgstr ""
 
-#: classes/PDb_Init.class.php:918
+#: classes/PDb_Init.class.php:925
 msgid "Participant Info"
 msgstr ""
 
-#: classes/PDb_Init.class.php:919
+#: classes/PDb_Init.class.php:926
 msgid "Personal Info"
 msgstr ""
 
-#: classes/PDb_Init.class.php:920
+#: classes/PDb_Init.class.php:927
 msgid "Administrative Info"
 msgstr ""
 
-#: classes/PDb_Init.class.php:921
+#: classes/PDb_Init.class.php:928
 msgid "Record Info"
 msgstr ""
 
@@ -413,7 +413,7 @@ msgstr ""
 msgid "send signup email"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1455 participants-database.php:3417
+#: classes/PDb_List_Admin.class.php:1455 participants-database.php:3448
 msgid "Apply"
 msgstr ""
 
@@ -423,7 +423,7 @@ msgctxt ""
 msgid "With selected"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.class.php:86 participants-database.php:3591
+#: classes/PDb_Manage_Fields.class.php:86 participants-database.php:3622
 msgid "Manage Database Fields"
 msgstr ""
 
@@ -622,11 +622,11 @@ msgstr ""
 msgid "First"
 msgstr ""
 
-#: classes/PDb_Pagination.class.php:377 participants-database.php:3419
+#: classes/PDb_Pagination.class.php:377 participants-database.php:3450
 msgid "Previous"
 msgstr ""
 
-#: classes/PDb_Pagination.class.php:396 participants-database.php:3418
+#: classes/PDb_Pagination.class.php:396 participants-database.php:3449
 msgid "Next"
 msgstr ""
 
@@ -634,7 +634,7 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-#: classes/PDb_Path.class.php:159 participants-database.php:3242
+#: classes/PDb_Path.class.php:159 participants-database.php:3273
 #, php-format
 msgid "The uploads directory (%s) could not be created."
 msgstr ""
@@ -1100,11 +1100,13 @@ msgid ""
 msgstr ""
 
 #: classes/PDb_Settings.class.php:545
-msgid "Show Group Descriptions"
+msgid "Show Groups"
 msgstr ""
 
 #: classes/PDb_Settings.class.php:550
-msgid "Show the group description under each group title in the record form."
+msgid ""
+"Show the group and description (if defined) under each group title in the "
+"record form."
 msgstr ""
 
 #: classes/PDb_Settings.class.php:558
@@ -1704,8 +1706,8 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: classes/PDb_Settings.class.php:1499 participants-database.php:3593
-#: participants-database.php:3654
+#: classes/PDb_Settings.class.php:1499 participants-database.php:3624
+#: participants-database.php:3685
 msgid "Settings"
 msgstr ""
 
@@ -1714,7 +1716,7 @@ msgstr ""
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr ""
 
-#: classes/PDb_Shortcode.class.php:286
+#: classes/PDb_Shortcode.class.php:287
 #, php-format
 msgctxt "message to show if the plugin cannot find the template"
 msgid ""
@@ -1722,7 +1724,7 @@ msgid ""
 "correct and the template file is in the correct location."
 msgstr ""
 
-#: classes/PDb_Shortcode.class.php:1279
+#: classes/PDb_Shortcode.class.php:1256
 msgid "next"
 msgstr ""
 
@@ -1940,28 +1942,28 @@ msgid ""
 "manually."
 msgstr ""
 
-#: classes/xnau_CSV_Import.class.php:158
+#: classes/xnau_CSV_Import.class.php:157
 msgid "Invalid file for import."
 msgstr ""
 
-#: classes/xnau_CSV_Import.class.php:210
+#: classes/xnau_CSV_Import.class.php:209
 msgid "Error occured while trying to add the data to the database"
 msgstr ""
 
-#: classes/xnau_CSV_Import.class.php:210
+#: classes/xnau_CSV_Import.class.php:209
 #, php-format
 msgid ""
 "Input file does not exist or path is incorrect.<br />Attempted to load: %s"
 msgstr ""
 
-#: classes/xnau_CSV_Import.class.php:260
+#: classes/xnau_CSV_Import.class.php:259
 #, php-format
 msgid ""
 "The number of items in line %s is incorrect.<br />There are %s and there "
 "should be %s."
 msgstr ""
 
-#: classes/xnau_CSV_Import.class.php:269
+#: classes/xnau_CSV_Import.class.php:268
 msgid "Number of values does not match number of columns"
 msgstr ""
 
@@ -1993,18 +1995,18 @@ msgstr ""
 msgid "read only"
 msgstr ""
 
-#: edit_participant.php:234
+#: edit_participant.php:244
 msgid "Save the Record"
 msgstr ""
 
-#: edit_participant.php:248
+#: edit_participant.php:258
 msgid ""
 "<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
 "strong> save record and continue with same record<br><strong>Next:</strong> "
 "save record and then start a new one"
 msgstr ""
 
-#: edit_participant.php:252
+#: edit_participant.php:262
 msgid "<strong>Previous:</strong> save and move to previous record"
 msgstr ""
 
@@ -2244,103 +2246,103 @@ msgstr ""
 msgid "Participants Database"
 msgstr ""
 
-#: participants-database.php:648
+#: participants-database.php:654
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr ""
 
-#: participants-database.php:650
+#: participants-database.php:656
 msgid "Delete the \"{name}\" {thing}?"
 msgstr ""
 
-#: participants-database.php:651
+#: participants-database.php:657
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: participants-database.php:652
+#: participants-database.php:658
 msgid ""
 "Changing the form element on a field that has stored data can result in data "
 "loss."
 msgstr ""
 
-#: participants-database.php:652
+#: participants-database.php:658
 msgid "More information here…"
 msgstr ""
 
-#: participants-database.php:653
+#: participants-database.php:659
 msgid "Yes, change the form element"
 msgstr ""
 
-#: participants-database.php:654
+#: participants-database.php:660
 msgid "No, don't change the form element"
 msgstr ""
 
-#: participants-database.php:3138
+#: participants-database.php:3169
 msgid ""
 "There is something wrong with the file you tried to upload. Try another."
 msgstr ""
 
-#: participants-database.php:3154 participants-database.php:3182
+#: participants-database.php:3185 participants-database.php:3213
 #, php-format
 msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
 msgstr ""
 
-#: participants-database.php:3156
+#: participants-database.php:3187
 #, php-format
 msgid "The file selected for \"%s\" must be one of these types: %s. "
 msgstr ""
 
-#: participants-database.php:3189
+#: participants-database.php:3220
 #, php-format
 msgid ""
 "The file you tried to upload is too large. The file must be smaller than %sK."
 msgstr ""
 
-#: participants-database.php:3196
+#: participants-database.php:3227
 msgid "The file could not be saved."
 msgstr ""
 
-#: participants-database.php:3416 templates/pdb-retrieve-bootstrap.php:69
+#: participants-database.php:3447 templates/pdb-retrieve-bootstrap.php:69
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr ""
 
-#: participants-database.php:3420
+#: participants-database.php:3451
 msgid "The record has been updated."
 msgstr ""
 
-#: participants-database.php:3421
+#: participants-database.php:3452
 msgid "The new record has been added."
 msgstr ""
 
-#: participants-database.php:3422
+#: participants-database.php:3453
 #, php-format
 msgid "No record was added on query: %s"
 msgstr ""
 
-#: participants-database.php:3423
+#: participants-database.php:3454
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr ""
 
-#: participants-database.php:3565
+#: participants-database.php:3596
 msgid "WordPress Plugin"
 msgstr ""
 
-#: participants-database.php:3566
+#: participants-database.php:3597
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr ""
 
-#: participants-database.php:3569
+#: participants-database.php:3600
 msgid "Developed by"
 msgstr ""
 
-#: participants-database.php:3570
+#: participants-database.php:3601
 msgid ""
 "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr ""
 
-#: participants-database.php:3573
+#: participants-database.php:3604
 #, php-format
 msgid ""
 "Please consider contributing to the continued support and development of "
@@ -2349,35 +2351,35 @@ msgid ""
 "Thanks!"
 msgstr ""
 
-#: participants-database.php:3589
+#: participants-database.php:3620
 msgid "Add Participant"
 msgstr ""
 
-#: participants-database.php:3590 participants-database.php:3597
+#: participants-database.php:3621 participants-database.php:3628
 msgid "List Participants"
 msgstr ""
 
-#: participants-database.php:3592 upload_csv.php:41
+#: participants-database.php:3623 upload_csv.php:41
 msgid "Import CSV File"
 msgstr ""
 
-#: participants-database.php:3594
+#: participants-database.php:3625
 msgid "Setup Guide"
 msgstr ""
 
-#: participants-database.php:3595
+#: participants-database.php:3626
 msgid "Add New Participant Record"
 msgstr ""
 
-#: participants-database.php:3596
+#: participants-database.php:3627
 msgid "Edit Existing Participant Record"
 msgstr ""
 
-#: participants-database.php:3598
+#: participants-database.php:3629
 msgid "Export CSV"
 msgstr ""
 
-#: participants-database.php:3724
+#: participants-database.php:3755
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
