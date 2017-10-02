@@ -542,12 +542,12 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     $this->plugin_settings[] = array(
         'name' => 'show_group_descriptions',
-        'title' => __( 'Show Group Descriptions', 'participants-database' ),
+        'title' => __( 'Show Groups', 'participants-database' ),
         'group' => 'pdb-record',
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'Show the group description under each group title in the record form.', 'participants-database' ),
+            'help_text' => __( 'Show the group and description (if defined) under each group title in the record form.', 'participants-database' ),
             'value' => 0,
             'options' => array(1, 0),
         )
