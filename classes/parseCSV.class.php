@@ -3,7 +3,7 @@
 class parseCSV {
 
     /*
-    Class: parseCSV v0.4.3 beta
+    Class: parseCSV v0.4.31 beta
     https://github.com/parsecsv/parsecsv-for-php
 
     Fully conforms to the specifications lined out on wikipedia:
@@ -1165,10 +1165,24 @@ class parseCSV {
 
             $data = fread($fh, filesize($file));
             fclose($fh);
-            return $data;
+            return $this->remove_BOM( $data );
         }
 
         return false;
+    }
+    
+    /**
+     * removes the BOM if present
+     * 
+     * @param string $s
+     * @return string
+     */
+    function remove_BOM( $s ){
+      if(substr($s,0,3)==chr(hexdec('EF')).chr(hexdec('BB')).chr(hexdec('BF'))){
+           return substr($s,3);
+       }else{
+           return $s;
+       }
     }
 
     /**
