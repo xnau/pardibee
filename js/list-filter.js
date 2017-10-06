@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.4
+ * version: 1.5
  * 
  * xnau webdesign xnau.com
  * 
@@ -24,7 +24,7 @@ PDbListFilter = (function ($) {
     } else {
       event.returnValue = false;
     }
-    var list_instance = $(event.target).PDb_event_instance();
+    var list_instance = $(event.target).closest('div[id^=participants-list-], .pdb-search');
     errormsg = list_instance.find('.pdb-searchform .pdb-error');
     filterform = list_instance.find('.sort_filter_form[data-ref="update"]');
     remoteform = list_instance.find('.sort_filter_form[data-ref="remote"]');
@@ -222,9 +222,6 @@ PDbListFilter = (function ($) {
     });
     post_submission(this);
   };
-  $.fn.PDb_event_instance = function() {
-    return $(this).closest('div[id^=participants-list-]')
-  }
   return {
     run : function () {
 
