@@ -45,7 +45,12 @@ class PDb_Base {
       $common[] = $content_path[$i];
       $i++;
     }
-    return trailingslashit( implode( '/', $common ) );
+    /**
+     * @filter pdb-app_base_path
+     * @param string  the base application path as calculated by the function
+     * @return string
+     */
+    return Participants_Db::apply_filters('app_base_path', trailingslashit( implode( '/', $common ) ) );
   }
 
   /**
@@ -313,6 +318,12 @@ class PDb_Base {
     }
     if ( empty( $id ) && is_admin() ) {
       $id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+    }
+    if ( empty( $id ) ) {
+      $id = Participants_Db::get_participant_id( get_query_var( 'pdb-record-edit-slug', false ) );
+    }
+    if ( empty( $id ) ) {
+      $id = Participants_Db::get_record_id_by_term( 'record_slug', get_query_var( 'pdb-record-slug', 0 ) );
     }
     if ( empty( $id ) ) {
       $id = Participants_Db::$session->get( 'pdbid' );
