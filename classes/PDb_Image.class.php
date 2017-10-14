@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Image_Handler class
  */
@@ -63,7 +63,6 @@ class PDb_Image extends xnau_Image_Handler {
       default:
         $pattern = $this->image_wrap[0] . '<img src="%5$s" %7$s />' . $this->image_wrap[1];
     }
-
     /**
      * @filter pdb-image_wrap_template
      * @param string  the template with sprintf-style numeric placeholders
@@ -122,8 +121,8 @@ class PDb_Image extends xnau_Image_Handler {
     $this->default_image = $image === false ? Participants_Db::plugin_setting('default_image', '') : $image;
 
     // check the path for a valid image
-    if (self::getimagesize(Participants_Db::app_base_path() . ltrim($this->default_image, '/')) !== false) {
-      $this->default_image = Participants_Db::app_base_url() . ltrim($this->default_image, '/');
+    if (self::getimagesize( ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? WP_CONTENT_DIR . '/' : self::app_base_path() ) . ltrim($this->default_image, '/')) !== false) {
+      $this->default_image = ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? content_url() . '/' : self::app_base_url() ) . ltrim($this->default_image, '/');
     } else {
       $this->default_image = false;
     }
