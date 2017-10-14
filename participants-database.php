@@ -2407,6 +2407,7 @@ class Participants_Db extends PDb_Base {
         return false;
       }
     }
+    return true;
   }
 
   /**
