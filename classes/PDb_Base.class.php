@@ -1094,8 +1094,9 @@ class PDb_Base {
   {
     if ( Participants_Db::$session->get( 'admin_message' ) ) {
       list(Participants_Db::$admin_message, Participants_Db::$admin_message_type) = Participants_Db::$session->get( 'admin_message' );
+      $class = Participants_Db::$admin_message_type === 'error' ? 'notice notice-error' : 'notice notice-success';
       if ( !empty( Participants_Db::$admin_message ) ) {
-        printf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', Participants_Db::$admin_message_type, Participants_Db::$admin_message );
+        printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, Participants_Db::$admin_message );
         Participants_Db::$session->clear( 'admin_message' );
       }
     }
