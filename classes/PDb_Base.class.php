@@ -926,7 +926,7 @@ class PDb_Base {
    */
   public static function files_path()
   {
-    return trailingslashit( PDb_Image::concatenate_directory_path( self::app_base_path(), Participants_Db::files_location() ) );
+    return trailingslashit( PDb_Image::concatenate_directory_path( ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? WP_CONTENT_DIR : self::app_base_path() ), Participants_Db::files_location() ) );
   }
 
   /**
@@ -937,7 +937,7 @@ class PDb_Base {
   public static function files_uri()
   {
     //return trailingslashit(site_url(Participants_Db::files_location()));
-    return self::app_base_url() . trailingslashit( ltrim( Participants_Db::files_location(), DIRECTORY_SEPARATOR ) );
+    return ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? content_url() . '/' : self::app_base_url() ) . trailingslashit( ltrim( Participants_Db::files_location(), DIRECTORY_SEPARATOR ) ); // content_url()
   }
 
   /**
