@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 0.9
+ * @version 1.0
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -85,7 +85,7 @@ PDbManageFields = (function ($) {
     var warning = $('[name="' + warning_name + '"]').length ? $('[name="' + warning_name + '"]') : $('<input>', {
       name : warning_name,
       type : 'hidden',
-      value : ''
+      value : 'pending'
     }).insertAfter(target);
     var confirmationBox = $('#confirmation-dialog');
     confirmationBox.html(PDb_L10n.datatype_confirm);
