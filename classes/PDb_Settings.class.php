@@ -1125,6 +1125,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    $this->plugin_settings[] = array(
+        'name' => 'files_use_content_base_path',
+        'title' => __( 'File and Image Uploads Use WP Content Path', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'when selected, the base path for file and image uploads will be the site\'s content directory.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
     /*     * ****************************************************
      *
      *   admin section settings
@@ -1606,6 +1619,10 @@ ORDER BY g.order, v.order';
     add_filter( Participants_Db::$prefix . 'disable_live_notifications', function(){
       return Participants_Db::plugin_setting('disable_live_notifications', '0' ) == '1';
     });
+    add_filter( Participants_Db::$prefix . 'files_use_content_base_path', function(){
+      return Participants_Db::plugin_setting('files_use_content_base_path', '0' ) == '1';
+    });
+    
   }
 
 }
