@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -643,18 +643,39 @@ class PDb_Manage_Fields {
           if ( in_array( $atts['name'], Participants_Db::$reserved_names ) ) {
 
             Participants_Db::set_admin_message( sprintf(
-                            '<h3>%s</h3> %s:<br />%s', __( 'Cannot add a field with that name', 'participants-database' ), __( 'This name is reserved; please choose another. Reserved names are', 'participants-database' ), implode( ', ', Participants_Db::$reserved_names ) ), 'error' );
+                    '<strong>%s</strong> %s: %s', 
+                    __( 'Cannot add a field with that name', 'participants-database' ), 
+                    __( 'This name is reserved; please choose another. Reserved names are', 'participants-database' ), implode( ', ', Participants_Db::$reserved_names ) 
+                    ), 'error' );
+            break;
+          }
+          // if they're trying to use the same name as one that already exists
+          if ( array_key_exists( $atts['name'], Participants_Db::$fields ) ) {
+
+            Participants_Db::set_admin_message( sprintf(
+                    '<strong>%s</strong> %s', 
+                    __( 'Cannot add a field with that name', 'participants-database' ), 
+                    __( 'The name must be unique: a field with that name has been previously defined.', 'participants-database' ) 
+                    ), 'error' );
             break;
           }
           // prevent name from beginning with a number
           if ( preg_match( '/^(\d)/', $atts['name'] ) ) {
 
             Participants_Db::set_admin_message( sprintf(
-                            '<h3>%s</h3> %s', __( 'The name cannot begin with a number', 'participants-database' ), __( 'Please choose another.', 'participants-database' )
+                    '<strong>%s</strong> %s', 
+                    __( 'The name cannot begin with a number', 'participants-database' ), 
+                    __( 'Please choose another.', 'participants-database' )
                     ), 'error' );
             break;
           }
           $result = Participants_Db::add_blank_field( $atts );
+          // prevent name from beginning with a number
+          if ( $result ) {
+            Participants_Db::set_admin_message( __( 'The new field was added.', 'participants-database' ), 'update' );
+          } else {
+            Participants_Db::set_admin_message( __( 'The field could not be added.', 'participants-database' ), 'error' );
+          }
 
           break;
 
