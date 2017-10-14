@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -558,8 +558,8 @@ class PDb_Manage_Fields {
                * 
                * the 'datatype_warning' needs to be accepted for this to take place
                */
-              if ( $row['group'] != 'internal' && isset( $row['datatype_warning'] ) && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
-                if ( $row['datatype_warning'] === 'accepted' ) {
+              if ( $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
+                if ( !isset( $row['datatype_warning'] ) || ( isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) ) {
                   $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
                 } else {
                   unset( $row['form_element'] ); // prevent this from getting changed
