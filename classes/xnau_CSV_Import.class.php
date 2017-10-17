@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -30,10 +30,6 @@ abstract class xnau_CSV_Import {
    * @var int number of valid columns
    */
   var $column_count;
-  /**
-   * @var string holds the system path to the web root
-   */
-  var $root_path;
   /**
    * @var string holds the path to the target location for the uploaded file 
    */
@@ -87,13 +83,11 @@ abstract class xnau_CSV_Import {
    */
   function __construct($file_field) {
 
-    $this->_set_root_path();
-
     if ( isset($_POST[$file_field]) && $this->check_submission() ) {
 
       if ($this->_set_upload_dir()) {
 
-        $target_path = $this->root_path . $this->upload_directory . basename($_FILES['uploadedfile']['name']);
+        $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES['uploadedfile']['name']);
 
         if (false !== move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 
@@ -178,16 +172,6 @@ abstract class xnau_CSV_Import {
    *
    */
   abstract protected function store_record($array);
-
-  /**
-   * sets up the root path for the uploaded file
-   *
-   * defaults to the WP root
-   */
-  function _set_root_path() {
-
-    $this->root_path = Participants_Db::app_base_path();
-  }
 
   /**
    * inserts a series of records from a csv file
