@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -126,7 +126,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-main',
         'options' => array(
             'type' => 'text',
-            'help_text' => __( "This defines where the uploaded files will go, relative to the WordPress root. The default location is '/wp-content/uploads/participants-database'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated.", 'participants-database' ),
+            'help_text' => sprintf( __( "This defines where the uploaded files will go, relative to the %s. The default location is '/wp-content/uploads/participants-database'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated.", 'participants-database' ), $this->files_base_label() ) . $this->settings_help( 'File-Upload-Location' ),
             'value' => 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/',
         )
     );
@@ -159,7 +159,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-main',
         'options' => array(
             'type' => 'text',
-            'help_text' => __( "Path (relative to WP root) of an image file to show if no image has been defined for an image field. Leave blank for no default image.", 'participants-database' ),
+            'help_text' => sprintf( __( "Path (relative to the %s) of an image file to show if no image has been defined for an image field. Leave blank for no default image.", 'participants-database' ), $this->files_base_label() ),
             'value' => '/wp-content/plugins/participants-database/ui/no-image.png',
         )
     );
@@ -1132,7 +1132,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'when selected, the base path for file and image uploads will be the site\'s content directory.', 'participants-database' ),
+            'help_text' => __( 'when selected, the base path for file and image uploads will be the site\'s content directory.', 'participants-database' ) . $this->settings_help( 'File-and-Image-Uploads-Use-WP-'),
             'value' => 0,
             'options' => array(1, 0),
         ),
@@ -1612,6 +1612,18 @@ ORDER BY g.order, v.order';
   }
   
   /**
+   * supplies a settings help link
+   * 
+   * @param string $anchor the anchor string
+   * @return string 
+   */
+  public function settings_help( $anchor )
+  {
+    $href = 'https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/';
+    return '<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+  }
+  
+  /**
    * sets up filters for allowing access to settings values
    */
   private function add_settings_filters()
@@ -1623,6 +1635,16 @@ ORDER BY g.order, v.order';
       return Participants_Db::plugin_setting('files_use_content_base_path', '0' ) == '1';
     });
     
+  }
+  
+  /**
+   * provides the name of the base used for file and image uploads
+   * 
+   * @return string
+   */
+  private function files_base_label()
+  {
+    return Participants_Db::apply_filters( 'files_use_content_base_path', false ) ? __( 'Content Directory', 'participants-database' ) : __( 'WordPress root', 'participants-database' );
   }
 
 }
