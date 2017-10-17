@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -40,6 +40,10 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     
     // set the field count for the group
     $this->_field_count = count( (array) $group->fields );
+    
+    // set up some classes
+    $this->add_class( $this->_field_count > 0 ? '' : 'pdb-group-empty' );
+    $this->add_class( $this->group_fields_have_values() ? '' : 'pdb-group-novalues' );
     
     $this->module = $module;
     
@@ -114,6 +118,23 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     }
     
     return Participants_Db::plugin_setting_is_true($optionname);
+  }
+  
+  /**
+   * determine if the group is composed of empty fields
+   * 
+   * @return bool true if one or more field have values
+   */
+  private function group_fields_have_values()
+  {
+    foreach( $this->fields as $field ) {
+      if ( ! $this->is_empty( $field->value ) ) {
+        reset( $this->fields );
+        return true;
+      }
+    }
+    reset( $this->fields );
+    return false;
   }
   
 }
