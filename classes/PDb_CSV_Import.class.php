@@ -85,7 +85,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $this->upload_directory = Participants_Db::files_location();
   
     // check for the target directory; attept to create if it doesn't exist
-    return is_dir( $this->root_path.$this->upload_directory ) ? true : Participants_Db::_make_uploads_dir( $this->upload_directory ) ;
+    return is_dir( Participants_Db::base_files_path() . $this->upload_directory ) ? true : Participants_Db::_make_uploads_dir( $this->upload_directory ) ;
     
   }
   
