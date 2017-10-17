@@ -118,14 +118,19 @@ class PDb_Image extends xnau_Image_Handler {
    */
   public function set_default_image($image = false)
   {
-    $this->default_image = $image === false ? Participants_Db::plugin_setting('default_image', '') : $image;
+    $default_image = wp_cache_get('pdb-default_image_url');
+    
+    if ( false === $default_image ) {
+      $default_image = $image === false ? Participants_Db::plugin_setting('default_image', '') : $image;
 
-    // check the path for a valid image
-    if (self::getimagesize( ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? WP_CONTENT_DIR . '/' : Participants_Db::app_base_path() ) . ltrim($this->default_image, '/')) !== false) {
-      $this->default_image = ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? content_url() . '/' : Participants_Db::app_base_url() ) . ltrim($this->default_image, '/');
-    } else {
-      $this->default_image = false;
+      // check the path for a valid image
+      if (self::getimagesize( Participants_Db::base_files_path() . ltrim( $default_image, '/' ) ) !== false) {
+        $default_image = Participants_Db::base_files_url() . ltrim($default_image, '/');
+      }
+      wp_cache_set('pdb-default_image_url', $default_image );
     }
+    
+    $this->default_image = $default_image;
   }
 
   /**
