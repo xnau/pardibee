@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.5.14
+ * Version: 1.7.5.15
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -3268,7 +3268,7 @@ class Participants_Db extends PDb_Base {
     $dir = empty( $dir ) ? Participants_Db::files_location() : $dir;
     $savedmask = umask( 0 );
     $status = true;
-    if ( mkdir( Participants_Db::app_base_path() . $dir, 0755, true ) === false ) {
+    if ( mkdir( Participants_Db::base_files_path() . $dir, 0755, true ) === false ) {
 
       if ( is_object( self::$validation_errors ) )
         self::$validation_errors->add_error( '', sprintf( __( 'The uploads directory (%s) could not be created.', 'participants-database' ), $dir ) );
