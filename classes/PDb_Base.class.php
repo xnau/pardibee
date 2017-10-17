@@ -905,6 +905,8 @@ class PDb_Base {
   public static function files_location()
   {
     $base_path = Participants_Db::plugin_setting( 'image_upload_location', 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' );
+    
+    // multisite compatibility
     global $wpdb;
     if ( isset($wpdb->blogid) && $wpdb->blogid > 1 ) {
       $base_path = str_replace( Participants_Db::PLUGIN_NAME, 'sites/' . $wpdb->blogid . '/' . Participants_Db::PLUGIN_NAME, $base_path );
@@ -918,6 +920,26 @@ class PDb_Base {
      */
     return Participants_Db::apply_filters( 'files_location', $base_path );
   }
+  
+  /**
+   * provides the base absolute path for files uploads
+   * 
+   * @return string
+   */
+  public static function base_files_path()
+  {
+    return Participants_Db::apply_filters('files_use_content_base_path', false ) ? trailingslashit( WP_CONTENT_DIR ) : self::app_base_path();
+  }
+  
+  /**
+   * provides the base URL for file and image uploads
+   * 
+   * @return string
+   */
+  public static function base_files_url()
+  {
+    return Participants_Db::apply_filters('files_use_content_base_path', false ) ? trailingslashit( content_url() ) : self::app_base_url();
+  }
 
   /**
    * supplies the absolute path to the files location
@@ -926,7 +948,7 @@ class PDb_Base {
    */
   public static function files_path()
   {
-    return trailingslashit( PDb_Image::concatenate_directory_path( ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? WP_CONTENT_DIR : self::app_base_path() ), Participants_Db::files_location() ) );
+    return trailingslashit( PDb_Image::concatenate_directory_path( self::base_files_path(), Participants_Db::files_location() ) );
   }
 
   /**
@@ -936,8 +958,7 @@ class PDb_Base {
    */
   public static function files_uri()
   {
-    //return trailingslashit(site_url(Participants_Db::files_location()));
-    return ( Participants_Db::apply_filters('files_use_content_base_path', false ) ? content_url() . '/' : self::app_base_url() ) . trailingslashit( ltrim( Participants_Db::files_location(), DIRECTORY_SEPARATOR ) ); // content_url()
+    return self::base_files_url() . trailingslashit( ltrim( Participants_Db::files_location(), DIRECTORY_SEPARATOR ) );
   }
 
   /**
@@ -950,7 +971,7 @@ class PDb_Base {
    */
   public static function delete_file( $filename )
   {
-    $current_dir = getcwd(); // save the cirrent dir
+    $current_dir = getcwd(); // save the current dir
     chdir( self::files_path() ); // set the plugin uploads dir
     $result = unlink( basename( $filename ) ); // delete the file
     chdir( $current_dir ); // change back to the previous directory
