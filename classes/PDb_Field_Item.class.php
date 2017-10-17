@@ -82,6 +82,9 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function __construct( $field, $id = false )
   {
+    if ( $field === false ) {
+      $field = '';
+    }
     if ( is_string( $field ) ) {
       $field = (object) array('name' => $field);
     }
