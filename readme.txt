@@ -283,7 +283,7 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.7.5.15 =
+= 1.7.5.16 =
 * CONTENT_URL preference performance improvements
 * empty group and empty group field classnames
 
@@ -891,8 +891,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.5.15 =
-Version 1.7.5.15 is a bugfix update
+= 1.7.5.16 =
+Version 1.7.5.16 is a bugfix update
 
 == Plugin Support ==
 
