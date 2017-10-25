@@ -177,6 +177,7 @@ class PDb_Signup extends PDb_Shortcode {
 //    error_log(__METHOD__.' shortcode atts: '. print_r($this->shortcode_atts,1));
 
     $record_edit_page = Participants_Db::find_permalink( $this->shortcode_atts['edit_record_page'] );
+//    error_log(__METHOD__.' record edit page: '.$record_edit_page);
     add_filter( 'pdb-record_edit_page', function() use ( $record_edit_page ) {
       return $record_edit_page;
     } );
