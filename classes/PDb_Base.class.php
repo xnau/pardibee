@@ -1307,19 +1307,24 @@ class PDb_Base {
   {
     // sets the caching header to allow private caching with no expiration
     $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' );
+    
+    
+    if ( self::is_multipage_form() ) {
+      // prevents browser back-button caching in the middle of a multipage form
+      $cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
+    }
+    
     if ( ! empty( $cache_limit ) ) {
       session_cache_limiter( $cache_limit );
     }
+    
     if ( Participants_Db::plugin_setting_is_true('use_php_sessions') ) {
       // initalize PHP sessions if needed
       if ( !session_id() && !headers_sent() ) {
         session_start();
       }
     }
-    if ( self::is_multipage_form() ) {
-      // attempts to prevent browser back-button caching in the middle of a multipage form
-      $headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store';
-    }
+    
     return $headers;
   }
 
