@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.9
+ * @version    0.10
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    FormElement class, Shortcode class
  * 
@@ -69,7 +69,10 @@ class PDb_Session {
     if ( $this->use_php_sessions ) {
 
       if ( !session_id() && !headers_sent() ) {
-        session_start();
+        /*
+         * as of 1.7.6 we only start the session in PDb_Base::control_caching()
+         */
+        //session_start();
       }
     } else {
 
