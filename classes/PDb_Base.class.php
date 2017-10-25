@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -276,7 +276,7 @@ class PDb_Base {
    * If an absolute path is provided, the path is returned unchanged.
    * 
    * @param string|int $page the term indicating the page to get a permalink for
-   * @global object $wpdb
+   * @global wpdb $wpdb
    * @return string|bool the permalink or false if it fails
    */
   public static function find_permalink( $page )
@@ -292,6 +292,7 @@ class PDb_Base {
     } else {
       global $wpdb;
       $id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p WHERE p.post_name = '%s' AND p.post_status = 'publish'", trim( $page, '/ ' ) ) );
+//      error_log(__METHOD__.' query: '.$wpdb->last_query);
     }
     if ( $id )
       $permalink = get_permalink( $id );
@@ -1297,15 +1298,26 @@ class PDb_Base {
   }
 
   /**
-   * attempts to prevent browser back-button caching in the middle of a multipage form
+   * set up cache control and sessions
    * 
    * @param array $headers array of http headers
    * @return array altered headers array
    */
   public static function control_caching( $headers )
   {
-//    $headers['X-xnau-plugin'] = $headers['X-xnau-plugin'] . ' ' . Participants_Db::$plugin_title . '-' . Participants_Db::$plugin_version;
+    // sets the caching header to allow private caching with no expiration
+    $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' );
+    if ( ! empty( $cache_limit ) ) {
+      session_cache_limiter( $cache_limit );
+    }
+    if ( Participants_Db::plugin_setting_is_true('use_php_sessions') ) {
+      // initalize PHP sessions if needed
+      if ( !session_id() && !headers_sent() ) {
+        session_start();
+      }
+    }
     if ( self::is_multipage_form() ) {
+      // attempts to prevent browser back-button caching in the middle of a multipage form
       $headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store';
     }
     return $headers;
