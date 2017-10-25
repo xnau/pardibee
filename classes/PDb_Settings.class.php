@@ -1094,8 +1094,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'uncheck this if PHP sessions are not working.', 'participants-database' ),
-            'value' => 1,
+            'help_text' => __( 'check this to use PHP sessions instead of database sessions.', 'participants-database' ) . $this->settings_help( 'usephpsessions'),
+            'value' => 0,
             'options' => array(1, 0),
         ),
     );
