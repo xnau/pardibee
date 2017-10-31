@@ -186,7 +186,7 @@ class PDb_FormElement extends xnau_FormElement {
      * @since 1.6
      * 
      * @param string $return the value display
-     * @param object $field the field object
+     * @param PDb_Field_Item $field the field object
      * 
      * formerly, this was set as "pdb-before_display_field" and included a more limited set of arguments
      */
@@ -198,9 +198,9 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     if ( empty( $return ) ) {
-
+      
       switch ( $field->form_element ) :
-
+        
         case 'image-upload' :
           switch ( $field->module ) {
             case 'single':
