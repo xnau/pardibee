@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -25,7 +25,7 @@ class PDb_List_Query_Filter {
   /**
    * @var string the name of the field the filter is to be applied to
    */
-  var $field;
+  private $fieldname;
 
   /**
    * @var string the filter expressed as a mysql query fragment
@@ -152,12 +152,10 @@ class PDb_List_Query_Filter {
   {
 
     if ( isset( $params['field'] ) ) {
-      $this->field = Participants_Db::$fields[$params['field']];
-      if ( !$this->field )
-        $this->field = ''; // blank it if the field name is invalid
+      $this->fieldname = array_key_exists( $params['field'], Participants_Db::$fields ) ? $params['field'] : '';
     }
     if ( isset( $params['statement'] ) ) {
-      $this->sql = $this->sanitize_sql( $params['statement'] );
+      $this->sql = $params['statement'];
     }
     if ( isset( $params['logic'] ) ) {
       $this->or_statement = $params['logic'] === 'OR';
@@ -174,7 +172,7 @@ class PDb_List_Query_Filter {
   }
 
   /**
-   * sets the search term property
+   * sanitizes and sets the search term property
    * 
    * @param string $term
    * @return null
@@ -185,7 +183,7 @@ class PDb_List_Query_Filter {
       $this->term = '';
     } else {
       $wrap =  preg_match( '#"[^"]+"#', $term ) === 1 ? '"%s"' : '%s';
-      $term = PDb_FormElement::get_title_value( trim($term, '"'), $this->field->name );
+      $term = PDb_FormElement::get_title_value( trim($term, '"'), $this->fieldname );
       $this->term = self::_esc_like( sprintf( $wrap, $term ) );
     }
   }
@@ -268,17 +266,6 @@ class PDb_List_Query_Filter {
   {
     $this->index = $set === false ? $this->index : $set;
     return $this->index;
-  }
-
-  /**
-   * sanitizes an SQL statement
-   * 
-   * @param string $sql the query statement
-   * @return string the sanitized statement
-   */
-  public static function sanitize_sql( $sql )
-  {
-    return stripslashes( esc_sql( $sql ) );
   }
 
   /**
