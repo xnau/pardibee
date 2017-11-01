@@ -214,6 +214,8 @@ class PDb_Init {
    */
   public static function do_network_operation( callable $callback )
   {
+    add_action('switch_blog', array( $this, 'switch_blog' ), 10, 2 );
+    
     global $wpdb;
 
     // store the currently active blog id
@@ -228,6 +230,19 @@ class PDb_Init {
     }
     // return to the current blog selection
     switch_to_blog( $current_blog );
+  }
+  
+  /**
+   * handles switching the blog
+   * 
+   * 
+   * @param int $new_blog id
+   * @param int $current_blog id
+   */
+  public function switch_blog ( $new_blog, $current_blog ) { 
+    if ( $new_blog != $current_blog ) {
+      Participants_Db::setup_source_names();
+    }
   }
 
   /**
