@@ -612,20 +612,45 @@ class PDb_Base {
   }
 
   /**
+   * checks a plugin permission level and passes it through a filter
+   * 
+   * this allows for all plugin functions that are permission-controlled to be controlled 
+   * with a filter callback
+   * 
+   * the context value will contain the name of the function or script that is pretected
+   * 
+   * see: http://codex.wordpress.org/Roles_and_Capabilities
+   * 
+   * @param string $cap the plugin capability level (not WP cap) to check for
+   * @param string $context provides the context of the request
+   * 
+   * @return string the name of the WP capability to use
+   */
+  public static function plugin_capability( $cap, $context = '' )
+  {
+
+    $capability = 'read'; // assume the lowest cap
+    if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
+      $capability = self::apply_filters( 'access_capability', self::plugin_setting( $cap ), $context );
+    }
+    return $capability;
+  }
+
+  /**
    * check the current users plugin role
    * 
    * the plugin has two roles: editor and admin; it is assumed an admin has the editor 
    * capability
    * 
    * @param string $role optional string to test a specific role. If omitted, tests 
-   *                     for either role
+   *                     for editor role
    * @param string $context the function or action being tested for
    * 
    * @return bool true if current user has the role tested
    */
   public static function current_user_has_plugin_role( $role = 'editor', $context = '' )
   {
-    $role = $role === 'admin' ? 'plugin_admin_capability' : 'record_edit_capability';
+    $role = stripos( $role, 'admin' ) !== false ? 'plugin_admin_capability' : 'record_edit_capability';
 
     return current_user_can( self::plugin_capability( $role, $context ) );
   }
@@ -655,31 +680,6 @@ class PDb_Base {
   public  static function csv_export_nonce()
   {
     return 'pdb-csv_export';
-  }
-
-  /**
-   * checks a plugin permission level and passes it through a filter
-   * 
-   * this allows for all plugin functions that are permission-controlled to be controlled 
-   * with a filter callback
-   * 
-   * the context value will contain the name of the function or script that is pretected
-   * 
-   * see: http://codex.wordpress.org/Roles_and_Capabilities
-   * 
-   * @param string $cap the plugin capability level (not WP cap) to check for
-   * @param string $context provides the context of the request
-   * 
-   * @return string the name of the WP capability to use
-   */
-  public static function plugin_capability( $cap, $context = '' )
-  {
-
-    $capability = 'read'; // assume the lowest cap
-    if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
-      $capability = self::apply_filters( 'access_capability', self::plugin_setting( $cap ), $context );
-    }
-    return $capability;
   }
 
   /**
@@ -1298,34 +1298,51 @@ class PDb_Base {
   }
 
   /**
-   * set up cache control and sessions
+   * make any needed alterations to the headers
    * 
    * @param array $headers array of http headers
    * @return array altered headers array
    */
   public static function control_caching( $headers )
   {
-    // sets the caching header to allow private caching with no expiration
-    $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' );
+    self::initialize_session();
+    /**
+     * @filter pdb-wp_headers
+     * @param array of headers
+     * @return array
+     */
+    return self::apply_filters( 'wp_headers', $headers );
+  }
+  
+  /**
+   * set up cache control and sessions
+   * 
+   */
+  public static function initialize_session()
+  {
+    // if this is called too late, do nothing
+    if ( headers_sent() ) return;
+    /**
+     * sets the cache mode
+     * 
+     * @link http://php.net/manual/en/function.session-cache-limiter.php
+     */
+    $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' ); // private_no_expire
     
     
-    if ( self::is_multipage_form() ) {
+    //if ( self::is_multipage_form() ) {
       // prevents browser back-button caching in the middle of a multipage form
-      $cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
-    }
+      //$cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
+    //}
     
     if ( ! empty( $cache_limit ) ) {
       session_cache_limiter( $cache_limit );
     }
     
-    if ( Participants_Db::plugin_setting_is_true('use_php_sessions') ) {
-      // initalize PHP sessions if needed
-      if ( !session_id() && !headers_sent() ) {
-        session_start();
-      }
+    // initalize PHP sessions if needed
+    if ( Participants_Db::plugin_setting_is_true('use_php_sessions') && !session_id() ) {
+      session_start();
     }
-    
-    return $headers;
   }
 
   /**
