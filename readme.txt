@@ -284,7 +284,8 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.5.17 =
-* added cache control to allow browser caching #1610 
+* added cache control to allow browser caching #1610
+* sessions not started if PHP Sessions preference is off #1611
 
 = 1.7.5.16 =
 * CONTENT_URL preference performance improvements
