@@ -167,7 +167,6 @@ class PDb_List_Query {
      */
 
 //    error_log(__METHOD__.' post: '.print_r($_POST,1));
-//    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
 //    error_log(__METHOD__.' action: '.$_POST['action'].' search? '.($this->is_search_result()?'yes':'no').' query session name: '.$this->query_session_name());
 
     if ( $this->requested_page() ) {
@@ -180,6 +179,9 @@ class PDb_List_Query {
       // we're just showing the list with the shortcode parameters
       $this->_clear_query_session();
     }
+//    error_log(__METHOD__.' ID: '.Participants_Db::$session->get_id().' 
+//      
+//session: '.print_r(Participants_Db::$session,1));
   }
 
   /**
@@ -264,7 +266,6 @@ class PDb_List_Query {
    */
   public function current_filter( $key = false )
   {
-
     $this->_setup_filter_array();
     reset( $this->sort );
     reset( $this->filter );
@@ -572,7 +573,7 @@ class PDb_List_Query {
 
       /*
        * each element in the field clauses array is a PDb_List_Query_Filter object 
-       * representing a statment acting on a particular field
+       * representing a statement acting on a particular field
        */
       if ( $clause->is_or() === $parens_logic && !$inparens ) {
         $subquery .= '(';
