@@ -379,7 +379,7 @@ class Participants_Db extends PDb_Base {
   /**
    * provides a list of all plugin shortcodes
    * 
-   * @filter 'pdb-plugin_sjortcode_list' array
+   * @filter 'pdb-plugin_shortcode_list' array
    * 
    * @return  array list of shortcode tags
    */
@@ -2375,7 +2375,9 @@ class Participants_Db extends PDb_Base {
    */
   public static function add_blank_field( $atts )
   {
-
+    // prevent spurious field creation
+    if ( !isset( $atts['name'] ) || empty( $atts['name'] ) ) return;
+    
     global $wpdb;
     $wpdb->hide_errors();
 
@@ -3329,8 +3331,7 @@ class Participants_Db extends PDb_Base {
    * @return null
    */
   public static function pdb_list_filter()
-  {
-
+  { 
     $multi = isset( $_POST['search_field'] ) && is_array( $_POST['search_field'] );
     $postinput = filter_input_array( INPUT_POST, self::search_post_filter( $multi ) );
 
@@ -3367,6 +3368,11 @@ class Participants_Db extends PDb_Base {
    */
   private static function print_list_search_result( $post, $instance )
   {
+    
+//    error_log(__METHOD__.' sess id: '.Participants_Db::$session->get_id().' 
+//     
+//session: '.print_r(Participants_Db::$session,1));
+    
     /*
      * get the attributes array; these values were saved in the session array by 
      * the Shortcode class when it was instantiated
