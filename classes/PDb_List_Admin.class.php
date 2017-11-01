@@ -261,9 +261,9 @@ class PDb_List_Admin {
    */
   public static function user_can_export_csv()
   {
-    $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'editor' : 'admin';
+    $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'record_edit_capability' : 'plugin_admin_capability';
     
-    return Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' );
+    return current_user_can( Participants_Db::plugin_capability( $csv_role, 'export csv' ) );
   }
   
   /**
@@ -880,24 +880,26 @@ class PDb_List_Admin {
              */
 //            do_action(Participants_Db::$prefix . 'admin_list_form_top', $this);
             do_action( Participants_Db::$prefix . 'admin_list_form_top' );
-            /**
-             * @filter pdb-admin_list_with_selected_actions
-             * @param array as $title => $action of actions to apply to selected records
-             */
-            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', array(
-                        __( 'delete', 'participants-database' ) => 'delete',
+            $with_selection_actions = array(
                         __( 'approve', 'participants-database' ) => 'approve',
                         __( 'unapprove', 'participants-database' ) => 'unapprove',
-                    ) );
+                    );
+            if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) {
+              $with_selection_actions = array(
+                        __( 'delete', 'participants-database' ) => 'delete'
+                    ) + $with_selection_actions;
+            }
+            /**
+             * @filter pdb-admin_list_with selected actions
+             * @param array as $title => $action of actions to apply to selected records
+             */
+            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with selected actions', $with_selection_actions );
             $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
             ?>
             <table class="form-table"><tbody><tr><td>
                     <fieldset class="widefat inline-controls">
                       <?php
-                      if (
-                              current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ||
-                              current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'send_list_email' ) ) // note: this is not fully implemented
-                      ) :
+                      if ( self::user_can_use_with_selected() ) :
                         ?>
                         <span style="padding-right:20px" >
                           <?php echo self::$i18n['with_selected'] ?>: 
@@ -981,7 +983,7 @@ class PDb_List_Admin {
                         <tr>
                           <?php // print delete check     ?>
                           <td>
-                            <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
+                            <?php if ( self::user_can_use_with_selected() ) : ?>
                               <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value['id'] ?>" />
                             <?php endif ?>
                             <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
@@ -1167,7 +1169,7 @@ class PDb_List_Admin {
     // print the "select all" header 
     ?>
     <th scope="col" style="width:3em">
-      <?php if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) : ?>
+      <?php if ( self::user_can_use_with_selected() ) : ?>
         <?php /* translators: uses the check symbol in a phrase that means "check all"  printf('<span class="checkmark" >&#10004;</span>%s', __('all', 'participants-database'))s */ ?>
         <input type="checkbox" name="checkall" id="checkall" ><span class="dashicons dashicons-edit" style="opacity: 0"></span>
       <?php endif ?>
@@ -1181,6 +1183,16 @@ class PDb_List_Admin {
               $field->sortable ? $sortable_head_pattern : $head_pattern, str_replace( array('"', "'"), array('&quot;', '&#39;'), $title ), $column->name, $column->name === self::$filter['sortBy'] ? $sorticon : ''
       );
     }
+  }
+  
+  /**
+   * tealls if the current user can utilize the "with selected" functionality
+   * 
+   * @return bool true if the user is allowed
+   */
+  private static function user_can_use_with_selected()
+  {
+    return current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) || current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'with selected actions' ) );
   }
 
   /**
