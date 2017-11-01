@@ -65,6 +65,8 @@ class PDb_Session {
     $this->use_php_sessions = Participants_Db::plugin_setting_is_true( 'use_php_sessions' );
 
     $this->session_name = Participants_Db::$prefix . 'session';
+    
+    Participants_Db::initialize_session();
 
     if ( $this->use_php_sessions ) {
 
@@ -200,7 +202,10 @@ class PDb_Session {
    */
   public function set( $key, $value )
   {
-
+//    error_log(__METHOD__.' setting: '.$key.' 
+//      
+//trace: '.print_r(  wp_debug_backtrace_summary(),1));
+    
     $key = sanitize_key( $key );
 
     $this->session[$key] = $value;
@@ -245,7 +250,9 @@ class PDb_Session {
    */
   public function clear( $name )
   {
-    //error_log(__METHOD__.' clearing: '.$name);
+//    error_log(__METHOD__.' clearing: '.$name.' 
+//      
+//trace: '.print_r(  wp_debug_backtrace_summary(),1));
 
     $key = sanitize_key( $name );
 
