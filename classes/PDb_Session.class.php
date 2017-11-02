@@ -202,7 +202,9 @@ class PDb_Session {
    */
   public function set( $key, $value )
   {
-//    error_log(__METHOD__.' setting: '.$key.' 
+//    error_log(__METHOD__.' setting: '.$key.'
+//      
+//value: ' . print_r( $value,1 ) . '
 //      
 //trace: '.print_r(  wp_debug_backtrace_summary(),1));
     
