@@ -113,6 +113,8 @@ class PDb_List_Admin {
   
   /**
    * initializes and outputs the list for the backend
+   * 
+   * @global wpdb $wpdb
    */
   public static function initialize()
   {
@@ -166,6 +168,8 @@ class PDb_List_Admin {
     self::$user_settings = Participants_Db::$prefix . self::$user_settings . '-' . $current_user->ID;
     self::$filter_transient = Participants_Db::$prefix . self::$filter_transient . '-' . $current_user->ID;
 
+//    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
+
     self::set_list_limit();
 
     self::$registration_page_url = get_bloginfo( 'url' ) . '/' . Participants_Db::plugin_setting( 'registration_page', '' );
@@ -173,7 +177,7 @@ class PDb_List_Admin {
     self::setup_display_columns();
 
     self::$sortables = Participants_Db::get_field_list( false, false, 'alpha' );
-//    self::$sortables = Participants_Db::get_sortables(false, 'alpha');
+
     // set up the basic values
     self::$default_filter = array(
         'search' => array(
@@ -191,27 +195,27 @@ class PDb_List_Admin {
 
     // merge the defaults with the $_REQUEST array so if there are any new values coming in, they're included
     self::_update_filter();
-
-    // error_log(__METHOD__.' filter:'.print_r(self::$filter,1));
+    
+    //error_log(__METHOD__.' filter:'.print_r(self::$filter,1));
     // process delete and items-per-page form submissions
     self::_process_general();
 
     self::_process_search();
 
     if ( PDB_DEBUG )
-      error_log( __METHOD__ . ' list query= ' . self::$list_query );
+      error_log( __METHOD__ . ' list query= ' . self::list_query() );
     /*
      * save the query in a transient so it can be used by the export CSV functionality
      */
     if ( self::user_can_export_csv() ) {
-      Participants_Db::$session->set( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID, self::$list_query );
+      Participants_Db::$session->set( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, self::list_query() );
     }
 
     // get the $wpdb object
     global $wpdb;
 
     // get the number of records returned
-    self::$num_records = $wpdb->get_var( str_replace( '*', 'COUNT(*)', self::$list_query ) );
+    self::$num_records = $wpdb->get_var( str_replace( '*', 'COUNT(*)', self::list_query() ) );
 
     // set the pagination object
     $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array('options' => array('default' => 1, 'min_range' => 1)) );
@@ -274,6 +278,23 @@ class PDb_List_Admin {
   public static function default_query() {
     global $wpdb;
     return 'SELECT * FROM ' . $wpdb->prefix . 'participants_database p ORDER BY p.date_recorded desc';
+  }
+  
+  /**
+   * provides the last list query
+   * 
+   * @global wpdb $wpdb
+   * @global string $wp_version
+   * 
+   * @return string
+   */
+  public static function list_query()
+  {
+    global $wpdb, $wp_version;
+    if ( version_compare( $wp_version, '1.8.3', '>=' ) ) {
+      return $wpdb->remove_placeholder_escape( self::$list_query );
+    }
+    return self::$list_query;
   }
 
   /**
