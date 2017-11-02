@@ -333,7 +333,8 @@ class Participants_Db extends PDb_Base {
      */
     add_action( 'switch_blog', array(__CLASS__, 'setup_source_names' ) );
     // set up the database for any new blogs
-    add_action( 'wpmu_new_blog', array('PDb_Init', 'new_blog' ) );
+    add_action( 'wpmu_new_blog', array( 'PDb_Init', 'new_blog' ) );
+    add_action( 'delete_blog', array( 'PDb_Init', 'delete_blog' ), 10, 2 );
 
     add_filter( 'wp_headers', array(__CLASS__, 'control_caching') );
     /**
@@ -433,9 +434,9 @@ class Participants_Db extends PDb_Base {
    */
   public static function setup_source_names()
   {
-    if ( !is_null( self::$participants_table ) ) {
-      return;
-    }
+//    if ( !is_null( self::$participants_table ) ) {
+//      return;
+//    }
     /*
      * these can be modified later with a filter hook
      * 
