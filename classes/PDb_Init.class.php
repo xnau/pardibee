@@ -36,7 +36,7 @@ class PDb_Init {
   {
     if ( !$mode )
       wp_die( 'class must be called on the activation hooks', 'object not correctly instantiated' );
-
+    
     switch ( $mode ) {
       case 'activate' :
         $this->_activate();
@@ -60,6 +60,11 @@ class PDb_Init {
 
       case 'new_blog':
         $this->_new_blog( $arg );
+        break;
+
+      case 'delete_blog':
+        $this->_delete_blog( $arg );
+        break;
     }
   }
 
@@ -97,6 +102,19 @@ class PDb_Init {
   public static function new_blog( $blog_id )
   {
     new PDb_Init( 'new_blog', $blog_id );
+  }
+
+  /**
+   * remove all plugin settings and database tables
+   * 
+   * @param int $blog_id of the blog to delete
+   * @param bool  $drop if true, delete tables
+   */
+  public static function delete_blog( $blog_id, $drop )
+  {
+    if ( $drop ) {
+      new PDb_Init( 'delete_blog', $blog_id );
+    }
   }
 
   /**
@@ -149,12 +167,40 @@ class PDb_Init {
       switch_to_blog( $current_blog );
     }
   }
+  
+  /**
+   * deletes a blog's PDB tables
+   * 
+   * @global wpdb $wpdb
+   * @param int $blog_id
+   * 
+   */
+  private function _delete_blog( $blog_id )
+  {
+    global $wpdb;
+    
+    // store the currently active blog id
+    $current_blog = $wpdb->blogid;
+    switch_to_blog( $blog_id );
+    Participants_Db::setup_source_names();
+    
+
+    // delete tables
+    $sql = 'DROP TABLE `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
+    $wpdb->query( $sql );
+    
+    // return to the current blog selection
+    switch_to_blog( $current_blog );
+  }
 
   /**
    * triggers a database install if needed
    */
   public function maybe_install()
   {
+    global $wpdb;
+    Participants_Db::setup_source_names();
+    
     if ( $this->needs_install() ) {
       $this->_install_database();
     }
@@ -248,7 +294,7 @@ class PDb_Init {
   /**
    * deletes all plugin tables, options and transients
    * 
-   * @global object $wpdb
+   * @global wpdb $wpdb
    */
   private function _uninstall()
   {
