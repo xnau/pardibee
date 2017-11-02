@@ -2674,7 +2674,7 @@ class Participants_Db extends PDb_Base {
             
             if ( is_admin() ) {
               global $current_user;
-              $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query' . $current_user->ID, PDb_List_Admin::default_query() );
+              $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
               $query = str_replace( '*', ' ' . $export_columns . ' ', $query );
             } else {
               $query = self::$session->get('csv_export_query');
