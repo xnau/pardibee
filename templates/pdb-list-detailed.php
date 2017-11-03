@@ -67,7 +67,7 @@ this is a more detailed template showing how the parts of the display can be cus
          */
         $this->column_selector( false, true, false, 'column', false );
       ?>
-			<input name="operator" type="hidden" class="search-item" value="LIKE" />
+			<input name="operator" type="hidden" class="search-item" value="<?php echo ( Participants_Db::plugin_setting_is_true( 'strict_search' ) ? '=' : 'LIKE' ) ?>" />
 			<?php
 			/*
 			 * the following text input is where the user types in the search term
