@@ -281,7 +281,7 @@ class PDb_List_Admin {
   }
   
   /**
-   * provides the last list query
+   * provides the last list query with the placeholders removed
    * 
    * @global wpdb $wpdb
    * @global string $wp_version
@@ -914,7 +914,7 @@ class PDb_List_Admin {
              * @filter pdb-admin_list_with selected actions
              * @param array as $title => $action of actions to apply to selected records
              */
-            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with selected actions', $with_selection_actions );
+            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
             $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
             ?>
             <table class="form-table"><tbody><tr><td>
