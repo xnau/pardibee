@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class, CSV_Import
  *
@@ -100,6 +100,11 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     return Participants_Db::apply_filters( 'csv_import_value', esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure)), $column );
   }
   
+  /**
+   * stores the record in the database
+   * 
+   * @param array $post asscitative srray of imported data
+   */
   function store_record( $post ) {
     
     /**
@@ -115,6 +120,14 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     
     // add the record data to the database
 		$id = Participants_Db::process_form( $post, 'insert', false, $this->column_names );
+    
+    /**
+     * @action pdb-after_import_record
+     * @param array $post the saved data
+     * @param int $id the record id
+     * @param string $insert_status the insert status for the record
+     */
+    do_action( 'pdb-after_import_record', $post, $id, Participants_Db::$insert_status );
 		
 		// count the insert type for the record
 		switch ( Participants_Db::$insert_status ) {
