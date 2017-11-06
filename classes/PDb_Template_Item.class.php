@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -107,6 +107,33 @@ class PDb_Template_Item {
     //str_replace(array('"',"'"), array('&quot;','&#39;'), stripslashes($string));
     //htmlspecialchars( stripslashes( $string ), ENT_QUOTES, "UTF-8", false );
   
+  }
+  
+  /**
+   * preps a display tring allowing HTML
+   * 
+   * @param string $string the string to display
+   * @return string sanitized for HMTL
+   */
+  public static function html_allowed( $string )
+  {
+    return wp_kses( $string, self::allowed_tags() );
+  }
+  
+  /**
+   * provides a list of allowed tags for HTML-enabled output
+   * 
+   * @return array
+   */
+  public static function allowed_tags()
+  {
+    return Participants_Db::apply_filters('field_attributes_allowed_html_tags',array(
+        'a' => array('href' => array(), 'title' => array(), 'target' => array()),
+        'pre' => array(), 'em' => array(), 'strong' => array(), 'br' => array(), 'span' => array( 'class' => array() ),
+        'p' => array(), 'ul' => array(), 'ol' => array(), 'li' => array(),
+        'h1' => array(), 'h2' => array(), 'h3' => array(), 'h4' => array(), 'h5' => array(), 'h6' => array(),
+        'img' => array('src' => array(), 'class' => array(), 'alt' => array())
+    ) );
   }
   
   /**
