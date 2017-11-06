@@ -3037,6 +3037,10 @@ class Participants_Db extends PDb_Base {
     foreach ( $raw_array as $key => $value ) {
 
       /**
+       * filters the raw value of the field
+       * 
+       * subsequent processing can be skipped by setting the $column->form_element property to 'skip'
+       * 
        * @version 1.7.1
        * @filter pdb-csv_export_value_raw
        * @param mixed the raw value
@@ -3080,18 +3084,32 @@ class Participants_Db extends PDb_Base {
            */
           $value = preg_replace( '/^\s+|\n|\r|\s+$/m', '', wpautop( $value, true ) );
           break;
+        
+        case 'skip':
+          // do nothing
+          break;
 
         default:
 
-          // flatten arrays
-          if ( is_array( maybe_unserialize( $value ) ) ) {
+          /**
+           * flatten arrays
+           * 
+           * @version 1.7.6.1 checks for assoc array
+           */
+          $value_check = maybe_unserialize( $value );
+          if ( is_array( $value_check ) && ! PDb_FormElement::is_assoc( $value_check ) ) {
+            // if it is an indexed array flatten the array into comma-separated list
             $value = implode( ', ', maybe_unserialize( $value ) );
+          } elseif ( is_array( $value ) ) {
+            // in case it was an array all along
+            $value = serialize( $value );
           }
+          
       }
 
       /*
        * decode HTML entities and convert line breaks to <br>, then pass to a filter 
-       * for processing beforebeing added to the output array
+       * for processing before being added to the output array
        */
       $output_value = Participants_Db::apply_filters( 'csv_export_value', html_entity_decode( str_replace( array("\n", "\r"), '<br />', stripslashes( $value ) ), ENT_QUOTES, "UTF-8" ), $column );
       $output[$key] = $output_value;
