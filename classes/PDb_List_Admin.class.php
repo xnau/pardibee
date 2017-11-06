@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.5
+ * @version    Release: 1.9.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -284,14 +284,13 @@ class PDb_List_Admin {
    * provides the last list query with the placeholders removed
    * 
    * @global wpdb $wpdb
-   * @global string $wp_version
    * 
    * @return string
    */
   public static function list_query()
   {
-    global $wpdb, $wp_version;
-    if ( version_compare( $wp_version, '1.8.3', '>=' ) ) {
+    global $wpdb;
+    if ( method_exists( $wpdb, 'remove_placeholder_escape' ) ) {
       return $wpdb->remove_placeholder_escape( self::$list_query );
     }
     return self::$list_query;
