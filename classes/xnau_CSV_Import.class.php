@@ -170,8 +170,9 @@ abstract class xnau_CSV_Import {
   /**
    * stores the record in the database
    *
+   * @param array $post associative array of imported data
    */
-  abstract protected function store_record($array);
+  abstract protected function store_record( $post );
 
   /**
    * inserts a series of records from a csv file
