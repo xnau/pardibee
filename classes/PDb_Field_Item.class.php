@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.8
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -325,7 +325,7 @@ class PDb_Field_Item extends PDb_Template_Item {
   private function _label()
   {
 
-    $label = $this->prepare_display_value( $this->title );
+    $label = $this->prepare_display_value( self::html_allowed( $this->title ) );
 
     if ( $this->place_required_mark() ) {
 
@@ -442,7 +442,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function has_help_text()
   {
-
     return !empty( $this->help_text );
   }
 
@@ -451,15 +450,7 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function print_help_text()
   {
-
-    /**
-     * now allowing help text to be shown on read only fields in the record form
-     */
-//    if ( $this->module == 'record' && $this->readonly ) {
-//      return;
-//    }
-
-    echo $this->prepare_display_value( $this->help_text );
+    echo $this->prepare_display_value( self::html_allowed( $this->help_text ) );
   }
 
   /**
