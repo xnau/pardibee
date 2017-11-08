@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.6
+ * Version: 1.7.6.1
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -3094,13 +3094,18 @@ class Participants_Db extends PDb_Base {
           /**
            * flatten arrays
            * 
+           * on CSV export, arrays are flattened into a comma-separated list, 
+           * but ONLY IF they are an indexed 1d array, otherwise, they are 
+           * exported as a serialized array
+           * 
            * @version 1.7.6.1 checks for assoc array
            */
           $value_check = maybe_unserialize( $value );
-          if ( is_array( $value_check ) && ! PDb_FormElement::is_assoc( $value_check ) ) {
+          if ( is_array( $value_check ) && ! PDb_FormElement::is_assoc( $value_check ) && count( $value_check ) === count( $value_check, COUNT_RECURSIVE ) ) {
             // if it is an indexed array flatten the array into comma-separated list
-            $value = implode( ', ', maybe_unserialize( $value ) );
-          } elseif ( is_array( $value ) ) {
+            $value = implode( ', ', $value_check );
+          }
+          if ( is_array( $value ) ) {
             // in case it was an array all along
             $value = serialize( $value );
           }
