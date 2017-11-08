@@ -285,6 +285,8 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.7.6.1 =
 * HTML allowed in field titles and help text #1607
+* fixed issue with "strict user searches" not working with some templates #1620
+* fixed issue with WP 1.8.3 not finding wpdb::remove_placeholder_escape method #1623
 
 
 = 1.7.6 =
@@ -901,8 +903,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.6 =
-Version 1.7.6 is an important compatibility update for WP 4.8.3
+= 1.7.6.1 =
+Version 1.7.6.1 is a minor feature and bug update
 
 == Plugin Support ==
 
