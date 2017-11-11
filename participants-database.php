@@ -3747,8 +3747,15 @@ function PDb_class_loader( $class )
 
   if ( !class_exists( $class ) ) {
 
-    $class_file = plugin_dir_path( __FILE__ ) . 'classes/' . $class . '.class.php';
-
+    /**
+     * allows class overrides
+     * 
+     * @filter pdb-autoloader_class_path
+     * @param string the absolute path to the class file
+     * @return string
+     */
+    $class_file = apply_filters( 'pdb-autoloader_class_path', plugin_dir_path( __FILE__ ) . 'classes/' . $class . '.class.php' );
+        
     if ( is_file( $class_file ) ) {
 
       require_once $class_file;
