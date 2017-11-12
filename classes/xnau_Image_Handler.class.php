@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  *
  * functionality provided here:
@@ -189,9 +189,9 @@ abstract class xnau_Image_Handler {
     $this->attributes['rel'] = $config['relstring'];
     $this->module = $config['module'];
 
-    $this->set_image_wrap(isset($config['wrap_tags']) && is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
-
     $this->_file_setup();
+
+    $this->set_image_wrap(isset($config['wrap_tags']) && is_array($config['wrap_tags']) ? $config['wrap_tags'] : '');
 
     $this->set_display_mode( $config['mode'] );
   }
