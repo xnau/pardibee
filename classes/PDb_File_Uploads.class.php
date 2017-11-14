@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -72,7 +72,7 @@ class PDb_File_Uploads {
 
     if ( 0 === $test ) {
 
-      if ( $type == 'image' && empty( $field_atts->values ) )
+      if ( $type == 'image' && $this->is_empty( $field_atts->values ) )
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title ), $field_name );
       else
         Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_atts->title, preg_replace( '#(,)(?=[^,])#U', ', ', $extensions ) ), $field_name );
@@ -143,5 +143,16 @@ class PDb_File_Uploads {
      */
 
     return $new_filename;
+  }
+  
+  /**
+   * quick empty test works on arrays and serialized arrays
+   * 
+   * @param string|array $input
+   * @return bool if empty
+   */
+  public function is_empty( $input )
+  {
+    return empty( implode('', (array) maybe_unserialize( $input ) ) );
   }
 }
