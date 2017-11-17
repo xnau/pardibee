@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -44,8 +44,8 @@ class PDb_File_Uploads {
 
     $field_atts = Participants_Db::get_field_atts( $field_name );
     $type = 'image-upload' == $field_atts->form_element ? 'image' : 'file';
-    $delete_checked = (bool) (isset( $_POST[$field_name . '-deletefile'] ) and $_POST[$field_name . '-deletefile'] == 'delete');
-    $_POST[$field_name . '-deletefile'] = '';
+//    $delete_checked = (bool) (isset( $_POST[$field_name . '-deletefile'] ) and $_POST[$field_name . '-deletefile'] == 'delete');
+//    $_POST[$field_name . '-deletefile'] = '';
 
     // attempt to create the target directory if it does not exist
     if ( !is_dir( Participants_Db::files_path() ) ) {
@@ -126,16 +126,18 @@ class PDb_File_Uploads {
      * user deletes are not allowed, they must check the delete box.
      * 
      * as of PDB 1.5.5
+     * 
+     * as of 1.7.6.2 file deletes are only handled in the Participants_Db::process_form method
      */
-    if ( $id !== false ) {
-      $record_data = Participants_Db::get_participant( $id );
-      if ( !empty( $record_data[$field_name] ) ) {
-        $image_obj = new PDb_Image( array('filename' => $record_data[$field_name]) );
-        if ( $image_obj->image_defined and ( Participants_Db::$plugin_options['file_delete'] == '1' || is_admin() && $delete_checked) ) {
-          Participants_Db::delete_file( $record_data[$field_name] );
-        }
-      }
-    }
+//    if ( $id !== false ) {
+//      $record_data = Participants_Db::get_participant( $id );
+//      if ( !empty( $record_data[$field_name] ) ) {
+//        $image_obj = new PDb_Image( array('filename' => $record_data[$field_name]) );
+//        if ( $image_obj->image_defined and ( Participants_Db::$plugin_options['file_delete'] == '1' || is_admin() && $delete_checked) ) {
+//          Participants_Db::delete_file( $record_data[$field_name] );
+//        }
+//      }
+//    }
 
     /*
      * as of 1.3.2 we save the image as filename only; the image is retrieved from 
