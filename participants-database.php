@@ -1870,11 +1870,12 @@ class Participants_Db extends PDb_Base {
             case 'file-upload':
 
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
-                if ( self::$plugin_options['file_delete'] == 1 or is_admin() ) {
-                  self::delete_file( $post[$column->name] );
+                if ( $participant_id && ( self::$plugin_options['file_delete'] == 1 || is_admin() ) ) {
+                  $participant_record = self::get_participant($participant_id);
+                  self::delete_file( $participant_record[$column->name] );
                 }
-                unset( $_POST[$column->name] );
-                $post[$column->name] = '';
+//                unset( $_POST[$column->name] );
+//                $post[$column->name] = '';
               }
               $new_value = self::_prepare_string_mysql( trim( $post[$column->name] ) );
               break;
@@ -3341,7 +3342,7 @@ class Participants_Db extends PDb_Base {
    * @param string  $fieldname name of the field involved (if any)
    * @return null
    */
-  public static function validation_error( $error, $name = '' )
+  public static function validation_error( $message, $fieldname = '' )
   {
     self::_show_validation_error($message, $fieldname);
   }
