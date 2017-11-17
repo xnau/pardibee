@@ -901,7 +901,7 @@ class PDb_Base {
    * 
    * @global  wpdb  $wpdb
    * 
-   * @return string realtive path to the plugin files location
+   * @return string relative path to the plugin files location
    */
   public static function files_location()
   {
@@ -953,7 +953,7 @@ class PDb_Base {
   }
 
   /**
-   * supplies the absolute path to the files location
+   * supplies the URI to the files location
    * 
    * @return string
    */
@@ -965,17 +965,28 @@ class PDb_Base {
   /**
    * deletes a file
    * 
-   * this looks in the fie upload directory and deletes $filename if found
-   * 
    * @param string $filename
    * @return bool success
    */
   public static function delete_file( $filename )
   {
-    $current_dir = getcwd(); // save the current dir
-    chdir( self::files_path() ); // set the plugin uploads dir
-    $result = unlink( basename( $filename ) ); // delete the file
-    chdir( $current_dir ); // change back to the previous directory
+    /**
+     * provides a way to override the delete method: if the filter returns bool 
+     * true of false, the normal delete method will be skipped. If the filter returns 
+     * a string, the string will be treated as the filename to delete
+     * 
+     * @since 1.7.6.2
+     * @filter pdb-delete_file
+     * @param string filename
+     * @return string|bool filename or bool success
+     */
+    $result = self::apply_filters('delete_file', $filename );
+    if ( ! is_bool( $result ) ) {
+      $current_dir = getcwd(); // save the current dir
+      chdir( self::files_path() ); // set the plugin uploads dir
+      $result = @unlink( basename( $filename ) ); // delete the file
+      chdir( $current_dir ); // change back to the previous directory
+    }
     return $result;
   }
 
@@ -984,7 +995,6 @@ class PDb_Base {
    */
   public static function make_anchor( $title )
   {
-
     return str_replace( ' ', '', preg_replace( '#^[0-9]*#', '', strtolower( $title ) ) );
   }
 
