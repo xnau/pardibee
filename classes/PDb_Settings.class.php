@@ -56,10 +56,25 @@ class PDb_Settings extends xnau_Plugin_Settings {
     parent::__construct( __CLASS__ );
 
     $this->submit_button = __( 'Save Plugin Settings', 'participants-database' );
-
-    // now that the settings have been defined, finish setting
-    // up the plugin settings
-    //$this->initialize();
+    
+    add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
+    
+  }
+  
+  /**
+   * checks the settings for problems and notifies the admin
+   * 
+   * run on the admin_init hook
+   * 
+   */
+  public function check_settings()
+  {
+    $notices = PDb_Admin_Notices::get_instance();
+    $settings = Participants_Db::$plugin_options;
+    
+    if ( Participants_Db::find_permalink( $settings['registration_page'] ) === false ) {
+      $notices->error( 'The Participant Record Page setting (Record Form Settings tab) does not point to a valid page.' );
+    }
   }
 
   /**
