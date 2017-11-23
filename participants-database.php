@@ -471,6 +471,17 @@ class Participants_Db extends PDb_Base {
      * sets up the update notification and update detail screens
      */
     new PDb_Update_Notices( __FILE__ );
+    
+    /**
+     * sets the admin notices class
+     * 
+     * admin notices are set with:
+     * 
+     * $notices = PDb_Admin_Notices::get_instance();
+     * $notices->error( 'error message text' );
+     */
+    PDb_Admin_Notices::get_instance();
+    
   }
 
   /**
@@ -608,6 +619,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array('jquery', 'jquery-ui-dialog') );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', self::$prefix . 'jq-placeholder' ,self::$prefix . 'cookie') );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery') );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
     if ( self::_set_admin_custom_css() ) {
@@ -658,6 +670,7 @@ class Participants_Db extends PDb_Base {
       wp_enqueue_script( self::$prefix . 'manage_fields' );
     }
 
+    // global admin enqueues
     wp_enqueue_style( 'pdb-global-admin' );
     wp_enqueue_style( 'pdb-utility' );
 
@@ -2015,10 +2028,28 @@ class Participants_Db extends PDb_Base {
     if ( preg_match( '#^<([^>]+)>$#', trim( $markdown_string ), $matches ) ) {
       return array($matches[1], '');
     } elseif ( preg_match( '#^\[([^\]]+)\]\(([^\)]+)\)$#', trim( $markdown_string ), $matches ) ) {
-      $url = filter_var( $matches[2], FILTER_VALIDATE_URL ) ? $matches[2] : '';
+      $url = self::valid_url( $matches[2] ) ? $matches[2] : '';
       return array($url, $matches[1]);
     } else
-      return filter_var( $markdown_string, FILTER_VALIDATE_URL ) ? array($markdown_string, '') : array('', $markdown_string);
+      return self::valid_url( $markdown_string )  ? array($markdown_string, '') : array('', $markdown_string);
+  }
+  
+  /**
+   * validates a URL
+   * 
+   * @param string $url
+   * @return bool true if the URL is valid
+   */
+  public static function valid_url( $url ) {
+    /**
+     * provides an way to add a custom URL validation
+     * 
+     * @filter pdb-validate_url
+     * @param bool validation result
+     * @param string URL
+     * @return bool
+     */
+    return self::apply_filters('validate_url', filter_var( $url, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) !== false, $url );
   }
 
   /**
@@ -3102,6 +3133,11 @@ class Participants_Db extends PDb_Base {
            * @version 1.7.6.1 checks for assoc array
            */
           $value_check = maybe_unserialize( $value );
+          
+          ob_start();
+          var_dump( $value_check );
+          error_log(__METHOD__.' value check: '.ob_get_clean().' is assoc? '.(PDb_FormElement::is_assoc( $value_check )?'yes':'no').' flat? '.(count( $value_check ) === count( $value_check, COUNT_RECURSIVE )?'yes':'no'));
+          
           if ( is_array( $value_check ) && ! PDb_FormElement::is_assoc( $value_check ) && count( $value_check ) === count( $value_check, COUNT_RECURSIVE ) ) {
             // if it is an indexed array flatten the array into comma-separated list
             $value = implode( ', ', $value_check );
