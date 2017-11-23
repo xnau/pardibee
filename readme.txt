@@ -13,11 +13,11 @@ Build and maintain a fully customizable database of participants, members or any
 
 This plugin offers all the functionality needed to build and maintain a database of people or anything you want. The database is fully configurable, allowing you to define all the fields of information you want to store for each record. The records can be entered individually in the WordPress admin section, imported with a CSV file, or let the individuals themselves create their own record. Display lists of records can be sorted and filtered by any field, and the result exported as a CSV file.
 
-This plugin was developed for an organization with the mission of educating and empowering voters. This organization needed to quickly build a database of concerned voters, supporters, and volunteers, giving them an ability to collect input and feedback, organize volunteers, and mobilize it's voter constituency with actions such as petition drives and voter education campaigns.
+This plugin was developed for an organization with the mission of educating and empowering voters. This organization needed to quickly build a database of concerned voters, supporters, and volunteers, giving them an ability to collect input and feedback, organize volunteers, and mobilize its voter constituency with actions such as petition drives and voter education campaigns.
 
-This database could be of use to any organization that needs to build and maintain lists of constituents, supporters, members, volunteers, etc. for any purpose. It is designed to be easy to use and serve multiple purposes, with several very powerful features to customize it's functionality to the needs of your organization, club, sports team, or any other large group of people.
+This database could be of use to any organization that needs to build and maintain lists of constituents, supporters, members, volunteers, etc. for any purpose. It is designed to be easy to use and serve multiple purposes, with several very powerful features to customize its functionality to the needs of your organization, club, sports team, or any other large group of people.
 
-The plugin can be easily adapted to work as a database for other applications such as indexes, directories, catalogs, or anything, really. The plugin uses a system of customizable templates for all it's displays, and an API for the customization and extension of it's capabilities. The plugin is fully internationalized with a growing set of translations.
+The plugin can be easily adapted to work as a database for other applications such as indexes, directories, catalogs, or anything, really. The plugin uses a system of customizable templates for all its displays, and an API for the customization and extension of its capabilities. The plugin is fully internationalized with a growing set of translations.
 
 = Some of the features of the Participants Database Plugin: =
 
@@ -201,7 +201,7 @@ There are several settings you should look at before you go live with your uploa
 * Allowed File Types - this is a comma-separated list of allowed file extensions. You can also define this on a per-field basis.
 * Allow File Delete - if this is checked, the file will be removed from the server when a user deletes it.
 
-Each file upload field can have it's allowed files determined in the "values" field on the Manage Database Fields page. For instance, if you want them to upload only a pdf file, put "pdf" in the values field for that field. The maximum size is determined globally in the settings only.
+Each file upload field can have its allowed files determined in the "values" field on the Manage Database Fields page. For instance, if you want them to upload only a pdf file, put "pdf" in the values field for that field. The maximum size is determined globally in the settings only.
 
 = When someone signs up, are they now users on my WordPress site? =
 
@@ -233,7 +233,7 @@ You can control which groups of fields show up in the frontend record edit scree
 
 = I want people to provide their email when they sign up, but I don't want that information showing to the public =
 
-It's a good practice to use field groups for something like this. Place all your "don't show to the public" fields in a group with it's "display" checkbox unchecked. This will prevent those fields from being shown in record detail pages, and also the signup form, but you can force them to display by specifying in the shortcode which groups you want included. The normally hidden groups will be included, but only those fields marked with the "signup" checkbox will appear. 
+It's a good practice to use field groups for something like this. Place all your "don't show to the public" fields in a group with its "display" checkbox unchecked. This will prevent those fields from being shown in record detail pages, and also the signup form, but you can force them to display by specifying in the shortcode which groups you want included. The normally hidden groups will be included, but only those fields marked with the "signup" checkbox will appear. 
 
 For example, let's say you have two groups: 'public' and 'private.' The email field is in the private group because you don't want it displayed. In the signup form shortcode, specify the groups to show like this: `[pdb_signup groups=public,private]` Now, both groups will be included in the signup form. Remember, only those fields marked as "signup" fields will be shown.
 
@@ -257,7 +257,7 @@ If you have a non-English site, you should convert your database to the correct 
 
 = I'm seeing strange characters in my CSV export. What's going on? =
 
-The plugin exports it's CSV files in "UTF-8" format. Make sure the program you're using to read the file knows this...it should detect it automatically, but can fail under some circumstances. Often this can be set on the import screen of the spreadsheet program when you open the CSV.
+The plugin exports its CSV files in "UTF-8" format. Make sure the program you're using to read the file knows this...it should detect it automatically, but can fail under some circumstances. Often this can be set on the import screen of the spreadsheet program when you open the CSV.
 
 = Is the private link to an individual record secure? =
 
@@ -570,7 +570,7 @@ Version 1.7.0.9 is a bugfix release for all users
 * Further adjustments to time rendering to compensate for difference between server and local time
 * added pdb-shortcode_present hook, several other useful hooks and filters
 * all display strings are passed though a gettext call, but only if the global PDB_MULTILINGUAL is set to true
-* plugin cleans up it's own transients and options
+* plugin cleans up its own transients and options
 * alternate directory structures are now supported automatically
 * improved messaging on setting up upload preferences
 * enforced minimum PHP version 5.3
