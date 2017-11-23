@@ -151,6 +151,7 @@ class PDb_FormElement extends xnau_FormElement {
      * 
      * @action pdb-form_element_build_{$type}
      */
+    
     Participants_Db::do_action( 'form_element_build_' . $this->type, $this );
     
     if ( empty( $this->output ) ) {
@@ -401,7 +402,6 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _add_input_series( $type = 'checkbox', $otherlabel = false )
   {
-
     if ( empty( $this->options ) )
       return;
 
