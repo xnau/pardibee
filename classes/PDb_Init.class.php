@@ -323,6 +323,8 @@ class PDb_Init {
     foreach ( $transients as $name ) {
       delete_transient( $name );
     }
+    
+    do_action( 'participants_database_uninstall' );
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin uninstalled' );
   }
