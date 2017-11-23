@@ -255,6 +255,7 @@ abstract class xnau_FormElement {
     // clear the output array
     $this->output = array();
 
+
     $this->build_element();
   }
 
@@ -1201,7 +1202,6 @@ abstract class xnau_FormElement {
    */
   protected function _add_radio_series( $otherlabel = false )
   {
-
     $this->_add_input_series( 'radio', $otherlabel );
   }
 
@@ -1576,10 +1576,13 @@ abstract class xnau_FormElement {
 
   /**
    * tests the type of an array, returns true if associative
+   * 
+   * @param mixed $array
+   * @return bool
    */
   public static function is_assoc( $array )
   {
-    return ( is_array( $array ) && ( array_keys( $array ) !== range( 0, count( $array ) - 1 ) ) );
+    return is_array( $array ) && count( array_filter( $array, function ($k) { return is_string($k); }, ARRAY_FILTER_USE_KEY ) ) === count( $array );
   }
 
   /**
