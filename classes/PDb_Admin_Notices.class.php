@@ -145,8 +145,8 @@ class PDb_Admin_Notices {
               echo ' is-dismissible" data-dismiss-url="' . esc_url( $dismiss_url );
             }
             ?>">
-            
-            <p><span class="dashicons <?php echo $this->dashicon( $type ) ?>"></span> <?php echo Participants_Db::$plugin_title ?>: <?php echo esc_html( $admin_notice->message ) ?></p>
+            <h4><?php echo Participants_Db::$plugin_title ?>:</h4>
+            <p><span class="dashicons <?php echo $this->dashicon( $type ) ?>"></span>&nbsp;<?php echo esc_html( $admin_notice->message ) ?></p>
 
           </div><?php
         }
@@ -217,7 +217,8 @@ class PDb_Admin_Notices {
    */
   private function notice_id( $message )
   {
-    return hash( 'crc32', $message );
+    $current_user = wp_get_current_user();
+    return $current_user->ID . '-' . hash( 'crc32', $message );
   }
   
   /**
