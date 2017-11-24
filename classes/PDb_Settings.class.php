@@ -57,7 +57,9 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     $this->submit_button = __( 'Save Plugin Settings', 'participants-database' );
     
-    add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
+    
+    // this is waiting on more complete implementation. #1634
+    //add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
     
   }
   
@@ -72,8 +74,13 @@ class PDb_Settings extends xnau_Plugin_Settings {
     $notices = PDb_Admin_Notices::get_instance();
     $settings = Participants_Db::$plugin_options;
     
-    if ( Participants_Db::find_permalink( $settings['registration_page'] ) === false ) {
-      $notices->error( 'The Participant Record Page setting (Record Form Settings tab) does not point to a valid page.' );
+    $post = get_post( $settings['registration_page'] );
+    error_log(__METHOD__.' post: '.print_r($post,1));
+    if ( $post->post_status !== 'publish' || !$post ) {
+      $notices->warning( 'The Participant Record Page setting (Record Form Settings tab) does not point to a valid page.' );
+    }
+    if ( stripos( $post->post_content, '[pdb_record') === false ) {
+      $notices->warning('The Participant Record Page must include the [pdb_record] shortcode to show the editable record.');
     }
   }
 
