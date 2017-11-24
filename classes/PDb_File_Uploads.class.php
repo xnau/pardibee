@@ -12,6 +12,7 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
+defined( 'ABSPATH' ) || die( '-1' );
 
 class PDb_File_Uploads {
   
