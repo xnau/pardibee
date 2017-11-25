@@ -3134,10 +3134,6 @@ class Participants_Db extends PDb_Base {
            */
           $value_check = maybe_unserialize( $value );
           
-          ob_start();
-          var_dump( $value_check );
-          error_log(__METHOD__.' value check: '.ob_get_clean().' is assoc? '.(PDb_FormElement::is_assoc( $value_check )?'yes':'no').' flat? '.(count( $value_check ) === count( $value_check, COUNT_RECURSIVE )?'yes':'no'));
-          
           if ( is_array( $value_check ) && ! PDb_FormElement::is_assoc( $value_check ) && count( $value_check ) === count( $value_check, COUNT_RECURSIVE ) ) {
             // if it is an indexed array flatten the array into comma-separated list
             $value = implode( ', ', $value_check );
