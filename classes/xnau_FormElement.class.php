@@ -1582,7 +1582,7 @@ abstract class xnau_FormElement {
    */
   public static function is_assoc( $array )
   {
-    return is_array( $array ) && count( array_filter( $array, function ($k) { return is_string($k); }, ARRAY_FILTER_USE_KEY ) ) === count( $array );
+    return is_array( $array ) && count( array_filter( array_keys( $array ), function ($k) { return is_string($k); } ) ) === count( $array );
   }
 
   /**
