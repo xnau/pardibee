@@ -284,6 +284,9 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.7.6.3 =
+* fixed PHP 5.3 compatibility issue
+
+= 1.7.6.2 =
 * fixed multicheckbox CSV exports as comma-separated list #1631
 * better user feedback for file uploads #1629 #1630
 
