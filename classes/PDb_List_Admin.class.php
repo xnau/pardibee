@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.6
+ * @version    Release: 1.9.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1011,7 +1011,7 @@ class PDb_List_Admin {
                           <?php
                           foreach ( self::$display_columns as $column ) {
                             
-                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id']) ) );
+                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id'], 'module' =>'admin-list') ) );
                             $display_value = '';
 
                             // this is where we place form-element-specific text transformations for display
