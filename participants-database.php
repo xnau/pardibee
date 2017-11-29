@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.6.3
+ * Version: 1.7.6.4
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -564,7 +564,7 @@ class Participants_Db extends PDb_Base {
     /*
      * register frontend scripts and stylesheets
      */
-    wp_register_style( 'pdb-frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons') );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons') );
     wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, $option_version );
 
     wp_register_script( self::$prefix . 'shortcode', plugins_url( 'js/shortcodes.js', __FILE__ ), array('jquery') );
@@ -1466,6 +1466,8 @@ class Participants_Db extends PDb_Base {
     global $wpdb;
 
     if ( !empty( $_FILES ) && !$currently_importing_csv ) {
+      
+//      error_log(__METHOD__.' files: '.print_r($_FILES,1));
 
       foreach ( $_FILES as $fieldname => $attributes ) {
 
