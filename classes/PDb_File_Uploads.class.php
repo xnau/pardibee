@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -156,6 +156,7 @@ class PDb_File_Uploads {
    */
   public function is_empty( $input )
   {
-    return empty( implode('', (array) maybe_unserialize( $input ) ) );
+    $test = implode('', (array) maybe_unserialize( $input ) );
+    return empty( $test );
   }
 }
