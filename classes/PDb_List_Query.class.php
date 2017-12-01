@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -660,7 +660,7 @@ class PDb_List_Query {
   private function _set_columns( $columns )
   {
     if ( is_array( $columns ) ) {
-      array_unshift( $columns, 'id' );
+      if ( ! in_array( 'id', $columns ) ) array_unshift( $columns, 'id' );
       $this->columns = $columns;
     }
   }
