@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -1582,7 +1582,14 @@ abstract class xnau_FormElement {
    */
   public static function is_assoc( $array )
   {
-    return is_array( $array ) && count( array_filter( array_keys( $array ), function ($k) { return is_string($k); } ) ) === count( $array );
+    //$assoc = is_array( $array ) && count( array_filter( array_keys( $array ), function ($k) { return is_string($k); } ) ) === count( $array );
+    $assoc = false;
+    foreach ( $array as $k => $v ) {
+      if ( is_string( $k ) && $k != $v ) {
+        $assoc = true;
+      }
+    }
+    return $assoc;
   }
 
   /**
