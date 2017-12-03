@@ -815,10 +815,7 @@ class PDb_Manage_Fields {
      * @return array
      */
     public static function prep_values_array( $values )
-    {
-      /* we can do this because if the matching string is in position 0, it's not 
-       * valid syntax anyway
-       */
+    { 
       $has_labels = strpos( $values, '::' ) !== false;
       $array = array();
       $term_list = explode( ',', stripslashes( $values ) );
