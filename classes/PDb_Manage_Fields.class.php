@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -541,6 +541,13 @@ class PDb_Manage_Fields {
             // skip all non-row elements
             if ( false === strpos( $name, 'row_' ) )
               continue;
+            
+            // unescape quotes in values
+            foreach ( $row as $k => $rowvalue ) {
+              if ( ! is_array( $rowvalue ) ) {
+                $row[$k] = stripslashes($rowvalue);
+              }
+            }
 
             if ( $row['status'] == 'changed' ) {
 
@@ -598,7 +605,7 @@ class PDb_Manage_Fields {
                   $row[$name] = serialize( $row[$name] );
                 }
               }
-
+              
               $result = $wpdb->update( Participants_Db::$fields_table, $row, array('id' => $id) );
             }
           }
