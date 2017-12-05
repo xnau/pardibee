@@ -1905,7 +1905,12 @@ class Participants_Db extends PDb_Base {
                 $new_value = self::_prepare_string_mysql( trim( $post[$column->name] ) );
               }
           } // switch column_atts->form_element
-      }  // swtich column_atts->name 
+      }  // swtich column_atts->name
+      
+      // don't update the value if importing a CSV and the incoming value is empty #1647
+      if ( $currently_importing_csv && strlen( $new_value ) === 0 ) {
+        $new_value = false;
+      }
 
       /*
        * add the column and value to the sql; if it is bool false, skip it entirely. 
@@ -1935,7 +1940,7 @@ class Participants_Db extends PDb_Base {
      * 
      * add in any missing default values
      */
-    if ( $action == 'insert' ) {
+    if ( $action === 'insert' ) {
       $all_columns = self::get_default_record();
       unset( $all_columns['private_id'], $all_columns['date_recorded'], $all_columns['date_updated'] );
       foreach ( $all_columns as $name => $value ) {
@@ -1970,7 +1975,7 @@ class Participants_Db extends PDb_Base {
       self::$insert_status = 'error';
     } else {
       // is it a new record?
-      if ( $action == 'insert' ) {
+      if ( $action === 'insert' ) {
 
         // get the new record id for the return
         $participant_id = $wpdb->insert_id;
