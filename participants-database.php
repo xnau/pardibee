@@ -1356,7 +1356,8 @@ class Participants_Db extends PDb_Base {
           $where = 'WHERE v.name <> "id" AND v.form_element <> "captcha" AND v.form_element <> "placeholder"';
           if ( !current_user_can( self::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
             // don't show non-displaying groups to non-admin users
-            $where .= 'AND g.admin = 0';
+            // the "approved" field is an exception; it should be visible to editor users
+            $where .= 'AND g.admin = 0 OR v.name = "approved"';
           }
           break;
 
