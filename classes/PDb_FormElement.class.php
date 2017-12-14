@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.12
+ * @version    1.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -670,7 +670,17 @@ class PDb_FormElement extends xnau_FormElement {
        */
       return $URI;
     } else {
-      return esc_html( $field->value ); // if it is neither URL nor email address and we're not formatting it as html
+      // if it is neither URL nor email address simply display the sanitized text
+      /**
+       * this filter gives access to the text field output before display, providing 
+       * an alternate way to sanitize the output
+       * 
+       * @filter pdb-text_field_output
+       * @param string sanitized output string
+       * @param object the field object
+       * @return string the display string   
+       */
+      return Participants_Db::apply_filters('text_field_output', esc_html( $field->value ), $field ); 
     }
 
     // default template for links
@@ -762,7 +772,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_title_value( $title, $fieldname )
   {
-    $value = $title;
+    $value = $title; // if no title is found, return the title argument
     if ( isset( Participants_Db::$fields[$fieldname] ) ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
       if ( is_array( $options_array ) && array_search( $title, $options_array ) === false ) {
@@ -790,7 +800,7 @@ class PDb_FormElement extends xnau_FormElement {
            * added filter: pdb-value_title_match_pattern
            */
           $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
-          if ( $match = current( preg_grep( sprintf( $title_pattern, $title ), array_keys( $options_array ) ) ) ) {
+          if ( $match = current( preg_grep( sprintf( $title_pattern, preg_quote($title, '/') ), array_keys( $options_array ) ) ) ) {
             $value = $options_array[ $match ];
           }
         }
