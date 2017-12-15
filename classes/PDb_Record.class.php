@@ -60,7 +60,7 @@ class PDb_Record extends PDb_Shortcode {
 
       $this->participant_values = Participants_Db::get_participant($this->participant_id);
 
-      if ($this->participant_values === false) {
+      if ($this->participant_values === false ) {
 
         $this->_not_found();
       } else {
@@ -177,7 +177,7 @@ class PDb_Record extends PDb_Shortcode {
    */
   protected function _not_found() {
     
-    if (Participants_Db::plugin_setting_is_true('no_record_use_template')) {
+    if (Participants_Db::plugin_setting_is_true('no_record_use_template') || version_compare( $this->template_version, '0.2', '<' ) ) {
 
         $this->_print_from_template();
       
