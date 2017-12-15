@@ -61,6 +61,16 @@ class PDb_Settings extends xnau_Plugin_Settings {
     // this is waiting on more complete implementation. #1634
     //add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
     
+    // filters to condition saved values for display
+    add_filter( 'pdb-settings_page_setting_value', function( $value, $input ) {
+      switch ($input['name']) {
+        case 'image_upload_limit': 
+        $value = preg_replace( '/\D/', '', $value );
+        break;
+      }
+      return $value;
+    }, 10, 2 );
+    
   }
   
   /**
@@ -157,9 +167,10 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'title' => __( 'File Upload Limit', 'participants-database' ),
         'group' => 'pdb-main',
         'options' => array(
-            'type' => 'text',
+            'type' => 'numeric',
             'help_text' => __( 'the maximum allowed file size (in kilobytes) for an uploaded file', 'participants-database' ),
             'value' => '100',
+            'attributes' => array('style' => 'width:5em','min' => '10', 'step' => '10','data-after' => 'K '),
         )
     );
 
@@ -681,9 +692,9 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'title' => __( 'Records per Page', 'participants-database' ),
         'group' => 'pdb-list',
         'options' => array(
-            'type' => 'text',
+            'type' => 'numeric',
             'help_text' => __( 'the number of records to show on each page', 'participants-database' ),
-            'attributes' => array('style' => 'width:40px'),
+            'attributes' => array('style' => 'width:4em','step' => '1', 'min' => '-1'),
             'value' => 10,
         ),
     );
