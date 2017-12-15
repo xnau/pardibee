@@ -75,9 +75,9 @@ class PDb_Date_Parse {
    * @param array $config optional configuration values to use
    *                      'strict' => bool,
    *                      'zero_time' => bool,
-   *                      'europen_order' => bool,
+   *                      'european_order' => bool,
    *                      'input_format' => string
-   * @param string $context
+   * @param string $context optionally identifies the calling context
    * 
    * @return int|bool timestamp or bool false if it can't be parsed
    */
