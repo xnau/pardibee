@@ -21,7 +21,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -55,6 +55,11 @@ abstract class PDb_Shortcode {
    * @var string holds the template file path
    */
   protected $template;
+  
+  /**
+   * @var string the current template version; 0 if no version found
+   */
+  protected $template_version;
 
   /**
    * @var string holds the output for the shortcode
@@ -385,6 +390,22 @@ abstract class PDb_Shortcode {
       error_log( __METHOD__ . ' template not found: ' . $template );
     }
     $this->template = $template;
+    $this->get_template_version();
+  }
+  
+  /**
+   * sets the template version property
+   * 
+   */
+  protected function get_template_version()
+  {
+    $contents = file_get_contents($this->template);
+    $findversion = preg_match('/@version (.+)\b/', $contents, $matches );
+    $version = 0;
+    if ( $findversion === 1 ) {
+      $version = $matches[1];
+    }
+    $this->template_version = $version;
   }
 
   /**
