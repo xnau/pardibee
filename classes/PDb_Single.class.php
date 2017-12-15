@@ -39,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) die;
     }
     $record_id = Participants_Db::get_record_id_by_term( $this->shortcode_atts['term'], $id );
     
-    if ( false === $record_id ) {
+    if ( false === $record_id && version_compare( $this->template_version, '0.2', '<') ) {
       
       $this->_not_found();
       
@@ -49,7 +49,6 @@ if ( ! defined( 'ABSPATH' ) ) die;
       $this->participant_id = $record_id;
           $this->_setup_iteration();
           $this->_print_from_template();
-          
     
     }
     
