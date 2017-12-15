@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.6.6
+ * Version: 1.7.7
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -17,7 +17,7 @@
  * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
  *
  * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License, version 2, as
+ * under the terms of the GNU General Public License, version 3, as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful, but
@@ -2395,19 +2395,13 @@ class Participants_Db extends PDb_Base {
       $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
       $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
       
-      $is_assoc = PDb_FormElement::is_assoc($value);
-      
       /*
        * here, we create a string representation of an associative array, using 
        * :: to denote a name=>value pair
        */
       $temp = array();
       foreach ( $value as $k => $v ) {
-        if ( $is_assoc ) {
-          $temp[] = $v;
-        } else {
-          $temp[] = $k . $pair_delim . $v;
-        }
+        $temp[] = $k . $pair_delim . $v;
       }
       $value = $temp;
     }
