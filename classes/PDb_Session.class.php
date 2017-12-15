@@ -1,14 +1,14 @@
 <?php
 
 /*
- * class description
+ * manages user sessions for the plugin
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.10
+ * @version    0.11
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    FormElement class, Shortcode class
  * 
