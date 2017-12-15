@@ -1,57 +1,58 @@
 <?php
 /**
+ * @version 0.4
+ * 
  * single table-based template for the [pdb_record] shortcode for editing a record on the frontend
  *
  * this template is design to match the formatting and layout of the pdb-signup-default template
  * 
- * @version 0.3
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?>">
 
   <?php
-  if (!empty($this->participant_id)) : 
-  // output any validation errors
-  $this->print_errors();
-  ?>
+  if ( !empty( $this->participant_id ) ) :
+    // output any validation errors
+    $this->print_errors();
+    ?>
 
-  <?php
-  // print the form header
-  $this->print_form_head()
-  ?>
+    <?php
+    // print the form header
+    $this->print_form_head()
+    ?>
 
-<?php while ($this->have_groups()) : $this->the_group(); ?>
+    <?php while ( $this->have_groups() ) : $this->the_group(); ?>
 
       <fieldset class="field-group field-group-<?php echo $this->group->name ?> <?php echo $this->group->printing_title() ? 'group-with-title' : 'group-no-title' ?>">
 
-        <?php $this->group->print_title('<legend>','</legend>') ?>
+        <?php $this->group->print_title( '<legend>', '</legend>' ) ?>
         <?php $this->group->print_description() ?>
 
         <?php
         // step through the fields in the current group
 
-        while ($this->have_fields()) : $this->the_field();
+        while ( $this->have_fields() ) : $this->the_field();
           ?>
 
           <div class="form-group <?php $this->field->print_element_class() ?>">
             <?php if ( $this->field->has_title() ) : ?>
-            <label>
-              <?php $this->field->print_label() ?>
-            </label>
+              <label>
+                <?php $this->field->print_label() ?>
+              </label>
             <?php endif ?>
             <div class="input-group" >
               <?php $this->field->print_element_with_id(); ?>
             </div>
-            <?php if ($this->field->has_help_text()) : ?>
+            <?php if ( $this->field->has_help_text() ) : ?>
               <p class="help-block helptext"><?php $this->field->print_help_text() ?></p>
             <?php endif ?>
           </div>
 
-  <?php endwhile; // field loop   ?>
+        <?php endwhile; // field loop   ?>
 
       </fieldset>
 
-<?php endwhile; // group loop   ?>
+    <?php endwhile; // group loop   ?>
 
     <fieldset class="field-group field-group-submit">
       <legend><?php $this->print_save_changes_label() ?></legend>
@@ -60,17 +61,18 @@
       </div>
     </fieldset>
 
-<?php $this->print_form_close() ?>
+    <?php $this->print_form_close() ?>
 
   <?php else : ?>
-    
-    <?php 
-    /*
-     * this part of the template is used if no record is found
-     */
-    echo empty(Participants_Db::$plugin_options['no_record_error_message']) ? '' : '<p class="alert alert-error">' . Participants_Db::plugin_setting('no_record_error_message') . '</p>'; 
-    ?>
-    
+
+    <?php $error_message = Participants_Db::plugin_setting( 'no_record_error_message', '' );
+
+    if ( !empty( $error_message ) ) :
+      ?>
+      <p class="alert alert-error"><?php echo $error_message ?></p>
+
     <?php endif ?>
+
+<?php endif ?>
 
 </div>

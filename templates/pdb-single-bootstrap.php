@@ -1,18 +1,18 @@
 <?php
-/*
+/**
+ * @name pdb single template bootstrap
+ * @version 2.0
+ * 
  * default template for displaying a single record for the twitter bootstrap framework
  *
  * http://twitter.github.com/bootstrap/
  * 
  */
-
-// define an array of fields to exclude here
-$exclude = array();
-
 ?>
 
 <div class="wrap  <?php echo $this->wrap_class ?>">
 
+  <?php if ( $this->participant_id > 0 ) : ?>
 	
   <?php while ( $this->have_groups() ) : $this->the_group(); ?>
   
@@ -23,9 +23,6 @@ $exclude = array();
     <?php $this->group->print_description( '<p>', '</p>' ) ?>
     
       <?php while ( $this->have_fields() ) : $this->the_field();
-      
-          // skip any field found in the exclude array
-          if ( in_array( $this->field->name, $exclude ) ) continue;
 					
           // CSS class for empty fields
 					$empty_class = $this->get_empty_class( $this->field );
@@ -46,5 +43,16 @@ $exclude = array();
   </section>
   
   <?php endwhile; // end of the groups loop ?>
+  
+<?php else : // content to show if no record is found ?>
+
+  <?php $error_message = Participants_Db::plugin_setting( 'no_record_error_message', '' );
+  
+  if ( ! empty( $error_message ) ) : ?>
+    <p class="alert alert-error"><?php echo $error_message ?></p>
+    
+  <?php endif ?>
+    
+<?php endif ?>
   
 </div>
