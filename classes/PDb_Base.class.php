@@ -617,21 +617,31 @@ class PDb_Base {
    * this allows for all plugin functions that are permission-controlled to be controlled 
    * with a filter callback
    * 
-   * the context value will contain the name of the function or script that is pretected
+   * the context value will contain the name of the function or script that is protected
    * 
-   * see: http://codex.wordpress.org/Roles_and_Capabilities
+   * @see http://codex.wordpress.org/Roles_and_Capabilities
    * 
    * @param string $cap the plugin capability level (not WP cap) to check for
    * @param string $context provides the context of the request
    * 
-   * @return string the name of the WP capability to use
+   * @return string the name of the WP capability to use in the named context
    */
   public static function plugin_capability( $cap, $context = '' )
   {
 
     $capability = 'read'; // assume the lowest cap
     if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
+      /**
+       * provides access to individual access privileges
+       * 
+       * @filter pdb-access_capability
+       * @param string the WP capability that identifies the default level of access
+       * @param string the privilege being requested
+       * @return string the WP capability that is allowed this privilege
+       */
       $capability = self::apply_filters( 'access_capability', self::plugin_setting( $cap ), $context );
+//      global $wp_filter;
+//      error_log(__METHOD__.' filters placed on access_capability: '.print_r($wp_filter['pdb-access_capability'],1));
     }
     return $capability;
   }
