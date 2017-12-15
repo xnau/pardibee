@@ -823,13 +823,25 @@ class PDb_Manage_Fields {
      */
     public static function prep_values_array( $values )
     { 
-      $has_labels = strpos( $values, '::' ) !== false;
+      /**
+       * allows for alternate strings to be used in structuring the field options 
+       * definition string 
+       * 
+       * @filter pdb-field_options_pair_delim
+       * @filter pdb-field_options_option_delim
+       * @param string the default string
+       * @return string the string to use for the structure
+       */
+      $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
+      $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
+      
+      $has_labels = strpos( $values, $pair_delim ) !== false;
       $array = array();
-      $term_list = explode( ',', stripslashes( $values ) );
+      $term_list = explode( $option_delim, stripslashes( $values ) );
       if ( $has_labels ) {
         foreach ( $term_list as $term ) {
-          if ( strpos( $term, '::' ) !== false && strpos( $term, '::' ) !== 0 ) {
-            list($key, $value) = explode( '::', $term );
+          if ( strpos( $term, $pair_delim ) !== false && strpos( $term, $pair_delim ) !== 0 ) {
+            list($key, $value) = explode( $pair_delim, $term );
             /*
              * @version 1.6
              * this is to allow for an optgroup label that is the same as a value label...
@@ -840,7 +852,7 @@ class PDb_Manage_Fields {
             $array[$array_key] = self::prep_value( trim( $value ), true );
           } else {
             // strip out the double colon in case it is present
-            $term = str_replace( array('::'), '', $term );
+            $term = str_replace( array($pair_delim), '', $term );
             $array[self::prep_value( $term, true )] = self::prep_value( $term, true );
           }
         }
