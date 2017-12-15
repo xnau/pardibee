@@ -367,7 +367,16 @@ class xnau_Plugin_Settings {
                 ) );
 
         // supply the value of the field from the saved option or the default as defined in the settings init
-        $args['value'] = isset( $options[$input['name']] ) ? $options[$input['name']] : $args['value'];
+        /**
+         * provides a way to condition a setting value before it is displayed
+         * 
+         * @filter pdb-settings_page_setting_value
+         * @param mixed the setting value
+         * @param array $input the setting input parameters
+         * @return mixed the value to display in the setting
+         * 
+         */
+        $args['value'] = Participants_Db::apply_filters('settings_page_setting_value', isset( $options[$input['name']] ) ? $options[$input['name']] : $args['value'], $input );
 
         $args['name'] = $this->WP_setting . '[' . $input['name'] . ']';
 
