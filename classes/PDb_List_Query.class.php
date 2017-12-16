@@ -130,6 +130,13 @@ class PDb_List_Query {
    */
   function __construct( PDb_List $List )
   {
+    /*
+     *  internal filters for search term keys
+     * 
+     * search term keys are strings that stand for dynamic values
+     */
+    add_filter('pdb-raw_search_term', array( $this, 'process_search_term_keys'));
+    
     $this->instance_index = $List->instance_index;
     $this->module = $List->module;
     $this->i18n = $List->i18n;
@@ -182,6 +189,7 @@ class PDb_List_Query {
 //    error_log(__METHOD__.' ID: '.Participants_Db::$session->get_id().' 
 //      
 //session: '.print_r(Participants_Db::$session,1));
+    
   }
 
   /**
@@ -357,6 +365,36 @@ class PDb_List_Query {
         }
       }
     }
+  }
+  
+  /** 
+   * processes the search term keys for use in shortcode filters
+   * 
+   * @param string  $key the search term
+   * @return string the search term to use
+   */
+  public function process_search_term_keys( $key )
+  {
+    $value = $key;
+    switch ($key) {
+      case 'current_date':
+        $value = time();
+        break;
+      case 'current_day':
+        $value = date( 'M j,Y 00:00' );
+        break;
+      case 'current_week':
+        $value = date( 'M j,Y 00:00', strtotime(  '-7 days' )  );
+        break;
+      case 'current_month':
+        $value = date( 'M 01,Y 00:00' );
+        break;
+      case 'current_year':
+        $value = date( 'jan 01,Y 00:00' );
+        break;
+    }
+//    error_log(__METHOD__.' key: '.$key.' value: '.$value);
+    return $value;
   }
 
   /**
@@ -892,6 +930,11 @@ class PDb_List_Query {
       return false;
     }
 
+    /*
+     * internal filters on this value:
+     * 
+     * string "current_date" is converted to timestamp
+     */
     $search_term = Participants_Db::apply_filters( 'raw_search_term', trim( rawurldecode( $search_term ) ) );
 
     /**
