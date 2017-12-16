@@ -2387,13 +2387,13 @@ class Participants_Db extends PDb_Base {
     if ( !is_array( $value ) ) {
       return $value;
     }
+    /**
+     * @see PDb_Manage_Fields::prep_values_array()
+     */
+    $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
+    $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
 
     if ( PDb_FormElement::is_assoc( $value ) ) {
-      /**
-       * @see PDb_Manage_Fields::prep_values_array()
-       */
-      $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
-      $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
       
       /*
        * here, we create a string representation of an associative array, using 
