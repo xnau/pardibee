@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -1526,7 +1526,7 @@ abstract class xnau_FormElement {
 
     if ( $null_select !== false ) {
       $selected = $this->value === '' ? $this->_set_selected( true, true, 'selected' ) : '';
-      $this->_addline( '<option value="' . esc_attr( $selected ) . '"  >' . esc_html( $null_select_label ) . '</option>' );
+      $this->_addline( '<option value="" ' . $selected . '  >' . esc_html( $null_select_label ) . '</option>' );
     }
   }
 
