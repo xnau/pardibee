@@ -22,7 +22,7 @@ body[class*='participants-database']  .widefat tr:nth-child(even) {
 .participants_db input[type='date']
 {
   width: 99%;
-  max-width: 400px;
+  max-width: 520px;
 }
 .widefat.manage-fields td.focused {
   position: relative;
