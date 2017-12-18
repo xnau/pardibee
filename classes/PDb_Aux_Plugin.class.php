@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.6
+ * @version    4.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -506,6 +506,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
             'options' => '',
             'style' => '',
             'class' => '',
+            'attributes' => array(),
             'section' => $this->aux_plugin_shortname . '_setting_section'
         );
         $params = shortcode_atts( $default, $atts );
@@ -520,6 +521,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
             'options' => $params['options'],
             'style' => $params['style'],
             'class' => $params['class'],
+            'attributes' => $params['attributes'],
                 )
         );
       }
@@ -577,6 +579,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      *                      style   - CSS style for the setting element
      *                      help    - help text
      *                      options - an array of options for multiple-option input types (name => title)
+     *                      attributes - array of HTML attributes
      */
     public function setting_callback_function( $atts )
     {
@@ -591,6 +594,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           'help' => '', // 6
           'options' => '', // 7
           'select' => '', // 8
+          'attributes' => array(), // 9
       );
       $setting = shortcode_atts( $defaults, $atts );
       $setting['value'] = isset( $options[$atts['name']] ) ? $options[$atts['name']] : $atts['value'];
@@ -602,6 +606,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
       $values[3] = htmlspecialchars( $values[3] );
       $values[8] = $this->set_selectstring( $setting['type'] );
+      $values[9] = $this->input_attributes( $setting['attributes'] );
+      
       $build_function = '_build_' . $setting['type'];
       if ( !is_callable( array($this, $build_function) ) ) {
         $build_function = '_build_text';
@@ -622,11 +628,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      *                       6 - help text
      *                       7 - setting options array
      *                       8 - select string
+     *                       9 - attribtues array
      * @return string HTML
      */
     protected function _build_text( $values )
     {
-      $pattern = "\n" . '<input name="' . $this->settings_name() . '[%1$s]" type="%2$s" value="%3$s" title="%4$s" class="%5$s" style="%6$s"  />';
+      $pattern = "\n" . '<input name="' . $this->settings_name() . '[%1$s]" type="%2$s" value="%3$s" title="%4$s" class="%5$s" style="%6$s" %10$s  />';
       if ( !empty( $values[6] ) )
         $pattern .= "\n" . '<p class="description">%7$s</p>';
       return vsprintf( $pattern, $values );
@@ -640,7 +647,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     protected function _build_textarea( $values )
     {
-      $pattern = '<textarea name="' . $this->settings_name() . '[%1$s]" title="%4$s" class="%5$s" style="%6$s"  />%3$s</textarea>';
+      $pattern = '<textarea name="' . $this->settings_name() . '[%1$s]" title="%4$s" class="%5$s" style="%6$s" %10$s  />%3$s</textarea>';
       if ( !empty( $values[6] ) )
         $pattern .= '<p class="description">%7$s</p>';
       return vsprintf( $pattern, $values );
@@ -660,7 +667,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       );
       ob_start();
       wp_editor( $values[2], 'richtext-' . str_replace( '-', '_', $values[0] ), $params );
-      $html = vsprintf( '<div class="%5$s" style="%6$s">', $values );
+      $html = vsprintf( '<div class="%5$s" style="%6$s" %10$s >', $values );
       $html .= ob_get_clean();
       if ( !empty( $values[6] ) ) {
         $html .= '<p class="description">' . $values[6] . '</p>';
@@ -681,7 +688,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $values[8] = $values[2] == 1 ? $selectstring : '';
       $pattern = '
 <input name="' . $this->settings_name() . '[%1$s]" type="hidden" value="0" />
-<input name="' . $this->settings_name() . '[%1$s]" type="%2$s" value="1" title="%4$s" class="%5$s" style="%6$s" %9$s />
+<input name="' . $this->settings_name() . '[%1$s]" type="%2$s" value="1" title="%4$s" class="%5$s" style="%6$s" %9$s %10$s />
 ';
       if ( !empty( $values[6] ) )
         $pattern .= '<p class="description">%7$s</p>';
@@ -699,7 +706,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $selectstring = $this->set_selectstring( $values[1] );
       $set_value = $values[2];
       $html = '';
-      $pattern = '<label style="%6$s"  title="%4$s"><input type="%2$s" %9$s value="%3$s" name="' . $this->settings_name() . '[%1$s]"> <span>%4$s</span></label>';
+      $pattern = '<label style="%6$s"  title="%4$s"><input type="%2$s" %9$s %10$s value="%3$s" name="' . $this->settings_name() . '[%1$s]"> <span>%4$s</span></label>';
       $html .= '<div class="' . $values[1] . ' ' . $values[4] . '" >';
       foreach ( $values[7] as $name => $title ) {
         if ( is_int( $name ) ) {
@@ -726,7 +733,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       $selectstring = $this->set_selectstring( $values[1] );
       $html = '';
-      $pattern = "\n" . '<label style="%6$s" title="%4$s"><input type="checkbox" %9$s value="%4$s" name="' . $this->settings_name() . '[%1$s][]"> <span>%4$s</span></label>';
+      $pattern = "\n" . '<label style="%6$s" title="%4$s"><input type="checkbox" %9$s %10$s value="%4$s" name="' . $this->settings_name() . '[%1$s][]"> <span>%4$s</span></label>';
       $html .= "\n" . '<div class="checkbox-group ' . $values[1] . ' ' . $values[4] . '" >';
       for ( $i = 0; $i < count( $values[7] ); $i++ ) {
         $value = $values[7][$i];
@@ -751,8 +758,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       $selectstring = $this->set_selectstring( $values[1] );
       $html = '';
-      $pattern = "\n" . '<option %9$s value="%4$s" ><span>%5$s</span></option>';
-      $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . ']" >';
+      $pattern = "\n" . '<option value="%4$s" %9$s ><span>%5$s</span></option>';
+      $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . ']" %10$s >';
 
       if ( PDb_FormElement::is_assoc( $values[7] ) ) {
         foreach ( $values[7] as $name => $title ) {
@@ -773,6 +780,24 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( !empty( $values[6] ) )
         $html .= "\n" . '<p class="description">' . $values[6] . '</p>';
       return $html;
+    }
+    
+    /**
+     * provides an attributes string
+     * 
+     * @param array $attributes as $name => $value
+     * @return HTML atributes string
+     */
+    protected function input_attributes( Array $attributes )
+    {
+      $atts_string = '';
+      $exclude = array('name','value','class','style','type','title'); // atts we don't set this way
+      foreach( $attributes as $name => $value ) {
+        if ( ! in_array( $name, $exclude ) ) {
+          $atts_string .= $name . '="' . esc_attr($value) . '" '; 
+        }
+      }
+      return $atts_string;
     }
 
     /**
