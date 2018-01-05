@@ -823,7 +823,6 @@ class PDb_Manage_Fields {
      */
     public static function prep_values_array( $values )
     { 
-      error_log(__METHOD__.' incoming values string: '.$values);
       /**
        * allows for alternate strings to be used in structuring the field options 
        * definition string 
