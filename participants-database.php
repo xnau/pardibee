@@ -1036,7 +1036,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _setup_columns()
   {
-
     global $wpdb;
     self::$fields = array();
     $sql = 'SELECT v.* 
@@ -1460,8 +1459,6 @@ class Participants_Db extends PDb_Base {
       return false;
             }
 
-//    error_log(__METHOD__.' post: '.print_r($post,1));
-
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
 
     global $wpdb;
@@ -1699,11 +1696,16 @@ class Participants_Db extends PDb_Base {
        * readonly field data is prevented from being saved by unauthorized users 
        * when not using the signup form
        */
+      /**
+       * @filter pdb-readonly_exempt_module
+       * @param string name of the module which allows wirting readonly fields
+       * @param object  the current field
+       */
       if (  
               $column->readonly != '0' && 
               $column->form_element !== 'hidden' && 
-              ! self::current_user_has_plugin_role( 'editor', 'readonly access' ) && 
-              filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) !== 'signup' 
+              self::current_user_has_plugin_role( 'editor', 'readonly access' ) === false && 
+              filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === self::apply_filters( 'readonly_exempt_module', 'signup', $column )
               ) {
         $post[$column->name] = '';
       }
