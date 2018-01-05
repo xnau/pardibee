@@ -1174,7 +1174,6 @@ abstract class PDb_Shortcode {
    */
   protected function _print_form_head( $hidden = '' )
   {
-
     $uri_components = parse_url( $_SERVER['REQUEST_URI'] );
 
     /*
@@ -1347,8 +1346,12 @@ abstract class PDb_Shortcode {
     $displayed = array();
     foreach ( $this->display_columns as $column ) {
       $field = $this->fields[$column];
-      if ( ( !in_array( $field->form_element, array('hidden') ) || $field->form_element === 'captcha'  ) && ( $this->module === 'signup' || $field->readonly === '0' ) ) {
-        
+      /**
+       * @filter pdb-readonly_exempt_module
+       * @param string name of the module which allows wirting readonly fields
+       * @param object  the current field
+       */
+      if ( ( !in_array( $field->form_element, array('hidden') ) || $field->form_element === 'captcha'  ) && ( $this->module === Participants_Db::apply_filters( 'readonly_exempt_module', 'signup', $field ) || $field->readonly === '0' ) ) {
         $displayed[] = $field->name;
       }
     }
