@@ -991,6 +991,7 @@ class PDb_Base {
      * @return string|bool filename or bool success
      */
     $result = self::apply_filters('delete_file', $filename );
+    
     if ( ! is_bool( $result ) ) {
       $current_dir = getcwd(); // save the current dir
       chdir( self::files_path() ); // set the plugin uploads dir
