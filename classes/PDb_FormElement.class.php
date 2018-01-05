@@ -671,6 +671,11 @@ class PDb_FormElement extends xnau_FormElement {
       return $URI;
     } else {
       // if it is neither URL nor email address simply display the sanitized text
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && $field->form_element === 'text-line' ) {
+        $sanitized = wp_kses_post( $field->value );
+      } else {
+        $sanitized = esc_html( $field->value );
+      }
       /**
        * this filter gives access to the text field output before display, providing 
        * an alternate way to sanitize the output
@@ -680,7 +685,7 @@ class PDb_FormElement extends xnau_FormElement {
        * @param object the field object
        * @return string the display string   
        */
-      return Participants_Db::apply_filters('text_field_output', esc_html( $field->value ), $field ); 
+      return Participants_Db::apply_filters('text_field_output', $sanitized, $field ); 
     }
 
     // default template for links

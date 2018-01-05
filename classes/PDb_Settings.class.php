@@ -221,6 +221,20 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'allow_tags',
+        'title' => __( 'Allow HTML Tags in Text Fields', 'participants-database' ),
+        'group' => 'pdb-main',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'if checked, limited HTML tags are allowed in "text-line" fields.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'make_links',
