@@ -4,7 +4,7 @@ Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.7.7
+Stable tag: 1.7.7.1
 License: GPLv2
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -282,6 +282,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.7.2 =
+* added preference to allow some HTML tags in text-line form elements #1661
+* fixed bug when using read-only field in the signup form #1659
+* dropdown elements may now use a value of 0 #1658
 
 = 1.7.7.1 =
 * fixed bug saving spurious value on dropdown null select #1656
@@ -930,10 +935,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.7.1 =
-Version 1.7.7.1 is a minor bugfix
-
-The new "dynamic dates" feature for list shortcode filters is described here: [List Shortcode Filters]<https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/list-shortcode-filters/#filtering-dates>
+= 1.7.7.2 =
+Version 1.7.7.2 is a minor feature and bugfix update
 
 == Plugin Support ==
 
