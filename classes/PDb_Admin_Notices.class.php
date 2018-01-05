@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -116,8 +116,7 @@ class PDb_Admin_Notices {
    */
   private function __construct()
   {
-    $this->admin_notice_list = get_option( self::pdb_admin_notice, array() );
-    $this->purge_transient_notices();
+    $this->admin_notice_list = $this->admin_notice_list();
 
     add_action( 'admin_init', array($this, 'action_admin_init'), 20 );
     add_action( 'admin_notices', array($this, 'action_admin_notices') );
@@ -164,7 +163,7 @@ class PDb_Admin_Notices {
   {
     if ( $this->is_plugin_screen() ):
       
-      foreach ( $this->admin_notice_list as $admin_notice ) {
+      foreach ( $this->admin_notice_list() as $admin_notice ) {
 
         $dismiss_url = add_query_arg( array(
             self::get_key => $admin_notice->id
@@ -180,7 +179,20 @@ class PDb_Admin_Notices {
 
         </div><?php
       }
+      
+    $this->purge_transient_notices();
+    
     endif;
+  }
+  
+  /**
+   * supplies the current admin notice list
+   * 
+   * @return array
+   */
+  private function admin_notice_list()
+  {
+    return get_option( self::pdb_admin_notice, array() );
   }
 
   /**
@@ -212,6 +224,7 @@ class PDb_Admin_Notices {
     $this->admin_notice_list = array_filter( $this->admin_notice_list, function ($notice) {
       return $notice->persistent;
     } );
+    $this->update_notices();
   }
 
   /**
@@ -367,7 +380,7 @@ class pdb_admin_notice_message {
     $this->type = $type;
     $this->message = $message;
     $this->context = $context;
-    $this->persistent = $persistent;
+    $this->persistent = (bool) $persistent;
     $this->notice_id( $message );
   }
   
