@@ -670,9 +670,8 @@ class PDb_FormElement extends xnau_FormElement {
        */
       return $URI;
     } else {
-      $screen = get_current_screen();
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( $screen->id === 'toplevel_page_participants-database' || $field->form_element === 'text-line' ) ) {
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || $field->form_element === 'text-line' ) ) {
         $sanitized = wp_kses_post( $field->value );
       } else {
         $sanitized = esc_html( $field->value );
@@ -698,6 +697,19 @@ class PDb_FormElement extends xnau_FormElement {
 
     //construct the link
     return sprintf( $linktemplate, $URI, esc_html( $linktext ), $target );
+  }
+  
+  /**
+   * tells if the current screen is the admin list page
+   * 
+   * @return bool true if on that page
+   */
+  private static function is_admin_list_page()
+  {
+    if ( function_exists( 'get_current_screen') && $screen = get_current_screen() ) {
+      return $screen->id === 'toplevel_page_participants-database';
+    }
+    return false;
   }
 
   /**
