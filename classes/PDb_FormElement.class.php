@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -670,8 +670,9 @@ class PDb_FormElement extends xnau_FormElement {
        */
       return $URI;
     } else {
+      $screen = get_current_screen();
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && $field->form_element === 'text-line' ) {
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( $screen->id === 'toplevel_page_participants-database' || $field->form_element === 'text-line' ) ) {
         $sanitized = wp_kses_post( $field->value );
       } else {
         $sanitized = esc_html( $field->value );
