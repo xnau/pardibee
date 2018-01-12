@@ -1447,7 +1447,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_form( $post, $action, $participant_id = false, $column_names = false )
   {
-    
     /**
      * reject submissions that aren't properly tagged
      */
@@ -1663,12 +1662,18 @@ class Participants_Db extends PDb_Base {
       $column_set = array_merge( $column_names, $default_cols );
     } else {
 
-      if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'signup' ) {
+      /**
+       * @filter pdb-post_action_override
+       * @param the current $_POST action value
+       * @return the action value to use: either "signup" or "update"
+       */
+      if ( self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) === 'signup' ) {
 
         $column_set = 'signup';
       } else {
 
         $column_set = $action == 'update' ? ( is_admin() ? 'backend' : 'frontend' ) : ( $participant_id ? 'all' : 'new' );
+
       }
     }
     
@@ -1705,7 +1710,7 @@ class Participants_Db extends PDb_Base {
               $column->readonly != '0' && 
               $column->form_element !== 'hidden' && 
               self::current_user_has_plugin_role( 'editor', 'readonly access' ) === false && 
-              filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === self::apply_filters( 'readonly_exempt_module', 'signup', $column )
+              self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) !== 'signup'
               ) {
         $post[$column->name] = '';
       }
