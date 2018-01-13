@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -129,6 +129,8 @@ abstract class xnau_CSV_Import {
                 __('Target directory does not exist and could not be created. Try creating it manually.', 'participants-database'), __('Destination', 'participants-database') . ': ' . $upload_location
         );
       }
+      // we are done with the file, delete it
+      Participants_Db::delete_file($target_path);
     }
   }
   
@@ -143,9 +145,11 @@ abstract class xnau_CSV_Import {
     if ( ! wp_verify_nonce( $nonce, self::nonce ) ) {
       return false;
     }
-    $filename = filter_var( $_FILES['uploadedfile']['name'], FILTER_SANITIZE_STRING );
-    $check =  pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv';
-    if ( $check ) {
+    
+    $filename = sanitize_file_name( filter_var( $_FILES['uploadedfile']['name'], FILTER_SANITIZE_STRING ) );
+    
+    if ( pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv' ) {
+      $_FILES['uploadedfile']['name'] = $filename;
       return true;
     }
     $this->set_error_heading( __('Invalid file for import.', 'participants-database') );
