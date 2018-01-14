@@ -66,7 +66,7 @@ class PDb_File_Uploads {
     /* get the allowed file types and test the uploaded file for an allowed file 
      * extension
      */
-    $field_allowed_extensions = implode( ',', array_filter( Participants_Db::unserialize_array( $field_atts->values ) ) );
+    $field_allowed_extensions = Participants_Db::get_field_allowed_extensions( $field_atts->values );
     $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
     
     $test = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $file['name'] ), $matches );
