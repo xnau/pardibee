@@ -449,11 +449,26 @@ class PDb_Base {
    */
   public static function is_allowed_file_extension( $filename, $allowed = '' )
   {
-    
-    $field_allowed_extensions = implode( ',', array_filter( self::unserialize_array( $allowed ) ) );
+    $field_allowed_extensions = self::get_field_allowed_extensions( $allowed );
     $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
     
-    return preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches ) !== 0;
+    $result = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches );
+    return $result !== 0;
+  }
+  
+  /**
+   * provides an array of allowed extensions from the field def "values" parameter
+   * 
+   * @param string $values possibly serialized array of field attributes or allowed extensions
+   * @return string comma-separated list of allowed extensions, empty string if not defined in the field
+   */
+  public static function get_field_allowed_extensions( $values )
+  {
+    $value_list = array_filter( self::unserialize_array( $values ) );
+    if ( array_key_exists( 'allowed', $value_list ) ) {
+      return str_replace( '|', ',', $value_list['allowed'] );
+    }
+    return implode( ',', $value_list );
   }
 
   /**
