@@ -565,7 +565,7 @@ class PDb_FormElement extends xnau_FormElement {
     if ( isset( $this->options['max_file_size'] ) )
       $max_size = $this->options['max_file_size'];
     else
-      $max_size = ( ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
+      $max_size = ( (int) ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
 
     $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value) ) );
 
