@@ -226,8 +226,9 @@ class PDb_Date_Parse {
     $the_Date = '';
     
     if ( ! intl_is_failure( $DateFormat->getErrorCode() ) ) {
+    
       $the_Date = new DateTime();
-      $the_Date->setTimestamp( $timestamp );
+      $the_Date->setTimestamp( $timestamp ); // type cast this to int?
     }
     if ( is_a( $the_Date, 'DateTime' ) ) {
       $this->set_timestamp_from_datetime( $the_Date );
