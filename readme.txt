@@ -287,6 +287,7 @@ You can define a "captcha" form element which will show a simple math question f
 * fixed security issue with upload CSV files #1665
 * php7 compatibility fixes #1669
 * fixed bug causing blank timestamp in updated record when using php7 #1672
+* minor error fixes in French translation
 
 = 1.7.7.3 =
 * fixed bug when using read-only field in the signup form #1659
