@@ -1742,26 +1742,26 @@ class Participants_Db extends PDb_Base {
             break;
           }
           /**
-           * @version 1.7.0.15
+           * @version 1.7.7.4
            * 
-           * if the localized timestamp date strings can't be parsed normally, we use the saved value if available
+           * if the timestamp is blank and we have a saved record, use the saved value. Otherwise, attempt to parse it
            */
-          if ( !PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
+          $new_value = $post[$column->name]; // this is our fallback value
+          if ( empty($post[$column->name]) && is_numeric( $participant_id ) ) {
+              // try using the saved value
+              $saved =  self::get_participant( $participant_id );
+              // use the saved value if available so we don't have to try to parse the string back to a mysql timestamp
+              if ( isset( $saved[$column->name] ) && PDb_Date_Parse::is_mysql_timestamp( $saved[$column->name] ) ) {
+                $new_value = $saved[$column->name];
+              }
+          } elseif ( !PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
+            
             $new_value = '';
             $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
             $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array('input_format' => $display_format), __METHOD__ . ' saving timestamps' );
             if ( $timestamp ) {
               $new_value = PDb_Date_Display::get_mysql_timestamp( $timestamp );
-            } else {
-              // try using the saved value
-              $saved = is_numeric( $participant_id ) ? self::get_participant( $participant_id ) : false;
-              // use the saved value if available so we don't have to try to parse the string back to a mysql timestamp
-              if ( $saved && isset( $saved[$column->name] ) && PDb_Date_Parse::is_mysql_timestamp( $saved[$column->name] ) ) {
-                $new_value = $saved[$column->name];
-              }
             }
-          } else {
-            $new_value = $post[$column->name];
           }
           break;
 
@@ -1895,6 +1895,7 @@ class Participants_Db extends PDb_Base {
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
                 if ( $participant_id && ( self::$plugin_options['file_delete'] == 1 || is_admin() ) ) {
                   $participant_record = self::get_participant($participant_id);
+                  
                   self::delete_file( $participant_record[$column->name] );
                 }
 //                unset( $_POST[$column->name] );
