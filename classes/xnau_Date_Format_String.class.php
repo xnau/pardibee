@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -114,7 +114,11 @@ class xnau_Date_Format_String {
         'm', //numeric month leading zeros
         //year
         'Y', //full numeric year
-        'y'  //numeric year: 2 digit
+        'y',  //numeric year: 2 digit
+        // time
+        'g', // 12-hour hour
+        'i', // minute with leading zero
+        'a', // AM or PM
     );
     switch ($format_type) {
       case 'strftime':
@@ -124,14 +128,16 @@ class xnau_Date_Format_String {
         $replace = array(
             'dd', 'd', 'EEEE', 'EEEE', 'D',
             'MMMM', 'MMM', 'M', 'MM',
-            'yyyy', 'yy'
+            'yyyy', 'yy',
+            'h', 'mm', 'a',
         );
         break;
       case 'jQuery':
         $replace = array(
             'dd', 'd', 'DD', 'D', 'o',
             'MM', 'M', 'm', 'mm',
-            'yy', 'y'
+            'yy', 'y',
+            'h', 'MM', 'tt',
         );
         break;
     }
