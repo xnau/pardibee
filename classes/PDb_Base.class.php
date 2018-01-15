@@ -1010,7 +1010,7 @@ class PDb_Base {
     if ( ! is_bool( $result ) ) {
       $current_dir = getcwd(); // save the current dir
       chdir( self::files_path() ); // set the plugin uploads dir
-      $result = @unlink( basename( $filename ) ); // delete the file
+      $result = @unlink( $filename ); // delete the file
       chdir( $current_dir ); // change back to the previous directory
     }
     return $result;
