@@ -1701,11 +1701,6 @@ class Participants_Db extends PDb_Base {
        * readonly field data is prevented from being saved by unauthorized users 
        * when not using the signup form
        */
-      /**
-       * @filter pdb-readonly_exempt_module
-       * @param string name of the module which allows wirting readonly fields
-       * @param object  the current field
-       */
       if (  
               $column->readonly != '0' && 
               $column->form_element !== 'hidden' && 
@@ -1726,13 +1721,7 @@ class Participants_Db extends PDb_Base {
         case 'date_recorded':
         case 'date_updated':
         case 'last_accessed':
-          /**
-           * skip the "last_accessed" field if the record is newly created
-           */
-          if ( $column->name === 'last_accessed' && $action !== 'update' ) {
-            $new_value = false;
-            break;
-          }
+          // these are the internal record timestamps
           /*
            *  remove the value from the post data if it is already set in the sql
            */
@@ -1741,30 +1730,39 @@ class Participants_Db extends PDb_Base {
             $new_value = false;
             break;
           }
-          /**
-           * @version 1.7.7.4
-           * 
-           * if the timestamp is blank and we have a saved record, use the saved value. Otherwise, attempt to parse it
+          /*
+           * always include the value if importing a CSV
            */
-          $new_value = $post[$column->name]; // this is our fallback value
-          if ( empty($post[$column->name]) && is_numeric( $participant_id ) ) {
-              // try using the saved value
-              $saved =  self::get_participant( $participant_id );
-              // use the saved value if available so we don't have to try to parse the string back to a mysql timestamp
-              if ( isset( $saved[$column->name] ) && PDb_Date_Parse::is_mysql_timestamp( $saved[$column->name] ) ) {
-                $new_value = $saved[$column->name];
+          if ( $currently_importing_csv ) {
+            $new_value = false;
+            if ( isset( $post[$column->name] ) && ! empty( $post[$column->name] ) ) {
+              if ( PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
+                // record it if it is a valid mysql timestamp
+                $new_value = $post[$column->name];
+              } else {
+                // convert the date to a mysql timestamp
+                $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array(), __METHOD__ . ' CSV import internal timestamp fields' );
+                if ( $timestamp ) {
+                  $new_value = PDb_Date_Display::get_mysql_timestamp( $timestamp );
+                }
               }
-          } elseif ( !PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
-            
-            $new_value = '';
-            $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-            $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array('input_format' => $display_format), __METHOD__ . ' saving timestamps' );
-            if ( $timestamp ) {
-              $new_value = PDb_Date_Display::get_mysql_timestamp( $timestamp );
             }
+            break;
+          }
+          /*
+           * skip the "last_accessed" field: it is set by the PDb_Record class
+           */
+          if ( $column->name === 'last_accessed' ) {
+            $new_value = false;
+            break;
+          }
+          /*
+           * skip the "date_recorded" field: it is either set in the query or left alone
+           */
+          if ( $column->name === 'date_recorded' ) {
+            $new_value = false;
           }
           break;
-
 
         case 'private_id':
           /*
