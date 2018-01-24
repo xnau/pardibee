@@ -580,6 +580,19 @@ class PDb_FormElement extends xnau_FormElement {
 
     $this->_addline( '</div>' );
   }
+  
+  
+
+  /**
+   * builds a password text element
+   */
+  protected function _password()
+  {
+    $dummy = str_repeat('*', strlen( $this->value ) );
+    $this->value = $dummy;
+
+    $this->_addline( $this->_input_tag( 'password' ) );
+  }
 
   /*   * ************************* 
    * UTILITY FUNCTIONS
