@@ -664,7 +664,6 @@ abstract class xnau_FormElement {
    */
   protected function _password()
   {
-
     $this->value = '';
 
     $this->_addline( $this->_input_tag( 'password' ) );
