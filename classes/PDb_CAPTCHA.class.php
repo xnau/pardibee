@@ -262,36 +262,25 @@ class PDb_CAPTCHA {
    */
   private function _set_types() {
     $this->captcha_types = Participants_Db::apply_filters('captcha_types_selector', array(
-        'math', 
-        'recaptcha',
+        'math',
     ) );
   }
   /**
-   * sets the type of the current captcha. It checks the defined list of catcha 
-   * types for a matching type name from the options value and sets the type if it 
-   * finds a match, otherwise it chooses the default type, defined as the first 
-   * item in the list of types
+   * sets the type of the current captcha
    * 
-   * TODO: the way this works is not very elegant...the type of CAPTCHA is set in 
-   * the field options parameter. We don't check it for validity because unknown 
-   * types need to be allowed and I didn't want to needlessly complicate the process 
-   * of adding an external CAPTCHA by requiring a type registration 
+   * checks the attributes array for a matching type string
    * 
    * @return null
    */
   private function _set_type() {
     $this->captcha_type = 'math';
-    if (is_array($this->options)) {
-      if ( isset( $this->options['captcha'] ) ) {
-        $captcha_type = $this->options['captcha'];
-      } else {
-        $captcha_type = current($this->options);
+ 
+    if ( is_array( $this->attributes ) ) {
+      foreach( $this->captcha_types as $type ) {
+        if ( in_array( $type, $this->attributes ) ) {
+          $this->captcha_type = $type;
+        }
       }
-      if ( in_array( $captcha_type, $this->captcha_types ) ) {
-        $this->captcha_type =  $captcha_type;
-      }
-    } elseif (is_array($this->attributes) && isset( $this->attributes[0] ) && in_array( $this->attributes[0], $this->captcha_types ) ) {
-      $this->captcha_type = $this->attributes[0];
     }
   }
   /**
