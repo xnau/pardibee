@@ -1184,6 +1184,18 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    $this->plugin_settings[] = array(
+        'name' => 'allow_record_timestamp_edit',
+        'title' => __( 'Allow Record Timestamps to be Edited', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
     /*     * ****************************************************
      *
      *   admin section settings
@@ -1679,6 +1691,9 @@ ORDER BY g.order, v.order';
     });
     add_filter( Participants_Db::$prefix . 'files_use_content_base_path', function(){
       return Participants_Db::plugin_setting('files_use_content_base_path', '0' ) == '1';
+    });
+    add_filter( Participants_Db::$prefix . 'edit_record_timestamps', function(){
+      return Participants_Db::plugin_setting('allow_record_timestamp_edit', '0' ) == '1';
     });
     
   }
