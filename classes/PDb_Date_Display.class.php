@@ -188,7 +188,7 @@ class PDb_Date_Display {
   private function _set_format()
   {
     if ( $this->mode === 'mysql' ) {
-      $format = 'Y-m-d G:i:s';
+      $format = 'Y-m-d H:i:s';
     } else {
       $format = get_option( 'date_format' );
       if ( $this->showing_time() ) {
