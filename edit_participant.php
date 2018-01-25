@@ -107,25 +107,31 @@ if ( $participant_values ) :
             <?php
             $add_title = '';
             $fieldnote_pattern = ' <span class="fieldnote">%s</span>';
-            if ( $column->form_element == 'hidden' ) {
+            if ( $column->form_element === 'hidden' ) {
               $add_title = sprintf( $fieldnote_pattern, __( 'hidden', 'participants-database' ) );
-            } elseif ( in_array( $column->name, $readonly_columns ) or $column->form_element == 'timestamp' ) {
-              $attributes['class'] = 'readonly-field';
-              /**
-               * @version 1.7.0.13
-               * @filter  pdb-field_readonly_override
-               * @param object $column the current field object
-               * @return bool if true the field is rendered as readonly
-               */
+            } elseif ( in_array( $column->name, $readonly_columns )  ) {
+              
               if (
-                  Participants_Db::apply_filters( 'field_readonly_override', 
-                          !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ) 
-                          || ( $column->name === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) )
-                          , $column )
-              ) {
-                $attributes['readonly'] = 'readonly';
+                      $column->form_element === 'timestamp' && Participants_Db::apply_filters( 'edit_record_timestamps', false ) === true ||
+                      $column->name === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) === false ) {
+                // don't mark these fields as read-only if editing is enabled
+              } else {
+              
+                $attributes['class'] = 'readonly-field';
+                /**
+                 * @version 1.7.0.13
+                 * @filter  pdb-field_readonly_override
+                 * @param object $column the current field object
+                 * @return bool if true the field is rendered as readonly
+                 */
+                if ( 
+                        Participants_Db::apply_filters( 'field_readonly_override', !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ), $column ) ||
+                        $column->name === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ) {
+                  $attributes['readonly'] = 'readonly';
+                }
+                $add_title = sprintf( $fieldnote_pattern, __( 'read only', 'participants-database' ) );
+                
               }
-              $add_title = sprintf( $fieldnote_pattern, __( 'read only', 'participants-database' ) );
             }
             ?>
             <th><?php echo $column_title . $add_title ?></th>
