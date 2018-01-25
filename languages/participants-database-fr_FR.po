@@ -5,14 +5,14 @@ msgstr ""
 "Project-Id-Version: Participants Database 1.4.9.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/participants-database\n"
 "POT-Creation-Date: 2013-12-27 17:36:25+00:00\n"
-"PO-Revision-Date: 2017-04-23 08:51+0200\n"
-"Last-Translator: Christian Ries <christian_ries@internet.lu>\n"
+"PO-Revision-Date: 2018-01-14 20:54-1000\n"
+"Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.5\n"
 "Language-Team: \n"
 
 #: classes/PDb_FormElement.class.php:324 classes/xnau_FormElement.class.php:986
@@ -885,11 +885,11 @@ msgstr "Modèle de relevé de liste"
 
 #: classes/PDb_Settings.class.php:780
 msgid "template for displaying the list count. %1$s - total number of records found, %2$s - number of records shown per page, %3$s - starting record number, %4$s - ending record number, %5$s - the current page number"
-msgstr "modèle pour afficher le relevé de liste. % 1 $ s - nombre total d&#39;enregistrements trouvés,% 2 $ s - nombre d&#39;enregistrements affichés par page,% 3 $ s - premier numéro d&#39;enregistrement,% 4 $ s - dernier numéro d&#39;enregistrement,% 5 $ s - numéro de page actuelle"
+msgstr "modèle pour afficher le relevé de liste. %1$s - nombre total d&#39;enregistrements trouvés,%2$s - nombre d&#39;enregistrements affichés par page,%3$s - premier numéro d&#39;enregistrement,%4$s - dernier numéro d&#39;enregistrement,%5$s - numéro de page actuelle"
 
 #: classes/PDb_Settings.class.php:781
 msgid "Total Records Found: %1$s, showing %2$s per page"
-msgstr "Total des enregistrements trouvés&nbsp;: % 1 $ s, dont % 2 $ s sont affichés par page"
+msgstr "Total des enregistrements trouvés&nbsp;: %1$s, dont %2$s sont affichés par page"
 
 #: classes/PDb_Settings.class.php:791
 msgid "List Default Sort"
