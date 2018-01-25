@@ -629,6 +629,12 @@ abstract class xnau_FormElement {
       $this->value = $this->format_date( strtotime( $this->value ), true );
     }
 
+    if ( Participants_Db::apply_filters( 'edit_record_timestamps', false ) === false ) {
+      $this->attributes['disabled'] = true;
+    } else {
+      unset( $this->attributes['readonly'] );
+    }
+    
     $this->_addline( $this->_input_tag() );
   }
 
