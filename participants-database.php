@@ -1570,7 +1570,7 @@ class Participants_Db extends PDb_Base {
              * @param int id of the matched record
              * @param array the submitted post data
              * 
-             * @eturn int the id of the matched record
+             * @return int the id of the matched record
              */
             $participant_id = self::apply_filters('process_form_matched_record', $participant_id, $post );
 
@@ -1732,8 +1732,10 @@ class Participants_Db extends PDb_Base {
           }
           /*
            * always include the value if importing a CSV
+           * 
+           * also parses the value if "pdb-edit_record_timestamps" filter is true
            */
-          if ( $currently_importing_csv ) {
+          if ( $currently_importing_csv || self::apply_filters( 'edit_record_timestamps', false ) ) {
             $new_value = false;
             if ( isset( $post[$column->name] ) && ! empty( $post[$column->name] ) ) {
               if ( PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
@@ -1741,8 +1743,11 @@ class Participants_Db extends PDb_Base {
                 $new_value = $post[$column->name];
               } else {
                 // convert the date to a mysql timestamp
-                $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array(), __METHOD__ . ' CSV import internal timestamp fields' );
-                if ( $timestamp ) {
+                $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+                $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array('input_format' => $display_format), __METHOD__ . ' saving internal timestamp fields, standard format' );
+                if ( ! $timestamp ) {
+                  $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array(), __METHOD__ . ' saving internal timestamp fields' );
+                } elseif ( $timestamp ) {
                   $new_value = PDb_Date_Display::get_mysql_timestamp( $timestamp );
                 }
               }
@@ -2576,6 +2581,13 @@ class Participants_Db extends PDb_Base {
 
         if ( false === $participant_id ) {
 
+          /**
+           * @action pdb-submission_not_verified
+           * @param array submission data
+           * @param int|bool record id or bool false
+           * @param PDb_Form_Validation object
+           */
+          do_action('pdb-submission_not_verified', $post_data, $id, self::$validation_errors );
           // we have errors; go back to form and show errors
           return;
         }
@@ -2826,6 +2838,15 @@ class Participants_Db extends PDb_Base {
           wp_redirect( $redirect );
 
           exit;
+        } else {
+          
+          /**
+           * @action pdb-signup_submission_not_verified
+           * @param array submission data
+           * @param int|bool record id or bool false
+           * @param PDb_Form_Validation object
+           */
+          do_action('pdb-signup_submission_not_verified', $post_data, $post_data['id'], self::$validation_errors );
         }
 
         return;
