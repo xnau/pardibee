@@ -279,6 +279,7 @@ class PDb_CAPTCHA {
       foreach( $this->captcha_types as $type ) {
         if ( in_array( $type, $this->attributes ) ) {
           $this->captcha_type = $type;
+          continue;
         }
       }
     }
