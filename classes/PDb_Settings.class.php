@@ -1191,6 +1191,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
+            'help_text' => __( 'normally, record timestamps (date_recorded, date_updated, last_accessed) are not editable, checking this allows them to be edited.', 'participants-database' ) . $this->settings_help( 'File-and-Image-Uploads-Use-WP-'),
             'value' => 0,
             'options' => array(1, 0),
         ),
