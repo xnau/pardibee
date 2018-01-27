@@ -553,7 +553,8 @@ class PDb_Manage_Fields {
 
               $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
 
-              $row['values'] = self::prep_values_array( $row['values'] );
+              if ( isset( $row['values'] ) )
+                $row['values'] = self::prep_values_array( $row['values'] );
 
               if ( !empty( $row['validation'] ) && !in_array( $row['validation'], array('yes', 'no') ) ) {
 
@@ -565,7 +566,7 @@ class PDb_Manage_Fields {
                * 
                * the 'datatype_warning' needs to be accepted for this to take place
                */
-              if ( $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
+              if ( isset( $row['group'] ) && $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] )) { 
                 if ( !isset( $row['datatype_warning'] ) || ( isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) ) {
                   $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
                 } else {
@@ -858,7 +859,8 @@ class PDb_Manage_Fields {
         }
       } else {
         foreach ( $term_list as $term ) {
-          $array[] = self::prep_value( $term, true );
+          $attribute = self::prep_value( $term, true );
+          $array[$attribute] = $attribute;
         }
       }
       return array_filter( $array, function($v) { return $v || $v == 0; } );
