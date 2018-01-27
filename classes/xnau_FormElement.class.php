@@ -1373,6 +1373,9 @@ abstract class xnau_FormElement {
         continue;
       } elseif ( $value === true ) {
         $value = $name;
+      } elseif ( preg_match('/^\d/', $name) ) {
+        // indexed element: use the value as the name
+        $name = $value;
       }
       $output .= sprintf( $pattern, esc_attr( $name ), esc_attr( $value ) );
     }
