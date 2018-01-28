@@ -1901,8 +1901,8 @@ class Participants_Db extends PDb_Base {
                   
                   self::delete_file( $participant_record[$column->name] );
                 }
-//                unset( $_POST[$column->name] );
-//                $post[$column->name] = '';
+                unset( $_POST[$column->name] );
+                $post[$column->name] = '';
               }
               $new_value = self::_prepare_string_mysql( trim( $post[$column->name] ) );
               break;
