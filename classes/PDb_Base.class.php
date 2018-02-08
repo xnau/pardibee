@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1371,7 +1371,7 @@ class PDb_Base {
       //$cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
     //}
     
-    if ( ! empty( $cache_limit ) ) {
+    if ( ! empty( $cache_limit )&& !session_id() ) {
       session_cache_limiter( $cache_limit );
     }
     
