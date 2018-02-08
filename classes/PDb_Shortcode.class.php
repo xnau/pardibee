@@ -296,7 +296,7 @@ abstract class PDb_Shortcode {
 
     ob_start();
 
-    if ( PDB_DEBUG && in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') ) ) {
+    if ( PDB_DEBUG /* && in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') ) */ ) {
       echo '<!-- template: ' . $this->template_basename( $this->template ) . ' -->';
     }
 
@@ -309,7 +309,7 @@ abstract class PDb_Shortcode {
     // this will be included in the subclass context
     $this->_include_template();
 
-    if ( PDB_DEBUG && in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') ) ) {
+    if ( PDB_DEBUG /*&& in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') )*/ ) {
       echo '<!-- end template: ' . $this->template_basename( $this->template ) . ' -->';
     }
 
@@ -349,7 +349,6 @@ abstract class PDb_Shortcode {
    */
   protected function set_template( $name )
   {
-
     $this->template_name = $name;
     $this->_find_template();
   }
