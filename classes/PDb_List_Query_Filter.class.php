@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.8
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -184,7 +184,7 @@ class PDb_List_Query_Filter {
     } else {
       $wrap =  preg_match( '#"[^"]+"#', $term ) === 1 ? '"%s"' : '%s';
       $term = PDb_FormElement::get_title_value( trim($term, '"'), $this->fieldname );
-      $this->term = self::_esc_like( sprintf( $wrap, $term ) );
+      $this->term = sprintf( $wrap, $term );
     }
   }
 
