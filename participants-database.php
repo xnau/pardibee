@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.7.5
+ * Version: 1.7.7.6
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -210,7 +210,7 @@ class Participants_Db extends PDb_Base {
    * list of reserved field names
    * @var array
    */
-  public static $reserved_names = array('source', 'subsource', 'id', 'private_id', 'record_link', 'action', 'submit', 'submit-button', 'name', 'day', 'month', 'year', 'hour', 'date', 'minute', 'email-regex');
+  public static $reserved_names = array('source', 'subsource', 'id', 'private_id', 'record_link', 'action', 'submit', 'submit-button', 'name', 'day', 'month', 'year', 'hour', 'date', 'minute', 'email-regex', 'combo_search');
 
   /**
    * true while sending an email
@@ -1889,6 +1889,16 @@ class Participants_Db extends PDb_Base {
                 $new_value = wp_hash_password( trim( $post[$column->name] ) );
               } else {
                 $new_value = false;
+              }
+              break;
+              
+            case 'numeric':
+            case 'decimal':
+            case 'currency':
+              if ( strlen( $post[$column->name] ) > 0 ) {
+                $new_value = filter_var( $post[$column->name], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+              } else {
+                $new_value = null;
               }
               break;
 
