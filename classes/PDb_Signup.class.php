@@ -243,7 +243,6 @@ class PDb_Signup extends PDb_Shortcode {
    */
   protected function _include_template()
   {
-
     include $this->template;
   }
 
