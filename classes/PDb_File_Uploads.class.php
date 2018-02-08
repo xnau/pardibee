@@ -70,7 +70,7 @@ class PDb_File_Uploads {
     $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
     
     $test = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $file['name'] ), $matches );
-
+    
     if ( 0 === $test ) {
 
       if ( $type == 'image' && $this->is_empty( $field_atts->values ) )
