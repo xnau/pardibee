@@ -958,8 +958,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.7.4 =
-Version 1.7.7.4 is a bugfix update
+= 1.7.7.7 =
+Version 1.7.7.7 is an important bugfix update for setups using a password field
 
 == Plugin Support ==
 
