@@ -787,9 +787,11 @@ abstract class xnau_FormElement {
         $this->_addline( '</div>' );
       }
     } else {
+      
       // readonly display
       $this->attributes['id'] = ( empty($this->attributes['id']) ? $this->element_id() : $this->attributes['id'] ) . '_readonly';
       $options = $this->_make_assoc( $this->options );
+      
       $this->_addline( '<input type="text" name="' . $this->name . '" value="' . array_search($this->value, $options) . '" ' . $this->_attributes('no validate') . $this->_class( 'pdb-readonly' ) . ' >' );
     }
   }
