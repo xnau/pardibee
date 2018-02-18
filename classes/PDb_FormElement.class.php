@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -588,8 +588,8 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _password()
   {
-    $dummy = str_repeat('*', strlen( $this->value ) );
-    $this->value = $dummy;
+//    $dummy = str_repeat('*', strlen( $this->value ) );
+//    $this->value = $dummy;
 
     $this->_addline( $this->_input_tag( 'password' ) );
   }
