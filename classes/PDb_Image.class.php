@@ -92,7 +92,7 @@ class PDb_Image extends xnau_Image_Handler {
   {
     if ( is_array( $attributes ) ) :
     foreach ( $attributes as $key => $value ) {
-      if ( in_array( $key, Participants_Db::apply_filters('image_class_image_attributes', array( 'height', 'width' ) ) ) ) {
+      if ( in_array( $key, Participants_Db::apply_filters('image_class_image_attributes', array( 'height', 'width', 'alt', 'longdesc' ) ) ) ) {
         $this->image_attributes[$key] = $value;
       } else {
         $this->attributes[$key] = $value;
