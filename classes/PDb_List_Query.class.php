@@ -344,7 +344,6 @@ class PDb_List_Query {
    */
   public function add_filter( $field, $operator, $term, $logic = 'AND' )
   {
-
     $this->_add_single_statement(
             filter_var( $field, FILTER_SANITIZE_STRING ), $this->_sanitize_operator( $operator ), filter_var( $term, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES) ), ($logic === 'OR' ? 'OR' : 'AND' ), false
     );
@@ -935,6 +934,7 @@ class PDb_List_Query {
      * 
      * string "current_date" is converted to timestamp
      */
+    
     $search_term = Participants_Db::apply_filters( 'raw_search_term', trim( rawurldecode( $search_term ) ) );
 
     /**
