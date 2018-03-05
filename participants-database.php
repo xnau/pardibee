@@ -302,6 +302,9 @@ class Participants_Db extends PDb_Base {
     register_deactivation_hook( __FILE__, array('PDb_Init', 'on_deactivate') );
     register_uninstall_hook( __FILE__, array('PDb_Init', 'on_uninstall') );
 
+    // start sessions management
+    self::$session = new PDb_Session();
+
     // admin plugin list display
     add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array(__CLASS__, 'add_plugin_action_links') );
     add_filter( 'plugin_row_meta', array(__CLASS__, 'add_plugin_meta_links'), 10, 2 );
@@ -497,9 +500,6 @@ class Participants_Db extends PDb_Base {
      * settings UI on the 'admin_menu' hook
      */
     self::$Settings = new PDb_Settings();
-
-    // start sessions management
-    self::$session = new PDb_Session();
 
     /*
      * set up the base reference object arrays
@@ -1529,7 +1529,7 @@ class Participants_Db extends PDb_Base {
        * if we are adding a record in the admin, we don't don't perform a record update 
        * on a matching record if the intent is to add a new record
        */
-      if ( is_admin() && !$currently_importing_csv ) {
+      if ( is_admin() && ! DOING_AJAX && ! $currently_importing_csv ) {
         $duplicate_record_preference = '2';
       }
 
@@ -1975,18 +1975,19 @@ class Participants_Db extends PDb_Base {
       }
     }
 
-
-
     // add in the column names
     $sql .= implode( ', ', $column_data );
 
     // add the WHERE clause
     $sql .= $where;
+    
+    // sanitize the values if including user input
+    $query = strpos( $sql, '%s' ) !== false ? $wpdb->prepare( $sql, $new_values ) : $sql;
 
     if ( PDB_DEBUG )
-      error_log( __METHOD__ . ' storing record: ' . $wpdb->prepare( $sql, $new_values ) );
+      error_log( __METHOD__ . ' storing record: ' . $query );
 
-    $result = $wpdb->query( $wpdb->prepare( $sql, $new_values ) );
+    $result = $wpdb->query( $query );
 
     $db_error_message = '';
     if ( $result === 0 ) {
@@ -2229,14 +2230,14 @@ class Participants_Db extends PDb_Base {
    * 
    * Returns the first of multiple matches
    * 
-   * @param string $term
-   * @param mixed $id
+   * @param string $term the name of the field to use in matching the record
+   * @param string $value the value to match
    * @return int|bool false if no valid id found
    */
-  public static function get_record_id_by_term( $term, $id, $single = true )
+  public static function get_record_id_by_term( $term, $value, $single = true )
   {
 
-    return self::_get_participant_id_by_term( $term, $id, $single );
+    return self::_get_participant_id_by_term( $term, $value, $single );
   }
 
   /**
@@ -2519,14 +2520,14 @@ class Participants_Db extends PDb_Base {
     $post_input = filter_input_array( INPUT_POST, $post_sanitize );
 
     // only process POST arrays from this plugin's pages
-    if ( empty( $post_input['subsource'] ) or $post_input['subsource'] != self::PLUGIN_NAME or empty( $post_input['action'] ) )
+    if ( empty( $post_input['subsource'] ) || $post_input['subsource'] != self::PLUGIN_NAME or empty( $post_input['action'] ) )
       return;
 
     // add a filter to check the submission before anything is done with it
     if ( self::apply_filters( 'check_submission', true ) === false )
       return;
 
-    // error_log( __METHOD__.' post:'.print_r( $_POST, true ) );
+//     error_log( __METHOD__.' post:'.print_r( $_POST, true ) );
 
     /*
      * the originating page for a multipage form is saved in a session value
