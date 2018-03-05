@@ -65,7 +65,7 @@ class PDb_Session {
     $this->use_php_sessions = Participants_Db::plugin_setting_is_true( 'use_php_sessions' );
 
     $this->session_name = Participants_Db::$prefix . 'session';
-    
+
     Participants_Db::initialize_session();
 
     if ( $this->use_php_sessions ) {
@@ -109,10 +109,59 @@ class PDb_Session {
         include $wp_session_path . 'class-wp-session.php';
         include $wp_session_path . 'wp-session.php';
       }
+
+      // sets up the new sessions table
+      // Create the required table.
+      add_action( 'admin_init', array( $this, 'create_sm_sessions_table' ) );
+      add_action( 'wp_session_init', array( $this, 'create_sm_sessions_table' ) );
+      
     }
 
     //add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
     $this->init();
+  }
+
+  /**
+   * Create the new table for housing session data if we're not still using
+   * the legacy options mechanism. This code should be invoked before
+   * instantiating the singleton session manager to ensure the table exists
+   * before trying to use it.
+   *
+   * @see https://github.com/ericmann/wp-session-manager/issues/55
+   */
+  function create_sm_sessions_table()
+  {
+    if ( defined( 'WP_SESSION_USE_OPTIONS' ) && WP_SESSION_USE_OPTIONS ) {
+      return;
+    }
+
+    $current_db_version = '0.1';
+    $created_db_version = get_option( 'sm_session_db_version', '0.0' );
+
+    if ( version_compare( $created_db_version, $current_db_version, '<' ) ) {
+      global $wpdb;
+
+      $collate = '';
+      if ( $wpdb->has_cap( 'collation' ) ) {
+        $collate = $wpdb->get_charset_collate();
+      }
+
+      $table = "CREATE TABLE {$wpdb->prefix}sm_sessions (
+		  session_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+		  session_key char(32) NOT NULL,
+		  session_value LONGTEXT NOT NULL,
+		  session_expiry BIGINT(20) UNSIGNED NOT NULL,
+		  PRIMARY KEY  (session_key),
+		  UNIQUE KEY session_id (session_id)
+		) $collate;";
+
+      require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+      dbDelta( $table );
+
+      add_option( 'sm_session_db_version', '0.1', '', 'no' );
+
+      WP_Session_Utils::delete_all_sessions_from_options();
+    }
   }
 
   /**
@@ -207,7 +256,7 @@ class PDb_Session {
 //value: ' . print_r( $value,1 ) . '
 //      
 //trace: '.print_r(  wp_debug_backtrace_summary(),1));
-    
+
     $key = sanitize_key( $key );
 
     $this->session[$key] = $value;
@@ -240,7 +289,7 @@ class PDb_Session {
 
     if ( $this->use_php_sessions )
       $_SESSION[$this->session_name] = $this->session;
-    
+
     return $this->session[$key];
   }
 
@@ -314,5 +363,4 @@ class PDb_Session {
 //    }
 //    return $c;
 //  }
-
 }
