@@ -522,7 +522,13 @@ class PDb_List extends PDb_Shortcode {
       $output[] = '</form></div>';
     }
 
-    echo $this->output_HTML( $output );
+    /**
+     * @filter pdb-search_sort_form_output
+     * @param array of string HTML lines
+     * 
+     * @return array
+     */
+    echo $this->output_HTML( Participants_Db::apply_filters( 'search_sort_form_output', $output ) );
   }
 
   /**
@@ -648,7 +654,7 @@ class PDb_List extends PDb_Shortcode {
     $search_columns = is_array( $columns ) && !empty( $columns ) ? $columns : $this->display_columns;
     foreach ( $search_columns as $col ) {
       $column = $this->get_column_atts( $col );
-      if ( $column )
+      if ( $column && !in_array( $column->form_element, array('placeholder') ) )
         $return[$column->title] = $column->name;
     }
     return $return;
