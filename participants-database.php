@@ -3740,7 +3740,7 @@ function PDb_class_loader( $class )
     }
   }
 }
-
+    
 /**
  * PHP version checks and notices before initializing the plugin
  */
