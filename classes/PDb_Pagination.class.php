@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  *
  * adapted from: http://www.goodphptutorials.com/out/Simple_PHP_MySQL_Pagination
  *
@@ -384,7 +384,7 @@ class PDb_Pagination {
       $output .= sprintf(
               ($i == $currentPage ? $disabled_pattern : $button_pattern), 
               $this->_sprintf($link, $i), 
-              ($i == $currentPage ? $this->current_page_class : ''), 
+              ($i == $currentPage ? $this->current_page_class : 'direct-page'), 
               $i,
               $i
       );
