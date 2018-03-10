@@ -801,7 +801,9 @@ class PDb_Manage_Fields {
        * in queries
        */
       $name = strtolower( str_replace(
-                      array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%'), array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct'), stripslashes( substr( $string, 0, 64 ) )
+              array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%'), 
+              array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct'), 
+              stripslashes( substr( $string, 0, 64 ) )
               ) );
       /*
        * allow only proper unicode letters, numerals and legal symbols
