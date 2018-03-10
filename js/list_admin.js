@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.5
+ * @version 0.6
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -79,7 +79,7 @@ var PDbListAdmin = (function ($) {
         var send_count = parseInt(count_element.val(), 10);
         var sense = (send_count > 1) ? 'plural' : 'singular';
         var action = $('[name=with_selected]').val();
-        var overlimit = send_count > parseInt( list_adminL10n.send_limit );
+        var overlimit = !list_adminL10n.unlimited_actions.includes(action) && send_count > parseInt( list_adminL10n.send_limit );
         var limit_message = overlimit ? $('<h4 class="dashicons-before dashicons-warning"/>').append(list_adminL10n.apply_confirm.recipient_count_exceeds_limit.replace('{limit}',list_adminL10n.send_limit)) : '';
         confirmDialog.append($('<h3/>').append(list_adminL10n.apply_confirm[action][sense])).append(limit_message).dialog('open').find('a').blur();
       });
