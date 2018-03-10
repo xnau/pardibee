@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.9.7
+ * @version    Release: 1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -153,6 +153,7 @@ class PDb_List_Admin {
         'apply' => self::$i18n['apply'],
         'apply_confirm' => $apply_confirm_messages,
         'send_limit' => (int) Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit ),
+        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array('delete','approve','unapprove') ),
             )
     );
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
