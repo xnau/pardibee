@@ -2435,36 +2435,36 @@ class Participants_Db extends PDb_Base {
    * adds a blank field type record
    * 
    * @global object $wpdb
-   * @param array $atts
+   * @param array $params the setup paramters for the new field
    * @return boolean 
    */
-  public static function add_blank_field( $atts )
+  public static function add_blank_field( $params )
   {
     // prevent spurious field creation
-    if ( !isset( $atts['name'] ) || empty( $atts['name'] ) ) return;
+    if ( !isset( $params['name'] ) || empty( $params['name'] ) ) return;
     
     global $wpdb;
     $wpdb->hide_errors();
 
-    $defaults = wp_parse_args( $atts, array('form_element' => 'text-line') );
+    $field_parameters = wp_parse_args( $params, array('form_element' => 'text-line') );
 
-    $wpdb->insert( self::$fields_table, $defaults );
+    $wpdb->insert( self::$fields_table, $field_parameters );
 
     if ( $wpdb->last_error ) {
 
       if ( PDB_DEBUG )
-        error_log( __METHOD__ . ' failed to add row ' . $atts['name'] );
+        error_log( __METHOD__ . ' failed to add row ' . $params['name'] . ' with error: ' . $wpdb->last_error );
 
       return false;
     }
 
     // if this column does not exist in the DB, add it
-    if ( count( $wpdb->get_results( "SHOW COLUMNS FROM `" . self::$participants_table . "` LIKE '" . $defaults['name'] . "'", ARRAY_A ) ) < 1 ) {
+    if ( count( $wpdb->get_results( "SHOW COLUMNS FROM `" . self::$participants_table . "` LIKE '" . $field_parameters['name'] . "'", ARRAY_A ) ) < 1 ) {
 
-      if ( false === ( self::_add_db_column( $defaults ) ) ) {
+      if ( false === ( self::_add_db_column( $field_parameters ) ) ) {
 
         if ( PDB_DEBUG )
-          error_log( __METHOD__ . ' failed to add column:' . print_r( $defaults, true ) );
+          error_log( __METHOD__ . ' failed to add column with error: ' . $wpdb->last_error .'  data: ' . print_r( $field_parameters, true ) );
 
         return false;
       }
