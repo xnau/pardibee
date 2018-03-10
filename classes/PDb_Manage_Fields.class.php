@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -637,7 +637,7 @@ class PDb_Manage_Fields {
 
           // use the wp function to clear out any irrelevant POST values
           $atts = shortcode_atts( array(
-              'name' => $this->make_name( filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING ) ),
+              'name' => self::make_name( filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING ) ),
               'title' => htmlspecialchars( stripslashes( filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING ) ), ENT_QUOTES, "UTF-8", false ),
               'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
               'order' => filter_input( INPUT_POST, 'order', FILTER_SANITIZE_NUMBER_INT ),
@@ -694,7 +694,7 @@ class PDb_Manage_Fields {
           $wpdb->hide_errors();
 
           $atts = array(
-              'name' => $this->make_name( $_POST['group_title'] ),
+              'name' => self::make_name( $_POST['group_title'] ),
               'title' => htmlspecialchars( stripslashes( $_POST['group_title'] ), ENT_QUOTES, "UTF-8", false ),
               'order' => $_POST['group_order'],
           );
@@ -794,7 +794,7 @@ class PDb_Manage_Fields {
      * @param string the proposed name
      * @retun string the legal name
      */
-    function make_name( $string )
+    public static function make_name( $string )
     {
       /*
        * truncate to 64 characters, then replace any characters that would cause problems 
@@ -806,6 +806,7 @@ class PDb_Manage_Fields {
       /*
        * allow only proper unicode letters, numerals and legal symbols
        */
+      $name = mb_check_encoding($name, 'UTF-8') ? $name : mb_convert_encoding( $name, 'UTF-8' );
       return preg_replace( '#[^\p{L}\p{N}_]#u', '', $name );
     }
 
@@ -837,7 +838,7 @@ class PDb_Manage_Fields {
       $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
       
       $has_labels = strpos( $values, $pair_delim ) !== false;
-      $array = array();
+      $values_array = array();
       $term_list = explode( $option_delim, stripslashes( $values ) );
       if ( $has_labels ) {
         foreach ( $term_list as $term ) {
@@ -850,20 +851,33 @@ class PDb_Manage_Fields {
              * optgroup label. In most cases it will be unnoticed.
              */
             $array_key = in_array( $value, array('false', 'optgroup', false) ) ? trim( $key ) . ' ' : trim( $key );
-            $array[$array_key] = self::prep_value( trim( $value ), true );
+            $values_array[$array_key] = self::prep_value( trim( $value ), true );
           } else {
             // strip out the double colon in case it is present
             $term = str_replace( array($pair_delim), '', $term );
-            $array[self::prep_value( $term, true )] = self::prep_value( $term, true );
+            $values_array[self::prep_value( $term, true )] = self::prep_value( $term, true );
           }
         }
       } else {
         foreach ( $term_list as $term ) {
           $attribute = self::prep_value( $term, true );
-          $array[$attribute] = $attribute;
+          $values_array[$attribute] = $attribute;
         }
       }
-      return array_filter( $array, function($v) { return $v || $v == 0; } );
+      return self::cleanup_array( $values_array );
+    }
+    
+    /**
+     * clears empty elements out of an array
+     * 
+     * leaves "zero" values in
+     * 
+     * @param array $array the input
+     * @return array the cleaned array
+     */
+    public static function cleanup_array( $array )
+    {
+      return array_filter( $array, function($v) { return $v || $v === 0 || $v === '0'; } );
     }
 
     /**
