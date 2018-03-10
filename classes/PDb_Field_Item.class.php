@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.9
+ * @version    0.10
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -69,6 +69,11 @@ class PDb_Field_Item extends PDb_Template_Item {
    * @var string the link href for elements wrapped in an anchor tag
    */
   var $link = false;
+  
+  /** 
+   * @var string name of the field's group
+   */
+  var $group;
 
   /**
    * @var bool determines if the field value is output as HTML or a formatted value 
@@ -264,7 +269,7 @@ class PDb_Field_Item extends PDb_Template_Item {
         if ( isset( $item->form_element ) && PDb_FormElement::is_value_set( $item->form_element ) ) {
           $this->values = $item->values;
         } else {
-          $this->attributes = $item->values;
+          $this->attributes = PDb_Manage_Fields::cleanup_array( $item->values );
         }
       } else {
         $this->$property = $item->$property;
