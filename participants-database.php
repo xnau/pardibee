@@ -1885,7 +1885,7 @@ class Participants_Db extends PDb_Base {
               break;
 
             case 'password':
-              if ( !empty( $post[$column->name] ) ) {
+              if ( !empty( $post[$column->name] ) && $post[$column->name] !== PDb_FormElement::dummy ) { // skip saving the password if it is the dummy
                 $new_value = wp_hash_password( trim( $post[$column->name] ) );
               } else {
                 $new_value = false;
