@@ -16,6 +16,13 @@ if ( !defined( 'ABSPATH' ) )
   die;
 
 class PDb_FormElement extends xnau_FormElement {
+  
+  /**
+   * @var string dummy password
+   * 
+   * this string is used to show that a password is present; it is not saved to the database
+   */
+  const dummy = '***************';
 
   /**
    * instantiates a xnau_FormElement object
@@ -588,7 +595,9 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _password()
   {
-    $this->value = '';
+    if ( !empty( $this->value ) ) {
+      $this->value = self::dummy;
+    }
     
     $this->_addline( $this->_input_tag( 'password' ) );
   }
