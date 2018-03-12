@@ -296,20 +296,21 @@ class PDb_FormElement extends xnau_FormElement {
 
           $linkdata = maybe_unserialize( $field->value );
 
-          if ( !is_array( $linkdata ) ) {
-
-            $return = '';
-            break;
+          if ( is_array( $linkdata ) ) {
+            list( $url, $value ) = $linkdata;
+          } else {
+            $url = $field->link;
+            $value = $field->value;
           }
 
-          if ( empty( $linkdata[1] ) ) {
-            $linkdata[1] = strlen( $field->default ) > 0 ? $field->default : preg_replace( '#(https?://)#', '', $linkdata[0] );
+          if ( empty( $value ) ) {
+            $value = strlen( $field->default ) > 0 ? $field->default : preg_replace( '#(https?://)#', '', $url );
           }
 
           if ( $html )
-            $return = vsprintf( ( empty( $linkdata[0] ) ? '%1$s%2$s' : '<a href="%1$s">%2$s</a>' ), $linkdata );
+            $return = sprintf( ( empty( $url ) ? '%1$s%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), $url, $value, self::html_attributes( $field->attributes ) );
           else
-            $return = $linkdata[0];
+            $return = $value;
           break;
 
         case 'text-line' :
@@ -954,7 +955,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function is_value_set( $form_element )
   {
-    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array('dropdown', 'radio', 'checkbox', 'dropdown-other', 'select-other', 'multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
+    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array('dropdown', 'radio', 'checkbox', 'dropdown-other', 'select-other', 'multi-checkbox', 'multi-select-other', 'multi-dropdown') ) );
   }
 
   /**
