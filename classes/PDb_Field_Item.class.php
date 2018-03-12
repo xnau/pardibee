@@ -69,8 +69,8 @@ class PDb_Field_Item extends PDb_Template_Item {
    * @var string the link href for elements wrapped in an anchor tag
    */
   var $link = false;
-  
-  /** 
+
+  /**
    * @var string name of the field's group
    */
   var $group;
@@ -93,13 +93,15 @@ class PDb_Field_Item extends PDb_Template_Item {
     if ( is_string( $field ) ) {
       $field = (object) array('name' => $field);
     }
-    
+
     // load the object properties
     $this->assign_props( $field );
 
-    if ( $id ) $this->record_id = $id;
-    
+    if ( $id )
+      $this->record_id = $id;
+
     $this->set_link_field_value();
+    
   }
 
   // template methods
@@ -111,7 +113,7 @@ class PDb_Field_Item extends PDb_Template_Item {
   {
     echo $this->_label();
   }
-  
+
   /**
    * tells if the title (field label) is empty
    * 
@@ -197,9 +199,9 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function __get( $name )
   {
     $value = isset( $this->{$name} ) ? $this->{$name} : '';
-    switch ($name) {
+    switch ( $name ) {
       case 'values':
-        $return = maybe_unserialize($value);
+        $return = maybe_unserialize( $value );
         break;
       default:
         $return = $value;
@@ -216,20 +218,21 @@ class PDb_Field_Item extends PDb_Template_Item {
   {
     $this->html_output = (bool) $mode;
   }
-  
+
   /**
    * assigns the object properties that match properties in the supplied object
    * 
    * @param object $item the supplied object or config array
    */
-  protected function assign_props( $item ) {
-    
+  protected function assign_props( $item )
+  {
+
     $item = (object) $item;
-    
+
     $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
-      
+
     $item_def = new stdClass;
-    if ( isset(Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
+    if ( isset( Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
       $item_def = clone Participants_Db::$fields[$item->name];
       $this->is_pdb_field = true;
     } else {
@@ -238,24 +241,20 @@ class PDb_Field_Item extends PDb_Template_Item {
         $item_def = (object) $groups[$item->name];
       }
     }
-    
+
     // grab and assign the class properties from the provided object
-    foreach( $class_properties as $property ) {
-      
+    foreach ( $class_properties as $property ) {
+
       if ( isset( $item->$property ) ) {
-        
-        $this->_assign_prop($item,  $property );
-      
+
+        $this->_assign_prop( $item, $property );
       } elseif ( isset( $item_def->$property ) ) {
-        
-        $this->_assign_prop($item_def,  $property );
-        
+
+        $this->_assign_prop( $item_def, $property );
       }
-      
     }
-    
   }
-  
+
   /**
    * assigns a class property
    * 
@@ -264,18 +263,18 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   private function _assign_prop( $item, $property )
   {
-      if ( $property === 'values' && isset( $item->values )  ) {
-        $item->values = (array) maybe_unserialize( $item->values );
-        if ( isset( $item->form_element ) && PDb_FormElement::is_value_set( $item->form_element ) ) {
-          $this->values = $item->values;
-        } else {
-          $this->attributes = PDb_Manage_Fields::cleanup_array( $item->values );
-        }
+    if ( $property === 'values' && isset( $item->values ) ) {
+      $item->values = (array) maybe_unserialize( $item->values );
+      if ( isset( $item->form_element ) && PDb_FormElement::is_value_set( $item->form_element ) ) {
+        $this->values = $item->values;
       } else {
-        $this->$property = $item->$property;
+        $this->attributes = empty($item->values) ? array() : PDb_Base::cleanup_array( $item->values );
       }
+    } else {
+      $this->$property = $item->$property;
+    }
   }
-  
+
   /**
    * assigns the values for the special case of the "link" field 
    */
@@ -286,7 +285,7 @@ class PDb_Field_Item extends PDb_Template_Item {
       if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
         $this->link = $parts[0];
       }
-      //$this->value = isset( $parts[1] ) ? $parts[1] : '';
+      $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
     }
   }
 
@@ -296,7 +295,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   private function _is_single_record_link()
   {
-
     return (
             Participants_Db::is_single_record_link($this)
             &&
@@ -339,7 +337,7 @@ class PDb_Field_Item extends PDb_Template_Item {
 
     return $label;
   }
-  
+
   /**
    * tells if the field should have the required field marker added to the label
    * 
@@ -354,7 +352,7 @@ class PDb_Field_Item extends PDb_Template_Item {
      * @param PDb_Field_Item
      * @return bool
      */
-    return Participants_Db::apply_filters('add_required_mark', Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && ! in_array( $this->module, array('list', 'search', 'total', 'single' ) ), $this );
+    return Participants_Db::apply_filters( 'add_required_mark', Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && !in_array( $this->module, array('list', 'search', 'total', 'single') ), $this );
   }
 
   /**
