@@ -1362,14 +1362,26 @@ abstract class xnau_FormElement {
   {
 
     $attributes_array = $attributes_array ? $attributes_array : $this->attributes;
-    $output = '';
 
     if ( empty( $attributes_array ) )
       return '';
 
+    return self::html_attributes($attributes_array);
+  }
+  
+  /**
+   * builds an html attributes string
+   * 
+   * @param array $attributes the attributes array
+   * 
+   * @return string the HTML attribute string
+   */
+  public static function html_attributes( $attributes )
+  {
+    $output = '';
     $pattern = '%1$s="%2$s" ';
 
-    foreach ( $attributes_array as $name => $value ) {
+    foreach ( (array) $attributes as $name => $value ) {
 
       if ( $value === false ) {
         continue;
