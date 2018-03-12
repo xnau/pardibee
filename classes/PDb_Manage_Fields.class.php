@@ -866,20 +866,7 @@ class PDb_Manage_Fields {
           $values_array[$attribute] = $attribute;
         }
       }
-      return self::cleanup_array( $values_array );
-    }
-    
-    /**
-     * clears empty elements out of an array
-     * 
-     * leaves "zero" values in
-     * 
-     * @param array $array the input
-     * @return array the cleaned array
-     */
-    public static function cleanup_array( $array )
-    {
-      return array_filter( $array, function($v) { return $v || $v === 0 || $v === '0'; } );
+      return PDb_Base::cleanup_array($values_array);
     }
 
     /**
