@@ -1362,15 +1362,15 @@ abstract class PDb_Shortcode {
   /**
    * prints an empty class designator
    *
-   * @param object Field object
+   * @param PDb_Field_Item $field  object
    * @return string the class name
    */
-  public function get_empty_class( $Field )
+  public function get_empty_class( $field )
   {
 
-    $emptyclass = 'image-upload' == $Field->form_element ? 'image-' . $this->emptyclass : $this->emptyclass;
+    $emptyclass = 'image-upload' == $field->form_element ? 'image-' . $this->emptyclass : $this->emptyclass;
 
-    return ( $this->_empty( $Field->value ) ? $emptyclass : '' );
+    return ( $this->_empty( $field->value ) && $this->_empty( $field->link) ? $emptyclass : '' );
   }
 
   /**
