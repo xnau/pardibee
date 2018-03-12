@@ -1067,6 +1067,19 @@ class PDb_Base {
   {
     return PDb_Tag_Template::replaced_text( $text, $participant_id );
   }
+  
+  /**
+   * clears empty elements out of an array
+   * 
+   * leaves "zero" values in
+   * 
+   * @param array $array the input
+   * @return array the cleaned array
+   */
+  public static function cleanup_array( $array )
+  {
+    return array_filter( $array, function($v) { return $v || $v === 0 || $v === '0'; } );
+  }
 
   /**
    * recursively merges two arrays, overwriting matching keys
