@@ -95,6 +95,7 @@ class PDb_Image extends xnau_Image_Handler {
       if ( in_array( $key, Participants_Db::apply_filters('image_class_image_attributes', array( 'height', 'width', 'alt', 'longdesc' ) ) ) ) {
         $this->image_attributes[$key] = $value;
       } else {
+        if ( $key === $value || $key === 'allowed' ) continue; // this filters out allowed extension configs
         $this->attributes[$key] = $value;
       }
     }
