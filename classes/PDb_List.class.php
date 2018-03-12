@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -736,7 +736,13 @@ class PDb_List extends PDb_Shortcode {
     $value = $this->list_query->current_filter( 'sort_field' );
     $options = array();
     if ( !in_array( $value, $this->sortables ) ) {
-      $options = array('null_select' => '');
+      $default_sort_field = Participants_Db::plugin_setting('list_default_sort', '');
+      if ( empty($default_sort_field) ) {
+        $options = array('null_select' => '');
+      } else {
+        $sort_field_def = Participants_Db::$fields[$default_sort_field];
+        $options = array( $sort_field_def->title => $default_sort_field );
+      }
     }
     $element = array(
         'type' => 'dropdown',
