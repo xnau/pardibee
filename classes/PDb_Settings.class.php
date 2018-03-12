@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -814,10 +814,25 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'strict_search',
+        'title' => __( 'Strict User Searching', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'When checked, the frontend list search must match the whole field exactly. If unchecked, the search will match if the search term is found in part of the field. Searches are not case-sensitive either way.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
 
     /*     * *****************************************************
      * 
-     * link retrieval settings
+     * LINK RECOVERY SETTINGS
      * 
      * ***************************************************** */
 
@@ -955,7 +970,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     /*     * ****************************************************
      *
-     *   advanced settings
+     *   ADVANCED SETTINGS
      *
      * **************************************************** */
 
@@ -1094,32 +1109,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => get_option( 'date_format' ),
         ),
     );
-
-    $this->plugin_settings[] = array(
-        'name' => 'show_time',
-        'title' => __( 'Show Timestamp Time', 'participants-database' ),
-        'group' => 'pdb-advanced',
-        'options' => array
-            (
-            'type' => 'checkbox',
-            'help_text' => __( 'Show time with timestamp dates', 'participants-database' ),
-            'value' => 0,
-            'options' => array(1, 0),
-        ),
-    );
-
-    $this->plugin_settings[] = array(
-        'name' => 'strict_search',
-        'title' => __( 'Strict User Searching', 'participants-database' ),
-        'group' => 'pdb-advanced',
-        'options' => array
-            (
-            'type' => 'checkbox',
-            'help_text' => __( 'When checked, the frontend list search must match the whole field exactly. If unchecked, the search will match if the search term is found in part of the field. Searches are not case-sensitive either way.', 'participants-database' ),
-            'value' => 0,
-            'options' => array(1, 0),
-        ),
-    );
+    
     $this->plugin_settings[] = array(
         'name' => 'ajax_search',
         'title' => __( 'Enable AJAX Search Functionality', 'participants-database' ),
@@ -1291,6 +1281,20 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => '0',
             'options' => array(1, 0),
         )
+    );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'show_time',
+        'title' => __( 'Show Timestamp Time', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'Show time with timestamp dates', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
     );
 
 
