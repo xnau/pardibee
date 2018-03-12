@@ -302,9 +302,6 @@ class Participants_Db extends PDb_Base {
     register_deactivation_hook( __FILE__, array('PDb_Init', 'on_deactivate') );
     register_uninstall_hook( __FILE__, array('PDb_Init', 'on_uninstall') );
 
-    // start sessions management
-    self::$session = new PDb_Session();
-
     // admin plugin list display
     add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array(__CLASS__, 'add_plugin_action_links') );
     add_filter( 'plugin_row_meta', array(__CLASS__, 'add_plugin_meta_links'), 10, 2 );
@@ -312,7 +309,7 @@ class Participants_Db extends PDb_Base {
 
     // set the WP hooks to finish setting up the plugin
     add_action( 'plugins_loaded', array(__CLASS__, 'setup_source_names'), 1 );
-    add_action( 'plugins_loaded', array(__CLASS__, 'init') );
+    add_action( 'plugins_loaded', array(__CLASS__, 'init'), 5 );
     add_action( 'wp', array(__CLASS__, 'check_for_shortcode'), 1 );
     add_action( 'wp', array(__CLASS__, 'remove_rel_link') );
 
@@ -494,12 +491,16 @@ class Participants_Db extends PDb_Base {
    */
   public static function init()
   {
+    
     /*
      * instantiate the settings class; this only sets up the settings definitions, 
      * the WP Settings API may not be available at this point, so we register the 
      * settings UI on the 'admin_menu' hook
      */
     self::$Settings = new PDb_Settings();
+    
+    // start sessions management
+    self::$session = new PDb_Session();
 
     /*
      * set up the base reference object arrays
