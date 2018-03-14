@@ -1436,7 +1436,7 @@ class PDb_List_Query {
         ),
         'search_field' => array(
             'filter' => FILTER_CALLBACK,
-            'options' => array(__CLASS__, 'sanitize_search_field')
+            'options' => array(__CLASS__, 'prepare_search_field')
         ),
         'operator' => FILTER_SANITIZE_STRING,
         'sortstring' => FILTER_SANITIZE_STRING,
@@ -1493,23 +1493,21 @@ class PDb_List_Query {
   }
 
   /**
-   * sanitizes the search_field value
-   * 
-   * this uses a regex to filter out all illegal mysql column name characters
+   * prepares the search_field value
    * 
    * if the data comes in from an AJAX request, it will be url-encoded, so we decode it first
    * 
-   * this won't remove all malicious sequences, we rely on $wpdb->prepare for the final layer of protection
+   * we rely on $wpdb->prepare for sanitizing
    * 
    * @param string $field the name of a field
    * @return string the sanitized value
    */
-  public static function sanitize_search_field( $field )
+  public static function prepare_search_field( $field )
   {
     if ( $field === 'none' ) {
       $field = '';
     }
-    return preg_replace( '#[^\p{L}\p{N}_]#u', '', strtolower( urldecode( $field ) ) );
+    return strtolower( urldecode( $field ) );
   }
 
 }
