@@ -50,7 +50,7 @@ class PDb_Base {
      * @param string  the base application path as calculated by the function
      * @return string
      */
-    return Participants_Db::apply_filters('app_base_path', trailingslashit( implode( '/', $common ) ) );
+    return Participants_Db::apply_filters( 'app_base_path', trailingslashit( implode( '/', $common ) ) );
   }
 
   /**
@@ -78,7 +78,7 @@ class PDb_Base {
     }
     return $scheme . trailingslashit( implode( '/', $common ) );
   }
-  
+
   /**
    * provides a simplified way to add or update a participant record
    * 
@@ -91,9 +91,9 @@ class PDb_Base {
   {
     $action = 'insert';
     if ( is_numeric( $id ) ) {
-      $action = Participants_Db::get_participant($id) === false ? 'insert' : 'update';
+      $action = Participants_Db::get_participant( $id ) === false ? 'insert' : 'update';
     }
-    return Participants_Db::process_form($post, $action, $id, array_keys( $post ) );
+    return Participants_Db::process_form( $post, $action, $id, array_keys( $post ) );
   }
 
   /**
@@ -205,6 +205,98 @@ class PDb_Base {
 
     return $return;
   }
+  
+  /**
+   * supplies a list of participant record ids
+   * 
+   * @param array $config with structure:
+   *                    filter      a shortcode filter string
+   *                    orderby     a comma-separated list of fields
+   *                    order       a comma-separated list of sort directions, correlates 
+   *                                to the $sort_fields argument
+   * 
+   * @return array of data arrays as $name => $value
+   */
+  public static function get_id_list( $config )
+  {
+    return self::get_list( $config, array('id') );
+  }
+  
+  /**
+   * supplies a list of participant data arrays
+   * 
+   * this provides only raw data from the database
+   * 
+   * @param array $config with structure:
+   *                    filter      a shortcode filter string
+   *                    orderby     a comma-separated list of fields
+   *                    order       a comma-separated list of sort directions, correlates 
+   *                                to the $sort_fields argument
+   *                    fields      a comma-separated list of fields to get
+   * @param array $columns list of field names to include in the results
+   * 
+   * @return array of data arrays as $name => $value
+   */
+  public static function get_participant_list( $config )
+  {
+    if ( !isset( $config['fields'] ) ) {
+      // get all column names
+      $columns = array_keys(Participants_Db::$fields);
+    } else {
+      $columns = explode(',', str_replace(' ','',$config['fields'] ) );
+      if ( array_search( 'id', $columns ) ) {
+        unset( $columns[array_search( 'id', $columns )] );
+      }
+      $columns = array_merge( array('id'), $columns );
+    }
+    
+    return self::get_list( $config, $columns );
+  }
+
+  /**
+   * supplies a list of PDB record data given a configuration object
+   * 
+   * @global wpdb $wpdb
+   * @param array $config with structure:
+   *                    filter      a shortcode filter string
+   *                    orderby     a comma-separated list of fields
+   *                    order       a comma-separated list of sort directions, correlates 
+   *                                to the $sort_fields argument
+   * @param array $columns optional list of field names to include in the results
+   * 
+   * @return array of record values (if single column) or id-indexed array of data objects
+   */
+  private static function get_list( $config, $columns )
+  {
+    $list = new stdClass();
+
+    $shortcode_defaults = array(
+        'sort' => 'false',
+        'search' => 'false',
+        'list_limit' => '-1',
+        'filter' => '',
+        'orderby' => Participants_Db::plugin_setting( 'list_default_sort' ),
+        'order' => Participants_Db::plugin_setting( 'list_default_sort_order' ),
+        'suppress' => false,
+    );
+    $list->shortcode_atts = shortcode_atts( $shortcode_defaults, $config );
+    
+    $list->display_columns = $columns;
+    $list->module = 'API';
+    $list->instance_index = 1;
+    
+    $list_query = new PDb_List_Query( $list );
+    
+    global $wpdb;
+    if ( count( $list->display_columns ) === 1 ) {
+      $result = $wpdb->get_col($list_query->get_list_query());
+    } else {
+      $result = $wpdb->get_results( $list_query->get_list_query(), OBJECT_K );
+    }
+//    error_log(__METHOD__.' query: ' . $wpdb->last_query . ' result: '.print_r($result,1));
+    
+    return $result;
+  }
 
   /**
    * determines if an incoming set of data matches an existing record
@@ -298,7 +390,7 @@ class PDb_Base {
       $permalink = get_permalink( $id );
     return $permalink;
   }
-  
+
   /**
    * supplies the current participant ID
    * 
@@ -308,7 +400,7 @@ class PDb_Base {
    * @param string $id the id (if known)
    * @return string the ID, empty if not determined
    */
-  public static function get_record_id ( $id = '' )
+  public static function get_record_id( $id = '' )
   {
     if ( empty( $id ) ) {
       // this is for backward compatibility
@@ -349,7 +441,7 @@ class PDb_Base {
      * @param array the defined single record link field name
      * @return array of fieldnames
      */
-    return !empty( $page ) && in_array( $name, self::apply_filters('single_record_link_field', (array) Participants_Db::plugin_setting( 'single_record_link_field' ) ) );
+    return !empty( $page ) && in_array( $name, self::apply_filters( 'single_record_link_field', (array) Participants_Db::plugin_setting( 'single_record_link_field' ) ) );
   }
 
   /*
@@ -438,7 +530,7 @@ class PDb_Base {
 
     return $filename;
   }
-  
+
   /**
    * tests a filename for allowed file extentions
    * 
@@ -451,11 +543,11 @@ class PDb_Base {
   {
     $field_allowed_extensions = self::get_field_allowed_extensions( $allowed );
     $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
-    
+
     $result = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches );
     return $result !== 0;
   }
-  
+
   /**
    * provides an array of allowed extensions from the field def "values" parameter
    * 
@@ -465,19 +557,20 @@ class PDb_Base {
   public static function get_field_allowed_extensions( $values )
   {
     $value_list = array_filter( self::unserialize_array( $values ) );
-    
+
     // check if our values parameter is a bare list of allowed extensions
     $bare_list = true;
-    foreach( $value_list as $k => $v) {
+    foreach ( $value_list as $k => $v ) {
       if ( $k !== $v ) {
         $bare_list = false;
         break;
       }
     }
-    if ( ! $bare_list ) {
+    if ( !$bare_list ) {
       if ( array_key_exists( 'allowed', $value_list ) ) {
         return str_replace( '|', ',', $value_list['allowed'] );
-      } else return '';
+      } else
+        return '';
     }
     return implode( ',', $value_list );
   }
@@ -690,7 +783,7 @@ class PDb_Base {
 
     return current_user_can( self::plugin_capability( $role, $context ) );
   }
-  
+
   /**
    * checks if a CSV export is allowed
    * 
@@ -707,13 +800,13 @@ class PDb_Base {
     $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'editor' : 'admin';
     return Participants_Db::current_user_has_plugin_role( $csv_role, 'csv export' );
   }
-  
+
   /**
    * supplies a nonce tag for the CSV export
    * 
    * @return string
    */
-  public  static function csv_export_nonce()
+  public static function csv_export_nonce()
   {
     return 'pdb-csv_export';
   }
@@ -786,7 +879,7 @@ class PDb_Base {
      * @param mixed the setting value
      * @return mixed setting value
      */
-    $setting = self::apply_filters($name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
+    $setting = self::apply_filters( $name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
     return Participants_Db::apply_filters( 'translate_string', $setting );
   }
 
@@ -942,13 +1035,13 @@ class PDb_Base {
   public static function files_location()
   {
     $base_path = Participants_Db::plugin_setting( 'image_upload_location', 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' );
-    
+
     // multisite compatibility
     global $wpdb;
-    if ( isset($wpdb->blogid) && $wpdb->blogid > 1 ) {
+    if ( isset( $wpdb->blogid ) && $wpdb->blogid > 1 ) {
       $base_path = str_replace( Participants_Db::PLUGIN_NAME, 'sites/' . $wpdb->blogid . '/' . Participants_Db::PLUGIN_NAME, $base_path );
     }
-    
+
     /**
      * @version 1.6.0
      * filter: pdb-files_location
@@ -957,7 +1050,7 @@ class PDb_Base {
      */
     return Participants_Db::apply_filters( 'files_location', $base_path );
   }
-  
+
   /**
    * provides the base absolute path for files uploads
    * 
@@ -965,9 +1058,9 @@ class PDb_Base {
    */
   public static function base_files_path()
   {
-    return Participants_Db::apply_filters('files_use_content_base_path', false ) ? trailingslashit( WP_CONTENT_DIR ) : self::app_base_path();
+    return Participants_Db::apply_filters( 'files_use_content_base_path', false ) ? trailingslashit( WP_CONTENT_DIR ) : self::app_base_path();
   }
-  
+
   /**
    * provides the base URL for file and image uploads
    * 
@@ -975,7 +1068,7 @@ class PDb_Base {
    */
   public static function base_files_url()
   {
-    return Participants_Db::apply_filters('files_use_content_base_path', false ) ? trailingslashit( content_url() ) : self::app_base_url();
+    return Participants_Db::apply_filters( 'files_use_content_base_path', false ) ? trailingslashit( content_url() ) : self::app_base_url();
   }
 
   /**
@@ -1016,9 +1109,9 @@ class PDb_Base {
      * @param string filename
      * @return string|bool filename or bool success
      */
-    $result = self::apply_filters('delete_file', $filename );
-    
-    if ( ! is_bool( $result ) ) {
+    $result = self::apply_filters( 'delete_file', $filename );
+
+    if ( !is_bool( $result ) ) {
       $current_dir = getcwd(); // save the current dir
       chdir( self::files_path() ); // set the plugin uploads dir
       $result = @unlink( $filename ); // delete the file
@@ -1067,7 +1160,7 @@ class PDb_Base {
   {
     return PDb_Tag_Template::replaced_text( $text, $participant_id );
   }
-  
+
   /**
    * clears empty elements out of an array
    * 
@@ -1078,7 +1171,9 @@ class PDb_Base {
    */
   public static function cleanup_array( $array )
   {
-    return array_filter( $array, function($v) { return $v || $v === 0 || $v === '0'; } );
+    return array_filter( $array, function($v) {
+      return $v || $v === 0 || $v === '0';
+    } );
   }
 
   /**
@@ -1158,7 +1253,7 @@ class PDb_Base {
   public static function set_admin_message( $message, $type = 'error' )
   {
     if ( is_admin() ) {
-      switch ($type) {
+      switch ( $type ) {
         // this is to translate some legacy values
         case 'updated':
           $type = 'success';
@@ -1373,7 +1468,7 @@ class PDb_Base {
      */
     return self::apply_filters( 'wp_headers', $headers );
   }
-  
+
   /**
    * set up cache control and sessions
    * 
@@ -1381,26 +1476,25 @@ class PDb_Base {
   public static function initialize_session()
   {
     // if this is called too late, do nothing
-    if ( headers_sent() ) return;
+    if ( headers_sent() )
+      return;
     /**
      * sets the cache mode
      * 
      * @link http://php.net/manual/en/function.session-cache-limiter.php
      */
     $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' ); // private_no_expire
-    
-    
     //if ( self::is_multipage_form() ) {
-      // prevents browser back-button caching in the middle of a multipage form
-      //$cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
+    // prevents browser back-button caching in the middle of a multipage form
+    //$cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
     //}
-    
-    if ( ! empty( $cache_limit )&& !session_id() ) {
+
+    if ( !empty( $cache_limit ) && !session_id() ) {
       session_cache_limiter( $cache_limit );
     }
-    
+
     // initalize PHP sessions if needed
-    if ( Participants_Db::plugin_setting_is_true('use_php_sessions') && !session_id() ) {
+    if ( Participants_Db::plugin_setting_is_true( 'use_php_sessions' ) && !session_id() ) {
       session_start();
     }
   }
@@ -1532,7 +1626,7 @@ class PDb_Base {
    */
   public static function get_key()
   {
-    if ( ! $key = Participants_Db::$session->get( PDb_CAPTCHA::captcha_key) ) {
+    if ( !$key = Participants_Db::$session->get( PDb_CAPTCHA::captcha_key ) ) {
       $key = self::generate_key();
       Participants_Db::$session->set( PDb_CAPTCHA::captcha_key, $key );
     }
@@ -1586,7 +1680,7 @@ class PDb_Base {
     return self::get_indexed_names( explode( '.', $datakey ) );
 //    return self::get_indexed_names( explode('.', self::xcrypt($datakey)));
   }
-  
+
   /**
    * sets the debug mode
    * 
@@ -1594,10 +1688,9 @@ class PDb_Base {
    */
   protected static function set_debug_mode()
   {
-    if ( ! defined( 'PDB_DEBUG' ) ) {
+    if ( !defined( 'PDB_DEBUG' ) ) {
       define( 'PDB_DEBUG', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) );
     }
   }
-  
 
 }
