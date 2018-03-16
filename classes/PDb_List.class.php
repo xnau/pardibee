@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -167,7 +167,7 @@ class PDb_List extends PDb_Shortcode {
 
     $this->registration_page_url = get_bloginfo( 'url' ) . '/' . Participants_Db::plugin_setting( 'registration_page', '' );
 
-    $this->_setup_i18n();
+    $this->i18n = self::i18n();
 
     $this->_set_single_record_url();
 
@@ -1347,13 +1347,13 @@ class PDb_List extends PDb_Shortcode {
   }
 
   /**
-   * sets up the internationalization strings
+   * provides the internationalization strings
    */
-  private function _setup_i18n()
+  public static function i18n()
   {
 
     /* translators: the following 5 strings are used in logic matching, please test after translating in case special characters cause problems */
-    $this->i18n = array(
+    return array(
         'delete_checked' => _x( 'Delete Checked', 'submit button label', 'participants-database' ),
         'change' => _x( 'Change', 'submit button label', 'participants-database' ),
         'sort' => _x( 'Sort', 'submit button label', 'participants-database' ),
