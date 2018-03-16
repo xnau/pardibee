@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -117,18 +117,16 @@ class PDb_List_Query {
   /**
    * construct the object
    * 
-   * @param PDb_List object $List
-   * 
-   * @param array  $shortcode_atts array of shortcode attributes
-   *                 filter      a shortcode filter string
-   *                 orderby     a comma-separated list of fields
-   *                 order       a comma-separated list of sort directions, correlates 
-   *                             to the $sort_fields argument
-   *                 suppress    if true, the query should return zero results if no search is used
-   * @param array  $columns      an array of column names to use in the SELECT statement
-   * @param array  $i18n         translation strings from the List class
+   * @param object $List with structure:
+   *    @param array  $shortcode_atts array of shortcode attributes
+   *                    filter      a shortcode filter string
+   *                    orderby     a comma-separated list of fields
+   *                    order       a comma-separated list of sort directions, correlates 
+   *                                to the $sort_fields argument
+   *                    suppress    if true, the query should return zero results if no search is used
+   *    @param array  $columns      an array of column names to use in the SELECT statement
    */
-  function __construct( PDb_List $List )
+  function __construct( $List )
   {
     /*
      *  internal filters for search term keys
@@ -139,14 +137,17 @@ class PDb_List_Query {
     
     $this->instance_index = $List->instance_index;
     $this->module = $List->module;
-    $this->i18n = $List->i18n;
+    $this->i18n = PDb_List::i18n();
     $this->_reset_filters();
     $this->set_sort( $List->shortcode_atts['orderby'], $List->shortcode_atts['order'] );
     $this->_set_columns( $List->display_columns );
     $this->suppress = filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
     $this->_add_filter_from_shortcode_filter( $List->shortcode_atts['filter'] );
-
-//    error_log(__METHOD__.' session query: '.print_r(Participants_Db::$session,1));
+    
+    /*
+     * the following configurations only apply to list and search shortcode pages, not API calls
+     */
+    if ( $this->module !== 'API' ):
 
     /*
      * at this point, the object has been instantiated with the properties provided 
@@ -172,10 +173,6 @@ class PDb_List_Query {
      * if we're getting a paginated set of records, get the stored session, if not, 
      * and we are searching, save the session
      */
-
-//    error_log(__METHOD__.' post: '.print_r($_POST,1));
-//    error_log(__METHOD__.' action: '.$_POST['action'].' search? '.($this->is_search_result()?'yes':'no').' query session name: '.$this->query_session_name());
-
     if ( $this->requested_page() ) {
       // we're getting a list page
       $this->_restore_query_session();
@@ -186,10 +183,8 @@ class PDb_List_Query {
       // we're just showing the list with the shortcode parameters
       $this->_clear_query_session();
     }
-//    error_log(__METHOD__.' ID: '.Participants_Db::$session->get_id().' 
-//      
-//session: '.print_r(Participants_Db::$session,1));
     
+    endif; // API check
   }
 
   /**
