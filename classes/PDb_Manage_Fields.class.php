@@ -770,7 +770,25 @@ class PDb_Manage_Fields {
       $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
       $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'values' => $field_values, 'form_element' => $form_element ) );
       $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
-      return $new_type !== $current_type ? $new_type : false;
+      return $this->datatype_has_changed( $current_type, $new_type ) ? $new_type : false;
+    }
+    
+    /**
+     * compares two field datatypes and tells if the are different
+     * 
+     * doesn't compare the value in parentheses so that decimals and other datatypes 
+     * can be customized in the database table
+     * 
+     * @param string  $current_type
+     * @param string  $default_type
+     * 
+     * @return bool true if the two types are different
+     */
+    private function datatype_has_changed( $current_type, $default_type )
+    {
+      $replace_pattern = '/^(.*)\(.+\)$/';
+      // strip out the parenthesized part
+      return preg_replace( $replace_pattern, '\1', $current_type ) !== preg_replace( $replace_pattern, '\1', $default_type );
     }
     
     /**
