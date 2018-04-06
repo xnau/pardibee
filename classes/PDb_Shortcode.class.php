@@ -996,7 +996,7 @@ abstract class PDb_Shortcode {
   /**
    * sets up the array of display columns
    * 
-   * @global object $wpdb
+   * @global wpdb $wpdb
    */
   protected function _set_shortcode_display_columns()
   {
@@ -1013,7 +1013,7 @@ abstract class PDb_Shortcode {
     switch ( $this->module ) {
 
       case 'signup':
-        $where .= 'WHERE field.signup = 1 AND ' . $groups . ' AND field.form_element NOT IN ("placeholder", "hidden")';
+        $where .= 'WHERE field.signup = 1 AND ' . $groups . ' AND field.form_element NOT IN (' . $this->suppressed_elements() . ')';
         break;
 
       case 'retrieve':
@@ -1021,12 +1021,12 @@ abstract class PDb_Shortcode {
         break;
 
       case 'record':
-        $where .= 'WHERE ' . $groups . ' AND field.form_element NOT IN ("captcha","placeholder","hidden")';
+        $where .= 'WHERE ' . $groups . ' AND field.form_element NOT IN (' . $this->suppressed_elements() . ')';
         break;
 
       case 'list':
       default:
-        $where .= 'WHERE ' . $groups . ' AND field.form_element NOT IN ("captcha","placeholder")';
+        $where .= 'WHERE ' . $groups . ' AND field.form_element NOT IN (' . $this->suppressed_elements() . ')';
     }
 
     $sql = '
@@ -1037,6 +1037,34 @@ abstract class PDb_Shortcode {
 
     $this->display_columns = $wpdb->get_col( $sql );
   }
+  
+  /**
+   * provides a list of suppressed form elements by module
+   * 
+   * @return string comma-separated quoted string for use in an sql query
+   */
+  private function suppressed_elements()
+  {
+    switch( $this->module ) {
+      case 'signup':
+        $list = array('placeholder', 'hidden');
+        break;
+      case 'record':
+        $list = array('captcha','placeholder','hidden');
+        break;
+      case 'list':
+      default:
+        $list = array('captcha','placeholder');
+        break;
+    }
+    /**
+     * @filter pdb-display_column_suppressed_form_elements
+     * @param array of form elements to exclude from the display
+     * @param PDb_Shortcode the shortcoe instance
+     * @return array of form elements to exclude
+     */
+    return '"' . implode('","', Participants_Db::apply_filters('display_column_suppressed_form_elements', $list, $this ) ) . '"';
+  }
 
   /**
    * gets the column and column order for participant listing
@@ -1044,7 +1072,7 @@ abstract class PDb_Shortcode {
    *
    * @param string $set selects the set of columns to get:
    *                    admin or display (frontend)
-   * @global object $wpdb
+   * @global wpdb $wpdb
    * @return array of column names, ordered and indexed by the set order
    */
   public static function get_list_display_columns( $set = 'admin_column' )
