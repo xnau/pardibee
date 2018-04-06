@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -71,7 +71,9 @@ class PDb_Tag_Template {
    */
   public static function replaced_text_raw( $template, $data )
   {
+    
     $tag_template = new self( $template, $data, true );
+    $tag_template->rich_text = false;
     
     return $tag_template->_replace_tags();
   }
