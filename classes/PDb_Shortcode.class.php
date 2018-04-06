@@ -127,7 +127,7 @@ abstract class PDb_Shortcode {
   /**
    * @var string the class name to apply to empty fields
    */
-  protected $emptyclass = 'blank-field';
+  const emptyclass = 'blank-field';
 
   /**
    * @var object the pagination object
@@ -1367,10 +1367,15 @@ abstract class PDb_Shortcode {
    */
   public function get_empty_class( $field )
   {
+    $emptyclass = 'image-upload' == $field->form_element ? 'image-' . self::emptyclass : self::emptyclass;
 
-    $emptyclass = 'image-upload' == $field->form_element ? 'image-' . $this->emptyclass : $this->emptyclass;
-
-    return ( $this->_empty( $field->value ) && $this->_empty( $field->link) ? $emptyclass : '' );
+    /**
+     * @filter pdb-field_empty_class
+     * @param string  the empty class name to use
+     * @param PDb_Field_Item the current field
+     * @return string the empty class to use
+     */
+    return Participants_Db::apply_filters( 'field_empty_class', ( $this->_empty( $field->value ) && $this->_empty( $field->link) ? $emptyclass : '' ), $field );
   }
 
   /**
