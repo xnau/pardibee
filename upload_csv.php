@@ -4,32 +4,35 @@ if ( !defined( 'ABSPATH' ) )
 if ( !Participants_Db::current_user_has_plugin_role( 'admin', 'upload csv' ) )
   exit;
 
+require_once \Participants_Db::$plugin_path . '/vendor/wp-background-process/wp-async-request.php';
+require_once \Participants_Db::$plugin_path . '/vendor/wp-background-process/wp-background-process.php';
+
 $CSV_import = new PDb_CSV_Import( 'csv_file_upload' );
 
 $csv_paramdefaults = array(
-      'delimiter_character' => 'auto',
-      'enclosure_character' => 'auto',
+    'delimiter_character' => 'auto',
+    'enclosure_character' => 'auto',
     'match_field' => Participants_Db::plugin_setting( 'unique_field' ),
     'match_preference' => Participants_Db::plugin_setting( 'unique_email' )
-      );
+);
 $csv_options = get_option( Participants_Db::$prefix . 'csv_import_params' );
 if ( $csv_options === false ) {
   $csv_params = $csv_paramdefaults;
 } else {
   $csv_params = array_merge( $csv_paramdefaults, $csv_options );
 }
-foreach (array_keys( $csv_paramdefaults ) as $param) {
+foreach ( array_keys( $csv_paramdefaults ) as $param ) {
   $new_value = '';
   if ( isset( $_POST[$param] ) ) {
     switch ( $param ) {
       case 'enclosure_character':
-        $new_value = str_replace( array( '"', "'" ), array( '&quot;', '&#39;' ), filter_input( INPUT_POST, 'enclosure_character', FILTER_SANITIZE_STRING ) );
+        $new_value = str_replace( array('"', "'"), array('&quot;', '&#39;'), filter_input( INPUT_POST, 'enclosure_character', FILTER_SANITIZE_STRING ) );
         break;
       default:
         $new_value = filter_input( INPUT_POST, $param, FILTER_SANITIZE_STRING );
     }
     $csv_params[$param] = $new_value;
-	}
+  }
 }
 extract( $csv_params );
 update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
@@ -64,7 +67,7 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
             <table class="spreadsheet">
               <tr>
                 <?php
-                foreach ($CSV_import->column_names as $name) {
+                foreach ( $CSV_import->column_names as $name ) {
                   echo '<th>' . $name . '</th>';
                 }
                 ?>
@@ -92,43 +95,43 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
         <div class="inside">
           <h3><?php _e( 'Upload the .csv file', 'participants-database' ) ?></h3>
           <form enctype="multipart/form-data" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="POST">
-            <?php wp_nonce_field(PDb_CSV_Import::nonce) ?>
+            <?php wp_nonce_field( PDb_CSV_Import::nonce ) ?>
             <input type="hidden" name="csv_file_upload" id="file_upload" value="true" />
             <fieldset class="widefat inline-controls">
               <p>
-            <label style="margin-left:0">
+                <label style="margin-left:0">
                   <?php
                   _e( 'Enclosure character', 'participants-database' );
-            $parameters = array(
-                'type' => 'dropdown',
-                'name' => 'enclosure_character',
-                'value' => $enclosure_character,
-                'options' => array(
+                  $parameters = array(
+                      'type' => 'dropdown',
+                      'name' => 'enclosure_character',
+                      'value' => $enclosure_character,
+                      'options' => array(
                           __( 'Auto', 'participants-database' ) => 'auto',
-                    '&quot;' => '&quot;',
-                    "&#39;" => "&#39;"
-                )
-            );
+                          '&quot;' => '&quot;',
+                          "&#39;" => "&#39;"
+                      )
+                  );
                   PDb_FormElement::print_element( $parameters );
-            ?>
-            </label>
-            <label>
+                  ?>
+                </label>
+                <label>
                   <?php
                   _e( 'Delimiter character', 'participants-database' );
-            $parameters = array(
-                'type' => 'dropdown',
-                'name' => 'delimiter_character',
-                'value' => $delimiter_character,
-                'options' => array(
+                  $parameters = array(
+                      'type' => 'dropdown',
+                      'name' => 'delimiter_character',
+                      'value' => $delimiter_character,
+                      'options' => array(
                           __( 'Auto', 'participants-database' ) => 'auto',
-                    ',' => ',',
-                    ';' => ';',
+                          ',' => ',',
+                          ';' => ';',
                           __( 'tab', 'participants-database' ) => "\t"
-                )
-            );
+                      )
+                  );
                   PDb_FormElement::print_element( $parameters );
-             ?>
-            </label>
+                  ?>
+                </label>
               </p>
             </fieldset>
 
@@ -137,49 +140,49 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
                 <label>
                   <?php
                   echo __( 'Duplicate Record Preference', 'participants-database' ) . ': ';
-                 $parameters = array(
-                     'type' => 'dropdown',
-                     'name' => 'match_preference',
-                     'value' => $match_preference,
-                     'options' => array(
+                  $parameters = array(
+                      'type' => 'dropdown',
+                      'name' => 'match_preference',
+                      'value' => $match_preference,
+                      'options' => array(
                           __( 'Create a new record with the submission', 'participants-database' ) => 0,
                           __( 'Update matching record with new data', 'participants-database' ) => 1,
                           __( "Don't import the record", 'participants-database' ) => 2,
-                        'null_select' => false,
+                          'null_select' => false,
                       )
-                 );
+                  );
                   PDb_FormElement::print_element( $parameters );
-                 ?>
+                  ?>
                 </label>
               </p>
               <p>
                 <label>
                   <?php
                   echo __( 'Duplicate Record Check Field', 'participants-database' ) . ': ';
-            $parameters = array(
-                'type' => 'dropdown',
-                'name' => 'match_field',
-                'value' => $match_field,
-                      'options' => array_merge( PDb_Settings::_get_identifier_columns(false), array( 'Record ID' => 'id' ) ),
-            );
+                  $parameters = array(
+                      'type' => 'dropdown',
+                      'name' => 'match_field',
+                      'value' => $match_field,
+                      'options' => array_merge( PDb_Settings::_get_identifier_columns( false ), array('Record ID' => 'id') ),
+                  );
                   PDb_FormElement::print_element( $parameters );
-             ?>
-            </label>
+                  ?>
+                </label>
               </p>
             </fieldset>
             <p><?php _e( '<strong>Note:</strong> Depending on the "Duplicate Record Preference" setting, imported records are checked against existing records by the field set in the "Duplicate Record Check Field" setting. If a record matching an existing record is imported, one of three things can happen, based on the "Duplicate Record Preference" setting:', 'participants-database' ) ?></p>
             <h4 class="inset" id="match-preferences"><?php _e( 'Current Setting', 'participants-database' ) ?>: 
-            <?php
-            $preferences = array(
+              <?php
+              $preferences = array(
                   '0' => sprintf( __( '%sCreate New%s adds all imported records as new records without checking for a match.', 'participants-database' ), '<span class="emphasized">', '</span>', '</span>' ),
                   '1' => sprintf( __( '%sOverwrite%s an existing record with a matching %s will be updated with the data from the imported record. Blank or missing fields will not overwrite existing data.', 'participants-database' ), '<span class="emphasized">', '</span>', '<em class="match-field">' . Participants_Db::$fields[$match_field]->title . '</em>' ),
                   '2' => sprintf( __( '%sDon&#39;t Import%s does not import the new record if it matches the %s of an existing one.', 'participants-database' ), '<span class="emphasized">', '</span>', '<em class="match-field">' . Participants_Db::$fields[$match_field]->title . '</em>' ),
-            );
-              foreach ($preferences as $i => $preference) {
-              $hide = $i == $match_preference ? '' : 'style="display:none"';
+              );
+              foreach ( $preferences as $i => $preference ) {
+                $hide = $i == $match_preference ? '' : 'style="display:none"';
                 printf( '<span class="preference" %s data-index="%s" >%s</span>', $hide, $i, $preference );
-            }
-            ?></h4>
+              }
+              ?></h4>
 
 
             <?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="uploadedfile" type="file" /><br />
@@ -192,28 +195,28 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
 </div>
 <script type="text/javascript">
   UploadCSV = (function ($) {
-    var 
-          prefs,
-          matchfield,
-          set_visible_pref = function (i) {
-            hide_prefs();
-            show_pref(i);
-          },
+    var
+            prefs,
+            matchfield,
+            set_visible_pref = function (i) {
+              hide_prefs();
+              show_pref(i);
+            },
             hide_prefs = function () {
-            prefs.find('.preference').hide();
-          },
-          show_pref = function (i) {
-            prefs.find('.preference[data-index=' + i + ']').show();
-          },
-          set_pref = function () {
-            set_visible_pref($(this).val());
-          },
-          set_match_field_text = function (f) {
-            matchfield.text(f);
-          },
-          set_match_field = function () {
-            set_match_field_text($(this).find('option:selected').text());
-          };
+              prefs.find('.preference').hide();
+            },
+            show_pref = function (i) {
+              prefs.find('.preference[data-index=' + i + ']').show();
+            },
+            set_pref = function () {
+              set_visible_pref($(this).val());
+            },
+            set_match_field_text = function (f) {
+              matchfield.text(f);
+            },
+            set_match_field = function () {
+              set_match_field_text($(this).find('option:selected').text());
+            };
     return {
       run : function () {
         prefs = $('#match-preferences');
@@ -224,7 +227,7 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
     }
   }(jQuery));
   jQuery(function () {
-  "use strict";
-  UploadCSV.run();
-});
+    "use strict";
+    UploadCSV.run();
+  });
 </script>
