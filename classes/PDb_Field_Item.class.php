@@ -164,7 +164,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function is_empty( $value = false )
   {
-
     if ( $value === false ) {
       $value = $this->value;
     }
@@ -187,7 +186,14 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function has_content()
   {
-    return !$this->is_empty();
+    switch( $this->form_element ) {
+      case 'link':
+        $value = $this->link;
+        break;
+      default:
+        $value = $this->value;
+    }
+    return !$this->is_empty($value);
   }
 
   /**
