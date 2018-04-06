@@ -3015,7 +3015,7 @@ class Participants_Db extends PDb_Base {
      * @param string  $context  a context identifier for the filter
      */
     $filtered_string = self::apply_filters( 'rich_text_auto_formatting', $string, $context );
-    switch ( Participants_Db::$plugin_options['enable_wpautop'] ) {
+    switch ( self::apply_filters( 'rich_text_filter_mode', Participants_Db::$plugin_options['enable_wpautop'] ) ) {
       case '1':
       case 'the_content':
         return self::rich_text_filter( $string );
