@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -95,28 +95,28 @@ abstract class xnau_CSV_Import {
 
           $this->insert_from_csv($target_path);
 
-          if ($this->insert_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s record added', '%s records added', $this->insert_count, 'participants-database'), $this->insert_count), '', false);
-          }
-          if ($this->update_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s matching record updated', '%s matching records updated', $this->update_count, 'participants-database'), $this->update_count), '', false);
-          }
-
-          if ($this->skip_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s duplicate record skipped', '%s duplicate records skipped', $this->skip_count, 'participants-database'), $this->skip_count), '', false);
-          }
-
-          if ($this->error_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s record skipped due to errors', '%s records skipped due to errors', $this->error_count, 'participants-database'), $this->error_count), '', false);
-          }
-          if ($this->update_count == 0 and $this->insert_count == 0) {
-
-            $this->set_error_heading(__('Zero records imported', 'participants-database'));
-          }
+//          if ($this->insert_count > 0) {
+//
+//            $this->set_error_heading(sprintf(_n('%s record added', '%s records added', $this->insert_count, 'participants-database'), $this->insert_count), '', false);
+//          }
+//          if ($this->update_count > 0) {
+//
+//            $this->set_error_heading(sprintf(_n('%s matching record updated', '%s matching records updated', $this->update_count, 'participants-database'), $this->update_count), '', false);
+//          }
+//
+//          if ($this->skip_count > 0) {
+//
+//            $this->set_error_heading(sprintf(_n('%s duplicate record skipped', '%s duplicate records skipped', $this->skip_count, 'participants-database'), $this->skip_count), '', false);
+//          }
+//
+//          if ($this->error_count > 0) {
+//
+//            $this->set_error_heading(sprintf(_n('%s record skipped due to errors', '%s records skipped due to errors', $this->error_count, 'participants-database'), $this->error_count), '', false);
+//          }
+//          if ($this->update_count == 0 and $this->insert_count == 0) {
+//
+//            $this->set_error_heading(__('Zero records imported', 'participants-database'));
+//          }
         } // file move successful
         else { // file move failed
           $this->set_error_heading(
@@ -253,10 +253,12 @@ csv line= '.print_r( $csv_line, true ) );
       }
 
       // put the keys and the values together into the $post array
-      if (!$post = array_combine($this->column_names, $values))
+      if (!$post = array_combine($this->column_names, $values)) {
         $this->set_error(__('Number of values does not match number of columns', 'participants-database'));
+      }
 
       // store the record
+      // here, instead, we're going to push this data to the queue
       $this->store_record($post);
 
       $line_num++;
@@ -268,12 +270,10 @@ csv line= '.print_r( $csv_line, true ) );
   /**
    * applies conditioning and escaping to the incoming value
    * 
-   * @global object $wpdb
    * @param type $value
    * @return string
    */
   protected function process_value($value) {
-    global $wpdb;
     return esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure));
   }
 
