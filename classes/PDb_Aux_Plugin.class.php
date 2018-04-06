@@ -587,7 +587,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $defaults = array(
           'name' => '', // 0
           'type' => 'text', // 1
-          'value' => $options[$atts['name']], // 2
+          'value' => isset( $options[$atts['name']] ) ? $options[$atts['name']] : '', // 2
           'title' => '', // 3
           'class' => '', // 4
           'style' => '', // 5
