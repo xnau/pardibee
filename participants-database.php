@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.8.1
+ * Version: 1.7.8.2
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -1964,7 +1964,7 @@ class Participants_Db extends PDb_Base {
      * add in any missing default values
      */
     if ( $action === 'insert' ) {
-      $all_columns = self::get_default_record();
+      $all_columns = self::get_default_record( $currently_importing_csv === false );
       unset( $all_columns['private_id'], $all_columns['date_recorded'], $all_columns['date_updated'] );
       foreach ( $all_columns as $name => $value ) {
         $find_result = preg_grep( '/' . $name . '/', $column_data );
@@ -2010,7 +2010,7 @@ class Participants_Db extends PDb_Base {
          */
         if ( is_admin() ) {
           // if in the admin hang on to the id of the last record for an hour
-          set_transient( self::$last_record, $participant_id, (1 * 60 * 60 * 1 ) );
+          set_transient( self::$last_record, $participant_id, HOUR_IN_SECONDS );
         }
       }
     }
@@ -2090,12 +2090,12 @@ class Participants_Db extends PDb_Base {
    * 
    * @version 1.6 placeholder elements are also excluded
    *
-   * @global object $wpdb
+   * @global wpdb $wpdb
+   * @param bool  $add_persistent if true, adds persistent field data
    * @return array name=>value
    */
-  public static function get_default_record()
+  public static function get_default_record( $add_persistent = true )
   {
-
     $sql = 'SELECT f.name,f.default,f.form_element 
             FROM ' . self::$fields_table . ' f
             WHERE f.group != "internal" AND f.form_element != "placeholder"';
@@ -2115,7 +2115,7 @@ class Participants_Db extends PDb_Base {
     // get the id of the last record stored
     $prev_record_id = get_transient( self::$last_record );
 
-    if ( is_admin() and $prev_record_id ) {
+    if ( $add_persistent && is_admin() && $prev_record_id ) {
 
       $previous_record = self::get_participant( $prev_record_id );
 
@@ -3010,12 +3010,18 @@ class Participants_Db extends PDb_Base {
   {
     /**
      * @version 1.6.3
-     * @filter  'pdb-rich_text_auto_formatting'
+     * @filter  pdb-rich_text_auto_formatting
      * @param string  $string   the raw rich text
      * @param string  $context  a context identifier for the filter
      */
     $filtered_string = self::apply_filters( 'rich_text_auto_formatting', $string, $context );
-    switch ( self::apply_filters( 'rich_text_filter_mode', Participants_Db::$plugin_options['enable_wpautop'] ) ) {
+    /**
+     * @filter pdb-rich_text_filter_mode
+     * @param string current filter mode setting
+     * @param string the content to be processed
+     * @return string filter mode to use
+     */
+    switch ( self::apply_filters( 'rich_text_filter_mode', Participants_Db::$plugin_options['enable_wpautop'], $string ) ) {
       case '1':
       case 'the_content':
         return self::rich_text_filter( $string );
