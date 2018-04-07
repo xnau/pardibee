@@ -386,8 +386,6 @@ class PDb_List extends PDb_Shortcode {
 
   /**
    * sets up the array of display columns
-   *
-   * @global object $wpdb
    */
   protected function _set_shortcode_display_columns()
   {
