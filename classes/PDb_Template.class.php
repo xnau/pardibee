@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -537,6 +537,7 @@ class PDb_Template {
         foreach ( $this->shortcode_object->fields as $name => $field ) {
           $this->fields->{$name} = $field;
           $this->fields->{$name}->module = $this->shortcode_object->module;
+          $this->fields->{$name}->record_id = $this->shortcode_object->participant_id;
           //$this->fields->{$name}->value = $this->values[$name];
         }
         foreach ( $this->record as $name => $group ) {
