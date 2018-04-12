@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.6
+ * @version 0.7
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -45,7 +45,7 @@ var PDbListAdmin = (function ($) {
     });
   };
   var confirmDialog = $('<div/>').dialog({
-    dialogClass : 'confirmation-dialog',
+    dialogClass : 'confirmation-dialog participants-database-confirm',
     modal : true,
     zIndex : 10000,
     autoOpen : false,

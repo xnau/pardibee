@@ -810,27 +810,23 @@ a.dragger {
   /* hide it by default */
   display:none;
 }
-.ui-dialog.ui-widget {
+.participants-database-confirm.ui-dialog.ui-widget {
   font-family: inherit;
   font-size:1.1em;
   line-height: 1.4;
   border-radius: 5px;
   background:#FFFFFF;
   border: 2px solid #D54E21;
-  box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
-  /* styling of the dialog box, i have a fixed dimension for this demo */
-  width:328px;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
   max-width: 25em;
-  /* make sure it has the highest z-index */
   position:absolute;
   z-index:500000;
-  /* hide it by default */
   display:none;
 }
-.ui-dialog {
+.participants-database-confirm.ui-dialog {
   padding:20px 40px;
 }
-.ui-dialog a.button{
+.participants-database-confirm.ui-dialog a.button{
   /*stylesforbutton*/
   margin:10px auto 0 auto;
   text-align:center;
@@ -856,13 +852,13 @@ a.dragger {
   position:relative;
   cursor:pointer;
 }
-.ui-dialog a.button:hover{
+.participants-database-confirm.ui-dialog a.button:hover{
   background-color:#c33100;
 }
-.ui-dialog .ui-widget-header {
+.participants-database-confirm.ui-dialog .ui-widget-header {
   display: none;
 }
-.ui-dialog .ui-dialog-buttonpane {
+.participants-database-confirm.ui-dialog .ui-dialog-buttonpane {
   border: none;
   display: block;
   padding: 0;
@@ -874,7 +870,7 @@ a.dragger {
 .ui-dialog .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
   font-family: inherit;
 }
-.ui-dialog .ui-state-default {
+.participants-database-confirm.ui-dialog .ui-state-default {
   background: #E6E6E6;
   border: 1px solid #D3D3D3;
   font-weight: normal;    
@@ -882,17 +878,17 @@ a.dragger {
   margin: 0.5em 0.4em 0.5em 0;
   line-height: 1.8;
 }
-.ui-dialog .ui-state-hover {
+.participants-database-confirm.ui-dialog .ui-state-hover {
   border: 1px solid #b3b3b3;
 }
-.ui-dialog .ui-icon {
+.participants-database-confirm.ui-dialog .ui-icon {
   vertical-align: middle;
   text-indent: 0;
 }
-.ui-dialog .ui-icon.dashicons[class*="no"] {
+.participants-database-confirm.ui-dialog .ui-icon.dashicons[class*="no"] {
   color: #D54E21;
 }
-.ui-dialog .ui-icon.dashicons[class*="yes"] {
+.participants-database-confirm.ui-dialog .ui-icon.dashicons[class*="yes"] {
 }
 #confirmation-dialog p{
 }
