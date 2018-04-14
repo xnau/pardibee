@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -82,7 +82,14 @@ class PDb_File_Uploads {
     } else {
 
       // validate and construct the new filename using only the allowed file extension
-      $new_filename = preg_replace( array('#\.#', "/\s+/", "/[^-\.\w]+/"), array("-", "_", ""), $matches[1] ) . '.' . $matches[2];
+      /**
+       * @filter pdb-file_upload_filename
+       * @param string the sanitized filename (without extension)
+       * @param array the field definition parameters
+       * @param int|bool the record id or bool false if the ID hasn't been determined yet (as in a signup form)
+       * @return string filename without it's extension
+       */
+      $new_filename = Participants_Db::apply_filters('file_upload_filename', preg_replace( array('#\.#', "/\s+/", "/[^-\.\w]+/"), array("-", "_", ""), $matches[1] ), $field_atts, $id ) . '.' . $matches[2];
       // now make sure the name is unique by adding an index if needed
       $index = 1;
       while ( file_exists( Participants_Db::files_path() . $new_filename ) ) {
