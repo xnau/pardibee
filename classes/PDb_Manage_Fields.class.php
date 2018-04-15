@@ -826,7 +826,9 @@ class PDb_Manage_Fields {
       /*
        * allow only proper unicode letters, numerals and legal symbols
        */
-      $name = mb_check_encoding($name, 'UTF-8') ? $name : mb_convert_encoding( $name, 'UTF-8' );
+      if ( function_exists( 'mb_check_encoding' ) ) {
+        $name = mb_check_encoding($name, 'UTF-8') ? $name : mb_convert_encoding( $name, 'UTF-8' );
+      }
       return preg_replace( '#[^\p{L}\p{N}_]#u', '', $name );
     }
 

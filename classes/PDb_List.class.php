@@ -386,8 +386,6 @@ class PDb_List extends PDb_Shortcode {
 
   /**
    * sets up the array of display columns
-   *
-   * @global object $wpdb
    */
   protected function _set_shortcode_display_columns()
   {
@@ -649,12 +647,17 @@ class PDb_List extends PDb_Shortcode {
    */
   function searchable_columns( $columns = false )
   {
-
     $return = array();
     $search_columns = is_array( $columns ) && !empty( $columns ) ? $columns : $this->display_columns;
     foreach ( $search_columns as $col ) {
       $column = $this->get_column_atts( $col );
-      if ( $column && !in_array( $column->form_element, array('placeholder') ) )
+      /**
+       * 
+       * @filter pdb-searchable_column_form_element_exceptions
+       * @param array of exempt form elements
+       * @return array
+       */
+      if ( $column && !in_array( $column->form_element, Participants_Db::apply_filters('searchable_column_form_element_exceptions', array('placeholder', 'captcha') ) ) )
         $return[$column->title] = $column->name;
     }
     return $return;

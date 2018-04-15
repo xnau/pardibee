@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    0.10
+ * @version    0.11
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -164,7 +164,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function is_empty( $value = false )
   {
-
     if ( $value === false ) {
       $value = $this->value;
     }
@@ -187,7 +186,14 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function has_content()
   {
-    return !$this->is_empty();
+    switch( $this->form_element ) {
+      case 'link':
+        $value = $this->link;
+        break;
+      default:
+        $value = $this->value;
+    }
+    return !$this->is_empty($value);
   }
 
   /**
@@ -394,7 +400,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function print_element()
   {
-
     $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array( $this->form_element, array('text-line', 'date', 'timestamp') ) ? ' regular-text' : '' );
 
     /**
@@ -436,6 +441,7 @@ class PDb_Field_Item extends PDb_Template_Item {
         'class' => $this->field_class,
         'attributes' => $this->attributes,
         'module' => $this->module,
+        'link' => $this->link,
             )
     );
   }

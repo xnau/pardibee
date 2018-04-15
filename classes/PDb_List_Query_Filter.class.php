@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.9
+ * @version    0.10
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -66,6 +66,11 @@ class PDb_List_Query_Filter {
    * @var bool true if the filter term is used in a regex
    */
   public $is_regex = false;
+  
+  /**
+   * @var bool "or" logic is parenthesized
+   */
+  private $or_parenthesized = true;
 
   /**
    * instantiates the filter object
@@ -99,6 +104,16 @@ class PDb_List_Query_Filter {
   public function is_or()
   {
     return $this->or_statement;
+  }
+  
+  /**
+   * tells of the current clause is parenthesized
+   * 
+   * @return bool
+   */
+  public function is_parenthesized()
+  {
+    return $this->is_or() === $this->or_parenthesized;
   }
 
   /**
@@ -168,6 +183,9 @@ class PDb_List_Query_Filter {
     }
     if ( isset( $params['index'] ) ) {
       $this->index = $params['index'];
+    }
+    if ( isset( $params['parenthesis_logic'] ) ) {
+      $this->or_parenthesized = $params['parenthesis_logic'];
     }
   }
 

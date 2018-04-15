@@ -583,53 +583,41 @@ class PDb_List_Query {
     $subquery = '';
     $inparens = false;
     $clause_sequence = $this->_build_clause_sequence();
-
-    /**
-     * if $parens_logic is true, "or" statements will be parenthesized
-     * if false, 'and' statements will be parenthesized
-     * 
-     * @filter pdb-list_query_parens_logic
-     * @version 1.6.2.6
-     */
-    $parens_logic = Participants_Db::apply_filters( 'list_query_parens_logic', TRUE );
+    
     /*
      * each element in the where_clauses property array is an array of statements 
      * acting on a single field; The key is the name of the field.
      */
     foreach ( $clause_sequence as $clause ) {
+      
+      /* @var $clause PDb_List_Query_Filter */
 
       /**
        * @todo fix the _reindex_subclauses method so it gets it right when there is only one clause
        */
       $last_clause = count( $clause_sequence ) === 1 ? true : $clause->index() === count( $clause_sequence ) - 1;
-
-      /*
-       * each element in the field clauses array is a PDb_List_Query_Filter object 
-       * representing a statement acting on a particular field
-       */
-      if ( $clause->is_or() === $parens_logic && !$inparens ) {
+      
+      if ( $clause->is_parenthesized() && !$inparens ) {
         $subquery .= '(';
         $inparens = true;
       }
 
       $subquery .= $clause->statement();
 
-
-      if ( !$parens_logic && $inparens && $clause->is_or() ) {
+      if ( !$clause->is_parenthesized() && $inparens ) {
         $subquery .= ')';
         $inparens = false;
       }
-      if ( $clause->is_or() && !$last_clause ) {
-        $subquery .= ' OR ';
+      
+      if ( !$last_clause ) {
+        $subquery .= ' ' . ( $clause->is_or() ? 'OR' : 'AND' ) . ' ';
       }
 
-      if ( $parens_logic && $inparens && (!$clause->is_or() || $last_clause) ) {
+      if ( $inparens && $last_clause ) {
         $subquery .= ')';
         $inparens = false;
       }
-      if ( !$clause->is_or() && !$last_clause ) {
-        $subquery .= ' AND ';
-      }
+      
     }
     return $subquery;
   }
@@ -950,12 +938,20 @@ class PDb_List_Query {
       return false;
     }
 
+    /**
+     * if $parens_logic is true, "or" statements will be parenthesized
+     * if false, 'and' statements will be parenthesized
+     * 
+     * @filter pdb-list_query_parens_logic
+     * @version 1.6.2.6
+     */
     $filter = new PDb_List_Query_Filter( array(
         'field' => $column,
         'logic' => $logic,
         'shortcode' => $shortcode,
         'term' => $search_term,
         'index' => $this->clause_index,
+        'parenthesis_logic' => Participants_Db::apply_filters( 'list_query_parens_logic', TRUE ),
             )
     );
 

@@ -3,12 +3,13 @@
  * 
  * Participants Database plugin
  * 
- * @version 1.0
+ * @version 1.1
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
   "use strict";
   var dialogOptions = {
+    dialogClass : 'participants-database-confirm',
     autoOpen : false,
     height : 'auto',
     minHeight : '20'

@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -179,6 +179,11 @@ abstract class xnau_FormElement {
    * @var string name of the instantiating module
    */
   var $module;
+  
+  /**
+   * @var string  URL element link property
+   */
+  var $link;
 
   /**
    * instantiates a xnau_FormElement object
@@ -216,7 +221,8 @@ abstract class xnau_FormElement {
         'size' => false,
         'container_id' => false,
         'group' => false,
-        'value' => ''
+        'value' => '',
+        'link' => '',
     );
     $params = wp_parse_args( $parameters, $defaults );
 
@@ -229,6 +235,7 @@ abstract class xnau_FormElement {
     $this->group = $params['group'];
     $this->module = isset( $params['module'] ) ? $params['module'] : '';
     $this->attributes = $params['attributes'];
+    $this->link = $params['link'];
 
     if ( NULL !== $params['options'] || !empty( $params['options'] ) ) {
 
@@ -917,8 +924,7 @@ abstract class xnau_FormElement {
    */
   protected function _link_field()
   {
-
-    // this element is stored as an array
+    // this element's value is stored as an array
     $this->group = true;
 
     $link_placeholder = '(URL)';
@@ -931,16 +937,24 @@ abstract class xnau_FormElement {
     $parts = maybe_unserialize( $this->value );
     
     if ( ! is_array( $parts ) ) {
-      $linktext_placeholder = $this->value;
-      $this->value = array('');
-      $parts = array('');
+      if ( filter_var( $parts, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
+        $this->value = $parts;
+        $parts = array( $parts, $linktext_placeholder );
+      } elseif ( filter_var( $this->link, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
+        $parts = array( $this->link, $parts );
+      } else {
+        $linktext_placeholder = $this->value;
+        $this->value = array('');
+        $parts = array('');
+      }
     }
+    
 
     // if the value contains only a URL, the linktext and URL are made the same
     // if the value is not a URL, only the linked text is used
     if ( count( $parts ) < 2 ) {
       $parts[1] = $parts[0];
-      if ( !filter_var( $parts[0], FILTER_VALIDATE_URL ) )
+      if ( !filter_var( $parts[0], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) )
         $parts[0] = '';
     }
     
@@ -948,10 +962,7 @@ abstract class xnau_FormElement {
 
     $this->_addline( '<div class="link-element">' );
 
-    //$url = empty( $url ) ? $link_placeholder : $url;
     $title = empty( $title ) ? '' : $title;
-
-    // previous onClick script: "this.value=this.value=='(URL)'?'':this.value"
 
     $this->attributes['placeholder'] = $link_placeholder;
 

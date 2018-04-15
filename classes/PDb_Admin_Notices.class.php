@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -45,7 +45,30 @@ class PDb_Admin_Notices {
   const get_key = 'pdb_admin_notices_dismiss';
 
   /**
-   * these are our API calls
+   * this is the single general API call
+   * 
+   * @param string  $message the message to post
+   * @param array $params
+   *              'type' => string 'error', 'warning', 'info', 'success' defaults to 'info'
+   *              'context' => string heading message
+   *              'persistent' => bool true to show dismissable persistent message, defaults to true
+   *              'global' => bool true to show the message on all admin pages, defaults to false
+   * @return string id for the message
+   */
+  public static function post_admin_notice( $message, $params = array() )
+  {
+    extract( shortcode_atts( array(
+        'type' => 'info',
+        'context' => '',
+        'persistent' => true,
+        'global' => false,
+                    ), $params ) );
+    $notice = self::get_instance();
+    return $notice->notice( $type, $message, $context, $persistent, $global );
+  }
+
+  /**
+   * these are our specific API calls
    * 
    * the static calls are the most likely to be used, dynamic calls are for situations 
    * where the object needs to be set up and modified before posting the message.
@@ -99,7 +122,7 @@ class PDb_Admin_Notices {
   {
     return $this->notice( 'info', $message, $context, $persistent );
   }
-  
+
   /**
    * deletes the named notice
    * 
@@ -108,7 +131,7 @@ class PDb_Admin_Notices {
   public static function delete_notice( $id )
   {
     $notice = self::get_instance();
-    $notice->delete($id);
+    $notice->delete( $id );
   }
 
   /**
@@ -117,10 +140,13 @@ class PDb_Admin_Notices {
   private function __construct()
   {
     $this->admin_notice_list = $this->admin_notice_list();
-
-    add_action( 'admin_init', array($this, 'action_admin_init'), 20 );
+    
+    
     add_action( 'admin_notices', array($this, 'action_admin_notices') );
     add_action( 'admin_enqueue_scripts', array($this, 'action_admin_enqueue_scripts') );
+    
+    add_action( 'wp_ajax_' . self::get_key, array( $this, 'dismiss_notice' ) );
+    
     add_action( 'participants_database_uninstall', array($this, 'uninstall') );
   }
 
@@ -138,22 +164,15 @@ class PDb_Admin_Notices {
   }
 
   /**
-   * initialize the class functionality
+   * enqueue the script
    */
-  public function action_admin_init()
-  {
-    $message_id = filter_input( INPUT_GET, self::get_key, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
-    if ( $message_id ) {
-      $this->delete( $message_id );
-      wp_die();
-    }
-  }
-
   public function action_admin_enqueue_scripts()
   {
-    if ( $this->is_plugin_screen() ) {
-      wp_enqueue_script( Participants_Db::$prefix . 'admin-notices' );
-    }
+    wp_localize_script(Participants_Db::$prefix . 'admin-notices', 'PDb_Notices', array(
+        'action' => self::get_key,
+        'nonce' => wp_create_nonce( self::pdb_admin_notice ),
+    ));
+    wp_enqueue_script( Participants_Db::$prefix . 'admin-notices' );
   }
 
   /**
@@ -161,30 +180,31 @@ class PDb_Admin_Notices {
    */
   public function action_admin_notices()
   {
-    if ( $this->is_plugin_screen() ):
+    foreach ( $this->admin_notice_list() as $admin_notice ) {
       
-      foreach ( $this->admin_notice_list() as $admin_notice ) {
+      /* @var $admin_notice pdb_admin_notice_message */
 
-        $dismiss_url = add_query_arg( array(
-            self::get_key => $admin_notice->id
-                ), admin_url() );
+      if ( $admin_notice->global || ( !$admin_notice->global && $this->is_plugin_screen() ) ) {
         ?><div
           class="notice pdb_admin_notices-notice notice-<?php
           echo $admin_notice->type;
 
-          echo ' is-dismissible" data-dismiss-url="' . esc_url( $dismiss_url );
+          echo ' is-dismissible" data-dismiss="' . $admin_notice->id;
           ?>">
           <h4><?php echo Participants_Db::$plugin_title . $admin_notice->context ?>:</h4>
+          <?php if ( $admin_notice->html_message() ) : 
+            echo $admin_notice->message;
+          else : ?>
           <p><span class="dashicons <?php echo $this->dashicon( $admin_notice->type ) ?>"></span>&nbsp;<?php echo $admin_notice->message ?></p>
+          <?php endif ?>
 
         </div><?php
       }
-      
+    }
+
     $this->purge_transient_notices();
-    
-    endif;
   }
-  
+
   /**
    * supplies the current admin notice list
    * 
@@ -193,6 +213,19 @@ class PDb_Admin_Notices {
   private function admin_notice_list()
   {
     return get_option( self::pdb_admin_notice, array() );
+  }
+  
+  /**
+   * handles the dismiss action
+   * 
+   */
+  public function dismiss_notice()
+  {
+    if ( !wp_verify_nonce( filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING ), self::pdb_admin_notice ) ) {
+      wp_die('nonce failed');
+    }
+    $this->delete( filter_input( INPUT_GET, 'msgid', FILTER_SANITIZE_STRING ) );
+    wp_die();
   }
 
   /**
@@ -266,10 +299,11 @@ class PDb_Admin_Notices {
    * @param string  $message
    * @param string  $context a context string fro the message header
    * @param bool    $persistent if true, message will persis across page loads
+   * @param bool    $global if false, notice is only shown on plugin admin pages, true shown on all admin pages
    */
-  private function notice( $type, $message, $context, $persistent )
+  private function notice( $type, $message, $context, $persistent, $global = false )
   {
-    $notice = new pdb_admin_notice_message($type,$message,$context,$persistent);
+    $notice = new pdb_admin_notice_message( $type, $message, $context, $persistent, $global );
 
     $this->admin_notice_list[$notice->id] = $notice;
     $this->update_notices();
@@ -336,36 +370,42 @@ class PDb_Admin_Notices {
  * models a single admin notice
  */
 class pdb_admin_notice_message {
+
   /**
    * @var string the type of message
    */
   private $type;
-  
+
   /**
    * @var string the messgae text
    */
   private $message;
-  
+
   /**
    * @var string the context string
    */
   private $context;
-  
+
   /**
    * @var bool whether the message should be persistent across page loads
    */
   private $persistent;
-  
+
+  /**
+   * @var bool whether the notice should be seen globally in the admin or on plugin plages only
+   */
+  private $global;
+
   /**
    * @var string holds the unique id for the message
    */
   private $id;
-  
+
   /**
    * @var string provides a joining string for using the context string in the message heading
    */
   private $context_joiner = '/';
-  
+
   /**
    * instantiates the message
    * 
@@ -374,16 +414,18 @@ class pdb_admin_notice_message {
    * @param string  $message
    * @param string  $context a context string fro the message header
    * @param bool    $persistent if true, message will persist across page loads
+   * @param bool    $global if true, the message will be seen on all admin pages
    */
-  public function __construct( $type, $message, $context, $persistent)
+  public function __construct( $type, $message, $context, $persistent, $global = false )
   {
     $this->type = $type;
     $this->message = $message;
     $this->context = $context;
     $this->persistent = (bool) $persistent;
     $this->notice_id( $message );
+    $this->global = $global;
   }
-  
+
   /**
    * provides object property values
    * 
@@ -401,11 +443,13 @@ class pdb_admin_notice_message {
         return esc_html( $this->context_string() );
       case 'persistent':
         return (bool) $this->persistent;
+      case 'global':
+        return (bool) $this->global;
       case 'type':
         return $this->type;
-    } 
+    }
   }
-  
+
   /**
    * provides a context string
    * 
@@ -415,6 +459,7 @@ class pdb_admin_notice_message {
   {
     return empty( $this->context ) ? '' : $this->context_joiner . $this->context;
   }
+
   /**
    * provides a unique ID for each message
    * 
@@ -426,4 +471,15 @@ class pdb_admin_notice_message {
     $current_user = wp_get_current_user();
     $this->id = $current_user->ID . '-' . hash( 'crc32', $message );
   }
+  
+  /**
+   * tells if the message is wrapped in a tag
+   * 
+   * @return bool
+   */
+  public function html_message()
+  {
+    return preg_match( '/^</', $this->message ) === 1;
+  }
+
 }
