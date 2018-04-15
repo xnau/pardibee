@@ -74,29 +74,12 @@ class PDb_CSV_Import_Process extends WP_Background_Process {
 		}
   
   /**
-   * handles the ajax callback
-   */
-  public function maybe_handle()
-  {
-    ini_set('error_log', '/home/xnaucom/public_html/dev/error_log');
-    error_log(__METHOD__);
-    parent::maybe_handle();
-  }
-  
-  /**
    * handles the record data importation
    * 
    * @param array $data the data from the CSV
    */
   protected function task( $data )
-  {
-    error_log(__METHOD__.' 
-      
-props: '.print_r($this,1).' 
-  
-data: '.print_r($data,1));
-    
-    
+  { 
     /**
      * @version 1.6.3
      * @filter pdb-before_csv_store_record
@@ -105,8 +88,12 @@ data: '.print_r($data,1));
     
     $post['csv_file_upload'] = 'true';
     $post['subsource'] = Participants_Db::PLUGIN_NAME;
-    $post['match_field'] = $this->match_field;
-    $post['match_preference'] = $this->match_preference;
+    
+//    error_log(__METHOD__.' 
+//      
+//props: '.print_r($this,1).' 
+//  
+//post: '.print_r($post,1));
     
     // add the record data to the database
 		$id = Participants_Db::process_form( $post, 'insert', false, array_keys($post) );
@@ -134,7 +121,7 @@ data: '.print_r($data,1));
   {
     parent::complete();
     
-    self::set_status_value( 'process_complete', time() );
+    self::set_status_value( 'process_complete', microtime(true) );
       
     do_action( 'pdb-csv_import_complete' );
   }
@@ -156,21 +143,21 @@ data: '.print_r($data,1));
 		 *
 		 * @return array
 		 */
-		protected function get_post_args() {
-			if ( property_exists( $this, 'post_args' ) ) {
-				return $this->post_args;
-			}
-
-			return array(
-				'action' => $this->identifier,
-				'nonce'  => wp_create_nonce( $this->identifier ),
-				'timeout'   => 1,
-				'blocking'  => true,
-				'body'      => $this->data,
-				'cookies'   => $_COOKIE,
-				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
-			);
-		}
+//		protected function get_post_args() {
+//			if ( property_exists( $this, 'post_args' ) ) {
+//				return $this->post_args;
+//			}
+//
+//			return array(
+//				'action' => $this->identifier,
+//				'nonce'  => wp_create_nonce( $this->identifier ),
+//				'timeout'   => 1,
+//				'blocking'  => true,
+//				'body'      => $this->data,
+//				'cookies'   => $_COOKIE,
+//				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+//			);
+//		}
   
   /**
    * increments a status value
