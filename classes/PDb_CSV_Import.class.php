@@ -41,7 +41,6 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    */
   function __construct( $file_field_name )
   {
-
     $this->i10n_context = Participants_Db::PLUGIN_NAME;
 
     $this->_set_column_array();
@@ -50,8 +49,10 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $this->match_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_NUMBER_INT );
 
     Participants_Db::$session->set( 'form_status', 'normal' ); // CSV import is a normal status
-    // instantiate the process controller
-    $this->process = new PDb_CSV_Import_Process();
+    //
+    // get the process controller
+    global $PDb_CSV_Import_Process;
+    $this->process = $PDb_CSV_Import_Process;
 
     parent::__construct( $file_field_name );
   }
@@ -105,6 +106,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $this->setup_import_columns();
 
     $line_num = 1;
+    
+    $timecheck = microtime(true);
 
     foreach ( $this->CSV->data as $csv_line ) {
 
@@ -136,35 +139,32 @@ csv line= ' . print_r( $csv_line, true ) );
       if ( !$post = array_combine( $this->column_names, $values ) ) {
         $this->set_error( __( 'Number of values does not match number of columns', 'participants-database' ) );
       }
+      
+      $post['match_field'] = $this->match_field;
+      $post['match_preference'] = $this->match_preference;
 
       // put the record data into the queue
-      $this->process->push_to_queue( 'dummy string' );
+      $this->process->push_to_queue( $post );
 
       $line_num++;
     }
-
-    $this->process->add_arg( array(
-        'match_field' => $this->match_field,
-        'match_preference' => $this->match_preference,
-    ) );
+    
+//    error_log(__METHOD__.' time to push to queue: '. floatval( microtime(true) ) - floatval( $timecheck ) );
 
     $this->process->initialize_status_info( array(
-        'process_start' => time(),
+        'process_start' => microtime(true),
         'queue_count' => $line_num - 1,
     ) );
 
     $this->process->save();
-    
-//    global $wp_filter;
-//    error_log(__METHOD__.' '.print_r($wp_filter['wp_ajax_wp_pdb_import_csv_async'],1));
-//
+
 //    error_log( __METHOD__ . ' queue saved: ' . print_r( $this->process, 1 ) );
 
     $result = $this->process->dispatch();
 
-    error_log( __METHOD__ . ' dispatched result: ' . print_r( $result, 1 ) . '
-      
-status: ' . print_r( get_transient( PDb_CSV_Import_Process::status ), 1 ) );
+//    error_log( __METHOD__ . ' dispatched result: ' . print_r( $result, 1 ) . '
+//      
+//status: ' . print_r( get_transient( PDb_CSV_Import_Process::status ), 1 ) );
 
     return true;
   }
@@ -223,7 +223,9 @@ status: ' . print_r( get_transient( PDb_CSV_Import_Process::status ), 1 ) );
    */
   function process_value( $value, $column = '' )
   {
-    return Participants_Db::apply_filters( 'csv_import_value', esc_sql( $this->_enclosure_trim( $value, '', $this->CSV->enclosure ) ), $column );
+    $value = maybe_unserialize( $value );
+//    $parpared_value = esc_sql( $this->_enclosure_trim( $value, '', $this->CSV->enclosure ) );
+    return Participants_Db::apply_filters( 'csv_import_value', $value, $column );
   }
 
   /**
