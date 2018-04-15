@@ -501,6 +501,17 @@ class Participants_Db extends PDb_Base {
     
     // start sessions management
     self::$session = new PDb_Session();
+    
+    /**
+     * instantiate the background process class if importing a CSV
+     */
+    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === 'participants-database-upload_csv' 
+            || filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING ) === 'wp_pdb_import_csv_async' ) {
+        global $PDb_CSV_Import_Process;
+        if ( !is_a($PDb_CSV_Import_Process,'PDb_CSV_Import_Process') ) {
+          $PDb_CSV_Import_Process = new PDb_CSV_Import_Process();
+        }
+    }
 
     /*
      * set up the base reference object arrays
@@ -1459,7 +1470,7 @@ class Participants_Db extends PDb_Base {
       return false;
             }
 
-    $currently_importing_csv = isset( $_POST['csv_file_upload'] );
+    $currently_importing_csv = isset( $_POST['csv_file_upload'] ) || $post['csv_file_upload'];
 
     global $wpdb;
 
@@ -1493,8 +1504,11 @@ class Participants_Db extends PDb_Base {
      */
     if ( $currently_importing_csv ) {
       // a CSV upload brings in it's own match preference
-      $duplicate_record_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING );
-      $match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING );
+      $duplicate_record_preference = array_key_exists('match_preference', $post ) ? $post['match_preference'] : filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING );
+      $match_field = array_key_exists('match_field', $post ) ? $post['match_field'] : filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING );
+      if ( isset($post['csv_file_upload']) ) {
+        unset( $post['csv_file_upload'], $post['match_field'], $post['match_preference'] );
+      }
     } else {
       $duplicate_record_preference = self::plugin_setting( 'unique_email', '0' );
       $match_field = self::plugin_setting( 'unique_field', 'id' );
