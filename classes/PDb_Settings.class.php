@@ -59,7 +59,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
     
     
     // this is waiting on more complete implementation. #1634
-    //add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
+//    add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
     
     // filters to condition saved values for display
     add_filter( 'pdb-settings_page_setting_value', function( $value, $input ) {
@@ -78,19 +78,25 @@ class PDb_Settings extends xnau_Plugin_Settings {
    * 
    * run on the admin_init hook
    * 
+   * 
    */
   public function check_settings()
   {
-    $notices = PDb_Admin_Notices::get_instance();
     $settings = Participants_Db::$plugin_options;
     
-    $post = get_post( $settings['registration_page'] );
-    if ( $post->post_status !== 'publish' || !$post ) {
-      $notices->warning( 'The Participant Record Page setting (Record Form Settings tab) does not point to a valid page.' );
-    }
-    if ( stripos( $post->post_content, '[pdb_record') === false ) {
-      $notices->warning( 'The Participant Record Page must include the [pdb_record] shortcode to show the editable record.' );
-    }
+
+    
+    /*
+     * check registration (particiant record) page settings
+     * unused at this point because not all users need to have this configured
+     */
+//    $post = get_post( $settings['registration_page'] );
+//    if ( $post->post_status !== 'publish' || !$post ) {
+//      $notices->warning( 'The Participant Record Page setting (Record Form Settings tab) does not point to a valid page.' );
+//    }
+//    if ( stripos( $post->post_content, '[pdb_record') === false ) {
+//      $notices->warning( 'The Participant Record Page must include the [pdb_record] shortcode to show the editable record.' );
+//    }
   }
 
   /**
