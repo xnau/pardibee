@@ -55,6 +55,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $this->process = $PDb_CSV_Import_Process;
 
     parent::__construct( $file_field_name );
+    
+    add_action( 'participants_database_uninstall', array( __CLASS__, 'uninstall' ) );
   }
 
   /**
@@ -140,14 +142,19 @@ csv line= ' . print_r( $csv_line, true ) );
         $this->set_error( __( 'Number of values does not match number of columns', 'participants-database' ) );
       }
       
-      $post['match_field'] = $this->match_field;
-      $post['match_preference'] = $this->match_preference;
+//      $post['match_field'] = $this->match_field;
+//      $post['match_preference'] = $this->match_preference;
 
       // put the record data into the queue
       $this->process->push_to_queue( $post );
 
       $line_num++;
     }
+      
+    $this->process->set_import_prefs(array(
+        'match_field' => $this->match_field,
+        'match_preference' => $this->match_preference,
+    ));
     
 //    error_log(__METHOD__.' time to push to queue: '. floatval( microtime(true) ) - floatval( $timecheck ) );
 
@@ -280,14 +287,6 @@ csv line= ' . print_r( $csv_line, true ) );
   }
 
   /**
-   * puts up the user feedback after the import is complete
-   */
-  public function post_complete_feedback()
-  {
-    
-  }
-
-  /**
    * detect the enclosure character
    *
    * @param string $csv_file path to a csv file to read and analyze
@@ -324,6 +323,15 @@ csv line= ' . print_r( $csv_line, true ) );
     } else {
       return parent::_detect_delimiter( $csv_file );
     }
+  }
+  
+  /**
+   * clears this class's db values
+   */
+  public static function uninstall()
+  {
+    delete_option(PDb_CSV_Import_Process::prefs);
+    delete_transient(PDb_CSV_Import_Process::status);
   }
 
 }
