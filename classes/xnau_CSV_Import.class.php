@@ -91,7 +91,7 @@ abstract class xnau_CSV_Import {
 
         if (false !== move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 
-          $this->set_error(sprintf(__('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES['uploadedfile']['name'] . '</strong>'), false);
+          $this->set_error(sprintf( __('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES['uploadedfile']['name'] . '</strong>' ) . '</p><p>' . __('Refresh to check import progress.', 'participants-database'), false);
 
           $this->insert_from_csv($target_path);
 
