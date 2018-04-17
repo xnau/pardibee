@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.7
+ * @version    4.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -84,6 +84,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var array of settings section definitions
      */
     public $settings_sections;
+    
+    /**
+     * @var array of settings objects
+     */
+    protected $setting_definitions;
 
     /**
      * 
@@ -239,6 +244,17 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     private function timeout_key()
     {
       return self::throttler . $this->aux_plugin_name;
+    }
+    
+    /**
+     * provides the setting definition
+     * 
+     * @param string  $name of the setting to get
+     * @return object|bool false if setting is not found
+     */
+    public function setting_definition( $name )
+    {
+      return isset( $this->setting_definitions[$name] ) ? $this->setting_definitions[$name] : false;
     }
 
     /**
@@ -510,6 +526,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
             'section' => $this->aux_plugin_shortname . '_setting_section'
         );
         $params = shortcode_atts( $default, $atts );
+        
+        // add the setting definition to the list of definition objects
+        $this->setting_definitions[$params['name']] = (object) $params;
 
         add_settings_field(
                 $params['name'], $params['title'], array($this, 'setting_callback_function'), $this->aux_plugin_name, $params['section'], array(
