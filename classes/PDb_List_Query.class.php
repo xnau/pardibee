@@ -378,7 +378,7 @@ class PDb_List_Query {
         $value = date( 'M j,Y 00:00' );
         break;
       case 'current_week':
-        $value = date( 'M j,Y 00:00', strtotime(  '-7 days' )  );
+        $value = date( 'M j,Y 00:00', strtotime( 'this week' )  );
         break;
       case 'current_month':
         $value = date( 'M 01,Y 00:00' );
