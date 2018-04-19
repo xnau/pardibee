@@ -373,7 +373,7 @@ class PDb_List_Query {
     
     // get the numeric part, if included
     if ( $numeric = $this->search_key_numeric_value( $key ) ) {
-      $key = preg_replace('/^[+-]\d+/', 'x', $key );
+      $key = preg_replace('/^[+-]\d+/', 'n', $key );
     }
     
     switch ($key) {
@@ -392,10 +392,10 @@ class PDb_List_Query {
       case 'current_year':
         $value = date( 'jan 01,Y 00:00' );
         break;
-      case 'x_days':
+      case 'n_days':
         $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' )  );
         break;
-      case 'x_months':
+      case 'n_months':
         $value = date( 'M 01,Y 00:00', strtotime( $numeric . ' months' )  );
         break;
     }
