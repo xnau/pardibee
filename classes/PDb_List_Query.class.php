@@ -370,6 +370,12 @@ class PDb_List_Query {
   public function process_search_term_keys( $key )
   {
     $value = $key;
+    
+    // get the numeric part, if included
+    if ( $numeric = $this->search_key_numeric_value( $key ) ) {
+      $key = preg_replace('/^[+-]\d+/', 'x', $key );
+    }
+    
     switch ($key) {
       case 'current_date':
         $value = time();
@@ -386,9 +392,29 @@ class PDb_List_Query {
       case 'current_year':
         $value = date( 'jan 01,Y 00:00' );
         break;
+      case 'x_days':
+        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' )  );
+        break;
+      case 'x_months':
+        $value = date( 'M 01,Y 00:00', strtotime( $numeric . ' months' )  );
+        break;
     }
 //    error_log(__METHOD__.' key: '.$key.' value: '.$value);
     return $value;
+  }
+  
+  /**
+   * provides the search term key numeric value
+   * 
+   * @param string $key
+   * @return string|bool extracted numeric value or bool false if no number can be extracted
+   */
+  private function search_key_numeric_value( $key )
+  {
+    if ( preg_match( '/^([+-]\d+)_/', $key, $matches ) === 0 ) {
+      return false;
+    }
+    return $matches[1];
   }
 
   /**
