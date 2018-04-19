@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign up form, survey, management, 
 Requires at least: 4.0
 Tested up to: 4.9.5
 Requires PHP: 5.6
-Stable tag: 1.7.8.3
+Stable tag: 1.7.8.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -284,6 +284,10 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.8.5 =
+* address formatting conflict issue with javascript confirmation pop-ups in the admin #1736
+* added new n_days and n_months "dynamic date keys" for use in the list filter #1744
 
 = 1.7.8.4 =
 * fixed list query parenthesization bug when parenthesizing "and" statements #1734
@@ -983,8 +987,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.8.4 =
-Version 1.7.8.4 is a bugfix update
+= 1.7.8.5 =
+Version 1.7.8.5 is a bugfix and feature update. The new "dynamic date keys" are [documented here…](https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/list-shortcode-filters/#filtering-dates)
 
 == Plugin Support ==
 
