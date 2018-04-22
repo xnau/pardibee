@@ -1192,6 +1192,20 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'pdb_debug',
+        'title' => __( 'Enable Debugging', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => sprintf(__( 'this will enable writing to the %s debugging log.', 'participants-database' ), Participants_Db::$plugin_title ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
 
     /*     * ****************************************************
      *
