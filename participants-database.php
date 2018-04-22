@@ -1986,7 +1986,7 @@ class Participants_Db extends PDb_Base {
     $query = strpos( $sql, '%s' ) !== false ? $wpdb->prepare( $sql, $new_values ) : $sql;
 
     if ( PDB_DEBUG )
-      error_log( __METHOD__ . ' storing record: ' . $query );
+      self::debug_log( __METHOD__ . ' storing record: ' . $query );
 
     $result = $wpdb->query( $query );
 
@@ -2454,7 +2454,7 @@ class Participants_Db extends PDb_Base {
     if ( $wpdb->last_error ) {
 
       if ( PDB_DEBUG )
-        error_log( __METHOD__ . ' failed to add row ' . $params['name'] . ' with error: ' . $wpdb->last_error );
+        self::debug_log( __METHOD__ . ' failed to add row ' . $params['name'] . ' with error: ' . $wpdb->last_error );
 
       return false;
     }
@@ -2465,7 +2465,7 @@ class Participants_Db extends PDb_Base {
       if ( false === ( self::_add_db_column( $field_parameters ) ) ) {
 
         if ( PDB_DEBUG )
-          error_log( __METHOD__ . ' failed to add column with error: ' . $wpdb->last_error .'  data: ' . print_r( $field_parameters, true ) );
+          self::debug_log( __METHOD__ . ' failed to add column with error: ' . $wpdb->last_error .'  data: ' . print_r( $field_parameters, true ) );
 
         return false;
       }
