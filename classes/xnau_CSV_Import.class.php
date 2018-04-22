@@ -217,7 +217,7 @@ abstract class xnau_CSV_Import {
     $this->CSV->parse($src_file);
 
     if (PDB_DEBUG and $this->CSV->error)
-      error_log(__METHOD__ . ' CSV parse error:' . print_r($this->CSV->error_info, 1));
+      Participants_Db::debug_log(__METHOD__ . ' CSV parse error:' . print_r($this->CSV->error_info, 1));
 
     /*
      * build the column names from the CSV if we have one and it's different from 
@@ -229,7 +229,7 @@ abstract class xnau_CSV_Import {
 
     foreach ($this->CSV->data as $csv_line) {
 
-      if (PDB_DEBUG) error_log( __METHOD__.'
+      if (PDB_DEBUG) Participants_Db::debug_log( __METHOD__.'
         
 columns:'.implode(', ',$this->column_names).'
   
