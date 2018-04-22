@@ -128,7 +128,7 @@ class xnau_Template_Email {
   protected function _mail( $recipients, $subject, $body )
   {
     if ( PDB_DEBUG )
-      error_log( __METHOD__ . '
+      Participants_Db::debug_log( __METHOD__ . '
       
 context: '. $this->context . '
 header: ' . $this->email_header() . '
