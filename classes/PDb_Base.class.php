@@ -1684,12 +1684,39 @@ class PDb_Base {
   /**
    * sets the debug mode
    * 
-   * @global PDB_DEBUG
+   * plugin debuggin is going to be enabled if the debug setting is enabled, 
+   * or if WP_DEBUG is true
+   * 
+   * 
+   * @global PDb_Debug $PDb_Debugging
    */
   protected static function set_debug_mode()
   {
     if ( !defined( 'PDB_DEBUG' ) ) {
-      define( 'PDB_DEBUG', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) );
+      $settings = get_option(Participants_Db::$participants_db_options);
+      if ( ( isset( $settings['pdb_debug'] ) && $settings['pdb_debug'] ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+        define( 'PDB_DEBUG', true );
+        global $PDb_Debugging;
+        $PDb_Debugging = new PDb_Debug();
+      } else {
+        define( 'PDB_DEBUG', false );
+      }
+    }
+  }
+  
+  /**
+   * writes a debug log message
+   * 
+   * @global PDb_Debug $PDb_Debugging
+   * @param string $message the debugging message
+   */
+  public static function debug_log( $message )
+  {
+    global $PDb_Debugging;
+    if ( $PDb_Debugging && method_exists( $PDb_Debugging, 'write_debug' ) ) {
+      $PDb_Debugging->write_debug($message);
+    } else {
+      error_log( $message );
     }
   }
 
