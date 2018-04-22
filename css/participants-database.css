@@ -250,6 +250,7 @@ input.otherfield[type=text] {
   display: inline-block;
   margin-left: 5px;
   margin-right: 5px;
+  visibility: visible;
 }
 
 /* pagination */
