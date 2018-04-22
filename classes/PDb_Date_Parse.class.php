@@ -250,7 +250,7 @@ class PDb_Date_Parse {
       }
       if ( is_array( $errors ) ) {
         if ( PDB_DEBUG )
-          error_log( __METHOD__ . ' DateTime parse error: ' . implode( ', ', $errors ) );
+          Participants_Db::debug_log( __METHOD__ . ' DateTime parse error: ' . implode( ', ', $errors ) );
 
         return;
       }
