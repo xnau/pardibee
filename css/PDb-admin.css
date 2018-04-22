@@ -900,3 +900,29 @@ a.dragger {
   top:1.6em;
   right:1.6em;
 }
+
+/** DEBUG LOG **/
+.pdb-log-display-frame {
+  height: 50em;
+  overflow: auto;
+}
+.pdb-log-display {
+  height: auto;
+  margin: 0;
+  text-align: left;
+  background: white;
+  padding: 1em;
+}
+.loghead {
+  font-weight: bold;
+}
+.pdb-log-display header,
+.pdb-log-display footer {
+  color:blue;
+}
+.pdb-log-display footer {
+  font-style: italic;
+}
+.pdb-debugging-refresh {
+  float: right;
+}
