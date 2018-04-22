@@ -285,7 +285,7 @@ class PDb_List extends PDb_Shortcode {
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
 
     if ( PDB_DEBUG )
-      error_log( __METHOD__ .' list query: ' . $list_query );
+      Participants_Db::debug_log( __METHOD__ .' list query: ' . $list_query );
 
     // get the $wpdb object
     global $wpdb;
@@ -1298,7 +1298,7 @@ class PDb_List extends PDb_Shortcode {
 
     $value = preg_match( '/%[0-9A-F]{2}/i', $string ) ? rawurldecode( $string ) : $string;
     if ( !function_exists( 'mb_detect_encoding' ) ) {
-      error_log( __METHOD__ . ': Participants Database Plugin unable to process multibyte strings because "mbstring" module is not present' );
+      Participants_Db::debug_log( __METHOD__ . ': Participants Database Plugin unable to process multibyte strings because "mbstring" module is not present' );
       return $value;
     }
     $encoding = mb_detect_encoding( $value . 'a', array('utf-8', 'windows-1251', 'windows-1252', 'ISO-8859-1') );
