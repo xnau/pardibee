@@ -90,7 +90,7 @@ class PDb_Debug {
    */
   public function write_debug( $message )
   {
-    $this->write_log_entry( "\n\n<header>" . $this->timestamp() . '</header> ' . $message );
+    $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . $message );
     error_log( $message );
   }
 
