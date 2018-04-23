@@ -3632,7 +3632,7 @@ class Participants_Db extends PDb_Base {
         'list_participants' => __( 'List Participants', 'participants-database' ),
         'manage_fields' => __( 'Manage Database Fields', 'participants-database' ),
         'upload_csv' => __( 'Import CSV File', 'participants-database' ),
-        'plugin_settings' => __( 'Settings', 'participants-database' ),
+        'plugin_settings' => '<span class="dashicons dashicons-admin-generic"></span>' . __( 'Settings', 'participants-database' ),
         'setup_guide' => __( 'Setup Guide', 'participants-database' ),
         'add_record_title' => __( 'Add New Participant Record', 'participants-database' ),
         'edit_record_title' => __( 'Edit Existing Participant Record', 'participants-database' ),
