@@ -27,6 +27,11 @@
 .branch-3-6 #adminmenu #toplevel_page_participants-database div.wp-menu-image:before {
   content: '';
 }
+#toplevel_page_participants-database .dashicons {
+  vertical-align: bottom;
+  margin-right: 2px;
+}
+
 #the-list .xnau-contribute {
   vertical-align: middle;
 }
