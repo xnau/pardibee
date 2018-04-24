@@ -570,7 +570,7 @@ class Participants_Db extends PDb_Base {
 
     wp_register_script( self::$prefix . 'shortcode', plugins_url( 'js/shortcodes.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'list-filter', plugins_url( 'js/list-filter.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
+//    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery') );
   }
 
@@ -613,12 +613,12 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), false, true );
     wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), false, true );
     wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), false, true );
-    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
+//    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
     wp_register_script( 'jq-doublescroll', plugins_url( 'js/jquery.doubleScroll.js', __FILE__ ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array('jquery', 'jq-doublescroll') );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array('jquery', 'jquery-ui-dialog') );
-    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', self::$prefix . 'jq-placeholder' ,self::$prefix . 'cookie') );
+    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie') );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery') );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
@@ -633,7 +633,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '1.4' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
-      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
+//      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
       wp_enqueue_script( self::$prefix . 'admin' );
       wp_enqueue_script( self::$prefix . 'otherselect' );
     }
@@ -727,7 +727,7 @@ class Participants_Db extends PDb_Base {
   public static function add_scripts()
   {
     wp_enqueue_script( self::$prefix . 'shortcode' );
-    wp_enqueue_script( self::$prefix . 'jq-placeholder' );
+//    wp_enqueue_script( self::$prefix . 'jq-placeholder' );
     wp_enqueue_script( self::$prefix . 'otherselect' );
   }
 
@@ -1499,7 +1499,7 @@ class Participants_Db extends PDb_Base {
       $duplicate_record_preference = self::plugin_setting( 'unique_email', '0' );
       $match_field = self::plugin_setting( 'unique_field', 'id' );
 
-      if ( is_admin() && self::current_user_has_plugin_role( 'admin', 'csv upload' ) ) {
+      if ( self::plugin_setting('admin_edits_validated', '0' ) == '0' && is_admin() && self::current_user_has_plugin_role( 'admin', 'csv upload' ) ) {
         /*
          * set the preference to 0 if current user is an admin in the admin and not 
          * importing a CSV
@@ -1522,7 +1522,7 @@ class Participants_Db extends PDb_Base {
       $duplicate_record_preference = '2';
     }
 
-    if ( $action == 'insert' and $duplicate_record_preference !== '0' ) {
+    if ( ( $action === 'insert' && $duplicate_record_preference !== '0' ) || ( $action === 'update' && $duplicate_record_preference === '2' ) ) {
 
       /**
        * @version 1.6.2.6
