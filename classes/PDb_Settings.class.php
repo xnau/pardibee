@@ -700,6 +700,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
         )
     );
 
+//    $this->plugin_settings[] = array(
+//        'name' => 'prevent_duplicate_on_update',
+//        'title' => __( 'Prevent Duplicate Field Values', 'participants-database' ),
+//        'group' => 'pdb-record',
+//        'options' => array
+//            (
+//            'type' => 'checkbox',
+//            'help_text' => __( 'When checked, the "duplicate field" settings for the signup form will be used to prevent a duplicate field value when the record is updated.', 'participants-database' )  . $this->settings_help( 'File-and-Image-Uploads-Use-WP-'),
+//            'value' => 0,
+//            'options' => array(1, 0),
+//        )
+//    );
+
 
     /*     * ****************************************************
      *
@@ -1288,6 +1301,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'help_text' => __( 'sets the user access level for fields management, plugin settings, deleting records and CSV operations.', 'participants-database' ),
             'value' => 'manage_options',
             'options' => $this->get_role_select(),
+        )
+    );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'admin_edits_validated',
+        'title' => __( 'Admin Record Edits are Validated', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'When checked, admin record edits and new records must pass validation.', 'participants-database' ) ,
+            'value' => 0,
+            'options' => array(1, 0),
         )
     );
 
