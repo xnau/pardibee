@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 1.1
+ * @version 1.2
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -128,7 +128,7 @@ PDbManageFields = (function ($) {
     if (el.is('[type=checkbox]')) {
       el.data('initState', el.is(':checked'));
     } else {
-      el.data('initState', el.attr('value'));
+      el.data('initState', el.val());
     }
   };
   var setChangedFlag = function () {
@@ -136,7 +136,7 @@ PDbManageFields = (function ($) {
     var initState = el.data('initState');
     var matches = el.closest('tr').attr('id').match(/(\d+)/);
     var flag = $('#status_' + matches[1]);
-    var check = el.is('[type=checkbox]') ? el.is(':checked') : el.attr('value');
+    var check = el.is('[type=checkbox]') ? el.is(':checked') : el.val();
     if (check !== initState) {
       flag.attr('value', 'changed');
       setUnsavedChangesFlag(1);
@@ -193,9 +193,9 @@ PDbManageFields = (function ($) {
   };
   var cancelReturn = function (event) {
     // disable autocomplete
-    if ($.browser.mozilla) {
+//    if ($.browser.mozilla) {
       $(this).attr("autocomplete", "off");
-    }
+//    }
     if (event.keyCode === 13)
       return false;
   };

@@ -25,7 +25,7 @@ PDbAdmin = (function ($) {
   }
   return {
     init : function () {
-      $('input[placeholder], textarea[placeholder]').placeholder();
+//      $('input[placeholder], textarea[placeholder]').placeholder();
       $('.participants_db .ui-tabs-nav li').append($('<span class="mask"/>'));
       $('.manage-fields-wrap').on('focus', '[name*=title], [name*=default] ', function () {
         $(this).addClass('focused').closest('td').addClass('focused');

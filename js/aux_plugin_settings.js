@@ -53,9 +53,9 @@ PDbAuxSettings = (function ($) {
           var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
           $(".pdb-aux-settings-tabs").removeClass().addClass(wrapclass + " " + activeclass);
         });
-        if ($.browser.mozilla) {
+//        if ($.browser.mozilla) {
           $("form").attr("autocomplete", "off");
-        }
+//        }
       }
     }
   }

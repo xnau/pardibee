@@ -52,9 +52,9 @@ PDbSettings = (function ($) {
         var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
         $(".participants_db.wrap").removeClass().addClass(wrapclass + " " + activeclass);
       });
-      if ($.browser.mozilla) {
+//      if ($.browser.mozilla) {
         $("form").attr("autocomplete", "off");
-      }
+//      }
     }
   }
 }(jQuery));
