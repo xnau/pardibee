@@ -52,9 +52,9 @@ PDbSettings = (function ($) {
         var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
         $(".pdb-admin-edit-participant.wrap").removeClass().addClass(wrapclass + " " + activeclass);
       });
-      if ($.browser.mozilla) {
+//      if ($.browser.mozilla) {
         $("form").attr("autocomplete", "off");
-      }
+//      }
     }
   }
 }(jQuery));
