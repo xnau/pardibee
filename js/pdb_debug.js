@@ -20,8 +20,13 @@ jQuery(document).ready(function ($) {
         $('.pdb-log-display').html(spinner);
       },
       success : function (response) {
-        $('.pdb-log-display').html(response);
-        pdb_scroll_down();
+        if ( response.indexOf('nonce failed') > -1 ) {
+          $('.pdb-log-display').html('reloading…');
+          window.location.href = $('#pdb-debug-refresh').attr('action');
+        } else {
+          $('.pdb-log-display').html(response);
+          pdb_scroll_down();
+        }
       }
     });
     return false;
