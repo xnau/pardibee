@@ -907,7 +907,7 @@ a.dragger {
   overflow: auto;
 }
 .pdb-log-display {
-  height: auto;
+  min-height: 90%;
   margin: 0;
   text-align: left;
   background: white;
@@ -916,13 +916,25 @@ a.dragger {
 .loghead {
   font-weight: bold;
 }
+.pdb-log-display article {
+  padding: 1em 0.5em;
+}
+.pdb-log-display article::before {
+    content: "--------------------------------------";
+}
+.pdb-log-display article:first-of-type::before {
+    content: inherit;
+}
 .pdb-log-display header,
 .pdb-log-display footer {
-  color:blue;
+  color: #0073aa;
 }
 .pdb-log-display footer {
   font-style: italic;
 }
 .pdb-debugging-refresh {
   float: right;
+}
+.pdb-log-display p + br {
+  display: none;
 }
