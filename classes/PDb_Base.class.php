@@ -1693,7 +1693,7 @@ class PDb_Base {
   protected static function set_debug_mode()
   {
     if ( !defined( 'PDB_DEBUG' ) ) {
-      $settings = get_option(Participants_Db::$participants_db_options);
+      $settings = get_option( Participants_Db::PLUGIN_NAME . '_options');
       if ( ( isset( $settings['pdb_debug'] ) && $settings['pdb_debug'] ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
         define( 'PDB_DEBUG', true );
         global $PDb_Debugging;
