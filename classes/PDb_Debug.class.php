@@ -190,7 +190,7 @@ class PDb_Debug {
         </div>
 
       </div>
-      <form id="pdb-debug-refresh">      
+      <form id="pdb-debug-refresh" action="<?php echo $_SERVER['REQUEST_URI'] ?>">      
         <?php wp_nonce_field( $this->action ) ?>
         <div class="form-group">
           <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participnats-database' ) ?></button>
