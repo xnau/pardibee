@@ -390,7 +390,7 @@ class PDb_List_Query {
         $value = date( 'M 01,Y 00:00' );
         break;
       case 'current_year':
-        $value = date( 'jan 01,Y 00:00' );
+        $value = date( '\j\a\n 01,Y 00:00' );
         break;
       case 'n_days':
         $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' )  );
