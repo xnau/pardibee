@@ -290,6 +290,7 @@ You can define a "captcha" form element which will show a simple math question f
 * duplicate field values prevented in frontend record edit #1746
 * plugin debug mode and log #1737
 * "current_year" date filter value fixed #1750
+* updated translation template
 
 = 1.7.8.5 =
 * address formatting conflict issue with javascript confirmation pop-ups in the admin #1736
