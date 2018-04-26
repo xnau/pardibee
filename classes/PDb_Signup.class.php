@@ -553,8 +553,8 @@ class PDb_Signup extends PDb_Shortcode {
    */
   public function allow_readonly_fields_in_form( $field )
   {
-    // if ($field->group !== 'internal') return $field;
-    $field->readonly = 0;
+    if ( $field )
+      $field->readonly = 0;
     return $field;
   }
 
