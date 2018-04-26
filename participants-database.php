@@ -283,8 +283,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function initialize()
   {
-    // set the debug global if not already
-    self::set_debug_mode();
 
     // set the plugin version
     self::$plugin_version = self::_get_plugin_data( 'Version' );
@@ -369,6 +367,9 @@ class Participants_Db extends PDb_Base {
     add_action( 'pdb-shortcode_present', function () {
       add_filter( 'the_content', array( 'Participants_Db', 'fix_shortcode_special_chars' ), 5 );
     } );
+    
+    // set the debug global if not already
+    self::set_debug_mode();
 
     /*
      * any plugins that require Participants Database should initialize on this action
@@ -452,7 +453,7 @@ class Participants_Db extends PDb_Base {
 
     // also filter the name of the settings to use
     self::$participants_db_options = self::apply_filters( 'select_database_table', self::PLUGIN_NAME . '_options' );
-
+    
     /**
      * @version 1.6.3
      * @filter pdb-single_query
@@ -621,6 +622,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie') );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery') );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
     if ( self::_set_admin_custom_css() ) {
