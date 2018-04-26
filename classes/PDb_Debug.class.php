@@ -59,11 +59,30 @@ class PDb_Debug {
 
     add_action( 'admin_init', array($this, 'initialize_logging') );
 
+    add_action( 'admin_enqueue_scripts', array($this, 'assets') );
+
     add_action( 'participants_database_uninstall', array(__CLASS__, 'uninstall') );
 
     set_error_handler( array($this, 'write_php_error') );
 
     add_action( 'wp_ajax_' . $this->action, array($this, 'handle_refresh') );
+  }
+
+  /**
+   * enqueues the class assets
+   * 
+   * @param string $hook the current admin page slug
+   */
+  public function assets( $hook )
+  {
+    if ( strpos( $hook, 'participants-database-pdb_debugging' ) !== false ) {
+      wp_localize_script( Participants_Db::$prefix . 'debug', 'PDb_Debug', array(
+          'action' => $this->action,
+          'spinner' => Participants_Db::get_loading_spinner(),
+              )
+      );
+      wp_enqueue_script( Participants_Db::$prefix . 'debug' );
+    }
   }
 
   /**
@@ -90,7 +109,7 @@ class PDb_Debug {
    */
   public function write_debug( $message )
   {
-    $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . $message );
+    $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . str_replace( array(PHP_EOL, "\t"), array('<br/>', '&emsp;'), htmlspecialchars( $message ) ) );
     error_log( $message );
   }
 
@@ -127,20 +146,21 @@ class PDb_Debug {
 
   /**
    * retrieves the contents of the log
+   * @return array of lines from the log
    */
   private function get_log()
   {
-    $buffer = '';
+    $buffer = array();
     if ( $this->log_file_resource() ) {
       rewind( $this->log_file );
       while ( ($line = fgets( $this->log_file, 4096 )) !== false ) {
-        $buffer .= str_replace( "\n", '<br/>', $line );
+        $buffer[] = $line;
       }
       if ( !feof( $this->log_file ) ) {
         error_log( __METHOD__ . ' file read fail' );
       }
     }
-    return $buffer;
+    return '<article>' . implode( '</article><article>', $buffer ) . '</article>';
   }
 
   /**
@@ -160,29 +180,6 @@ class PDb_Debug {
   {
     ?>
     <div class="wrap pdb-admin-settings participants_db pdb-debugging" >
-      <script>
-        jQuery(document).on('click', '#pdb-debug-refresh button', function (e) {
-          var el = jQuery(e.target);
-          var spinner = jQuery('<?php echo Participants_Db::get_loading_spinner() ?>');
-          jQuery.ajax({
-            url : ajaxurl,
-            type : 'post',
-            data : {
-              action : '<?php echo $this->action ?>',
-              command : el.data('action'),
-              _wpnonce : jQuery('#_wpnonce').val()
-            },
-            beforeSend : function () {
-              jQuery('.pdb-log-display').html(spinner);
-            },
-            success : function (response) {
-              jQuery('.pdb-log-display').html(response);
-            }
-          });
-
-          return false;
-        })
-      </script>
 
       <?php Participants_Db::admin_page_heading() ?>  
       <h2><?php echo Participants_Db::$plugin_title . ' ' . $this->log_title ?></h2>
@@ -193,7 +190,7 @@ class PDb_Debug {
         </div>
 
       </div>
-      <form id="pdb-debug-refresh">
+      <form id="pdb-debug-refresh">      
         <?php wp_nonce_field( $this->action ) ?>
         <div class="form-group">
           <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participnats-database' ) ?></button>
