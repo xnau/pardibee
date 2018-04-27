@@ -3,7 +3,7 @@
  * 
  * sets up the tab functionality on the plugin settings page
  * 
- * @version 0.3
+ * @version 0.4
  * 
  */
 PDbSettings = (function ($) {

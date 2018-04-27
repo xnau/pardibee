@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 1.2
+ * @version 1.3
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
