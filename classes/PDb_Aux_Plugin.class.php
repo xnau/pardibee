@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.8
+ * @version    4.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -555,8 +555,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         ?>
       <div class="wrap pdb-admin-settings participants_db" >
 
-      <?php Participants_Db::admin_page_heading() ?>  
-        <h2><?php echo $this->aux_plugin_title ?></h2>
+      <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . $this->aux_plugin_title ) ?>
 
       <?php settings_errors(); ?>  
 
