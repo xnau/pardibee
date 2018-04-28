@@ -751,12 +751,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       $selectstring = $this->set_selectstring( $values[1] );
       $html = '';
-      $pattern = "\n" . '<label style="%6$s" title="%4$s"><input type="checkbox" %9$s %10$s value="%4$s" name="' . $this->settings_name() . '[%1$s][]"> <span>%4$s</span></label>';
+      $pattern = "\n" . '<label style="%6$s" title="%4$s"><input type="checkbox" %9$s %10$s value="%11$s" name="' . $this->settings_name() . '[%1$s][]"> <span>%4$s</span></label>';
       $html .= "\n" . '<div class="checkbox-group ' . $values[1] . ' ' . $values[4] . '" >';
-      for ( $i = 0; $i < count( $values[7] ); $i++ ) {
-        $value = $values[7][$i];
+      foreach ( $values[7] as $value => $title ) {
         $values[8] = in_array( $value, $values[2] ) ? $selectstring : '';
-        $values[3] = $value;
+        $values[3] = $title;
+        $values[10] = is_int($value) ? $title : $value;
         $html .= vsprintf( $pattern, $values );
       }
       $html .= "\n" . '</div>';
