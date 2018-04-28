@@ -1538,7 +1538,8 @@ class Participants_Db extends PDb_Base {
 
       $match_field_value = isset( $post[$match_field] ) ? filter_var( $post[$match_field], FILTER_SANITIZE_STRING ) : '';
 
-      $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field );
+      $match_count = $action === 'update' ? 1 : 0;
+      $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field ) > $match_count;
       // if true, the incoming record matches an existing record
       /**
        * @since 1.6
@@ -2384,16 +2385,19 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * returns true if a record has a value matching the checked field
+   * returns > 0 if a record has a value matching the checked field
    *
    * @param string $value the value of the field to test
    * @param string $field the field to test
-   * @return bool true if match exists (only checks for the first one)
+   * @return int number of records with the matching value
    */
   public static function field_value_exists( $value, $field )
   {
+    global $wpdb;
 
-    return self::_id_exists( $value, $field );
+    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' )", $value ) );
+
+    return is_null($match_count) ? 0 : (int) $match_count;
   }
 
   /**
