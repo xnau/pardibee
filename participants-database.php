@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.8.7
+ * Version: 1.7.8.8
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -1538,9 +1538,15 @@ class Participants_Db extends PDb_Base {
 
       $match_field_value = isset( $post[$match_field] ) ? filter_var( $post[$match_field], FILTER_SANITIZE_STRING ) : '';
 
-      $match_count = $action === 'update' ? 1 : 0;
-      $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field ) > $match_count;
-      // if true, the incoming record matches an existing record
+      /*
+       *  prevent updating record from matching itself if we are avoiding duplicates
+       */
+      $mask_id = $duplicate_record_preference === '2' ? 0 : $participant_id;
+      /*
+       * if true, incoming record matches existing record or updated record mathces another record
+       */
+      $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field, $mask_id );
+      
       /**
        * @since 1.6
        * the $record_match status variable is made available to a filter so a custom 
@@ -2389,15 +2395,16 @@ class Participants_Db extends PDb_Base {
    *
    * @param string $value the value of the field to test
    * @param string $field the field to test
-   * @return int number of records with the matching value
+   * @param int $mask_id optional record id to exclude
+   * @return bool true if there is a matching value for the field
    */
-  public static function field_value_exists( $value, $field )
+  public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
     global $wpdb;
 
-    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' )", $value ) );
+    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
 
-    return is_null($match_count) ? 0 : (int) $match_count;
+    return is_null($match_count) ? false : (bool) $match_count;
   }
 
   /**
