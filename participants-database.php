@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.7.8.8
+ * Version: 1.7.8.9
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -1529,10 +1529,10 @@ class Participants_Db extends PDb_Base {
       /**
        * @version 1.6.2.6
        * 
-       * if we are adding a record in the admin, we don't don't perform a record update 
+       * if we are adding a record in the admin, we don't perform a record update 
        * on a matching record if the intent is to add a new record
        */
-      if ( is_admin() && ! DOING_AJAX && ! $currently_importing_csv ) {
+      if ( is_admin() && $action === 'insert' && ( ! defined('DOING_AJAX') || ! DOING_AJAX ) && ! $currently_importing_csv ) {
         $duplicate_record_preference = '2';
       }
 
@@ -1541,9 +1541,10 @@ class Participants_Db extends PDb_Base {
       /*
        *  prevent updating record from matching itself if we are avoiding duplicates
        */
-      $mask_id = $duplicate_record_preference === '2' ? 0 : $participant_id;
+      $mask_id = $duplicate_record_preference === '2' ? $participant_id : 0;
+      
       /*
-       * if true, incoming record matches existing record or updated record mathces another record
+       * if true, incoming record matches existing record or updated record matches another record
        */
       $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field, $mask_id );
       
