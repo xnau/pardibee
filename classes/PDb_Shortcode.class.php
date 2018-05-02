@@ -286,7 +286,6 @@ abstract class PDb_Shortcode {
    */
   protected function _print_from_template()
   {
-
     if ( false === $this->template ) {
 
       $this->output = '<p class="alert alert-error">' . sprintf( _x( '<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is correct and the template file is in the correct location.', 'message to show if the plugin cannot find the template', 'participants-database' ), 'strong', $this->template ) . '</p>';
@@ -312,7 +311,7 @@ abstract class PDb_Shortcode {
     if ( PDB_DEBUG /*&& in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') )*/ ) {
       echo '<!-- end template: ' . $this->template_basename( $this->template ) . ' -->';
     }
-
+    
     /**
      * @filter 'pdb-{$module}_shortcode_output'
      * 
