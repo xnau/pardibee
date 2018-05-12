@@ -204,7 +204,8 @@ class PDb_List_Admin {
     self::_process_search();
 
     if ( PDB_DEBUG )
-      Participants_Db::debug_log( __METHOD__ . ' list query= ' . self::list_query() );
+      Participants_Db::debug_log( __METHOD__ . '
+list query: ' . self::list_query() );
     /*
      * save the query in a transient so it can be used by the export CSV functionality
      */
@@ -425,6 +426,7 @@ class PDb_List_Admin {
                 if ( $result > 0 ) {
                   Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
                 }
+                $last_query = $wpdb->last_query;
               }
               break;
 
@@ -444,6 +446,7 @@ class PDb_List_Admin {
                   do_action( 'pdb-list_admin_with_selected_' . $selected_action, $selected_ids );
                   Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ) ), 'updated' );
                 }
+                $last_query = $wpdb->last_query;
               }
               break;
 
@@ -508,6 +511,11 @@ class PDb_List_Admin {
                * @param string feedback to show after the action has been performed
                */
               Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', ''), 'updated' );
+          }
+          if ( PDB_DEBUG ) {
+            Participants_Db::debug_log(__METHOD__.' 
+action: ' . $selected_action . '   
+query: '.$last_query);
           }
           break;
 
