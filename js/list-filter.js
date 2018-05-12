@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.5
+ * version: 1.6
  * 
  * xnau webdesign xnau.com
  * 
@@ -45,7 +45,7 @@ PDbListFilter = (function ($) {
           search_field_error.show();
           isError = true;
         }
-        if ($('[name^="value"]').PDb_checkInputs('')) {
+        if (!PDb_ajax.allow_empty_term && $('[name^="value"]').PDb_checkInputs('')) {
           value_error.show();
           isError = true;
         }
