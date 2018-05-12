@@ -224,7 +224,7 @@ class PDb_List_Query {
       if ( empty( $this->post_input['search_field'] ) ) {
         $this->is_search_result( false );
         return 'search';
-      } elseif ( empty( $this->post_input['value'] ) ) {
+      } elseif ( ! $this->search_term_is_valid( $this->post_input['value'] ) ) {
         $this->is_search_result( false );
         return 'value';
       }
@@ -558,7 +558,8 @@ class PDb_List_Query {
    */
   private function search_term_is_valid( $term )
   {
-    return Participants_Db::apply_filters( 'search_term_tests_valid', strlen( trim( $term, '*?_%.' ) ) > 0, $term );
+    $valid = strlen( trim( $term, '*?_%.' ) ) > 0 || ( Participants_Db::plugin_setting_is_true('empty_search') && $term === '' );
+    return Participants_Db::apply_filters( 'search_term_tests_valid', $valid, $term );
   }
 
   /**
