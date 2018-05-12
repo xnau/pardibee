@@ -185,7 +185,8 @@ class PDb_List extends PDb_Shortcode {
 //        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
         'postID' => ( isset( $wp_query->post ) ? $wp_query->post->ID : '' ),
         'prefix' => Participants_Db::$prefix,
-        'loading_indicator' => Participants_Db::get_loading_spinner()
+        'loading_indicator' => Participants_Db::get_loading_spinner(),
+        'allow_empty_term' => Participants_Db::plugin_setting_is_true( 'empty_search', false ),
     );
 
     wp_localize_script( Participants_Db::$prefix . 'list-filter', 'PDb_ajax', $ajax_params );
