@@ -663,7 +663,7 @@ class PDb_FormElement extends xnau_FormElement {
        * set, which becomes our href
        */
       $URI = $field->link;
-      $linktext = esc_html( $field->value );
+      $linktext = wp_kses_post( $field->value );
     } elseif ( filter_var( $URI, FILTER_VALIDATE_URL ) !== false && Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
 
       // convert the get array to a get string and add it to the URI
@@ -681,7 +681,7 @@ class PDb_FormElement extends xnau_FormElement {
         list( $URI, $linktext ) = explode( '@', $URI, 2 );
         $template = '<a class="obfuscate" data-email-values=\'{"name":"%1$s","domain":"%2$s"}\'>%1$s AT %2$s</a>';
       } else {
-        $linktext = $URI;
+        $linktext = esc_html($URI);
         $URI = 'mailto:' . $URI;
       }
     } elseif ( filter_var( $URI, FILTER_VALIDATE_EMAIL ) !== false && Participants_Db::plugin_setting_is_true( 'email_protect' ) && !Participants_Db::$sending_email ) {
@@ -718,7 +718,7 @@ class PDb_FormElement extends xnau_FormElement {
     $target = isset( $field->attributes['target'] ) ? 'target="' . $field->attributes['target'] . '"' : '';
 
     //construct the link
-    return sprintf( $linktemplate, $URI, esc_html( $linktext ), $target );
+    return sprintf( $linktemplate, $URI, $linktext, $target );
   }
   
   /**
