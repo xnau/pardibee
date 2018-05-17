@@ -784,7 +784,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_value_title( $value, $fieldname )
   {
-    if ( isset( Participants_Db::$fields[$fieldname] ) ) {
+    if ( isset( Participants_Db::$fields[$fieldname] ) && self::is_value_set( Participants_Db::$fields[$fieldname]->form_element ) ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
       if ( is_array( $options_array ) ) {
         foreach ( $options_array as $option_title => $option_value ) {
@@ -813,7 +813,7 @@ class PDb_FormElement extends xnau_FormElement {
   public static function get_title_value( $title, $fieldname )
   {
     $value = $title; // if no title is found, return the title argument
-    if ( isset( Participants_Db::$fields[$fieldname] ) ) {
+    if ( isset( Participants_Db::$fields[$fieldname] ) && self::is_value_set( Participants_Db::$fields[$fieldname]->form_element ) ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
       if ( is_array( $options_array ) && array_search( $title, $options_array ) === false ) {
         if ( isset( $options_array[$title] ) ) {
