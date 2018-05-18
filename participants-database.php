@@ -561,18 +561,17 @@ class Participants_Db extends PDb_Base {
     } else {
       $custom_css_file = 'custom_css.php';
     }
-
-    $option_version = self::$Settings->option_version();
+    
     /*
      * register frontend scripts and stylesheets
      */
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons') );
-    wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, $option_version );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), self::$plugin_version );
+    wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$plugin_version );
 
     wp_register_script( self::$prefix . 'shortcode', plugins_url( 'js/shortcodes.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-filter', plugins_url( 'js/list-filter.js', __FILE__ ), array('jquery'), '1.6' );
+    wp_register_script( self::$prefix . 'list-filter', plugins_url( 'js/list-filter.js', __FILE__ ), array('jquery'), self::$plugin_version );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery'), self::$plugin_version );
   }
 
   /**
@@ -611,28 +610,28 @@ class Participants_Db extends PDb_Base {
      * register admin scripts and stylesheets
      */
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/jquery_cookie.js', __FILE__ ) );
-    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '1.3', true );
-    wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  '0.4', true );
-    wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), '0.3', true );
+    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
     wp_register_script( 'jq-doublescroll', plugins_url( 'js/jquery.doubleScroll.js', __FILE__ ), array('jquery', 'jquery-ui-widget') );
-    wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array('jquery', 'jq-doublescroll'), '0.1' );
+    wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array('jquery', 'jq-doublescroll'), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array('jquery', 'jquery-ui-dialog'), '0.7' );
-    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), '0.4' );
+    wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), self::$plugin_version );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
     if ( self::_set_admin_custom_css() ) {
-      wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ) );
+      wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$plugin_version );
     }
-    wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ) );
-    wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, false );
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ) );
+    wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
+    wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '1.4' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
 //      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
@@ -1553,10 +1552,17 @@ class Participants_Db extends PDb_Base {
        * the $record_match status variable is made available to a filter so a custom 
        * record matching method can be implemented
        * 
+       * @since 1.7.8.11 added duplicate preference and csv import state
+       * 
+       * @filter pdb-incoming_record_match
        * @param bool  $record_match true if a matching record has been found
-       * @param array $post         the submitted post data  
+       * @param array $post         the submitted post data
+       * @param int   $duplicate_record_preference 1 = update matched record, 2 = prevent duplicate
+       * @param bool  $currently_importing_csv if true, a CSV import is being processed
+       * 
+       * @return bool true if a matching record is found
        */
-      $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post );
+      $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post, $duplicate_record_preference, $currently_importing_csv );
 
       if ( $record_match ) {
         /*
@@ -1658,7 +1664,8 @@ class Participants_Db extends PDb_Base {
         break;
 
       case 'skip':
-      // do nothing, this record won't be saved because there is a duplicate error
+        // do nothing, this record won't be saved because there is a duplicate error
+        $sql = '';
     }
 
     /*
