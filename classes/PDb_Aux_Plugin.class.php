@@ -160,7 +160,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       //add_action( 'init', array($this, 'initialize_updater'), 50 );
       add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
       add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
-
+      
       /**
        * include the aux plugin update class
        * 
