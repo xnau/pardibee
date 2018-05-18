@@ -203,9 +203,10 @@ class PDb_List_Admin {
 
     self::_process_search();
 
-    if ( PDB_DEBUG )
+    if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ . '
-list query: ' . self::list_query() );
+  list query: ' . self::list_query() );
+    }
     /*
      * save the query in a transient so it can be used by the export CSV functionality
      */
