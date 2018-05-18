@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -153,8 +153,12 @@ class PDb_Debug {
     $buffer = array();
     if ( $this->log_file_resource() ) {
       rewind( $this->log_file );
+      $line_limit = $this->line_limit();
       while ( ($line = fgets( $this->log_file, 4096 )) !== false ) {
         $buffer[] = $line;
+        if ( count( $buffer ) >= $line_limit ) {
+          $buffer = array(); // clear it if it gets too large
+        }
       }
       if ( !feof( $this->log_file ) ) {
         error_log( __METHOD__ . ' file read fail' );
@@ -228,21 +232,25 @@ class PDb_Debug {
    */
   public function initialize_logging()
   {
-    if ( !$this->log_file ) {
+    if ( !is_resource($this->log_file) ) {
+    
+    
+      $this->log_file_resource(); // set up the resource
 
-      $this->log_file = fopen( $this->log_filepath(), 'a+b' );
-
-      if ( !$this->log_file ) {
+      if ( !is_resource($this->log_file) ) {
         $this->clear_log_filename();
         Participants_Db::debug_log( __METHOD__ . ' unable to open file for logging: ' . $this->log_filepath() );
         PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>', array(
             'type' => 'error',
             'context' => __( 'Debugging', 'participants-database' ),
         ) );
-      }
+        return;
+      } 
     }
+      
+    $this->truncate_large_file(); // truncate the file if it's too big
 
-    if ( $this->log_file && $this->empty_log() ) {
+    if ( $this->empty_log() ) {
       $this->write_initial_header();
     }
   }
@@ -324,6 +332,32 @@ class PDb_Debug {
   {
     $first = fread( $this->log_file_resource(), 4096 );
     return empty( $first );
+  }
+  
+  /**
+   * provides the limit to the number of lines from the log to buffer
+   * 
+   * @return int
+   */
+  private function line_limit()
+  {
+    return Participants_Db::apply_filters( 'debug_log_line_buffer_limit', 200 );
+  }
+  
+  /**
+   * truncates the log file if it is too large
+   */
+  private function truncate_large_file()
+  {
+    if ( is_resource( $this->log_file ) ) {
+      $stat = fstat( $this->log_file );
+      
+      $too_big = $stat['size'] > Participants_Db::apply_filters('debug_log_max_size_mb', 5 ) * MB_IN_BYTES; // 5MB
+      
+      if ( $too_big ) {
+        $this->clear_log();
+      }
+    }
   }
 
   /**
