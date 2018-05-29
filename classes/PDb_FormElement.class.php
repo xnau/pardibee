@@ -375,9 +375,9 @@ class PDb_FormElement extends xnau_FormElement {
         case 'decimal':
 
           if ( isset( $field->attributes['data-before'] ) ) {
-            $field->value = '<span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value );
+            $field->value = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value ) . '</span>';
           } elseif ( isset( $field->attributes['data-after'] ) ) {
-            $field->value = esc_html( $field->value ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span>';
+            $field->value = '<span class="pdb-added-content">' . esc_html( $field->value ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>';
           }
           $return = $field->value;
           break;
