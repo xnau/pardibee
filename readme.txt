@@ -21,6 +21,8 @@ This database could be of use to any organization that needs to build and mainta
 
 The plugin can be easily adapted to work as a database for other applications such as indexes, directories, catalogs, or anything, really. The plugin uses a system of customizable templates for all its displays, and an API for the customization and extension of its capabilities. The plugin is fully internationalized with a growing set of translations.
 
+[GDPR Compliance Information](https://xnau.com/work/wordpress-plugins/participants-database/gdpr-compliance-and-participants-database/) for users of Participants Database
+
 = Some of the features of the Participants Database Plugin: =
 
 * fully configurable database for holding any kind of information about people (or anything, really!)
