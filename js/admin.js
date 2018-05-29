@@ -1,12 +1,14 @@
 // participants-database admin support scripts
 PDbAdmin = (function ($) {
   var precontent = function (el) {
+    el.wrap('<span class="pdb-added-content"></span>');
     el.before($('<span />', {
       html : el.data('before'),
       class : 'pdb-precontent'
     }));
   }
   var postcontent = function (el) {
+    el.wrap('<span class="pdb-added-content"></span>');
     el.after($('<span />', {
       html : el.data('after'),
       class : 'pdb-postcontent'

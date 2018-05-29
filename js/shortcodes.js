@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * @version 0.9
+ * @version 0.10
  * 
  * xnau webdesign xnau.com
  * 
@@ -21,12 +21,14 @@ PDbShortcodes = (function ($) {
     return true;
   }
   var precontent = function (el) {
+    el.wrap('<span class="pdb-added-content"></span>');
     el.before($('<span />', {
       html : el.data('before'),
       class : 'pdb-precontent'
     }));
   }
   var postcontent = function (el) {
+    el.wrap('<span class="pdb-added-content"></span>');
     el.after($('<span />', {
       html : el.data('after'),
       class : 'pdb-postcontent'

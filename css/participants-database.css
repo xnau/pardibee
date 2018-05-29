@@ -192,6 +192,10 @@ input.otherfield[type=text] {
 .dropdown-other input[name=temp] {
   /*  display:none;*/
 }
+.pdb-added-content {
+  display: flex;
+  align-items: center;
+}
 .pdb-precontent, 
 .pdb-postcontent {
   display: inline-block;
