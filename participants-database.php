@@ -568,7 +568,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), self::$plugin_version );
     wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$plugin_version );
 
-    wp_register_script( self::$prefix . 'shortcode', plugins_url( 'js/shortcodes.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'shortcode', plugins_url( 'js/shortcodes.js', __FILE__ ), array('jquery'), self::$plugin_version );
     wp_register_script( self::$prefix . 'list-filter', plugins_url( 'js/list-filter.js', __FILE__ ), array('jquery'), self::$plugin_version );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery'), self::$plugin_version );
@@ -2959,23 +2959,23 @@ class Participants_Db extends PDb_Base {
 
     $column = self::plugin_setting( 'retrieve_link_identifier', 'email' );
 
-    if ( !isset( $_POST[$column] ) || empty( $_POST[$column] ) ) {
-      self::$validation_errors->add_error( $column, 'empty' );
-      return;
-    }
-    // a value was submitted, try to find a record with it
-    //$match_id = self::_get_participant_id_by_term($column, $_POST[$column]);
-    $match_id = self::find_record_match( $column, $_POST );
-
     if ( !is_object( self::$validation_errors ) ) {
       self::$validation_errors = new PDb_FormValidation();
     }
 
-    if ( $match_id === false ) {
+    if ( !isset( $_POST[$column] ) || empty( $_POST[$column] ) ) {
+      self::$validation_errors->add_error( $column, 'empty' );
+      return;
+    }
+    
+    // a value was submitted, try to find a record with it
+    $match_id = self::find_record_match( $column, $_POST );
+
+    if ( is_numeric( $match_id ) ) {
+      $participant_values = self::get_participant( $match_id );
+    } else {
       self::$validation_errors->add_error( $column, 'identifier' );
       return;
-    } else {
-      $participant_values = self::get_participant( $match_id );
     }
     // prepare an object for the filter to use
     $retrieve_link_email = new stdClass();
