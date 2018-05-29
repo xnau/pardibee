@@ -322,7 +322,7 @@ class PDb_Base {
      * 
      * @param int|bool  $matched_id the id found using the standard method, bool 
      *                              false if no match was found
-     * @param string    $matched_id column name or names used to find the match
+     * @param string    $columns column name or names used to find the match
      * @param array     $submission the un-sanitized $_POST array
      * 
      * @return int|bool the found record ID
