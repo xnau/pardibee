@@ -484,16 +484,11 @@ class PDb_FormElement extends xnau_FormElement {
    */
   static function array_display( $field )
   {
-    $multivalues = maybe_unserialize( $field->value );
-    if ( !is_array( $multivalues ) )
-      return self::get_value_title( $field->value, $field->name );
-    // remove empty elements and convert to string for display
-    $multivalues = array_filter( (array) $multivalues, array(__CLASS__, 'is_displayable') );
-
     $titles = array();
-    foreach ( $multivalues as $value ) {
+    foreach ( self::field_value_array($field->value) as $value ) {
       $titles[] = self::get_value_title( $value, $field->name );
     }
+    
     return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
   }
 
@@ -786,11 +781,13 @@ class PDb_FormElement extends xnau_FormElement {
   {
     if ( isset( Participants_Db::$fields[$fieldname] ) && self::is_value_set( Participants_Db::$fields[$fieldname]->form_element ) ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
+      
       if ( is_array( $options_array ) ) {
         foreach ( $options_array as $option_title => $option_value ) {
-          if ( !is_string( $option_title ) or $option_title === 'other' ) {
-            // we use the stored value
-          } elseif ( $option_value === $value ) {
+          
+          if ( !is_string( $option_title ) || $option_title === 'other' ) {
+            // do nothing: we use the stored value
+          } elseif ( str_replace(' ','',$option_value) === $value ) { // strip out spaces in the option because we did that to the value
             // grab the option title
             return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
           }
@@ -847,19 +844,6 @@ class PDb_FormElement extends xnau_FormElement {
       }
     }
     return $value;
-  }
-
-  /**
-   * tests for a displayble value
-   * 
-   * this is used as a callback for a array_filter function
-   * 
-   * @param string|int $string the test subject
-   * @return bool true if is non-empty string or integer
-   */
-  public static function is_displayable( $string )
-  {
-    return strlen( $string ) > 0;
   }
 
   /**
@@ -955,7 +939,16 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function is_value_set( $form_element )
   {
-    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array('dropdown', 'radio', 'checkbox', 'dropdown-other', 'select-other', 'multi-checkbox', 'multi-select-other', 'multi-dropdown') ) );
+    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array(
+        'dropdown', 
+        'radio', 
+        'checkbox', 
+        'dropdown-other', 
+        'select-other', 
+        'multi-checkbox', 
+        'multi-select-other', 
+        'multi-dropdown',
+        ) ) );
   }
 
   /**
