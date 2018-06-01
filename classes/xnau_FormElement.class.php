@@ -743,11 +743,13 @@ abstract class xnau_FormElement {
     if ( isset( $this->attributes['other'] ) ) {
       $otherlabel = $this->attributes['other'];
       unset( $this->attributes['other'] );
-    } else
+    } else {
       $otherlabel = $this->i18n['other'];
+    }
 
-      // set the ID for the select element
-      $id = $this->element_id();
+    // set the ID for the select element
+    $id = $this->element_id();
+    
     if ( !isset( $this->attributes['readonly'] ) ) {
 
       // make a unique prefix for the js function
@@ -759,7 +761,7 @@ abstract class xnau_FormElement {
       if ( isset( $this->attributes['multiple'] ) && $this->attributes['multiple'] === true ) {
         $this->group = true;
         $this->name = $this->name . '[]';
-        $this->value = maybe_unserialize( $this->value );
+        $this->value = self::field_value_array( $this->value );
       }
       if ( $other ) {
         $this->_addline( '<div class="dropdown-other-control-group" >' );
@@ -834,7 +836,7 @@ abstract class xnau_FormElement {
   protected function _multi_checkbox()
   {
 
-    $this->value = (array) maybe_unserialize( $this->value );
+    $this->value = self::field_value_array( $this->value );
 
 //    if (!isset($this->attributes['readonly'])) {
 
@@ -862,7 +864,7 @@ abstract class xnau_FormElement {
     if ( $type == 'radio' ) {
       $this->value = is_array( $this->value ) ? current( $this->value ) : $this->value;
     } else {
-      $this->value = (array) maybe_unserialize( $this->value );
+      $this->value = self::field_value_array( $this->value );
       if ( !isset( $this->value['other'] ) )
         $this->value['other'] = '';
     }
@@ -989,7 +991,7 @@ abstract class xnau_FormElement {
 
     $this->_addline( '<div class="readonly-value-group">' );
 
-    foreach ( (array) maybe_unserialize( $this->value ) as $value ) {
+    foreach ( self::field_value_array( $this->value ) as $value ) {
 
       if ( $value !== '' ) {
 
@@ -1298,6 +1300,25 @@ abstract class xnau_FormElement {
   /*   * ************************* 
    * UTILITY FUNCTIONS
    */
+  
+  /**
+   * provides an array of values from a stored field value
+   * 
+   * @param string $value the raw value from the db
+   * @return array array of values
+   */
+  public static function field_value_array( $value )
+  {
+    $multivalues = maybe_unserialize( $value );
+    
+    if ( !is_array( $multivalues ) ) {
+      // make it into an array
+      $multivalues = explode( ',', str_replace(' ', '', $value ) );
+    }
+    
+    // remove empty elements
+    return array_filter( $multivalues, function ($v) { return $v !== ''; } );
+  }
 
   /**
    * outputs a link (HTML anchor tag) in specified format if enabled by "make_links"
