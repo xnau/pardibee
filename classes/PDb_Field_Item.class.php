@@ -232,7 +232,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   protected function assign_props( $item )
   {
-
     $item = (object) $item;
 
     $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
