@@ -254,7 +254,7 @@ class Participants_Db extends PDb_Base {
    * 
    * @var array of all field objects, indexed by field name
    */
-  public static $fields;
+  public static $fields = array();
 
   /**
    * @var string context string for the main submission nonce
@@ -1034,19 +1034,22 @@ class Participants_Db extends PDb_Base {
   /**
    * sets up the $fields array
    * 
-   * global $wpdb
+   * @global wpdb $wpdb
    */
   private static function _setup_columns()
   {
-    global $wpdb;
-    self::$fields = array();
-    $sql = 'SELECT v.* 
-            FROM ' . self::$fields_table . ' v 
-            ORDER BY v.order';
-    $result = $wpdb->get_results( $sql );
-    foreach ( $result as $column ) {
-      self::$fields[$column->name] = $column;
-    }
+    if ( empty( self::$fields ) ) :
+      error_log(__METHOD__);
+      global $wpdb;
+      self::$fields = array();
+      $sql = 'SELECT v.* 
+              FROM ' . self::$fields_table . ' v 
+              ORDER BY v.order';
+      $result = $wpdb->get_results( $sql );
+      foreach ( $result as $column ) {
+        self::$fields[$column->name] = new PDb_Form_Field( $column );
+      }
+    endif;
   }
 
   /**
