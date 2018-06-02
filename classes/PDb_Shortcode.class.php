@@ -651,6 +651,8 @@ abstract class PDb_Shortcode {
       $all_empty_fields = true;
 
       foreach ( $group_fields as $field ) {
+        
+        /* @var $field PDb_Form_Field */
 
         // set the current value of the field
         $this->_set_field_value( $field );
@@ -659,22 +661,22 @@ abstract class PDb_Shortcode {
          * hidden fields are stored separately for modules that use them as
          * hidden input fields
          */
-        if ( $field->form_element !== 'hidden' ) {
+        if ( ! $field->is_hidden_field() ) {
 
           $this->_set_field_link( $field );
-
           /*
            * add the field object to the record object
            */
-          if ( in_array( $field->name, $this->display_columns ) ) {
+          if ( in_array( $field->name(), $this->display_columns ) ) {
             $field_count++;
-            if ( !$this->_empty( $field->value ) )
+            if ( $field->has_value() )
               $all_empty_fields = false;
             /**
-             * @version 1.6 'pdb-before_field_added_to_iterator' filter
-             * @param $field object
+             * @filter pdb-before_field_added_to_iterator
+             * @param PDb_Form_field $field
+             * @return PDb_Form_Field
              */
-            $this->record->$group_name->fields->{$field->name} = Participants_Db::apply_filters( 'before_field_added_to_iterator', $field );
+            $this->record->$group_name->fields->{$field->name()} = Participants_Db::apply_filters( 'before_field_added_to_iterator', $field );
           }
         }
       }
@@ -700,9 +702,10 @@ abstract class PDb_Shortcode {
   protected function _setup_hidden_fields()
   {
     foreach ( Participants_Db::$fields as $field ) {
-      if ( $field->form_element === 'hidden' ) {
+      /* @var $field PDb_Form_Field */
+      if ( $field->is_hidden_field() ) {
         $this->_set_field_value( $field );
-        $this->hidden_fields[$field->name] = $field->value;
+        $this->hidden_fields[$field->name()] = $field->value();
       }
     }
   }
@@ -751,8 +754,9 @@ abstract class PDb_Shortcode {
   {
     $group_fields = array();
     foreach ( $this->fields as $field ) {
-      if ( $field->group == $group && in_array( $field->name, $this->display_columns ) ) {
-        $group_fields[$field->name] = clone $field;
+      /* @var $field PDb_Form_Field */
+      if ( $field->group() == $group && in_array( $field->name(), $this->display_columns ) ) {
+        $group_fields[$field->name()] = clone $field;
       }
     }
     return $group_fields;
@@ -805,8 +809,7 @@ abstract class PDb_Shortcode {
     if ( !empty( $this->shortcode_atts['fields'] ) ) {
 
       foreach ( $this->display_columns as $column ) {
-        $column = $this->fields[$column];
-        $groups[$column->group] = true;
+        $groups[$this->fields[$column]->group()] = true;
       }
 
       $groups = array_keys( $groups );
@@ -870,7 +873,7 @@ abstract class PDb_Shortcode {
    * always used in the signup module.
    *
    *
-   * @param object $field the current field object
+   * @param PDb_Form_Field $field the current field object
    * @return string the value of the field
    */
   protected function _set_field_value( $field )
@@ -879,41 +882,41 @@ abstract class PDb_Shortcode {
      * get the value from the record; if it is empty, use the default value if the 
      * "persistent" flag is set.
      */
-    $record_value = isset( $this->participant_values[$field->name] ) ? $this->participant_values[$field->name] : '';
+    $record_value = isset( $this->participant_values[$field->name()] ) ? $this->participant_values[$field->name()] : '';
     $value = $record_value;
-    $default_value = $this->_empty( $field->default ) ? '' : $field->default;
+    $default_value = $field->default_value();
     
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
-      $value = isset( $_POST[$field->name] ) ? $this->_esc_submitted_value( $_POST[$field->name] ) : $value;
+      $value = isset( $_POST[$field->name()] ) ? $this->_esc_submitted_value( $_POST[$field->name()] ) : $value;
     }
 
     /*
      * make sure id and private_id fields are read only
      */
-    if ( in_array( $field->name, array('id', 'private_id') ) ) {
+    if ( $field->is_internal_field() ) {
       $this->display_as_readonly( $field );
     }
-    if ( $field->form_element === 'hidden' ) {
+    if ( $field->is_hidden_field() ) {
       if ( in_array( $this->module, array('signup', 'record', 'retrieve') ) ) {
         /**
          * use the dynamic value if no value has been set
          * 
          * @version 1.6.2.6 only set this if the value is empty
          */
-        $dynamic_value = Participants_Db::is_dynamic_value( $field->default ) ? $this->get_dynamic_value( $field->default ) : $field->default;
+        $dynamic_value = Participants_Db::is_dynamic_value( $field->default_value() ) ? $this->get_dynamic_value( $field->default_value() ) : $field->default_value();
         $value = $this->_empty( $record_value ) ? $dynamic_value : $record_value;
         /*
          * add to the display columns if not already present so it will be processed 
          * in the form submission
          */
-        $this->display_columns += array($field->name);
+        $this->display_columns += array($field->name());
       } else {
         // show this one as a readonly field
         $this->display_as_readonly( $field );
       }
     }
-    $field->value = $value;
+    $field->set_value($value);
   }
 
   /**
@@ -921,23 +924,19 @@ abstract class PDb_Shortcode {
    * 
    * sets the link property of the field, right now only for the single record link
    * 
-   * @param object $field field data object
+   * @param PDb_Form_Field $field field data object
    */
   protected function _set_field_link( $field )
   {
-
-    $link = '';
-
+    error_log(__METHOD__.' trace: '.print_r(wp_debug_backtrace_summary(),1));
     //check for single record link
     if (
             !in_array( $this->module, array('single', 'signup') ) &&
             Participants_Db::is_single_record_link( $field ) &&
             isset( $this->participant_values['id'] )
     ) {
-      $link = Participants_Db::single_record_url( $this->participant_values['id'] );
+      $field->set_link( Participants_Db::single_record_url( $this->participant_values['id'] ) );
     }
-
-    $field->link = $link;
   }
 
   /**
@@ -1157,14 +1156,15 @@ abstract class PDb_Shortcode {
     return esc_html( stripslashes( $value ) );
   }
 
-  /*
+  /**
    * temporarily sets a field to a read-only text line field 
+   * 
+   * @param PDb_Form_Field $field
    */
 
-  protected function display_as_readonly( &$field )
+  protected function display_as_readonly( $field )
   {
-    $field->form_element = 'text-line';
-    $field->readonly = 1;
+    $field->make_readonly();
   }
 
   /**
@@ -1259,8 +1259,9 @@ abstract class PDb_Shortcode {
 
     $this->fields = array();
     foreach ( Participants_Db::$fields as $column ) {
-      $this->fields[$column->name] = clone $column;
-      $this->fields[$column->name]->module = $this->module;
+      /** @var PDb_Form_Field the field def object */
+      $this->fields[$column->name()] = clone $column;
+      $this->fields[$column->name()]->set_module( $this->module );
     }
   }
 
