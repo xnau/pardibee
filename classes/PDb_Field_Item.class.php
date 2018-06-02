@@ -87,6 +87,8 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function __construct( $field, $id = false )
   {
+    assert( is_a( $field, 'PDb_Form_Field' ), ' instantiated with: ' . print_r($item,1) );
+    
     if ( $field === false ) {
       $field = '';
     }
@@ -236,24 +238,22 @@ class PDb_Field_Item extends PDb_Template_Item {
 
     $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
 
-    $item_def = new stdClass;
-    if ( isset( Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
-      $item_def = clone Participants_Db::$fields[$item->name];
+    if ( is_a( $item, 'PDb_Form_Field' ) ) {
       $this->is_pdb_field = true;
-    } else {
-      $groups = Participants_Db::get_groups();
-      if ( in_array( $item->name, $groups ) ) {
-        $item_def = (object) $groups[$item->name];
-      }
+    } elseif ( isset( Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) { 
+      $item_def = Participants_Db::$fields[$item->name];
+      /* @var $item_def PDb_Form_Field */
+      $this->is_pdb_field = true;
     }
 
     // grab and assign the class properties from the provided object
     foreach ( $class_properties as $property ) {
 
-      if ( isset( $item->$property ) ) {
+      if ( property_exists( $item, $property ) ) {
 
         $this->_assign_prop( $item, $property );
-      } elseif ( isset( $item_def->$property ) ) {
+        
+      } elseif ( is_object( $item_def ) && property_exists( $item_def, $property ) ) {
 
         $this->_assign_prop( $item_def, $property );
       }
@@ -263,20 +263,24 @@ class PDb_Field_Item extends PDb_Template_Item {
   /**
    * assigns a class property
    * 
-   * @param object  $item
+   * @param PDb_Form_Field  $item
    * @param string  $property name of the property
    */
   private function _assign_prop( $item, $property )
   {
-    if ( $property === 'values' && isset( $item->values ) ) {
-      $item->values = (array) maybe_unserialize( $item->values );
-      if ( isset( $item->form_element ) && PDb_FormElement::is_value_set( $item->form_element ) ) {
-        $this->values = $item->values;
+    if ( $property === 'values' ) {
+      $values = $item->values_array();
+      /*
+       * for "value set" fields, the values parameter defines the options; for 
+       * other fields, it defines the attributes
+       */
+      if ( $item->is_value_set() ) {
+        $this->values = $values;
       } else {
-        $this->attributes = empty($item->values) ? array() : PDb_Base::cleanup_array( $item->values );
+        $this->attributes = $values;
       }
     } else {
-      $this->$property = $item->$property;
+      $this->$property = $item->{$property};
     }
   }
 
