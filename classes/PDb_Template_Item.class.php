@@ -188,17 +188,6 @@ class PDb_Template_Item {
     $item = (object) $item;
     
     $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
-      
-    $item_def = new stdClass;
-    if ( isset(Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
-      $item_def = clone Participants_Db::$fields[$item->name];
-      $this->is_pdb_field = true;
-    } else {
-      $groups = Participants_Db::get_groups();
-      if ( in_array( $item->name, $groups ) ) {
-        $item_def = (object) $groups[$item->name];
-      }
-    }
     
     // grab and assign the class properties from the provided object
     foreach( $class_properties as $property ) {
@@ -207,10 +196,6 @@ class PDb_Template_Item {
         
         $this->$property = $item->$property;
       
-      } elseif ( isset( $item_def->$property ) ) {
-        
-        $this->$property = $item_def->$property;
-        
       }
       
     }
