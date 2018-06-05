@@ -331,31 +331,19 @@ class PDb_List extends PDb_Shortcode {
     if ( !empty( $this->records ) ) {
 
       foreach ( $this->records as $record_id => $record_fields ) {
-
-        /*
-         * @version 1.6 
-         * 
-         * this array now contains all values for the record
-         */
-        // set the values for the current record
-        $this->participant_values = Participants_Db::get_participant( $record_id );
+        
+        $this->participant_values = Participants_Db::get_participant($record_id);
 
         foreach ( $record_fields as $field => $value ) {
 
-          /*
-           * as of 1.5.5, we don't fill up the records property with all the field properties, 
-           * just the current props, like value and link. The field properties are added when 
-           * the list is displayed to use less memory
-           */
-          $field_object = new stdClass();
-          $field_object->name = $field;
+          $field_object = new PDb_Field_Item( (object) array( 'name' => $field, 'record_id' => $record_id, 'module' => $this->module ) );
 
           // set the current value of the field
-          $this->_set_field_value( $field_object );
+          $field_object->set_value( $this->field_value($field_object) );
+          
+          $this->setup_hidden_field_value($field_object);
 
-          $this->_set_field_link( $field_object );
-
-          // add the field to the record object
+          // add the field to the records object
           $this->records[$record_id]->{$field_object->name} = $field_object;
         }
       }
@@ -366,7 +354,7 @@ class PDb_List extends PDb_Shortcode {
      * each of which is an object that is a collection of objects: each one of
      * which is the data for a field
      */
-    // error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+//     error_log( __METHOD__.' all records:'.print_r( $this->records,1));
   }
   
   /**
@@ -440,38 +428,36 @@ class PDb_List extends PDb_Shortcode {
    * @param object $field the current field object
    * @return null
    */
-  protected function _set_field_value( $field )
+  protected function field_value( $field )
   {
 
-    $field_obj = $this->fields[$field->name];
+    //$field_obj = $this->fields[$field->name];
     /*
      * get the value from the record; if it is empty, use the default value if the 
      * "persistent" flag is set.
      */
     $record_value = isset( $this->participant_values[$field->name] ) ? $this->participant_values[$field->name] : '';
 
-    // replace it with the new value if provided, escaping the input
-    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && isset( $_POST[$field->name] ) ) {
+    $value = $this->_empty( $record_value ) ? ( $this->_empty( $field->default_value ) ? '' : $field->default_value ) : $record_value;
 
-      $value = $this->_esc_submitted_value( filter_input( INPUT_POST, $field->name, FILTER_SANITIZE_STRING ) );
-    }
-    $value = $this->_empty( $record_value ) ? ($this->_empty( $field_obj->default ) ? '' : $field_obj->default) : $record_value;
-
-    /*
-     * make sure id and private_id fields are read only
-     */
-    if ( in_array( $field->name, array('id', 'private_id') ) ) {
-      $this->display_as_readonly( $field );
-    }
-    if ( $field_obj->form_element === 'hidden' ) {
-      if ( $field_obj->default === $record_value ) {
+    return maybe_unserialize( $value );
+  }
+  
+  /**
+   * sets up the value for any hidden fields
+   * 
+   * @param object $field the current field object
+   * @return null
+   */
+  private function setup_hidden_field_value( $field ) {
+    if ( $field->is_hidden_field() ) {
+      if ( $field->default_value === $record_value ) {
         $record_value = '';
       }
       $value = $this->_empty( $record_value ) ? '' : $record_value;
       // show this one as a readonly field
-      $this->display_as_readonly( $field );
+      $field->make_readonly();
     }
-    $field->value = maybe_unserialize( $value );
   }
 
   /**
