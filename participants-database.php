@@ -508,7 +508,7 @@ class Participants_Db extends PDb_Base {
      * 
      * this is to reduce the number of db queries
      */
-    self::_setup_columns();
+    self::_setup_fields();
 
     self::load_plugin_textdomain( __FILE__ );
 
@@ -1036,10 +1036,9 @@ class Participants_Db extends PDb_Base {
    * 
    * @global wpdb $wpdb
    */
-  private static function _setup_columns()
+  private static function _setup_fields()
   {
     if ( empty( self::$fields ) ) :
-      error_log(__METHOD__);
       global $wpdb;
       self::$fields = array();
       $sql = 'SELECT v.* 
@@ -1047,7 +1046,7 @@ class Participants_Db extends PDb_Base {
               ORDER BY v.order';
       $result = $wpdb->get_results( $sql );
       foreach ( $result as $column ) {
-        self::$fields[$column->name] = new PDb_Form_Field( $column );
+        self::$fields[$column->name] = new PDb_Form_Field_Def( $column );
       }
     endif;
   }
@@ -1267,7 +1266,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_column( $name )
   {
-
     return isset( self::$fields[$name] ) ? self::$fields[$name] : false;
   }
 
