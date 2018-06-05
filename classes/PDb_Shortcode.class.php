@@ -548,26 +548,31 @@ abstract class PDb_Shortcode {
     // the first time through, use current()
     if ( $this->current_field_pointer == 1 ) {
       if ( is_object( $this->group ) ) {
-          $this->field = new PDb_Field_Item( current( $this->group->fields ), $this->participant_id );
+          $this->field = current( $this->group->fields );
+          $record_id = $this->participant_id;
       } else {
-          $this->field = new PDb_Field_Item( current( $this->record->fields ), $this->record->record_id );
+          $this->field = current( $this->record->fields );
+          $record_id = $this->record->record_id;
       }
     } else {
       if ( is_object( $this->group ) ) {
-        $this->field = new PDb_Field_Item( next( $this->group->fields ), $this->participant_id );
+        $this->field = next( $this->group->fields );
+        $record_id = $this->participant_id;
       } else {
-        $this->field = new PDb_Field_Item( next( $this->record->fields ), $this->record->record_id );
+        $this->field = next( $this->record->fields );
+        $record_id = $this->record->record_id;
       }
     }
 
-    $this->field->module = $this->module;
+    $this->field->set_record_id( $record_id );
+    $this->field->set_module( $this->module );
 
     /*
      * if pre-fill values for the signup form are present in the GET array, set them
      */
-    $get_field_name = filter_input( INPUT_GET, $this->field->name, FILTER_SANITIZE_STRING );
-    if ( in_array( $this->module, array('signup', 'retrieve') ) and ! empty( $get_field_name ) ) {
-      $this->field->value = $get_field_name;
+    $get_var_value = filter_input( INPUT_GET, $this->field->name(), FILTER_SANITIZE_STRING );
+    if ( in_array( $this->module, array('signup', 'retrieve') ) and ! empty( $get_var_value ) ) {
+      $this->field->set_value($get_var_value);
     }
 
     $this->current_field_pointer++;
@@ -662,8 +667,6 @@ abstract class PDb_Shortcode {
          * hidden input fields
          */
         if ( ! $field->is_hidden_field() ) {
-
-          $this->_set_field_link( $field );
           /*
            * add the field object to the record object
            */
@@ -701,7 +704,7 @@ abstract class PDb_Shortcode {
    */
   protected function _setup_hidden_fields()
   {
-    foreach ( Participants_Db::$fields as $field ) {
+    foreach ( $this->fields as $field ) {
       /* @var $field PDb_Form_Field */
       if ( $field->is_hidden_field() ) {
         $this->_set_field_value( $field );
@@ -917,26 +920,6 @@ abstract class PDb_Shortcode {
       }
     }
     $field->set_value($value);
-  }
-
-  /**
-   * determines if the field should be wrapped in a link and sets the link property of the field object
-   * 
-   * sets the link property of the field, right now only for the single record link
-   * 
-   * @param PDb_Form_Field $field field data object
-   */
-  protected function _set_field_link( $field )
-  {
-    error_log(__METHOD__.' trace: '.print_r(wp_debug_backtrace_summary(),1));
-    //check for single record link
-    if (
-            !in_array( $this->module, array('single', 'signup') ) &&
-            Participants_Db::is_single_record_link( $field ) &&
-            isset( $this->participant_values['id'] )
-    ) {
-      $field->set_link( Participants_Db::single_record_url( $this->participant_values['id'] ) );
-    }
   }
 
   /**
@@ -1256,11 +1239,12 @@ abstract class PDb_Shortcode {
    */
   protected function _setup_fields()
   {
-
     $this->fields = array();
+      
     foreach ( Participants_Db::$fields as $column ) {
       /** @var PDb_Form_Field the field def object */
-      $this->fields[$column->name()] = clone $column;
+      $this->fields[$column->name()] = new PDb_Field_Item( $column->name() );
+      
       $this->fields[$column->name()]->set_module( $this->module );
     }
   }
