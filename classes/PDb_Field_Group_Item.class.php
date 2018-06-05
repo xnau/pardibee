@@ -163,7 +163,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   private function group_fields_have_values()
   {
     foreach( $this->fields as $field ) {
-      /* @var $field PDb_Form_Field */
+      /* @var $field PDb_Form_Field_Def */
       if ( $field->has_value() ) {
         reset( $this->fields );
         return true;
