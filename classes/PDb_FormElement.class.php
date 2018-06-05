@@ -171,7 +171,7 @@ class PDb_FormElement extends xnau_FormElement {
    * 
    * this supplants the function Participants_Db::prep_field_for_display
    * 
-   * @param object $field a Field_Item object or similar
+   * @param object|string $field a Field_Item object or field name
    * @param bool   $html  if true, retuns the value wrapped in HTML, false returns 
    *                      the formatted value alone
    * @return string the object's current value, formatted
@@ -202,15 +202,15 @@ class PDb_FormElement extends xnau_FormElement {
       $return = Participants_Db::apply_filters( 'before_display_form_element', $return, $field );
     } elseif ( has_filter( Participants_Db::$prefix . 'before_display_field' ) ) {
       // provided for backward-compatibility
-      $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value, $field->form_element );
+      $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value(), $field->form_element() );
     }
 
     if ( empty( $return ) ) {
       
-      switch ( $field->form_element ) :
+      switch ( $field->form_element() ) :
         
         case 'image-upload' :
-          switch ( $field->module ) {
+          switch ( $field->module() ) {
             case 'single':
             case 'list':
             case 'tag-template':
@@ -226,11 +226,11 @@ class PDb_FormElement extends xnau_FormElement {
           }
 
           $image = new PDb_Image( array(
-              'filename' => $field->value,
-              'link' => $field->link,
-              'module' => $field->module,
+              'filename' => $field->value(),
+              'link' => $field->link(),
+              'module' => $field->module(),
               'mode' => $display_mode,
-              'attributes' => $field->attributes,
+              'attributes' => $field->attributes(),
                   ) );
 
           if ( $html ) {
@@ -241,21 +241,21 @@ class PDb_FormElement extends xnau_FormElement {
           } elseif ( $image->file_exists ) {
             $return = $image->get_image_file();
           } else {
-            $return = $field->value;
+            $return = $field->value();
           }
 
           break;
 
         case 'file-upload' :
-          if ( $html && $field->value !== $field->default ) {
+          if ( $html && $field->is_not_default() ) {
             $return = '';
             if ( $field->module === 'signup' ) {
-              $field->link = false;
-              $return = $field->value;
-            } elseif ( !empty( $field->value ) && Participants_Db::is_allowed_file_extension( $field->value, $field->values ) ) {
-              $field->link = filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL );
-              if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $field->link && strlen( $field->default ) > 0 ) {
-                $field->value = $field->default;
+              $field->set_link(false);
+              $return = $field->value();
+            } elseif ( !empty( $field->value() ) && Participants_Db::is_allowed_file_extension( $field->value(), $field->attributes() ) ) {
+              $field->set_link( filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL ) );
+              if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $field->link() && strlen( $field->default ) > 0 ) {
+                $field->set_value( $field->default );
               }
               $return = self::make_link( $field );
             }
@@ -267,7 +267,7 @@ class PDb_FormElement extends xnau_FormElement {
           }
 
         case 'date' :
-          if ( !self::is_empty( $field->value ) ) {
+          if ( $field->has_value() ) {
             $return = PDb_Date_Display::get_date( $field->value, __METHOD__ . ' date field' );
           }
           $return = $return ? $return : '';
@@ -275,8 +275,8 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'timestamp' :
 
-          if ( !self::is_empty( $field->value ) ) {
-            $return = Participants_Db::plugin_setting_is_true( 'show_time' ) ? PDb_Date_Display::get_date_time( $field->value, __METHOD__ . ' timestamp field with time' ) : PDb_Date_Display::get_date( $field->value, __METHOD__ . ' timestamp field' );
+          if ( $field->has_value() ) {
+            $return = Participants_Db::plugin_setting_is_true( 'show_time' ) ? PDb_Date_Display::get_date_time( $field->value(), __METHOD__ . ' timestamp field with time' ) : PDb_Date_Display::get_date( $field->value(), __METHOD__ . ' timestamp field' );
           }
           $return = $return ? $return : '';
           break;
@@ -294,17 +294,17 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'link' :
 
-          $linkdata = maybe_unserialize( $field->value );
+          $linkdata = maybe_unserialize( $field->value() );
 
           if ( is_array( $linkdata ) ) {
             list( $url, $value ) = $linkdata;
           } else {
-            $url = $field->link;
-            $value = $field->value;
+            $url = $field->link();
+            $value = $field->value();
           }
 
-          if ( empty( $value ) ) {
-            $value = strlen( $field->default ) > 0 ? $field->default : preg_replace( '#(https?://)#', '', $url );
+          if ( empty( $value ) && ! empty( $url ) ) {
+            $value = $field->has_default() ? $field->default : preg_replace( '#(https?://)#', '', $url );
           }
 
           if ( $html )
@@ -317,13 +317,12 @@ class PDb_FormElement extends xnau_FormElement {
 
           if ( $html ) {
 
-            $field->value = self::get_value_title( $field->value, $field->name );
             $return = self::make_link( $field );
             
             break;
           } else {
 
-            $return = esc_html( $field->value );
+            $return = esc_html( $field->value() );
             
             break;
           }
@@ -332,15 +331,15 @@ class PDb_FormElement extends xnau_FormElement {
         case 'textarea':
 
           $pattern = $html ? '<span ' . self::class_attribute( 'textarea' ) . '>%s</span>' : '%s';
-          $return = sprintf( $pattern, esc_textarea( $field->value ) );
+          $return = sprintf( $pattern, esc_textarea( $field->value() ) );
           break;
 
         case 'rich-text':
 
           if ( $html ) {
-            $return = sprintf( '<span ' . self::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $field->value, 'rich-text field' ) );
+            $return = sprintf( '<span ' . self::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $field->value(), 'rich-text field' ) );
           } else {
-            $return = strip_tags( esc_textarea( $field->value ) );
+            $return = strip_tags( esc_textarea( $field->value() ) );
           }
           break;
 
@@ -350,19 +349,19 @@ class PDb_FormElement extends xnau_FormElement {
         case 'dropdown-other':
         case 'select-other':
 
-          $field->value = self::array_display( $field );
+          $field->set_value( $field->display_array_value() );
 
           if ( $html ) {
-            $return = sprintf( '<span %s>%s</span>', self::class_attribute( $field->form_element ), self::make_link( $field ) );
+            $return = sprintf( '<span %s>%s</span>', self::class_attribute( $field->form_element() ), self::make_link( $field ) );
           } else {
-            $return = $field->value;
+            $return = $field->value();
           }
           break;
 
         case 'placeholder':
 
-          $field->value = $field->default;
-          $return = $html ? self::make_link( $field ) : $field->value;
+          $field->set_value( $field->default );
+          $return = $html ? self::make_link( $field ) : $field->value();
           break;
 
         case 'password':
@@ -375,26 +374,26 @@ class PDb_FormElement extends xnau_FormElement {
         case 'decimal':
 
           if ( isset( $field->attributes['data-before'] ) ) {
-            $field->value = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value ) . '</span>';
+            $field->set_value( '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value() ) . '</span>' );
           } elseif ( isset( $field->attributes['data-after'] ) ) {
-            $field->value = '<span class="pdb-added-content">' . esc_html( $field->value ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>';
+            $field->set_value( '<span class="pdb-added-content">' . esc_html( $field->value() ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>' );
           }
-          $return = $field->value;
+          $return = $field->value();
           break;
 
         case 'hidden':
 
-          if ( Participants_Db::is_dynamic_value( $field->default ) && $field->value === $field->default ) {
+          if ( $field->is_dynamic_hidden_field() && ! $field->is_not_default() ) {
             // this is to prevent the dynamic value key from getting printed
-            $field->value = '';
-          } elseif ( !Participants_Db::is_dynamic_value( $field->default ) && strlen( $field->value ) === 0 ) {
+            $field->set_value( '' );
+          } elseif ( ! $field->is_dynamic_hidden_field() && ! $field->has_content() ) {
             // show the default value if it's not a dynamic field value and there is no set value
-            $field->value = $field->default;
+            $field->set_value( $field->default );
           }
         // don't break here so we can assign the return value
         default :
 
-          $return = $html ? self::make_link( $field ) : $field->value;
+          $return = $html ? self::make_link( $field ) : $field->value();
 
       endswitch;
     }
@@ -633,7 +632,7 @@ class PDb_FormElement extends xnau_FormElement {
    * this func validates the link as being either an email addres or URI, then
    * (if enabled) builds the HTML and returns it
    * 
-   * @param object $field the field object
+   * @param PDb_Field_Item|object $field the field object
    * @param string $linktext the clickable text (optional)
    * @param string $template the format of the link (optional)
    * @param array  $get an array of name=>value pairs to include in the get string
@@ -642,6 +641,17 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function make_link( $field, $template = false, $get = false )
   {
+    
+    // convert the PDb_Field_Item object to a stdClass
+    // for backward compatibility
+    if ( is_a( $field, 'PDb_Field_Item' ) ) {
+      $field_data = array(
+          'value' => $field->value(),
+          'link' => $field->link(),
+          'form_element' => $field->form_element(),
+      );
+      $field = (object) $field_data;
+    }
 
     /**
      * links may only be placed on string values
@@ -652,7 +662,7 @@ class PDb_FormElement extends xnau_FormElement {
     // clean up the provided string
     $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->value ) ) );
 
-    if ( isset( $field->link ) && !empty( $field->link ) ) {
+    if ( ! empty($field->link) ) {
       /*
        * the field is a single record link or other field with the link property 
        * set, which becomes our href
@@ -688,7 +698,7 @@ class PDb_FormElement extends xnau_FormElement {
       return $URI;
     } else {
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || $field->form_element === 'text-line' ) ) {
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || ( isset($field->form_element) && $field->form_element === 'text-line' ) ) ) {
         $sanitized = wp_kses_post( $field->value );
       } else {
         $sanitized = esc_html( $field->value );
