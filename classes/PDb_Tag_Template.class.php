@@ -201,21 +201,18 @@ class PDb_Tag_Template {
   protected function prepare_display_values()
   {
     foreach ( $this->data as $fieldname => $value ) {
-      $field_def = PDb_Form_Field::instance($fieldname);
       /*
        * if the fieldname is a PDB field, use the Field Item class to determine the display string
        */
-      if ( $field_def ) {
-        $field_def->set_value($value);
-        $field_def->set_module('tag-template');
-        $field = new PDb_Field_Item( $field_def, isset( $this->data['id'] ) ? $this->data['id'] : null );
+      if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
+        $field = new PDb_Field_Item( (object) array( 'name' => $fieldname, 'value' => $value, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null ) ) );
         /**
          * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
          * 
          * @vaersion 1.7.1.4 added "raw" mode
          * 
          */
-        if ( ! $field->is_pdb_field() || $this->raw ) {
+        if ( $this->raw ) {
           $field->html_mode(false);
         }
         $value = $field->get_value();
