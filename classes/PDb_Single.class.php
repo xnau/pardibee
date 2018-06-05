@@ -47,7 +47,9 @@ if ( ! defined( 'ABSPATH' ) ) die;
       
       $this->participant_values = Participants_Db::get_participant( $record_id );
       $this->participant_id = $record_id;
+      
           $this->_setup_iteration();
+    
           $this->_print_from_template();
     
     }
