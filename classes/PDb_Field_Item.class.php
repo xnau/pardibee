@@ -7,73 +7,44 @@
  * @package    WordPress
  * @subpackage Participants Database Plugin
  * @author     Roland Barker <webdeign@xnau.com>
- * @copyright  2013 xnau webdesign
+ * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    0.11
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
- * @depends    Template_Item class
  */
 if ( !defined( 'ABSPATH' ) )
   die;
 
-class PDb_Field_Item extends PDb_Template_Item {
+class PDb_Field_Item extends PDb_Form_Field_Def {
 
   /**
    * @var string the field's value
    */
-  var $value;
-
-  /**
-   * @var array additional attributes
-   */
-  var $attributes = array();
-
-  /**
+  private $value = '';
+	
+	/**
    *
-   * @var string the validation method for the field
+   * @var int the id of the current record
    */
-  var $validation;
-
-  /**
+	private $record_id = 0;
+	
+	/**
    *
-   * @var string the field's form element
+   * @var string the instantiating module
    */
-  var $form_element;
-
-  /**
-   *
-   * @var string the field's defualt value
-   */
-  var $default;
-
-  /**
-   *
-   * @var string the help text
-   */
-  var $help_text;
-
-  /**
-   *
-   * @var bool the readonly status of the field
-   */
-  var $readonly;
+	private $module;
 
   /**
    *
    * @var string the element class name
    */
-  var $field_class;
+  private $field_class;
 
   /**
    *
-   * @var string the link href for elements wrapped in an anchor tag
+   * @var string the href value
    */
-  var $link = false;
-
-  /**
-   * @var string name of the field's group
-   */
-  var $group;
+  private $link = '';
 
   /**
    * @var bool determines if the field value is output as HTML or a formatted value 
@@ -82,28 +53,62 @@ class PDb_Field_Item extends PDb_Template_Item {
 
   /**
    * 
-   * @param array|object|string $field the field attributes or field name
-   * @param mixed $id the id of the source record if available
+   * @param array|object|string $config the field attributes or field name
+   * @param int|string $id the id of the source record if available
    */
-  public function __construct( $field, $id = false )
+  public function __construct( $config, $id = false )
   {
-    assert( is_a( $field, 'PDb_Form_Field' ), ' instantiated with: ' . print_r($item,1) );
+    /*
+     * OK, this is going to be instantiated by: 
+     *    an object with at the very least a 'name' property naming a defined PDB field
+     */
+// error_log( __CLASS__ . ' instantiated with: ' . print_r( $field,1)  . '
+//      
+//trace: '.print_r(  wp_debug_backtrace_summary(),1)  );
     
-    if ( $field === false ) {
-      $field = '';
+    if ( is_string( $config ) ) {
+      $config = (object) array('name' => $config);
     }
-    if ( is_string( $field ) ) {
-      $field = (object) array('name' => $field);
-    }
-
-    // load the object properties
-    $this->assign_props( $field );
+    
+    parent::__construct($config->name);
 
     if ( $id )
       $this->record_id = $id;
 
-    $this->set_link_field_value();
+    // load the object properties
+    $this->assign_props( $config );
     
+  }
+  
+  /**
+   * provides direct access to property values
+   * 
+   * this is provided for compatibility
+   * 
+   * @param string $name of the property to get
+   * @return string|int|array
+   */
+  public function __get( $name )
+  {
+    if ( property_exists( $this, $name ) ) {
+      return $this->{$name};
+    }
+    return parent::__get($name);
+  }
+  
+  /**
+   * handles isset on clas properties
+   * 
+   * @param string $name of the property
+   */
+  public function __isset( $name )
+  {
+    switch ( $name ) {
+      case 'record_id':
+        return $this->record_id > 0;
+      default:
+        return $this->{$name} !== '';
+    }
   }
 
   // template methods
@@ -114,16 +119,6 @@ class PDb_Field_Item extends PDb_Template_Item {
   public function print_label()
   {
     echo $this->_label();
-  }
-
-  /**
-   * tells if the title (field label) is empty
-   * 
-   * @return bool true if there is a title string defined
-   */
-  public function has_title()
-  {
-    return strlen( $this->title ) > 0;
   }
 
   /**
@@ -149,13 +144,135 @@ class PDb_Field_Item extends PDb_Template_Item {
   {
     return PDb_FormElement::get_field_value_display( $this, $this->html_output );
   }
+  
+  /**
+   * supplies the raw value of the field
+   * 
+   * @return string|int value
+   */
+  public function value()
+  {
+    return $this->value;
+  }
+  
+  /**
+   * supplies the value in a displayable format
+   * 
+   * @return string
+   */
+  public function display_array_value()
+  {
+    if ( $this->is_value_set() ) {
+      $titles = array();
+      foreach ( xnau_FormElement::field_value_array($field->value) as $value ) {
+        $titles[] = $this->value_title( $value );
+      }
+      return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
+    }
+    return $this->value();
+  }
+  
+  /**
+   * supplies the attributes array
+   * 
+   * @return array value
+   */
+  public function attributes()
+  {
+    return $this->attributes;
+  }
+  
+  /**
+   * supplies the name of the current module
+   * 
+   * @return string value
+   */
+  public function module()
+  {
+    return $this->module;
+  }
+  
+  /**
+   * supplies the href value
+   * 
+   * @return string value
+   */
+  public function link()
+  {
+    return $this->link;
+  }
+  
+  /**
+   * sets the field's value
+   * 
+   * @param string|int|array $value
+   */
+  public function set_value( $value )
+  {
+    $this->value = $value;
+  }
+  
+  /**
+   * sets the field's module
+   * 
+   * @param string $module
+   */
+  public function set_module( $module )
+  {
+    $this->module = $module;
+  }
+
 
   /**
-   * provides public access to the single record link test func
+   * sets the link value of the object
+   * 
+   * @param string $url the link url
    */
-  public function is_single_record_link()
+  public function set_link( $url )
   {
-    return $this->_is_single_record_link();
+    $this->link = $url;
+  }
+  
+  /**
+   * sets the current record id
+   * 
+   * @param int  $record_id of the pdb record
+   */
+  public function set_record_id( $record_id )
+  {
+    $this->record_id = $record_id;
+  }
+
+  /**
+   * tells if the title (field label) is empty
+   * 
+   * @return bool true if there is a title string defined
+   */
+  public function has_title()
+  {
+    return strlen( $this->title ) > 0;
+  }
+  
+  /**
+   * tells if the field has a non-empty value
+   * 
+   * alias of has_content()
+   * 
+   * @return bool
+   */
+  public function has_value()
+  {
+    return $this->has_content();
+  }
+  
+  /**
+   * tells if the link property is set
+   * 
+   * @return bool
+   */
+  public function has_link()
+  {
+    return $this->link !== '';
   }
 
   /**
@@ -197,24 +314,15 @@ class PDb_Field_Item extends PDb_Template_Item {
     }
     return !$this->is_empty($value);
   }
-
+  
   /**
-   * handles supplying property values
+   * tells if the field's value is diferent from the field's default value
    * 
-   * @param string  $name of the property
-   * @retrun  mixed the property value or empty string if no value defined
+   * @return bool true if the value is different from the default
    */
-  public function __get( $name )
+  public function is_not_default()
   {
-    $value = isset( $this->{$name} ) ? $this->{$name} : '';
-    switch ( $name ) {
-      case 'values':
-        $return = maybe_unserialize( $value );
-        break;
-      default:
-        $return = $value;
-    }
-    return $return;
+    return $this->value !== $this->default_value();
   }
 
   /**
@@ -230,57 +338,24 @@ class PDb_Field_Item extends PDb_Template_Item {
   /**
    * assigns the object properties that match properties in the supplied object
    * 
-   * @param object $item the supplied object or config array
+   * @param object $config the field data object
    */
-  protected function assign_props( $item )
+  protected function assign_props( $config )
   {
-    $item = (object) $item;
-
-    $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
-
-    if ( is_a( $item, 'PDb_Form_Field' ) ) {
-      $this->is_pdb_field = true;
-    } elseif ( isset( Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) { 
-      $item_def = Participants_Db::$fields[$item->name];
-      /* @var $item_def PDb_Form_Field */
-      $this->is_pdb_field = true;
+    // assigns the dynamic contextual properties
+    if ( property_exists( $config, 'value' ) ) {
+      $this->set_value( $config->value );
     }
-
-    // grab and assign the class properties from the provided object
-    foreach ( $class_properties as $property ) {
-
-      if ( property_exists( $item, $property ) ) {
-
-        $this->_assign_prop( $item, $property );
-        
-      } elseif ( is_object( $item_def ) && property_exists( $item_def, $property ) ) {
-
-        $this->_assign_prop( $item_def, $property );
-      }
+    if ( property_exists( $config, 'record_id' ) ) {
+      $this->set_record_id( $config->record_id );
     }
-  }
-
-  /**
-   * assigns a class property
-   * 
-   * @param PDb_Form_Field  $item
-   * @param string  $property name of the property
-   */
-  private function _assign_prop( $item, $property )
-  {
-    if ( $property === 'values' ) {
-      $values = $item->values_array();
-      /*
-       * for "value set" fields, the values parameter defines the options; for 
-       * other fields, it defines the attributes
-       */
-      if ( $item->is_value_set() ) {
-        $this->values = $values;
-      } else {
-        $this->attributes = $values;
-      }
-    } else {
-      $this->$property = $item->{$property};
+    if ( property_exists( $config, 'module' ) ) {
+      $this->set_module( $config->module );
+    }
+    $this->set_link_field_value();
+    
+    if ( $this->is_valid_single_record_link_field() ) {
+      $this->set_link( Participants_Db::single_record_url( $this->record_id ) );
     }
   }
 
@@ -294,21 +369,20 @@ class PDb_Field_Item extends PDb_Template_Item {
       if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
         $this->link = $parts[0];
       }
-      $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
+      $this->value = $this->has_link() ? ( isset( $parts[1] ) ? $parts[1] : $this->default ) : '';
     }
   }
 
   /**
-   * is this the single record link?
-   * returns boolean
+   * tells if the field is valid to get the single record link
+   * 
+   * @return bool
    */
-  private function _is_single_record_link()
+  private function is_valid_single_record_link_field()
   {
     return (
-            Participants_Db::is_single_record_link($this)
-            &&
-            ! in_array( $this->form_element, array('rich-text', 'link' ) )
-            &&
+            !in_array( $this->module, array('single', 'signup') ) &&
+            $this->is_single_record_link_field() &&
             $this->record_id
             );
   }
@@ -323,28 +397,10 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function output_single_record_link( $template = false )
   {
-
-    $template = $template ? $template : '<a class="single-record-link" href="%1$s" title="%2$s" >%2$s</a>';
+    $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" title="%2$s" >%2$s</a>';
     $url = Participants_Db::single_record_url( $this->record_id );
 
-    return sprintf( $template, $url, (empty( $this->value ) ? $this->default : $this->value ) );
-  }
-
-  /**
-   * adds the required marker to a field label as needed
-   *
-   */
-  private function _label()
-  {
-
-    $label = $this->prepare_display_value( self::html_allowed( $this->title ) );
-
-    if ( $this->place_required_mark() ) {
-
-      $label = sprintf( Participants_Db::$plugin_options['required_field_marker'], $label );
-    }
-
-    return $label;
+    return sprintf( $pattern, $url, (empty( $this->value ) ? $this->default : $this->value ) );
   }
 
   /**
@@ -392,7 +448,6 @@ class PDb_Field_Item extends PDb_Template_Item {
    */
   public function print_element_with_id()
   {
-
     $this->attributes['id'] = $this->prepare_CSS_class();
     $this->print_element();
   }
@@ -483,6 +538,35 @@ class PDb_Field_Item extends PDb_Template_Item {
       return $error_array[$this->name];
     else
       return false;
+  }
+
+  /**
+   * adds the required marker to a field label as needed
+   *
+   */
+  private function _label()
+  {
+
+    $label = $this->prepare_display_value( PDb_Template_Item::html_allowed( $this->title ) );
+
+    if ( $this->place_required_mark() ) {
+
+      $label = sprintf( Participants_Db::$plugin_options['required_field_marker'], $label );
+    }
+
+    return $label;
+  }
+  
+  /**
+   * prepare a field for display
+   *
+   * makes the value available to translations
+   * 
+   * @param string $string the value to be prepared
+   */
+  private function prepare_display_value( $string )
+  {   
+    return Participants_Db::apply_filters('translate_string', $string);
   }
 
 }
