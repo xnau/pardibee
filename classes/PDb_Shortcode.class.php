@@ -657,7 +657,7 @@ abstract class PDb_Shortcode {
 
       foreach ( $group_fields as $field ) {
         
-        /* @var $field PDb_Form_Field */
+        /* @var $field PDb_Field_Item */
 
         // set the current value of the field
         $this->_set_field_value( $field );
@@ -677,9 +677,10 @@ abstract class PDb_Shortcode {
             /**
              * @filter pdb-before_field_added_to_iterator
              * @param PDb_Form_field $field
-             * @return PDb_Form_Field
+             * @return PDb_Field_item
              */
-            $this->record->$group_name->fields->{$field->name()} = Participants_Db::apply_filters( 'before_field_added_to_iterator', $field );
+            do_action( 'pdb-before_field_added_to_iterator', $field );
+            $this->record->$group_name->fields->{$field->name()} = $field;
           }
         }
       }
@@ -876,7 +877,7 @@ abstract class PDb_Shortcode {
    * always used in the signup module.
    *
    *
-   * @param PDb_Form_Field $field the current field object
+   * @param PDb_Field_Item $field the current field object
    * @return string the value of the field
    */
   protected function _set_field_value( $field )
@@ -887,7 +888,6 @@ abstract class PDb_Shortcode {
      */
     $record_value = isset( $this->participant_values[$field->name()] ) ? $this->participant_values[$field->name()] : '';
     $value = $record_value;
-    $default_value = $field->default_value();
     
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
@@ -895,7 +895,7 @@ abstract class PDb_Shortcode {
     }
 
     /*
-     * make sure id and private_id fields are read only
+     * internal fields are rendered as read-only
      */
     if ( $field->is_internal_field() ) {
       $this->display_as_readonly( $field );
@@ -907,7 +907,7 @@ abstract class PDb_Shortcode {
          * 
          * @version 1.6.2.6 only set this if the value is empty
          */
-        $dynamic_value = Participants_Db::is_dynamic_value( $field->default_value() ) ? $this->get_dynamic_value( $field->default_value() ) : $field->default_value();
+        $dynamic_value = $field->is_dynamic_hidden_field() ? $field->dynamic_value() : $field->default_value();
         $value = $this->_empty( $record_value ) ? $dynamic_value : $record_value;
         /*
          * add to the display columns if not already present so it will be processed 
@@ -919,6 +919,7 @@ abstract class PDb_Shortcode {
         $this->display_as_readonly( $field );
       }
     }
+    
     $field->set_value($value);
   }
 
@@ -1142,7 +1143,7 @@ abstract class PDb_Shortcode {
   /**
    * temporarily sets a field to a read-only text line field 
    * 
-   * @param PDb_Form_Field $field
+   * @param PDb_Field_Item $field
    */
 
   protected function display_as_readonly( $field )
@@ -1151,25 +1152,16 @@ abstract class PDb_Shortcode {
   }
 
   /**
-   * parses the value string and obtains the corresponding dynamic value
-   *
-   * the object property pattern is 'object->property' (for example 'curent_user->name'),
-   * and the presence of the  '->'string identifies it.
+   * parses the dynamic value key and obtains the corresponding dynamic value
    * 
-   * the superglobal pattern is 'global_label:value_name' (for example 'SERVER:HTTP_HOST')
-   *  and the presence of the ':' identifies it.
+   * returns empty string if no dynamic value is found or the value doesn't 
+   * represent a dynamic value key
    *
-   * if there is no indicator, the field is treated as a constant
-   *
-   * @version 1.6 moved to Base class
-   *
-   * @param string $value the current value of the field as read from the
-   *                      database or in the $_POST array
+   * @return string
    *
    */
   public function get_dynamic_value( $value )
   {
-
     return Participants_Db::get_dynamic_value( $value );
   }
 
@@ -1242,10 +1234,11 @@ abstract class PDb_Shortcode {
     $this->fields = array();
       
     foreach ( Participants_Db::$fields as $column ) {
-      /** @var PDb_Form_Field the field def object */
-      $this->fields[$column->name()] = new PDb_Field_Item( $column->name() );
-      
-      $this->fields[$column->name()]->set_module( $this->module );
+      /* @var $column PDb_Form_Field_Def */
+      $this->fields[$column->name()] = new PDb_Field_Item( (object) array( 
+          'name' => $column->name(),
+          'module' => $this->module,
+          ) );
     }
   }
 
