@@ -44,7 +44,7 @@ class PDb_Record extends PDb_Shortcode {
     // run the parent class initialization to set up the parent methods 
     parent::__construct($shortcode_atts, $add_atts);
 
-    add_filter('pdb-before_field_added_to_iterator', array( $this, 'alter_field' ) );
+    add_action('pdb-before_field_added_to_iterator', array( $this, 'alter_field' ) );
 
     $this->_setup_multipage();
 
@@ -152,13 +152,11 @@ class PDb_Record extends PDb_Shortcode {
    * alters a password field to prevent (hopefully!) autocomplete
    */
   public function alter_field( $field ) {
-    
     switch ( $field->form_element ) {
       case 'password':
         $field->attributes['autocomplete'] = 'off';
         break;
     }
-    return $field;
   }
 
   /**
