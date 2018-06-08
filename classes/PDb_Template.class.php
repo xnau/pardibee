@@ -518,7 +518,7 @@ class PDb_Template {
         foreach ( $this->shortcode_object->record->fields as $field_object ) {
           $name = $field_object->name;
           $value = isset( $field_object->value ) ? $field_object->value : '';
-          $this->fields->{$name} = Participants_Db::get_column( $name );
+          $this->fields->{$name} = Participants_Db::$fields[$name];
           $this->fields->{$name}->module = $this->shortcode_object->module;
           $this->fields->{$name}->value = $value;
         }
@@ -535,10 +535,9 @@ class PDb_Template {
         }
         $this->record = clone $this->shortcode_object->record;
         foreach ( $this->shortcode_object->fields as $name => $field ) {
+          /* @var $field PDb_Field_Item */
           $this->fields->{$name} = $field;
-          $this->fields->{$name}->module = $this->shortcode_object->module;
-          $this->fields->{$name}->record_id = $this->shortcode_object->participant_id;
-          //$this->fields->{$name}->value = $this->values[$name];
+          $this->fields->{$name}->set_record_id($this->shortcode_object->participant_id);
         }
         foreach ( $this->record as $name => $group ) {
           $this->groups[$name] = $this_group = new stdClass();
