@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -23,15 +23,13 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   // count of fields in the group
   var $_field_count;
   
-  // holds the group's fields
-  var $fields;
-  
   // methods
   
   /**
    * instantiates a field group object
    *
    * @param object a object with all the field group's properties
+   * @param string $module name of the current module
    */
   public function __construct( $group, $module ) {
     
