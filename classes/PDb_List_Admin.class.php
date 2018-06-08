@@ -1025,19 +1025,15 @@ query: '.$last_query);
                             $display_value = '';
 
                             // this is where we place form-element-specific text transformations for display
-                            switch ( $column->form_element ) {
+                            switch ( $field->form_element() ) {
 
                               case 'image-upload':
 
                                 $image_params = array(
-                                    'filename' => $value[$column->name],
+                                    'filename' => $field->value(),
                                     'link' => '',
                                     'mode' => Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename',
                                 );
-
-                                if ( Participants_Db::is_single_record_link( $column ) ) {
-                                  $image_params['link'] = Participants_Db::single_record_url( $value['id'] );
-                                }
                                 
                                 // this is to display the image as a linked thumbnail
                                 $image = new PDb_Image( $image_params );
@@ -1052,7 +1048,7 @@ query: '.$last_query);
                               case 'date':
                               case 'timestamp':
 
-                                $column->value = $value[$column->name];
+                                $column->value = $field->value();
                                 $display_value = PDb_FormElement::get_field_value_display( $field, false );
                                 break;
                               case 'multi-select-other':
@@ -1066,46 +1062,34 @@ query: '.$last_query);
 
                               case 'link':
 
-                                $link_value = maybe_unserialize( $value[$column->name] );
-
-                                if ( count( $link_value ) === 1 ) {
-                                  $link_value = array_fill( 0, 2, current( (array) $link_value ) );
-                                }
-
-                                $display_value = Participants_Db::make_link( $link_value[0], $link_value[1] );
+                                $display_value = $field->get_value();
 
                                 break;
 
                               case 'rich-text':
 
-                                if ( !empty( $value[$column->name] ) ) {
-                                  $display_value = '<span class="textarea">' . $value[$column->name] . '</span>';
+                                if ( $field->has_content() ) {
+                                  $display_value = '<span class="textarea">' . $field->get_value() . '</span>';
                                 }
                                 break;
 
                               case 'text-line':
 
-                                if ( Participants_Db::is_single_record_link( $column ) ) {
-                                  $url = Participants_Db::single_record_url( $value['id'] );
-                                  $template = '<a href="%1$s" >%2$s</a>';
-                                  $display_value = sprintf( $template, $url, $value[$column->name] );
-                                } elseif ( Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
-                                  if ( ! empty( $value[$column->name] ) ) {
-                                    $field = new stdClass();
-                                    $field->value = $value[$column->name];
+                                if ( Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
+                                  if ( $field->has_content() ) {
                                     $display_value = PDb_FormElement::make_link( $field );
                                   }
                                 } else {
-                                  $display_value = $value[$column->name] === '' ? $column->default : esc_html( $value[$column->name] );
+                                  //$display_value = $value[$column->name] === '' ? $column->default : esc_html( $value[$column->name] );
+                                  $display_value = $field->get_value();
                                 }
                                 break;
                               case 'hidden':
-                                $display_value = $value[$column->name] === '' ? '' : esc_html( $value[$column->name] );
+                                $display_value = $field->get_value();
                                 break;
 
                               default:
-                                $column->value = $value[$column->name];
-                                $display_value = PDb_FormElement::get_field_value_display( $field, false );
+                                $display_value = $field->get_value();
                             }
 
                             if ( $column->name === 'private_id' && Participants_Db::plugin_setting_is_set( 'registration_page' ) ) {
