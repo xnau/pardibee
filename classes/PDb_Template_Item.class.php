@@ -169,13 +169,24 @@ class PDb_Template_Item {
     
     if ( false === $name ) $name = $this->name;
     
-    // make sure it does not begin with a numeral
-    $classname = preg_replace( '/^([0-9])/','n$1', $name );
-    // clean out any non-valid CSS name characters
-    $classname = preg_replace( '/[^_a-zA-Z0-9-]/','', $classname );
+    $classname = self::prep_css_class_string($name);
     
     return $prefix ? Participants_Db::$prefix.$classname : $classname;
     
+  }
+  
+  /**
+   * prepares a string for use as a css class
+   * 
+   * @param string $string string to prepare
+   * @return string
+   */
+  public static function prep_css_class_string( $string )
+  {
+    // make sure it does not begin with a numeral
+    $classname = preg_replace( '/^([0-9])/','n$1', $string );
+    // clean out any non-valid CSS name characters
+    return preg_replace( '/[^_a-zA-Z0-9-]/','', $classname );
   }
   
   /**
