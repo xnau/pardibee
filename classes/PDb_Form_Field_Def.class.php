@@ -46,7 +46,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string field help text
    */
-  private $help_text;
+  public $help_text;
   
   /**
    * @var string form element of the field
@@ -197,10 +197,16 @@ class PDb_Form_Field_Def {
    */
   public function __set( $prop, $value )
   {
-    error_log(__METHOD__.' setting property: '.$prop.' 
-      
-trace: '.print_r(wp_debug_backtrace_summary(),1));
-    $this->{$prop} = $value;
+    switch ($prop) {
+      case 'value':
+        $this->{$prop} = $value;
+        break;
+      default:
+        error_log(__METHOD__.' setting property: '.$prop.' 
+
+    trace: '.print_r(wp_debug_backtrace_summary(),1));
+        $this->{$prop} = $value;
+    }
   }
   
   /**
@@ -210,6 +216,16 @@ trace: '.print_r(wp_debug_backtrace_summary(),1));
   {
     $this->readonly = true;
     $this->form_element = 'text-line';
+  }
+  
+  /**
+   * sets the readonly state
+   * 
+   * @param bool $state defaults to true, sets the readonly state
+   */
+  public function set_readonly( $state = true )
+  {
+    $this->readonly = (bool) $state;
   }
   
   /**
@@ -342,7 +358,7 @@ trace: '.print_r(wp_debug_backtrace_summary(),1));
    */
   public function values_array()
   {
-    return maybe_unserialize( $this->values );
+    return (array) maybe_unserialize( $this->values );
   }
     
   
