@@ -255,7 +255,7 @@ class PDb_Signup extends PDb_Shortcode {
    */
   protected function _setup_hidden_fields()
   {
-    foreach ( Participants_Db::$fields as $field ) {
+    foreach ( $this->fields as $field ) {
       if ( $field->form_element === 'hidden' && $field->signup ) {
         $this->_set_field_value( $field );
         $this->hidden_fields[$field->name] = $field->value;
@@ -547,15 +547,15 @@ class PDb_Signup extends PDb_Shortcode {
   }
 
   /**
-   * changes the readonly status of fields used in the retrieve form
+   * changes the readonly status of fields used in the signup form
    * 
-   * @param $field a PDb_Field_Item object
+   * all fields are writable in the signup form
+   * 
+   * @param PDb_Field_Item $field
    */
   public function allow_readonly_fields_in_form( $field )
   {
-    if ( $field )
-      $field->readonly = 0;
-    return $field;
+    $field->set_readonly(false);
   }
 
   /**
