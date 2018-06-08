@@ -97,7 +97,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
   
   /**
-   * handles isset on clas properties
+   * handles isset call on class properties
    * 
    * @param string $name of the property
    */
@@ -153,6 +153,20 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function value()
   {
     return $this->value;
+  }
+
+  /**
+   * provides the dynamic value for a dynamic hidden field
+   *
+   * @return string
+   */
+  public function dynamic_value()
+  {
+    $value = $field->value;
+    if ( $this->is_dynamic_hidden_field() ) {
+      $value = Participants_Db::get_dynamic_value( $value );
+    }
+    return $value;
   }
   
   /**
@@ -427,7 +441,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
 
     // for compatibility we are not prefixing the form element class name
-    $this->print_CSS_class( $this->form_element, false );
+    echo PDb_Template_Item::prep_css_class_string( $this->form_element );
 
     if ( $this->readonly )
       echo ' readonly-element';
@@ -438,8 +452,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_id()
   {
-
-    $this->print_CSS_class( $this->name, true );
+    echo PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name ); 
   }
 
   /**
@@ -448,7 +461,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_with_id()
   {
-    $this->attributes['id'] = $this->prepare_CSS_class();
+    $this->attributes['id'] = PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name );
     $this->print_element();
   }
 
@@ -517,7 +530,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_help_text()
   {
-    echo $this->prepare_display_value( self::html_allowed( $this->help_text ) );
+    echo $this->prepare_display_value( PDb_Template_Item::html_allowed( $this->help_text ) );
   }
 
   /**
