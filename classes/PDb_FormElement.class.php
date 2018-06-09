@@ -186,8 +186,6 @@ class PDb_FormElement extends xnau_FormElement {
 
     $return = '';
 
-//    error_log(__METHOD__.' field: '.print_r($field,1));
-
     /**
      * filter: pdb-before_display_form_element
      * 
@@ -348,7 +346,7 @@ class PDb_FormElement extends xnau_FormElement {
         case 'checkbox':
         case 'dropdown-other':
         case 'select-other':
-
+          
           $field->set_value( $field->display_array_value() );
 
           if ( $html ) {
