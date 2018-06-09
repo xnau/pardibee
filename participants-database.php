@@ -252,7 +252,7 @@ class Participants_Db extends PDb_Base {
   /**
    * this is set once per plugin instantiation, then all instances are expected to use this instead of running their own queries
    * 
-   * @var array of all field objects, indexed by field name
+   * @var array of PDb_Form_Field_Def objects, indexed by field name
    */
   public static $fields = array();
 
