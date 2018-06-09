@@ -1473,7 +1473,7 @@ abstract class xnau_FormElement {
    * returns a select state for a form field
    *
    * @param mixed  $element_value  the set values of the element that we compare against
-   * @param string $new_value      the selected value of the field
+   * @param string $selected_value      the selected value of the field
    * 
    * @param string $attribute      the keyword for the select state of the form element
    * @param bool   $state          inverts the logic of the array value match:
@@ -1482,22 +1482,20 @@ abstract class xnau_FormElement {
    *
    * @return string selection state string for HTML element
    */
-  protected function _set_selected( $element_value, $new_value, $attribute = 'selected', $state = true )
+  protected function _set_selected( $element_value, $selected_value, $attribute = 'selected', $state = true )
   {
-
-
-    if ( is_array( $new_value ) ) {
-      return $this->_set_multi_selected( $element_value, $new_value, $attribute, $state );
+    if ( is_array( $selected_value ) ) {
+      return $this->_set_multi_selected( $element_value, $selected_value, $attribute, $state );
     }
 
     $add_attribute = false;
-    $new_value = $this->_prep_comp_string( $new_value );
+    $selected_value = $this->_prep_comp_string( $selected_value );
     $element_value = $this->_prep_comp_array( $element_value );
 
     switch ( true ) {
-      case ($element_value === true and $new_value === true):
-      case (is_array( $element_value ) and ( $state === in_array( $new_value, $element_value ))):
-      case ($element_value == $new_value):
+      case ($element_value === true and $selected_value === true):
+      case (is_array( $element_value ) and ( $state === in_array( $selected_value, $element_value ))):
+      case ($element_value == $selected_value):
         $add_attribute = true;
         break;
       default:
@@ -1610,16 +1608,16 @@ abstract class xnau_FormElement {
    * for the field
    *
    * @param string  $element_value   the value of one select of a multi-select
-   * @param array   $new_value_array the array of stored or inputted values
+   * @param array   $selected_value_array the array of stored or inputted values
    * @param string  $attribute       the name of the "selected" attribute for the element
    * @param bool    $state           true to check for a match or false for a non-match
    * @return string                  the attribute string for the element
    */
-  protected function _set_multi_selected( $element_value, $new_value_array, $attribute = 'selected', $state = true )
+  protected function _set_multi_selected( $element_value, $selected_value_array, $attribute = 'selected', $state = true )
   {
 
-    $prepped_new_value_array = $this->_prep_comp_array( $new_value_array );
-
+    $prepped_new_value_array = $this->_prep_comp_array( $selected_value_array );
+    
     $prepped_string = $this->_prep_comp_string( $element_value );
 
     if ( $state === in_array( $prepped_string, $prepped_new_value_array ) )
