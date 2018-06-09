@@ -215,7 +215,7 @@ class PDb_Tag_Template {
         if ( $this->raw ) {
           $field->html_mode(false);
         }
-        $value = $field->get_value();
+        $value = $field->get_value_display();
       }
     }
   }
