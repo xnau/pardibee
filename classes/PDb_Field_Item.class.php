@@ -128,9 +128,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function print_value( $print = true )
   {
     if ( $print ) {
-      echo $this->get_value();
+      echo $this->get_value_display();
     } else {
-      return $this->get_value();
+      return $this->get_value_display();
     }
   }
 
@@ -140,7 +140,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @return string the field's value, prepped for display
    * 
    */
-  public function get_value()
+  public function get_value_display()
   {
     return PDb_FormElement::get_field_value_display( $this, $this->html_output );
   }
@@ -178,12 +178,25 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     if ( $this->is_value_set() ) {
       $titles = array();
-      foreach ( xnau_FormElement::field_value_array($field->value) as $value ) {
+      foreach ( xnau_FormElement::field_value_array($this->value) as $value ) {
         $titles[] = $this->value_title( $value );
       }
       return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
     }
     return $this->value();
+  }
+  
+  /**
+   * provides the current value of the field as an associative array or string
+   * 
+   * @return array|string the current value of the field
+   */
+  public function get_value()
+  {
+    if ( $this->is_value_set() ) {
+      return $this->make_assoc_value_array( xnau_FormElement::field_value_array($this->value) );
+    }
+    return $this->value;
   }
   
   /**
@@ -580,6 +593,34 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function prepare_display_value( $string )
   {   
     return Participants_Db::apply_filters('translate_string', $string);
+  }
+  
+  /**
+   * provides an associative array of values
+   * 
+   * this will add an "other" value if no matching field option is found
+   * 
+   * @param array $value_list
+   * @return array as $title => $value
+   */
+  private function make_assoc_value_array( $value_list )
+  {
+    $title_array = array();
+    $other_list = array();
+    
+    foreach( $value_list as $value )
+    {
+      if ( in_array( $value, $this->options ) ) {
+        $title_array[ $this->value_title($value) ] = $value;
+      } else {
+        $other_list[] = $value;
+      }
+    }
+    if ( ! empty( $other_list ) ) {
+      return array_merge( $title_array, array('other' => implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $other_list ) ) );
+    } else {
+      return $title_array;
+    }
   }
 
 }
