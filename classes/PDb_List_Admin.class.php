@@ -436,7 +436,8 @@ class PDb_List_Admin {
               if ( $selected_count > 0 ) {
                 $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
                 $approval_field = Participants_Db::$fields[$approval_field_name];
-                list ( $yes, $no ) = maybe_unserialize( $approval_field->values );
+                /* @var $approval_field PDb_Form_Field_Def */
+                list ( $yes, $no ) = $approval_field->option_values();
                 $set_value = $selected_action === 'approve' ? $yes : $no;
 
                 $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= "%s"';
@@ -1062,34 +1063,37 @@ query: '.$last_query);
 
                               case 'link':
 
-                                $display_value = $field->get_value();
+                                $display_value = $field->get_value_display();
 
                                 break;
 
                               case 'rich-text':
 
                                 if ( $field->has_content() ) {
-                                  $display_value = '<span class="textarea">' . $field->get_value() . '</span>';
+                                  $display_value = '<span class="textarea">' . $field->get_value_display() . '</span>';
                                 }
                                 break;
 
                               case 'text-line':
-
+                                
                                 if ( Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
                                   if ( $field->has_content() ) {
                                     $display_value = PDb_FormElement::make_link( $field );
                                   }
                                 } else {
                                   //$display_value = $value[$column->name] === '' ? $column->default : esc_html( $value[$column->name] );
-                                  $display_value = $field->get_value();
+                                  $display_value = $field->get_value_display();
                                 }
                                 break;
+                                
                               case 'hidden':
-                                $display_value = $field->get_value();
+                                
+                                $display_value = $field->get_value_display();
                                 break;
 
                               default:
-                                $display_value = $field->get_value();
+                                
+                                $display_value = $field->get_value_display();
                             }
 
                             if ( $column->name === 'private_id' && Participants_Db::plugin_setting_is_set( 'registration_page' ) ) {
