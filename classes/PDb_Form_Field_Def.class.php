@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -17,22 +17,22 @@ class PDb_Form_Field_Def {
   /**
    * @var int id of the field definition
    */
-  private $id;
+  protected $id;
 
   /**
    * @var int order value of the field definition
    */
-  private $order;
+  protected $order;
 
   /**
    * @var string name of the field
    */
-  private $name;
+  protected $name;
 
   /**
    * @var string display title of the field
    */
-  private $title;
+  protected $title;
 
   /**
    * @var string default value of the field
@@ -42,7 +42,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string name of the field's group
    */
-  private $group;
+  protected $group;
 
   /**
    * @var string field help text
@@ -52,7 +52,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string form element of the field
    */
-  private $form_element;
+  protected $form_element;
 
   /**
    * @var string raw string form the "values" parameter of the field def
@@ -62,17 +62,17 @@ class PDb_Form_Field_Def {
   /**
    * @var string validation type
    */
-  private $validation;
+  protected $validation;
 
   /**
    * @var int display column value
    */
-  private $display_column;
+  protected $display_column;
 
   /**
    * @var int admin column value
    */
-  private $admin_column;
+  protected $admin_column;
 
   /**
    * @var bool field is sortable
@@ -92,7 +92,7 @@ class PDb_Form_Field_Def {
   /**
    * @var bool field is included in the signup form
    */
-  private $signup;
+  protected $signup;
 
   /**
    * @var bool field is read only
@@ -178,9 +178,9 @@ class PDb_Form_Field_Def {
    */
   public function __get( $prop )
   {
-//    error_log(__METHOD__.' getting property: '.$prop.' 
-//      
-//trace: '.print_r(wp_debug_backtrace_summary(),1));
+    error_log(__METHOD__.' getting property: '.$prop.' 
+      
+trace: '.print_r(wp_debug_backtrace_summary(),1));
     assert( property_exists( $this, $prop ), ' undefined property: ' . $prop );
     switch ( $prop ) {
       default:
@@ -342,7 +342,7 @@ class PDb_Form_Field_Def {
    */
   public function is_dynamic_hidden_field()
   {
-    return $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->value );
+    return $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default );
   }
 
   /**
@@ -373,6 +373,18 @@ class PDb_Form_Field_Def {
   public function has_default()
   {
     return $this->default_value() !== '';
+  }
+  
+  /**
+   * tells if the field is a multi-type field
+   * 
+   * this is a field that keeps it's value in an array
+   * 
+   * @return bool
+   */
+  public function is_multi()
+  {
+    return strpos( $this->form_element, 'multi' ) !== false;
   }
 
   /**
