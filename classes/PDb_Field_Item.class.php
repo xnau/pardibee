@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -162,9 +162,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function dynamic_value()
   {
-    $value = $field->value;
+    $value = '';
     if ( $this->is_dynamic_hidden_field() ) {
-      $value = Participants_Db::get_dynamic_value( $value );
+      $value = Participants_Db::get_dynamic_value( $this->default );
     }
     return $value;
   }
@@ -456,7 +456,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     // for compatibility we are not prefixing the form element class name
     echo PDb_Template_Item::prep_css_class_string( $this->form_element );
 
-    if ( $this->readonly )
+    if ( $this->is_readonly() )
       echo ' readonly-element';
   }
 
@@ -484,7 +484,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element()
   {
-    $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array( $this->form_element, array('text-line', 'date', 'timestamp') ) ? ' regular-text' : '' );
+    $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array( $this->form_element(), array('text-line', 'date', 'timestamp') ) ? ' regular-text' : '' );
 
     /**
      * @filter pdb-before_display_form_input
@@ -495,16 +495,14 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      */
     Participants_Db::do_action( 'before_display_form_input', $this );
 
-    if ( $this->readonly && !in_array( $this->form_element, array('captcha') ) ) {
+    if ( $this->is_readonly() && !in_array( $this->form_element(), array('captcha') ) ) {
 
-      if ( !in_array( $this->form_element, array('rich-text') ) ) {
+      if ( !in_array( $this->form_element(), array('rich-text') ) ) {
 
         $this->attributes['readonly'] = 'readonly';
         $this->_print();
       } else {
-
-        $this->value = PDb_FormElement::get_field_value_display( $this );
-        echo '<span class="pdb-readonly ' . $this->field_class . '" >' . $this->value . '</span>';
+        echo '<span class="pdb-readonly ' . $this->field_class . '" >' . $this->get_value_display() . '</span>';
       }
     } else {
 
@@ -518,14 +516,14 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function _print()
   {
     PDb_FormElement::print_element( array(
-        'type' => $this->form_element,
-        'value' => $this->value,
-        'name' => $this->name,
-        'options' => $this->values,
+        'type' => $this->form_element(),
+        'value' => $this->value(),
+        'name' => $this->name(),
+        'options' => $this->options(),
         'class' => $this->field_class,
-        'attributes' => $this->attributes,
-        'module' => $this->module,
-        'link' => $this->link,
+        'attributes' => $this->attributes(),
+        'module' => $this->module(),
+        'link' => $this->link(),
             )
     );
   }
