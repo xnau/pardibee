@@ -16,7 +16,7 @@ if ( !defined( 'ABSPATH' ) )
   die;
 
 class PDb_FormElement extends xnau_FormElement {
-  
+
   /**
    * @var string dummy password
    * 
@@ -158,9 +158,8 @@ class PDb_FormElement extends xnau_FormElement {
      * 
      * @action pdb-form_element_build_{$type}
      */
-    
     Participants_Db::do_action( 'form_element_build_' . $this->type, $this );
-    
+
     if ( empty( $this->output ) ) {
       $this->call_element_method();
     }
@@ -204,9 +203,9 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     if ( empty( $return ) ) {
-      
+
       switch ( $field->form_element() ) :
-        
+
         case 'image-upload' :
           switch ( $field->module() ) {
             case 'single':
@@ -248,7 +247,7 @@ class PDb_FormElement extends xnau_FormElement {
           if ( $html && $field->is_not_default() ) {
             $return = '';
             if ( $field->module === 'signup' ) {
-              $field->set_link(false);
+              $field->set_link( false );
               $return = $field->value();
             } elseif ( !empty( $field->value() ) && Participants_Db::is_allowed_file_extension( $field->value(), $field->attributes() ) ) {
               $field->set_link( filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL ) );
@@ -301,7 +300,7 @@ class PDb_FormElement extends xnau_FormElement {
             $value = $field->value();
           }
 
-          if ( empty( $value ) && ! empty( $url ) ) {
+          if ( empty( $value ) && !empty( $url ) ) {
             $value = $field->has_default() ? $field->default : preg_replace( '#(https?://)#', '', $url );
           }
 
@@ -316,12 +315,12 @@ class PDb_FormElement extends xnau_FormElement {
           if ( $html ) {
 
             $return = self::make_link( $field );
-            
+
             break;
           } else {
 
             $return = esc_html( $field->value() );
-            
+
             break;
           }
 
@@ -346,7 +345,7 @@ class PDb_FormElement extends xnau_FormElement {
         case 'checkbox':
         case 'dropdown-other':
         case 'select-other':
-          
+
           $field->set_value( $field->display_array_value() );
 
           if ( $html ) {
@@ -381,10 +380,10 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'hidden':
 
-          if ( $field->is_dynamic_hidden_field() && ! $field->is_not_default() ) {
+          if ( $field->is_dynamic_hidden_field() && !$field->is_not_default() ) {
             // this is to prevent the dynamic value key from getting printed
             $field->set_value( '' );
-          } elseif ( ! $field->is_dynamic_hidden_field() && ! $field->has_content() ) {
+          } elseif ( !$field->is_dynamic_hidden_field() && !$field->has_content() ) {
             // show the default value if it's not a dynamic field value and there is no set value
             $field->set_value( $field->default );
           }
@@ -482,10 +481,10 @@ class PDb_FormElement extends xnau_FormElement {
   static function array_display( $field )
   {
     $titles = array();
-    foreach ( self::field_value_array($field->value) as $value ) {
+    foreach ( self::field_value_array( $field->value ) as $value ) {
       $titles[] = self::get_value_title( $value, $field->name );
     }
-    
+
     return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
   }
 
@@ -575,13 +574,11 @@ class PDb_FormElement extends xnau_FormElement {
 
       // add the delete checkbox if there is a file defined
       if ( $this->value !== $field_def->default && $this->module !== 'signup' )
-        $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) .'" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
+        $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
     }
 
     $this->_addline( '</div>' );
   }
-  
-  
 
   /**
    * builds a password text element
@@ -591,7 +588,7 @@ class PDb_FormElement extends xnau_FormElement {
     if ( !empty( $this->value ) ) {
       $this->value = self::dummy;
     }
-    
+
     $this->_addline( $this->_input_tag( 'password' ) );
   }
 
@@ -639,7 +636,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function make_link( $field, $template = false, $get = false )
   {
-    
+
     // convert the PDb_Field_Item object to a stdClass
     // for backward compatibility
     if ( is_a( $field, 'PDb_Field_Item' ) ) {
@@ -660,7 +657,7 @@ class PDb_FormElement extends xnau_FormElement {
     // clean up the provided string
     $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->value ) ) );
 
-    if ( ! empty($field->link) ) {
+    if ( !empty( $field->link ) ) {
       /*
        * the field is a single record link or other field with the link property 
        * set, which becomes our href
@@ -684,7 +681,7 @@ class PDb_FormElement extends xnau_FormElement {
         list( $URI, $linktext ) = explode( '@', $URI, 2 );
         $template = '<a class="obfuscate" data-email-values=\'{"name":"%1$s","domain":"%2$s"}\'>%1$s AT %2$s</a>';
       } else {
-        $linktext = esc_html($URI);
+        $linktext = esc_html( $URI );
         $URI = 'mailto:' . $URI;
       }
     } elseif ( filter_var( $URI, FILTER_VALIDATE_EMAIL ) !== false && Participants_Db::plugin_setting_is_true( 'email_protect' ) && !Participants_Db::$sending_email ) {
@@ -696,7 +693,7 @@ class PDb_FormElement extends xnau_FormElement {
       return $URI;
     } else {
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || ( isset($field->form_element) && $field->form_element === 'text-line' ) ) ) {
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || ( isset( $field->form_element ) && $field->form_element === 'text-line' ) ) ) {
         $sanitized = wp_kses_post( $field->value );
       } else {
         $sanitized = esc_html( $field->value );
@@ -710,7 +707,7 @@ class PDb_FormElement extends xnau_FormElement {
        * @param object the field object
        * @return string the display string   
        */
-      return Participants_Db::apply_filters('text_field_output', $sanitized, $field ); 
+      return Participants_Db::apply_filters( 'text_field_output', $sanitized, $field );
     }
 
     // default template for links
@@ -723,7 +720,7 @@ class PDb_FormElement extends xnau_FormElement {
     //construct the link
     return sprintf( $linktemplate, $URI, $linktext, $target );
   }
-  
+
   /**
    * tells if the current screen is the admin list page
    * 
@@ -731,7 +728,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   private static function is_admin_list_page()
   {
-    if ( function_exists( 'get_current_screen') && $screen = get_current_screen() ) {
+    if ( function_exists( 'get_current_screen' ) && $screen = get_current_screen() ) {
       return $screen->id === 'toplevel_page_participants-database';
     }
     return false;
@@ -787,21 +784,20 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_value_title( $value, $fieldname )
   {
-    if ( isset( Participants_Db::$fields[$fieldname] ) && self::is_value_set( Participants_Db::$fields[$fieldname]->form_element ) ) {
-      $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
-      
-      if ( is_array( $options_array ) ) {
-        foreach ( $options_array as $option_title => $option_value ) {
-          
-          if ( !is_string( $option_title ) || $option_title === 'other' ) {
-            // do nothing: we use the stored value
-          } elseif ( str_replace(' ','',$option_value) === $value ) { // strip out spaces in the option because we did that to the value
-            // grab the option title
-            return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
-          }
+    $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
+    /* @var $field PDb_Form_field_Def */
+    if ( $field && $field->is_value_set() ) {
+      foreach ( $field->options() as $option_title => $option_value ) {
+
+        if ( !is_string( $option_title ) || $option_title === 'other' ) {
+          // do nothing: we use the stored value
+        } elseif ( str_replace( ' ', '', $option_value ) === $value ) { // strip out spaces in the option because we did that to the value
+          // grab the option title
+          return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
         }
       }
     }
+
     return $value;
   }
 
@@ -845,8 +841,8 @@ class PDb_FormElement extends xnau_FormElement {
            * added filter: pdb-value_title_match_pattern
            */
           $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
-          if ( $match = current( preg_grep( sprintf( $title_pattern, preg_quote($title, '/') ), array_keys( $options_array ) ) ) ) {
-            $value = $options_array[ $match ];
+          if ( $match = current( preg_grep( sprintf( $title_pattern, preg_quote( $title, '/' ) ), array_keys( $options_array ) ) ) ) {
+            $value = $options_array[$match];
           }
         }
       }
@@ -948,15 +944,15 @@ class PDb_FormElement extends xnau_FormElement {
   public static function is_value_set( $form_element )
   {
     return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array(
-        'dropdown', 
-        'radio', 
-        'checkbox', 
-        'dropdown-other', 
-        'select-other', 
-        'multi-checkbox', 
-        'multi-select-other', 
-        'multi-dropdown',
-        ) ) );
+                'dropdown',
+                'radio',
+                'checkbox',
+                'dropdown-other',
+                'select-other',
+                'multi-checkbox',
+                'multi-select-other',
+                'multi-dropdown',
+            ) ) );
   }
 
   /**
