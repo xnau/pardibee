@@ -902,13 +902,14 @@ abstract class PDb_Shortcode {
     }
     if ( $field->is_hidden_field() ) {
       if ( in_array( $this->module, array('signup', 'record', 'retrieve') ) ) {
+        
         /**
          * use the dynamic value if no value has been set
          * 
-         * @version 1.6.2.6 only set this if the value is empty
+         * @version 1.6.2.6 only set this if the value is empty or equal to the default
          */
         $dynamic_value = $field->is_dynamic_hidden_field() ? $field->dynamic_value() : $field->default_value();
-        $value = $this->_empty( $record_value ) ? $dynamic_value : $record_value;
+        $value = $this->_empty( $record_value ) || $record_value === $field->default_value() ? $dynamic_value : $record_value;
         /*
          * add to the display columns if not already present so it will be processed 
          * in the form submission
@@ -1346,16 +1347,19 @@ abstract class PDb_Shortcode {
    */
   protected function _form_data_keys()
   {
-
     $displayed = array();
     foreach ( $this->display_columns as $column ) {
       $field = $this->fields[$column];
+      /* @var $field PDb_Field_Item */
       /**
        * @filter pdb-readonly_exempt_module
        * @param string name of the module which allows wirting readonly fields
-       * @param object  the current field
+       * @param PDb_Field_Item  the current field
        */
-      if ( ( !in_array( $field->form_element, array('hidden') ) || $field->form_element === 'captcha'  ) && ( $this->module === Participants_Db::apply_filters( 'readonly_exempt_module', 'signup', $field ) || $field->readonly === '0' ) ) {
+      if ( 
+              ( ! $field->is_hidden_field() || $field->form_element() === 'captcha'  ) && 
+              ( $this->module === Participants_Db::apply_filters( 'readonly_exempt_module', 'signup', $field ) || ! $field->is_readonly() )
+                      ) {
         $displayed[] = $field->name;
       }
     }
