@@ -18,12 +18,12 @@ if ( !Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id
 if ( false === $participant_id ) {
 
   $action = 'insert';
-  $page_title = Participants_Db::plugin_label('add_record_title');
+  $page_title = Participants_Db::plugin_label( 'add_record_title' );
   $participant_values = Participants_Db::get_default_record();
 } else {
 
   $action = 'update';
-  $page_title = Participants_Db::plugin_label('edit_record_title');
+  $page_title = Participants_Db::plugin_label( 'edit_record_title' );
   $participant_values = Participants_Db::get_participant( $participant_id );
 }
 
@@ -69,7 +69,10 @@ if ( $participant_values ) :
 
       // get the columns and output form
       $readonly_columns = Participants_Db::get_readonly_fields();
-      foreach ( Participants_db::get_column_atts( 'backend' ) as $column ) :
+      foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
+
+        $column = new PDb_Field_Item( $backend_column );
+        $column->set_value( $participant_values[$column->name()] );
 
         $id_line = '';
 
@@ -85,7 +88,7 @@ if ( $participant_values ) :
       } else {
         $id_line = '<tr><th>' . _x( 'ID', 'abbreviation for "identification"', 'participants-database' ) . '</th><td>' . ( false === $participant_id ? _x( '(new record)', 'indicates a new record is being entered', 'participants-database' ) : $participant_id ) . '</td></tr>';
       }
-      $section = $column->group
+      $section = $column->group()
       ?>
       <div  class="field-group field-group-<?php echo $groups[$section]['name'] ?>" >
         <h3 class="field-group-title"><?php _e( $groups[$section]['title'] ) ?></h3>
@@ -97,7 +100,7 @@ if ( $participant_values ) :
           echo $id_line;
           ?>
 
-          <tr class="<?php echo ( 'hidden' == $column->form_element ? 'text-line' : $column->form_element ) . ' ' . $column->name . '-field' ?>">
+          <tr class="<?php echo ( 'hidden' == $column->form_element() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' ?>">
             <?php
             $column_title = str_replace( array('"', "'"), array('&quot;', '&#39;'), Participants_Db::apply_filters( 'translate_string', stripslashes( $column->title ) ) );
             if ( $options['mark_required_fields'] && $column->validation != 'no' ) {
@@ -107,16 +110,17 @@ if ( $participant_values ) :
             <?php
             $add_title = '';
             $fieldnote_pattern = ' <span class="fieldnote">%s</span>';
-            if ( $column->form_element === 'hidden' ) {
+            if ( $column->form_element() === 'hidden' ) {
               $add_title = sprintf( $fieldnote_pattern, __( 'hidden', 'participants-database' ) );
-            } elseif ( in_array( $column->name, $readonly_columns )  ) {
-              
+            } elseif ( $column->is_readonly() ) {
+
               if (
-                      $column->form_element === 'timestamp' && Participants_Db::apply_filters( 'edit_record_timestamps', false ) === true ||
-                      $column->name === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) === false ) {
+                      $column->form_element() === 'timestamp' && Participants_Db::apply_filters( 'edit_record_timestamps', false ) === true ||
+                      $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) === false ) {
                 // don't mark these fields as read-only if editing is enabled
+                $column->make_readonly( false );
               } else {
-              
+
                 $attributes['class'] = 'readonly-field';
                 /**
                  * @version 1.7.0.13
@@ -124,53 +128,47 @@ if ( $participant_values ) :
                  * @param object $column the current field object
                  * @return bool if true the field is rendered as readonly
                  */
-                if ( 
+                if (
                         Participants_Db::apply_filters( 'field_readonly_override', !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ), $column ) ||
-                        $column->name === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ) {
+                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ) {
                   $attributes['readonly'] = 'readonly';
                 }
                 $add_title = sprintf( $fieldnote_pattern, __( 'read only', 'participants-database' ) );
-                
               }
             }
             ?>
             <th><?php echo $column_title . $add_title ?></th>
-            <td id="<?php echo Participants_Db::$prefix . $column->name ?>-field" >
+            <td id="<?php echo Participants_Db::$prefix . $column->name() ?>-field" >
               <?php
               /*
                * get the value from the record; if it is empty, use the default value if the 
                * "persistent" flag is set.
                */
-              
-              
-              if ( empty( $participant_values[$column->name] ) ) {
-                $column->value = $column->persistent == '1' ? $column->default : ''; 
-              } else {
-                $column->value = $participant_values[$column->name];
-                if ( is_array( maybe_unserialize( $participant_values[$column->name] ) ) ) {
-                  $column->value = Participants_Db::unserialize_array( $participant_values[$column->name] );
-                }
+
+              // handle the persistent feature
+              if ( empty( $participant_values[$column->name()] ) ) {
+                $column->set_value( $column->is_persistent() ? $column->default : '' );
               }
 
               // get the existing value if any
               //$column->value = isset($participant_values[$column->name]) ? Participants_Db::unserialize_array($participant_values[$column->name]) : '';
               // replace it with the new value if provided
-              if ( isset( $_POST[$column->name] ) ) {
+              if ( array_key_exists( $column->name(), $_POST ) ) {
 
-                if ( is_array( $_POST[$column->name] ) )
+                if ( is_array( $_POST[$column->name()] ) )
                   $column->value = filter_var_array( $_POST[$column->name], FILTER_SANITIZE_STRING );
 
-                elseif ( 'rich-text' == $column->form_element )
-                  $column->value = filter_input( INPUT_POST, $column->name, FILTER_SANITIZE_SPECIAL_CHARS );
+                elseif ( 'rich-text' === $column->form_element() )
+                  $column->set_value( filter_input( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS ) );
                 else
-                  $column->value = filter_input( INPUT_POST, $column->name, FILTER_SANITIZE_SPECIAL_CHARS );
+                  $column->set_value( filter_input( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS ) );
               }
 
-              $field_class = ( $column->validation != 'no' ? "required-field" : '' ) . ( in_array( $column->form_element, array('text-line', 'date') ) ? ' regular-text' : '' );
+              $field_class = ( $column->validation != 'no' ? "required-field" : '' ) . ( in_array( $column->form_element(), array('text-line', 'date') ) ? ' regular-text' : '' );
 
-              if ( isset( $column->value ) ) {
+              if ( $column->has_content() ) {
 
-                switch ( $column->form_element ) {
+                switch ( $column->form_element() ) {
 
 //                  case 'timestamp':
                   case 'date':
@@ -179,22 +177,19 @@ if ( $participant_values ) :
                      * if it's not a timestamp, format it for display; if it is a
                      * timestamp, it will be formatted by the xnau_FormElement class
                      */
-                    if ( !empty( $column->value ) ) {
+                    if ( $column->has_content() ) {
                       $column->value = PDb_Date_Parse::timestamp( $column->value, array(), 'Edit Participant value display date element' );
                     }
 
                     break;
 
-                  case 'multi-select-other':
-                  case 'multi-checkbox':
-
-                    $column->value = is_array( $column->value ) ? $column->value : explode( ',', $column->value );
-
-                    break;
-
                   case 'password':
 
-                    $column->value = '';
+                    $value = '';
+                    if ( $column->has_content() ) {
+                      $value = PDb_FormElement::dummy;
+                    }
+                    $column->set_value($value);
                     break;
 
                   case 'hidden':
@@ -204,8 +199,8 @@ if ( $participant_values ) :
 
                   case 'timestamp':
 
-                    if ( !PDb_Date_Parse::is_mysql_timestamp( $column->value ) )
-                      $column->value = '';
+                    if ( !PDb_Date_Parse::is_mysql_timestamp( $column->value() ) )
+                      $column->set_value('');
                     break;
                 }
               }
@@ -213,24 +208,24 @@ if ( $participant_values ) :
               if ( 'rich-text' == $column->form_element ) {
 
                 wp_editor(
-                        $column->value, preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), Participants_Db::$prefix . $column->name ), array(
+                        $column->value(), preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), Participants_Db::$prefix . $column->name() ), array(
                     'media_buttons' => false,
-                    'textarea_name' => $column->name,
+                    'textarea_name' => $column->name(),
                     'editor_class' => $field_class,
                         )
                 );
               } else {
 
                 $params = array(
-                    'type' => $column->form_element,
-                    'value' => $column->value,
-                    'name' => $column->name,
-                    'options' => $column->values,
+                    'type' => $column->form_element(),
+                    'value' => $column->get_value(),
+                    'name' => $column->name(),
+                    'options' => $column->options(),
                     'class' => $field_class,
                     'attributes' => $attributes,
                     'module' => 'admin-edit',
                 );
-                
+
                 PDb_FormElement::print_element( $params );
               }
 
@@ -284,6 +279,7 @@ if ( $participant_values ) :
   </form>
   </div>
   <?php
+
 
 
 

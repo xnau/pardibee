@@ -94,9 +94,11 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Estonian: Laura Vunk
 
-* French: Christian Ries
-
 * Farsi: Mohsen Azarteymoor [CodHa](http://www.codha.ir)
+
+* Finnish: Visa Jokela
+
+* French: Christian Ries
 
 * German: Martin Sauter
 

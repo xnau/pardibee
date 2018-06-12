@@ -252,7 +252,6 @@ class PDb_List extends PDb_Shortcode {
    */
   public function _include_template()
   {
-
     // set some local variables for use in the template
     $filter_mode = $this->_sort_filter_mode();
     $display_count = isset( $this->shortcode_atts['display_count'] ) ? filter_var( $this->shortcode_atts['display_count'], FILTER_VALIDATE_BOOLEAN ) : false;
@@ -328,45 +327,30 @@ class PDb_List extends PDb_Shortcode {
       $this->records[$id] = $record;
     }
 
-    if ( !empty( $this->records ) ) {
+    foreach ( $this->records as $record_id => $record_fields ) {
 
-      foreach ( $this->records as $record_id => $record_fields ) {
+      $this->participant_values = Participants_Db::get_participant($record_id);
 
-        /*
-         * @version 1.6 
-         * 
-         * this array now contains all values for the record
-         */
-        // set the values for the current record
-        $this->participant_values = Participants_Db::get_participant( $record_id );
+      foreach ( $record_fields as $field => $value ) {
 
-        foreach ( $record_fields as $field => $value ) {
-
-          /*
-           * as of 1.5.5, we don't fill up the records property with all the field properties, 
-           * just the current props, like value and link. The field properties are added when 
-           * the list is displayed to use less memory
-           */
-          $field_object = new stdClass();
-          $field_object->name = $field;
-
-          // set the current value of the field
-          $this->_set_field_value( $field_object );
-
-          $this->_set_field_link( $field_object );
-
-          // add the field to the record object
-          $this->records[$record_id]->{$field_object->name} = $field_object;
-        }
+        // add the field to the records object
+        $this->records[$record_id]->{$field} = new PDb_Field_Item( (object) array( 
+            'name' => $field, 
+            'record_id' => $record_id, 
+            'module' => $this->module, 
+            'value' => isset($this->participant_values[$field]) ? $this->participant_values[$field] : '',
+                ) );
       }
     }
+    
     reset( $this->records );
+    
     /*
      * at this point, $this->records has been defined as an array of records,
      * each of which is an object that is a collection of objects: each one of
-     * which is the data for a field
+     * which is a PDb_Field_Item instance
      */
-    // error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+//     error_log( __METHOD__.' all records:'.print_r( $this->records,1));
   }
   
   /**
@@ -425,53 +409,6 @@ class PDb_List extends PDb_Shortcode {
     if ( $input !== false ) {
       $this->current_page = filter_input( $input, $this->list_page, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'default' => 1)) );
     }
-  }
-
-  /**
-   * sets the field value; uses the default value if no stored value is present
-   * 
-   * as of version 1.5.5 we slightly changed how this works: formerly, the default 
-   * value was only used in the record module if the "persistent" flag was set, now 
-   * the default value is used anyway. Seems more intuitive to let the default value 
-   * be used if it's set, and not require the persistent flag. The default value is 
-   * always used in the signup module.
-   * 
-   * 
-   * @param object $field the current field object
-   * @return null
-   */
-  protected function _set_field_value( $field )
-  {
-
-    $field_obj = $this->fields[$field->name];
-    /*
-     * get the value from the record; if it is empty, use the default value if the 
-     * "persistent" flag is set.
-     */
-    $record_value = isset( $this->participant_values[$field->name] ) ? $this->participant_values[$field->name] : '';
-
-    // replace it with the new value if provided, escaping the input
-    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && isset( $_POST[$field->name] ) ) {
-
-      $value = $this->_esc_submitted_value( filter_input( INPUT_POST, $field->name, FILTER_SANITIZE_STRING ) );
-    }
-    $value = $this->_empty( $record_value ) ? ($this->_empty( $field_obj->default ) ? '' : $field_obj->default) : $record_value;
-
-    /*
-     * make sure id and private_id fields are read only
-     */
-    if ( in_array( $field->name, array('id', 'private_id') ) ) {
-      $this->display_as_readonly( $field );
-    }
-    if ( $field_obj->form_element === 'hidden' ) {
-      if ( $field_obj->default === $record_value ) {
-        $record_value = '';
-      }
-      $value = $this->_empty( $record_value ) ? '' : $record_value;
-      // show this one as a readonly field
-      $this->display_as_readonly( $field );
-    }
-    $field->value = maybe_unserialize( $value );
   }
 
   /**

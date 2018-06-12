@@ -596,11 +596,16 @@ class PDb_Base {
     // this value serves as a key for the dynamic value to get
     $dynamic_key = html_entity_decode( $value );
     /**
-     * @version 1.6 added 'pdb-dynamic_value' filter
+     * @filter pdb-dynamic_value
+     * 
+     * @param string the initial result; empty string
+     * @param string the dynamic value key
+     * @return the computed dynamic value
      */
     $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
+    
     // return the value if it was set in the filter
-    if ( !empty( $dynamic_value ) )
+    if ( $dynamic_value !== '' )
       return $dynamic_value;
 
     if ( strpos( $dynamic_key, '->' ) > 0 ) {
@@ -714,7 +719,19 @@ class PDb_Base {
   public static function is_dynamic_value( $value )
   {
     $test_value = html_entity_decode( $value );
-    return strpos( $test_value, '->' ) > 0 || strpos( $test_value, ':' ) > 0;
+    
+    /**
+     * @filter pdb-dynamic_value
+     * 
+     * this filter is duplicated here so we can test the dynamic conversion
+     * 
+     * @param string the initial result; empty string
+     * @param string the dynamiv value key
+     * @return the computed dynamic value
+     */
+    $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
+    
+    return strpos( $test_value, '->' ) > 0 || strpos( $test_value, ':' ) > 0 || $dynamic_value !== '';
   }
 
   /**

@@ -192,6 +192,9 @@ input.otherfield[type=text] {
 .dropdown-other input[name=temp] {
   /*  display:none;*/
 }
+input[type="color"] {
+  min-height: 3em;
+}
 .pdb-added-content {
   display: flex;
   align-items: center;
@@ -200,8 +203,7 @@ input.otherfield[type=text] {
 .pdb-postcontent {
   display: inline-block;
 }
-.pdb-precontent
-{
+.pdb-precontent {
   margin-right: 3px;
 }
 .pdb-postcontent {

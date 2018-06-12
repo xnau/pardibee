@@ -169,13 +169,24 @@ class PDb_Template_Item {
     
     if ( false === $name ) $name = $this->name;
     
-    // make sure it does not begin with a numeral
-    $classname = preg_replace( '/^([0-9])/','n$1', $name );
-    // clean out any non-valid CSS name characters
-    $classname = preg_replace( '/[^_a-zA-Z0-9-]/','', $classname );
+    $classname = self::prep_css_class_string($name);
     
     return $prefix ? Participants_Db::$prefix.$classname : $classname;
     
+  }
+  
+  /**
+   * prepares a string for use as a css class
+   * 
+   * @param string $string string to prepare
+   * @return string
+   */
+  public static function prep_css_class_string( $string )
+  {
+    // make sure it does not begin with a numeral
+    $classname = preg_replace( '/^([0-9])/','n$1', $string );
+    // clean out any non-valid CSS name characters
+    return preg_replace( '/[^_a-zA-Z0-9-]/','', $classname );
   }
   
   /**
@@ -188,17 +199,6 @@ class PDb_Template_Item {
     $item = (object) $item;
     
     $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
-      
-    $item_def = new stdClass;
-    if ( isset(Participants_Db::$fields[$item->name] ) && is_object( Participants_Db::$fields[$item->name] ) ) {
-      $item_def = clone Participants_Db::$fields[$item->name];
-      $this->is_pdb_field = true;
-    } else {
-      $groups = Participants_Db::get_groups();
-      if ( in_array( $item->name, $groups ) ) {
-        $item_def = (object) $groups[$item->name];
-      }
-    }
     
     // grab and assign the class properties from the provided object
     foreach( $class_properties as $property ) {
@@ -207,10 +207,6 @@ class PDb_Template_Item {
         
         $this->$property = $item->$property;
       
-      } elseif ( isset( $item_def->$property ) ) {
-        
-        $this->$property = $item_def->$property;
-        
       }
       
     }

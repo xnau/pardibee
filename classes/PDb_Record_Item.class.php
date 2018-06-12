@@ -7,7 +7,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -15,9 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) die;
 class PDb_Record_Item extends PDb_Template_Item {
   
   /**
-   * instantiates a field group object
-   *
-   * @param object a object with all the field group's properties
+   * instantiates the record item
+   * 
+   * @param array $record collection of PDb_Field_Item objects
+   * @param int $id the record id
+   * @param string $modules name of the current module
    */
   public function __construct( $record, $id, $module ) {
     

@@ -252,9 +252,9 @@ class Participants_Db extends PDb_Base {
   /**
    * this is set once per plugin instantiation, then all instances are expected to use this instead of running their own queries
    * 
-   * @var array of all field objects, indexed by field name
+   * @var array of PDb_Form_Field_Def objects, indexed by field name
    */
-  public static $fields;
+  public static $fields = array();
 
   /**
    * @var string context string for the main submission nonce
@@ -508,7 +508,7 @@ class Participants_Db extends PDb_Base {
      * 
      * this is to reduce the number of db queries
      */
-    self::_setup_columns();
+    self::_setup_fields();
 
     self::load_plugin_textdomain( __FILE__ );
 
@@ -1034,19 +1034,21 @@ class Participants_Db extends PDb_Base {
   /**
    * sets up the $fields array
    * 
-   * global $wpdb
+   * @global wpdb $wpdb
    */
-  private static function _setup_columns()
+  private static function _setup_fields()
   {
-    global $wpdb;
-    self::$fields = array();
-    $sql = 'SELECT v.* 
-            FROM ' . self::$fields_table . ' v 
-            ORDER BY v.order';
-    $result = $wpdb->get_results( $sql );
-    foreach ( $result as $column ) {
-      self::$fields[$column->name] = $column;
-    }
+    if ( empty( self::$fields ) ) :
+      global $wpdb;
+      self::$fields = array();
+      $sql = 'SELECT v.* 
+              FROM ' . self::$fields_table . ' v 
+              ORDER BY v.order';
+      $result = $wpdb->get_results( $sql );
+      foreach ( $result as $column ) {
+        self::$fields[$column->name] = new PDb_Form_Field_Def( $column );
+      }
+    endif;
   }
 
   /**
@@ -1264,7 +1266,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_column( $name )
   {
-
     return isset( self::$fields[$name] ) ? self::$fields[$name] : false;
   }
 
@@ -1301,6 +1302,7 @@ class Participants_Db extends PDb_Base {
   /**
    * gets a set of field attributes as filtered by context
    *
+   * @global wpdb $wpdb
    * @param string|array $filter sets the context of the display and determines the 
    *                             set of columns to return, also accepts an array of 
    *                             column names
@@ -2002,10 +2004,10 @@ class Participants_Db extends PDb_Base {
     // sanitize the values if including user input
     $query = strpos( $sql, '%s' ) !== false ? $wpdb->prepare( $sql, $new_values ) : $sql;
 
-    if ( PDB_DEBUG )
-      self::debug_log( __METHOD__ . ' storing record: ' . $query );
-
     $result = $wpdb->query( $query );
+
+    if ( PDB_DEBUG )
+      self::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
 
     $db_error_message = '';
     if ( $result === 0 ) {

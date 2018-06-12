@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -23,15 +23,13 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   // count of fields in the group
   var $_field_count;
   
-  // holds the group's fields
-  var $fields;
-  
   // methods
   
   /**
    * instantiates a field group object
    *
    * @param object a object with all the field group's properties
+   * @param string $module name of the current module
    */
   public function __construct( $group, $module ) {
     
@@ -121,6 +119,41 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   }
   
   /**
+   * assigns the object properties that match properties in the supplied object
+   * 
+   * @param object $item the supplied object or config array
+   */
+  protected function assign_props( $item ) {
+    
+    $item = (object) $item;
+    
+    $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
+      
+    $item_def = new stdClass;
+    
+    $groups = Participants_Db::get_groups();
+    if ( in_array( $item->name, $groups ) ) {
+      $item_def = (object) $groups[$item->name];
+    }
+    
+    // grab and assign the class properties from the provided object
+    foreach( $class_properties as $property ) {
+      
+      if ( isset( $item->$property ) ) {
+        
+        $this->$property = $item->$property;
+      
+      } elseif ( isset( $item_def->$property ) ) {
+        
+        $this->$property = $item_def->$property;
+        
+      }
+      
+    }
+    
+  }
+  
+  /**
    * determine if the group is composed of empty fields
    * 
    * @return bool true if one or more field have values
@@ -128,7 +161,8 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   private function group_fields_have_values()
   {
     foreach( $this->fields as $field ) {
-      if ( ! $this->is_empty( $field->value ) ) {
+      /* @var $field PDb_Form_Field_Def */
+      if ( $field->has_value() ) {
         reset( $this->fields );
         return true;
       }

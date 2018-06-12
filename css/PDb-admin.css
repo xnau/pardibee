@@ -348,9 +348,9 @@ input[type="checkbox"],
   /*  float: left;
     margin-right: 10px;*/
 }
-label input[type="checkbox"] {
-  float:none;    
-  margin: 0 4px 0 0;
+.checkbox-group label,
+.radio-group label {
+  padding-right: 10px;
 }
 .pdb-searchform fieldset {
   display: inline-block;
