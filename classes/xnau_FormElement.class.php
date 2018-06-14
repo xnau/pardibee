@@ -739,7 +739,6 @@ abstract class xnau_FormElement {
    */
   protected function _dropdown( $other = false )
   {
-
     if ( isset( $this->attributes['other'] ) ) {
       $otherlabel = $this->attributes['other'];
       unset( $this->attributes['other'] );
@@ -766,11 +765,10 @@ abstract class xnau_FormElement {
       if ( $other ) {
         $this->_addline( '<div class="dropdown-other-control-group" >' );
         $this->add_class( 'otherselect' );
-        $this->_addline( '<select name="' . $this->name . '" ' . $this->_attributes() . $this->_class() . ' >' );
         //$this->_addline('<select id="' . $js_prefix . '_otherselect" onChange="' . $js_prefix . 'SelectOther()" name="' . $this->name . '" ' . $this->_attributes() . ' >');
-      } else {
-        $this->_addline( '<select name="' . $this->name . '" ' . $this->_attributes() . $this->_class() . ' >' );
       }
+      
+      $this->_addline( '<select name="' . $this->name . '" ' . $this->_attributes() . $this->_class() . ' >' );
 
       // restore the ID attribute
       $this->attributes['id'] = $id;
@@ -787,7 +785,7 @@ abstract class xnau_FormElement {
       $this->_addline( '</select>', -1 );
 
       if ( $other ) {
-
+        
         // build the text input element
         $this->attributes['id'] .= '_other';
         $is_other = $this->_set_selected( $this->options, $this->value, 'selected', false ) !== '';
@@ -1309,15 +1307,7 @@ abstract class xnau_FormElement {
    */
   public static function field_value_array( $value )
   {
-    $multivalues = maybe_unserialize( $value );
-    
-    if ( !is_array( $multivalues ) ) {
-      // make it into an array
-      $multivalues = explode( ',', str_replace(' ', '', $value ) );
-    }
-    
-    // remove empty elements
-    return array_filter( $multivalues, function ($v) { return $v !== ''; } );
+    return PDb_Field_Item::field_value_array($value);
   }
 
   /**
