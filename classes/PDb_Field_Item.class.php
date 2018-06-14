@@ -62,7 +62,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * OK, this is going to be instantiated by: 
      *    an object with at the very least a 'name' property naming a defined PDB field
      */
-// error_log( __CLASS__ . ' instantiated with: ' . print_r( $field,1)  . '
+// error_log( __CLASS__ . ' instantiated with: ' . print_r( $config,1)  . '
 //      
 //trace: '.print_r(  wp_debug_backtrace_summary(),1)  );
     
@@ -178,7 +178,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     if ( $this->is_value_set() ) {
       $titles = array();
-      foreach ( xnau_FormElement::field_value_array($this->value) as $value ) {
+      foreach ( self::field_value_array($this->value) as $value ) {
         $titles[] = $this->value_title( $value );
       }
       return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
@@ -193,8 +193,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function get_value()
   {
-    if ( $this->is_value_set() ) {
-      return $this->make_assoc_value_array( xnau_FormElement::field_value_array($this->value) );
+    if ( $this->is_multi() ) {
+      return $this->make_assoc_value_array( self::field_value_array($this->value) );
     }
     return $this->value;
   }
@@ -360,6 +360,27 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function html_mode( $mode )
   {
     $this->html_output = (bool) $mode;
+  }
+  
+  /**
+   * processes a field value into an array 
+   * 
+   * this is used for values as they com ein from a database or imported from CSV
+   * 
+   * @param string|array $value
+   * @return array
+   */
+  public static function field_value_array( $value )
+  {
+    $multivalues = maybe_unserialize( $value );
+    
+    if ( !is_array( $multivalues ) ) {
+      // make it into an array
+      $multivalues = explode( ',', $value );
+    }
+    
+    // remove empty elements
+    return array_filter( $multivalues, function ($v) { return $v !== ''; } );
   }
 
   /**
@@ -598,7 +619,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * 
    * this will add an "other" value if no matching field option is found
    * 
-   * @param array $value_list
+   * @param array $value_list the selected values from the record
    * @return array as $title => $value
    */
   private function make_assoc_value_array( $value_list )
@@ -608,7 +629,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     
     foreach( $value_list as $value )
     {
-      if ( in_array( $value, $this->options ) ) {
+      if ( $this->option_match_found( $value, $this->options ) ) {
         $title_array[ $this->value_title($value) ] = $value;
       } else {
         $other_list[] = $value;
@@ -619,6 +640,25 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     } else {
       return $title_array;
     }
+  }
+  
+  /**
+   * finds a matching value in an array of options
+   * 
+   * this gives us a chance to prepare the option value before comparing
+   * 
+   * @param string  $value
+   * @param array $option_list the array to find the matching value in
+   * @return bool true if a match is found
+   */
+  private function option_match_found( $value, $option_list )
+  {
+    foreach ( $option_list as $option ) {
+      if ( trim($value) === $option ) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
