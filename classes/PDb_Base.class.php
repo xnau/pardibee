@@ -726,10 +726,10 @@ class PDb_Base {
      * this filter is duplicated here so we can test the dynamic conversion
      * 
      * @param string the initial result; empty string
-     * @param string the dynamiv value key
+     * @param string the dynamic value key
      * @return the computed dynamic value
      */
-    $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
+    $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $test_value );
     
     return strpos( $test_value, '->' ) > 0 || strpos( $test_value, ':' ) > 0 || $dynamic_value !== '';
   }
@@ -1709,15 +1709,17 @@ class PDb_Base {
    */
   protected static function set_debug_mode()
   {
+    global $PDb_Debugging;
     if ( !defined( 'PDB_DEBUG' ) ) {
       $settings = get_option( Participants_Db::PLUGIN_NAME . '_options');
       if ( ( isset( $settings['pdb_debug'] ) && $settings['pdb_debug'] ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
-        define( 'PDB_DEBUG', true );
-        global $PDb_Debugging;
-        $PDb_Debugging = new PDb_Debug();
+        define( 'PDB_DEBUG', 1 );
       } else {
-        define( 'PDB_DEBUG', false );
+        define( 'PDB_DEBUG', 0 );
       }
+    }
+    if ( PDB_DEBUG && ! is_a( 'PDb_Debug', $PDb_Debugging ) ) {
+      $PDb_Debugging = new PDb_Debug();
     }
   }
   
