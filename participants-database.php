@@ -566,7 +566,7 @@ class Participants_Db extends PDb_Base {
      * register frontend scripts and stylesheets
      */
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), self::$plugin_version );
-    wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$plugin_version );
+    wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$Settings->option_version() );
 
     wp_register_script( self::$prefix . 'shortcode', plugins_url( 'js/shortcodes.js', __FILE__ ), array('jquery'), self::$plugin_version );
     wp_register_script( self::$prefix . 'list-filter', plugins_url( 'js/list-filter.js', __FILE__ ), array('jquery'), self::$plugin_version );
@@ -625,7 +625,7 @@ class Participants_Db extends PDb_Base {
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
     if ( self::_set_admin_custom_css() ) {
-      wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$plugin_version );
+      wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$Settings->option_version() );
     }
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
@@ -1716,14 +1716,17 @@ class Participants_Db extends PDb_Base {
       if ( is_object( self::$validation_errors ) ) {
         self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post, $participant_id );
       }
+      
+      $field = new PDb_Field_Item( $column );
+      $field->set_value($post[$column->name]);
 
       /**
        * readonly field data is prevented from being saved by unauthorized users 
        * when not using the signup form
        */
       if (  
-              $column->readonly != '0' && 
-              $column->form_element !== 'hidden' && 
+              $field->is_readonly() && 
+              ! $field->is_hidden_field() && 
               self::current_user_has_plugin_role( 'editor', 'readonly access' ) === false && 
               self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) !== 'signup'
               ) {
@@ -1816,67 +1819,14 @@ class Participants_Db extends PDb_Base {
             case 'multi-select-other':
             case 'multi-checkbox':
             case 'multi-dropdown':
-              /* match the items in the comma-separated list against the preset
-               * values of the multi-select. Any extra values are placed in an
-               * 'other' array element
-               */
-              if ( isset( $post[$column->name] ) ) {
 
-                if ( is_array( $post[$column->name] ) ) {
-
-                  if ( $column->form_element == 'multi-select-other' && $i = array_search( 'other', $post[$column->name] ) ) {
-                    unset( $post[$column->name][$i] );
-                  }
-
-                  $value_array = $post[$column->name];
-                  // delete the empty placeholder value
-                  if ( isset( $value_array[0] ) && $value_array[0] === '' )
-                    unset( $value_array[0] );
-                } else {
-
-                  /**
-                   * build the value array from the string form used in CSV files
-                   * 
-                   * @version 1.6.2.6 use array_filter to weed out empty elements
-                   * 
-                   * we use the declared function for compatibility with PHP 5.2
-                   */
-                  if ( !function_exists( 'pdb_not_empty' ) ) {
-
-                    function pdb_not_empty( $v )
-                    {
-                      return strlen( $v ) > 0;
-                    }
-
-                  }
-                  $value_array = array();
-                  $incoming_value = array_filter( preg_split( '#([ ]*,[ ]*)#', trim( $post[$column->name] ) ), 'pdb_not_empty' );
-                  $field_values = self::unserialize_array( $column->values );
-
-                  foreach ( $incoming_value as $v ) {
-
-                    if ( in_array( $v, $field_values ) ) {
-
-                      $value_array[] = $v;
-                    } else {
-
-                      $value_array['other'][] = $v;
-                    }
-                  }
-
-                  if ( isset( $value_array['other'] ) && is_array( $value_array['other'] ) )
-                    $value_array['other'] = implode( ',', $value_array['other'] );
-                }
-              } else
-                $value_array = array();
-
-              $new_value = self::_prepare_array_mysql( $value_array );
+              $new_value = self::_prepare_array_mysql( $field->get_value() );
               break;
 
             case 'link':
+              
               /* translate the link markdown used in CSV files to the array format used in the database
                */
-
               if ( !is_array( $post[$column->name] ) ) {
 
                 $new_value = self::_prepare_array_mysql( self::get_link_array( $post[$column->name] ) );
@@ -3146,6 +3096,8 @@ class Participants_Db extends PDb_Base {
 
     foreach ( $raw_array as $key => $value ) {
 
+      $field_def = self::$fields[$key];
+      /* @var $field_def PDb_Form_Field_Def */
       /**
        * filters the raw value of the field
        * 
@@ -3157,10 +3109,10 @@ class Participants_Db extends PDb_Base {
        * @param object the field object
        * @return mixed
        */
-      $value = self::apply_filters( 'csv_export_value_raw', $value, $column );
+      $value = self::apply_filters( 'csv_export_value_raw', $value, $field_def );
 
       // process any other value types
-      switch ( $column->form_element ) {
+      switch ( $field_def->form_element() ) {
 
         case 'date':
 
@@ -3200,24 +3152,13 @@ class Participants_Db extends PDb_Base {
           break;
 
         default:
-
-          /**
-           * flatten arrays
-           * 
-           * on CSV export, arrays are flattened into a comma-separated list, 
-           * but ONLY IF they are an indexed 1d array, otherwise, they are 
-           * exported as a serialized array
-           * 
-           * @version 1.7.6.1 checks for assoc array
-           */
-          $value_check = maybe_unserialize( $value );
           
-          if ( is_array( $value_check ) && ! PDb_FormElement::is_assoc( $value_check ) && count( $value_check ) === count( $value_check, COUNT_RECURSIVE ) ) {
-            // if it is an indexed array flatten the array into comma-separated list
-            $value = implode( ', ', $value_check );
-          }
-          if ( is_array( $value ) ) {
-            // in case it was an array all along
+          $value = maybe_unserialize( $value );
+
+          if ( $field_def->is_multi() ) {
+            $value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
+          } elseif ( is_array( $value ) ) {
+             // if it is an array, serialize it
             $value = serialize( $value );
           }
           
