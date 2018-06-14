@@ -178,9 +178,9 @@ class PDb_Form_Field_Def {
    */
   public function __get( $prop )
   {
-    error_log(__METHOD__.' getting property: '.$prop.' 
-      
-trace: '.print_r(wp_debug_backtrace_summary(),1));
+//    error_log(__METHOD__.' getting property: '.$prop.' 
+//      
+//trace: '.print_r(wp_debug_backtrace_summary(),1));
     assert( property_exists( $this, $prop ), ' undefined property: ' . $prop );
     switch ( $prop ) {
       default:
@@ -286,7 +286,7 @@ trace: '.print_r(wp_debug_backtrace_summary(),1));
       foreach ( $this->options as $option_title => $option_value ) {
         if ( !is_string( $option_title ) || $option_title === 'other' ) {
           // do nothing: we use the stored value
-        } elseif ( str_replace( ' ', '', $option_value ) === $value ) { // strip out spaces in the option because we did that to the value
+        } elseif ( $option_value === $value ) { // strip out spaces in the option because we did that to the value
           // grab the option title
           return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
         }
