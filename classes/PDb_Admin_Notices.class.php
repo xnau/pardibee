@@ -148,6 +148,12 @@ class PDb_Admin_Notices {
     add_action( 'wp_ajax_' . self::get_key, array( $this, 'dismiss_notice' ) );
     
     add_action( 'participants_database_uninstall', array($this, 'uninstall') );
+    
+    /*
+     * this looks for a 'clear_pdb_notices' variable in the URL and clears all admin 
+     * messages if found
+     */
+    $this->check_for_message_purge();
   }
 
   /**
@@ -255,8 +261,19 @@ class PDb_Admin_Notices {
   private function purge_transient_notices()
   {
     $this->admin_notice_list = array_filter( $this->admin_notice_list, function ($notice) {
-      return $notice->persistent;
+      return ! $notice->persistent;
     } );
+    
+    $this->update_notices();
+  }
+
+  /**
+   * purges all notices
+   */
+  private function purge_all_notices()
+  {
+    $this->admin_notice_list = array();
+    
     $this->update_notices();
   }
 
@@ -270,6 +287,17 @@ class PDb_Admin_Notices {
   {
     $page = get_current_screen();
     return stripos( $page->id, Participants_Db::PLUGIN_NAME ) !== false;
+  }
+  
+  /**
+   * checks for a purge all messages signal
+   * 
+   */
+  public function check_for_message_purge()
+  {
+    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_STRING ) == '1'  ) {
+      $this->purge_all_notices();
+    }
   }
 
   /**
