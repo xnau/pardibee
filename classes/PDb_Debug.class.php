@@ -63,7 +63,7 @@ class PDb_Debug {
 
     add_action( 'participants_database_uninstall', array(__CLASS__, 'uninstall') );
 
-    set_error_handler( array($this, 'write_php_error') );
+    if ( PDB_DEBUG > 1 ) set_error_handler( array($this, 'write_php_error') );
 
     add_action( 'wp_ajax_' . $this->action, array($this, 'handle_refresh') );
   }
