@@ -1342,6 +1342,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'clear_pdb_notices',
+        'title' => __( 'Clear Plugin Admin Notices', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array(
+            'type' => 'checkbox',
+            'help_text' => __( 'If checked, all plugin-generated admin notices will be cleared.', 'participants-database' ),
+            'value' => '0',
+            'options' => array(1, 0),
+        )
+    );
 
 
     /*     * ****************************************************
@@ -1714,6 +1727,10 @@ ORDER BY g.order, v.order';
             add_settings_error( $name, $name, sprintf( __( 'Only numeric values can be used for the "%s" setting.', 'participants-database' ), $this->get_option_title( $name ) ), 'error' );
             $settings[$name] = $this->get_default_value( $name );
           }
+          break;
+        case 'clear_pdb_notices':
+          // this gets reset every time
+          $settings['clear_pdb_notices'] = '0';
           break;
       }
     }
