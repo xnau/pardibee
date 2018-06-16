@@ -245,6 +245,16 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * provides the field title
+   * 
+   * @return string
+   */
+  public function title()
+  {
+    return Participants_Db::apply_filters('translate_string', $this->title );
+  }
+
+  /**
    * provides the default value for the field
    * 
    * @return string
@@ -378,13 +388,14 @@ class PDb_Form_Field_Def {
   /**
    * tells if the field is a multi-type field
    * 
-   * this is a field that keeps it's value in an array
+   * this is a field that has multiple values and stores it's value in the db as an array
    * 
    * @return bool
    */
   public function is_multi()
   {
-    return strpos( $this->form_element, 'multi' ) !== false;
+    //return strpos( $this->form_element, 'multi' ) !== false;
+    return PDb_FormElement::is_multi($this->form_element);
   }
 
   /**
