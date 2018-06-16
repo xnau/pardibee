@@ -321,8 +321,9 @@ class PDb_Template {
   public function set_detail_page( $page = '' )
   {
     if ( empty( $page ) ) {
-      $page = !empty( $this->shortcode_object->shortcode_atts['single_record_link'] ) ? $this->shortcode_object->shortcode_atts['single_record_link'] : Participants_Db::$plugin_options['single_record_page'];
+      $page = !empty( $this->shortcode_object->shortcode_atts['single_record_link'] ) ? $this->shortcode_object->shortcode_atts['single_record_link'] : Participants_Db::single_record_page();
     }
+    
     $this->detail_page = Participants_Db::find_permalink( $page );
   }
 
