@@ -762,13 +762,25 @@ class Participants_Db extends PDb_Base {
    */
   public static function single_record_url( $id )
   {
+    $page = self::add_uri_conjunction( self::single_record_page() ) . self::$single_query . '=' . $id;
+    return self::apply_filters( 'single_record_url', get_permalink( $page ), $id );
+  }
+  
+  /**
+   * provides the URL fo the single record page
+   * 
+   * @since 1.7.9
+   * @return string URL
+   */
+  public static function single_record_page()
+  {
     /**
      * @version 1.7
      * @filter  pdb-single_record_page sets the base page url of the single record page
+     * @param string  single record page name
+     * @retrun string page name
      */
-    $page = self::apply_filters( 'single_record_page', get_permalink( self::$plugin_options['single_record_page'] ) );
-    $page = self::add_uri_conjunction( $page ) . self::$single_query . '=' . $id;
-    return self::apply_filters( 'single_record_url', $page, $id );
+    return self::apply_filters( 'single_record_page', self::$plugin_options['single_record_page'] );
   }
 
   /**
@@ -1820,7 +1832,7 @@ class Participants_Db extends PDb_Base {
             case 'multi-checkbox':
             case 'multi-dropdown':
 
-              $new_value = self::_prepare_array_mysql( $field->get_value() );
+              $new_value = self::_prepare_array_mysql( array_values( $field->get_value() ) );
               break;
 
             case 'link':
@@ -2703,9 +2715,11 @@ class Participants_Db extends PDb_Base {
             $export_columns = array();
 
             foreach ( $csv_columns as $column ) {
+              $field = self::$fields[$column->name];
+              /* @var $field PDb_Form_Field_Def */
               $export_columns[] = sprintf( 'p.%s', $column->name );
               $header_row[] = $column->name;
-              $title_row[] = $column->title;
+              $title_row[] = $field->title();
             }
             
             $export_columns = implode( ', ', $export_columns );
@@ -3155,11 +3169,18 @@ class Participants_Db extends PDb_Base {
           
           $value = maybe_unserialize( $value );
 
+          /*
+           * as of version 1.7.9 multi-type fields export their values as a 
+           * comma-separated list of values; values that contain a comma will use 
+           * the &#44; entity to represent them
+           */
           if ( $field_def->is_multi() ) {
             $value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
           } elseif ( is_array( $value ) ) {
              // if it is an array, serialize it
-            $value = serialize( $value );
+            $value = html_entity_decode( serialize( $value ), ENT_QUOTES, "UTF-8" );
+          } else {
+            $value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
           }
           
       }
@@ -3168,7 +3189,7 @@ class Participants_Db extends PDb_Base {
        * decode HTML entities and convert line breaks to <br>, then pass to a filter 
        * for processing before being added to the output array
        */
-      $output_value = Participants_Db::apply_filters( 'csv_export_value', html_entity_decode( str_replace( array("\n", "\r"), '<br />', stripslashes( $value ) ), ENT_QUOTES, "UTF-8" ), $column );
+      $output_value = Participants_Db::apply_filters( 'csv_export_value', str_replace( array("\n", "\r"), '<br />', stripslashes( $value ) ), $column );
       $output[$key] = $output_value;
 
       $column = next( $columns );
