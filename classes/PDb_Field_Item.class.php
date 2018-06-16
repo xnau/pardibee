@@ -193,10 +193,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function get_value()
   {
-    if ( $this->is_multi() ) {
-      return $this->make_assoc_value_array( self::field_value_array($this->value) );
-    }
-    return $this->value;
+    return $this->value();
   }
   
   /**
@@ -236,7 +233,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function set_value( $value )
   {
-    $this->value = $value;
+    $this->_set_value( $value );
   }
   
   /**
@@ -392,7 +389,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     // assigns the dynamic contextual properties
     if ( property_exists( $config, 'value' ) ) {
-      $this->set_value( $config->value );
+      $this->_set_value( $config->value );
     }
     if ( property_exists( $config, 'record_id' ) ) {
       $this->set_record_id( $config->record_id );
@@ -660,5 +657,38 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     }
     return false;
   }
+  
+  /**
+   * sets the value property from an incoming value
+   * 
+   * this is to clean up an array of values and replace any commas with entities 
+   * so that when stored as a comma string, can be recompsed into the same array
+   * 
+   * @param string|array $raw_value
+   */
+  private function _set_value( $raw_value )
+  {
+    if ( $this->is_multi() ) {
+      $value_list = array();
+      foreach ( self::field_value_array( $raw_value ) as $value ) {
+        $value_list[] = str_replace( ',', '&#44;', $this->prepare_value($value) );
+      }
+      $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
+    } else {
+      $this->value = $this->prepare_value($raw_value);
+    }
+  }
 
+  /**
+   * prepares a single value for use as the value property
+   * 
+   * sanitizes and converts commas to entities
+   * 
+   * @param string
+   * @return string
+   */
+  private function prepare_value( $value )
+  {
+    return filter_var( $value, FILTER_SANITIZE_STRING );
+  }
 }
