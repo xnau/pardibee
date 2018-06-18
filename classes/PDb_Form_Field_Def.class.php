@@ -425,13 +425,13 @@ class PDb_Form_Field_Def {
   /**
    * provides an array of option values
    * 
-   * this provides an indexed array of just the avlues, titles are ignored
+   * this provides an indexed array of just the values, titles are ignored
    * 
-   * @return array as $index => $value
+   * @return array of option values
    */
   public function option_values()
   {
-    return PDb_FormElement::is_assoc( $this->options ) ? array_values( $this->options ) : $this->options;
+    return array_values( $this->options );
   }
 
   /**
