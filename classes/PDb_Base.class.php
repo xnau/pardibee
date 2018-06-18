@@ -346,7 +346,7 @@ class PDb_Base {
     global $wpdb;
     $values = array();
     $where = array();
-    $columns = !is_array( $columns ) ? explode( ',', str_replace( ' ', '', $columns ) ) : (array) $columns;
+    $columns = is_array( $columns ) ? $columns : explode( ',', str_replace( ' ', '', $columns ) );
     foreach ( $columns as $column ) {
       if ( isset( $submission[$column] ) ) {
         $values[] = $submission[$column];
@@ -1736,6 +1736,19 @@ class PDb_Base {
     } else {
       error_log( $message );
     }
+  }
+  
+  /**
+   * provides the user's IP
+   * 
+   * this function provides a filter so that a different method can be used if the 
+   * site is behind a proxy, firewall, etc.
+   * 
+   * @return string IP
+   */
+  public static function user_ip()
+  {
+    return self::apply_filters('user_ip', $_SERVER['REMOTE_ADDR']);
   }
 
 }
