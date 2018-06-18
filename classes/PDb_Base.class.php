@@ -481,7 +481,6 @@ class PDb_Base {
    */
   public static function _prepare_string_mysql( $string )
   {
-
     return stripslashes( $string );
   }
 
