@@ -7,7 +7,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -17,38 +17,32 @@ class PDb_Record_Item extends PDb_Template_Item {
   /**
    * instantiates the record item
    * 
-   * @param array $record collection of PDb_Field_Item objects
+   * @param array $fields collection of PDb_Field_Item objects
    * @param int $id the record id
    * @param string $modules name of the current module
    */
-  public function __construct( $record, $id, $module ) {
+  public function __construct( $fields, $id, $module ) {
     
     $this->module = $module;
+    $this->record_id = $id;
+    $this->fields = $fields;
     
     // get rid of unneeded properties
     unset( $this->name, $this->title );
     
-    $this->record_id = $id;
-    
-    $this->assign_props( $record );
+    $this->assign_props();
     
   }
   
   /**
    * sets up the values property
    */
-  protected function assign_props( $record ) {
-    
-    // add the record field objects
-    // this needs to by typed as array for the iterators to work
-    $this->fields = (array) $record;
+  protected function assign_props() {
     
     foreach($this->fields as $name => $field) {
-    
-      // get the field attributes
-      $field = (object) array_merge((array)$field, (array)Participants_Db::$fields[$name]);
       
-      if (isset($field->value)) $this->values[$name] = $field->value;
+      $this->values[$name] = isset($field->value) ? $field->value : '';
+      
     }
     reset($this->fields);
   }
