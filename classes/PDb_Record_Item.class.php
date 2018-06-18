@@ -30,14 +30,14 @@ class PDb_Record_Item extends PDb_Template_Item {
     // get rid of unneeded properties
     unset( $this->name, $this->title );
     
-    $this->assign_props();
+    $this->assign_values();
     
   }
   
   /**
    * sets up the values property
    */
-  protected function assign_props() {
+  protected function assign_values() {
     
     foreach($this->fields as $name => $field) {
       
