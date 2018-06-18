@@ -6,6 +6,7 @@
  * this demonstrates how to show various types ot total from the database
  *
  */
+  
 if (empty($this->shortcode_atts['fields'])) {
 
   /* if no "fields" attribute is defined, show a simple count of records, including 
@@ -24,14 +25,16 @@ if (empty($this->shortcode_atts['fields'])) {
    * 
    */
   $fields = explode(',', str_replace(' ', '', $this->shortcode_atts['fields']));
+  
   while ($this->have_records()) : $this->the_record();
-    foreach ($this->record->values as $name => $value) {
-      foreach ($fields as $field) {
-        if ($name == $field) {
-					$total = $total + floatval($value);
-				}
-			}
-    }
+  
+      foreach ($this->record->values as $name => $value) {
+        foreach ($fields as $field) {
+          if ($name == $field) {
+            $total = $total + floatval($value);
+          }
+        }
+      }
   endwhile;
 
   echo $total;
