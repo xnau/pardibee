@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1200,7 +1200,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'normally, record timestamps (date_recorded, date_updated, last_accessed) are not editable, checking this allows them to be edited.', 'participants-database' ) . $this->settings_help( 'File-and-Image-Uploads-Use-WP-'),
+            'help_text' => __( 'normally, record timestamps (date_recorded, date_updated, last_accessed) are not editable, checking this allows them to be edited.', 'participants-database' ) . $this->settings_help( 'allow-record-timestamps-to-be-edited'),
             'value' => 0,
             'options' => array(1, 0),
         ),
@@ -1213,10 +1213,14 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-advanced',
         'options' => array
             (
-            'type' => 'checkbox',
-            'help_text' => sprintf(__( 'this will enable writing to the %s debugging log.', 'participants-database' ), Participants_Db::$plugin_title ),
+            'type' => 'dropdown',
+            'help_text' => sprintf(__( 'this will enable writing to the %s debugging log.', 'participants-database' ), Participants_Db::$plugin_title ) . $this->settings_help( 'enable-debugging'),
             'value' => 0,
-            'options' => array(1, 0),
+            'options' => array( 
+                __('off', 'participants-database') => 0, 
+                __('plugin debug', 'participants-database') => 1,
+                __('all errors', 'participants-database') => 2,
+                ),
         ),
     );
 
@@ -1745,7 +1749,7 @@ ORDER BY g.order, v.order';
    */
   public function settings_help( $anchor )
   {
-    $href = 'https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/';
+    $href = 'https://xnau.com/participants-database-settings-help/';
     return '<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
   }
   
