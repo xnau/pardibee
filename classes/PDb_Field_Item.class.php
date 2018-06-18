@@ -682,13 +682,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * prepares a single value for use as the value property
    * 
-   * sanitizes and converts commas to entities
-   * 
    * @param string
    * @return string
    */
   private function prepare_value( $value )
   {
-    return filter_var( $value, FILTER_SANITIZE_STRING );
+    return $value; // filter_var( $value, FILTER_SANITIZE_STRING );
   }
 }
