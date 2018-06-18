@@ -3737,9 +3737,11 @@ function PDb_class_loader( $class )
  * PHP version checks and notices before initializing the plugin
  */
 if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
-  if ( ! defined( 'PDB_DEBUG' ) ) { // this is so we only initilize once per page load
+  
+  if ( is_null( Participants_Db::$plugin_version ) ) { // check for the uninitialized class
     Participants_Db::initialize();
   }
+  
 } else {
 
   add_action( 'admin_notices', 'pdb_handle_php_version_error' );
