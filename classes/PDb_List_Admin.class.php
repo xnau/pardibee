@@ -381,15 +381,16 @@ class PDb_List_Admin {
 
   /** 	
    * processes all the general list actions: delete and  set items-per-page
+   * 
+   * @global wpdb $wpdb
    */
   private static function _process_general()
   {
-
     global $wpdb;
 
-    if ( filter_input( INPUT_POST, 'action' ) == 'list_action' ) {
+    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'list_action' ) {
 
-      switch ( filter_input( INPUT_POST, 'submit-button' ) ) {
+      switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
 
         //case self::$i18n['delete_checked']:
         case self::$i18n['apply']:
