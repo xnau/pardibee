@@ -2909,19 +2909,16 @@ class Participants_Db extends PDb_Base {
      * times per day to get a private ID, they are blocked for 24 hours
      */
     $max_tries = Participants_Db::current_user_has_plugin_role( 'admin', 'retrieve link' ) ? 10000 : 3; // give the plugin admin unlimited tries
-    $transient = self::$prefix . 'retrieve-count-' . str_replace( '.', '', $_SERVER['REMOTE_ADDR'] );
-    $count = get_transient( $transient );
-    if ( $count === false ) {
-      set_transient( $transient, 1, (60 * 60 * 24 ) );
-    }
+    $transient = self::$prefix . 'retrieve-count-' . str_replace( '.', '', self::user_ip() );
+    $count = get_transient( $transient ) ? : 0; // set the count to 0 if no transient is set
     if ( $count > $max_tries ) {
 
 // too many tries, come back tomorrow
-      error_log( 'Participants Database Plugin: IP blocked for too many retrieval attempts from IP ' . $_SERVER['REMOTE_ADDR'] . ' in 24-hour period.' );
+      error_log( 'Participants Database Plugin: IP blocked for too many retrieval attempts from IP ' . self::user_ip() . ' in 24-hour period.' );
       return;
     }
     $count++;
-    set_transient( $transient, $count, (60 * 60 * 24 ) );
+    set_transient( $transient, $count, DAY_IN_SECONDS );
 
     $column = self::plugin_setting( 'retrieve_link_identifier', 'email' );
 
