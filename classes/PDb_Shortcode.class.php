@@ -622,8 +622,8 @@ abstract class PDb_Shortcode {
 
       $the_record = next( $this->records );
     }
-
-    $this->record = new PDb_Record_Item( $the_record, key( $this->records ), $this->module );
+    
+    $this->record = new PDb_Record_Item( (array) $the_record, key( $this->records ), $this->module );
 
     $this->reset_field_counter();
 
@@ -760,7 +760,7 @@ abstract class PDb_Shortcode {
     foreach ( $this->fields as $field ) {
       /* @var $field PDb_Form_Field */
       if ( $field->group() == $group && in_array( $field->name(), $this->display_columns ) ) {
-        $group_fields[$field->name()] = clone $field;
+        $group_fields[$field->name()] = $field;
       }
     }
     return $group_fields;
