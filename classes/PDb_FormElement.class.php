@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -182,6 +182,7 @@ class PDb_FormElement extends xnau_FormElement {
       // now we can use our field class methods
       $field = new PDb_Field_Item( $field );
     }
+    /* @var $field PDb_Field_Item */
 
     $return = '';
 
@@ -357,8 +358,10 @@ class PDb_FormElement extends xnau_FormElement {
 
         case 'placeholder':
 
-          $field->set_value( $field->default );
+          $field->set_value( $field->default_value() );
+          
           $return = $html ? self::make_link( $field ) : $field->value();
+          
           break;
 
         case 'password':
@@ -552,9 +555,10 @@ class PDb_FormElement extends xnau_FormElement {
   protected function _upload( $type )
   {
     $field_def = Participants_Db::$fields[$this->name];
+    /* @var $field_def PDb_Form_field_Def */
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
-    if ( $this->value !== $field_def->default ) {
+    if ( $this->value !== $field_def->default_value() ) {
 
       $this->_addline( self::get_field_value_display( $this ) );
     }
@@ -573,7 +577,7 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline( $this->_input_tag( 'file' ) );
 
       // add the delete checkbox if there is a file defined
-      if ( $this->value !== $field_def->default && $this->module !== 'signup' )
+      if ( $this->value !== $field_def->default_value() && $this->module !== 'signup' )
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
     }
 
@@ -693,10 +697,10 @@ class PDb_FormElement extends xnau_FormElement {
       return $URI;
     } else {
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || ( isset( $field->form_element ) && $field->form_element === 'text-line' ) ) ) {
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || ( isset( $field->form_element ) && in_array( $field->form_element, array('text-line','placeholder') ) ) ) ) {
         $sanitized = wp_kses_post( $field->value );
       } else {
-        $sanitized = esc_html( $field->value );
+        $sanitized = strip_tags( $field->value );
       }
       /**
        * this filter gives access to the text field output before display, providing 
