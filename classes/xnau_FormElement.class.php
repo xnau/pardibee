@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -1243,12 +1243,12 @@ abstract class xnau_FormElement {
       } elseif ( $value === 'other' ) {
         $otherlabel = $title;
       } elseif ( strlen( $value ) > 0 ) {
-        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . Participants_Db::apply_filters( 'translate_string', esc_html( $title ) ) . '</option>', -1 );
+        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . Participants_Db::apply_filters( 'translate_string', strip_tags( $title ) ) . '</option>', -1 );
       }
     }
     // add the "other" option
     if ( $otherlabel !== false )
-      $this->_addline( '<option ' . ( $this->value !== '' ? $this->_set_selected( $this->options, $this->value, 'selected', false ) : '' ) . ' value="other" >' . $otherlabel . '</option>' );
+      $this->_addline( '<option ' . ( $this->value !== '' ? $this->_set_selected( $this->options, $this->value, 'selected', false ) : '' ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
 
     if ( $this->inside ) {
       $this->_addline( '</optgroup>' );
