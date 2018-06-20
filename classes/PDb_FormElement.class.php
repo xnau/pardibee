@@ -643,31 +643,28 @@ class PDb_FormElement extends xnau_FormElement {
 
     // convert the PDb_Field_Item object to a stdClass
     // for backward compatibility
-    if ( is_a( $field, 'PDb_Field_Item' ) ) {
-      $field_data = array(
-          'value' => $field->value(),
-          'link' => $field->link(),
-          'form_element' => $field->form_element(),
-      );
-      $field = (object) $field_data;
+    if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
+      if ( PDB_DEBUG ) Participants_Db::debug_log ( __METHOD__.' called with: '.print_r($field,1));
+      $field = new PDb_Field_Item( $field );
     }
+    /* @var PDb_Field_Item $field */
 
     /**
      * links may only be placed on string values
      */
-    if ( is_array( $field->value ) )
-      return $field->value;
+    if ( is_array( $field->get_value() ) )
+      return $field->get_value();
 
     // clean up the provided string
-    $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->value ) ) );
+    $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->get_value() ) ) );
 
-    if ( !empty( $field->link ) ) {
+    if ( !empty( $field->link() ) ) {
       /*
        * the field is a single record link or other field with the link property 
        * set, which becomes our href
        */
-      $URI = $field->link;
-      $linktext = wp_kses_post( $field->value );
+      $URI = $field->link();
+      $linktext = wp_kses_post( $field->get_value() );
     } elseif ( filter_var( $URI, FILTER_VALIDATE_URL ) !== false && Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
 
       // convert the get array to a get string and add it to the URI
@@ -697,32 +694,23 @@ class PDb_FormElement extends xnau_FormElement {
       return $URI;
     } else {
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || ( isset( $field->form_element ) && in_array( $field->form_element, array('text-line','placeholder') ) ) ) ) {
-        $sanitized = wp_kses_post( $field->value );
+      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || in_array( $field->form_element(), array('text-line','placeholder') ) ) ) {
+        $sanitized = wp_kses_post( $field->get_value() );
       } else {
-        $sanitized = strip_tags( $field->value );
+        $sanitized = strip_tags( $field->get_value() );
       }
-      /**
-       * this filter gives access to the text field output before display, providing 
-       * an alternate way to sanitize the output
-       * 
-       * @filter pdb-text_field_output
-       * @param string sanitized output string
-       * @param object the field object
-       * @return string the display string   
-       */
-      return Participants_Db::apply_filters( 'text_field_output', $sanitized, $field );
+      return $sanitized;
     }
 
     // default template for links
     $linktemplate = $template === false ? '<a href="%1$s" %3$s >%2$s</a>' : $template;
 
     $linktext = empty( $linktext ) ? str_replace( array('http://', 'https://'), '', $URI ) : $linktext;
-
-    $target = isset( $field->attributes['target'] ) ? 'target="' . $field->attributes['target'] . '"' : '';
+    
+    $attributes = self::html_attributes($field->attributes, array('rel','download','target','type'));
 
     //construct the link
-    return sprintf( $linktemplate, $URI, $linktext, $target );
+    return sprintf( $linktemplate, $URI, $linktext, $attributes );
   }
 
   /**
