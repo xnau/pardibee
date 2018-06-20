@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -1395,15 +1395,18 @@ abstract class xnau_FormElement {
    * builds an html attributes string
    * 
    * @param array $attributes the attributes array
+   * @param array $allowed array of allowed attributes (optional)
    * 
    * @return string the HTML attribute string
    */
-  public static function html_attributes( $attributes )
+  public static function html_attributes( $attributes, $allowed = false )
   {
-    $output = '';
-    $pattern = '%1$s="%2$s" ';
+    $output = array();
+    $pattern = '%s="%s"';
 
     foreach ( (array) $attributes as $name => $value ) {
+      
+      if ( ( $allowed && in_array( $name, $allowed ) ) || !is_array( $allowed ) ) :
 
       if ( $value === false ) {
         continue;
@@ -1413,10 +1416,14 @@ abstract class xnau_FormElement {
         // indexed element: use the value as the name
         $name = $value;
       }
-      $output .= sprintf( $pattern, esc_attr( $name ), esc_attr( $value ) );
+      
+      $output[] = sprintf( $pattern, esc_attr( $name ), esc_attr( $value ) );
+      
+      endif;
+      
     }
 
-    return $output;
+    return implode( ' ', $output );
   }
 
   /**
