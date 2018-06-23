@@ -435,7 +435,7 @@ class PDb_Base {
   public static function is_single_record_link( $field )
   {
     $name = is_object( $field ) ? $field->name : $field;
-    $page = Participants_Db::plugin_setting( 'single_record_page' );
+    $page = Participants_Db::single_record_page();
     /**
      * @filter pdb-single_record_link_field
      * @param array the defined single record link field name
