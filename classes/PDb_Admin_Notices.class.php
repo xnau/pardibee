@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -131,7 +131,7 @@ class PDb_Admin_Notices {
   public static function delete_notice( $id )
   {
     $notice = self::get_instance();
-    $notice->delete( $id );
+    $notice->dismiss( $id );
   }
 
   /**
@@ -141,6 +141,7 @@ class PDb_Admin_Notices {
   {
     $this->admin_notice_list = $this->admin_notice_list();
     
+//    error_log(__METHOD__.' admin notices: '.print_r($this->admin_notice_list,1));
     
     add_action( 'admin_notices', array($this, 'action_admin_notices') );
     add_action( 'admin_enqueue_scripts', array($this, 'action_admin_enqueue_scripts') );
@@ -190,7 +191,7 @@ class PDb_Admin_Notices {
       
       /* @var $admin_notice pdb_admin_notice_message */
 
-      if ( $admin_notice->global || ( !$admin_notice->global && $this->is_plugin_screen() ) ) {
+      if ( $this->notice_is_shown( $admin_notice ) ) {
         ?><div
           class="notice pdb_admin_notices-notice notice-<?php
           echo $admin_notice->type;
@@ -228,21 +229,22 @@ class PDb_Admin_Notices {
   public function dismiss_notice()
   {
     if ( !wp_verify_nonce( filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING ), self::pdb_admin_notice ) ) {
-      wp_die('nonce failed');
+      wp_die();
     }
-    $this->delete( filter_input( INPUT_GET, 'msgid', FILTER_SANITIZE_STRING ) );
+    $this->dismiss( filter_input( INPUT_GET, 'msgid', FILTER_SANITIZE_STRING ) );
+    
     wp_die();
   }
 
   /**
-   * removes a notice from the notices option
+   * marks a notice as dismissed
    * 
    * @param string  $notice_id
    */
-  public function delete( $notice_id )
+  public function dismiss( $notice_id )
   {
     if ( isset( $this->admin_notice_list[$notice_id] ) ) {
-      unset( $this->admin_notice_list[$notice_id] );
+      $this->admin_notice_list[$notice_id]->dismiss();
       $this->update_notices();
     }
   }
@@ -253,6 +255,30 @@ class PDb_Admin_Notices {
   private function update_notices()
   {
     update_option( self::pdb_admin_notice, $this->admin_notice_list );
+  }
+  
+  /**
+   * tells if the notice should be shown
+   * 
+   * @param pdb_admin_notice_message $notice
+   * @return bool
+   */
+  private function notice_is_shown( pdb_admin_notice_message $notice )
+  {
+    return $notice->is_dimissed() === false && ( $notice->is_global_message() || $this->is_plugin_screen() );
+  }
+  
+  /**
+   * tells if the notice needs to be added to the list
+   * 
+   * if the notice is in the list already, don't add it
+   * 
+   * @param pdb_admin_notice_message $notice
+   * @return bool
+   */
+  private function notice_should_be_added( pdb_admin_notice_message $notice )
+  {
+    return array_key_exists($notice->id, $this->admin_notice_list) === false;
   }
 
   /**
@@ -328,13 +354,17 @@ class PDb_Admin_Notices {
    * @param string  $context a context string fro the message header
    * @param bool    $persistent if true, message will persis across page loads
    * @param bool    $global if false, notice is only shown on plugin admin pages, true shown on all admin pages
+   * 
+   * @return string notice ID
    */
   private function notice( $type, $message, $context, $persistent, $global = false )
   {
     $notice = new pdb_admin_notice_message( $type, $message, $context, $persistent, $global );
 
-    $this->admin_notice_list[$notice->id] = $notice;
-    $this->update_notices();
+    if ( $this->notice_should_be_added( $notice ) ) {
+      $this->admin_notice_list[$notice->id] = $notice;
+      $this->update_notices();
+    }
     return $notice->id;
   }
 
@@ -423,6 +453,11 @@ class pdb_admin_notice_message {
    * @var bool whether the notice should be seen globally in the admin or on plugin plages only
    */
   private $global;
+  
+  /**
+   * @var bool whether the notice has been dismissed
+   */
+  private $dismissed = false;
 
   /**
    * @var string holds the unique id for the message
@@ -470,9 +505,9 @@ class pdb_admin_notice_message {
       case 'context':
         return esc_html( $this->context_string() );
       case 'persistent':
-        return (bool) $this->persistent;
       case 'global':
-        return (bool) $this->global;
+      case 'dismissed':
+        return (bool) $this->{$name};
       case 'type':
         return $this->type;
     }
@@ -508,6 +543,35 @@ class pdb_admin_notice_message {
   public function html_message()
   {
     return preg_match( '/^</', $this->message ) === 1;
+  }
+  
+  /**
+   * sets the dismissed flag
+   * 
+   */
+  public function dismiss()
+  {
+    $this->dismissed = true;
+  }
+  
+  /**
+   * tells of the notice has been dismissed
+   * 
+   * @return bool
+   */
+  public function is_dimissed()
+  {
+    return (bool) $this->dismissed;
+  }
+  
+  /**
+   * tells of the notice should be shown on all admin pages
+   * 
+   * @return bool
+   */
+  public function is_global_message()
+  {
+    return $this->global;
   }
 
 }
