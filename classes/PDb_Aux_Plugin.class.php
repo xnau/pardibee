@@ -139,6 +139,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     function __construct( $subclass, $plugin_file )
     {
+      if ( is_null( Participants_Db::$plugin_version ) ) {
+        // main plugin has not been initialized
+        return;
+      }
       // provides the fallback values for these plugin data fields
       $this->plugin_data += array(
           'PluginURI' => 'https://xnau.com/shop/',
