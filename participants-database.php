@@ -767,11 +767,17 @@ class Participants_Db extends PDb_Base {
   public static function single_record_url( $id )
   {
     $page = self::add_uri_conjunction( self::single_record_page() ) . self::$single_query . '=' . $id;
-    return self::apply_filters( 'single_record_url', get_permalink( $page ), $id );
+    /**
+     * @filter pdb-single_record_url
+     * @param string  single record page complete url
+     * @param int record id
+     * @return string URL to the record's single record page
+     */
+    return self::apply_filters( 'single_record_url', $page, $id );
   }
   
   /**
-   * provides the URL fo the single record page
+   * provides the base URL fo the single record page
    * 
    * @since 1.7.9
    * @return string URL
@@ -781,10 +787,10 @@ class Participants_Db extends PDb_Base {
     /**
      * @version 1.7
      * @filter  pdb-single_record_page sets the base page url of the single record page
-     * @param string  single record page name
-     * @retrun string page name
+     * @param string  single record page base url
+     * @return string URL
      */
-    return self::apply_filters( 'single_record_page', self::$plugin_options['single_record_page'] );
+    return self::apply_filters( 'single_record_page', get_permalink( self::$plugin_options['single_record_page'] ) );
   }
 
   /**
@@ -1717,7 +1723,7 @@ class Participants_Db extends PDb_Base {
     
     // gather the submit values and add them to the query
     foreach ( $columns as $column ) {
-      
+      /** @var object $column */
       /**
        * @action pdb-process_form_submission_column_{$fieldname}
        * 
@@ -1750,7 +1756,7 @@ class Participants_Db extends PDb_Base {
       }
       $new_value = false;
           
-      // we can process individual submit values here
+      // first process the internal fields
       switch ( $column->name ) {
 
         case 'id':
