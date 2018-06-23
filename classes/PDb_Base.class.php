@@ -1294,6 +1294,20 @@ class PDb_Base {
       }
     }
   }
+  
+  /**
+   * displays a warning message if the php version is too low
+   * 
+   */
+  protected static function php_version_warning()
+  {
+    $target_version = '5.6';
+
+    if ( version_compare( PHP_VERSION, $target_version, '<' ) ) {
+      
+      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database will require PHP version %1$s in future releases, you have PHP version %2$s. Please update your php version, future versions of Participants Database may not run without minimum php version %1$s', 'participants-database' ), $target_version, PHP_VERSION ) . '</p>', '', false);
+    }
+  }
 
   /**
    * gets the PHP timezone setting
