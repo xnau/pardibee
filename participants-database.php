@@ -283,7 +283,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function initialize()
   {
-
     // set the plugin version
     self::$plugin_version = self::_get_plugin_data( 'Version' );
 
@@ -482,6 +481,11 @@ class Participants_Db extends PDb_Base {
      * $notices->error( 'error message text' );
      */
     PDb_Admin_Notices::get_instance();
+    
+    
+    
+    // check the php version for possible warning
+    self::php_version_warning();
     
   }
 
@@ -3744,7 +3748,6 @@ if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
   add_action( 'admin_notices', 'pdb_handle_php_version_error' );
 
   add_action( 'admin_init', 'pdb_deactivate_plugin' );
-  return;
 }
 
 function pdb_deactivate_plugin()
@@ -3754,7 +3757,7 @@ function pdb_deactivate_plugin()
 
 function pdb_handle_php_version_error()
 {
-  echo '<div class="error"><p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database requires PHP version %s to function properly, you have PHP version %s. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version, PHP_VERSION ) . '</p></div>';
+  echo '<div class="notice notice-error is-dismissible"><p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database requires PHP version %s to function properly, you have PHP version %s. Please upgrade PHP. The Plugin has been auto-deactivated.', 'participants-database' ), Participants_Db::min_php_version, PHP_VERSION ) . '</p></div>';
   if ( isset( $_GET['activate'] ) ) {
     unset( $_GET['activate'] );
   }
