@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign up form, survey, management, 
 Requires at least: 4.0
 Tested up to: 4.9.6
 Requires PHP: 5.6
-Stable tag: 1.7.8.10
+Stable tag: 1.7.8.11
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,15 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.9 =
+* version warning for php < 5.6
+* refactored field definition and dynamic objects
+* improved efficiency for database interactions
+* fixed mass-approval bug with user field values
+* multiselect data now exported as comma-separated list
+* fixed issue with "stuck" admin messages
+* added Finnish translation
 
 = 1.7.8.11 =
 * minor improvements to several API filters
@@ -1014,8 +1023,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.8.11 =
-Version 1.7.8.11 is a minor bugfix update.
+= 1.7.9 =
+Version 1.7.9 is a bugfix and feature update.
 
 == Plugin Support ==
 
