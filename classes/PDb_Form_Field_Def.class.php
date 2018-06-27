@@ -62,7 +62,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string validation type
    */
-  protected $validation;
+  public $validation;
 
   /**
    * @var int display column value
@@ -77,27 +77,27 @@ class PDb_Form_Field_Def {
   /**
    * @var bool field is sortable
    */
-  private $sortable;
+  public $sortable;
 
   /**
    * @var bool field is included in CSV export
    */
-  private $CSV;
+  public $CSV;
 
   /**
    * @var bool field is persistent
    */
-  private $persistent;
+  public $persistent;
 
   /**
    * @var bool field is included in the signup form
    */
-  protected $signup;
+  public $signup;
 
   /**
    * @var bool field is read only
    */
-  private $readonly;
+  protected $readonly;
 
   /**
    * @var string name of the current module
