@@ -1130,9 +1130,10 @@ class PDb_List extends PDb_Shortcode {
       $page_id = Participants_Db::plugin_setting( 'single_record_page', false );
     }
 
+    $this->single_record_page = get_permalink( $page_id );
+    
     // supply our page to the main script
     add_filter( 'pdb-single_record_page', array($this, 'single_record_page') );
-    $this->single_record_page = get_permalink( $page_id );
   }
 
   /**
