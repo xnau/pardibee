@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.1
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -32,7 +32,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    *
    * @var string the instantiating module
    */
-	private $module;
+	private $module = 'none';
 
   /**
    *
@@ -67,7 +67,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 //trace: '.print_r(  wp_debug_backtrace_summary(),1)  );
     
     if ( is_string( $config ) ) {
-      $config = (object) array('name' => $config);
+      $config = array('name' => $config);
+    }
+    
+    if ( is_array( $config ) ) {
+      $config = (object) $config;
     }
     
     parent::__construct($config->name);
