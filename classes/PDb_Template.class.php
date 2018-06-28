@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.6.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -435,7 +435,7 @@ class PDb_Template {
         /**
          * @version 1.7 modified to get the currently submitted value if available
          */
-        return isset( $this->fields->{$name}->value ) && $this->has_content( $name ) ? $this->fields->{$name}->value : $this->values[$name];
+        return isset( $this->fields->{$name}->value ) && $this->has_content( $name ) ? $this->fields->{$name}->value : ( isset($this->values[$name]) ? $this->values[$name] : '' );
     }
   }
 
