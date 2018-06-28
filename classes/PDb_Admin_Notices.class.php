@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.3
+ * @version    1.3.1
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -321,7 +321,7 @@ class PDb_Admin_Notices {
    */
   public function check_for_message_purge()
   {
-    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_STRING ) == '1'  ) {
+    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || ( array_key_exists( Participants_Db::$participants_db_options,$_POST ) && filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_STRING ) == '1' )  ) {
       $this->purge_all_notices();
     }
   }
