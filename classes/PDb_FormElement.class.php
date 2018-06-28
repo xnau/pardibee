@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -250,7 +250,7 @@ class PDb_FormElement extends xnau_FormElement {
             if ( $field->module === 'signup' ) {
               $field->set_link( false );
               $return = $field->value();
-            } elseif ( !empty( $field->value() ) && Participants_Db::is_allowed_file_extension( $field->value(), $field->attributes() ) ) {
+            } elseif ( $field->has_content() && Participants_Db::is_allowed_file_extension( $field->value(), $field->attributes() ) ) {
               $field->set_link( filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL ) );
               if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $field->link() && strlen( $field->default ) > 0 ) {
                 $field->set_value( $field->default );
@@ -294,15 +294,19 @@ class PDb_FormElement extends xnau_FormElement {
 
           $linkdata = maybe_unserialize( $field->value() );
 
-          if ( is_array( $linkdata ) ) {
+          if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
             list( $url, $value ) = $linkdata;
           } else {
             $url = $field->link();
             $value = $field->value();
           }
 
-          if ( empty( $value ) && !empty( $url ) ) {
-            $value = $field->has_default() ? $field->default : preg_replace( '#(https?://)#', '', $url );
+          if ( empty( $value ) ) {
+            if ( !empty( $url ) ) {
+              $value = $field->has_default() ? $field->default : preg_replace( '#(https?://)#', '', $url );
+            } else {
+              $value = '';
+            }
           }
 
           if ( $html )
