@@ -103,7 +103,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   /**
    * stores the record in the database
    * 
-   * @param array $post asscitative srray of imported data
+   * @param array $post asscitative array of imported data
    */
   function store_record( $post ) {
     
