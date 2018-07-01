@@ -1301,11 +1301,17 @@ class PDb_Base {
    */
   protected static function php_version_warning()
   {
-    $target_version = '5.6';
+    $target_version = '7.6';
+    
+    error_log(__METHOD__.' shown flag: '. get_option( Participants_Db::one_time_notice_flag ) );
 
-    if ( version_compare( PHP_VERSION, $target_version, '<' ) ) {
+    if ( version_compare( PHP_VERSION, $target_version, '<' ) && ! get_option( Participants_Db::one_time_notice_flag ) ) {
       
       PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database will require PHP version %1$s in future releases, you have PHP version %2$s. Please update your php version, future versions of Participants Database may not run without minimum php version %1$s', 'participants-database' ), $target_version, PHP_VERSION ) . '</p>', '', false);
+      
+      // mark the option as shown
+      update_option(Participants_Db::one_time_notice_flag, true);
+      
     }
   }
 
