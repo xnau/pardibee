@@ -1032,8 +1032,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.9.1 =
-Version 1.7.9.1 is a minor bugfix and update.
+= 1.7.9.2 =
+Version 1.7.9.2 is a minor bugfix and update.
 
 == Plugin Support ==
 
