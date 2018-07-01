@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.6.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -662,7 +662,7 @@ class PDb_FormElement extends xnau_FormElement {
     // clean up the provided string
     $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->get_value() ) ) );
 
-    if ( !empty( $field->link() ) ) {
+    if ( $field->has_link() ) {
       /*
        * the field is a single record link or other field with the link property 
        * set, which becomes our href
