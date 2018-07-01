@@ -3,7 +3,7 @@
 /**
  * plugin initialization class
  *
- * @version 1.6
+ * @version 1.7
  *
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the "delta"
@@ -308,6 +308,7 @@ class PDb_Init {
     delete_option( Participants_Db::$participants_db_options );
     delete_option( Participants_Db::$db_version_option );
     delete_option( Participants_Db::$default_options );
+    delete_option( Participants_Db::one_time_notice_flag );
 
 // clear transients
     delete_transient( Participants_Db::$last_record );
