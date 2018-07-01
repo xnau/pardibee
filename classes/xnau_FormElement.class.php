@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -930,7 +930,8 @@ abstract class xnau_FormElement {
     $link_placeholder = '(URL)';
     $linktext_placeholder = $this->i18n['linktext'];
     
-    if ( is_null( $this->value ) || ( is_string( $this->value ) && strlen( $this->value ) === 0 ) ) {
+    // set the correct format for an empty value
+    if ( $this->value === array() || is_null( $this->value ) || ( is_string( $this->value ) && strlen( $this->value ) === 0 ) ) {
       $this->value = array('');
     }
     
@@ -949,9 +950,9 @@ abstract class xnau_FormElement {
       }
     }
     
-
     // if the value contains only a URL, the linktext and URL are made the same
     // if the value is not a URL, only the linked text is used
+    
     if ( count( $parts ) < 2 ) {
       $parts[1] = $parts[0];
       if ( !filter_var( $parts[0], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) )
