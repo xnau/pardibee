@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -121,7 +121,6 @@ class PDb_Form_Field_Def {
    */
   public function __construct( $field )
   {
-    assert( is_string( $field ) || property_exists( $field, 'name' ), ' improperly instantiated with: ' . print_r( $field, 1 ) );
     $def = is_string( $field ) ? self::get_field_def( $field ) : $field;
 
     $this->assign_def_props( $def );
@@ -181,7 +180,6 @@ class PDb_Form_Field_Def {
 //    error_log(__METHOD__.' getting property: '.$prop.' 
 //      
 //trace: '.print_r(wp_debug_backtrace_summary(),1));
-    assert( property_exists( $this, $prop ), ' undefined property: ' . $prop );
     switch ( $prop ) {
       default:
         return $this->{$prop};
