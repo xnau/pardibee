@@ -722,7 +722,7 @@ class PDb_Base {
     /**
      * @filter pdb-dynamic_value
      * 
-     * this filter is duplicated here so we can test the dynamic conversion
+     * this filter is duplicated here so we can test the dynamic con_
      * 
      * @param string the initial result; empty string
      * @param string the dynamic value key
@@ -1301,9 +1301,7 @@ class PDb_Base {
    */
   protected static function php_version_warning()
   {
-    $target_version = '7.6';
-    
-    error_log(__METHOD__.' shown flag: '. get_option( Participants_Db::one_time_notice_flag ) );
+    $target_version = '5.6';
 
     if ( version_compare( PHP_VERSION, $target_version, '<' ) && ! get_option( Participants_Db::one_time_notice_flag ) ) {
       

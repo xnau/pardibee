@@ -200,9 +200,6 @@ class PDb_Form_Field_Def {
         $this->{$prop} = $value;
         break;
       default:
-        error_log( __METHOD__ . ' setting property: ' . $prop . ' 
-
-    trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
         $this->{$prop} = $value;
     }
   }
