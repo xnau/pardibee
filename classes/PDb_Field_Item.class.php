@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -44,7 +44,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    *
    * @var string the href value
    */
-  private $link = '';
+  public $link = '';
 
   /**
    * @var bool determines if the field value is output as HTML or a formatted value 
