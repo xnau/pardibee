@@ -224,6 +224,7 @@ if ( $participant_values ) :
                     'class' => $field_class,
                     'attributes' => $attributes,
                     'module' => 'admin-edit',
+                    'link' => $column->link(),
                 );
 
                 PDb_FormElement::print_element( $params );
