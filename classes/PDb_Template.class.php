@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6.1
+ * @version    1.6.2
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -567,10 +567,12 @@ class PDb_Template {
   {
     $this->record = new stdClass();
     $this->_setup_record_groups();
-    
     foreach ( $this->fields as $name => $field ) {
+      /* @var $field PDb_Form_Field_Def */
       $this->groups[$field->group]->fields[$field->order] = $name;
-      $this->record->{$field->group}->fields->{$name} = clone $field;
+      if ( isset( $this->record->{$field->group} ) ) {
+        $this->record->{$field->group}->fields->{$name} = $field; // formerly cloned
+      }
     }
   }
 
