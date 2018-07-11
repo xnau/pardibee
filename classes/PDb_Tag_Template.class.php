@@ -24,12 +24,12 @@ class PDb_Tag_Template {
    * @var array the data array
    */
   private $data = array();
-  
+
   /**
    * @var bool rich text flag
    */
   private $rich_text = false;
-  
+
   /**
    * @var bool  if true, replacement values will not contain HTML tags
    */
@@ -73,7 +73,7 @@ class PDb_Tag_Template {
   {
     $tag_template = new self( $template, $data, true );
     $tag_template->rich_text = false;
-    
+
     return $tag_template->_replace_tags();
   }
 
@@ -90,6 +90,7 @@ class PDb_Tag_Template {
     $tag_template->rich_text = true;
     return $tag_template->_replace_tags();
   }
+
   /**
    * supplies a class instance
    * @param string $template
@@ -101,6 +102,7 @@ class PDb_Tag_Template {
   {
     return new self( $template, $data );
   }
+
   /**
    * provides the string-replaced text
    * 
@@ -110,6 +112,7 @@ class PDb_Tag_Template {
   {
     return $this->_replace_tags();
   }
+
   /**
    * sets a value
    * 
@@ -117,19 +120,19 @@ class PDb_Tag_Template {
    */
   public function __set( $name, $value )
   {
-    switch ($name) {
+    switch ( $name ) {
       case 'template':
         $this->template = $template;
         break;
       case 'data':
-        $this->add_data($value);
+        $this->add_data( $value );
         break;
       case 'rich_text':
         $this->rich_text = (bool) $value;
         break;
     }
   }
-  
+
   /**
    * adds data fields to the data array
    * 
@@ -137,10 +140,13 @@ class PDb_Tag_Template {
    */
   public function add_data( $data )
   {
-    if ( ! is_array( $data ) ) {
-      $data = array( (string) $data => (string) $data );
+    if ( !is_array( $data ) ) {
+      $data = array((string) $data => (string) $data);
     }
-    $this->data = $data + $this->data; 
+    foreach ( $data as $fieldname => $value ) {
+      $data[$fieldname] = $this->value_display($fieldname, $value);
+    }
+    $this->data = $data + $this->data;
   }
 
   /**
@@ -153,22 +159,24 @@ class PDb_Tag_Template {
 
     $placeholders = array();
 
-    for ($i = 1; $i <= count($this->data); $i++) {
+    for ( $i = 1; $i <= count( $this->data ); $i++ ) {
       $placeholders[] = '%' . $i . '$s';
     }
-    
+
     // gets the tag strings and wrap them in brackets to match them in the template
-    $tags = array_map( function ( $v ) { return '[' . $v . ']'; }, array_keys( $this->data ) );
+    $tags = array_map( function ( $v ) {
+      return '[' . $v . ']';
+    }, array_keys( $this->data ) );
 
     // replace the tags with variables
     $pattern = str_replace( $tags, $placeholders, $this->template );
 
     // replace the variables with strings
     $fulltext = vsprintf( $pattern, $this->data );
-    
+
 //    error_log(__METHOD__.' pattern: '.$pattern.' data: '.print_r($this->data,1));
 //    error_log(__METHOD__.' rich text? '.($this->rich_text?'yes':'no'). '   '.$fulltext);
-    
+
     return $this->rich_text ? Participants_Db::process_rich_text( $fulltext, 'tag template' ) : $fulltext;
   }
 
@@ -179,24 +187,34 @@ class PDb_Tag_Template {
    */
   protected function setup_data( $data = false )
   {
-    if (is_array($data)) {
+    if ( is_array( $data ) ) {
       $this->data = $data;
-    } elseif (is_numeric($data) && $record = Participants_Db::get_participant($data)) {
+    } elseif ( is_numeric( $data ) && $record = Participants_Db::get_participant( $data ) ) {
       $this->data = $record;
     } else {
       $this->data = array();
     }
     if ( isset( $this->data['id'] ) ) {
-      $cached_data = wp_cache_get( $this->data['id'], __METHOD__ );
+      $cached_data = wp_cache_get( $this->data_cache_key(), __METHOD__ );
       if ( $cached_data ) {
         $this->data = $cached_data;
       } else {
         $this->prepare_display_values();
-        wp_cache_add($this->data['id'], $this->data, __METHOD__ );
+        wp_cache_add( $this->data_cache_key(), $this->data, __METHOD__ );
       }
     }
   }
   
+  /**
+   * provides the data array cache key
+   * 
+   * @return string key
+   */
+  private function data_cache_key()
+  {
+    return $this->data['id'] . '-' . count( $this->data );
+  }
+
   /**
    * prepares the data array values for inclusion in the text
    * 
@@ -208,23 +226,37 @@ class PDb_Tag_Template {
    */
   protected function prepare_display_values()
   {
-    foreach ( $this->data as $fieldname => &$value ) {
-      /*
-       * if the fieldname is a PDB field, use the Field Item class to determine the display string
-       */
-      if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
-        $field = new PDb_Field_Item( (object) array( 'name' => $fieldname, 'value' => $value, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null ) ) );
-        /**
-         * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
-         * 
-         * @vaersion 1.7.1.4 added "raw" mode
-         * 
-         */
-        if ( $this->raw ) {
-          $field->html_mode(false);
-        }
-        $value = $field->get_value_display();
-      }
+    foreach ( $this->data as $fieldname => $value ) {
+      $this->data[$fieldname] = $this->value_display( $fieldname, $value );
     }
   }
+
+  /**
+   * prepares an inidividual display value
+   * 
+   * @param string  $fieldname  name of the field
+   * @param string $value field value
+   * @return string field value display string
+   */
+  private function value_display( $fieldname, $value )
+  {
+    /*
+     * if the fieldname is a PDB field, use the Field Item class to determine the display string
+     */
+    if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
+      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'value' => $value, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null )) );
+      /**
+       * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
+       * 
+       * @version 1.7.1.4 added "raw" mode
+       * 
+       */
+      if ( $this->raw ) {
+        $field->html_mode( false );
+      }
+      $value = $field->get_value_display();
+    }
+    return $value;
+  }
+
 }
