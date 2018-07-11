@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -443,9 +443,6 @@ abstract class xnau_FormElement {
    */
   public static function get_field_value_display( $field, $html = true )
   {
-
-    //error_log(__METHOD__.' field:'.print_r($field,1));
-
     switch ( $field->form_element ) :
 
       case 'image-upload' :
@@ -937,6 +934,10 @@ abstract class xnau_FormElement {
     
     $parts = maybe_unserialize( $this->value );
     
+    if ( ! empty($this->link) ) {
+      $parts[0] = $this->link;
+    }
+    
     if ( ! is_array( $parts ) ) {
       if ( filter_var( $parts, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $this->value = $parts;
@@ -954,7 +955,7 @@ abstract class xnau_FormElement {
     // if the value is not a URL, only the linked text is used
     
     if ( count( $parts ) < 2 ) {
-      $parts[1] = $parts[0];
+      $parts[1] = ''; // when showing an edit form, leave the click text blank
       if ( !filter_var( $parts[0], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) )
         $parts[0] = '';
     }
