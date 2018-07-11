@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -182,11 +182,19 @@ class PDb_Tag_Template {
     if (is_array($data)) {
       $this->data = $data;
     } elseif (is_numeric($data) && $record = Participants_Db::get_participant($data)) {
-      $this->data =  $record;
+      $this->data = $record;
     } else {
       $this->data = array();
     }
-    $this->prepare_display_values();
+    if ( isset( $this->data['id'] ) ) {
+      $cached_data = wp_cache_get( $this->data['id'], __METHOD__ );
+      if ( $cached_data ) {
+        $this->data = $cached_data;
+      } else {
+        $this->prepare_display_values();
+        wp_cache_add($this->data['id'], $this->data, __METHOD__ );
+      }
+    }
   }
   
   /**
@@ -200,7 +208,7 @@ class PDb_Tag_Template {
    */
   protected function prepare_display_values()
   {
-    foreach ( $this->data as $fieldname => $value ) {
+    foreach ( $this->data as $fieldname => &$value ) {
       /*
        * if the fieldname is a PDB field, use the Field Item class to determine the display string
        */
