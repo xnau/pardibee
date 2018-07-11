@@ -62,7 +62,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * OK, this is going to be instantiated by: 
      *    an object with at the very least a 'name' property naming a defined PDB field
      */
-// error_log( __CLASS__ . ' instantiated with: ' . print_r( $config,1)  . '
+//error_log( __CLASS__ . ' instantiated with: ' . print_r( $config,1)  . '
 //      
 //trace: '.print_r(  wp_debug_backtrace_summary(),1)  );
     
@@ -414,11 +414,16 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function set_link_field_value()
   {
     if ( $this->form_element === 'link' ) {
+      
       $parts = (array) maybe_unserialize( $this->value );
+      
       if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
         $this->link = $parts[0];
       }
-      $this->value = $this->has_link() ? ( isset( $parts[1] ) ? $parts[1] : $this->default ) : '';
+      
+      if ( $this->has_link() ) {
+        $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
+      }
     }
   }
 
@@ -672,7 +677,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function _set_value( $raw_value )
   {
-    if ( $this->is_multi() ) {
+   if ( $this->is_multi() && ! $this->form_element === 'link' ) {
       $value_list = array();
       foreach ( self::field_value_array( $raw_value ) as $value ) {
         $value_list[] = str_replace( ',', '&#44;', $this->prepare_value($value) );
@@ -681,6 +686,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     } else {
       $this->value = $this->prepare_value($raw_value);
     }
+    $this->set_link_field_value();
   }
 
   /**
