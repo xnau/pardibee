@@ -191,8 +191,9 @@ class PDb_FormElement extends xnau_FormElement {
      * 
      * @since 1.6
      * 
-     * @param string $return the value display
+     * @param string empty string
      * @param PDb_Field_Item $field the field object
+     * @return string the field value display or empty string
      * 
      * formerly, this was set as "pdb-before_display_field" and included a more limited set of arguments
      */
