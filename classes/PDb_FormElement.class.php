@@ -294,7 +294,7 @@ class PDb_FormElement extends xnau_FormElement {
         case 'link' :
 
           $linkdata = maybe_unserialize( $field->value() );
-
+          
           if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
             list( $url, $value ) = $linkdata;
           } else {
