@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -83,7 +83,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $this->assign_props( $config );
     
   }
-  
+    
   /**
    * provides direct access to property values
    * 
@@ -401,7 +401,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( property_exists( $config, 'module' ) ) {
       $this->set_module( $config->module );
     }
-    $this->set_link_field_value();
     
     if ( $this->is_valid_single_record_link_field() ) {
       $this->set_link( Participants_Db::single_record_url( $this->record_id ) );
