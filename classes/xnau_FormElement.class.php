@@ -934,10 +934,6 @@ abstract class xnau_FormElement {
     
     $parts = maybe_unserialize( $this->value );
     
-    if ( ! empty($this->link) ) {
-      $parts[0] = $this->link;
-    }
-    
     if ( ! is_array( $parts ) ) {
       if ( filter_var( $parts, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $this->value = $parts;
@@ -949,6 +945,8 @@ abstract class xnau_FormElement {
         $this->value = array('');
         $parts = array('');
       }
+    } elseif ( !empty( $this->link ) ) {
+      $parts[0] = $this->link;
     }
     
     // if the value contains only a URL, the linktext and URL are made the same
