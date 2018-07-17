@@ -1,9 +1,11 @@
 <?php
-/*
+/**
  * this file is called by the admin menu item, also a link in the admin record list
  * 
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
+ * 
+ * @version 1.1
  *
  */
 if ( !defined( 'ABSPATH' ) )
@@ -100,7 +102,7 @@ if ( $participant_values ) :
           echo $id_line;
           ?>
 
-          <tr class="<?php echo ( 'hidden' == $column->form_element() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' ?>">
+            <tr class="<?php echo ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' ?>">
             <?php
             $column_title = str_replace( array('"', "'"), array('&quot;', '&#39;'), Participants_Db::apply_filters( 'translate_string', stripslashes( $column->title ) ) );
             if ( $options['mark_required_fields'] && $column->validation != 'no' ) {
@@ -108,11 +110,12 @@ if ( $participant_values ) :
             }
             ?>
             <?php
-            $add_title = '';
+            $add_title = array();
             $fieldnote_pattern = ' <span class="fieldnote">%s</span>';
-            if ( $column->form_element() === 'hidden' ) {
-              $add_title = sprintf( $fieldnote_pattern, __( 'hidden', 'participants-database' ) );
-            } elseif ( $column->is_readonly() ) {
+            if ( $column->is_hidden_field() ) {
+              $add_title[] = __( 'hidden', 'participants-database' );
+            }
+            if ( $column->is_readonly() ) {
 
               if (
                       $column->form_element() === 'timestamp' && Participants_Db::apply_filters( 'edit_record_timestamps', false ) === true ||
@@ -130,14 +133,15 @@ if ( $participant_values ) :
                  */
                 if (
                         Participants_Db::apply_filters( 'field_readonly_override', !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ), $column ) ||
-                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ) {
+                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true )  
+                        ) {
                   $attributes['readonly'] = 'readonly';
                 }
-                $add_title = sprintf( $fieldnote_pattern, __( 'read only', 'participants-database' ) );
+                $add_title[] = __( 'read only', 'participants-database' );
               }
             }
             ?>
-            <th><?php echo $column_title . $add_title ?></th>
+            <th><?php echo $column_title . ( empty( $add_title ) ? '' : sprintf( $fieldnote_pattern, implode( ', ', $add_title ) ) ) ?></th>
             <td id="<?php echo Participants_Db::$prefix . $column->name() ?>-field" >
               <?php
               /*
@@ -166,43 +170,40 @@ if ( $participant_values ) :
 
               $field_class = ( $column->validation != 'no' ? "required-field" : '' ) . ( in_array( $column->form_element(), array('text-line', 'date') ) ? ' regular-text' : '' );
 
-              if ( $column->has_content() ) {
-
-                switch ( $column->form_element() ) {
+              switch ( $column->form_element() ) {
 
 //                  case 'timestamp':
-                  case 'date':
+                case 'date':
 
-                    /*
-                     * if it's not a timestamp, format it for display; if it is a
-                     * timestamp, it will be formatted by the xnau_FormElement class
-                     */
-                    if ( $column->has_content() ) {
-                      $column->value = PDb_Date_Parse::timestamp( $column->value, array(), 'Edit Participant value display date element' );
-                    }
+                  /*
+                   * if it's not a timestamp, format it for display; if it is a
+                   * timestamp, it will be formatted by the xnau_FormElement class
+                   */
+                  if ( $column->has_content() ) {
+                    $column->value = PDb_Date_Parse::timestamp( $column->value, array(), 'Edit Participant value display date element' );
+                  }
 
-                    break;
+                  break;
 
-                  case 'password':
+                case 'password':
 
-                    $value = '';
-                    if ( $column->has_content() ) {
-                      $value = PDb_FormElement::dummy;
-                    }
-                    $column->set_value($value);
-                    break;
+                  $value = '';
+                  if ( $column->has_content() ) {
+                    $value = PDb_FormElement::dummy;
+                  }
+                  $column->set_value($value);
+                  break;
 
-                  case 'hidden':
+                case 'hidden':
 
-                    $column->form_element = 'text-line';
-                    break;
+                  $column->form_element = 'text-line';
+                  break;
 
-                  case 'timestamp':
+                case 'timestamp':
 
-                    if ( !PDb_Date_Parse::is_mysql_timestamp( $column->value() ) )
-                      $column->set_value('');
-                    break;
-                }
+                  if ( !PDb_Date_Parse::is_mysql_timestamp( $column->value() ) )
+                    $column->set_value('');
+                  break;
               }
 
               if ( 'rich-text' == $column->form_element ) {
@@ -226,7 +227,7 @@ if ( $participant_values ) :
                     'module' => 'admin-edit',
                     'link' => $column->link(),
                 );
-
+                
                 PDb_FormElement::print_element( $params );
               }
 
