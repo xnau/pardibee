@@ -374,6 +374,9 @@ class Participants_Db extends PDb_Base {
     
     // set the debug global if not already
     self::set_debug_mode();
+    
+    // action for handling the list columns UI
+    add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
 
     /*
      * any plugins that require Participants Database should initialize on this action
@@ -624,7 +627,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
     wp_register_script( 'jq-doublescroll', plugins_url( 'js/jquery.doubleScroll.js', __FILE__ ), array('jquery', 'jquery-ui-widget') );
-    wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array('jquery', 'jq-doublescroll'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'admin', plugins_url( 'js/admin.js', __FILE__ ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable'), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', plugins_url( 'js/otherselect.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'list-admin', plugins_url( 'js/list_admin.js', __FILE__ ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
@@ -3570,6 +3573,10 @@ class Participants_Db extends PDb_Base {
     );
 
     add_submenu_page(
+            self::PLUGIN_NAME, self::plugin_label( 'manage_list_columns' ), self::plugin_label( 'manage_list_columns' ), self::plugin_capability( 'plugin_admin_capability', 'manage fields' ), self::$plugin_page . '-manage_list_columns', array(__CLASS__, 'include_admin_file')
+    );
+
+    add_submenu_page(
             self::PLUGIN_NAME, self::plugin_label( 'upload_csv' ), self::plugin_label( 'upload_csv' ), self::plugin_capability( 'plugin_admin_capability', 'upload csv' ), self::$plugin_page . '-upload_csv', array(__CLASS__, 'include_admin_file')
     );
 
@@ -3638,6 +3645,7 @@ class Participants_Db extends PDb_Base {
         'edit_record_title' => __( 'Edit Existing Participant Record', 'participants-database' ),
         'list_participants_title' => __( 'List Participants', 'participants-database' ),
         'export_csv_title' => __( 'Export CSV', 'participants-database' ),
+        'manage_list_columns' => __( 'Manage List Columns', 'participants-database' ),
     ) );
     return isset( $labels[$key] ) ? $labels[$key] : $key;
   }
