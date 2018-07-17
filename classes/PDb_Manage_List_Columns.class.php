@@ -83,6 +83,11 @@ class PDb_Manage_List_Columns {
   private function fieldlist( $update_list )
   {
     $fieldlist = $this->field_reset_array();
+    
+    if ( count( $update_list ) === 0 ) {
+      return $fieldlist;
+    }
+    
     foreach ( $update_list as $i => $rawname ) {
       $fieldname = filter_var( $rawname, FILTER_SANITIZE_STRING );
       if ( isset( $fieldlist[$fieldname] ) ) { // check against list of defined fields before adding
