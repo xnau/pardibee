@@ -383,20 +383,23 @@ class PDb_Form_Field_Def {
   /**
    * tells if the field is a multi-type field
    * 
-   * this is a field that has multiple values and stores it's value in the db as an array
+   * this is a field that has multiple values and stores it's value in the db as 
+   * a serialized array
    * 
    * @return bool
    */
   public function is_multi()
   {
-    //return strpos( $this->form_element, 'multi' ) !== false;
     return PDb_FormElement::is_multi($this->form_element);
   }
 
   /**
    * provides the values array
    * 
-   * this is the contents of the "values" paramter of the definition
+   * this is the contents of the "values" parameter of the definition
+   * 
+   * this is not the preferred way to get options or attributes, but it is here 
+   * for edge cases
    * 
    * @return array
    */
@@ -427,6 +430,24 @@ class PDb_Form_Field_Def {
   public function option_values()
   {
     return array_values( $this->options );
+  }
+  
+  /**
+   * provides the attributes array
+   * 
+   * these are typically printed in the HTML as attributes to the main tag
+   * 
+   * @return array as $name => $value
+   */
+  public function attributes()
+  {
+    /**
+     * @filter pdb-form_field_attributes
+     * @param array the field attributes
+     * @param PDb_Form_Field_Def current instance
+     * @return array as $name => $value
+     */
+    return Participants_Db::apply_filters('form_field_attributes', $this->attributes, $this );
   }
 
   /**
