@@ -677,8 +677,10 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       
       $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
     } else {
+      
       $this->value = $this->prepare_value($raw_value);
     }
+    
     $this->set_link_field_value();
   }
 
