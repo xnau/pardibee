@@ -533,7 +533,6 @@ abstract class PDb_Shortcode {
    */
   public function have_fields()
   {
-
     $field_count = is_object( $this->group ) ? $this->group->_field_count : count( $this->display_columns );
 
     return $this->current_field_pointer <= $field_count;
@@ -969,11 +968,11 @@ abstract class PDb_Shortcode {
 
         if ( Participants_Db::is_column( $column ) ) {
 
-          $field_list[] = $column;
+          $field_list[$column] = $column; // prevent accidental duplicates from getting added twice
         }
       }
     }
-    return $field_list;
+    return array_values( $field_list );
   }
 
   /**
