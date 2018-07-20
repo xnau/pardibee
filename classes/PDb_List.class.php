@@ -374,7 +374,6 @@ class PDb_List extends PDb_Shortcode {
    */
   protected function _set_shortcode_display_columns()
   {
-
     if ( empty( $this->shortcode_atts['groups'] ) ) {
       $this->display_columns = $this->get_list_display_columns( 'display_column' );
     } else {
