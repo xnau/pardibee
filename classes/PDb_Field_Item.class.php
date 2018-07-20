@@ -62,9 +62,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * OK, this is going to be instantiated by: 
      *    an object with at the very least a 'name' property naming a defined PDB field
      */
+//    if ( $config->name === 'interests' ) {
 //error_log( __CLASS__ . ' instantiated with: ' . print_r( $config,1)  . '
 //      
 //trace: '.print_r(  wp_debug_backtrace_summary(),1)  );
+//    }
     
     if ( is_string( $config ) ) {
       $config = array('name' => $config);
@@ -198,16 +200,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function get_value()
   {
     return $this->value();
-  }
-  
-  /**
-   * supplies the attributes array
-   * 
-   * @return array value
-   */
-  public function attributes()
-  {
-    return $this->attributes;
   }
   
   /**
@@ -676,11 +668,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function _set_value( $raw_value )
   {
-   if ( $this->is_multi() && ! $this->form_element === 'link' ) {
+    if ( $this->is_multi() && $this->form_element !== 'link' ) {
+      
       $value_list = array();
       foreach ( self::field_value_array( $raw_value ) as $value ) {
         $value_list[] = str_replace( ',', '&#44;', $this->prepare_value($value) );
       }
+      
       $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
     } else {
       $this->value = $this->prepare_value($raw_value);
