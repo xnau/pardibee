@@ -1854,6 +1854,7 @@ class Participants_Db extends PDb_Base {
             case 'multi-dropdown':
 
               $new_value = self::_prepare_array_mysql( array_values( $field->get_value() ) );
+              
               break;
 
             case 'link':
