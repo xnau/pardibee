@@ -58,12 +58,16 @@ class PDb_Record extends PDb_Shortcode {
 
       $this->participant_id = $this->shortcode_atts['record_id'];
 
-      $this->participant_values = Participants_Db::get_participant($this->participant_id);
+      $record_values = Participants_Db::get_participant($this->participant_id);
 
-      if ($this->participant_values === false ) {
+      if ($record_values === false ) {
 
         $this->_not_found();
       } else {
+        
+        // drop in any default values 
+        $defaults = Participants_Db::get_default_record();
+        $this->participant_values = array_merge( array_filter( $record_values ), array_filter( $defaults ) );
 
         // update the access timestamp
         Participants_Db::set_record_access($this->participant_id);
