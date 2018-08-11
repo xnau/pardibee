@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -580,6 +580,22 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       return $error_array[$this->name];
     else
       return false;
+  }
+  
+  /**
+   * is this the single record link?
+   * 
+   * @return bool
+   */
+  public function is_single_record_link()
+  {
+    return (
+            Participants_Db::is_single_record_link($this->name)
+            &&
+            ! in_array( $this->form_element, array('rich-text', 'link' ) )
+            &&
+            $this->record_id
+            );
   }
 
   /**
