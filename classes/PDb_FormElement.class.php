@@ -432,6 +432,11 @@ class PDb_FormElement extends xnau_FormElement {
     $this->_addline( '<div class="' . $type . '-group" >' );
 
     $optgroup = false;
+    
+    // use the default value (if defined) if there is no value
+//    if ( $this->value === '' && Participants_Db::$fields[$this->name]->default_value() !== '' ) {
+//      $this->value = Participants_Db::$fields[$this->name]->default_value();
+//    }
 
     foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
