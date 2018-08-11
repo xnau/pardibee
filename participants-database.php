@@ -2448,6 +2448,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function add_blank_field( $params )
   {
+    //error_log(__METHOD__.' params: '.print_r($params,1));
     // prevent spurious field creation
     if ( !isset( $params['name'] ) || empty( $params['name'] ) ) return;
     
