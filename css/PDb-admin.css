@@ -920,10 +920,10 @@ a.dragger {
   padding: 1em 0.5em;
 }
 .pdb-log-display article::before {
-    content: "--------------------------------------";
+  content: "--------------------------------------";
 }
 .pdb-log-display article:first-of-type::before {
-    content: inherit;
+  content: inherit;
 }
 .pdb-log-display header,
 .pdb-log-display footer {
@@ -937,4 +937,12 @@ a.dragger {
 }
 .pdb-log-display p + br {
   display: none;
+}
+@media only screen and (max-width: 782px) {
+  .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column) {
+    display: table-cell;
+  }
+  .pdb-horiz-scroll-width {
+    min-width: inherit;
+  }
 }
