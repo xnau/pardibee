@@ -57,17 +57,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @param int|string $id the id of the source record if available
    */
   public function __construct( $config, $id = false )
-  {
-    /*
-     * OK, this is going to be instantiated by: 
-     *    an object with at the very least a 'name' property naming a defined PDB field
-     */
-//    if ( $config->name === 'interests' ) {
-//error_log( __CLASS__ . ' instantiated with: ' . print_r( $config,1)  . '
-//      
-//trace: '.print_r(  wp_debug_backtrace_summary(),1)  );
-//    }
-    
+  { 
     if ( is_string( $config ) ) {
       $config = array('name' => $config);
     }
