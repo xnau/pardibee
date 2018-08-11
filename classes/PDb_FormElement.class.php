@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6.1
+ * @version    1.6.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -184,16 +184,14 @@ class PDb_FormElement extends xnau_FormElement {
     }
     /* @var $field PDb_Field_Item */
 
-    $return = '';
+    $return = false;
 
     /**
-     * filter: pdb-before_display_form_element
+     * @filter pdb-before_display_form_element
      * 
-     * @since 1.6
-     * 
-     * @param string empty string
+     * @param bool false
      * @param PDb_Field_Item $field the field object
-     * @return string the field value display or empty string
+     * @return string the field value display or false if not altering the value
      * 
      * formerly, this was set as "pdb-before_display_field" and included a more limited set of arguments
      */
@@ -204,7 +202,7 @@ class PDb_FormElement extends xnau_FormElement {
       $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value(), $field->form_element() );
     }
 
-    if ( empty( $return ) ) {
+    if ( $return === false ) {
 
       switch ( $field->form_element() ) :
 
