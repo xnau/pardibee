@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 4.9.7
+Tested up to: 4.9.8
 Requires PHP: 5.6
-Stable tag: 1.7.9.6
+Stable tag: 1.7.9.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,12 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.7.9.8 =
+* PDb_Field_Item::is_single_record_link method reinstated
+* admin list on small screens is now much more usable
+* radio buttons now default to defined default value on record edit page
+* default values now correctly inherited to new records, frontend record edits
 
 = 1.7.9.7 =
 * fixed bug with multi-select-other field values
@@ -1053,8 +1059,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.7.9.7 =
-Version 1.7.9.7 is a minor bugfix update.
+= 1.7.9.8 =
+Version 1.7.9.8 is a minor bugfix update.
 
 == Plugin Support ==
 
