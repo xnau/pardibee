@@ -66,8 +66,10 @@ class PDb_Record extends PDb_Shortcode {
       } else {
         
         // drop in any default values 
-        $defaults = Participants_Db::get_default_record();
-        $this->participant_values = array_merge( array_filter( $record_values ), array_filter( $defaults ) );
+        $this->participant_values = array_merge( 
+                array_filter( Participants_Db::get_default_record(), 'Participants_Db::is_set_value' ), 
+                array_filter( $record_values, 'Participants_Db::is_set_value' )  
+                );
 
         // update the access timestamp
         Participants_Db::set_record_access($this->participant_id);
@@ -221,4 +223,8 @@ class PDb_Record extends PDb_Shortcode {
       Participants_Db::$session->clear('pdbid');
     }
   }
+  
+  
+  
+  
 }
