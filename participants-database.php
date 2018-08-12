@@ -1967,11 +1967,11 @@ class Participants_Db extends PDb_Base {
      * add in any missing default values
      */
     if ( $action === 'insert' ) {
-      $all_columns = self::get_default_record( $currently_importing_csv === false );
-      unset( $all_columns['private_id'], $all_columns['date_recorded'], $all_columns['date_updated'] );
-      foreach ( $all_columns as $name => $value ) {
+      $default_record = self::get_default_record( $currently_importing_csv === false );
+      unset( $default_record['private_id'], $default_record['date_recorded'], $default_record['date_updated'] );
+      foreach ( $default_record as $name => $value ) {
         $find_result = preg_grep( '/' . $name . '/', $column_data );
-        if ( count( $find_result ) === 0 && $value != '' ) {
+        if ( count( $find_result ) === 0 && self::is_set_value( $value ) ) {
           // if a field with a defined default value is missing from the submission, add it in
           $column_data[] = "`$name` = %s";
           $new_values[] = $value;
@@ -2089,9 +2089,8 @@ class Participants_Db extends PDb_Base {
   /**
    * gets the default set of values
    * 
-   * this does not include hidden fields
-   * 
-   * @version 1.6 placeholder elements are also excluded
+   * @version 1.7.9.8 dynamic hidden fields are included with empty value
+   * @version 1.6 placeholder elements are excluded
    *
    * @global wpdb $wpdb
    * @param bool  $add_persistent if true, adds persistent field data
@@ -2111,8 +2110,7 @@ class Participants_Db extends PDb_Base {
 
     foreach ( $result as $column ) {
 
-      if ( $column->form_element != 'hidden' )
-        $default_record[$column->name] = $column->default;
+      $default_record[$column->name] = ( $column->form_element === 'hidden' && self::is_dynamic_value($column->default) ) ? '' : $column->default;
     }
 
     // get the id of the last record stored
@@ -2137,7 +2135,7 @@ class Participants_Db extends PDb_Base {
     }
 
     // fill in some convenience values
-    global $current_user;
+    //global $current_user;
 
 //    if ( is_object( $current_user ) ) $default_record['by'] = $current_user->display_name;
 //    $default_record['when'] = date_i18n(self::$date_format);
