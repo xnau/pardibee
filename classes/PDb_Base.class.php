@@ -483,6 +483,19 @@ class PDb_Base {
   {
     return stripslashes( $string );
   }
+  
+  
+  /**
+   * tells if a database value is set
+   * 
+   * this is mainly used as a callback for an array_filter function
+   * 
+   * @param string|null $v the raw value from the db
+   * @return bool true if the value is set 
+   */
+  public static function is_set_value( $v ) {
+    return ! is_null($v) && strlen($v) > 0;
+  }
 
   /**
    * unserializes an array if necessary, provides an array in all cases
