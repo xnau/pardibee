@@ -1481,6 +1481,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_form( $post, $action, $participant_id = false, $column_names = false )
   {
+    
     /**
      * reject submissions that aren't properly tagged
      */
