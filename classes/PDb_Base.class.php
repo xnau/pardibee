@@ -1521,7 +1521,7 @@ class PDb_Base {
    * 
    */
   public static function initialize_session()
-  {
+  { 
     // if this is called too late, do nothing
     if ( headers_sent() )
       return;
@@ -1541,7 +1541,7 @@ class PDb_Base {
     }
 
     // initalize PHP sessions if needed
-    if ( Participants_Db::plugin_setting_is_true( 'use_php_sessions' ) && !session_id() ) {
+    if ( ( Participants_Db::plugin_setting_is_true( 'use_php_sessions' ) || self::wp_session_plugin_is_active() ) && !session_id() ) {
       session_start();
     }
   }
@@ -1564,6 +1564,17 @@ class PDb_Base {
       $current_session[$post->ID] = array();
       Participants_Db::$session->set( 'shortcode_atts', $current_session );
     }
+  }
+  
+  /**
+   * checks for the presence of the WP Session plugin
+   * 
+   * @return bool true if the plugin is present
+   */
+  public static function wp_session_plugin_is_active()
+  {
+    $plugins = get_option('active_plugins');
+    return in_array('wp-session-manager/wp-session-manager.php', $plugins);
   }
 
   /**
