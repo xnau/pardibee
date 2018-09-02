@@ -62,7 +62,7 @@ class PDb_Session {
   public function __construct()
   {
     $plugin_setting = get_option(Participants_Db::$participants_db_options);
-    $this->use_php_sessions = (bool) $plugin_setting['use_php_sessions'];
+    $this->use_php_sessions = (bool) $plugin_setting['use_php_sessions'] || PDb_Base::wp_session_plugin_is_active();
 
     $this->session_name = Participants_Db::$prefix . 'session';
 
