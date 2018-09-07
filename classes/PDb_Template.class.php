@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6.2
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -519,9 +519,9 @@ class PDb_Template {
         foreach ( $this->shortcode_object->record->fields as $field_object ) {
           $name = $field_object->name;
           $value = isset( $field_object->value ) ? $field_object->value : '';
-          $this->fields->{$name} = Participants_Db::$fields[$name];
-          $this->fields->{$name}->module = $this->shortcode_object->module;
-          $this->fields->{$name}->value = $value;
+          $this->fields->{$name} = new PDb_Field_Item( Participants_Db::$fields[$name] );
+          $this->fields->{$name}->set_module( $this->shortcode_object->module );
+          $this->fields->{$name}->set_value( $value );
         }
         reset( $this->shortcode_object->record->fields );
         $this->_setup_list_record_object();
@@ -535,9 +535,9 @@ class PDb_Template {
           break;
         }
         $this->record = clone $this->shortcode_object->record;
-        foreach ( $this->shortcode_object->fields as $name => $field ) {
-          /* @var $field PDb_Field_Item */
-          $this->fields->{$name} = $field;
+        foreach ( Participants_Db::$fields as $name => $field ) {
+          /* @var $field PDb_Form_Field_Def */
+          $this->fields->{$name} = new PDb_Field_Item( $field );
           $this->fields->{$name}->set_record_id($this->shortcode_object->participant_id);
         }
         foreach ( $this->record as $name => $group ) {
@@ -548,7 +548,7 @@ class PDb_Template {
           $this_group->fields = array();
           foreach ( $group->fields as $group_field ) {
             $this_group->fields[] = $group_field->name;
-            $this->fields->{$group_field->name}->value = $group_field->value;
+            $this->fields->{$group_field->name}->set_value( $group_field->value );
           }
           reset( $group->fields );
         }
