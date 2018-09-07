@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -255,10 +255,12 @@ class PDb_Signup extends PDb_Shortcode {
    */
   protected function _setup_hidden_fields()
   {
-    foreach ( $this->fields as $field ) {
-      if ( $field->form_element === 'hidden' && $field->signup ) {
-        $this->_set_field_value( $field );
-        $this->hidden_fields[$field->name] = $field->value;
+    foreach ( Participants_Db::$fields as $field ) {
+      /* @var $field PDb_Form_Field_Def */
+      if ( $field->is_hidden_field() && $field->signup ) {
+        $field_item = new PDb_Field_Item( $field );
+        $this->_set_field_value( $field_item );
+        $this->hidden_fields[$field_item->name()] = $field_item->value();
       }
     }
   }
