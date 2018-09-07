@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.12
+ * @version    1.13
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -794,7 +794,13 @@ class PDb_List extends PDb_Shortcode {
     if ( empty( $columns ) ) {
       $columns = $this->display_columns;
     }
-    $this->set_sortables( $columns );
+    /**
+     * @filter pdb-list_sortable_columns
+     * @param array of field names
+     * @param PDb-List the current instance
+     * @return array
+     */
+    $this->set_sortables( Participants_Db::apply_filters('list_sortable_columns', $columns, $this ) );
   }
 
   /**
