@@ -615,7 +615,7 @@ query: '.($last_query?:$wpdb->last_query));
       self::$list_query .= ' (';
       self::$inparens = true;
     }
-    $filter_set['value'] = str_replace( '*', '%', $filter_set['value'] );
+    $filter_set['value'] = str_replace( array('*', '?'), array('%', '_'), $filter_set['value'] );
 
     $delimiter = array("'", "'");
 
@@ -655,7 +655,7 @@ query: '.($last_query?:$wpdb->last_query));
         if ( $filter_set['value'] === '' ) {
           $filter_set['value'] = 'null';
           $operator = '<>';
-        } elseif ( strpos( $filter_set['value'], '%' ) !== false ) {
+        } elseif ( self::term_has_wildcard( $filter_set['value'] ) ) {
           $delimiter = array("'", "'");
         }
     }
@@ -1467,6 +1467,17 @@ query: '.($last_query?:$wpdb->last_query));
     if ( !empty(self::$error_messages)) {
       printf( $wrap, $error_class, implode( "\r", self::$error_messages ) );
     }
+  }
+  
+  /**
+   * tells if the search term contains a wildcard
+   * 
+   * @param string $term
+   * @return bool true if there is a wildcard in the term
+   */
+  private static function term_has_wildcard( $term )
+  {
+    return strpos( $term, '%' ) !== false || strpos( $term, '_' ) !== false;
   }
 
   /**
