@@ -52,6 +52,9 @@ class PDb_File_Uploads {
     if ( !is_dir( Participants_Db::files_path() ) ) {
 
       if ( false === Participants_Db::_make_uploads_dir() ) {
+        if ( PDB_DEBUG ) {
+          Participants_Db::debug_log('Uploads directory could not be created at: ' . Participants_Db::files_path() );
+        }
         return false;
       }
     }
@@ -59,6 +62,10 @@ class PDb_File_Uploads {
     if ( !is_uploaded_file( realpath( $file['tmp_name'] ) ) ) {
 
       Participants_Db::validation_error( __( 'There is something wrong with the file you tried to upload. Try another.', 'participants-database' ), $field_name );
+      
+      if ( PDB_DEBUG ) {
+        Participants_Db::debug_log( "File upload could not be validated by the server: " . $file['name'] );
+      }
 
       return false;
     }
@@ -77,6 +84,10 @@ class PDb_File_Uploads {
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title ), $field_name );
       else
         Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_atts->title, preg_replace( '#(,)(?=[^,])#U', ', ', $extensions ) ), $field_name );
+      
+      if ( PDB_DEBUG ) {
+        Participants_Db::debug_log( "File upload rejected, not of an allowed type: " . $file['name'] );
+      }      
 
       return false;
     } else {
@@ -110,6 +121,11 @@ class PDb_File_Uploads {
       if ( !$valid_image ) {
 
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title ), $field_name );
+        
+        if ( PDB_DEBUG ) {
+          Participants_Db::debug_log( "Image upload does not validate as an image file: " . $file['name'] );
+        }
+      
         return false;
       }
     }
@@ -117,6 +133,10 @@ class PDb_File_Uploads {
     if ( $file['size'] > Participants_Db::$plugin_options['image_upload_limit'] * 1024 ) {
 
       Participants_Db::validation_error( sprintf( __( 'The file you tried to upload is too large. The file must be smaller than %sK.', 'participants-database' ), Participants_Db::$plugin_options['image_upload_limit'] ), $field_name );
+      
+      if ( PDB_DEBUG ) {
+        Participants_Db::debug_log( sprintf( "File upload is too large: %s is %s K bytes.", $file['name'], round( $file['size']/1024 ) ) );
+      }
 
       return false;
     }
@@ -124,8 +144,16 @@ class PDb_File_Uploads {
     if ( false === move_uploaded_file( $file['tmp_name'], Participants_Db::files_path() . $new_filename ) ) {
 
       Participants_Db::validation_error( __( 'The file could not be saved.', 'participants-database' ) );
+      
+      if ( PDB_DEBUG ) {
+        Participants_Db::debug_log( sprintf( "The file %s could not be saved in %s", $file['name'], Participants_Db::files_path() ) );
+      }
 
       return false;
+    }
+    
+    if ( PDB_DEBUG ) {
+      Participants_Db::debug_log( sprintf( "The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
     }
 
     /*
