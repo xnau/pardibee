@@ -518,7 +518,7 @@ class PDb_List_Admin {
           if ( PDB_DEBUG ) {
             Participants_Db::debug_log(__METHOD__.' 
 action: ' . $selected_action . '   
-query: '.($last_query?:$wpdb->last_query));
+query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
           }
           break;
 
