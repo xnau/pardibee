@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -539,6 +539,7 @@ class PDb_Template {
           /* @var $field PDb_Form_Field_Def */
           $this->fields->{$name} = new PDb_Field_Item( $field );
           $this->fields->{$name}->set_record_id($this->shortcode_object->participant_id);
+          $this->fields->{$name}->set_module( $this->shortcode_object->module );
         }
         foreach ( $this->record as $name => $group ) {
           $this->groups[$name] = $this_group = new stdClass();
