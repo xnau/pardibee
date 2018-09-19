@@ -126,6 +126,9 @@
   <?php endif ?>
 
   <div class="pdb-list list-container" >
+    
+    <?php do_action( 'pdb-prepend_to_list_container_content' ) ?>
+    
     <?php
     /* print the count if enabled in the shortcode
      * 

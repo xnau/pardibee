@@ -71,6 +71,9 @@ this template demonstrates a "table-less" reponsive layout for the list of recor
 </style>
 
 <div class="pdb-list list-container" >
+  
+  <?php do_action( 'pdb-prepend_to_list_container_content' ) ?>
+  
 		<?php 
 		/* print the count if enabled in the shortcode
 		 * 

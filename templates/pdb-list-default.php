@@ -32,6 +32,8 @@
    */
 ?>
   <table class="wp-list-table widefat fixed pages list-container" >
+    
+    <caption><?php do_action( 'pdb-prepend_to_list_container_content' ) ?></caption>
 
     <?php 
     // print the count if enabled in the shortcode
