@@ -199,7 +199,7 @@ class PDb_Pagination {
   }
 
   /**
-   * Set's total records
+   * Sets total records
    *
    * @param integer $total
    */
