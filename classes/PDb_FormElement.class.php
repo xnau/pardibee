@@ -206,6 +206,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       switch ( $field->form_element() ) :
 
+        
         case 'image-upload' :
           switch ( $field->module() ) {
             case 'single':
@@ -235,6 +236,7 @@ class PDb_FormElement extends xnau_FormElement {
             $image->set_image_wrap();
 
             $return = $image->get_image_html();
+            
           } elseif ( $image->file_exists ) {
             $return = $image->get_image_file();
           } else {
