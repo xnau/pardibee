@@ -44,6 +44,10 @@ body[class*='participants-database']  .widefat tr:nth-child(even) {
   position: relative;
   z-index: 1;
 }
+.participants_db input[disabled] {
+  color: inherit;
+  border-style: dashed;
+}
 .participants_db option[value='none'],
 .participants_db option[value='other'] {
   font-weight:bold;
