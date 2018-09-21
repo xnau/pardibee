@@ -77,16 +77,21 @@ $this->pagination->set_props(array(
 
   <table class="table pdb-list list-container" >
     
-    <caption><?php do_action( 'pdb-prepend_to_list_container_content' ) ?></caption>
-  
-		<?php 
-		/* print the count if enabled in the shortcode
-		 * 
-		 * the tag wrapping the count statment can be supplied in the function argument, example here
-		 */
-		$this->print_list_count('<caption>'); 
-		?>
-
+    <?php if ( has_action( 'pdb-prepend_to_list_container_content' ) ) : ?>
+      <caption>
+        <?php do_action( 'pdb-prepend_to_list_container_content' ) ?>
+        <?php $this->print_list_count( '<div class="%s"><span class="list-display-count">' ) ?>
+      </caption>
+    <?php else : ?>
+      <?php
+      /* print the count if enabled in the shortcode
+       * 
+       * the tag wrapping the count statment can be supplied in the function argument, example here
+       */
+      $this->print_list_count( '<caption class="%s" ><span class="list-display-count">' );
+      ?>
+    <?php endif ?>
+    
     <?php if ($record_count > 0) : ?>
 
     <thead>
