@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -333,11 +333,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function has_content()
   {
     switch( $this->form_element ) {
+      case 'placeholder':
+        $value = $this->default_value();
+        break;
       case 'link':
         $value = $this->link;
         break;
       default:
-        $value = $this->value;
+        /**
+         * @filter pdb-field_has_content_test_value
+         * 
+         * @param string the value to test
+         * @param PDb_Field_Item the current field
+         * @return string the value to test for content
+         */
+        $value = Participants_Db::apply_filters('field_has_content_test_value', $this->value, $this );
     }
     return !$this->is_empty($value);
   }
