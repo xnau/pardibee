@@ -650,6 +650,10 @@ a.dragger {
 .settings-subsection-row {
   border-top: 3px solid #0000001a;
 }
+.settings-subsection-row-spacer {
+  padding: 3em;
+  height: 3em;
+}
 
 /*   UI TABS   */
 

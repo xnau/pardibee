@@ -45,7 +45,7 @@ PDbAdmin = (function ($) {
       $('[data-after]').each(function () {
         postcontent($(this));
       });
-      $('div.settings-subsection').closest('tr').addClass('settings-subsection-row');
+      $('div.settings-subsection').closest('tr').addClass('settings-subsection-row').before('<tr class="settings-subsection-row-spacer"></tr>');
     }
   }
 })(jQuery);
