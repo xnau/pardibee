@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    4.9
+ * @version    5.0
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -84,7 +84,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var array of settings section definitions
      */
     public $settings_sections;
-    
+
     /**
      * @var array of settings objects
      */
@@ -164,7 +164,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       //add_action( 'init', array($this, 'initialize_updater'), 50 );
       add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
       add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
-      
+
       /**
        * include the aux plugin update class
        * 
@@ -176,18 +176,17 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
 
       if ( apply_filters( 'pdbaux-enable_auto_updates', true ) /* && $this->update_check_ok() */ ) {
-        
+
         $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
 
         //$urlcheck = @get_headers( $update_url );
-
         //if ( is_array( $urlcheck ) && strpos( $urlcheck[0], '200' ) !== false ) {
 
-          Puc_v4_Factory::buildUpdateChecker(
-                  $update_url, $plugin_file, $this->aux_plugin_name
-          );
+        Puc_v4_Factory::buildUpdateChecker(
+                $update_url, $plugin_file, $this->aux_plugin_name
+        );
 
-         // $this->set_update_check_timeout();
+        // $this->set_update_check_timeout();
         //}
       }
     }
@@ -249,7 +248,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       return self::throttler . $this->aux_plugin_name;
     }
-    
+
     /**
      * provides the setting definition
      * 
@@ -416,6 +415,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public function settings_api_init()
     {
       register_setting( $this->aux_plugin_name . '_settings', $this->settings_name() );
+
       $this->settings_sections = array(
           array(
               'title' => __( 'General Settings', 'participants-database' ),
@@ -471,104 +471,104 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( count( $this->settings_sections ) > 1 ) :
         ?>
         <ul class="ui-tabs-nav">
-        <?php
-        foreach ( $this->settings_sections as $section )
-          printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $section['slug'] ), $section['title'] );
-        ?>
-        </ul>
           <?php
-        endif;
+          foreach ( $this->settings_sections as $section )
+            printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $section['slug'] ), $section['title'] );
+          ?>
+        </ul>
+        <?php
+      endif;
+    }
+
+    /**
+     * registers the settings sections
+     * 
+     * @version 1.6.3 added $settings_sections property; making the parameter optional
+     * 
+     * @param array $sections
+     */
+    public function _add_settings_sections( $sections = false )
+    {
+      if ( $sections ) {
+        $this->settings_sections = $sections;
       }
-
-      /**
-       * registers the settings sections
-       * 
-       * @version 1.6.3 added $settings_sections property; making the parameter optional
-       * 
-       * @param array $sections
-       */
-      public function _add_settings_sections( $sections = false )
-      {
-        if ( $sections ) {
-          $this->settings_sections = $sections;
-        }
-        // enqueue the settings tabs script of there is more than one section
-        if ( count( $this->settings_sections ) > 1 ) {
-          add_action( 'admin_enqueue_scripts', function() {
-            wp_enqueue_script( Participants_Db::$prefix . 'aux_plugin_settings_tabs' );
-          }, 50 );
-        }
-        foreach ( $this->settings_sections as $section ) {
-          // Add the section to reading settings so we can add our
-          // fields to it
-          add_settings_section(
-                  $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name
-          );
-        }
+      // enqueue the settings tabs script of there is more than one section
+      if ( count( $this->settings_sections ) > 1 ) {
+        add_action( 'admin_enqueue_scripts', function() {
+          wp_enqueue_script( Participants_Db::$prefix . 'aux_plugin_settings_tabs' );
+        }, 50 );
       }
-
-      /**
-       * adds a setting to the Settings API
-       * 
-       * @param array $atts an array of settings parameters
-       * @return null
-       * 
-       */
-      protected function add_setting( $atts )
-      {
-
-        $default = array(
-            'type' => 'text',
-            'name' => '',
-            'title' => '',
-            'default' => '',
-            'help' => '',
-            'options' => '',
-            'style' => '',
-            'class' => '',
-            'attributes' => array(),
-            'section' => $this->aux_plugin_shortname . '_setting_section'
-        );
-        $params = shortcode_atts( $default, $atts );
-        
-        // add the setting definition to the list of definition objects
-        $this->setting_definitions[$params['name']] = (object) $params;
-
-        add_settings_field(
-                $params['name'], $params['title'], array($this, 'setting_callback_function'), $this->aux_plugin_name, $params['section'], array(
-            'type' => $params['type'],
-            'name' => $params['name'],
-            'value' => isset( $this->plugin_options[$params['name']] ) ? $this->plugin_options[$params['name']] : $params['default'],
-            'title' => $params['title'],
-            'help' => $params['help'],
-            'options' => $params['options'],
-            'style' => $params['style'],
-            'class' => $params['class'],
-            'attributes' => $params['attributes'],
-                )
+      foreach ( $this->settings_sections as $section ) {
+        // Add the section to reading settings so we can add our
+        // fields to it
+        add_settings_section(
+                $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name
         );
       }
+    }
 
-      /**
-       * renders the plugin settings page
-       * 
-       * this generic rendering is expected to be overridden in the subclass
-       */
-      public function render_settings_page()
-      {
-        ?>
+    /**
+     * adds a setting to the Settings API
+     * 
+     * @param array $atts an array of settings parameters
+     * @return null
+     * 
+     */
+    protected function add_setting( $atts )
+    {
+
+      $default = array(
+          'type' => 'text',
+          'name' => '',
+          'title' => '',
+          'default' => '',
+          'help' => '',
+          'options' => '',
+          'style' => '',
+          'class' => '',
+          'attributes' => array(),
+          'section' => $this->aux_plugin_shortname . '_setting_section'
+      );
+      $params = shortcode_atts( $default, $atts );
+
+      // add the setting definition to the list of definition objects
+      $this->setting_definitions[$params['name']] = (object) $params;
+
+      add_settings_field(
+              $params['name'], $params['title'], array($this, 'setting_callback_function'), $this->aux_plugin_name, $params['section'], array(
+          'type' => $params['type'],
+          'name' => $params['name'],
+          'value' => isset( $this->plugin_options[$params['name']] ) ? $this->plugin_options[$params['name']] : $params['default'],
+          'title' => $params['title'],
+          'help' => $params['help'],
+          'options' => $params['options'],
+          'style' => $params['style'],
+          'class' => $params['class'],
+          'attributes' => $params['attributes'],
+              )
+      );
+    }
+
+    /**
+     * renders the plugin settings page
+     * 
+     * this generic rendering is expected to be overridden in the subclass
+     */
+    public function render_settings_page()
+    {
+      ?>
       <div class="wrap pdb-admin-settings participants_db" >
 
-      <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . $this->aux_plugin_title ) ?>
+        <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . $this->aux_plugin_title ) ?>
 
-      <?php settings_errors(); ?>  
+        <?php settings_errors(); ?>  
 
         <form method="post" action="options.php">  
-      <?php
-      settings_fields( $this->aux_plugin_name . '_settings' );
-      do_settings_sections( $this->aux_plugin_name );
-      submit_button();
-      ?>  
+          <?php
+          settings_fields( $this->aux_plugin_name . '_settings' );
+          do_settings_sections( $this->aux_plugin_name );
+          submit_button();
+          ?>  
         </form>  
 
         <aside class="attribution"><?php echo $this->attribution ?></aside>
@@ -629,7 +629,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $values[3] = htmlspecialchars( $values[3] );
       $values[8] = $this->set_selectstring( $setting['type'] );
       $values[9] = $this->input_attributes( $setting['attributes'] );
-      
+
       $build_function = '_build_' . $setting['type'];
       if ( !is_callable( array($this, $build_function) ) ) {
         $build_function = '_build_text';
@@ -760,7 +760,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       foreach ( $values[7] as $value => $title ) {
         $values[8] = in_array( $value, $values[2] ) ? $selectstring : '';
         $values[3] = $title;
-        $values[10] = is_int($value) ? $title : $value;
+        $values[10] = is_int( $value ) ? $title : $value;
         $html .= vsprintf( $pattern, $values );
       }
       $html .= "\n" . '</div>';
@@ -773,29 +773,36 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * builds a dropdown setting element
      * 
      * @param array $values array of setting values
+     * @param bool  $multi if true, builds a multiselect
      * 
      * @return string HTML
      */
-    protected function _build_dropdown( $values )
+    protected function _build_dropdown( $values, $multi = false )
     {
       $selectstring = $this->set_selectstring( $values[1] );
       $html = '';
-      $pattern = "\n" . '<option value="%4$s" %9$s ><span>%5$s</span></option>';
-      $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . ']" %10$s >';
+      $option_pattern = "\n" . '<option value="%4$s" %9$s ><span>%5$s</span></option>';
+      
+      if ( $multi ) {
+        $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . '][]" multiple %10$s >';
+      } else {
+        $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . ']" %10$s >';
+      }
+
 
       if ( PDb_FormElement::is_assoc( $values[7] ) ) {
         foreach ( $values[7] as $name => $title ) {
-          $values[8] = $name == $values[2] ? $selectstring : '';
+          $values[8] = in_array( $name, (array) $values[2] ) ? $selectstring : '';
           $values[3] = $name;
           $values[4] = $title;
-          $html .= vsprintf( $pattern, $values );
+          $html .= vsprintf( $option_pattern, $values );
         }
       } else {
         foreach ( $values[7] as $value ) {
-          $values[8] = $value == $values[2] ? $selectstring : '';
+          $values[8] = in_array( $value, (array) $values[2] ) ? $selectstring : '';
           $values[3] = $value;
           $values[4] = $value;
-          $html .= vsprintf( $pattern, $values );
+          $html .= vsprintf( $option_pattern, $values );
         }
       }
       $html .= "\n" . '</select></div>';
@@ -803,7 +810,50 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         $html .= "\n" . '<p class="description">' . $values[6] . '</p>';
       return $html;
     }
-    
+
+    /**
+     * builds a multiselect drodown
+     * 
+     * @param array $values config array
+     * 
+     * @return atring HTML
+     */
+    protected function _build_multiselect( $values )
+    {
+      return $this->_build_dropdown( $values, true );
+    }
+
+    /**
+     * provides a subsection divider
+     * 
+     * @param array $values array of setting values
+     *                       0 - setting name (%1$s)
+     *                       1 - element type (%2$s)
+     *                       2 - setting value
+     *                       3 - title
+     *                       4 - CSS class
+     *                       5 - CSS style
+     *                       6 - help text
+     *                       7 - setting options array
+     *                       8 - select string
+     * @return string HTML
+     */
+    protected function _build_subsection( $values )
+    {
+      return vsprintf( '<div class="settings-subsection">%7$s</div>', $values );
+    }
+
+    /**
+     * builds a color selector
+     * 
+     * @param array $values
+     * @return string html
+     */
+    protected function _build_color_selector( $values )
+    {
+      return vsprintf( '<input name="' . $this->settings_name() . '[%1$s]" type="color" value="%3$s" title="%4$s" class="%5$s" style="%6$s" %10$s  />', $values );
+    }
+
     /**
      * provides an attributes string
      * 
@@ -813,10 +863,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     protected function input_attributes( Array $attributes )
     {
       $atts_string = '';
-      $exclude = array('name','value','class','style','type','title'); // atts we don't set this way
-      foreach( $attributes as $name => $value ) {
-        if ( ! in_array( $name, $exclude ) ) {
-          $atts_string .= $name . '="' . esc_attr($value) . '" '; 
+      $exclude = array('name', 'value', 'class', 'style', 'type', 'title'); // atts we don't set this way
+      foreach ( $attributes as $name => $value ) {
+        if ( !in_array( $name, $exclude ) ) {
+          $atts_string .= $name . '="' . esc_attr( $value ) . '" ';
         }
       }
       return $atts_string;
@@ -837,6 +887,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         case 'multicheckbox':
           return 'checked="checked"';
         case 'dropdown':
+        case 'multiselect':
           return 'selected="selected"';
         default:
           return '';
@@ -856,6 +907,26 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( !empty( $setting['help'] ) )
         $pattern .= '<p class="description">%7$s</p>';
       return vsprintf( $pattern, $values );
+    }
+
+    /**
+     * provides a list of fields valid for use as a list selector
+     * 
+     * @param string $allowed comma-separated list of form_element types to allow
+     * @retrun array of fields; 'title' => 'value'
+     */
+    protected function field_selector( $allowed )
+    {
+      $available_fields = array();
+      foreach ( \Participants_Db::$fields as $fieldname => $field ) {
+        /* @var $field \PDB_Form_Field_Def */
+        if (
+                in_array( $field->form_element(), explode( ',', str_replace( ' ', '', $allowed ) ) )
+        ) {
+          $available_fields[$fieldname] = $field->title();
+        }
+      }
+      return $available_fields;
     }
 
     /**
@@ -893,6 +964,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     }
 
   }
+
+  
+
+  
 
   
 
