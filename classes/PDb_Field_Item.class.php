@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -21,18 +21,18 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @var string the field's value
    */
   private $value = '';
-	
-	/**
+
+  /**
    *
    * @var int the id of the current record
    */
-	private $record_id = 0;
-	
-	/**
+  private $record_id = 0;
+
+  /**
    *
    * @var string the instantiating module
    */
-	private $module = 'none';
+  private $module = 'none';
 
   /**
    *
@@ -57,25 +57,24 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @param int|string $id the id of the source record if available
    */
   public function __construct( $config, $id = false )
-  { 
+  {
     if ( is_string( $config ) ) {
       $config = array('name' => $config);
     }
-    
+
     if ( is_array( $config ) ) {
       $config = (object) $config;
     }
-    
-    parent::__construct($config->name);
+
+    parent::__construct( $config->name );
 
     if ( $id )
       $this->record_id = $id;
 
     // load the object properties
     $this->assign_props( $config );
-    
   }
-    
+
   /**
    * provides direct access to property values
    * 
@@ -90,9 +89,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( property_exists( $this, $name ) ) {
       return $this->{$name};
     }
-    return parent::__get($name);
+    return parent::__get( $name );
   }
-  
+
   /**
    * allows direct setting of the value property
    * 
@@ -105,10 +104,10 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     switch ( $prop ) {
       case 'value':
-        $this->set_value($value);
+        $this->set_value( $value );
     }
   }
-  
+
   /**
    * handles isset call on class properties
    * 
@@ -157,7 +156,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return PDb_FormElement::get_field_value_display( $this, $this->html_output );
   }
-  
+
   /**
    * supplies the raw value of the field
    * 
@@ -181,7 +180,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     }
     return $value;
   }
-  
+
   /**
    * supplies the value in a displayable format
    * 
@@ -191,14 +190,14 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     if ( $this->is_value_set() ) {
       $titles = array();
-      foreach ( self::field_value_array($this->value) as $value ) {
+      foreach ( self::field_value_array( $this->value ) as $value ) {
         $titles[] = $this->value_title( $value );
       }
       return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
     }
     return $this->value();
   }
-  
+
   /**
    * provides the current value of the field as an associative array or string
    * 
@@ -208,7 +207,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->value();
   }
-  
+
   /**
    * supplies the name of the current module
    * 
@@ -218,7 +217,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->module;
   }
-  
+
   /**
    * supplies the href value
    * 
@@ -228,7 +227,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->link;
   }
-  
+
   /**
    * sets the field's value
    * 
@@ -238,7 +237,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $this->_set_value( $value );
   }
-  
+
   /**
    * sets the field's module
    * 
@@ -249,7 +248,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $this->module = $module;
   }
 
-
   /**
    * sets the link value of the object
    * 
@@ -259,7 +257,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $this->link = $url;
   }
-  
+
   /**
    * sets the current record id
    * 
@@ -279,7 +277,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return strlen( $this->title ) > 0;
   }
-  
+
   /**
    * tells if the field has a non-empty value
    * 
@@ -291,7 +289,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->has_content();
   }
-  
+
   /**
    * tells if the link property is set
    * 
@@ -332,7 +330,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function has_content()
   {
-    switch( $this->form_element ) {
+    switch ( $this->form_element ) {
       case 'placeholder':
         $value = $this->default_value();
         break;
@@ -347,11 +345,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
          * @param PDb_Field_Item the current field
          * @return string the value to test for content
          */
-        $value = Participants_Db::apply_filters('field_has_content_test_value', $this->value, $this );
+        $value = Participants_Db::apply_filters( 'field_has_content_test_value', $this->value, $this );
     }
-    return !$this->is_empty($value);
+    return !$this->is_empty( $value );
   }
-  
+
   /**
    * tells if the field's value is diferent from the field's default value
    * 
@@ -371,7 +369,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $this->html_output = (bool) $mode;
   }
-  
+
   /**
    * processes a field value into an array 
    * 
@@ -383,14 +381,16 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public static function field_value_array( $value )
   {
     $multivalues = maybe_unserialize( $value );
-    
+
     if ( !is_array( $multivalues ) ) {
       // make it into an array
       $multivalues = explode( ',', $value );
     }
-    
+
     // remove empty elements
-    return array_filter( $multivalues, function ($v) { return $v !== ''; } );
+    return array_filter( $multivalues, function ($v) {
+      return $v !== '';
+    } );
   }
 
   /**
@@ -410,28 +410,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( property_exists( $config, 'module' ) ) {
       $this->set_module( $config->module );
     }
-    
+
     if ( $this->is_valid_single_record_link_field() ) {
       $this->set_link( Participants_Db::single_record_url( $this->record_id ) );
-    }
-  }
-
-  /**
-   * assigns the values for the special case of the "link" field 
-   */
-  private function set_link_field_value()
-  {
-    if ( $this->form_element === 'link' ) {
-      
-      $parts = (array) maybe_unserialize( $this->value );
-      
-      if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) ) {
-        $this->link = $parts[0];
-      }
-      
-      if ( $this->has_link() ) {
-        $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
-      }
     }
   }
 
@@ -500,7 +481,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_id()
   {
-    echo PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name ); 
+    echo PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name );
   }
 
   /**
@@ -598,7 +579,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     else
       return false;
   }
-  
+
   /**
    * is this the single record link?
    * 
@@ -607,10 +588,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function is_single_record_link()
   {
     return (
-            Participants_Db::is_single_record_link($this->name)
-            &&
-            ! in_array( $this->form_element, array('rich-text', 'link' ) )
-            &&
+            Participants_Db::is_single_record_link( $this->name ) &&
+            !in_array( $this->form_element, array('rich-text', 'link') ) &&
             $this->record_id
             );
   }
@@ -631,7 +610,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     return $label;
   }
-  
+
   /**
    * prepare a field for display
    *
@@ -640,10 +619,10 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @param string $string the value to be prepared
    */
   private function prepare_display_value( $string )
-  {   
-    return Participants_Db::apply_filters('translate_string', $string);
+  {
+    return Participants_Db::apply_filters( 'translate_string', $string );
   }
-  
+
   /**
    * provides an associative array of values
    * 
@@ -656,22 +635,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $title_array = array();
     $other_list = array();
-    
-    foreach( $value_list as $value )
-    {
+
+    foreach ( $value_list as $value ) {
       if ( $this->option_match_found( $value, $this->options ) ) {
-        $title_array[ $this->value_title($value) ] = $value;
+        $title_array[$this->value_title( $value )] = $value;
       } else {
         $other_list[] = $value;
       }
     }
-    if ( ! empty( $other_list ) ) {
-      return array_merge( $title_array, array('other' => implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $other_list ) ) );
+    if ( !empty( $other_list ) ) {
+      return array_merge( $title_array, array('other' => implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $other_list )) );
     } else {
       return $title_array;
     }
   }
-  
+
   /**
    * finds a matching value in an array of options
    * 
@@ -684,13 +662,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function option_match_found( $value, $option_list )
   {
     foreach ( $option_list as $option ) {
-      if ( trim($value) === $option ) {
+      if ( trim( $value ) === $option ) {
         return true;
       }
     }
     return false;
   }
-  
+
   /**
    * sets the value property from an incoming value
    * 
@@ -702,19 +680,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function _set_value( $raw_value )
   {
     if ( $this->is_multi() && $this->form_element !== 'link' ) {
-      
+
       $value_list = array();
       foreach ( self::field_value_array( $raw_value ) as $value ) {
-        $value_list[] = str_replace( ',', '&#44;', $this->prepare_value($value) );
+        $value_list[] = str_replace( ',', '&#44;', $this->prepare_value( $value ) );
       }
-      
+
       $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
+    } elseif ( $this->form_element === 'link' ) {
+
+      $this->value = $this->prepare_value( $raw_value );
+      $this->set_link_field_value();
     } else {
-      
-      $this->value = $this->prepare_value($raw_value);
+
+      $this->value = $this->prepare_value( $raw_value );
     }
-    
-    $this->set_link_field_value();
   }
 
   /**
@@ -727,4 +707,27 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $value; // filter_var( $value, FILTER_SANITIZE_STRING );
   }
+
+  /**
+   * assigns the values for the special case of the "link" field 
+   */
+  private function set_link_field_value()
+  {
+    if ( is_serialized( $this->value) ) {
+      
+      $parts = unserialize( $this->value );
+
+      if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) && ! $this->has_link() ) {
+        $this->link = $parts[0];
+      }
+
+      if ( $this->has_link() ) {
+        $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
+      }
+      
+    } elseif ( filter_var( $this->value, FILTER_VALIDATE_URL ) ) {
+      $this->link = $this->value;
+    }
+  }
+
 }

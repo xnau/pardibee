@@ -540,6 +540,7 @@ class PDb_Template {
           $this->fields->{$name} = new PDb_Field_Item( $field );
           $this->fields->{$name}->set_record_id($this->shortcode_object->participant_id);
           $this->fields->{$name}->set_module( $this->shortcode_object->module );
+          $this->fields->{$name}->set_value( $this->values[$name] );
         }
         foreach ( $this->record as $name => $group ) {
           $this->groups[$name] = $this_group = new stdClass();
