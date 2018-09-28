@@ -735,6 +735,12 @@ class PDb_Manage_Fields {
           Participants_Db::set_admin_message( __( 'There was an error; the settings were not saved.', 'participants-database' ), 'error' );
         }
       } elseif ( is_int( $result ) ) {
+        /**
+         * @action pdb-field_defs_updated
+         * @param string action
+         * @param string last query
+         */
+        do_action(Participants_Db::$prefix . 'field_defs_updated', $action, $wpdb->last_query);
         Participants_Db::set_admin_message( __( 'Your information has been updated', 'participants-database' ), 'updated' );
       }
     }
