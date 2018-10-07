@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 1.3
+ * @version 1.4
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -77,7 +77,7 @@ PDbManageFields = (function ($) {
         } // buttons
       });// dialog
     }
-    confirmationBox.dialog('open'); //Display confirmation dialog when user clicks on "delete Image"
+    confirmationBox.dialog('open');
     return false;
   };
   var form_element_change_confirm = function () {
@@ -107,11 +107,12 @@ PDbManageFields = (function ($) {
           click : function () {
             warning.val('rejected');
             $(this).dialog('close'); // Close the Confirmation Box
+            target.val(target.data('initState')).change();
           }
         }
       ] // buttons
     });// dialog 
-    confirmationBox.dialog('open'); //Display confirmation dialog when user clicks on "delete Image"
+    confirmationBox.dialog('open');
     return false;
   };
   var captchaPreset = function () {
