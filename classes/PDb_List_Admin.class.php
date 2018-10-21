@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.10
+ * @version    Release: 1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -786,6 +786,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
           }
           $record_id_field = Participants_Db::$fields['id'];
           $filter_columns += array(Participants_Db::apply_filters( 'translate_string', $record_id_field->title ) => 'id');
+          
           ?>
           <div class="pdb-searchform">
             <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER['REQUEST_URI'] ) ?>" >
@@ -826,7 +827,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
                           );
                           PDb_FormElement::print_element( $element );
                           ?>
-                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo htmlspecialchars( esc_attr( $filter_set['value'] ) ) ?>">
+                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set['value'] ) ?>">
                           <?php
                           if ( $i < $filter_count - 1 ) {
                             echo '<br />';
