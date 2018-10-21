@@ -129,7 +129,7 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 			return array(
 				'timeout'   => 0.01,
 				'blocking'  => false,
-				'body'      => $this->data,
+				'body'      => array(), // $this->data not used so send an empty array
 				'cookies'   => $_COOKIE,
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 			);
