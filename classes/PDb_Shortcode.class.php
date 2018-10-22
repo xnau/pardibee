@@ -1221,7 +1221,7 @@ abstract class PDb_Shortcode {
    */
   public function template_basename()
   {
-    if ( PDB_DEBUG ) {
+    if ( PDB_DEBUG > 2 ) {
       $path = $this->template;
     } else {
       $path = '';
