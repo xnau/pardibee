@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.3.1
+ * @version    1.3.2
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -127,11 +127,12 @@ class PDb_Admin_Notices {
    * deletes the named notice
    * 
    * @param string  $id the notice id
+   * @param bool $dismiss if false, delete the notice, if true, dismiss it
    */
-  public static function delete_notice( $id )
+  public static function delete_notice( $id, $dismiss = true )
   {
     $notice = self::get_instance();
-    $notice->dismiss( $id );
+    $notice->dismiss( $id, $dismiss );
   }
 
   /**
@@ -187,6 +188,7 @@ class PDb_Admin_Notices {
    */
   public function action_admin_notices()
   {
+//    error_log(__METHOD__.' notices: '.print_r($this->admin_notice_list(),1));
     foreach ( $this->admin_notice_list() as $admin_notice ) {
       
       /* @var $admin_notice pdb_admin_notice_message */
@@ -240,11 +242,16 @@ class PDb_Admin_Notices {
    * marks a notice as dismissed
    * 
    * @param string  $notice_id
+   * @param bool $dismiss if false, the message is deleted completely
    */
-  public function dismiss( $notice_id )
+  public function dismiss( $notice_id, $dismiss = true )
   {
     if ( isset( $this->admin_notice_list[$notice_id] ) ) {
-      $this->admin_notice_list[$notice_id]->dismiss();
+      if ( $dismiss ) {
+        $this->admin_notice_list[$notice_id]->dismiss();
+      } else {
+        unset($this->admin_notice_list[$notice_id]);
+      }
       $this->update_notices();
     }
   }
@@ -552,6 +559,15 @@ class pdb_admin_notice_message {
   public function dismiss()
   {
     $this->dismissed = true;
+  }
+  
+  /**
+   * clears the dismissed flag
+   * 
+   */
+  public function undismiss()
+  {
+    $this->dismissed = false;
   }
   
   /**
