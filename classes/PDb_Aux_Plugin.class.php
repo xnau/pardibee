@@ -784,9 +784,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $option_pattern = "\n" . '<option value="%4$s" %9$s ><span>%5$s</span></option>';
       
       if ( $multi ) {
-        $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . '][]" multiple %10$s >';
+        $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . '][]" multiple ' . $values[9] . ' >';
       } else {
-        $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . ']" %10$s >';
+        $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . ']" ' . $values[9] . ' >';
       }
 
 
