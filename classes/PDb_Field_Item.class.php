@@ -410,6 +410,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( property_exists( $config, 'module' ) ) {
       $this->set_module( $config->module );
     }
+    if ( property_exists( $config, 'attributes' ) ) {
+      $this->attributes = $config->attributes;
+    }
 
     if ( $this->is_valid_single_record_link_field() ) {
       $this->set_link( Participants_Db::single_record_url( $this->record_id ) );
