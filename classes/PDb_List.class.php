@@ -956,15 +956,29 @@ class PDb_List extends PDb_Shortcode {
   /**
    * prints a table header row
    */
-  public function print_header_row( $head_pattern )
+  public function print_header_row( $head_pattern = '' )
   {
-
+    if ( empty( $head_pattern ) ) {
+      $head_pattern = '<th class="%2$s" scope="col">%1$s</th>';
+    }
     // print the top header row
     foreach ( $this->display_columns as $column ) {
-      $title = stripslashes( Participants_Db::column_title( $column ) );
-      printf(
-              $head_pattern, str_replace( array('"', "'"), array('&quot;', '&#39;'), $title ), $column
-      );
+      
+      $field = Participants_Db::$fields[$column];
+      /* @var $field PDb_Form_Field_Def */
+      
+      $title = str_replace( array('"', "'"), array('&quot;', '&#39;'), stripslashes( $field->title() ) );
+      /**
+       * @filter pdb-list_header_title
+       * @param string the title
+       * @param PDb_Form_Field_Def
+       * @param array the current list filter
+       * @return string title
+       */
+      printf( 
+              $head_pattern, 
+              Participants_Db::apply_filters('list_header_title', $title, $field, $this->list_query->current_filter() ), 
+              $column );
     }
   }
 
