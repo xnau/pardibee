@@ -193,18 +193,21 @@ class PDb_Signup extends PDb_Shortcode {
 
     if ( $this->submitted ) {
 
-      /*
+      /**
        * filter provides access to the freshly-stored record and the email and 
        * thanks message properties so user feedback can be altered.
        * 
-       * filter: pdb-before_signup_thanks
+       * @action pdb-before_signup_thanks
+       * @param object feedback messages      
+       * @param string form status
+       * 
        */
       if ( has_filter( Participants_Db::$prefix . 'before_signup_thanks' ) ) {
 
         $signup_feedback_props = array('recipient', 'receipt_subject', 'receipt_body', 'notify_recipients', 'notify_subject', 'notify_body', 'thanks_message', 'participant_values');
         $signup_feedback = new stdClass();
         foreach ( $signup_feedback_props as $prop ) {
-          $signup_feedback->$prop = &$this->$prop;
+          $signup_feedback->$prop = $this->$prop;
         }
         do_action( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
       }
