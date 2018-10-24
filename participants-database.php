@@ -295,6 +295,9 @@ class Participants_Db extends PDb_Base {
     self::$default_options = self::$prefix . 'default_options';
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
+    
+    // initialize WP Session Manager
+    require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
