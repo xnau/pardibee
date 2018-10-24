@@ -296,8 +296,15 @@ class Participants_Db extends PDb_Base {
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
     
-    // initialize WP Session Manager
-    require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
+    /*
+     * initialize WP Session Manager if not already present
+     * 
+     * we do not check the version, so if a pre 2.0 version of WP Session Manager 
+     * is installed sessions could be broken 
+     */
+    if ( ! self::wp_session_plugin_is_active() ) {
+      require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
+    }
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
