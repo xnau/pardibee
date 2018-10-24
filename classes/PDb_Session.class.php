@@ -10,10 +10,8 @@
  * @license    GPL2
  * @version    2.0
  * @link       http://xnau.com/wordpress-plugins/
- * @depends    FormElement class, Shortcode class
+ * @depends    wp-session-manager
  * 
- * based on EDD_Session class by Pippin Williamson
- * https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/includes/class-edd-session.php
  * 
  */
 if ( !defined( 'ABSPATH' ) )
