@@ -1276,6 +1276,7 @@ class PDb_List_Query {
         'clause_count' => $this->clause_count,
         'is_search' => $this->is_search_result
     );
+    error_log(__METHOD__.' key: '.$this->query_session_name(). ' '.print_r($save,1));
     Participants_Db::$session->set( $this->query_session_name(), $save );
   }
 
