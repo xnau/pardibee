@@ -1539,11 +1539,6 @@ class PDb_Base {
     if ( !empty( $cache_limit ) && !session_id() ) {
       session_cache_limiter( $cache_limit );
     }
-
-    // initalize PHP sessions if needed
-    if ( ( Participants_Db::plugin_setting_is_true( 'use_php_sessions' ) || self::wp_session_plugin_is_active() ) && !session_id() ) {
-      session_start();
-    }
   }
 
   /**
