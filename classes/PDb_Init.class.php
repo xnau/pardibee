@@ -258,7 +258,7 @@ class PDb_Init {
    * 
    * @param array|string $callback a PHP callable to execute on each blog
    */
-  public static function do_network_operation( callable $callback )
+  public static function do_network_operation( $callback )
   {
     add_action('switch_blog', array( $this, 'switch_blog' ), 10, 2 );
     
@@ -298,6 +298,11 @@ class PDb_Init {
    */
   private function _uninstall()
   {
+    Participants_Db::initialize();
+    Participants_Db::setup_source_names();
+    
+    do_action( 'participants_database_uninstall' );
+    
     global $wpdb;
 
 // delete tables
@@ -325,7 +330,7 @@ class PDb_Init {
       delete_transient( $name );
     }
     
-    do_action( 'participants_database_uninstall' );
+    PDb_Session::uninstall();
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin uninstalled' );
   }
