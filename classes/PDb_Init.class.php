@@ -130,6 +130,9 @@ class PDb_Init {
 
     // install the db tables if needed
     $this->maybe_install();
+    
+    if ( is_callable( 'EAMann\WPSession\DatabaseHandler::create_table' ) ) 
+      EAMann\WPSession\DatabaseHandler::create_table();
 
     do_action( 'pdb-plugin_activation' );
 
