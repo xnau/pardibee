@@ -41,7 +41,6 @@ class PDb_Session {
     $this->use_php_sessions = (bool) $plugin_setting['use_php_sessions'] || PDb_Base::wp_session_plugin_is_active();  $this->session_name = Participants_Db::$prefix . 'session';
 
     Participants_Db::initialize_session(); // this is only to set up the cache limiter now
-    
   }
 
  
@@ -194,4 +193,17 @@ class PDb_Session {
 //    }
 //    return $c;
 //  }
+  
+  /**
+   * deletes the session table on uninstall
+   */
+  public static function uninstall()
+  {
+    global $wpdb;
+
+    // delete session table
+    $wpdb->query( "DROP TABLE {$wpdb->prefix}sm_sessions;" );
+    
+    delete_option('sm_session_db_version');
+  }
 }
