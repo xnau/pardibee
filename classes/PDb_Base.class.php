@@ -1754,7 +1754,7 @@ class PDb_Base {
         define( 'PDB_DEBUG', 0 );
       }
     }
-    if ( PDB_DEBUG && ! is_a( 'PDb_Debug', $PDb_Debugging ) ) {
+    if ( PDB_DEBUG && ! is_a( $PDb_Debugging, 'PDb_Debug' ) ) {
       $PDb_Debugging = new PDb_Debug();
     }
   }
