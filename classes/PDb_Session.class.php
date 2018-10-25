@@ -30,10 +30,6 @@ class PDb_Session {
   /**
    * construct the class
    * 
-   * we check the setting for using PHP session, if false, we use a WP Transient-based session
-   * 
-   * we are just using this alternate form of session mnagement instead of PHP 
-   * sessions for now
    */
   public function __construct()
   {
