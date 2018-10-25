@@ -162,7 +162,7 @@ if ( !class_exists('Puc_v4p1_StateStore', false) ):
 
 			$state = get_site_option($this->optionName, null);
 
-			if ( !is_object($state) ) {
+			if ( !is_object($state) || !class_exists( 'Puc_v4p1_Utils' ) ) {
 				$this->lastCheck = 0;
 				$this->checkedVersion = '';
 				$this->update = null;
