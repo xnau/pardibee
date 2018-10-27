@@ -289,11 +289,15 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.8.1 =
+* force required php 5.4 or better
+
 = 1.8 =
 * improved session management
 * further optimize background processes
 * improvements to the API
 * fixed issues with plugin uninstall
+* requires php 5.4 or better
 
 = 1.7.9.12 =
 * fixed issue with link field when using the PDb_Template class

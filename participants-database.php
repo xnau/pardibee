@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.8
+ * Version: 1.8.1
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -43,7 +43,7 @@ spl_autoload_register( 'PDb_class_loader' );
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011 - 2018 7th Veil, LLC
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GPL2
- * @version    Release: 1.8
+ * @version    Release: 1.8.1
  * 
  */
 class Participants_Db extends PDb_Base {
@@ -51,7 +51,7 @@ class Participants_Db extends PDb_Base {
   /**
    * @var string sets the min PHP version level required
    */
-  const min_php_version = '5.3';
+  const min_php_version = '5.4';
 
   /**
    *
@@ -3770,7 +3770,7 @@ function PDb_class_loader( $class )
 /**
  * PHP version checks and notices before initializing the plugin
  */
-if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
+if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) { // 
   
   if ( is_null( Participants_Db::$plugin_version ) ) { // check for the uninitialized class
     Participants_Db::initialize();
