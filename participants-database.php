@@ -500,11 +500,8 @@ class Participants_Db extends PDb_Base {
      */
     PDb_Admin_Notices::get_instance();
     
-    
-    
     // check the php version for possible warning
     self::php_version_warning();
-    
   }
 
   /**
@@ -524,6 +521,10 @@ class Participants_Db extends PDb_Base {
     
     // start sessions management
     self::$session = new PDb_Session();
+    
+    if ( self::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
+      add_filter( 'pdb-record_id_in_get_var', function () { return true; } );
+    }
 
     /*
      * set up the base reference object arrays
@@ -827,7 +828,8 @@ class Participants_Db extends PDb_Base {
   public static function print_record_edit_form( $atts )
   {
     $record_id = false;
-    // get the pid from the get string if given (for backwards compatibility)
+    
+    // get the pid from the get string if given
     $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
 
     if ( empty( $get_pid ) ) {
@@ -837,18 +839,8 @@ class Participants_Db extends PDb_Base {
       $record_id = self::get_participant_id( $get_pid );
     }
 
-    /*
-     * get the id from the SESSION array. This will be present if the user has come 
-     * from a form that is in a multi-page series
-     * 
-     * we don't use the PDb_Session::record_id method because that would compromize 
-     * the security of the record edit form. Multi-page forms MUST have working 
-     * sessions in order to function, the pdb-record_id_in_get_var filter can't 
-     * be used to pass the ID in the GET var.
-     * 
-     */
     if ( $record_id === false ) {
-      $record_id = self::get_record_id_by_term( 'id', self::$session->get('pdbid') );
+      $record_id = self::$session->record_id( true );
     }
 
     if ( $record_id === false && (isset( $atts['id'] ) || isset( $atts['record_id'] )) ) {
@@ -2621,6 +2613,7 @@ class Participants_Db extends PDb_Base {
           return;
         }
 
+        $record = self::get_participant( $participant_id );
         /*
          * set the stored record hook.
          * 
@@ -2628,7 +2621,7 @@ class Participants_Db extends PDb_Base {
          * hook: pdb-after_submit_add
          */
         $wp_hook = self::$prefix . 'after_submit_' . ($post_input['action'] == 'insert' ? 'add' : 'update');
-        do_action( $wp_hook, self::get_participant( $participant_id ) );
+        do_action( $wp_hook, $record );
 
         /*
          * if we are submitting from the frontend, set the feedback message and 
@@ -2664,7 +2657,9 @@ class Participants_Db extends PDb_Base {
             self::$session->set( 'pdbid', $post_data['id'] );
             self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
             
-            $query_args = apply_filters( 'pdb-record_id_in_get_var', false ) ? array( self::$single_query => $post_data['id'] ) : array();
+            $query_args = apply_filters( 'pdb-record_id_in_get_var', false ) ? array( 
+                self::$record_query => $record['private_id'],
+                ) : array();
 
             $redirect = $post_data['thanks_page'];
             /**
@@ -2853,15 +2848,19 @@ class Participants_Db extends PDb_Base {
 
         if ( false !== $post_data['id'] ) {
 
+          $record = self::get_participant( $post_data['id'] );
           /*
            * hook: pdb-after_submit_signup
            */
           $wp_hook = self::$prefix . 'after_submit_signup';
-          do_action( $wp_hook, self::get_participant( $post_data['id'] ) );
-
-          $redirect = apply_filters( 'pdb-record_id_in_get_var', false ) 
-                  ? add_query_arg( Participants_Db::$single_query, $post_data['id'], $post_data['thanks_page'] ) 
-                  : $post_data['thanks_page'];
+          do_action( $wp_hook, $record );
+          
+          $redirect = $post_data['thanks_page'];
+          if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
+            $redirect = add_query_arg( array(
+                self::$record_query => $record['private_id'],
+                    ), $post_data['thanks_page'] );
+          }
 
           self::$session->set( 'pdbid', $post_data['id'] );
           self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
