@@ -30,14 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) die;
      *
      */
     if ( $this->shortcode_atts['record_id'] !== false ) {
-      $id = $this->shortcode_atts['record_id'];
-    } else $id = 0;
-		// override the shortcode att if the value is in the URI
-    $get_pdb = filter_input(INPUT_GET, Participants_Db::$single_query, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
-    if (!empty($get_pdb)) {
-      $id = $get_pdb;
+      $record_id = Participants_Db::get_record_id_by_term( $this->shortcode_atts['term'], $this->shortcode_atts['record_id'] );
+    } else {
+      $record_id = Participants_Db::$session->record_id();
     }
-    $record_id = Participants_Db::get_record_id_by_term( $this->shortcode_atts['term'], $id );
     
     if ( false === $record_id && version_compare( $this->template_version, '0.2', '<') ) {
       
@@ -48,10 +44,9 @@ if ( ! defined( 'ABSPATH' ) ) die;
       $this->participant_values = Participants_Db::get_participant( $record_id );
       $this->participant_id = $record_id;
       
-          $this->_setup_iteration();
-    
-          $this->_print_from_template();
-    
+      $this->_setup_iteration();
+      
+      $this->_print_from_template();
     }
     
   }
