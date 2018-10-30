@@ -1143,29 +1143,42 @@ class PDb_Settings extends xnau_Plugin_Settings {
     );
 
     $this->plugin_settings[] = array(
-        'name' => 'use_php_sessions',
-        'title' => __( 'Use PHP Sessions', 'participants-database' ),
+        'name' => 'use_session_alternate_method',
+        'title' => __( 'Use Alternate Session Method', 'participants-database' ),
         'group' => 'pdb-advanced',
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'check this to use PHP sessions instead of database sessions.', 'participants-database' ) . $this->settings_help( 'usephpsessions'),
+            'help_text' => __( 'use this if you are having problems with sessions.', 'participants-database' ) . $this->settings_help( 'sessionsalternate'),
             'value' => 0,
             'options' => array(1, 0),
         ),
     );
 
-    $this->plugin_settings[] = array(
-        'name' => 'cookie_name',
-        'title' => __( 'Cookie Name', 'participants-database' ),
-        'group' => 'pdb-advanced',
-        'options' => array
-            (
-            'type' => 'text-line',
-            'help_text' => __( 'Change the name of the cookie for compatibility with some web hosting setups.', 'participants-database' ),
-            'value' => 'pdb_wp_session',
-        ),
-    );
+//    $this->plugin_settings[] = array(
+//        'name' => 'use_php_sessions',
+//        'title' => __( 'Use PHP Sessions', 'participants-database' ),
+//        'group' => 'pdb-advanced',
+//        'options' => array
+//            (
+//            'type' => 'checkbox',
+//            'help_text' => __( 'check this to use PHP sessions instead of database sessions.', 'participants-database' ) . $this->settings_help( 'usephpsessions'),
+//            'value' => 0,
+//            'options' => array(1, 0),
+//        ),
+//    );
+
+//    $this->plugin_settings[] = array(
+//        'name' => 'cookie_name',
+//        'title' => __( 'Cookie Name', 'participants-database' ),
+//        'group' => 'pdb-advanced',
+//        'options' => array
+//            (
+//            'type' => 'text-line',
+//            'help_text' => __( 'Change the name of the cookie for compatibility with some web hosting setups.', 'participants-database' ),
+//            'value' => 'pdb_wp_session',
+//        ),
+//    );
 
     $this->plugin_settings[] = array(
         'name' => 'disable_live_notifications',
