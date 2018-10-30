@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * manages user sessions for the plugin
  *
  * @package    WordPress
@@ -8,8 +8,8 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    2.0
- * @link       http://xnau.com/wordpress-plugins/
+ * @version    2.1
+ * @link       https://github.com/ericmann/wp-session-manager
  * @depends    wp-session-manager
  * 
  * 
@@ -18,14 +18,11 @@ if ( !defined( 'ABSPATH' ) )
   die;
 
 class PDb_Session {
-
- 
+  
   /**
-   * Whether to use PHP $_SESSION or WP_Session
-   *
-   * @var bool
+   * @var string name of the session id variable
    */
-  private $use_php_sessions = false;
+  const id_var = 'sess';
 
   /**
    * construct the class
@@ -34,7 +31,10 @@ class PDb_Session {
   public function __construct()
   {
     $plugin_setting = get_option(Participants_Db::$participants_db_options);
-    $this->use_php_sessions = (bool) $plugin_setting['use_php_sessions'] || PDb_Base::wp_session_plugin_is_active();  $this->session_name = Participants_Db::$prefix . 'session';
+    
+    if ( $plugin_setting['use_session_alternate_method'] ) {
+      $this->obtain_session_id();
+    }
 
     Participants_Db::initialize_session(); // this is only to set up the cache limiter now
   }
@@ -144,6 +144,37 @@ class PDb_Session {
   {
     unset( $_SESSION[sanitize_key( $name )] );
   }
+  
+  /**
+   * sets the session ID from the post or get
+   * 
+   * @return session id or bool false if not found
+   */
+  private function obtain_session_id()
+  {
+    $sessid = false;
+    $validator = array('options' => array('regexp' => '/^[0-9a-zA-Z,-]{22,40}$/') );
+    if ( array_key_exists( self::id_var, $_POST ) ) {
+      $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
+    } elseif ( array_key_exists( self::id_var, $_GET ) ) {
+      $sessid = filter_input( INPUT_GET, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
+    }
+    if ( $sessid ) {
+      $this->set_session_from_id( $sessid );
+    }
+    return $sessid;
+  }
+  
+  /**
+   * sets up the php session with the found ID
+   * 
+   * @param sring $sessid
+   */
+  private function set_session_from_id( $sessid )
+  {
+    session_id($sessid);
+  }
+  
 
   /**
    * displays all session object values
