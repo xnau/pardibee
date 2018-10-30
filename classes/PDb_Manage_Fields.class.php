@@ -597,6 +597,8 @@ class PDb_Manage_Fields {
                     break;
                 }
               }
+              
+              $status = array_intersect_key( $row, array( 'id' => '', 'status' => '', 'name' => '' ) );
 
               // remove the fields we won't be updating
               unset( $row['status'], $row['id'], $row['name'] );
@@ -607,7 +609,15 @@ class PDb_Manage_Fields {
                 }
               }
               
-              $result = $wpdb->update( Participants_Db::$fields_table, $row, array('id' => $id) );
+              /**
+               * provides access to the field definition parameters as the field is getting updated
+               * 
+               * @filter pdb-update_field_def
+               * @param array of field definition parameters
+               * @param array of non-saved status values for the field: id, status, name 
+               * @return array
+               */
+              $result = $wpdb->update( Participants_Db::$fields_table, Participants_Db::apply_filters('update_field_def', $row, $status ), array('id' => $id) );
             }
           }
 
