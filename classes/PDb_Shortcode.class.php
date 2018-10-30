@@ -299,7 +299,7 @@ abstract class PDb_Shortcode {
 
     ob_start();
 
-    if ( PDB_DEBUG /* && in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') ) */ ) {
+    if ( PDB_DEBUG && stripos($this->template, 'bare') === false ) {
       echo '<!-- template: ' . $this->template_basename( $this->template ) . ' -->';
     }
 
@@ -312,7 +312,7 @@ abstract class PDb_Shortcode {
     // this will be included in the subclass context
     $this->_include_template();
 
-    if ( PDB_DEBUG /*&& in_array( $this->module, array('signup', 'single', 'record', 'list', 'search') )*/ ) {
+    if ( PDB_DEBUG && stripos($this->template, 'bare') === false ) {
       echo '<!-- end template: ' . $this->template_basename( $this->template ) . ' -->';
     }
     
