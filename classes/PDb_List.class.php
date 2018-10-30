@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.13
+ * @version    1.14
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -508,6 +508,11 @@ class PDb_List extends PDb_Shortcode {
         'orderstring' => $this->filter['orderstring'],
 //        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
     );
+    
+    if ( Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
+      $hidden_fields[PDb_Session::id_var] = session_id();
+    }
+    
     if ( $ref === 'remote' ) {
       $hidden_fields['submit_button'] = 'search';
     }
