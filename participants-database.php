@@ -2658,7 +2658,8 @@ class Participants_Db extends PDb_Base {
             self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
             
             $query_args = apply_filters( 'pdb-record_id_in_get_var', false ) ? array( 
-                self::$record_query => $record['private_id'],
+                PDb_Session::id_var => session_id(),
+                //self::$record_query => $record['private_id'],
                 ) : array();
 
             $redirect = $post_data['thanks_page'];
@@ -2833,8 +2834,6 @@ class Participants_Db extends PDb_Base {
          */
         $post_data = self::apply_filters( 'before_submit_signup', $_POST );
 
-
-
         /*
          * the signup form should update the current record if it is revisited during a multipage form session
          */
@@ -2858,12 +2857,14 @@ class Participants_Db extends PDb_Base {
           $redirect = $post_data['thanks_page'];
           if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
             $redirect = add_query_arg( array(
-                self::$record_query => $record['private_id'],
+                PDb_Session::id_var => session_id(),
+                //self::$record_query => $record['private_id'],
                     ), $post_data['thanks_page'] );
           }
 
           self::$session->set( 'pdbid', $post_data['id'] );
           self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
+          self::$session->set( 'form_status', array_key_exists( 'previous_multipage', $_POST ) ? 'multipage-signup' : 'normal' );
 
           wp_redirect( $redirect );
 
