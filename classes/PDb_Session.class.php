@@ -63,14 +63,15 @@ class PDb_Session {
    */
   public function record_id( $pid_only = false )
   {
-    if ( ! $pid_only && array_key_exists( Participants_Db::$single_query, $_GET )  ) {
-      $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
-    } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )  ) {
-      $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
+    if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
+      if ( ! $pid_only && array_key_exists( Participants_Db::$single_query, $_GET )  ) {
+        $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
+      } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )  ) {
+        $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
+      }
+      if ( $id )
+        return $id;
     }
-    if ( $id )
-      return $id;
-    
     return $this->get( 'pdbid' );
   }
 
