@@ -91,10 +91,6 @@ class PDb_Signup extends PDb_Shortcode {
    */
   private $errors = array();
 
-  // methods
-
-  //
-
 	/**
    * instantiates the signup form object
    *
@@ -110,6 +106,7 @@ class PDb_Signup extends PDb_Shortcode {
         'submit_button' => Participants_Db::plugin_setting( 'signup_button_text' ),
         'edit_record_page' => Participants_Db::plugin_setting( 'registration_page' ),
     );
+    
     /*
      * status values: normal (signup form submission) or multipage
      */
@@ -119,6 +116,7 @@ class PDb_Signup extends PDb_Shortcode {
      * get the record ID from the last submission or current multiform
      */
     $this->participant_id = Participants_Db::$session->record_id();
+    $shortcode_atts['record_id'] = $this->participant_id;
 
     /*
      * if we've opened a regular signup form while in a multipage session, treat it 
@@ -173,11 +171,9 @@ class PDb_Signup extends PDb_Shortcode {
 
     // run the parent class initialization to set up the $shortcode_atts property
     parent::__construct( $shortcode_atts, $shortcode_defaults );
-    
-//    error_log(__METHOD__.' shortcode atts: '. print_r($this->shortcode_atts,1));
 
     $record_edit_page = Participants_Db::find_permalink( $this->shortcode_atts['edit_record_page'] );
-//    error_log(__METHOD__.' record edit page: '.$record_edit_page);
+    
     add_filter( 'pdb-record_edit_page', function() use ( $record_edit_page ) {
       return $record_edit_page;
     } );
@@ -192,7 +188,7 @@ class PDb_Signup extends PDb_Shortcode {
     $this->_setup_iteration();
 
     if ( $this->submitted ) {
-
+      
       /**
        * filter provides access to the freshly-stored record and the email and 
        * thanks message properties so user feedback can be altered.
@@ -219,6 +215,7 @@ class PDb_Signup extends PDb_Shortcode {
     
     // print the shortcode output
     $this->_print_from_template();
+    
     if ( $this->submitted ) {
       $this->_clear_multipage_session();
     }
@@ -303,7 +300,6 @@ class PDb_Signup extends PDb_Shortcode {
    */
   protected function _set_submission_page()
   {
-
     $form_status = $this->get_form_status();
     $this->submission_page = false;
     /*
