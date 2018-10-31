@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) die;
     if ( $this->shortcode_atts['record_id'] !== false ) {
       $record_id = Participants_Db::get_record_id_by_term( $this->shortcode_atts['term'], $this->shortcode_atts['record_id'] );
     } else {
-      $record_id = Participants_Db::$session->record_id();
+      $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );; // Participants_Db::$session->record_id();
     }
     
     if ( false === $record_id && version_compare( $this->template_version, '0.2', '<') ) {
