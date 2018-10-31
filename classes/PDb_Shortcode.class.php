@@ -641,7 +641,6 @@ abstract class PDb_Shortcode {
    */
   protected function _setup_iteration()
   {
-
     $this->_setup_hidden_fields();
 
     $this->record = new stdClass;
@@ -1201,7 +1200,7 @@ abstract class PDb_Shortcode {
         'session_hash' => Participants_Db::nonce( Participants_Db::$main_submission_nonce_key ),
     );
 
-    if ( $this->get_form_status() === 'multipage' ) {
+    if ( Participants_Db::is_multipage_form() ) {
       $default_hidden_fields['previous_multipage'] = $default_hidden_fields['shortcode_page'];
     }
 
@@ -1318,7 +1317,7 @@ abstract class PDb_Shortcode {
    * sets the current form status
    * 
    * this is used to determine the submission status of a form; primarily to determine 
-   * if a nulti-page form in ins process
+   * if a multi-page form is in process
    * 
    * @param string $status the new status string or null
    */
