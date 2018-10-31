@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    2.1
+ * @version    2.2
  * @link       https://github.com/ericmann/wp-session-manager
  * @depends    wp-session-manager
  * 
@@ -63,15 +63,14 @@ class PDb_Session {
    */
   public function record_id( $pid_only = false )
   {
-    if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
-      if ( ! $pid_only && array_key_exists( Participants_Db::$single_query, $_GET )  ) {
-        $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
-      } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )  ) {
-        $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
-      }
-      if ( $id )
-        return $id;
+    if ( ! $pid_only && array_key_exists( Participants_Db::$single_query, $_GET )  ) {
+      $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
+    } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )  ) {
+      $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
     }
+    if ( $id )
+      return $id;
+    
     return $this->get( 'pdbid' );
   }
 
