@@ -197,7 +197,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   protected function _set_submission_page()
   {
-
     $form_status = $this->get_form_status();
     
     if (!empty($this->shortcode_atts['action'])) {
@@ -206,9 +205,11 @@ class PDb_Record extends PDb_Shortcode {
         $form_status = 'multipage-update';
       }
     }
+    
     if (!$this->submission_page) {
       $this->submission_page = $_SERVER['REQUEST_URI'];
     }
+    
     $this->set_form_status($form_status);
   }
   
