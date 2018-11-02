@@ -32,7 +32,7 @@ class PDb_Session {
   {
     $plugin_setting = get_option(Participants_Db::$participants_db_options);
     
-    if ( $plugin_setting['use_session_alternate_method'] ) {
+    if ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] ) {
       $this->obtain_session_id();
     }
 
