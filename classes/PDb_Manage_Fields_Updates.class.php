@@ -15,18 +15,13 @@
 class PDb_Manage_Fields_Updates {
 
   /**
-   * @var string action key
-   */
-  const action_key = 'pdb-manage-fields';
-
-  /**
    * instantiate the class
    * 
    * @return null 
    */
   function __construct()
   {
-    add_action( 'wp_ajax_' . self::action_key, array($this, 'process_ajax_submit') );
+    add_action( 'wp_ajax_' . PDb_Manage_Fields::action_key, array($this, 'process_ajax_submit') );
     add_action( 'admin_post_update_fields', array($this, 'update_fields') );
     add_action( 'admin_post_add_field', array($this, 'add_field') );
     add_action( 'admin_post', array($this, 'process_submit') );
@@ -213,7 +208,7 @@ class PDb_Manage_Fields_Updates {
   public function process_submit()
   {
 
-    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
+    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], PDb_Manage_Fields::action_key ) ) {
       return;
     }
 
@@ -299,7 +294,7 @@ class PDb_Manage_Fields_Updates {
    */
   public function process_ajax_submit()
   {
-    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
+    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], PDb_Manage_Fields::action_key ) ) {
       wp_send_json( 'failed' );
     }
 
