@@ -3,7 +3,7 @@
 /**
  * plugin initialization class
  *
- * @version 1.7
+ * @version 1.8
  *
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the "delta"
@@ -375,10 +375,12 @@ class PDb_Init {
           `title` TINYTEXT NOT NULL,
           `default` TINYTEXT NULL,
           `group` VARCHAR(64) NOT NULL,
-          `help_text` TEXT NULL,
           `form_element` TINYTEXT NULL,
-          `values` LONGTEXT NULL,
+          `options` LONGTEXT NULL,
+          `attributes` TEXT NULL,
           `validation` TINYTEXT NULL,
+          `validation_message` TEXT NULL,
+          `help_text` TEXT NULL,
           `display_column` INT(3) DEFAULT 0,
           `admin_column` INT(3) DEFAULT 0,
           `sortable` BOOLEAN DEFAULT 0,
@@ -897,6 +899,24 @@ class PDb_Init {
         update_option( Participants_Db::$db_version_option, '1.0' );
       }
     }
+    
+    // update from 1.0 to 1.1
+    if ( '1.0' == get_option( Participants_Db::$db_version_option ) ) {
+      
+      $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `options` LONGTEXT NULL AFTER `values`");
+      if ( $success !== false )
+        $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `attributes` TEXT NULL AFTER `options`");
+      if ( $success !== false )
+        $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `validation_message` TEXT NULL AFTER `validation`");
+      
+
+      if ( $success === false ) {
+        error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
+      } else {
+        update_option( Participants_Db::$db_version_option, '1.1' );
+      }
+      
+    }
 
     if ( PDB_DEBUG )
       Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . get_option( Participants_Db::$db_version_option ) );
@@ -905,7 +925,7 @@ class PDb_Init {
   /**
    * performs a series of tests on the database to determine it's actual version
    * 
-   * this is becuse it is apparently possible for the database version option 
+   * this is because it is apparently possible for the database version option 
    * to be incorrect or missing. This way, we know with some certainty which version 
    * the database really is. Every time we create a new database version, we add 
    * a test for it here.
@@ -982,10 +1002,17 @@ class PDb_Init {
       update_option( Participants_Db::$db_version_option, '0.9' );
     else
       return;
+    
+    // check for version 1.0
+    $table_status = $wpdb->get_results( "SHOW TABLE STATUS WHERE `name` = '" . Participants_Db::$participants_table . "'" );
+    if ( current( $table_status )->Collation == 'utf8_unicode_ci' )
+      update_option( Participants_Db::$db_version_option, '1.0' );
+    else
+      return;
   }
 
   /**
-   * defines arrays containg a starting set of fields, groups, etc.
+   * defines arrays containing a starting set of fields, groups, etc.
    *
    * @return void
    */
