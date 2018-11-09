@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6.2
+ * @version    1.6.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -752,22 +752,8 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_value_titles( $values, $fieldname )
   {
-    $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
-    $return = array();
-    if ( is_array( $options_array ) ) {
-      $i = 0;
-      foreach ( $options_array as $index => $option_value ) {
-        if ( !is_string( $index ) or $index == 'other' ) {
-          // we use the stored value
-          $return[$option_value] = $option_value;
-        } elseif ( $option_value == $values[$i] ) {
-          // grab the option title
-          $return[$option_value] = $index;
-        }
-        $i++;
-      }
-    }
-    return $return;
+    $options_array = Participants_Db::$fields[$fieldname]->options();
+    return array_flip( $options_array );
   }
 
   /**
@@ -786,7 +772,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_value_title( $value, $fieldname )
   {
-    $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
+    $field = PDb_Form_Field_Def::is_field( $fieldname ) ? Participants_Db::$fields[$fieldname] : false;
     /* @var $field PDb_Form_field_Def */
     if ( $field && $field->is_value_set() ) {
       foreach ( $field->options() as $option_title => $option_value ) {
@@ -799,7 +785,6 @@ class PDb_FormElement extends xnau_FormElement {
         }
       }
     }
-
     return $value;
   }
 
@@ -816,7 +801,9 @@ class PDb_FormElement extends xnau_FormElement {
   public static function get_title_value( $title, $fieldname )
   {
     $value = $title; // if no title is found, return the title argument
-    if ( isset( Participants_Db::$fields[$fieldname] ) && self::is_value_set( Participants_Db::$fields[$fieldname]->form_element ) ) {
+    $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
+    /* @var $field PDb_Form_Field_Def */
+    if ( $field && $field->is_value_set() ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
       if ( is_array( $options_array ) && array_search( $title, $options_array ) === false ) {
         if ( isset( $options_array[$title] ) ) {
