@@ -169,8 +169,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           }
           break;
         case 'checkbox':
-          $field_def = Participants_Db::$fields[$field->name];
-          $values = maybe_unserialize( $field_def->values );
+          $values = Participants_Db::$fields[$field->name]->option_values();
           
           $checked_value = current( $values );
           if ( $field->validation === 'yes' && $field->value !== $checked_value ) {
@@ -330,44 +329,45 @@ class PDb_FormValidation extends xnau_FormValidation {
     if ( !$this->errors_exist() )
       return array();
 
-    foreach ( $this->errors as $field => $error ) {
+    foreach ( $this->errors as $fieldname => $error ) {
       /* @var $error PDb_Validation_Error_Message */
 
-      if ( $field !== '' ) {
+      if ( $fieldname !== '' ) {
 
-        $field_atts = clone Participants_Db::$fields[$field];
+        $field = Participants_Db::$fields[$fieldname];
+        /* @var $field PDb_Form_Field_Def */
 
-        switch ( $field_atts->form_element ) {
+        switch ( $field->form_element() ) {
           case 'captcha':
           case 'link':
-            $field_selector = '[name="' . $field_atts->name . '[]"]';
+            $field_selector = '[name="' . $field->name() . '[]"]';
             break;
           case 'multi-checkbox':
           case 'radio':
           case 'checkbox':
           case 'multi-select-other':
-            $field_selector = '[for="pdb-' . $field_atts->name . '"]';
+            $field_selector = '[for="pdb-' . $field->name() . '"]';
             break;
           default:
-            $field_selector = '[name="' . $field_atts->name . '"]';
+            $field_selector = '[name="' . $field->name() . '"]';
         }
 
         //$this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
 
         if ( isset( $this->error_messages[$error->slug] ) ) {
-          $error_message = $error->slug == 'nonmatching' ? sprintf( $this->error_messages[$error->slug], $field_atts->title, Participants_Db::column_title( $field_atts->validation ) ) : sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field_atts->title );
+          $error_message = $error->slug == 'nonmatching' ? sprintf( $this->error_messages[$error->slug], $field->title(), Participants_Db::column_title( $field->validation ) ) : sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
           $this->error_class = Participants_Db::$prefix . 'error';
         } else {
           $error_message = $error->slug;
-          $this->error_class = empty( $field ) ? Participants_Db::$prefix . 'message' : Participants_Db::$prefix . 'error';
+          $this->error_class = Participants_Db::$prefix . 'error';
         }
       } else {
         $error_message = $error->slug;
         $this->error_class = Participants_Db::$prefix . 'message';
       }
       $error->set_error_message( $error_message );
-      $error->add_message_class( $this->error_class . '-' . $field );
+      $error->add_message_class( $this->error_class . '-' . $fieldname );
     }
   }
 
