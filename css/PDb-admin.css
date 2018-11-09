@@ -24,26 +24,6 @@ body[class*='participants-database']  .widefat tr:nth-child(even) {
   width: 99%;
   max-width: 520px;
 }
-.widefat.manage-fields td.focused {
-  position: relative;
-  z-index: 10000;
-  overflow: visible;
-}
-.widefat.manage-fields input.focused {
-  position:absolute;
-  margin-top:-1em;
-  z-index: 200;
-  width: 400px;
-}
-.participants_db input.add_field {
-  width: 250px;
-}
-.manage-fields.widefat td,
-.manage-fields.widefat th {
-  padding: 8px 5px;
-  position: relative;
-  z-index: 1;
-}
 .participants_db input[disabled] {
   color: inherit;
   border-style: dashed;
@@ -285,9 +265,6 @@ body[class*='participants-database'] a.delete {
 body[class*='participants-database'] .form-table {
   /*  margin-bottom:4em;*/
 }
-#manage_main_fields .dashicons {
-  font-size: 140%;
-}
 .pdb-list .image-field-wrap img {
   height: 30px;
   width: auto;
@@ -486,94 +463,147 @@ body[class*='participants-database'] .text-block li {
 }
 
 /***  MANAGE FIELDS  ***/
-div.manage-fields-wrap {
-  min-width:1100px;
-}
-.manage-fields thead > tr {
-  height:6.5em;
-}
-#internal .manage-fields thead > tr {
-  height:5.3em;
-}
-#field_groups .manage-fields thead > tr {
-  height:5em;
-}
-.manage-fields.widefat th {
-  padding:0 0 0 10px;
-  vertical-align:text-top;
-  text-align:left;
-}
-.manage-fields th.sortable {
-  /*padding:7px 7px 8px;*/
-}
-.id, .order, .persistent, .sortable, .admin_column, .display_column, .CSV {
-  text-align:center;
-}
-body[class*="participants-database"] .manage-fields tr.highlighted {
-  background-color:#E0EDF9;
-}
-th.vertical-title  {
-  width:25px;
-}
-th.vertical-title.number-column {
-  width: 3em;
-}
-th.form_element {
-  width:150px;
-}
-th.validation, th.title, th.default, th.group, th.name {
-  width:8%;
-}
-#internal th.name, #internal th.title {
-  width:auto;
-}
-#internal table.manage-fields {
-  width: 360px;
-}
-#field_groups th.title {
-  width:auto;
-}
-.manage-fields th.vertical-title {
-  vertical-align:text-top;
-  padding: 5px 0 0 0;
-}
-.manage-fields th.vertical-title span {
-  /*  writing-mode:vertical-rl;*/
-  transform: rotate(90deg);
-  transform-origin: left bottom;
 
-  -moz-transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
+.manage-fields-wrap .def-fieldset {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  padding: 0.5em 0.5em 0.5em 3.3em;
+  margin: 0.5em 0;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 30px 7px 7px 30px;
+  overflow: hidden;
+}
+.manage-fields-wrap .attribute-control {
+  margin: 0.7em 0.5em 0.5em 0.5em;
+}
+.manage-fields-wrap .attribute-control label {
+  display: block;
+}
 
-  -moz-transform-origin: left bottom;
-  -webkit-transform-origin: left bottom;
-  -o-transform-origin: left bottom;
-  -ms-transform-origin: left bottom;
+.def-fieldset .field-header {
+  margin: 0;
+  padding: 1em 0.8em 1.2em 0.5em;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: calc( 100% - 2.2em );
+}
+.manage-fields .attribute-control input[type="checkbox"],
+.manage-fields .field-header input[type="checkbox"] {
+  width: 1em;
+}
+.participants_db .validation-attribute input.otherfield {
+  max-width: inherit;
+}
+.editor-opener {
+  cursor: pointer;
+}
+.editor-opener:hover {
+  background: rgba( 0,0,0,0.1);
+}
 
+.editor-open .editor-opener.dashicons-arrow-right {
+  display: none;
+}
+.editor-closed .editor-opener.dashicons-arrow-down {
+  display: none;
+}
+.participants_db .field-header h4 {
+  font-weight: normal;
+  font-size: 1.4em;
+} 
+.editor-open .field-header h4 {
+  display: none;
+} 
+.editor-open .field-header input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
+}
+.def-fieldset.editor-closed {
+  min-height: 2.5em;
+}
+.editor-closed .attribute-control {
+  display: none;
+}
+.editor-closed .attribute-control.field-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 15em;
+  padding-right: 0.5em;
+}
+.participants_db .editor-closed .field-header h4 {
+  display: inline-block;
+  margin: 0 1em;
+} 
+
+.manage-fields-wrap input[readonly] {
+  border: 1px solid #ddd;
+  background: inherit;
+}
+
+.general_fields_control_header .add-field-submit {
+  display: block;
+  margin: 1em 0 0 0;
+  font-size: 110%;
+}
+
+.general_fields_control_header .manage-fields-update {
+  margin-left: 4em;
+}
+
+.attribute-control input, 
+.participants_db .attribute-control select, 
+.attribute-control textarea {
+  width: auto;
+}
+button .dashicons {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+  margin-left: -5px;
+}
+.general_fields_control_header .check-all {
   display: inline-block;
   height: auto;
-  left: 0.6em;
-  line-height: 1.1;
-  position: relative;
-  top: -2em;
-  white-space: nowrap;
-  width: auto;
-  word-wrap: normal;
+  line-height: 24px;
+  width: 3.6em;
+  text-align: center;
 }
-.ie8 .manage-fields th.vertical-title span {
-  top:0;
+.manage-fields-actions,
+.with-selected-control {
+  display: block;
+  width:auto;
+  max-width: 40em;
+  margin: 0.25em 0;
+  padding: 0.5em;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
 }
-.manage-field-groups th.vertical-title span {
-  top: -1em;
+.participants_db .manage-fields-actions label, 
+.participants_db .manage-fields-actions input {
+  display: block;
+  margin-top: 0.5em;
 }
-.manage-fields th.admin_column span, .manage-fields th.display_column span {
-  /*  left:18px;*/
+.participants_db .manage-fields-actions label {
+
 }
-.manage-fields input, 
-.manage-fields textarea {
-  width:100%;
+.participants_db .manage-fields-actions label {
+  text-transform: capitalize;
+}
+
+.participants_db .manage-fields-wrap input,
+.participants_db .manage-fields-wrap  select,
+.participants_db .manage-fields-wrap textarea {
+  font-size: 120%;
+}
+.participants_db input.otherfield {
+  max-width: 10em;
 }
 .manage-fields input[type="checkbox"], 
 .manage-fields input[type="radio"] {
@@ -582,27 +612,10 @@ th.validation, th.title, th.default, th.group, th.name {
   top:-1px;
 }
 .manage-fields textarea {
-  height:3.5em;
+  height: 3.3em;
 }
-.manage-field-groups th.name {
-  width:160px;
-}
-
-.manage-field-groups th.fields {
-  width:30px;
-}
-.manage-field-groups td[id^='field_count'] {
-  text-align:center;
-}
-.manage-field-groups th.column span {
-  position:relative;
-  left:5px;
-}
-td.order {
-  padding:3px 0;
-  text-align: center;
-}
-a.dragger {
+.field-header a.dragger {
+  text-decoration: none;
   cursor: move;
 }
 .dashicons.dashicons-sort:after {
@@ -624,6 +637,55 @@ a.dragger {
 }
 #message {
   font-size: 16px;
+}
+.color-text {
+  background-color: hsl(190, 60%, 95%);
+  border-color: hsl(190, 60%, 90%);
+}
+.color-text .field-header {
+  background-color: hsl(190, 60%, 90%);
+}
+.color-selector {
+  background-color: hsl(150, 50%, 95%);
+  border-color: hsl(150, 50%, 90%);
+}
+.color-selector .field-header {
+  background-color: hsl(150, 50%, 90%);
+}
+.color-numeric {
+  background-color: hsl(55, 60%, 95%);
+  border-color: hsl(55, 60%, 85%);
+}
+.color-numeric .field-header {
+  background-color: hsl(55, 60%, 85%);
+}
+.color-upload {
+  background-color: hsl(30, 65%, 95%);
+  border-color: hsl(30, 65%, 90%);
+}
+.color-upload .field-header {
+  background-color: hsl(30, 65%, 90%);
+}
+.color-captcha {
+  background-color: hsl(0, 40%, 95%);
+  border-color: hsl(0, 40%, 90%);
+}
+.color-captcha .field-header {
+  background-color: hsl(0, 40%, 90%);
+}
+.color-utility {
+  background-color: hsl(0, 10%, 95%);
+  border-color: hsl(0, 10%, 90%);
+}
+.color-utility .field-header {
+  background-color: hsl(0, 10%, 90%);
+}
+.color-custom {
+  background-color: hsl(220, 60%, 95%);
+  border-color: hsl(220, 60%, 90%);
+}
+.color-custom .field-header {
+  background-color: hsl(220, 60%, 90%);
 }
 
 /* SETTINGS PAGE */
@@ -888,6 +950,9 @@ a.dragger {
   cursor: pointer;
   margin: 0.5em 0.4em 0.5em 0;
   line-height: 1.8;
+}
+.participants-database-confirm.ui-dialog .ui-button-text {
+  display: inline;
 }
 .participants-database-confirm.ui-dialog .ui-state-hover {
   border: 1px solid #b3b3b3;
