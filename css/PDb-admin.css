@@ -469,6 +469,7 @@ body[class*='participants-database'] .text-block li {
   display: flex;
   flex-flow: row wrap;
   align-items: flex-start;
+  min-height: 6em;
   padding: 0.5em 0.5em 0.5em 3.3em;
   margin: 0.5em 0;
   border-style: solid;
@@ -485,12 +486,17 @@ body[class*='participants-database'] .text-block li {
 
 .def-fieldset .field-header {
   margin: 0;
-  padding: 1em 0.8em 1.2em 0.5em;
+  padding: 0.6em 0.8em 1.7em 0.5em;
   position: absolute;
   left: 0;
   top: 0;
   height: calc( 100% - 2.2em );
 }
+
+.editor-closed.def-fieldset .field-header {
+  padding: 1em 0.8em 1.3em 0.5em;
+}
+
 .manage-fields .attribute-control input[type="checkbox"],
 .manage-fields .field-header input[type="checkbox"] {
   width: 1em;
@@ -538,7 +544,11 @@ body[class*='participants-database'] .text-block li {
 .participants_db .editor-closed .field-header h4 {
   display: inline-block;
   margin: 0 1em;
-} 
+}
+.editor-closed .field-header a.delete,
+.editor-closed .field-header a.dragger {
+    display: inline-block;
+}
 
 .manage-fields-wrap input[readonly] {
   border: 1px solid #ddd;
@@ -614,9 +624,16 @@ button .dashicons {
 .manage-fields textarea {
   height: 3.3em;
 }
-.field-header a.dragger {
+.field-header a.dragger,
+.field-header a.delete {
   text-decoration: none;
+  display: block;
+}
+.field-header a.dragger {
   cursor: move;
+}
+.field-header a.delete {
+  cursor: pointer;
 }
 .dashicons.dashicons-sort:after {
   white-space: nowrap;
@@ -628,6 +645,13 @@ button .dashicons {
   line-height: 18px;
   font-size: 22px;
 }
+
+.manage-field-groups th.vertical-title {
+  width: 3em;
+}
+
+
+
 .mirror {
   display:block; 
   -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
