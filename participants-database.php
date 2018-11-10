@@ -636,7 +636,7 @@ class Participants_Db extends PDb_Base {
      * register admin scripts and stylesheets
      */
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/jquery_cookie.js', __FILE__ ) );
-    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '1.8.17', true );
+    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '1.8.26', true );
     wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
@@ -687,10 +687,11 @@ class Participants_Db extends PDb_Base {
       wp_localize_script( self::$prefix . 'manage_fields', 'manageFields', array('uri' => $_SERVER['REQUEST_URI']) );
       wp_localize_script( self::$prefix . 'manage_fields', 'PDb_L10n', array(
           '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
-          'action' => PDb_Manage_Fields::action_key,
+          'action' => PDb_Manage_Fields_Updates::action_key,
           /* translators: don't translate the words in brackets {} */
           'must_remove' => '<h4>' . __( 'You must remove all fields from the {name} group before deleting it.', 'participants-database' ) . '</h4>',
           /* translators: don't translate the words in brackets {} */
+          'delete_confirm' => '<h4>' . __( 'Delete the {name} {thing}?', 'participants-database' ) . '</h4>',
           'delete_confirm_field' => '<h4>' . __( 'Delete the selected field?', 'participants-database' ) . '</h4>',
           'delete_confirm_fields' => '<h4>' . __( 'Delete the selected fields?', 'participants-database' ) . '</h4>',
           'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
