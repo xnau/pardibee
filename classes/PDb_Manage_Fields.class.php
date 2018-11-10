@@ -49,11 +49,6 @@ class PDb_Manage_Fields {
   var $error_msgs = array();
 
   /**
-   * @var string action key
-   */
-  const action_key = 'pdb-manage-fields';
-
-  /**
    * instantiate the class
    * 
    * @return null 
@@ -123,7 +118,7 @@ class PDb_Manage_Fields {
 
         $last_order = $num_group_rows > 1 ? $this->fields_data[$group][$num_group_rows - 1]['order'] + 1 : 1;
         ?>
-        <div id="<?php echo $group ?>" class="manage-fields-wrap" >
+        <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $this->fields_data[$group][0]['group_id'] ?>" >
           <h3><?php echo $this->group_titles[$group], ' ', $this->i18n['fields'] ?></h3>
           <?php
           if ( !$internal_group )
@@ -136,7 +131,7 @@ class PDb_Manage_Fields {
               <form id="manage_<?php echo $group ?>_fields" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
                 <?php
                 PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $last_order) );
-                wp_nonce_field( self::action_key );
+                wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
                   <section id="<?php echo $group ?>_fields">
@@ -151,7 +146,7 @@ class PDb_Manage_Fields {
 
                         $field_definition_attributes = new PDb_Form_Element_Def( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
-                        <div class="def-fieldset <?php echo $field_definition_attributes->rowclass() ?> editor-open" id="db_row_<?php echo $database_row['id'] ?>">
+                        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?> editor-open" id="db_row_<?php echo $database_row['id'] ?>">
 
                           <?php
                           while ( $control_html = $field_definition_attributes->get_next_control() ) {
@@ -190,21 +185,11 @@ class PDb_Manage_Fields {
         ?>
         <div id="field_groups" class="manage-fields-wrap">
           <form id="manage_field_groups" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
-            <input type="hidden" name="action" value="<?php echo $this->i18n['update groups'] ?>" />
+            <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
             <h3><?php _e( 'Edit / Add / Remove Field Groups', 'participants-database' ) ?></h3>
-            <p>
+            <p class="add-group-inputs">
+              <button type="submit" class="button button-secondary add-group-submit disabled" name="action" value="add_group" disabled="disabled"><?php echo $this->i18n['add group'] ?></button>
               <?php
-              // "add group" functionality
-              PDb_FormElement::print_element( array(
-                  'type' => 'submit',
-                  'value' => $this->i18n['add group'],
-                  'name' => 'action',
-                  'attributes' => array(
-                      'class' => 'button button-default',
-                      'disabled' => 'disabled'
-                  )
-                      )
-              );
               PDb_FormElement::print_element( array(
                   'type' => 'text',
                   'name' => 'group_title',
@@ -243,7 +228,7 @@ class PDb_Manage_Fields {
 
                   $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                   ?>
-                  <tr>
+                  <tr class="def-line">
                     <td id="field_count_<?php echo $group ?>"><?php echo $group_count ?></td>
                     <td>
                       <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
@@ -291,7 +276,7 @@ class PDb_Manage_Fields {
                       if ( !empty( $options ) )
                         $element_atts['options'] = $options;
                       ?>
-                      <td class="<?php echo $column ?>"><?php PDb_FormElement::print_element( $element_atts ); ?></td>
+                      <td class="<?php echo $column ?>-attribute"><?php PDb_FormElement::print_element( $element_atts ); ?></td>
                       <?php
                     }
                     ?>
@@ -302,15 +287,7 @@ class PDb_Manage_Fields {
               </tbody>
             </table>
             <p class="submit">
-              <?php
-              PDb_FormElement::print_element( array(
-                  'type' => 'submit',
-                  'name' => 'submit-button',
-                  'value' => $this->i18n['update groups'],
-                  'class' => 'button button-primary'
-                      )
-              );
-              ?>
+              <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n['update groups'] ?></button>
             </p>
           </form>
         </div><!-- groups tab panel -->
@@ -342,7 +319,7 @@ class PDb_Manage_Fields {
       ?>
       <div class="general_fields_control_header">
         <form id="general_fields_control_<?php echo $group ?>" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
-          <?php wp_nonce_field( self::action_key ); ?>
+          <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
         <div id="check-all-<?php echo $group ?>" class="check-all">
           <input id="select-all-checkbox-<?php echo $group ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo $group ?>" style="display:none" ><?php echo $this->i18n['all'] ?></label>
         </div>
@@ -448,7 +425,7 @@ class PDb_Manage_Fields {
       // get an array with all the defined fields
       foreach ( $this->groups as $group ) {
 
-        $sql = "SELECT `id`,`name` FROM " . Participants_Db::$fields_table . ' WHERE `group` = "' . $group . '" ORDER BY `order` ';
+        $sql = "SELECT f.id,f.name,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN '.Participants_Db::$groups_table.' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
 
         $group_title = $wpdb->get_var( 'SELECT `title` FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "' . $group . '"' );
