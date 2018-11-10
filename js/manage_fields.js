@@ -25,8 +25,8 @@ PDbManageFields = (function ($) {
     event.preventDefault();
     var el = $(this);
     var row_id = el.data('thing-name').replace(/^delete_/, '');
-    var parent = el.closest('tr');
-    var name = parent.find('td.title input').val();
+    var parent = el.closest('.def-line');
+    var name = parent.find('.title-attribute input').val();
     var thing = el.data('thing');
     var group = parent.find('td.group select').val(); // set the group ID and get the field count for the group
     var group_id = group ? group : row_id;
@@ -51,28 +51,32 @@ PDbManageFields = (function ($) {
 
       confirmationBox.html(PDb_L10n.delete_confirm.replace('{name}', name).replace('{thing}', thing));
 
-      // initialize the dialog action
       confirmationBox.dialog(dialogOptions, {
         buttons : {
-          "Ok" : function () { //If the user choose to click on "OK" Button
+          "Ok" : function () {
             parent.css('opacity', '0.3');
-            $(this).dialog('close'); // Close the Confirmation Box
-            $.ajax({//make the Ajax Request
+            $(this).dialog('close');
+            $.ajax({
               type : 'post',
-              url : window.location.pathname + window.location.search,
-              data : 'delete=' + row_id + '&action=delete_' + thing,
+              url : ajaxurl,
+              data : {
+                list : [row_id],
+                action : PDb_L10n.action,
+                task:'delete_'+thing,
+                _wpnonce : PDb_L10n._wpnonce
+              },
               beforeSend : function () {
               },
               success : function (response) {
-                parent.slideUp(600, function () { //remove the Table row .
+                parent.slideUp(600, function () {
                   parent.remove();
                 });
-                countDisplay.html(count - 1);// update the group field count
+                countDisplay.html(count - 1);
                 $('#tab_' + row_id).fadeOut();
               }
             });// ajax
           }, // ok
-          "Cancel" : function () { //if the User Clicks the button "cancel"
+          "Cancel" : function () {
             $(this).dialog('close');
           } // cancel
         } // buttons
@@ -171,7 +175,7 @@ PDbManageFields = (function ($) {
     return ui;
   };
   var enableNew = function () {
-    $(this).closest('.add-field-inputs').find('[type=submit]').removeClass('disabled').addClass('enabled').prop('disabled', false);
+    $(this).closest('.add-field-inputs, .add-group-inputs').find('[type=submit]').removeClass('disabled').addClass('enabled').prop('disabled', false);
   };
   var serializeList = function (container) {
     /*
@@ -268,7 +272,7 @@ PDbManageFields = (function ($) {
     if (list.length) {
       switch (ws_action) {
         case 'delete':
-          delete_selected_fields(list);
+          delete_selected_fields(list,$(this).closest('.manage-fields-wrap').attr('id'));
           break;
         case 'group':
           assign_group(list, $(this).prev('select.with-selected-group-select').val());
@@ -319,7 +323,7 @@ PDbManageFields = (function ($) {
     });
     return list;
   }
-  var delete_selected_fields = function (list) {
+  var delete_selected_fields = function (list,group) {
 
     confirmationBox.html(list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field);
 
@@ -347,6 +351,8 @@ PDbManageFields = (function ($) {
                   $(this).remove();
                 });
               });
+              var countDisplay = $('#field_count_'+group);
+              countDisplay.html(parseInt(countDisplay.html())-list.length);
               $('.with-selected-control').slideUp(effect_speed);
               set_feedback(response.feedback);
             }
@@ -405,6 +411,8 @@ PDbManageFields = (function ($) {
       tabcontrols.on('change.confirm', 'select.column-has-values', form_element_change_confirm);
       // pre-set CAPTCHA settings
       $('.manage-fields-wrap').on('change', '.manage-fields tbody .form_element-attribute select', captchaPreset);
+      // set up the delete functionality
+      tabcontrols.find('.manage-fields a.delete').click(deleteField);
       // prevent empty submission
       tabcontrols.find('input.add_field').on('input', enableNew);
       // set up the field sorting
