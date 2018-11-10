@@ -15,16 +15,22 @@
 class PDb_Manage_Fields_Updates {
 
   /**
+   * @var string action key
+   */
+  const action_key = 'pdb-manage-fields';
+
+  /**
    * instantiate the class
    * 
    * @return null 
    */
   function __construct()
   {
-    add_action( 'wp_ajax_' . PDb_Manage_Fields::action_key, array($this, 'process_ajax_submit') );
+    add_action( 'wp_ajax_' . self::action_key, array($this, 'process_ajax_submit') );
     add_action( 'admin_post_update_fields', array($this, 'update_fields') );
     add_action( 'admin_post_add_field', array($this, 'add_field') );
-    add_action( 'admin_post', array($this, 'process_submit') );
+    add_action( 'admin_post_add_group', array($this, 'add_group') );
+    add_action( 'admin_post_update_groups', array($this, 'update_groups') );
   }
 
   /**
@@ -37,7 +43,7 @@ class PDb_Manage_Fields_Updates {
     global $wpdb;
 
     // dispose of these now unneeded fields
-    unset( $_POST['action'], $_POST['submit-button'] );
+    unset( $_POST['action'], $_POST['group'], $_POST['order'], $_POST['_wp_http_referer'], $_POST['_wpnonce'], $_POST['temp'] );
 
     foreach ( $_POST as $name => $row ) {
 
@@ -127,11 +133,17 @@ class PDb_Manage_Fields_Updates {
          * @return array
          */
         $result = $wpdb->update( Participants_Db::$fields_table, Participants_Db::apply_filters( 'update_field_def', $row, $status ), array('id' => $id) );
-        if ( PDB_DEBUG >= 1 ) {
+        if ( PDB_DEBUG > 1 ) {
           Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
         }
         if ( $result ) {
           PDb_Admin_Notices::post_success( __( 'Fields Updated', 'participants-database' ) );
+          /**
+           * @action pdb-field_defs_updated
+           * @param string action
+           * @param string last query
+           */
+          do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_fields', $wpdb->last_query );
         }
       }
     }
@@ -147,8 +159,8 @@ class PDb_Manage_Fields_Updates {
   {
     // set up the new field's parameters
     $params = array(
-        'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name' ) ),
-        'title' => filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING, array( 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES|FILTER_FLAG_STRIP_BACKTICK ) ),
+        'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
+        'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
         'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
         'order' => '0',
         'validation' => 'no',
@@ -200,74 +212,66 @@ class PDb_Manage_Fields_Updates {
   }
 
   /**
-   * processes the general form submission
+   * adds a new group
    * 
    * @global wpdb $wpdb
-   * @return null 
    */
-  public function process_submit()
+  public function add_group()
   {
+    global $wpdb;
+    $atts = array(
+        'name' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
+        'title' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
+        'order' => $_POST['group_order'],
+        'display' => 1,
+        'admin' => 0,
+        'description' => '',
+    );
 
-    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], PDb_Manage_Fields::action_key ) ) {
-      return;
+    // if the name already exists, add a numeral to make it unique
+    $extant_groups = $wpdb->get_col( 'SELECT `name` FROM ' . Participants_Db::$groups_table );
+    $i = 1;
+    $stem = $atts['name'];
+    while ( in_array( $atts['name'], $extant_groups ) ) {
+      $atts['name'] = $stem . '-' . $i++;
     }
 
+    $result = $wpdb->insert( Participants_Db::$groups_table, $atts );
+
+    if ( $result ) {
+      Participants_Db::set_admin_message( __( 'The new group was added.', 'participants-database' ), 'update' );
+    }
+
+    $this->return_to_the_manage_database_fields_page();
+  }
+
+  /**
+   * processes the groups update submission
+   * 
+   * @global wpdb $wpdb
+   */
+  public function update_groups()
+  {
+
+    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
+      return;
+    }
+    
+    unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'], $_POST['group_title'], $_POST['group_order']);
+
     global $wpdb;
+    
+    $result = false;
+    $data = array();
 
-    // process form submission
-    $action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+    foreach ( $_POST as $group_name => $row ) {
 
-    $result = true;
+      $data['title'] = filter_var( $row['title'], FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') );
+      $data['description'] = filter_var( $row['description'], FILTER_SANITIZE_STRING );
+      $data['display'] = $row['display'] == '1' ? '1' : '0';
+      $data['admin'] = $row['admin'] == '1' ? '1' : '0';
 
-    switch ( $action ) {
-
-      case $this->i18n( 'update groups' ):
-
-        // dispose of these now unneeded fields
-        unset( $_POST['action'], $_POST['submit-button'], $_POST['group_title'], $_POST['group_order'] );
-
-        foreach ( $_POST as $name => $row ) {
-
-          foreach ( array('title', 'description') as $field ) {
-            if ( isset( $row[$field] ) )
-              $row[$field] = stripslashes( $row[$field] );
-          }
-
-          $result = $wpdb->update( Participants_Db::$groups_table, $row, array('name' => stripslashes_deep( $name )) );
-        }
-        break;
-
-      // add a new blank field
-      case $this->i18n( 'add field' ):
-
-
-
-      // add a new blank field
-      case $this->i18n( 'add group' ):
-
-        $wpdb->hide_errors();
-
-        $atts = array(
-            'name' => self::make_name( $_POST['group_title'] ),
-            'title' => htmlspecialchars( stripslashes( $_POST['group_title'] ), ENT_QUOTES, "UTF-8", false ),
-            'order' => $_POST['group_order'],
-        );
-
-        $result = $wpdb->insert( Participants_Db::$groups_table, $atts );
-
-        break;
-
-      case 'delete_' . $this->i18n( 'group' ):
-
-        global $wpdb;
-        //$wpdb->hide_errors();
-
-        $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $_POST['delete'] ) );
-
-        if ( $group_count == 0 )
-          $result = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"', $_POST['delete'] ) );
-
-        break;
+      $result = $wpdb->update( Participants_Db::$groups_table, $data, array('name' => stripslashes( $group_name ) ) );
     }
 
     if ( $result === false ) {
@@ -276,15 +280,17 @@ class PDb_Manage_Fields_Updates {
       } elseif ( empty( Participants_Db::$admin_message ) ) {
         Participants_Db::set_admin_message( __( 'There was an error; the settings were not saved.', 'participants-database' ), 'error' );
       }
-    } elseif ( is_int( $result ) ) {
+    } elseif ( $result ) {
       /**
        * @action pdb-field_defs_updated
        * @param string action
        * @param string last query
        */
-      do_action( Participants_Db::$prefix . 'field_defs_updated', $action, $wpdb->last_query );
-      Participants_Db::set_admin_message( __( 'Your information has been updated', 'participants-database' ), 'updated' );
+      do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_groups', $wpdb->last_query );
+      Participants_Db::set_admin_message( __( 'Your groups have been updated', 'participants-database' ), 'updated' );
     }
+    
+    $this->return_to_the_manage_database_fields_page();
   }
 
   /**
@@ -294,7 +300,7 @@ class PDb_Manage_Fields_Updates {
    */
   public function process_ajax_submit()
   {
-    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], PDb_Manage_Fields::action_key ) ) {
+    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
       wp_send_json( 'failed' );
     }
 
@@ -316,6 +322,23 @@ class PDb_Manage_Fields_Updates {
         );
 
         wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+
+      case 'delete_group':
+
+        $group = current( $_POST['list'] );
+
+        $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
+
+        $result = false;
+
+        if ( $group_count == 0 )
+          $result = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"', $group ) );
+
+        if ( $result ) {
+          wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+        } else {
+          wp_send_json( 'error:could not delete group' );
+        }
 
       case 'update_param':
 
@@ -452,9 +475,7 @@ class PDb_Manage_Fields_Updates {
      * in queries
      */
     $name = strtolower( str_replace(
-            array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), 
-            array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), 
-            stripslashes( substr( $string, 0, 64 ) )
+                    array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), stripslashes( substr( $string, 0, 64 ) )
             ) );
     /*
      * allow only proper unicode letters, numerals and legal symbols
@@ -463,6 +484,17 @@ class PDb_Manage_Fields_Updates {
       $name = mb_check_encoding( $name, 'UTF-8' ) ? $name : mb_convert_encoding( $name, 'UTF-8' );
     }
     return preg_replace( '#[^\p{L}\p{N}_]#u', '', $name );
+  }
+
+  /**
+   * sanitizes the group ot field title
+   * 
+   * @param string $title
+   * @return string
+   */
+  public static function make_title( $title )
+  {
+    return filter_var( $title, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_BACKTICK) );
   }
 
   /**
