@@ -120,6 +120,12 @@ class PDb_Form_Element_Def {
             'type' => 'drag-sort',
         );
         break;
+      case 'deletable':
+        $config = array(
+            'type' => 'delete-button',
+            'id' => $this->field_def->id,
+        );
+        break;
       case 'sortable':
       case 'csv':
       case 'persistent':
@@ -203,6 +209,12 @@ class PDb_Form_Element_Def {
       case ( $attribute === 'orderable' ):
         $lines = array(
             $field_def_att->html(),
+        );
+        break;
+
+      case ( $attribute === 'deletable' ):
+        $lines = array(
+            $field_def_att->html(),
             '<h4>' . $this->field_def->title() . '</h4>',
             '</div>',
         );
@@ -262,6 +274,7 @@ class PDb_Form_Element_Def {
         return true;
       case 'id':
       case 'selectable':
+      case 'deletable':
         return false;
       case 'status':
         return null;
@@ -314,6 +327,7 @@ class PDb_Form_Element_Def {
         'status' => true,
         'selectable' => true,
         'orderable' => true,
+        'deletable' => true,
         'name' => true,
         'title' => true,
         'groupable' => true,
@@ -464,6 +478,7 @@ class PDb_Form_Element_Def {
       $def = array_merge( $def, array(
           'selectable' => false,
           'orderable' => false,
+          'deletable' => false,
           'default' => true,
           'groupable' => false,
           'help_text' => false,
@@ -537,8 +552,20 @@ class PDb_Field_Def_Att_Item {
       case 'options':
         $this->config['value'] = Participants_Db::array_to_string_notation( $this->config['value'] );
         break;
+      case 'deletable':
+        return $this->delete_button();
     }
     return PDb_FormElement::get_element( $this->config );
+  }
+  
+  /**
+   * provides the HTML for the field delete button
+   * 
+   * @return string
+   */
+  private function delete_button()
+  {
+    return '<a href="javascript:return false" data-thing-name="delete_' . $this->config['id'] . '" class="delete" data-thing="field"><span class="dashicons dashicons-no"></span></a>';
   }
 
   /**
