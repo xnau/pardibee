@@ -240,10 +240,48 @@ PDbManageFields = (function ($) {
     return message;
   };
   var open_field_editor = function () {
-    $(this).closest('.def-fieldset').removeClass('editor-closed').addClass('editor-open');
+    switch_field_editor($(this),'open');
   }
   var close_field_editor = function () {
-    $(this).closest('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
+    switch_field_editor($(this),'close');
+  }
+  var switch_field_editor = function (el,state) {
+    switch (state) {
+      case 'close':
+        el.closest('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
+        break;
+      case 'open':
+        el.closest('.def-fieldset').removeClass('editor-closed').addClass('editor-open');
+        break;
+    }
+    $.post(ajaxurl, {
+      action : PDb_L10n.action,
+      task : 'open_close_editor',
+      id : el.closest('.field-header').find('[data-id]').data('id'),
+      state : state,
+      _wpnonce : PDb_L10n._wpnonce,
+    });
+  }
+  var open_close_all_field_editors = function (container,action) {
+    switch (action) {
+      case 'close':
+        container.find('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
+        break;
+      case 'open':
+        container.find('.def-fieldset').removeClass('editor-closed').addClass('editor-open');
+        break;
+    }
+    var list = [];
+    container.find('[name*=selectable]').each(function () {
+      list.push($(this).data('id'));
+    });
+    $.post(ajaxurl, {
+      action : PDb_L10n.action,
+      task : 'open_close_all',
+      list : list,
+      state : action,
+      _wpnonce : PDb_L10n._wpnonce,
+    });
   }
   var showhide_validation_message = function () {
     var message_control = $(this).closest('.attribute-control').next('.validation_message-attribute');
@@ -455,12 +493,13 @@ PDbManageFields = (function ($) {
       });
       // open/close all
       $('.general_fields_control_header .openclose-all').click(function () {
-        if ($(this).find('.dashicons').hasClass('dashicons-arrow-right')) {
-          $(this).closest('.general_fields_control_header').next('form').find('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
-        } else {
-          $(this).closest('.general_fields_control_header').next('form').find('.def-fieldset').removeClass('editor-closed').addClass('editor-open');
+        var icon = $(this).find('.dashicons');
+        var action = 'open';
+        if (icon.hasClass('dashicons-arrow-right')) {
+          action = 'close';
         }
-        $(this).find('.dashicons').toggleClass('dashicons-arrow-down dashicons-arrow-right');
+        open_close_all_field_editors($(this).closest('.manage-fields-wrap'),action);
+        icon.toggleClass('dashicons-arrow-down dashicons-arrow-right');
       });
       // with selected action handler
       $('.apply-with-selected').click(handle_with_selected_action);
