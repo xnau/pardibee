@@ -204,6 +204,8 @@ class PDb_Form_Field_Def {
         return $this->{'is_' . $prop}();
       case 'default':
         return $this->default_value();
+      case 'id':
+        return $this->id;
       default:
         return null;
     }
