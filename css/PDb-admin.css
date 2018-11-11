@@ -532,7 +532,7 @@ body[class*='participants-database'] .text-block li {
   min-height: 2.5em;
 }
 .editor-closed .attribute-control {
-  display: none;
+  display: none !important;
 }
 .editor-closed .attribute-control.field-header {
   display: flex;
