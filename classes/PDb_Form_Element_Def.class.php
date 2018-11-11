@@ -66,7 +66,18 @@ class PDb_Form_Element_Def {
    */
   public function rowclass ()
   {
-    return $this->field_def->form_element() . '-form-element color-' . $this->colorclass;
+    return $this->field_def->form_element() . '-form-element color-' . $this->colorclass . ' ' . $this->open_close_class();
+  }
+  
+  
+  /**
+   * provides the open/close class for the field
+   * 
+   * @return string classname
+   */
+  public function open_close_class()
+  {
+    return isset( $_SESSION[PDb_Manage_Fields_Updates::action_key]['editorclosed'][$this->field_def->get_prop( 'id' )] ) ? 'editor-closed' : 'editor-open';
   }
 
   /**
@@ -479,7 +490,7 @@ class PDb_Form_Element_Def {
           'selectable' => false,
           'orderable' => false,
           'deletable' => false,
-          'default' => true,
+          'default' => false,
           'groupable' => false,
           'help_text' => false,
           'form_element' => false,
