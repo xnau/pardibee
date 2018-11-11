@@ -256,11 +256,11 @@ class PDb_Manage_Fields_Updates {
     if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
       return;
     }
-    
-    unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'], $_POST['group_title'], $_POST['group_order']);
+
+    unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'], $_POST['group_title'], $_POST['group_order'] );
 
     global $wpdb;
-    
+
     $result = false;
     $data = array();
 
@@ -271,7 +271,7 @@ class PDb_Manage_Fields_Updates {
       $data['display'] = $row['display'] == '1' ? '1' : '0';
       $data['admin'] = $row['admin'] == '1' ? '1' : '0';
 
-      $result = $wpdb->update( Participants_Db::$groups_table, $data, array('name' => stripslashes( $group_name ) ) );
+      $result = $wpdb->update( Participants_Db::$groups_table, $data, array('name' => stripslashes( $group_name )) );
     }
 
     if ( $result === false ) {
@@ -289,7 +289,7 @@ class PDb_Manage_Fields_Updates {
       do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_groups', $wpdb->last_query );
       Participants_Db::set_admin_message( __( 'Your groups have been updated', 'participants-database' ), 'updated' );
     }
-    
+
     $this->return_to_the_manage_database_fields_page();
   }
 
@@ -377,6 +377,34 @@ class PDb_Manage_Fields_Updates {
           );
         }
         wp_send_json( array('status' => 'success') );
+
+      case 'open_close_editor':
+        $fieldid = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+        switch ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) ) {
+          case 'open':
+            unset( $_SESSION[self::action_key]['editorclosed'][$fieldid] );
+            break;
+          case 'close':
+            $_SESSION[self::action_key]['editorclosed'][$fieldid] = true;
+        }
+        wp_send_json( 'set' );
+
+      case 'open_close_all':
+        
+        $list = $this->sanitize_id_list();
+
+        if ( count( $list ) < 1 ) {
+          wp_send_json( 'error:no valid id list' );
+        }
+
+        foreach ( $list as $id ) {
+          if ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) === 'close' ) {
+            $_SESSION[self::action_key]['editorclosed'][$id] = true;
+          } else {
+            unset( $_SESSION[self::action_key]['editorclosed'][$id] );
+          }
+        }
+        wp_send_json( 'set' );
     }
   }
 
