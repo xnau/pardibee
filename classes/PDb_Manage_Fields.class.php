@@ -146,7 +146,7 @@ class PDb_Manage_Fields {
 
                         $field_definition_attributes = new PDb_Form_Element_Def( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
-                        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?> editor-open" id="db_row_<?php echo $database_row['id'] ?>">
+                        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>">
 
                           <?php
                           while ( $control_html = $field_definition_attributes->get_next_control() ) {
