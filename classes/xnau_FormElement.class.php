@@ -91,7 +91,7 @@ abstract class xnau_FormElement {
    * 
    * @var array 
    */
-  var $attributes;
+  var $attributes = array();
 
   /**
    * @var array of class names
@@ -1107,7 +1107,6 @@ abstract class xnau_FormElement {
    */
   protected function _input_tag( $type = 'text', $value = false, $select = false )
   {
-
     if ( $value === false )
       $value = $this->value;
     $size = $this->size ? ' size="' . $this->size . '" ' : '';
