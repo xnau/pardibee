@@ -497,6 +497,11 @@ body[class*='participants-database'] .text-block li {
   padding: 1em 0.8em 1.3em 0.5em;
 }
 
+.manage-field-groups .def-fieldset .field-header {
+  padding: 1.4em 0.8em 0.9em 0.5em;
+  text-align: center;
+}
+
 .manage-fields .attribute-control input[type="checkbox"],
 .manage-fields .field-header input[type="checkbox"] {
   width: 1em;
@@ -704,11 +709,12 @@ button .dashicons {
 .color-utility .field-header {
   background-color: hsl(0, 10%, 90%);
 }
-.color-custom {
+.color-custom, .color-group {
   background-color: hsl(220, 60%, 95%);
   border-color: hsl(220, 60%, 90%);
 }
-.color-custom .field-header {
+.color-custom .field-header,
+.color-group .field-header {
   background-color: hsl(220, 60%, 90%);
 }
 
