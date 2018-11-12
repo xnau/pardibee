@@ -853,15 +853,31 @@ abstract class PDb_Shortcode {
 
       $orderby = empty( $this->shortcode_atts['fields'] ) ? 'g.order ASC' : 'FIELD( g.name, "' . implode( '","', $groups ) . '")';
 
-      if ( $this->module === 'signup' ) {
-        $sql = 'SELECT DISTINCT g.name 
+      $display_where = '';
+      if ( $public_only ) {
+        // using the new 'mode' value
+        $display_where = 'AND ( g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"';
+      }
+      switch ( $this->module ) {
+        case 'signup':
+          // get only signup-enabled fields from public groups
+          $sql = 'SELECT DISTINCT g.name 
+                  FROM ' . Participants_Db::$groups_table . ' g  
+                  WHERE f.signup = "1" AND g.display = "1" OR g.mode = "public" ORDER BY ' . $orderby;
+          break;
+        
+        case 'record':
+          // get field from public and private groups
+          $sql = 'SELECT DISTINCT g.name 
                 FROM ' . Participants_Db::$groups_table . ' g 
-                JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
-                WHERE f.signup = "1" ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' AND f.form_element <> "hidden" ORDER BY ' . $orderby;
-      } else {
-        $sql = 'SELECT g.name 
-              FROM ' . Participants_Db::$groups_table . ' g
-                WHERE 1=1 ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' ORDER BY ' . $orderby;
+                WHERE g.display = "1" OR g.mode = "public" OR ( g.display = g.admin ) OR g.mode = "private" ORDER BY ' . $orderby;
+          break;
+    
+        default:
+          // get fields from all groups or only public groups
+          $sql = 'SELECT g.name 
+                FROM ' . Participants_Db::$groups_table . ' g
+                  WHERE 1=1 ' . ( $public_only ? 'AND ( g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"' : '' ) . ' ORDER BY ' . $orderby;
       }
 
       $result = $wpdb->get_results( $sql, ARRAY_N );
