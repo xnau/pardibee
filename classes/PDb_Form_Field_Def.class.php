@@ -222,25 +222,26 @@ class PDb_Form_Field_Def {
 //    error_log(__METHOD__.' getting property: '.$prop.' 
 //      
 //trace: '.print_r(wp_debug_backtrace_summary(),1));
-    switch ( $prop ) {
-      case 'form_element':
-      case 'title':
-      case 'default':
-      case 'name':
-      case 'group':
-      case 'options':
-      case 'attributes':
-      case 'help_text':
-      case 'validation_message':
-      case 'sortable':
-      case 'csv':
-      case 'persistent':
-      case 'signup':
-      case 'readonly':
-        return $this->{$prop}();
-      default:
-        return property_exists(get_class($this), $prop) ? $this->{$prop} : null;
-    }
+//    switch ( $prop ) {
+//      case 'form_element':
+//      case 'title':
+//      case 'default':
+//      case 'name':
+//      case 'group':
+//      case 'options':
+//      case 'attributes':
+//      case 'help_text':
+//      case 'validation_message':
+//      case 'sortable':
+//      case 'csv':
+//      case 'persistent':
+//      case 'signup':
+//      case 'readonly':
+//        return $this->{$prop}();
+//      default:
+//        return property_exists(get_class($this), $prop) ? $this->{$prop} : null;
+//    }
+    return $this->get_prop( $prop );
   }
 
   /**
