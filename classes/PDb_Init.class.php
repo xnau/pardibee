@@ -485,6 +485,8 @@ class PDb_Init {
       $defaults['name'] = $group;
       $defaults['title'] = $title;
       $defaults['mode'] = ( in_array( $group, array('internal', 'admin', 'source') ) ? 'admin' : 'public' );
+      $defaults['admin'] = ( in_array( $group, array('internal', 'admin', 'source') ) ? '1' : '0' );
+      $defaults['display'] = ( in_array( $group, array('internal', 'admin', 'source') ) ? '0' : '1' );
       $defaults['order'] = $i;
 
       $wpdb->insert( Participants_Db::$groups_table, $defaults );
