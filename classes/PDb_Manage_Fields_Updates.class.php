@@ -268,8 +268,9 @@ class PDb_Manage_Fields_Updates {
 
       $data['title'] = filter_var( $row['title'], FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') );
       $data['description'] = filter_var( $row['description'], FILTER_SANITIZE_STRING );
-      $data['display'] = $row['display'] == '1' ? '1' : '0';
-      $data['admin'] = $row['admin'] == '1' ? '1' : '0';
+      $data['mode'] = filter_var( $row['mode'], FILTER_SANITIZE_STRING );
+      $data['display'] = $data['mode'] === 'public' ? '1' : '0';
+      $data['admin'] = $data['mode'] === 'admin' ? '1' : '0';
 
       $result = $wpdb->update( Participants_Db::$groups_table, $data, array('name' => stripslashes( $group_name )) );
     }
@@ -370,13 +371,14 @@ class PDb_Manage_Fields_Updates {
         wp_send_json( array('status' => $result ? 'success' : 'failed') );
 
       case 'reorder_groups':
-        unset( $_POST['action'], $_POST['submit-button'] );
-        foreach ( $_POST as $key => $value ) {
-          $result = $wpdb->update(
-                  Participants_Db::$groups_table, array('order' => filter_var( $value, FILTER_SANITIZE_NUMBER_INT )), array('name' => filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ))
-          );
+        parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
+        $update = array();
+        foreach ( $list as $key => $value ) {
+          $update[] = 'WHEN `name` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
         }
-        wp_send_json( array('status' => 'success') );
+        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$groups_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END' );
+        
+        wp_send_json( array('status' => $result ? 'success' : 'failed') );
 
       case 'open_close_editor':
         $fieldid = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
