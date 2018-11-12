@@ -420,13 +420,11 @@ PDbManageFields = (function ($) {
   var sortGroups = {
     helper : fixHelper,
     update : function (event, ui) {
-      $.ajax({
-        url : ajaxurl,
-        type : "POST",
+      $.post(ajaxurl,{
         action : PDb_L10n.action,
         task : 'reorder_groups',
         _wpnonce : PDb_L10n._wpnonce,
-        data : serializeList($(this))
+        list : serializeList($(this))
       });
     }
   };
@@ -454,7 +452,7 @@ PDbManageFields = (function ($) {
       // prevent empty submission
       tabcontrols.find('input.add_field').on('input', enableNew);
       // set up the field sorting
-      $("#field_groups tbody").sortable(sortGroups);
+      $(".manage-field-groups").sortable(sortGroups);
       $('section[id$="_fields"]').sortable(sortFields);
       // clear the unsaved changes opo-up
       $('.manage-fields-update').on('click', clearUnsavedChangesWarning);
