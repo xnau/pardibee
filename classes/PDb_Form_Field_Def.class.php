@@ -107,12 +107,12 @@ class PDb_Form_Field_Def {
   /**
    * @var array element attributes
    */
-  public $attributes = array();
+  public $attributes;
 
   /**
    * @var array element options
    */
-  public $options = array();
+  public $options;
 
   /**
    * instantiates the object
@@ -246,7 +246,7 @@ class PDb_Form_Field_Def {
    */
   public function title()
   {
-    return Participants_Db::apply_filters('translate_string', $this->title );
+    return Participants_Db::apply_filters( 'translate_string', $this->title );
   }
 
   /**
@@ -359,7 +359,7 @@ class PDb_Form_Field_Def {
   {
     return !in_array( $this->form_element, array('rich-text', 'link') ) && Participants_Db::is_single_record_link( $this );
   }
-  
+
   /**
    * tells if the field has the persistent flag set
    * 
@@ -379,7 +379,7 @@ class PDb_Form_Field_Def {
   {
     return $this->default_value() !== '';
   }
-  
+
   /**
    * tells if the field is a multi-type field
    * 
@@ -390,7 +390,7 @@ class PDb_Form_Field_Def {
    */
   public function is_multi()
   {
-    return PDb_FormElement::is_multi($this->form_element);
+    return PDb_FormElement::is_multi( $this->form_element );
   }
 
   /**
@@ -431,7 +431,7 @@ class PDb_Form_Field_Def {
   {
     return array_values( $this->options );
   }
-  
+
   /**
    * provides the attributes array
    * 
@@ -447,7 +447,7 @@ class PDb_Form_Field_Def {
      * @param PDb_Form_Field_Def current instance
      * @return array as $name => $value
      */
-    return Participants_Db::apply_filters('form_field_attributes', $this->attributes, $this );
+    return Participants_Db::apply_filters( 'form_field_attributes', is_array( $this->attributes ) ? $this->attributes : array(), $this );
   }
 
   /**
@@ -471,16 +471,27 @@ class PDb_Form_Field_Def {
         case 'values':
 
           $this->values = $def->values;
-          $values = $this->values_array();
-          /*
-           * for "value set" fields, the values parameter defines the options; for 
-           * other fields, it defines the attributes
-           */
-          if ( $this->is_value_set() ) {
-//            $this->values = $values;
-            $this->options = $values;
-          } else {
-            $this->attributes = $values;
+
+          // if the values parameter has a value, then the field def is of the old format
+          if ( $def->values !== '' && !is_null( $def->values ) ) {
+            $values = $this->values_array();
+            /*
+             * for "value set" fields, the values parameter defines the options; for 
+             * other fields, it defines the attributes
+             */
+            if ( $this->is_value_set() ) {
+              $this->options = $values;
+            } else {
+              $this->attributes = $values;
+            }
+          }
+          break;
+
+        case 'attributes':
+        case 'options':
+
+          if ( !empty($value) ) {
+            $this->{$prop} = (array) maybe_unserialize( $value );
           }
           break;
 
