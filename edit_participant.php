@@ -1,4 +1,4 @@
-<?php
+  <?php
 /**
  * this file is called by the admin menu item, also a link in the admin record list
  * 
@@ -73,12 +73,12 @@ if ( $participant_values ) :
       $readonly_columns = Participants_Db::get_readonly_fields();
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
 
-        $column = new PDb_Field_Item( $backend_column );
+        $column = new PDb_Field_Item( $backend_column->name );
         $column->set_value( $participant_values[$column->name()] );
 
         $id_line = '';
 
-        $attributes = array();
+        $attributes = $column->attributes();
 
         // set a new section
         if ( $column->group != $section ) {
