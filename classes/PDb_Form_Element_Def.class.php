@@ -576,7 +576,7 @@ class PDb_Field_Def_Att_Item {
    */
   private function delete_button()
   {
-    return '<a href="javascript:return false" data-thing-name="delete_' . $this->config['id'] . '" class="delete" data-thing="field"><span class="dashicons dashicons-no"></span></a>';
+    return '<a href="#" data-thing-name="delete_' . $this->config['id'] . '" class="delete" data-thing="field"><span class="dashicons dashicons-no"></span></a>';
   }
 
   /**
