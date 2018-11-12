@@ -3,7 +3,7 @@
 /**
  * plugin initialization class
  *
- * @version 1.8
+ * @version 1.9
  *
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the "delta"
@@ -403,6 +403,7 @@ class PDb_Init {
     $sql = 'CREATE TABLE ' . Participants_Db::$groups_table . ' (
           `id` INT(3) NOT NULL AUTO_INCREMENT,
           `order` INT(3) NOT NULL DEFAULT 0,
+          `mode` VARCHAR(64) NOT NULL,
           `display` BOOLEAN DEFAULT 1,
           `admin` BOOLEAN NOT NULL DEFAULT 0,
           `title` TINYTEXT NOT NULL,
@@ -483,7 +484,7 @@ class PDb_Init {
     foreach ( self::$field_groups as $group => $title ) {
       $defaults['name'] = $group;
       $defaults['title'] = $title;
-      $defaults['display'] = ( in_array( $group, array('internal', 'admin', 'source') ) ? 0 : 1 );
+      $defaults['mode'] = ( in_array( $group, array('internal', 'admin', 'source') ) ? 'admin' : 'public' );
       $defaults['order'] = $i;
 
       $wpdb->insert( Participants_Db::$groups_table, $defaults );
@@ -908,6 +909,8 @@ class PDb_Init {
         $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `attributes` TEXT NULL AFTER `options`");
       if ( $success !== false )
         $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `validation_message` TEXT NULL AFTER `validation`");
+      if ( $success !== false )
+        $success = $wpdb->query("ALTER TABLE " . Participants_Db::$groups_table . " ADD COLUMN `mode` VARCHAR(64) NULL AFTER `order`");
       
 
       if ( $success === false ) {
