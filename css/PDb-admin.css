@@ -479,6 +479,7 @@ body[class*='participants-database'] .text-block li {
 }
 .manage-fields-wrap .attribute-control {
   margin: 0.7em 0.5em 0.5em 0.5em;
+  width: auto !important;
 }
 .manage-fields-wrap .attribute-control label {
   display: block;
@@ -487,6 +488,7 @@ body[class*='participants-database'] .text-block li {
 .def-fieldset .field-header {
   margin: 0;
   padding: 0.6em 0.8em 1.7em 0.5em;
+  width: auto !important;
   position: absolute;
   left: 0;
   top: 0;
