@@ -863,6 +863,7 @@ abstract class PDb_Shortcode {
           // get only signup-enabled fields from public groups
           $sql = 'SELECT DISTINCT g.name 
                   FROM ' . Participants_Db::$groups_table . ' g  
+                  JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
                   WHERE f.signup = "1" AND g.display = "1" OR g.mode = "public" ORDER BY ' . $orderby;
           break;
         
