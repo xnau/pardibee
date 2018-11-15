@@ -886,7 +886,7 @@ class PDb_Init {
       //
       if ( $success !== false ) {
         $table_status = $wpdb->get_results( "SHOW TABLE STATUS WHERE `name` = '" . Participants_Db::$participants_table . "'" );
-        if ( current( $table_status )->Collation == 'utf8_general_ci' ) {
+        if ( current( $table_status )->Collation !== 'utf8_unicode_ci' ) {
           if ( $success !== false )
             $success = $wpdb->query( "alter table `" . Participants_Db::$participants_table . "` convert to character set utf8 collate utf8_unicode_ci" );
           if ( $success !== false )
@@ -920,11 +920,11 @@ class PDb_Init {
       } else {
         update_option( Participants_Db::$db_version_option, '1.1' );
       }
+
+      if ( PDB_DEBUG && $success )
+        Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . get_option( Participants_Db::$db_version_option ) );
       
     }
-
-    if ( PDB_DEBUG )
-      Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . get_option( Participants_Db::$db_version_option ) );
   }
 
   /**
@@ -1003,7 +1003,7 @@ class PDb_Init {
 
 // check for version 0.9
     $column_test = $wpdb->get_results( 'SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "name"' );
-    if ( $column_test[0]->CHARACTER_MAXIMUM_LENGTH == '64' )
+    if ( $column_test[0]->CHARACTER_MAXIMUM_LENGTH === '64' )
       update_option( Participants_Db::$db_version_option, '0.9' );
     else
       return;
@@ -1014,6 +1014,15 @@ class PDb_Init {
       update_option( Participants_Db::$db_version_option, '1.0' );
     else
       return;
+    
+    // check for version 1.1
+    $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$groups_table . ' LIKE "mode"' );
+    if ( !empty( $column_test ) )
+      update_option( Participants_Db::$db_version_option, '1.1' );
+    else
+      return;
+    
+    return;
   }
 
   /**
