@@ -563,6 +563,16 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * tells if the field has a default value
+   * 
+   * @return bool true if the default is non-empty
+   */
+  public function has_validation_message()
+  {
+    return $this->validation_message() !== '';
+  }
+
+  /**
    * tells if the field is a multi-type field
    * 
    * this is a field that has multiple values and stores it's value in the db as 
