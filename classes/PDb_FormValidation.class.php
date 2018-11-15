@@ -273,11 +273,21 @@ class PDb_FormValidation extends xnau_FormValidation {
         $test_result = preg_match( $regex, $field->value );
 
         if ( $test_result === 0 ) {
-          $field->error_type = $field->validation == 'captcha' ? 'captcha' : 'invalid';
+          // failed regex
+          if ( $this->is_empty( $field->value ) ) {
+            $field->error_type = 'empty';
+          } elseif( $field->validation === 'captcha' ) {
+            $field->error_type = 'captcha';
+          } else {
+            $field->error_type = 'invalid';
+          }
+          
         } elseif ( $test_result === false ) {
-          error_log( __METHOD__ . ' captcha regex error with regex: "' . $regex . '"' );
+          error_log( __METHOD__ . ' captcha or regex error with regex: "' . $regex . '"' );
+          
         } elseif ( $test_result === 1 ) {
           $field->validation_state_is( 'valid' );
+          
         }
       }
     }
@@ -351,17 +361,44 @@ class PDb_FormValidation extends xnau_FormValidation {
           default:
             $field_selector = '[name="' . $field->name() . '"]';
         }
+        
+        error_log(__METHOD__.' field: '.$field->name().' error type: '.$error->slug);
 
         //$this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
-
-        if ( isset( $this->error_messages[$error->slug] ) ) {
-          $error_message = $error->slug == 'nonmatching' ? sprintf( $this->error_messages[$error->slug], $field->title(), Participants_Db::column_title( $field->validation ) ) : sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
-          $this->error_class = Participants_Db::$prefix . 'error';
-        } else {
-          $error_message = $error->slug;
-          $this->error_class = Participants_Db::$prefix . 'error';
+        
+        switch ( $error->slug ) {
+          
+          case 'invalid':
+            if ( $field->has_validation_message() && $field->validation() !== 'yes' ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
+            } elseif ( isset( $this->error_messages[$error->slug] ) ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
+            }
+            break;
+            
+          case 'nonmatching':
+            if ( $field->has_validation_message() && $field->validation() === 'other' ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
+            } elseif ( isset( $this->error_messages[$error->slug] ) ) {
+              $error_message = sprintf( $this->error_messages[$error->slug], $field->title(), Participants_Db::column_title( $field->validation ) );
+            }
+            break;
+            
+          case 'empty':
+            if ( $field->has_validation_message() && $field->validation() === 'yes' ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
+            } elseif ( isset( $this->error_messages[$error->slug] ) ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
+            }
+            break;
+            
+          default:
+            $error_message = $error->slug;
+            
         }
+        $this->error_class = Participants_Db::$prefix . 'error';
+        
       } else {
         $error_message = $error->slug;
         $this->error_class = Participants_Db::$prefix . 'message';
