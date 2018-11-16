@@ -62,7 +62,7 @@ class PDb_Manage_Fields {
   {
 
     $this->i18n = self::get_i18n();
-
+    
     $this->process_submit();
 
     $this->set_groups();
