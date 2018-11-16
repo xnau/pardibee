@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    2.2
+ * @version    2.3
  * @link       https://github.com/ericmann/wp-session-manager
  * @depends    wp-session-manager
  * 
@@ -35,8 +35,6 @@ class PDb_Session {
     if ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] ) {
       $this->obtain_session_id();
     }
-
-    Participants_Db::initialize_session(); // this is only to set up the cache limiter now
   }
 
  
