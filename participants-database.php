@@ -347,8 +347,6 @@ class Participants_Db extends PDb_Base {
     // set up the database for any new blogs
     add_action( 'wpmu_new_blog', array( 'PDb_Init', 'new_blog' ) );
     add_action( 'delete_blog', array( 'PDb_Init', 'delete_blog' ), 10, 2 );
-
-    add_filter( 'wp_headers', array(__CLASS__, 'control_caching') );
     /**
      * @since 1.6.3
      * added global constant to enable multilingual content of the type that qtranslate-x 
