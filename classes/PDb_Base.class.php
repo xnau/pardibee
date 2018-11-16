@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1497,48 +1497,6 @@ class PDb_Base {
         'ascdesc' => FILTER_SANITIZE_STRING,
         Participants_Db::$list_page => FILTER_VALIDATE_INT,
     );
-  }
-
-  /**
-   * make any needed alterations to the headers
-   * 
-   * @param array $headers array of http headers
-   * @return array altered headers array
-   */
-  public static function control_caching( $headers )
-  {
-    self::initialize_session();
-    /**
-     * @filter pdb-wp_headers
-     * @param array of headers
-     * @return array
-     */
-    return self::apply_filters( 'wp_headers', $headers );
-  }
-
-  /**
-   * set up cache control and sessions
-   * 
-   */
-  public static function initialize_session()
-  { 
-    // if this is called too late, do nothing
-    if ( headers_sent() )
-      return;
-    /**
-     * sets the cache mode
-     * 
-     * @link http://php.net/manual/en/function.session-cache-limiter.php
-     */
-    $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' ); // private_no_expire
-    //if ( self::is_multipage_form() ) {
-    // prevents browser back-button caching in the middle of a multipage form
-    //$cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
-    //}
-
-    if ( !empty( $cache_limit ) && !session_id() ) {
-      session_cache_limiter( $cache_limit );
-    }
   }
 
   /**
