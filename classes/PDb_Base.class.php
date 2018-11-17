@@ -1706,7 +1706,9 @@ class PDb_Base {
     global $PDb_Debugging;
     if ( !defined( 'PDB_DEBUG' ) ) {
       $settings = get_option( Participants_Db::PLUGIN_NAME . '_options');
-      if ( ( isset( $settings['pdb_debug'] ) && $settings['pdb_debug'] ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+      if ( isset( $settings['pdb_debug'] ) ) {
+        define( 'PDB_DEBUG', intval($settings['pdb_debug']) );
+      } elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
         define( 'PDB_DEBUG', 1 );
       } else {
         define( 'PDB_DEBUG', 0 );
