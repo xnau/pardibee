@@ -1218,7 +1218,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
-    
 
     $this->plugin_settings[] = array(
         'name' => 'pdb_debug',
@@ -1228,7 +1227,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'dropdown',
             'help_text' => sprintf(__( 'this will enable writing to the %s debugging log.', 'participants-database' ), Participants_Db::$plugin_title ) . $this->settings_help( 'enable-debugging'),
-            'value' => 0,
+            'value' => $this->debug_value(),
             'options' => array( 
                 __('off', 'participants-database') => 0, 
                 __('plugin debug', 'participants-database') => 1,
@@ -1553,6 +1552,19 @@ ORDER BY g.order, v.order';
       $columnlist[Participants_Db::title_key( $column->title, $column->name )] = $column->name;
     }
     return $columnlist;
+  }
+  
+  /**
+   * gets the current PDB_DEBUG value
+   * 
+   * @return int
+   */
+  public function debug_value()
+  {
+    if ( defined('PDB_DEBUG') ) {
+      return intval(PDB_DEBUG) > 2 ? 2 : intval(PDB_DEBUG);
+    }
+    return 0;
   }
 
   /**
