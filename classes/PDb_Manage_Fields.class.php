@@ -469,7 +469,7 @@ class PDb_Manage_Fields {
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
 
         // get an array of the field attributes
-        $this->attribute_columns[$group] = $wpdb->get_col_info( 'name' );
+        $this->attribute_columns[$group] = array_keys( current( $this->fields_data[$group] ) );
 
         $group_title = $wpdb->get_var( 'SELECT `title` FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "' . $group . '"' );
         /**
