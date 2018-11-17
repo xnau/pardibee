@@ -296,6 +296,9 @@ class Participants_Db extends PDb_Base {
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
     
+    // set the debug global if not already
+    self::set_debug_mode();
+    
     /*
      * initialize WP Session Manager if not already present
      * 
@@ -379,9 +382,6 @@ class Participants_Db extends PDb_Base {
     add_action( 'pdb-shortcode_present', function () {
       add_filter( 'the_content', array( 'Participants_Db', 'fix_shortcode_special_chars' ), 5 );
     } );
-    
-    // set the debug global if not already
-    self::set_debug_mode();
     
     // action for handling the list columns UI
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
