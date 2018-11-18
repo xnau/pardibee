@@ -868,11 +868,12 @@ class PDb_FormElement extends xnau_FormElement {
     return parent::_attributes( $attributes_array );
   }
 
-  /*
-   * static function for assembling the types array
+  /**
+   * provides a list of all defined form elements
+   * 
+   * @return array as $name => $title
    * 
    */
-
   public static function get_types()
   {
     $types = array(
@@ -900,9 +901,12 @@ class PDb_FormElement extends xnau_FormElement {
         'placeholder' => __( 'Placeholder', 'participants-database' ),
 //         'timestamp'          => __('Timestamp', 'participants-database'),
     );
-    /*
+    /**
      * this gives access to the list of form element types for alteration before
      * it is set
+     * @filter pdb-set_form_element_types
+     * @param array of core form element types
+     * @return array of all form element types
      */
     return Participants_Db::apply_filters( 'set_form_element_types', $types );
   }
