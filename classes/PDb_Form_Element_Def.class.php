@@ -227,7 +227,8 @@ class PDb_Form_Element_Def {
         $lines = array(
             $field_def_att->html(),
             '<h4>' . $this->field_def->title() . '</h4>',
-            '</div>',
+            '</div>
+              <div class="form-element-label" >' . $this->field_def->form_element_title() . '</div>',
         );
         break;
 
