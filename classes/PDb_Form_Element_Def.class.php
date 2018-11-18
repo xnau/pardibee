@@ -211,8 +211,8 @@ class PDb_Form_Element_Def {
       case ( $attribute === 'selectable' ):
         $lines = array(
             '<div class="field-header">',
-            '<span class="editor-opener dashicons dashicons-arrow-down" ></span>',
-            '<span class="editor-opener dashicons dashicons-arrow-right" ></span>',
+            '<span class="editor-opener dashicons field-close-icon" title="' . _x('Close', 'label for a "close" control', 'participants-database') . '" ></span>',
+            '<span class="editor-opener dashicons field-open-icon" title="' . _x('Open for editing','label for an "open" control', 'participants-database') . '" ></span>',
             $field_def_att->html(),
         );
         break;
@@ -566,6 +566,9 @@ class PDb_Field_Def_Att_Item {
         break;
       case 'deletable':
         return $this->delete_button();
+      case 'selectable':
+        $this->config['attributes']['title'] = __('Select this field', 'participants-database');
+        break;
     }
     return PDb_FormElement::get_element( $this->config );
   }
@@ -577,7 +580,7 @@ class PDb_Field_Def_Att_Item {
    */
   private function delete_button()
   {
-    return '<a href="#" data-thing-name="delete_' . $this->config['id'] . '" class="delete" data-thing="field"><span class="dashicons dashicons-no"></span></a>';
+    return '<a href="#" data-thing-name="delete_' . $this->config['id'] . '" class="delete" data-thing="field" title="' . __('Delete this field', 'participants-database') . '"><span class="dashicons dashicons-no"></span></a>';
   }
 
   /**
@@ -591,9 +594,9 @@ class PDb_Field_Def_Att_Item {
   }
 
   /**
-   * tells of the attribute needs a label
+   * tells if the attribute has a label and it should be added
    * 
-   * @return bool true if the attribute should have a label
+   * @return bool true if the attribute has a label
    */
   public function has_label()
   {
