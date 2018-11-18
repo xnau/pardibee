@@ -457,8 +457,8 @@ PDbManageFields = (function ($) {
       // clear the unsaved changes opo-up
       $('.manage-fields-update').on('click', clearUnsavedChangesWarning);
       // set up the open/close field editor button
-      $('.def-fieldset').on('click', '.editor-opener.dashicons-arrow-right', open_field_editor);
-      $('.def-fieldset').on('click', '.editor-opener.dashicons-arrow-down', close_field_editor);
+      $('.def-fieldset').on('click', '.editor-opener.field-open-icon', open_field_editor);
+      $('.def-fieldset').on('click', '.editor-opener.field-close-icon', close_field_editor);
       // show/hide the validation message setting
       $('.validation-attribute select').on('change', showhide_validation_message).each(showhide_validation_message);
       // set up the manage fields global action panels
@@ -493,11 +493,11 @@ PDbManageFields = (function ($) {
       $('.general_fields_control_header .openclose-all').click(function () {
         var icon = $(this).find('.dashicons');
         var action = 'open';
-        if (icon.hasClass('dashicons-arrow-right')) {
+        if (icon.hasClass('field-open-icon')) {
           action = 'close';
         }
         open_close_all_field_editors($(this).closest('.manage-fields-wrap'),action);
-        icon.toggleClass('dashicons-arrow-down dashicons-arrow-right');
+        icon.toggleClass('field-close-icon field-open-icon');
       });
       // with selected action handler
       $('.apply-with-selected').click(handle_with_selected_action);
