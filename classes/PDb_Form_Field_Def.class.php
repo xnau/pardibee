@@ -348,6 +348,17 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * provides the display title of the field's form element
+   * 
+   * @return string title for the form element
+   */
+  public function form_element_title()
+  {
+    $types = PDb_FormElement::get_types();
+    return  isset( $types[$this->form_element] ) ? $types[$this->form_element] : $types['text-line'];
+  }
+
+  /**
    * tells the field group
    * 
    * @return string
