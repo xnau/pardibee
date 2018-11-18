@@ -306,7 +306,7 @@ class PDb_Manage_Fields {
             <input id="select-all-checkbox-<?php echo $group ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo $group ?>" style="display:none" ><?php echo $this->i18n['all'] ?></label>
           </div>
           <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo $group ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n['add field'] ?></button>
-          <button type="button" class="button-secondary openclose-all" ><span class="dashicons dashicons-arrow-right"></span><?php echo $this->i18n['all'] ?></button>
+          <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n['all'] ?></button>
           <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions">
             <h4><?php echo $this->i18n['add field'] ?></h4>
             <label><?php echo $this->i18n['new field title'] ?></label>
