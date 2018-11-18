@@ -531,10 +531,19 @@ body[class*='participants-database'] .text-block li {
   background: rgba( 0,0,0,0.1);
 }
 
-.editor-open .editor-opener.dashicons-arrow-right {
+.dashicons.field-open-icon::before {
+    /* content: "\f139"; /* arrow-right */
+    content: "\f345"; /* dashicons-arrow-right-alt2 (chevron)) */
+}
+.dashicons.field-close-icon::before {
+    /* content: "\f140"; /* arrow-down */
+    content: "\f347"; /* dashicons-arrow-down-alt2 (chevron)) */
+}
+
+.editor-open .editor-opener.field-open-icon {
   display: none;
 }
-.editor-closed .editor-opener.dashicons-arrow-down {
+.editor-closed .editor-opener.field-close-icon {
   display: none;
 }
 .participants_db .field-header h4 {
@@ -594,7 +603,7 @@ button .dashicons {
   vertical-align: middle;
   width: 24px;
   height: 24px;
-  font-size: 24px;
+/*  font-size: 24px;*/
   line-height: 24px;
   margin-left: -5px;
 }
