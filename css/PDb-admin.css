@@ -585,7 +585,7 @@ body[class*='participants-database'] .text-block li {
 }
 
 .general_fields_control_header .add-field-submit {
-  display: block;
+  display: inline-block;
   margin: 1em 0 0 0;
   font-size: 110%;
 }
@@ -721,7 +721,7 @@ button .dashicons {
   background-color: hsl(55, 60%, 85%);
 }
 .color-numeric .form-element-label {
-  color: hsl(55, 60%, 80%);
+  color: hsl(55, 70%, 73%);
 }
 
 
