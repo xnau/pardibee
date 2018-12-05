@@ -177,6 +177,9 @@ PDbManageFields = (function ($) {
   var enableNew = function () {
     $(this).closest('.add-field-inputs, .add-group-inputs').find('[type=submit]').removeClass('disabled').addClass('enabled').prop('disabled', false);
   };
+  var disableNew = function (el) {
+    el.find('[type=submit]').removeClass('enabled').addClass('disabled').prop('disabled', true);
+  };
   var serializeList = function (container) {
     /*
      * grabs the id's of the anchor tags and puts them in a string for the 
@@ -467,6 +470,12 @@ PDbManageFields = (function ($) {
         $('.button-showhide').not('#' + $(this).attr('for')).slideUp();
         $('#' + $(this).attr('for')).slideToggle('slow');
         return false;
+      });
+      // cancel add field
+      $('button[name=add-field-cancel]').click(function(e){
+        e.preventDefault();
+        $(this).closest('.button-showhide').slideUp();
+        disableNew($(this).closest('.button-showhide'));
       });
       // "with selected" functionality
       $('.with-selected-control').slideUp(effect_speed);
