@@ -144,7 +144,7 @@ class PDb_Manage_Fields {
                       // add the rows of the group
                       foreach ( $this->fields_data[$group] as $database_row ) :
 
-                        $field_definition_attributes = new PDb_Form_Element_Def( new PDb_Form_Field_Def( $database_row['name'] ) );
+                        $field_definition_attributes = new PDb_Field_Editor( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
                         <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>">
 
@@ -340,10 +340,13 @@ class PDb_Manage_Fields {
                     )
             );
             ?>
-            <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n['add field'] ?></button>
+            <div class="add-field-submit-wrap">
+              <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n['add field'] ?></button>
+              <button class="button button-secondary add-field-submit" name="add-field-cancel" ><?php _e('Cancel', 'participants-database') ?></button>
+            </div>
           </div>
           <div id="with-selected-control-<?php echo $group ?>" class="with-selected-control">
-            <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n['with selected'] ?> : </label>
+            <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n['with selected'] ?>: </label>
             <?php
             PDb_FormElement::print_element( array(
                 'type' => 'dropdown',
@@ -358,7 +361,7 @@ class PDb_Manage_Fields {
             );
             PDb_FormElement::print_element( array(
                 'type' => 'dropdown',
-                'options' => PDb_Form_Element_Def::group_options(),
+                'options' => PDb_Field_Editor::group_options(),
                 'name' => 'with_selected_group_assign',
                 'value' => $group,
                 'attributes' => array(
