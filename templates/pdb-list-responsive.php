@@ -89,7 +89,7 @@ this template demonstrates a "table-less" reponsive layout for the list of recor
         <?php while( $this->have_fields() ) : $this->the_field(); // each field is one cell ?>
 
         <?php if ( $this->field->has_content() ) : ?>
-        <div class="pdb-field">
+        <div class="pdb-field pdb-field-<?php echo $this->field->name ?>">
           <span class="pdb-field-title"><?php echo $this->field->title ?></span>
           <span class="pdb-field-data"><?php echo PDb_FormElement::get_field_value_display($this->field); ?></span>
         </div>
