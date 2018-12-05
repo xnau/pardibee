@@ -384,10 +384,10 @@ class PDb_Manage_Fields_Updates {
         $fieldid = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
         switch ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) ) {
           case 'open':
-            unset( $_SESSION[self::action_key]['editorclosed'][$fieldid] );
+            $_SESSION[self::action_key]['editoropen'][$fieldid] = true;
             break;
           case 'close':
-            $_SESSION[self::action_key]['editorclosed'][$fieldid] = true;
+            unset( $_SESSION[self::action_key]['editoropen'][$fieldid] );
         }
         wp_send_json( 'set' );
 
@@ -400,10 +400,10 @@ class PDb_Manage_Fields_Updates {
         }
 
         foreach ( $list as $id ) {
-          if ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) === 'close' ) {
-            $_SESSION[self::action_key]['editorclosed'][$id] = true;
+          if ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) === 'open' ) {
+            $_SESSION[self::action_key]['editoropen'][$id] = true;
           } else {
-            unset( $_SESSION[self::action_key]['editorclosed'][$id] );
+            unset( $_SESSION[self::action_key]['editoropen'][$id] );
           }
         }
         wp_send_json( 'set' );
