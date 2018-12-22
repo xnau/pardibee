@@ -538,7 +538,7 @@ class PDb_Manage_Fields {
           'with selected' => _x( 'With Selected', 'button label', 'participants-database' ),
           'apply' => _x( 'Apply', 'button label', 'participants-database' ),
           'all' => _x( 'All', 'select all button label', 'participants-database' ),
-          'mode' => _x( 'Mode', 'label for a mode selector', 'participants-database' ),
+          'mode' => _x( 'View Mode', 'label for the view mode selector', 'participants-database' ),
       );
     }
 
