@@ -511,7 +511,7 @@ class Participants_Db extends PDb_Base {
   {
     
     /*
-     * instantiate the settings class; this only sets up the settings definitions, 
+     * instantiate the settings class; this only sets up the settings values, 
      * the WP Settings API may not be available at this point, so we register the 
      * settings UI on the 'admin_menu' hook
      */
@@ -3539,6 +3539,8 @@ class Participants_Db extends PDb_Base {
 
   /**
    * sets up the plugin admin menus
+   * 
+   * fired on the admin_menu hook
    * 
    * @return null
    */
