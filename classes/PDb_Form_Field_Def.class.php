@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -163,10 +163,20 @@ class PDb_Form_Field_Def {
   private static function get_field_def( $fieldname )
   {
     global $wpdb;
-    $sql = 'SELECT v.* 
-            FROM ' . Participants_Db::$fields_table . ' v 
-            WHERE v.name = %s';
-    return current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
+    $cachekey = 'participants-database-field-definitions';
+    
+    $all_defs = wp_cache_get( $cachekey );
+    if ( ! $all_defs ) {
+      $raw_defs = $wpdb->get_results( 'SELECT * FROM ' . Participants_Db::$fields_table );
+      
+      $all_defs = array();
+      foreach( $raw_defs as $def ) {
+        $all_defs[$def->name] = $def;
+      }
+      wp_cache_set( $cachekey, $all_defs );
+    }
+    
+    return $all_defs[$fieldname];
   }
 
   /**
