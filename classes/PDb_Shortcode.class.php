@@ -813,64 +813,71 @@ abstract class PDb_Shortcode {
    */
   protected function _set_display_groups( $public_only = true )
   {
+    $cachekey = 'pdb-display-groups_' . ( $public_only ? 'public' : 'all' );
+    $display_groups = wp_cache_get( $cachekey );
+    
+    if ( $display_groups ) {
+      $this->display_groups = $display_groups;
+    } else {
+      global $wpdb;
+      $groups = array();
+      if ( !empty( $this->shortcode_atts['fields'] ) ) {
 
-    global $wpdb;
-    $groups = array();
-    if ( !empty( $this->shortcode_atts['fields'] ) ) {
+        foreach ( $this->display_columns as $column ) {
+          $groups[Participants_Db::$fields[$column]->group()] = true;
+        }
 
-      foreach ( $this->display_columns as $column ) {
-        $groups[Participants_Db::$fields[$column]->group()] = true;
-      }
+        $groups = array_keys( $groups );
+      } elseif ( !empty( $this->shortcode_atts['groups'] ) ) {
 
-      $groups = array_keys( $groups );
-    } elseif ( !empty( $this->shortcode_atts['groups'] ) ) {
-
-      /*
-       * process the shortcode groups attribute and get the list of groups defined
-       */
-      $group_list = array();
-      $groups_attribute = explode( ',', str_replace( array(' '), '', $this->shortcode_atts['groups'] ) );
-      foreach ( $groups_attribute as $item ) {
-        if ( Participants_Db::is_group( $item ) )
-          $group_list[] = trim( $item );
-      }
-      if ( count( $group_list ) !== 0 ) {
         /*
-         * get a list of all defined groups
+         * process the shortcode groups attribute and get the list of groups defined
          */
-        $sql = 'SELECT g.name 
-                FROM ' . Participants_Db::$groups_table . ' g ORDER BY FIELD( g.name, "' . implode( '","', $group_list ) . '")';
+        $group_list = array();
+        $groups_attribute = explode( ',', str_replace( array(' '), '', $this->shortcode_atts['groups'] ) );
+        foreach ( $groups_attribute as $item ) {
+          if ( Participants_Db::is_group( $item ) )
+            $group_list[] = trim( $item );
+        }
+        if ( count( $group_list ) !== 0 ) {
+          /*
+           * get a list of all defined groups
+           */
+          $sql = 'SELECT g.name 
+                  FROM ' . Participants_Db::$groups_table . ' g ORDER BY FIELD( g.name, "' . implode( '","', $group_list ) . '")';
 
-        $result = $wpdb->get_results( $sql, ARRAY_N );
-        foreach ( $result as $group ) {
-          if ( in_array( current( $group ), $group_list ) || $public_only === false ) {
-            $groups[] = current( $group );
+          $result = $wpdb->get_results( $sql, ARRAY_N );
+          foreach ( $result as $group ) {
+            if ( in_array( current( $group ), $group_list ) || $public_only === false ) {
+              $groups[] = current( $group );
+            }
           }
         }
       }
-    }
-    if ( count( $groups ) === 0 ) {
+      if ( count( $groups ) === 0 ) {
 
-      $orderby = empty( $this->shortcode_atts['fields'] ) ? 'g.order ASC' : 'FIELD( g.name, "' . implode( '","', $groups ) . '")';
+        $orderby = empty( $this->shortcode_atts['fields'] ) ? 'g.order ASC' : 'FIELD( g.name, "' . implode( '","', $groups ) . '")';
 
-      if ( $this->module === 'signup' ) {
-        $sql = 'SELECT DISTINCT g.name 
-                FROM ' . Participants_Db::$groups_table . ' g 
-                JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
-                WHERE f.signup = "1" ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' AND f.form_element <> "hidden" ORDER BY ' . $orderby;
-      } else {
-        $sql = 'SELECT g.name 
-              FROM ' . Participants_Db::$groups_table . ' g
-                WHERE 1=1 ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' ORDER BY ' . $orderby;
+        if ( $this->module === 'signup' ) {
+          $sql = 'SELECT DISTINCT g.name 
+                  FROM ' . Participants_Db::$groups_table . ' g 
+                  JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
+                  WHERE f.signup = "1" ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' AND f.form_element <> "hidden" ORDER BY ' . $orderby;
+        } else {
+          $sql = 'SELECT g.name 
+                FROM ' . Participants_Db::$groups_table . ' g
+                  WHERE 1=1 ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' ORDER BY ' . $orderby;
+        }
+
+        $result = $wpdb->get_results( $sql, ARRAY_N );
+
+        foreach ( $result as $group ) {
+          $groups[] = current( $group );
+        }
       }
-
-      $result = $wpdb->get_results( $sql, ARRAY_N );
-
-      foreach ( $result as $group ) {
-        $groups[] = current( $group );
-      }
+      $this->display_groups = $groups;
+      wp_cache_set( $cachekey, $groups );
     }
-    $this->display_groups = $groups;
   }
 
   /**
