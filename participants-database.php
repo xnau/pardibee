@@ -1107,6 +1107,15 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_groups( $column = '*', $exclude = false )
   {
+    $cachekey = false;
+    // check for the cached default return value
+    if ( $column === '*' && $exclude === false ) {
+      $cachekey = 'pdb-groups-array';
+      $groups = wp_cache_get( $cachekey );
+      if ( $groups ) {
+        return $groups;
+      }
+    }
 
     global $wpdb;
 
@@ -1146,6 +1155,11 @@ class Participants_Db extends PDb_Base {
       // build an array indexed by the group's name
       foreach ( $groups as $group )
         $group_index[$group['name']] = $group;
+      
+      if ( $cachekey ) {
+        // set the cache
+        wp_cache_set( $cachekey, $group_index );
+      }
 
       return $group_index;
     }
@@ -1306,7 +1320,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function is_column( $string )
   {
-
     return isset( self::$fields[$string] );
   }
 
@@ -2249,7 +2262,7 @@ class Participants_Db extends PDb_Base {
    * given an identifier, returns the id of the record identified. If there is
    * more than one record with the given term, returns the first one.
    *
-   * @global object $wpdb
+   * @global wpdb $wpdb
    * @param string $term the column to match
    * @param string $value the value to search for
    * @param bool   $single if true, return only one ID
@@ -2259,25 +2272,35 @@ class Participants_Db extends PDb_Base {
    */
   private static function _get_participant_id_by_term( $term, $value, $single = true )
   {
-
-    global $wpdb;
-
-    if ( !self::is_column( $term ) )
+    if ( $value === false || is_null( $value ) || !self::is_column( $term ) )
       return false;
+    
+    $cachekey = 'pdb-record_by_term_' . $term;
+    $output = wp_cache_get( $value, $cachekey, false, $found );
+    
+    if ( ! $found ) {
+      global $wpdb;
 
-    $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
-    $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
+      $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
+      $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
 
-    if ( !is_array( $result ) )
-      return false;
+      if ( !is_array( $result ) ) {
+        $output = false;
+      } else {
+        $output = array();
 
-    $output = array();
-
-    foreach ( $result as $id ) {
-      $output[] = current( $id );
+        foreach ( $result as $id ) {
+          $output[] = current( $id );
+        }
+      }
+      wp_cache_set($value, $output, $cachekey);
     }
 
-    return $single ? current( $output ) : $output;
+    if ( $output === false ) {
+      return false;
+    } else {
+      return $single ? current( $output ) : $output;  
+    }
   }
   
   /**
@@ -2330,7 +2353,7 @@ class Participants_Db extends PDb_Base {
 
     global $wpdb;
 
-    $id_exists = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' LIMIT 1 )", $id ) );
+    $id_exists = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' LIMIT 1", $id ) );
 
     if ( NULL !== $id_exists )
       return $id_exists === '0' ? false : true;
