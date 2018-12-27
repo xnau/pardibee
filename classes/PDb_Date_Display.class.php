@@ -95,7 +95,7 @@ class PDb_Date_Display {
    */
   public static function reassert_timezone()
   {
-    if ( Participants_Db::apply_filters( 'php_timezone_sync', true ) ) {
+    if ( Participants_Db::apply_filters( 'php_timezone_sync', true ) && Participants_Db::plugin_setting_is_true( 'sync_timezone', true ) ) {
       date_default_timezone_set( self::timezone() );
     }
   }

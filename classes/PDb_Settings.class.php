@@ -1218,6 +1218,20 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'sync_timezone',
+        'title' => __( 'Sync php Timezone', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'when checked, the php timezone will be set to the WordPress timezone.', 'participants-database' ) . $this->settings_help( 'sync-php-timezone'),
+            'value' => 1,
+            'options' => array(1, 0),
+        ),
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'pdb_debug',
