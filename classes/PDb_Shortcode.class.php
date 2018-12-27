@@ -282,6 +282,12 @@ abstract class PDb_Shortcode {
     $this->wrap_class = trim( $this->wrap_class ) . ' ' . trim( $this->shortcode_atts['class'] );
     // set the template to use
     $this->set_template( $this->shortcode_atts['template'] );
+    
+    /**
+     * @action pdb-shortcode_set
+     * @param object the currently instanted shortcode class
+     */
+    do_action( Participants_Db::$prefix . 'shortcode_set', $this );
   }
 
   /**
