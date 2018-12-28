@@ -1,82 +1,10 @@
 <?php
-/*
-
-  template for a responsive list layout using CSS3 flexbox
-
+/**
+ * template for a responsive list layout using CSS3 flexbox
+ * 
+ * @version 0.2
  */
 ?>
-
-
-
-<?php // this is an example of a way to style the records, delete this or edit as needed ?>
-<style type="text/css">
-  .pdb-list.list-container {
-    display: flex;
-    flex-direction: column;
-  }
-  section {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin: 0 0 0.75em 0;
-    padding-bottom: 0.75em;
-    border-bottom: 2px solid rgba(0,0,0,0.1);
-  }
-  section:last-of-type {
-    border-bottom: none;
-  }
-  .pdb-field {
-    margin-right: 1em;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    font-weight: bold;
-    margin-bottom: 0.5em;
-  }
-  .pdb-field.blank-field {
-    display: none;
-  }
-  .pdb-field-title {
-    font-weight: normal;
-    padding-right: 0.25em;
-    font-size: 70%;
-  }
-  .pdb-list .pagination ul, .pdb-pagination ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    width: 100%;
-  }
-  @media only screen and (max-width: 600px) {
-    /* 
-    this will hide the direct number pagination links, resulting in a more 
-    compact display 
-    */
-    .pdb-flexbox-list .pdb-pagination li.direct-page {
-      display: none;
-    }
-  }
-  .pdb-list .pagination li, .pdb-pagination li {
-    width: 20%;
-    max-width: 4em;
-  }
-  .pdb-list .pagination li > span, 
-  .pdb-pagination li > span, 
-  .pdb-list .pagination a, 
-  .pdb-pagination a {
-    padding: 0.5em 0;
-    display: inline-block;
-    width: 100%;
-  }
-  .pdb-pagination span.dashicons {
-    vertical-align: middle;
-  }
-  .pdb-pagination span.ajax-loading {
-    position: absolute;
-  }
-</style>
 <div class="wrap <?php echo $this->wrap_class ?> pdb-flexbox-list" id="<?php echo $this->list_anchor ?>">
   <?php /* SEARCH/SORT FORM */ ?>
   <?php if ( $filter_mode != 'none' ) : ?>
@@ -126,9 +54,9 @@
   <?php endif ?>
 
   <div class="pdb-list list-container" >
-    
+
     <?php do_action( 'pdb-prepend_to_list_container_content' ) ?>
-    
+
     <?php
     /* print the count if enabled in the shortcode
      * 
@@ -144,11 +72,10 @@
 
           <?php while ( $this->have_fields() ) : $this->the_field(); // each field is one cell ?>
 
-            <?php $empty_class = $this->field->has_content() ? '' : 'blank-field' ?>
-              <div class="pdb-field pdb-field-<?php echo $this->field->name ?> <?php echo $empty_class ?>">
-                <span class="pdb-field-title"><?php echo $this->field->title ?></span>
-                <span class="pdb-field-data"><?php echo PDb_FormElement::get_field_value_display( $this->field ); ?></span>
-              </div>
+            <div class="pdb-field pdb-field-<?php echo $this->field->name() ?> <?php echo $this->get_empty_class() ?>">
+              <span class="pdb-field-title"><?php echo $this->field->title() ?></span>
+              <span class="pdb-field-data"><?php $this->field->print_value() ?></span>
+            </div>
 
           <?php endwhile; // each field  ?>
 
@@ -185,3 +112,72 @@
   $this->pagination->show();
   ?>
 </div>
+<?php // this is an example of a way to style the records, delete this or edit as needed ?>
+<style type="text/css">
+  .pdb-list.list-container {
+    display: flex;
+    flex-direction: column;
+  }
+  section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0 0 0.75em 0;
+    padding-bottom: 0.75em;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+  }
+  section:last-of-type {
+    border-bottom: none;
+  }
+  .pdb-field {
+    margin-right: 1em;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  .pdb-field.blank-field {
+    display: none;
+  }
+  .pdb-field-title {
+    font-weight: normal;
+    padding-right: 0.25em;
+    font-size: 70%;
+  }
+  .pdb-list .pagination ul, .pdb-pagination ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+  .pdb-list .pagination li, .pdb-pagination li {
+    width: 20%;
+    max-width: 4em;
+  }
+  .pdb-pagination span.dashicons {
+    vertical-align: middle;
+  }
+  .pdb-pagination span.ajax-loading {
+    postion: absolute;
+  }
+  .pdb-list .pagination li > span, 
+  .pdb-pagination li > span, 
+  .pdb-list .pagination a, 
+  .pdb-pagination a {
+    padding: 0.5em 0;
+    width: 100%;
+  }
+
+  @media only screen and (max-width: 600px) {
+    /* 
+    this will hide the direct number pagination links, resulting in a more 
+    compact display 
+    */
+    .pdb-flexbox-list .pdb-pagination li.direct-page {
+      display: none;
+    }
+  }
+</style>
