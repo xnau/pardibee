@@ -289,6 +289,11 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.8.4 =
+* optimized some database transactions
+* added php timezone sync preference
+* updated the list responsive template for better element classnames
+
 = 1.8.3.2 =
 * fixes blank Manage Database Fields screen bug
 * post logins now working
