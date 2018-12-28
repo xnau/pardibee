@@ -155,7 +155,7 @@ abstract class PDb_Shortcode {
   public $current_group_pointer = 1;
 
   /**
-   * @var object the current Field object
+   * @var PDb_Field_Item the current Field object
    */
   public $field;
 
