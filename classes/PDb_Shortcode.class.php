@@ -1410,9 +1410,12 @@ abstract class PDb_Shortcode {
    * @param PDb_Field_Item $field  object
    * @return string the class name
    */
-  public function get_empty_class( $field )
+  public function get_empty_class( $field = false )
   {
-    $emptyclass = 'image-upload' == $field->form_element ? 'image-' . self::emptyclass : self::emptyclass;
+    if ( $field === false ) {
+      $field = $this->field;
+    }
+    $emptyclass = 'image-upload' == $field->form_element() ? 'image-' . self::emptyclass : self::emptyclass;
 
     /**
      * @filter pdb-field_empty_class
@@ -1420,7 +1423,7 @@ abstract class PDb_Shortcode {
      * @param PDb_Field_Item the current field
      * @return string the empty class to use
      */
-    return Participants_Db::apply_filters( 'field_empty_class', ( $this->_empty( $field->value ) && $this->_empty( $field->link) ? $emptyclass : '' ), $field );
+    return Participants_Db::apply_filters( 'field_empty_class', ( $this->_empty( $field->get_value() ) && $this->_empty( $field->link) ? $emptyclass : '' ), $field );
   }
 
   /**
