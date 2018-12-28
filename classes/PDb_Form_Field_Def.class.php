@@ -55,7 +55,7 @@ class PDb_Form_Field_Def {
   protected $form_element;
 
   /**
-   * @var string raw string form the "values" parameter of the field def
+   * @var string raw string from the "values" parameter of the field def
    */
   private $values;
 
@@ -266,7 +266,7 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
-    return $this->default;
+    return is_null( $this->default ) ? '' : $this->default;
   }
 
   /**
