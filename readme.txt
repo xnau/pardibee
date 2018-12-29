@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 4.9.8
+Tested up to: 5.0.2
 Requires PHP: 5.6
 Stable tag: 1.8.3.2
 License: GPLv3
@@ -293,6 +293,7 @@ You can define a "captcha" form element which will show a simple math question f
 * optimized some database transactions
 * added php timezone sync preference
 * updated the list responsive template for better element classnames
+* WordPress 5.0 compatibility
 
 = 1.8.3.2 =
 * fixes blank Manage Database Fields screen bug
