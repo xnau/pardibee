@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign up form, survey, management, 
 Requires at least: 4.0
 Tested up to: 4.9.8
 Requires PHP: 5.6
-Stable tag: 1.8.3.1
+Stable tag: 1.8.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
