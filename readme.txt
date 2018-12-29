@@ -1103,8 +1103,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.8.3.2 =
-Version 1.8.3.2 is a bugfix update.
+= 1.8.4 =
+Version 1.8.4 is a minor feature update.
 
 == Plugin Support ==
 
