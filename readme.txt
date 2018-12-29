@@ -290,10 +290,10 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.8.4 =
-* optimized some database transactions
+* WordPress 5.0 compatibility
 * added php timezone sync preference
 * updated the list responsive template for better element classnames
-* WordPress 5.0 compatibility
+* optimized some database transactions
 
 = 1.8.3.2 =
 * fixes blank Manage Database Fields screen bug
