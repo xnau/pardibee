@@ -1498,6 +1498,18 @@ class PDb_Base {
         Participants_Db::$list_page => FILTER_VALIDATE_INT,
     );
   }
+  
+  /**
+   * provides a general cache expiration time
+   * 
+   * this is to prevent persistent caches from holding on to the cached values too long
+   * 
+   * @return int cache valid time in seconds
+   */
+  public static function cache_expire()
+  {
+    return Participants_Db::apply_filters( 'general_cache_expiration', HOUR_IN_SECONDS );
+  }
 
   /**
    * make any needed alterations to the headers
@@ -1522,7 +1534,7 @@ class PDb_Base {
    */
   public static function initialize_session()
   { 
-    // if this is called too late, do nothing
+    // if this is called too late, do nothing        
     if ( headers_sent() )
       return;
     /**
