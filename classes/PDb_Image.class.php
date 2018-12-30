@@ -128,7 +128,7 @@ class PDb_Image extends xnau_Image_Handler {
       if (self::getimagesize( Participants_Db::base_files_path() . ltrim( $default_image, '/' ) ) !== false) {
         $default_image = Participants_Db::base_files_url() . ltrim($default_image, '/');
       }
-      wp_cache_set('pdb-default_image_url', $default_image );
+      wp_cache_set('pdb-default_image_url', $default_image, Participants_Db::cache_expire() );
     }
     
     $this->default_image = $default_image;
