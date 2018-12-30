@@ -28,6 +28,11 @@ class PDb_Field_Editor {
    * @var the row color class
    */
   private $colorclass;
+  
+  /**
+   * @var bool we use this to class the first checkbox field
+   */
+  private $first_checkbox = true;
 
   /**
    * creates the object
@@ -98,13 +103,12 @@ class PDb_Field_Editor {
   /**
    * provides the control HTML for the named attribute
    * 
-   * @param string $attribute
+   * @param string $attribute a field parameter
    * 
    * @return string
    */
   private function get_att_control( $attribute )
   {
-//    error_log(__METHOD__.' attribute: '.$attribute);
     switch ( $attribute ) {
       case 'id':
         $config = array(
@@ -235,12 +239,14 @@ class PDb_Field_Editor {
 
       case ( $field_def_att->is_checkbox() ):
         $lines = array(
+            $this->first_checkbox ? '<break></break>' : '',
             '<div class="attribute-control ' . $attribute . '-attribute ' . $field_def_att->type() . '-control-wrap">',
             $field_def_att->has_label() ? '<label for="row_' . $this->field_def->id . '_' . $attribute . '">' . $field_def_att->label() : '',
             $field_def_att->html(),
             $field_def_att->has_label() ? '</label>' : '',
             '</div>',
         );
+        $this->first_checkbox = false;
         break;
 
       default:
