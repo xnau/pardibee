@@ -151,11 +151,19 @@ class PDb_Form_Field_Def {
    */
   public static function is_field( $fieldname )
   {
-    global $wpdb;
-    $sql = 'SELECT COUNT(*) 
-            FROM ' . Participants_Db::$fields_table . ' v 
-            WHERE v.name = %s';
-    return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $fieldname ) );
+    $cachekey = 'pdb-is_field';
+    $is = wp_cache_get( $fieldname, $cachekey, false, $found );
+    
+    if ( ! $found ) {
+      global $wpdb;
+      $sql = 'SELECT COUNT(*) 
+              FROM ' . Participants_Db::$fields_table . ' v 
+              WHERE v.name = %s';
+      $is = (bool) $wpdb->get_var( $wpdb->prepare( $sql, $fieldname ) );
+      wp_cache_set( $fieldname, $is, $cachekey, Participants_Db::cache_expire() );
+    }
+    
+    return $is;
   }
 
   /**
@@ -167,11 +175,19 @@ class PDb_Form_Field_Def {
    */
   private static function get_field_def( $fieldname )
   {
-    global $wpdb;
-    $sql = 'SELECT v.* 
-            FROM ' . Participants_Db::$fields_table . ' v 
-            WHERE v.name = %s';
-    return current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
+    $cachekey = 'pdb-field_def';
+    $def = wp_cache_get( $fieldname, $cachekey );
+    
+    if ( ! $def ) {
+      global $wpdb;
+      $sql = 'SELECT v.* 
+              FROM ' . Participants_Db::$fields_table . ' v 
+              WHERE v.name = %s';
+      $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
+      wp_cache_set( $fieldname, $def, $cachekey, Participants_Db::cache_expire() );
+    }
+    
+    return $def;
   }
   
   /**
@@ -314,7 +330,7 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
-    return $this->default;
+    return Participants_Db::apply_filters( 'translate_string', $this->default );
   }
 
   /**
@@ -334,7 +350,7 @@ class PDb_Form_Field_Def {
    */
   public function validation_message()
   {
-    return $this->validation_message;
+    return Participants_Db::apply_filters( 'translate_string', $this->validation_message );
   }
 
   /**
@@ -417,7 +433,7 @@ class PDb_Form_Field_Def {
    */
   public function help_text()
   {
-    return $this->help_text;
+    return Participants_Db::apply_filters( 'translate_string', $this->help_text );
   }
 
   /**
@@ -570,7 +586,7 @@ class PDb_Form_Field_Def {
    */
   public function has_default()
   {
-    return $this->default_value() !== '';
+    return strlen( $this->default ) > 0;
   }
 
   /**
@@ -580,7 +596,7 @@ class PDb_Form_Field_Def {
    */
   public function has_validation_message()
   {
-    return $this->validation_message() !== '';
+    return strlen( $this->validation_message ) > 0;
   }
 
   /**
