@@ -3387,9 +3387,7 @@ class Participants_Db extends PDb_Base {
   private static function print_list_search_result( $post, $instance )
   {
     
-//    error_log(__METHOD__.' sess id: '.Participants_Db::$session->get_id().' 
-//     
-//session: '.print_r(Participants_Db::$session,1));
+//    error_log(__METHOD__.' session: '.print_r($_SESSION,1));
     
     /*
      * get the attributes array; these values were saved in the session array by 
