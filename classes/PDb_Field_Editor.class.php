@@ -92,7 +92,7 @@ class PDb_Field_Editor {
   {
     $form_element_switches = $this->form_element_atts();
     $this->definition_attributes = Participants_Db::array_merge2( $this->default_def_att_switches(), $form_element_switches );
-    if ( $form_element_switches['validation'] === false ) {
+    if ( isset($form_element_switches['validation']) && $form_element_switches['validation'] === false ) {
       // disable the validation if disabled in the form element
       $this->definition_attributes['validation'] = false;
     }
