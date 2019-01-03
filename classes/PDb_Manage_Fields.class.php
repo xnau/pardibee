@@ -163,6 +163,9 @@ class PDb_Manage_Fields {
                 <div class="pdb-horiz-scroll-width">
                 <?php endif ?>
                 <table class="wp-list-table widefat fixed manage-fields" >
+                  
+              <?php if ( $num_group_rows > 0 ) : ?>
+                  
                   <thead>
                     <tr>
                       <?php if ( !$internal_group ) : ?>
@@ -185,6 +188,7 @@ class PDb_Manage_Fields {
                       ?>
                     </tr>
                   </thead>
+                  <?php endif ?>
                   <tbody id="<?php echo $group ?>_fields">
                     <?php
                     if ( $num_group_rows < 1 ) { // there are no rows in this group to show
@@ -469,7 +473,7 @@ class PDb_Manage_Fields {
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
 
         // get an array of the field attributes
-        $this->attribute_columns[$group] = array_keys( current( $this->fields_data[$group] ) );
+        $this->attribute_columns[$group] = current( $this->fields_data[$group] ) ? array_keys( current( $this->fields_data[$group] ) ) : array();
 
         $group_title = $wpdb->get_var( 'SELECT `title` FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "' . $group . '"' );
         /**
