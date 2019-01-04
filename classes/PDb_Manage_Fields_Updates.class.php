@@ -42,14 +42,7 @@ class PDb_Manage_Fields_Updates {
   {
     global $wpdb;
 
-    // dispose of these now unneeded fields
-    unset( $_POST['action'], $_POST['group'], $_POST['order'], $_POST['_wp_http_referer'], $_POST['_wpnonce'], $_POST['temp'] );
-
-    foreach ( $_POST as $name => $row ) {
-
-      // skip all non-row elements
-      if ( false === strpos( $name, 'row_' ) )
-        continue;
+    foreach ( $this->sanitized_post() as $name => $row ) {
 
       // unescape quotes in values
       foreach ( $row as $k => $rowvalue ) {
@@ -58,7 +51,7 @@ class PDb_Manage_Fields_Updates {
         }
       }
 
-      if ( $row['status'] == 'changed' ) {
+      if ( $row['status'] === 'changed' ) {
 
         $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
 
@@ -148,6 +141,25 @@ class PDb_Manage_Fields_Updates {
       }
     }
     $this->return_to_the_manage_database_fields_page();
+  }
+
+  /**
+   * provides a sanitized post array
+   * 
+   * only the row data is included, all other elements are discarded
+   * 
+   * @return array
+   */
+  private function sanitized_post()
+  {
+    $keys = array_filter( array_keys( $_POST ), function ($v) {
+      return preg_match( '/^row_[0-9]{1,3}$/', $v ) === 1;
+    } );
+
+    return filter_input_array( INPUT_POST, array_fill_keys( $keys, array(
+        'filter' => FILTER_SANITIZE_STRING,
+        'flags' => FILTER_REQUIRE_ARRAY,
+            ) ) );
   }
 
   /**
@@ -377,7 +389,7 @@ class PDb_Manage_Fields_Updates {
           $update[] = 'WHEN `name` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
         }
         $result = $wpdb->query( 'UPDATE ' . Participants_Db::$groups_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END' );
-        
+
         wp_send_json( array('status' => $result ? 'success' : 'failed') );
 
       case 'open_close_editor':
@@ -392,7 +404,7 @@ class PDb_Manage_Fields_Updates {
         wp_send_json( 'set' );
 
       case 'open_close_all':
-        
+
         $list = $this->sanitize_id_list();
 
         if ( count( $list ) < 1 ) {
@@ -459,7 +471,7 @@ class PDb_Manage_Fields_Updates {
            * with an admittedly funky hack: adding a space to the end of the key for the 
            * optgroup label. In most cases it will be unnoticed.
            */
-          $array_key = in_array( $value, array('false', 'optgroup', false) ) ? trim( $key ) . ' ' : trim( $key );
+          $array_key = in_array( $value, array('false', 'optgroup', false), true ) ? trim( $key ) . ' ' : trim( $key );
           $values_array[$array_key] = self::prep_value( trim( $value ), true );
         } else {
           // strip out the double colon in case it is present
