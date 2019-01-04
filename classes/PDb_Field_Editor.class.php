@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -96,7 +96,13 @@ class PDb_Field_Editor {
       // disable the validation if disabled in the form element
       $this->definition_attributes['validation'] = false;
     }
-    $this->definition_attributes = array_filter( $this->definition_attributes ); // remove the disabled elements
+    /**
+     * @filter pdb-field_editor_switches
+     * @param array of editor attribute enable/disable switches
+     * @param PDb_Form_Field_Def field definition
+     * @return array of switches
+     */
+    $this->definition_attributes = array_filter( Participants_Db::apply_filters('field_editor_switches', $this->definition_attributes, $this->field_def ) ); // remove the disabled elements
     reset( $this->definition_attributes );
   }
 
