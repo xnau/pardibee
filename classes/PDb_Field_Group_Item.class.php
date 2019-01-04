@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -40,7 +40,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     $this->_field_count = count( (array) $group->fields );
     
     // set up some classes
-    $this->add_class( $this->_field_count > 0 ? '' : 'pdb-group-empty' );
+    $this->add_class( $this->has_fields() ? '' : 'pdb-group-empty' );
     $this->add_class( $this->group_fields_have_values() ? '' : 'pdb-group-novalues' );
     
     $this->module = $module;
@@ -119,6 +119,26 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   }
   
   /**
+   * tells if the group gas fields in it
+   * 
+   * @return bool
+   */
+  public function has_fields()
+  {
+    return $this->_field_count > 0;
+  }
+  
+  /**
+   * tells if all the group's fields are empty
+   * 
+   * @return bool
+   */
+  public function has_all_empty_fields()
+  {
+    return ! $this->group_fields_have_values();
+  }
+  
+  /**
    * assigns the object properties that match properties in the supplied object
    * 
    * @param object $item the supplied object or config array
@@ -160,15 +180,21 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
    */
   private function group_fields_have_values()
   {
-    foreach( $this->fields as $field ) {
-      /* @var $field PDb_Form_Field_Def */
-      if ( $field->has_value() ) {
-        reset( $this->fields );
-        return true;
+    $has_field_values = wp_cache_get( $this->name, 'pdb-group_fields_have_value', false, $found );
+    
+    if ( ! $found ) {
+      foreach( $this->fields as $field ) {
+        /* @var $field PDb_Form_Field_Def */
+        if ( $field->has_value() ) {
+          $has_field_values = true;
+          break;
+        }
       }
+      reset( $this->fields );
+      wp_cache_set( $this->name, $has_field_values, 'pdb-group_fields_have_value', Participants_Db::cache_expire() );
     }
-    reset( $this->fields );
-    return false;
+    
+    return $has_field_values;
   }
   
 }
