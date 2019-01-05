@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.0
+ * @version 2.1
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -139,9 +139,14 @@ PDbManageFields = (function ($) {
   };
   var setChangedFlag = function () {
     var el = $(this);
+    var flag;
     var initState = el.data('initState');
-    var matches = el.closest('.def-fieldset').attr('id').match(/(\d+)/);
-    var flag = $('#status_' + matches[1]);
+    if ( el.closest('.manage-field-groups').length ) {
+      flag = $('#status_'+el.closest('.def-fieldset').data('id'));
+    } else {
+      var matches = el.closest('.def-fieldset').attr('id').match(/(\d+)/);
+      flag = $('#status_' + matches[1]);
+    }
     var check = el.is('[type=checkbox]') ? el.is(':checked') : el.val();
     if (check !== initState) {
       flag.attr('value', 'changed');
@@ -458,7 +463,7 @@ PDbManageFields = (function ($) {
       $(".manage-field-groups").sortable(sortGroups);
       $('section[id$="_fields"]').sortable(sortFields);
       // clear the unsaved changes opo-up
-      $('.manage-fields-update').on('click', clearUnsavedChangesWarning);
+      $('.manage-fields-update, .manage-groups-update').on('click', clearUnsavedChangesWarning);
       // set up the open/close field editor button
       $('.def-fieldset').on('click', '.editor-opener.field-open-icon', open_field_editor);
       $('.def-fieldset').on('click', '.editor-opener.field-close-icon', close_field_editor);

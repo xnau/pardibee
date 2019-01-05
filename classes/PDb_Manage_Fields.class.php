@@ -212,7 +212,8 @@ class PDb_Manage_Fields {
 
                 $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                 ?>
-                <div class="def-fieldset def-line color-group">
+                <div class="def-fieldset def-line color-group" data-id="<?php echo $group ?>">
+                  <input type="hidden" name="<?php echo $group ?>[status]" id="status_<?php echo $group ?>" value />
                   <div class="field-header">
                     <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
                     <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
@@ -384,6 +385,11 @@ class PDb_Manage_Fields {
      */
     protected function with_selected_options()
     {
+      /**
+       * @filter pdb-manage_fields_with_selected_actions
+       * @param array of tasks as $task => $title
+       * @return array
+       */
       return Participants_Db::apply_filters( 'manage_fields_with_selected_actions', array(
                   'delete' => $this->i18n['delete'],
                   'group' => __( 'Assign Group', 'participants-database' ),
