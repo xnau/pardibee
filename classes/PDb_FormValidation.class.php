@@ -361,11 +361,11 @@ class PDb_FormValidation extends xnau_FormValidation {
           default:
             $field_selector = '[name="' . $field->name() . '"]';
         }
-        
-        error_log(__METHOD__.' field: '.$field->name().' error type: '.$error->slug);
 
         //$this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
+        
+        $error_message = $error->slug; // fallback message
         
         switch ( $error->slug ) {
           
@@ -393,8 +393,11 @@ class PDb_FormValidation extends xnau_FormValidation {
             }
             break;
             
-          default:
-            $error_message = $error->slug;
+          case 'duplicate':
+            if ( isset( $this->error_messages[$error->slug] ) ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
+            }
+            break;
             
         }
         $this->error_class = Participants_Db::$prefix . 'error';
