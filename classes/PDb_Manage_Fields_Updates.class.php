@@ -419,6 +419,14 @@ class PDb_Manage_Fields_Updates {
           }
         }
         wp_send_json( 'set' );
+        
+      default:
+        /**
+         * @action pdb-with_selected_field_edit_action
+         * @param string name of the task
+         * @param array of selected ids
+         */
+        do_action( Participants_Db::$prefix . 'with_selected_field_edit_action', filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ), $this->sanitize_id_list() );
     }
   }
 
