@@ -357,7 +357,7 @@ class PDb_Field_Editor {
         'title' => true,
         'groupable' => true,
         'form_element' => true,
-        'attributes' => true,
+        'help_text' => true,
         'options' => false,
         'validation' => array(
             'no' => true,
@@ -368,7 +368,7 @@ class PDb_Field_Editor {
         ),
         'validation_message' => true,
         'default' => true,
-        'help_text' => true,
+        'attributes' => true,
         'signup' => true,
         'csv' => true,
         'readonly' => true,
