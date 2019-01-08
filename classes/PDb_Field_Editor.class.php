@@ -518,6 +518,7 @@ class PDb_Field_Editor {
           'validation_message' => false,
           'signup' => false,
           'readonly' => false,
+          'persistent' => false,
               )
       );
     }
