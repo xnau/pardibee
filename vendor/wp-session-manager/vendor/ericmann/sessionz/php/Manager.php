@@ -130,6 +130,10 @@ class Manager implements \SessionHandlerInterface {
         $manager = self::$manager = new self();
         $manager->seedHandlerStack();
 
+        /*
+         * suppress the warning if the session has been started by another script 
+         * #1943
+         */
         @session_set_save_handler($manager);
 
         return $manager;
