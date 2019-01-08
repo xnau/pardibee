@@ -512,7 +512,7 @@ body[class*='participants-database'] .text-block li {
 
 .def-fieldset .form-element-label {
   align-self: center;
-  font-size: 140%;
+  font-size: 130%;
 }
 .editor-open.def-fieldset .form-element-label {
   display: none;
@@ -585,6 +585,11 @@ body[class*='participants-database'] .text-block li {
   display: inline-block;
 }
 
+.wp-core-ui .general_fields_control_header .button-secondary {
+  line-height: 24px;
+  margin-left: 0.5em;
+}
+
 .manage-fields-wrap input[readonly] {
   border: 1px solid #ddd;
   background: inherit;
@@ -617,7 +622,7 @@ button .dashicons {
   display: inline-block;
   height: auto;
   line-height: 24px;
-  width: 3.6em;
+  width: 3.2em;
   text-align: center;
 }
 .manage-fields-actions,
@@ -625,7 +630,7 @@ button .dashicons {
   display: block;
   width:auto;
   max-width: 40em;
-  margin: 0.25em 0;
+  margin: 0.55em 0 0.25em 0;
   padding: 0.5em;
   border: 1px solid rgba(0,0,0,0.1);
   background-color: rgba(0,0,0,0.1);
@@ -699,10 +704,10 @@ button .dashicons {
 }
 .color-text {
   background-color: hsl(190, 60%, 95%);
-  border-color: hsl(190, 60%, 90%);
+  border-color: hsl(190.6, 47.2%, 85.9%); /* #cae4e9 */
 }
 .color-text .field-header {
-  background-color: hsl(190, 60%, 90%);
+  background-color: hsl(190.6, 47.2%, 85.9%);
 }
 .color-text .form-element-label {
   color: hsl(190, 60%, 80%);
@@ -710,10 +715,10 @@ button .dashicons {
 
 .color-selector {
   background-color: hsl(150, 50%, 95%);
-  border-color: hsl(150, 50%, 90%);
+  border-color: hsl(152.1, 40%, 86.3%);
 }
 .color-selector .field-header {
-  background-color: hsl(150, 50%, 90%);
+  background-color: hsl(152.1, 40%, 86.3%);
 }
 .color-selector .form-element-label {
   color: hsl(150, 50%, 80%);
@@ -721,22 +726,22 @@ button .dashicons {
 
 .color-numeric {
   background-color: hsl(55, 60%, 95%);
-  border-color: hsl(55, 60%, 85%);
+  border-color: hsl(54.7, 50.6%, 82.5%);
 }
 .color-numeric .field-header {
-  background-color: hsl(55, 60%, 85%);
+  background-color: hsl(54.7, 50.6%, 82.5%);
 }
 .color-numeric .form-element-label {
-  color: hsl(55, 70%, 73%);
+  color: hsl(54.8, 63%, 71.4%);
 }
 
 
 .color-upload {
   background-color: hsl(30, 65%, 95%);
-  border-color: hsl(30, 65%, 90%);
+  border-color: hsl(31.8, 48.6%, 86.3%);
 }
 .color-upload .field-header {
-  background-color: hsl(30, 65%, 90%);
+  background-color: hsl(31.8, 48.6%, 86.3%);
 }
 .color-upload .form-element-label {
   color: hsl(30, 65%, 80%);
@@ -755,10 +760,10 @@ button .dashicons {
 
 .color-utility {
   background-color: hsl(0, 10%, 95%);
-  border-color: hsl(0, 10%, 90%);
+  border-color: hsl(0, 11.5%, 88%);
 }
 .color-utility .field-header {
-  background-color: hsl(0, 10%, 90%);
+  background-color: hsl(0, 11.5%, 88%);
 }
 .color-utility .form-element-label {
   color: hsl(0, 10%, 80%);
