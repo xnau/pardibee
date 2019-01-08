@@ -333,6 +333,7 @@ class Participants_Db extends PDb_Base {
     add_action( 'admin_menu', array(__CLASS__, 'plugin_menu') );
     add_action( 'admin_init', array(__CLASS__, 'admin_init') );
     add_action( 'admin_init', array(__CLASS__, 'reg_page_setting_fix') );
+    add_action( 'current_screen', array(__CLASS__, 'init_settings_page') );
     add_action( 'wp_enqueue_scripts', array(__CLASS__, 'register_assets'), 1 );
 
     add_action( 'wp_loaded', array(__CLASS__, 'process_page_request') ); // wp_loaded
@@ -3559,6 +3560,23 @@ class Participants_Db extends PDb_Base {
     <?php
     self::admin_message();
   }
+  
+  /**
+   * initializes the settings UI on the settings page
+   * 
+   * called on the current_screen hook
+   * 
+   * @param WP_Screen $screen
+   */
+  public static function init_settings_page( $screen )
+  {
+    if ( $screen->id === 'participants-database_page_participants-database_settings_page' || $screen->id === 'options' ) {
+      /*
+       * intialize the plugin settings for the plugin settings pages
+       */
+      self::$Settings->initialize();
+    } 
+  }
 
   /**
    * sets up the plugin admin menus
@@ -3569,14 +3587,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function plugin_menu()
   {
-    global $pagenow;
-    if ( ($pagenow == 'admin.php' && filter_input( INPUT_GET, 'page' ) === 'participants-database_settings_page') || $pagenow == 'options.php' ) {
-      /*
-       * intialize the plugin settings for the plugin settings pages
-       */
-      self::$Settings->initialize();
-    }
-
     /*
      * this allows the possibility of a child class handling the admin list display
      */
