@@ -110,7 +110,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     if ( !is_array( $default_options ) || empty( $default_options ) ) {
 
-      add_filter( 'admin_menu', array($this, 'save_default_options'), 20 );
+      add_filter( 'current_screen', array($this, 'save_default_options'), 20 );
 
     }
 
