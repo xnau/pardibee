@@ -385,7 +385,7 @@ abstract class PDb_Shortcode {
      * @return string
      * 
      */
-    if ( has_filter( Participants_Db::$prefix . 'custom_template_location' ) ) {
+    if ( !file_exists( $template ) ) {
       $template = Participants_Db::apply_filters( 'custom_template_location', get_stylesheet_directory() . '/templates/' ) . $custom_template_file;
     }
 
