@@ -253,8 +253,8 @@ PDbManageFields = (function ($) {
   var close_field_editor = function () {
     switch_field_editor($(this),'close');
   }
-  var switch_field_editor = function (el,state) {
-    switch (state) {
+  var switch_field_editor = function (el,action) {
+    switch (action) {
       case 'close':
         el.closest('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
         break;
@@ -266,7 +266,7 @@ PDbManageFields = (function ($) {
       action : PDb_L10n.action,
       task : 'open_close_editor',
       id : el.closest('.field-header').find('[data-id]').data('id'),
-      state : state,
+      state : action,
       _wpnonce : PDb_L10n._wpnonce,
     });
   }
@@ -416,6 +416,7 @@ PDbManageFields = (function ($) {
   }
   var sortFields = {
     helper : fixHelper,
+    handle : '.dragger',
     update : function (event, ui) {
       $.post(ajaxurl, {
         action : PDb_L10n.action,
@@ -427,6 +428,7 @@ PDbManageFields = (function ($) {
   };
   var sortGroups = {
     helper : fixHelper,
+    handle : '.dragger',
     update : function (event, ui) {
       $.post(ajaxurl,{
         action : PDb_L10n.action,
@@ -506,9 +508,9 @@ PDbManageFields = (function ($) {
       // open/close all
       $('.general_fields_control_header .openclose-all').click(function () {
         var icon = $(this).find('.dashicons');
-        var action = 'open';
+        var action = 'close';
         if (icon.hasClass('field-open-icon')) {
-          action = 'close';
+          action = 'open';
         }
         open_close_all_field_editors($(this).closest('.manage-fields-wrap'),action);
         icon.toggleClass('field-close-icon field-open-icon');
