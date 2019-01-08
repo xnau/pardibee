@@ -892,6 +892,10 @@ button .dashicons {
   background-color: rgba(0,0,0,0);
   padding-bottom: 11px;
 }
+.participants_db .ui-tabs-nav .ui-state-default.utility a {
+  background-color: hsla(0, 0%, 0%, 0.2);
+  color: hsla(0,0%,44.3%,1);
+}
 .participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active .mask {
   visibility: visible;
 }
