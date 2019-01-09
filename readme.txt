@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign up form, survey, management, 
 Requires at least: 4.0
 Tested up to: 5.0.2
 Requires PHP: 5.6
-Stable tag: 1.8.4.2
+Stable tag: 1.8.4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -289,7 +289,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-+ 1.8.4.3 =
+= 1.8.4.4 =
+* fixed issue with settings page blank
+
+= 1.8.4.3 =
 * fixed bug with custom templates not found in default location
 
 = 1.8.4.2 =

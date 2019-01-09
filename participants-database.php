@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.8.4.3
+ * Version: 1.8.4.4
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -333,7 +333,7 @@ class Participants_Db extends PDb_Base {
     add_action( 'admin_menu', array(__CLASS__, 'plugin_menu') );
     add_action( 'admin_init', array(__CLASS__, 'admin_init') );
     add_action( 'admin_init', array(__CLASS__, 'reg_page_setting_fix') );
-    add_action( 'current_screen', array(__CLASS__, 'init_settings_page') );
+    add_action( 'admin_init', array(__CLASS__, 'init_settings_page') );
     add_action( 'wp_enqueue_scripts', array(__CLASS__, 'register_assets'), 1 );
 
     add_action( 'wp_loaded', array(__CLASS__, 'process_page_request') ); // wp_loaded
@@ -3564,13 +3564,12 @@ class Participants_Db extends PDb_Base {
   /**
    * initializes the settings UI on the settings page
    * 
-   * called on the current_screen hook
+   * called on the admin_init hook
    * 
-   * @param WP_Screen $screen
    */
-  public static function init_settings_page( $screen )
+  public static function init_settings_page()
   {
-    if ( $screen->id === 'participants-database_page_participants-database_settings_page' || $screen->id === 'options' ) {
+    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === self::$plugin_page . '_settings_page' ) {
       /*
        * intialize the plugin settings for the plugin settings pages
        */
