@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -110,7 +110,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
     if ( !is_array( $default_options ) || empty( $default_options ) ) {
 
-      add_filter( 'current_screen', array($this, 'save_default_options'), 20 );
+      add_filter( 'plugins_loaded', array($this, 'save_default_options'), 20 );
 
     }
 
@@ -137,6 +137,10 @@ class PDb_Settings extends xnau_Plugin_Settings {
   public function get_default_options()
   {
     $defaults = array();
+    
+    if ( ! is_array( $this->plugin_settings ) || empty( $this->plugin_settings ) ) {
+      $this->_define_settings();
+    }
     
     foreach ( $this->plugin_settings as $setting ) {
       $defaults[$setting['name']] = isset( $setting['options']['value'] ) ? $setting['options']['value'] : '';
