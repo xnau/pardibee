@@ -1855,10 +1855,10 @@ class Participants_Db extends PDb_Base {
 
           break;
 
-        default :
+        default : // process the non-internal fields
 
           if ( !isset( $post[$column->name] ) ) {
-            continue;
+            break;
           }
 
           switch ( $column->form_element ) {
