@@ -171,7 +171,7 @@ class PDb_FormElement extends xnau_FormElement {
    * this supplants the function Participants_Db::prep_field_for_display
    * 
    * @param object|string $field a PDb_Field_Item object or field name
-   * @param bool   $html  if true, retuns the value wrapped in HTML, false returns 
+   * @param bool   $html  if true, returns the value wrapped in HTML, false returns 
    *                      the formatted value alone
    * @return string the object's current value, formatted
    */
@@ -208,6 +208,7 @@ class PDb_FormElement extends xnau_FormElement {
 
         
         case 'image-upload' :
+          
           switch ( $field->module() ) {
             case 'single':
             case 'list':
