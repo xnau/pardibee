@@ -296,6 +296,9 @@ class Participants_Db extends PDb_Base {
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
     
+    // set the debug global if not already
+    self::set_debug_mode();
+    
     /*
      * initialize WP Session Manager if not already present
      * 
@@ -347,8 +350,6 @@ class Participants_Db extends PDb_Base {
     // set up the database for any new blogs
     add_action( 'wpmu_new_blog', array( 'PDb_Init', 'new_blog' ) );
     add_action( 'delete_blog', array( 'PDb_Init', 'delete_blog' ), 10, 2 );
-
-    add_filter( 'wp_headers', array(__CLASS__, 'control_caching') );
     /**
      * @since 1.6.3
      * added global constant to enable multilingual content of the type that qtranslate-x 
@@ -381,9 +382,6 @@ class Participants_Db extends PDb_Base {
     add_action( 'pdb-shortcode_present', function () {
       add_filter( 'the_content', array( 'Participants_Db', 'fix_shortcode_special_chars' ), 5 );
     } );
-    
-    // set the debug global if not already
-    self::set_debug_mode();
     
     // action for handling the list columns UI
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
@@ -516,7 +514,7 @@ class Participants_Db extends PDb_Base {
   {
     
     /*
-     * instantiate the settings class; this only sets up the settings definitions, 
+     * instantiate the settings class; this only sets up the settings values, 
      * the WP Settings API may not be available at this point, so we register the 
      * settings UI on the 'admin_menu' hook
      */
@@ -657,7 +655,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '2.0' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
 //      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
@@ -1116,6 +1114,15 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_groups( $column = '*', $exclude = false )
   {
+    $cachekey = false;
+    // check for the cached default return value
+    if ( $column === '*' && $exclude === false ) {
+      $cachekey = 'pdb-groups-array';
+      $groups = wp_cache_get( $cachekey );
+      if ( $groups ) {
+        return $groups;
+      }
+    }
 
     global $wpdb;
 
@@ -1155,6 +1162,11 @@ class Participants_Db extends PDb_Base {
       // build an array indexed by the group's name
       foreach ( $groups as $group )
         $group_index[$group['name']] = $group;
+
+      if ( $cachekey ) {
+        // set the cache
+        wp_cache_set( $cachekey, $group_index );
+      }
 
       return $group_index;
     }
@@ -1315,7 +1327,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function is_column( $string )
   {
-
     return isset( self::$fields[$string] );
   }
 
@@ -1851,10 +1862,10 @@ class Participants_Db extends PDb_Base {
 
           break;
 
-        default :
+        default : // process the non-internal fields
 
           if ( !isset( $post[$column->name] ) ) {
-            continue;
+            break;
           }
 
           switch ( $column->form_element ) {
@@ -2258,7 +2269,7 @@ class Participants_Db extends PDb_Base {
    * given an identifier, returns the id of the record identified. If there is
    * more than one record with the given term, returns the first one.
    *
-   * @global object $wpdb
+   * @global wpdb $wpdb
    * @param string $term the column to match
    * @param string $value the value to search for
    * @param bool   $single if true, return only one ID
@@ -2268,25 +2279,35 @@ class Participants_Db extends PDb_Base {
    */
   private static function _get_participant_id_by_term( $term, $value, $single = true )
   {
-
-    global $wpdb;
-
-    if ( !self::is_column( $term ) )
+    if ( $value === false || is_null( $value ) || !self::is_column( $term ) )
       return false;
+
+    $cachekey = 'pdb-record_by_term_' . $term;
+    $output = wp_cache_get( $value, $cachekey, false, $found );
+    
+    if ( ! $found ) {
+    global $wpdb;
 
     $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
     $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
 
-    if ( !is_array( $result ) )
-      return false;
-
+      if ( !is_array( $result ) ) {
+        $output = false;
+      } else {
     $output = array();
 
     foreach ( $result as $id ) {
       $output[] = current( $id );
     }
+      }
+      wp_cache_set($value, $output, $cachekey);
+    }
 
-    return $single ? current( $output ) : $output;
+    if ( $output === false ) {
+      return false;
+    } else {
+      return $single ? current( $output ) : $output;
+    }
   }
   
   /**
@@ -2339,7 +2360,7 @@ class Participants_Db extends PDb_Base {
 
     global $wpdb;
 
-    $id_exists = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' LIMIT 1 )", $id ) );
+    $id_exists = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' LIMIT 1", $id ) );
 
     if ( NULL !== $id_exists )
       return $id_exists === '0' ? false : true;
@@ -3547,14 +3568,15 @@ class Participants_Db extends PDb_Base {
   /**
    * sets up the plugin admin menus
    * 
+   * fired on the admin_menu hook
+   * 
    * @return null
    */
   public static function plugin_menu()
   {
-    global $pagenow;
-    if ( ($pagenow == 'admin.php' && filter_input( INPUT_GET, 'page' ) === 'participants-database_settings_page') || $pagenow == 'options.php' ) {
+    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === self::$plugin_page . '_settings_page' ) {
       /*
-       * intialize the plugin settings for the plugin settings pages
+       * intialize the plugin settings for the plugin settings page
        */
       self::$Settings->initialize();
     }
