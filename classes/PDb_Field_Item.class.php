@@ -363,7 +363,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * sets the html mode
    * 
-   * @param bool $mode tur to use html, false to use ony formatted values
+   * @param bool $mode true to use html, false to use only formatted values
    */
   public function html_mode( $mode )
   {
