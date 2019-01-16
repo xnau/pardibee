@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -132,11 +132,16 @@ class PDb_Settings extends xnau_Plugin_Settings {
    * 
    * this is used to overload the options
    * 
-   * @return array name => defualt
+   * @return array name => default
    */
   public function get_default_options()
   {
     $defaults = array();
+    
+    if ( ! is_array( $this->plugin_settings ) || empty( $this->plugin_settings ) ) {
+      $this->_define_settings();
+    }
+    
     foreach ( $this->plugin_settings as $setting ) {
       $defaults[$setting['name']] = isset( $setting['options']['value'] ) ? $setting['options']['value'] : '';
     }
@@ -1221,6 +1226,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
     
 
     $this->plugin_settings[] = array(
+        'name' => 'sync_timezone',
+        'title' => __( 'Sync php Timezone', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'when checked, the php timezone will be set to the WordPress timezone.', 'participants-database' ) . $this->settings_help( 'sync-php-timezone'),
+            'value' => 1,
+            'options' => array(1, 0),
+        ),
+    );
+
+    $this->plugin_settings[] = array(
         'name' => 'pdb_debug',
         'title' => __( 'Enable Debugging', 'participants-database' ),
         'group' => 'pdb-advanced',
@@ -1228,7 +1246,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'dropdown',
             'help_text' => sprintf(__( 'this will enable writing to the %s debugging log.', 'participants-database' ), Participants_Db::$plugin_title ) . $this->settings_help( 'enable-debugging'),
-            'value' => 0,
+            'value' => $this->debug_value(),
             'options' => array( 
                 __('off', 'participants-database') => 0, 
                 __('plugin debug', 'participants-database') => 1,
@@ -1445,7 +1463,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
       if ( $pages === false ) {
         $pages = get_posts( array('post_type' => 'page', 'posts_per_page' => -1) );
-        wp_cache_set( 'pdb-pagelist_posts', $pages, '', Participants_Db::cache_expire() );
+        wp_cache_set( 'pdb-pagelist_posts', $pages );
       }
 
       foreach ( $pages as $page ) {
@@ -1465,7 +1483,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
         }
        */
-      wp_cache_set( $key, $pagelist, 'pdb-get_pagelist', Participants_Db::cache_expire() );
+      wp_cache_set( $key, $pagelist, 'pdb-get_pagelist' );
     }
 
     return $pagelist;
@@ -1553,6 +1571,19 @@ ORDER BY g.order, v.order';
       $columnlist[Participants_Db::title_key( $column->title, $column->name )] = $column->name;
     }
     return $columnlist;
+  }
+
+  /**
+   * gets the current PDB_DEBUG value
+   * 
+   * @return int
+   */
+  public function debug_value()
+  {
+    if ( defined('PDB_DEBUG') ) {
+      return intval(PDB_DEBUG) > 2 ? 2 : intval(PDB_DEBUG);
+    }
+    return 0;
   }
 
   /**
