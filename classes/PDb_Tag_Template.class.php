@@ -88,6 +88,7 @@ class PDb_Tag_Template {
   {
     $tag_template = new self( $template, $data );
     $tag_template->rich_text = true;
+    
     return $tag_template->_replace_tags();
   }
 
@@ -212,7 +213,7 @@ class PDb_Tag_Template {
    */
   private function data_cache_key()
   {
-    return $this->data['id'] . '-' . count( $this->data );
+    return $this->data['id'] . '-' . count( $this->data ) . '-' . strval($this->raw) . strval($this->html);
   }
 
   /**
@@ -251,9 +252,8 @@ class PDb_Tag_Template {
        * @version 1.7.1.4 added "raw" mode
        * 
        */
-      if ( $this->raw ) {
-        $field->html_mode( false );
-      }
+      $field->html_mode( ! $this->raw );
+      
       $value = $field->get_value_display();
     }
     return $value;
