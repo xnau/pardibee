@@ -772,6 +772,7 @@ abstract class PDb_Shortcode {
       /* @var $field PDb_Form_Field_Def */
       if ( $field->group() == $group && in_array( $field->name(), $this->display_columns ) ) {
         $group_fields[$field->name()] = new PDb_Field_Item( $field );
+        $group_fields[$field->name()]->set_module( $this->module );
       }
     }
     return $group_fields;
