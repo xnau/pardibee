@@ -1237,12 +1237,14 @@ abstract class xnau_FormElement {
 
     foreach ( $this->_make_assoc( $this->options ) as $title => $value ) {
 
+      $title = Participants_Db::apply_filters( 'translate_string', esc_html( stripslashes( $title ) ) );
+      
       if ( ($value === false or $value === 'false' or $value === 'optgroup') and ! empty( $title ) ) {
         $this->_add_options_divider( $title );
       } elseif ( $value === 'other' ) {
         $otherlabel = $title;
       } elseif ( strlen( $value ) > 0 ) {
-        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . Participants_Db::apply_filters( 'translate_string', strip_tags( $title ) ) . '</option>', -1 );
+        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . $title . '</option>', -1 );
       }
     }
     // add the "other" option
