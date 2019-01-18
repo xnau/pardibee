@@ -875,6 +875,7 @@ class PDb_Base {
    */
   public static function string_static_translation( $string )
   {
+    //error_log(__METHOD__.' string: '.$string . ' called by: '. print_r(wp_debug_backtrace_summary( null, 3 ),1) );
     return is_string( $string ) && !is_numeric( $string ) ? __( $string ) : $string;
   }
 
