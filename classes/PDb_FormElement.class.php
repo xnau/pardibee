@@ -981,15 +981,18 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_datatype( $element )
   {
+    $form_element = is_array( $element ) ? $element['form_element'] : $element;
+    $fieldname = is_array( $element ) ? $element['name'] : '';
     /**
      * @version 1.7.0.7
      * @filter pdb-form_element_datatype
      * 
      * @param string $datatype the datatype found by the parent method
      * @param string  $form_element the name of the form element
+     * @param string name of the field if defined
      * @return string $datatype 
      */
-    return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $element ), is_array( $element ) ? $element['form_element'] : $element  );
+    return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $form_element ), $form_element, $fieldname );
   }
 
 }
