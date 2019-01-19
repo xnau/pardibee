@@ -47,6 +47,11 @@ class PDb_Manage_Fields {
    * @var array of error messages
    */
   var $error_msgs = array();
+  
+  /**
+   * @var string base URL to the help page
+   */
+  const help_page = 'https://xnau.com/the-manage-database-fields-page';
 
   /**
    * instantiate the class
