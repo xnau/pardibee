@@ -215,7 +215,7 @@ class PDb_Field_Editor {
                 'value' => $this->attribute_value( $attribute ),
                 'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
             ),$config ) );
-
+    
     switch ( true ) {
 
       case ( $attribute === 'selectable' ):
@@ -584,7 +584,7 @@ class PDb_Field_Def_Parameter {
     switch ( $this->name ) {
       case 'attributes':
       case 'options':
-        $this->config['value'] = Participants_Db::array_to_string_notation( $this->config['value'] );
+        $this->config['value'] = PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] );
         break;
       case 'deletable':
         return $this->delete_button();
@@ -677,10 +677,16 @@ class PDb_Field_Def_Parameter {
       case 'readonly':
         $name = 'readonly';
         break;
+      case 'options':
+        $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-options" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+        break;
+      case 'attributes':
+        $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-attributes" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+        break;
       default:
         $name = $this->name;
     }
-    return isset( $titles[$name] ) ? $titles[$name] : '';
+    return isset( $titles[$name] ) ? $titles[$name] : $name;
   }
 
 }
