@@ -1766,15 +1766,11 @@ abstract class xnau_FormElement {
   /**
    * returns a MYSQL datatype appropriate to the form element type
    * 
-   * @param string|array $element the (string) form element type or (array) field definition array
+   * @param string $element name of the form element
    * @return string the name of the MySQL datatype
    */
-  public static function get_datatype( $element )
+  public static function get_datatype( $form_element )
   {
-
-    $form_element = is_array( $element ) ? $element['form_element'] : $element;
-    $values = isset( $element['values'] ) ? maybe_unserialize( $element['values'] ) : false;
-
     switch ( $form_element ) {
 
       case 'timestamp':
