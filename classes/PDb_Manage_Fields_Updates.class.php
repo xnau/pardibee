@@ -55,14 +55,29 @@ class PDb_Manage_Fields_Updates {
 
         $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
 
-        foreach ( array('options', 'attributes') as $attname ) {
+        foreach ( array( 'values', 'options', 'attributes' ) as $attname ) {
+          
+          /*
+           * format the value for attributes that use a values array
+           * 
+           * also, if the deprecated 'values' attribute is present, place its 
+           * data into the correct attribute
+           */
+          
           if ( isset( $row[$attname] ) ) {
-            $row[$attname] = self::prep_values_array( $row[$attname] );
+            
+            $attvalue = $row[$attname];
+            
+            if ( $attname === 'values' && strlen( $attvalue ) > 0 ) {
+              $correct_attribute = PDb_FormElement::is_value_set($row['form_element']) ? 'options' : 'attributes';
+              if ( strlen( $row[$correct_attribute] ) === 0 ) {
+                $attname = $correct_attribute;
+                $row['values'] = '';
+              } 
+            }
+            $row[$attname] = self::string_notation_to_array( $attvalue );
           }
         }
-
-        // clear out the deprecated values column
-        $row['values'] = null;
 
         if ( !empty( $row['validation'] ) && !in_array( $row['validation'], array('yes', 'no') ) ) {
 
@@ -74,7 +89,7 @@ class PDb_Manage_Fields_Updates {
          * 
          * the 'datatype_warning' needs to be accepted for this to take place
          */
-        if ( isset( $row['group'] ) && $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['values'], $row['form_element'] ) ) {
+        if ( isset( $row['group'] ) && $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['form_element'] ) ) {
           if ( !isset( $row['datatype_warning'] ) || ( isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) ) {
             $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
           } else {
@@ -99,8 +114,8 @@ class PDb_Manage_Fields_Updates {
               $row['readonly'] = 1;
               break;
             case 'decimal':
-              if ( !isset( $row['values']['step'] ) ) {
-                $row['values']['step'] = 'any';
+              if ( !isset( $row['attributes']['step'] ) ) {
+                $row['attributes']['step'] = 'any';
               }
               break;
           }
@@ -438,6 +453,45 @@ class PDb_Manage_Fields_Updates {
     wp_redirect( add_query_arg( 'page', 'participants-database-manage_fields', admin_url( 'admin.php' ) ) );
     exit();
   }
+  
+
+  /**
+   * prepares a serialized array for display
+   * 
+   * displays an array as a series of comma-separated strings
+   * 
+   * @param string|array $array of field options or attributes
+   * @return string the prepared string
+   */
+  public static function array_to_string_notation( $array )
+  {
+
+    $value_list = maybe_unserialize( $array );
+
+    if ( !is_array( $value_list ) ) {
+      return $value_list;
+    }
+    /**
+     * @see PDb_Manage_Fields::prep_values_array()
+     */
+    $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
+    $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
+
+    if ( PDb_FormElement::is_assoc( $value_list ) ) {
+      
+      /*
+       * here, we create a string representation of an associative array, using 
+       * :: to denote a name=>value pair
+       */
+      $temp = array();
+      foreach ( $value_list as $k => $v ) {
+        $temp[] = $k . $pair_delim . $v;
+      }
+      $value_list = $temp;
+    }
+
+    return implode( $option_delim, $value_list );
+  }
 
   /**
    * breaks the submitted comma-separated string of values into elements for use in 
@@ -449,10 +503,10 @@ class PDb_Manage_Fields_Updates {
    * there is no syntax checking...if there is no key string before the ::, the element 
    * will have an empty key, but it will be obvious to the user
    * 
-   * @param string $values
-   * @return array
+   * @param string $values in the field settings notation
+   * @return array as $title => $value
    */
-  public static function prep_values_array( $values )
+  public static function string_notation_to_array( $values )
   {
     /**
      * allows for alternate strings to be used in structuring the field options 
@@ -563,16 +617,15 @@ class PDb_Manage_Fields_Updates {
    * 
    * @global wpdb $wpdb
    * @param string  $fieldname
-   * @param array $field_values the new values definition
    * @param string $form_element the field form element
    * @return string|bool false if no change, new datatype if changed
    */
-  protected function new_datatype( $fieldname, $field_values, $form_element )
+  protected function new_datatype( $fieldname, $form_element )
   {
     global $wpdb;
     $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . ' WHERE `field` = "%s"';
     $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
-    $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'values' => $field_values, 'form_element' => $form_element) );
+    $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'form_element' => $form_element) );
     $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
     return $this->datatype_has_changed( $current_type, $new_type ) ? $new_type : false;
   }
