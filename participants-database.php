@@ -2435,37 +2435,12 @@ class Participants_Db extends PDb_Base {
    * 
    * displays an array as a series of comma-separated strings
    * 
-   * @param string $string
+   * @param string|array $array of field options or attributes
    * @return string the prepared string
    */
-  public static function array_to_string_notation( $string )
+  public static function array_to_string_notation( $array )
   {
-
-    $value = maybe_unserialize( $string );
-
-    if ( !is_array( $value ) ) {
-      return $value;
-    }
-    /**
-     * @see PDb_Manage_Fields::prep_values_array()
-     */
-    $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
-    $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
-
-    if ( PDb_FormElement::is_assoc( $value ) ) {
-      
-      /*
-       * here, we create a string representation of an associative array, using 
-       * :: to denote a name=>value pair
-       */
-      $temp = array();
-      foreach ( $value as $k => $v ) {
-        $temp[] = $k . $pair_delim . $v;
-      }
-      $value = $temp;
-    }
-
-    return implode( $option_delim, $value );
+    return PDb_Manage_Fields_Updates::array_to_string_notation($array);
   }
 
   /**
