@@ -690,6 +690,10 @@ button .dashicons {
   width: 3em;
 }
 
+.manage-fields label a {
+  text-decoration: none;
+}
+
 
 
 .mirror {
