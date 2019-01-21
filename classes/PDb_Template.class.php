@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -543,6 +543,7 @@ class PDb_Template {
           $this->fields->{$name}->set_value( $this->values[$name] );
         }
         foreach ( $this->record as $name => $group ) {
+          if ( count( (array) $group->fields ) === 0 ) continue 1; // skip empty groups
           $this->groups[$name] = $this_group = new stdClass();
           $this_group->name = $name;
           $this_group->title = $group->title;
