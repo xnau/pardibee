@@ -388,6 +388,7 @@ class PDb_Field_Editor {
   {
     // set up the built-in form elements
     switch ( $this->field_def->form_element() ) {
+      
       case 'text-line':
       case 'text-area':
       case 'rich-text':
@@ -395,6 +396,7 @@ class PDb_Field_Editor {
         $this->colorclass = 'text';
         $def = array();
         break;
+      
       case 'checkbox':
       case 'radio':
       case 'dropdown':
@@ -411,6 +413,7 @@ class PDb_Field_Editor {
             ),
         );
         break;
+      
       case 'date':
       case 'numeric':
       case 'decimal':
@@ -422,10 +425,10 @@ class PDb_Field_Editor {
             ),
         );
         break;
+      
       case 'link':
       case 'image-upload':
       case 'file-upload':
-        
         $this->colorclass = 'upload';
         $def = array(
             'validation' => array(
@@ -435,6 +438,7 @@ class PDb_Field_Editor {
             'persistent' => false,
         );
         break;
+      
       case 'hidden':
         $def = array(
             'help_text' => false,
@@ -444,6 +448,7 @@ class PDb_Field_Editor {
         );
         $this->colorclass = 'utility';
         break;
+      
       case 'captcha':
         $this->colorclass = 'captcha';
         $def = array(
@@ -454,6 +459,7 @@ class PDb_Field_Editor {
             ),
         );
         break;
+      
       case 'placeholder':
         
         $this->colorclass = 'utility';
@@ -469,6 +475,7 @@ class PDb_Field_Editor {
             'readonly' => false,
         );
         break;
+      
       case 'timestamp':
         
         $this->colorclass = 'numeric';
@@ -481,6 +488,7 @@ class PDb_Field_Editor {
             'form_element' => false,
         );
         break;
+      
       default:
         /**
          * defines the definition attribute switches for a specific form element type
@@ -504,6 +512,7 @@ class PDb_Field_Editor {
          */
         $this->colorclass = Participants_Db::apply_filters( $this->field_def->form_element() . '_form_element_colorclass', 'custom' );
     }
+    
     if ( $this->field_def->group() === 'internal' ) {
       $def = array_merge( $def, array(
           'selectable' => true,
