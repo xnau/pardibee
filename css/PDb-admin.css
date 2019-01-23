@@ -895,8 +895,9 @@ button .dashicons {
 .participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active a {
   background-color: rgba(0,0,0,0);
   padding-bottom: 11px;
+  font-weight: bold;
 }
-.participants_db .ui-tabs-nav .ui-state-default.utility a {
+.participants_db .ui-tabs-nav .utility a {
   background-color: hsla(0, 0%, 0%, 0.2);
   color: hsla(0,0%,44.3%,1);
 }
