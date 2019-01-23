@@ -87,8 +87,9 @@ class PDb_Manage_Fields {
         <ul>
           <?php
           $mask = '<span class="mask"></span>';
-          foreach ( $this->groups as $group ) {
-            echo '<li><a href="#' . $group . '" id="tab_' . $group . '">' . $this->group_title($group) . '</a>' . $mask . '</li>';
+          foreach ( $this->groups as $group_name ) {
+            $group = Participants_Db::get_group($group_name);
+            echo '<li class="' . $group->mode . '"><a href="#' . $group_name . '" id="tab_' . $group_name . '">' . $this->group_title($group_name) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -116,7 +117,7 @@ class PDb_Manage_Fields {
       protected function print_group_tab_content( $group )
       {
         $internal_group = $group === 'internal';
-        $hscroll = Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
+        $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
 
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
