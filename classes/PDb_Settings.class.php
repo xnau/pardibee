@@ -908,6 +908,30 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => 'email',
         )
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'retrieve_link_title',
+        'title' => __( 'Lost Private Link Form Title', 'participants-database' ),
+        'group' => 'pdb-resend',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'the title shown above the link request form', 'participants-database' ),
+            'value' => __( 'Request your Private Link', 'participants-database' ),
+        )
+    );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'retrieve_link_success',
+        'title' => __( 'Lost Private Link Success Message', 'participants-database' ),
+        'group' => 'pdb-resend',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'the message shown when a private link is successfully sent', 'participants-database' ),
+            'value' => __('Success: your private link has been emailed to you.','participants-database'),
+        )
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'id_field_prompt',
