@@ -2949,7 +2949,7 @@ class Participants_Db extends PDb_Base {
     if ( $count > $max_tries ) {
 
 // too many tries, come back tomorrow
-      error_log( 'Participants Database Plugin: IP blocked for too many retrieval attempts from IP ' . self::user_ip() . ' in 24-hour period.' );
+      self::debug_log( 'Participants Database Plugin: IP blocked for too many retrieval attempts from IP ' . self::user_ip() . ' in 24-hour period.' );
       return;
     }
     $count++;
