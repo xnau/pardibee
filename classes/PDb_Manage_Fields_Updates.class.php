@@ -31,6 +31,8 @@ class PDb_Manage_Fields_Updates {
     add_action( 'admin_post_add_field', array($this, 'add_field') );
     add_action( 'admin_post_add_group', array($this, 'add_group') );
     add_action( 'admin_post_update_groups', array($this, 'update_groups') );
+    
+    PDb_Admin_Notices::post_info( sprintf('The Participants Database Manage Database Fields page has been completely redesigned. Use the "Help" tab for %sinstructions on using the new interface!%s','<a href="https://xnau.com/the-manage-database-fields-page/" target="_blank">','</a>'), __( 'Manage Database Fields', 'participants-database' ));
   }
 
   /**
