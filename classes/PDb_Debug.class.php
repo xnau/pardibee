@@ -194,11 +194,11 @@ class PDb_Debug {
         </div>
 
       </div>
-      <form id="pdb-debug-refresh" action="<?php echo $_SERVER['REQUEST_URI'] ?>">      
+      <form id="pdb-debug-refresh" action="<?php echo esc_attr( $_SERVER['REQUEST_URI'] ) ?>">      
         <?php wp_nonce_field( $this->action ) ?>
         <div class="form-group">
-          <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participnats-database' ) ?></button>
-          <button class="button-primary pdb-debugging-refresh" data-action="refresh" ><?php _e( 'Refresh', 'participnats-database' ) ?></button>
+          <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participants-database' ) ?></button>
+          <button class="button-primary pdb-debugging-refresh" data-action="refresh" ><?php _e( 'Refresh', 'participants-database' ) ?></button>
         </div>
       </form>
 
