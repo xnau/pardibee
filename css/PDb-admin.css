@@ -483,6 +483,10 @@ body[class*='participants-database'] .text-block li {
 }
 .manage-fields-wrap .attribute-control label {
   display: block;
+  opacity: 0.8;
+}
+.manage-fields-wrap .attribute-control.checkbox-control-wrap label {
+  opacity: 1;
 }
 .def-fieldset break {
   flex-basis: 100%;
@@ -651,6 +655,9 @@ button .dashicons {
 .participants_db .manage-fields-wrap  select,
 .participants_db .manage-fields-wrap textarea {
   font-size: 120%;
+}
+.participants_db .manage-fields-wrap input.title-field {
+  font-weight: bold;
 }
 .participants_db input.otherfield {
   max-width: 10em;
