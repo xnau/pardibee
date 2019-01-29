@@ -543,6 +543,7 @@ class PDb_Template {
           $this->fields->{$name}->set_value( $this->values[$name] );
         }
         foreach ( $this->record as $name => $group ) {
+          if ( count( (array) $group->fields ) === 0 ) continue 1; // skip empty groups
           $this->groups[$name] = $this_group = new stdClass();
           $this_group->name = $name;
           $this_group->title = $group->title;
