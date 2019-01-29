@@ -167,6 +167,7 @@ class PDb_Field_Editor {
       case 'default':
         $config = array(
             'type' => 'text-line',
+            'class' => $attribute . '-field',
         );
         break;
       case 'help_text':
@@ -343,6 +344,8 @@ class PDb_Field_Editor {
   /**
    * provides the set of default definition attribute switches
    * 
+   * this also defines the order of attributes in the editor
+   * 
    * @return array
    */
   private function default_def_att_switches()
@@ -353,8 +356,8 @@ class PDb_Field_Editor {
         'selectable' => true,
         'orderable' => true,
         'deletable' => true,
-        'name' => true,
         'title' => true,
+        'name' => true,
         'groupable' => true,
         'form_element' => true,
         'help_text' => true,
