@@ -45,7 +45,7 @@
           
         </div>
 
-        <?php endwhile; // fields ?>
+    <?php endwhile ?>
 
         </fieldset>
         
