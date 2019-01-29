@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -194,7 +194,7 @@ class PDb_Debug {
         </div>
 
       </div>
-      <form id="pdb-debug-refresh" action="<?php echo $_SERVER['REQUEST_URI'] ?>">      
+      <form id="pdb-debug-refresh" >
         <?php wp_nonce_field( $this->action ) ?>
         <div class="form-group">
           <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participnats-database' ) ?></button>
