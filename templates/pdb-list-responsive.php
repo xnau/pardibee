@@ -84,8 +84,6 @@
 
     <?php if ( $record_count > 0 ) : ?>
 
-      <pre><?php echo get_class( $this ) ?></pre>
-
       <?php while ( $this->have_records() ) : $this->the_record(); // each record is one row ?>
         <section id="record-<?php echo $this->record->record_id ?>">
           <?php while ( $this->have_fields() ) : $this->the_field(); // each field is one cell ?>
