@@ -297,6 +297,7 @@ class Participants_Db extends PDb_Base {
     self::$plugin_path = plugin_dir_path( __FILE__ );
     
     // set the debug global if not already
+    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), self::$plugin_version );
     self::set_debug_mode();
     
     /*
@@ -642,7 +643,6 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', plugins_url( '/js/aux_plugin_settings.js', __FILE__ ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery'), self::$plugin_version );
-    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), self::$plugin_version );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
     if ( self::_set_admin_custom_css() ) {
