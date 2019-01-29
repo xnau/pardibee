@@ -277,10 +277,12 @@ class PDb_List extends PDb_Shortcode {
     // the list query object can be modified at this point to add a custom search
     do_action( Participants_Db::$prefix . 'list_query_object', $this->list_query );
 
-    /*
+    /**
      * allow the query to be altered before the records are retrieved
      * 
-     * pdb-list_query
+     * @filter pdb-list_query
+     * @param string the list query
+     * @return string list query
      */
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
 
