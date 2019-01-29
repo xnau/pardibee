@@ -211,7 +211,7 @@ class PDb_Admin_Notices {
       }
     }
 
-    $this->purge_transient_notices();
+    //$this->purge_transient_notices();
   }
 
   /**
@@ -294,7 +294,7 @@ class PDb_Admin_Notices {
   private function purge_transient_notices()
   {
     $this->admin_notice_list = array_filter( $this->admin_notice_list, function ($notice) {
-      return ! $notice->persistent;
+      return $notice->persistent;
     } );
     
     $this->update_notices();
