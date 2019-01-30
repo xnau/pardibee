@@ -79,46 +79,46 @@ class PDb_Admin_Notices {
    * 
    * @return string unique id for the notice
    */
-  public static function post_error( $message, $context = '', $persistent = true )
+  public static function post_error( $message, $context = '', $persistent = false )
   {
     $notice = self::get_instance();
     return $notice->error( $message, $context, $persistent );
   }
 
-  public function error( $message, $context = '', $persistent = true )
+  public function error( $message, $context = '', $persistent = false )
   {
     return $this->notice( 'error', $message, $context, $persistent );
   }
 
-  public static function post_warning( $message, $context = '', $persistent = true )
+  public static function post_warning( $message, $context = '', $persistent = false )
   {
     $notice = self::get_instance();
     return $notice->warning( $message, $context, $persistent );
   }
 
-  public function warning( $message, $context = '', $persistent = true )
+  public function warning( $message, $context = '', $persistent = false )
   {
     return $this->notice( 'warning', $message, $context, $persistent );
   }
 
-  public static function post_success( $message, $context = '', $persistent = true )
+  public static function post_success( $message, $context = '', $persistent = false )
   {
     $notice = self::get_instance();
     return $notice->success( $message, $context, $persistent );
   }
 
-  public function success( $message, $context = '', $persistent = true )
+  public function success( $message, $context = '', $persistent = false )
   {
     return $this->notice( 'success', $message, $context, $persistent );
   }
 
-  public static function post_info( $message, $context = '', $persistent = true )
+  public static function post_info( $message, $context = '', $persistent = false )
   {
     $notice = self::get_instance();
     return $notice->info( $message, $context, $persistent );
   }
 
-  public function info( $message, $context = '', $persistent = true )
+  public function info( $message, $context = '', $persistent = false )
   {
     return $this->notice( 'info', $message, $context, $persistent );
   }
@@ -272,7 +272,7 @@ class PDb_Admin_Notices {
    */
   private function notice_is_shown( pdb_admin_notice_message $notice )
   {
-    return $notice->is_dimissed() === false && ( $notice->is_global_message() || $this->is_plugin_screen() );
+    return $notice->show_to_current_user() && $notice->is_dimissed() === false && ( $notice->is_global_message() || $this->is_plugin_screen() );
   }
   
   /**
@@ -518,6 +518,28 @@ class pdb_admin_notice_message {
       case 'type':
         return $this->type;
     }
+  }
+  
+  /**
+   * tells if the current message should be shown to the current user
+   * 
+   * @return bool true if it should be shown
+   */
+  public function show_to_current_user()
+  {
+    $current_user = wp_get_current_user();
+    return $this->message_user_id() == $current_user->ID;
+  }
+  
+  /**
+   * tells the user id associated with the message
+   * 
+   * @return int user ID
+   */
+  public function message_user_id()
+  {
+    list( $id, $hash ) = explode( '-', $this->id );
+    return $id;
   }
 
   /**
