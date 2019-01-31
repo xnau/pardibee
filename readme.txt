@@ -289,6 +289,12 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.8.4.8 =
+* fixed debug log white screen issue
+* signup form skips empty field groups
+* admin notices now dismissed for each user
+* removed spurious text from responsive list template
+
 = 1.8.4.7 =
 * fixed issue with images lacking a link in emails
 * optgroup titles now passed through translation filter
