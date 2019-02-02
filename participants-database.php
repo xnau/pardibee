@@ -296,9 +296,8 @@ class Participants_Db extends PDb_Base {
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
     
-    wp_register_script( Participants_Db::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), '0.7' );
-    
     // set the debug global if not already
+    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), self::$plugin_version );
     self::set_debug_mode();
     
     /*
@@ -656,7 +655,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '2.0' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '2.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
 //      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
@@ -1163,7 +1162,7 @@ class Participants_Db extends PDb_Base {
       // build an array indexed by the group's name
       foreach ( $groups as $group )
         $group_index[$group['name']] = $group;
-
+      
       if ( $cachekey ) {
         // set the cache
         wp_cache_set( $cachekey, $group_index );
@@ -2289,8 +2288,8 @@ class Participants_Db extends PDb_Base {
     if ( ! $found ) {
     global $wpdb;
 
-    $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
-    $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
+      $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
+      $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
 
       if ( !is_array( $result ) ) {
         $output = false;
@@ -3540,9 +3539,11 @@ class Participants_Db extends PDb_Base {
     <?php
     self::admin_message();
   }
-
+  
   /**
    * sets up the plugin admin menus
+   * 
+   * fired on the admin_menu hook
    * 
    * fired on the admin_menu hook
    * 
@@ -3555,7 +3556,7 @@ class Participants_Db extends PDb_Base {
        * intialize the plugin settings for the plugin settings page
        */
       self::$Settings->initialize();
-    }
+    } 
 
     /*
      * this allows the possibility of a child class handling the admin list display

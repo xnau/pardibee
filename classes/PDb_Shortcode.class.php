@@ -55,7 +55,7 @@ abstract class PDb_Shortcode {
    * @var string holds the template file path
    */
   protected $template;
-  
+
   /**
    * @var string the current template version; 0 if no version found
    */
@@ -155,7 +155,7 @@ abstract class PDb_Shortcode {
   public $current_group_pointer = 1;
 
   /**
-   * @var object the current Field object
+   * @var PDb_Field_Item the current Field object
    */
   public $field;
 
@@ -267,9 +267,8 @@ abstract class PDb_Shortcode {
       if ( filter_input( INPUT_GET, 'pdb-shortcode_clear', FILTER_SANITIZE_STRING ) ) {
         Participants_Db::$session->clear( 'shortcode_atts' );
       }
-      
+
       Participants_Db::$session->update( 'shortcode_atts', $this->shortcode_session() );
-      
     }
 
     $this->wrap_class = $this->prefix . $this->module . ' ' . $this->prefix . 'instance-' . $this->instance_index;
@@ -282,6 +281,12 @@ abstract class PDb_Shortcode {
     $this->wrap_class = trim( $this->wrap_class ) . ' ' . trim( $this->shortcode_atts['class'] );
     // set the template to use
     $this->set_template( $this->shortcode_atts['template'] );
+
+    /**
+     * @action pdb-shortcode_set
+     * @param object the currently instanted shortcode class
+     */
+    do_action( Participants_Db::$prefix . 'shortcode_set', $this );
   }
 
   /**
@@ -299,7 +304,7 @@ abstract class PDb_Shortcode {
 
     ob_start();
 
-    if ( PDB_DEBUG && stripos($this->template, 'bare') === false ) {
+    if ( PDB_DEBUG && stripos( $this->template, 'bare' ) === false ) {
       echo '<!-- template: ' . $this->template_basename( $this->template ) . ' -->';
     }
 
@@ -312,10 +317,10 @@ abstract class PDb_Shortcode {
     // this will be included in the subclass context
     $this->_include_template();
 
-    if ( PDB_DEBUG && stripos($this->template, 'bare') === false ) {
+    if ( PDB_DEBUG && stripos( $this->template, 'bare' ) === false ) {
       echo '<!-- end template: ' . $this->template_basename( $this->template ) . ' -->';
     }
-    
+
     /**
      * @filter 'pdb-{$module}_shortcode_output'
      * 
@@ -397,15 +402,15 @@ abstract class PDb_Shortcode {
     $this->template = $template;
     $this->get_template_version();
   }
-  
+
   /**
    * sets the template version property
    * 
    */
   protected function get_template_version()
   {
-    $contents = file_get_contents($this->template);
-    $findversion = preg_match('/@version (.+)\b/', $contents, $matches );
+    $contents = file_get_contents( $this->template );
+    $findversion = preg_match( '/@version (.+)\b/', $contents, $matches );
     $version = 0;
     if ( $findversion === 1 ) {
       $version = $matches[1];
@@ -492,7 +497,7 @@ abstract class PDb_Shortcode {
     if ( is_object( Participants_Db::$validation_errors ) ) {
 
       $errors = Participants_Db::$validation_errors->get_validation_errors();
-      if ( ! $this->_empty( $errors ) ) {
+      if ( !$this->_empty( $errors ) ) {
         return $errors;
       }
     }
@@ -554,11 +559,11 @@ abstract class PDb_Shortcode {
     // the first time through, use current()
     if ( $this->current_field_pointer == 1 ) {
       if ( is_object( $this->group ) ) {
-          $this->field = current( $this->group->fields );
-          $record_id = $this->participant_id;
+        $this->field = current( $this->group->fields );
+        $record_id = $this->participant_id;
       } else {
-          $this->field = current( $this->record->fields );
-          $record_id = $this->record->record_id;
+        $this->field = current( $this->record->fields );
+        $record_id = $this->record->record_id;
       }
     } else {
       if ( is_object( $this->group ) ) {
@@ -578,7 +583,7 @@ abstract class PDb_Shortcode {
      */
     $get_var_value = filter_input( INPUT_GET, $this->field->name(), FILTER_SANITIZE_STRING );
     if ( in_array( $this->module, array('signup', 'retrieve') ) and ! empty( $get_var_value ) ) {
-      $this->field->set_value($get_var_value);
+      $this->field->set_value( $get_var_value );
     }
 
     $this->current_field_pointer++;
@@ -628,7 +633,7 @@ abstract class PDb_Shortcode {
 
       $the_record = next( $this->records );
     }
-    
+
     $this->record = new PDb_Record_Item( (array) $the_record, key( $this->records ), $this->module );
 
     $this->reset_field_counter();
@@ -661,7 +666,7 @@ abstract class PDb_Shortcode {
       $all_empty_fields = true;
 
       foreach ( $group_fields as $field ) {
-        
+
         /* @var $field PDb_Field_Item */
 
         // set the current value of the field
@@ -671,7 +676,7 @@ abstract class PDb_Shortcode {
          * hidden fields are stored separately for modules that use them as
          * hidden input fields
          */
-        if ( ! $field->is_hidden_field() ) {
+        if ( !$field->is_hidden_field() ) {
           /*
            * add the field object to the record object
            */
@@ -814,7 +819,6 @@ abstract class PDb_Shortcode {
    */
   protected function _set_display_groups( $public_only = true )
   {
-
     global $wpdb;
     $groups = array();
     if ( !empty( $this->shortcode_atts['fields'] ) ) {
@@ -840,7 +844,7 @@ abstract class PDb_Shortcode {
          * get a list of all defined groups
          */
         $sql = 'SELECT g.name 
-                FROM ' . Participants_Db::$groups_table . ' g ORDER BY FIELD( g.name, "' . implode( '","', $group_list ) . '")';
+                  FROM ' . Participants_Db::$groups_table . ' g ORDER BY FIELD( g.name, "' . implode( '","', $group_list ) . '")';
 
         $result = $wpdb->get_results( $sql, ARRAY_N );
         foreach ( $result as $group ) {
@@ -906,7 +910,7 @@ abstract class PDb_Shortcode {
    */
   protected function _set_field_value( $field )
   {
-    if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
+    if ( !is_a( $field, 'PDb_Field_Item' ) ) {
       $field = new PDb_Field_Item( $field );
     }
     /*
@@ -915,7 +919,7 @@ abstract class PDb_Shortcode {
      */
     $record_value = isset( $this->participant_values[$field->name()] ) ? $this->participant_values[$field->name()] : '';
     $value = $record_value;
-    
+
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
       $value = isset( $_POST[$field->name()] ) ? $this->_esc_submitted_value( $_POST[$field->name()] ) : $value;
@@ -929,7 +933,7 @@ abstract class PDb_Shortcode {
     }
     if ( $field->is_hidden_field() ) {
       if ( in_array( $this->module, array('signup', 'record', 'retrieve') ) ) {
-        
+
         /**
          * use the dynamic value if no value has been set
          * 
@@ -947,8 +951,8 @@ abstract class PDb_Shortcode {
         $this->display_as_readonly( $field );
       }
     }
-    
-    $field->set_value($value);
+
+    $field->set_value( $value );
   }
 
   /**
@@ -1047,7 +1051,7 @@ abstract class PDb_Shortcode {
 
     $this->display_columns = $wpdb->get_col( $sql );
   }
-  
+
   /**
    * provides a list of suppressed form elements by module
    * 
@@ -1055,16 +1059,16 @@ abstract class PDb_Shortcode {
    */
   private function suppressed_elements()
   {
-    switch( $this->module ) {
+    switch ( $this->module ) {
       case 'signup':
         $list = array('placeholder', 'hidden');
         break;
       case 'record':
-        $list = array('captcha','placeholder','hidden');
+        $list = array('captcha', 'placeholder', 'hidden');
         break;
       case 'list':
       default:
-        $list = array('captcha','placeholder');
+        $list = array('captcha', 'placeholder');
         break;
     }
     /**
@@ -1073,7 +1077,7 @@ abstract class PDb_Shortcode {
      * @param PDb_Shortcode the shortcoe instance
      * @return array of form elements to exclude
      */
-    return '"' . implode('","', Participants_Db::apply_filters('display_column_suppressed_form_elements', $list, $this ) ) . '"';
+    return '"' . implode( '","', Participants_Db::apply_filters( 'display_column_suppressed_form_elements', $list, $this ) ) . '"';
   }
 
   /**
@@ -1173,7 +1177,6 @@ abstract class PDb_Shortcode {
    * 
    * @param PDb_Field_Item $field
    */
-
   protected function display_as_readonly( $field )
   {
     $field->make_readonly();
@@ -1252,7 +1255,7 @@ abstract class PDb_Shortcode {
     }
     return ltrim( $path, '/' );
   }
-  
+
   /**
    * supplies the fields value
    * 
@@ -1274,13 +1277,13 @@ abstract class PDb_Shortcode {
   protected function _setup_fields()
   {
     $this->fields = array();
-      
+
     foreach ( Participants_Db::$fields as $column ) {
       /* @var $column PDb_Form_Field_Def */
-      $this->fields[$column->name()] = new PDb_Field_Item( (object) array( 
-          'name' => $column->name(),
-          'module' => $this->module,
-          ) );
+      $this->fields[$column->name()] = new PDb_Field_Item( (object) array(
+                  'name' => $column->name(),
+                  'module' => $this->module,
+              ) );
     }
   }
 
@@ -1397,10 +1400,10 @@ abstract class PDb_Shortcode {
        * @param string name of the module which allows wirting readonly fields
        * @param PDb_Form_Field_Def  the current field
        */
-      if ( 
-              ( ! $field->is_hidden_field() || $field->form_element() === 'captcha'  ) && 
-              ( $this->module === Participants_Db::apply_filters( 'readonly_exempt_module', 'signup', $field ) || ! $field->is_readonly() )
-                      ) {
+      if (
+              (!$field->is_hidden_field() || $field->form_element() === 'captcha' ) &&
+              ( $this->module === Participants_Db::apply_filters( 'readonly_exempt_module', 'signup', $field ) || !$field->is_readonly() )
+      ) {
         $displayed[] = $field->name();
       }
     }
@@ -1415,9 +1418,12 @@ abstract class PDb_Shortcode {
    * @param PDb_Field_Item $field  object
    * @return string the class name
    */
-  public function get_empty_class( $field )
+  public function get_empty_class( $field = false )
   {
-    $emptyclass = 'image-upload' == $field->form_element ? 'image-' . self::emptyclass : self::emptyclass;
+    if ( $field === false ) {
+      $field = $this->field;
+    }
+    $emptyclass = 'image-upload' == $field->form_element() ? 'image-' . self::emptyclass : self::emptyclass;
 
     /**
      * @filter pdb-field_empty_class
@@ -1425,7 +1431,7 @@ abstract class PDb_Shortcode {
      * @param PDb_Field_Item the current field
      * @return string the empty class to use
      */
-    return Participants_Db::apply_filters( 'field_empty_class', ( $this->_empty( $field->value ) && $this->_empty( $field->link) ? $emptyclass : '' ), $field );
+    return Participants_Db::apply_filters( 'field_empty_class', ( $this->_empty( $field->get_value() ) && $this->_empty( $field->link ) ? $emptyclass : '' ), $field );
   }
 
   /**

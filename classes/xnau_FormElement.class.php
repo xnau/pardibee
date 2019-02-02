@@ -91,7 +91,7 @@ abstract class xnau_FormElement {
    * 
    * @var array 
    */
-  var $attributes;
+  var $attributes = array();
 
   /**
    * @var array of class names
@@ -1107,7 +1107,6 @@ abstract class xnau_FormElement {
    */
   protected function _input_tag( $type = 'text', $value = false, $select = false )
   {
-
     if ( $value === false )
       $value = $this->value;
     $size = $this->size ? ' size="' . $this->size . '" ' : '';
@@ -1238,12 +1237,14 @@ abstract class xnau_FormElement {
 
     foreach ( $this->_make_assoc( $this->options ) as $title => $value ) {
 
-      if ( ($value === false or $value === 'false' or $value === 'optgroup') and ! empty( $title ) ) {
+      $title = Participants_Db::apply_filters( 'translate_string', $title );
+      
+      if ( ($value === false || $value === 'false' || $value === 'optgroup') && strlen( $title ) > 0 ) {
         $this->_add_options_divider( $title );
       } elseif ( $value === 'other' ) {
         $otherlabel = $title;
       } elseif ( strlen( $value ) > 0 ) {
-        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . Participants_Db::apply_filters( 'translate_string', strip_tags( $title ) ) . '</option>', -1 );
+        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . strip_tags( $title ) . '</option>', -1 );
       }
     }
     // add the "other" option
@@ -1592,7 +1593,7 @@ abstract class xnau_FormElement {
       $divider = '</optgroup>' . self::BR;
       $this->inside = false;
     }
-    $divider .= sprintf( '<optgroup label="%s">', esc_attr( $title ) );
+    $divider .= sprintf( '<optgroup label="%s">', esc_html( $title ) );
     $this->inside = true;
     $this->_addline( $divider );
   }

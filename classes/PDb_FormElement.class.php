@@ -302,10 +302,10 @@ class PDb_FormElement extends xnau_FormElement {
             $url = $field->link();
             $value = $field->value();
           }
-
-          if ( empty( $value ) ) {
-            if ( !empty( $url ) ) {
-              $value = $field->has_default() ? $field->default : preg_replace( '#(https?://)#', '', $url );
+          
+          if ( strlen( $value ) < 1 ) {
+            if ( strlen( $url ) > 0) {
+              $value = $field->has_default() ? $field->default : preg_replace( '#https?://#', '', $url );
             } else {
               $value = '';
             }

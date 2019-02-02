@@ -55,7 +55,7 @@ class PDb_Form_Field_Def {
   protected $form_element;
 
   /**
-   * @var string raw string form the "values" parameter of the field def
+   * @var string raw string from the "values" parameter of the field def
    */
   private $values;
 
@@ -630,23 +630,6 @@ class PDb_Form_Field_Def {
 //    }
     return (array) maybe_unserialize( $this->values );
   }
-  
-  // this is purely temporary
-  private function get_calling_class() {
-
-    //get the trace
-    $trace = debug_backtrace();
-
-    // Get the class that is asking for who awoke it
-    $class = $trace[1]['class'];
-
-    // +1 to i cos we have to account for calling this function
-    for ( $i=1; $i<count( $trace ); $i++ ) {
-        if ( isset( $trace[$i] ) ) // is it set?
-             if ( $class != $trace[$i]['class'] ) // is it a different class
-                 return $trace[$i]['class'];
-    }
-}
 
   /**
    * assigns the object properties
@@ -684,13 +667,12 @@ class PDb_Form_Field_Def {
             }
           }
           break;
-          
+
         case 'attributes':
         case 'options':
           
           // if "values" is not empty, then the field has not been converted to the new format yet
           if ( $def->values === '' || is_null($def->values) ) {
-          
             
             $this->{$prop} = (array) maybe_unserialize($value);
             

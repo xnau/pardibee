@@ -9,7 +9,7 @@
  * plugins requiring a more complex settings scheme, such as multiple pages. It
  * will work well with Javascript tabs, however.
  *
- * @version 1.2
+ * @version 1.3
  *
  * @depends xnau_FormElement class
  */
@@ -94,16 +94,17 @@ class xnau_Plugin_Settings {
     // register the plugin setting with WP
     // this will store an array of all the individual settings for the plugin
     register_setting( $this->WP_setting, $this->WP_setting, array($this, 'validate') );
-    
-    // define the individual settings
-    $this->_define_settings();
   }
 
   /**
    * registers the individual plugin options
+   * 
+   * fired on the admin_menu hook
    */
   public function initialize()
   {
+    // define the individual settings
+    $this->_define_settings();
 
     // register the individual settings
     if ( function_exists( 'add_settings_field' ) ) {

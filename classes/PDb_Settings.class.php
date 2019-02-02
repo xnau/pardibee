@@ -1596,7 +1596,7 @@ ORDER BY g.order, v.order';
     }
     return $columnlist;
   }
-
+  
   /**
    * gets the current PDB_DEBUG value
    * 

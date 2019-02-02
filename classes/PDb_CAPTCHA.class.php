@@ -275,12 +275,10 @@ class PDb_CAPTCHA {
   private function _set_type() {
     $this->captcha_type = 'math';
  
-    if ( is_array( $this->attributes ) ) {
-      foreach( $this->captcha_types as $type ) {
-        if ( in_array( $type, $this->attributes ) ) {
-          $this->captcha_type = $type;
-          continue;
-        }
+    foreach( $this->captcha_types as $type ) {
+      if ( in_array( $type, (array) $this->attributes ) ) {
+        $this->captcha_type = $type;
+        continue;
       }
     }
   }

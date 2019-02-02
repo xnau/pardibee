@@ -117,7 +117,7 @@ class PDb_List_Query {
   /**
    * construct the object
    * 
-   * @param object $List with structure:
+   * @param PDb_List $List with structure:
    *    @param array  $shortcode_atts array of shortcode attributes
    *                    filter      a shortcode filter string
    *                    orderby     a comma-separated list of fields

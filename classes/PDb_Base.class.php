@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -875,6 +875,7 @@ class PDb_Base {
    */
   public static function string_static_translation( $string )
   {
+    //error_log(__METHOD__.' string: '.$string . ' called by: '. print_r(wp_debug_backtrace_summary( null, 3 ),1) );
     return is_string( $string ) && !is_numeric( $string ) ? __( $string ) : $string;
   }
 
@@ -1512,48 +1513,6 @@ class PDb_Base {
   }
 
   /**
-   * make any needed alterations to the headers
-   * 
-   * @param array $headers array of http headers
-   * @return array altered headers array
-   */
-  public static function control_caching( $headers )
-  {
-    self::initialize_session();
-    /**
-     * @filter pdb-wp_headers
-     * @param array of headers
-     * @return array
-     */
-    return self::apply_filters( 'wp_headers', $headers );
-  }
-
-  /**
-   * set up cache control and sessions
-   * 
-   */
-  public static function initialize_session()
-  { 
-    // if this is called too late, do nothing        
-    if ( headers_sent() )
-      return;
-    /**
-     * sets the cache mode
-     * 
-     * @link http://php.net/manual/en/function.session-cache-limiter.php
-     */
-    $cache_limit = Participants_Db::apply_filters( 'cache_limiter', 'private_no_expire' ); // private_no_expire
-    //if ( self::is_multipage_form() ) {
-    // prevents browser back-button caching in the middle of a multipage form
-    //$cache_limit = Participants_Db::apply_filters( 'multipage_cache_limiter', 'nocache' );
-    //}
-
-    if ( !empty( $cache_limit ) && !session_id() ) {
-      session_cache_limiter( $cache_limit );
-    }
-  }
-
-  /**
    * clears the shortcode session for the current page
    * 
    * 
@@ -1760,7 +1719,9 @@ class PDb_Base {
     global $PDb_Debugging;
     if ( !defined( 'PDB_DEBUG' ) ) {
       $settings = get_option( Participants_Db::PLUGIN_NAME . '_options');
-      if ( ( isset( $settings['pdb_debug'] ) && $settings['pdb_debug'] ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+      if ( isset( $settings['pdb_debug'] ) ) {
+        define( 'PDB_DEBUG', intval($settings['pdb_debug']) );
+      } elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
         define( 'PDB_DEBUG', 1 );
       } else {
         define( 'PDB_DEBUG', 0 );

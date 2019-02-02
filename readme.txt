@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 4.9.8
+Tested up to: 5.0.3
 Requires PHP: 5.6
-Stable tag: 1.8.3
+Stable tag: 1.8.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,50 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.8.4.8 =
+* fixed debug log white screen issue
+* signup form skips empty field groups
+* admin notices now dismissed for each user
+* removed spurious text from responsive list template
+
+= 1.8.4.7 =
+* fixed issue with images lacking a link in emails
+* optgroup titles now passed through translation filter
+* several minor bug fixes
+
+= 1.8.4.6 =
+* fixed caching issue with shortcode fields and groups attributes
+* minor tweak for php 7.3 compatibility
+
+= 1.8.4.5 =
+* addressing settings page access issues for some users
+
+= 1.8.4.4 =
+* fixed issue with settings page blank
+
+= 1.8.4.3 =
+* fixed bug with custom templates not found in default location
+
+= 1.8.4.2 =
+* settings page timing issues fixed #1942
+* handle early session starts without warnings #1943
+
+= 1.8.4.1 =
+* fixed warning when setting up the plugin first time
+
+= 1.8.4 =
+* WordPress 5.0 compatibility
+* added php timezone sync preference
+* updated the list responsive template for better element classnames
+* optimized some database transactions
+
+= 1.8.3.2 =
+* fixes blank Manage Database Fields screen bug
+* post logins now working
+
+= 1.8.3.1 =
+* bugfix: field attributes missing in backend record edit
 
 = 1.8.5 =
 * redesigned Manage Database Fields page
@@ -1095,8 +1139,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.8.2 =
-Version 1.8.2 is a code quality and reliability update.
+= 1.8.4.8 =
+Version 1.8.4.8 is a bigfix update.
 
 == Plugin Support ==
 
