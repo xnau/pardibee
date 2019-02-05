@@ -671,12 +671,7 @@ class PDb_Form_Field_Def {
         case 'attributes':
         case 'options':
           
-          // if "values" is not empty, then the field has not been converted to the new format yet
-          if ( $def->values === '' || is_null($def->values) ) {
-            
-            $this->{$prop} = (array) maybe_unserialize($value);
-            
-          }
+          $this->{$prop} = (array) maybe_unserialize($value);
           break;
 
         default:
