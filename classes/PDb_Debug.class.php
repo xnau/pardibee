@@ -59,7 +59,7 @@ class PDb_Debug {
 
     add_action( 'admin_init', array($this, 'initialize_logging') );
 
-    add_action( 'admin_enqueue_scripts', array($this, 'assets') );
+    add_action( 'admin_enqueue_scripts', array($this, 'assets'), 15 );
 
     add_action( 'participants_database_uninstall', array(__CLASS__, 'uninstall') );
 
@@ -76,6 +76,7 @@ class PDb_Debug {
   public function assets( $hook )
   {
     if ( strpos( $hook, 'participants-database-pdb_debugging' ) !== false ) {
+      
       wp_localize_script( Participants_Db::$prefix . 'debug', 'PDb_Debug', array(
           'action' => $this->action,
           'spinner' => Participants_Db::get_loading_spinner(),
