@@ -59,7 +59,7 @@ class PDb_Debug {
 
     add_action( 'admin_init', array($this, 'initialize_logging') );
 
-    add_action( 'admin_enqueue_scripts', array($this, 'assets') );
+    add_action( 'admin_enqueue_scripts', array($this, 'assets'), 15 );
 
     add_action( 'participants_database_uninstall', array(__CLASS__, 'uninstall') );
 
