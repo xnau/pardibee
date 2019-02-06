@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.8.4.8
+ * Version: 1.8.4.9
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -297,7 +297,6 @@ class Participants_Db extends PDb_Base {
     self::$plugin_path = plugin_dir_path( __FILE__ );
     
     // set the debug global if not already
-    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), self::$plugin_version );
     self::set_debug_mode();
     
     /*
@@ -645,6 +644,9 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'admin-notices', plugins_url( 'js/pdb_admin_notices.js', __FILE__ ), array('jquery'), self::$plugin_version );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
+    wp_register_script( self::$prefix . 'debug', plugins_url( 'js/pdb_debug.js', __FILE__ ), array('jquery'), self::$plugin_version );
+    
+    
     if ( self::_set_admin_custom_css() ) {
       wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$Settings->option_version() );
     }
