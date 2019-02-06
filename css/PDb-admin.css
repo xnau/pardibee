@@ -715,13 +715,13 @@ button .dashicons {
 }
 .color-text {
   background-color: hsl(190, 60%, 95%);
-  border-color: hsl(190.6, 47.2%, 85.9%); /* #cae4e9 */
+  border-color: hsl(205.7, 75%, 89%); /* #cae4e9 */
 }
 .color-text .field-header {
-  background-color: hsl(190.6, 47.2%, 85.9%);
+  background-color: hsl(205.7, 75%, 89%); /*  hsl(190.6, 47.2%, 85.9%) */
 }
 .color-text .form-element-label {
-  color: hsl(190, 60%, 80%);
+  color: hsl(205.7, 60%, 80%);
 }
 
 .color-selector {
@@ -732,7 +732,7 @@ button .dashicons {
   background-color: hsl(152.1, 40%, 86.3%);
 }
 .color-selector .form-element-label {
-  color: hsl(150, 50%, 80%);
+  color: hsl(149.4, 45%, 78.6%);
 }
 
 .color-numeric {
@@ -743,7 +743,7 @@ button .dashicons {
   background-color: hsl(54.7, 50.6%, 82.5%);
 }
 .color-numeric .form-element-label {
-  color: hsl(54.8, 63%, 71.4%);
+  color: hsl(54.8, 56.1%, 67.8%);
 }
 
 
@@ -780,12 +780,45 @@ button .dashicons {
   color: hsl(0, 10%, 80%);
 }
 
-.color-custom, .color-group {
+.color-group {
+  background-color: hsl(192, 60%, 95.1%);
+  border-color: hsl(192.9, 51.9%, 89.4%);
+}
+.color-group .field-header {
+  background-color: hsl(192.9, 51.9%, 89.4%);
+}
+.color-group .form-element-label {
+  color: hsl(192.9, 51.9%, 89.4%);
+}
+
+.color-group.view-mode-private {
+  background-color: hsl(0, 100%, 97.5%);
+  border-color: hsl(0, 50%, 92.2%);
+}
+.color-group.view-mode-private .field-header {
+  background-color: hsl(0, 50%, 92.2%);
+}
+.color-group.view-mode-private .form-element-label {
+  color: hsl(0, 50%, 92.2%);
+}
+
+.color-group.view-mode-admin {
+  background-color: hsl(92, 60%, 95.1%);
+  border-color: hsl(92, 60%, 90%);
+}
+.color-group.view-mode-admin .field-header {
+  background-color: hsl(92, 45.5%, 87.1%);
+}
+.color-group.view-mode-admin .form-element-label {
+  color: hsl(92, 60%, 80%);
+}
+
+
+.color-custom {
   background-color: hsl(220, 60%, 95%);
   border-color: hsl(220, 60%, 90%);
 }
-.color-custom .field-header,
-.color-group .field-header {
+.color-custom .field-header {
   background-color: hsl(220, 60%, 90%);
 }
 .color-custom .form-element-label {
