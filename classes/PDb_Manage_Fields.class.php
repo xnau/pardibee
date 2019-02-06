@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.12
+ * @version    2.0
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -22,16 +22,6 @@ class PDb_Manage_Fields {
    * @var array translations strings used by this class
    */
   var $i18n;
-
-  /**
-   * @var array all defined groups
-   */
-  var $groups;
-
-  /**
-   * @var array of group title strings
-   */
-  var $group_titles;
 
   /**
    * @var array of group definitions
@@ -62,8 +52,8 @@ class PDb_Manage_Fields {
   {
     $this->i18n = self::get_i18n();
 
-    $this->setup_field_data();
     $this->setup_group_data();
+    $this->setup_field_data();
 
     $this->print_header();
     $this->print_group_tabs();
@@ -87,9 +77,8 @@ class PDb_Manage_Fields {
         <ul>
           <?php
           $mask = '<span class="mask"></span>';
-          foreach ( $this->groups as $group_name ) {
-            $group = Participants_Db::get_group($group_name);
-            echo '<li class="' . $group->mode . '"><a href="#' . $group_name . '" id="tab_' . $group_name . '">' . $this->group_title($group_name) . '</a>' . $mask . '</li>';
+          foreach ( $this->group_defs as $group ) {
+            echo '<li class="display-' . $group['mode'] . '"><a href="#' . $group['name'] . '" id="tab_' . $group['name'] . '">' . $this->group_title($group['name']) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -103,7 +92,7 @@ class PDb_Manage_Fields {
        */
       protected function print_group_tabs()
       {
-        foreach ( $this->groups as $group ) {
+        foreach ( $this->groups() as $group ) {
           $this->print_group_tab_content( $group );
         }
         $this->print_group_edit_tab_content();
@@ -218,7 +207,7 @@ class PDb_Manage_Fields {
 
                 $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                 ?>
-                <div class="def-fieldset def-line color-group" data-id="<?php echo $group ?>">
+                <div class="def-fieldset def-line color-group view-mode-<?php echo $group_def['mode'] ?>" data-id="<?php echo $group ?>">
                   <input type="hidden" name="<?php echo $group ?>[status]" id="status_<?php echo $group ?>" value />
                   <div class="field-header">
                     <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
@@ -259,7 +248,7 @@ class PDb_Manage_Fields {
                         'name' => ( empty( $name ) ? $group . '[' . $column . ']' : $name ),
                         'value' => htmlspecialchars( stripslashes( $value ) ),
                         'type' => $type,
-                        'attributes' => array_merge( array('id' => 'group-attribute-' . $column), $attributes ),
+                        'attributes' => array_merge( array('id' => 'group-' . $group . '-attribute-' . $column), $attributes ),
                         'options' => $options,
                     );
                     ?>
@@ -279,6 +268,16 @@ class PDb_Manage_Fields {
               <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n['update groups'] ?></button>
             </p>
           </form>
+          <script type="text/javascript">
+          jQuery(function($){
+            var setmode = function(el) {
+              el.closest('.def-fieldset').removeClass('view-mode-public view-mode-private view-mode-admin').addClass('view-mode-'+el.val());
+            };
+            $('.manage-field-groups .mode-attribute select').on('change', function(){
+              setmode($(this));
+            });
+          });
+          </script>
         </div><!-- groups tab panel -->
         <?php
       }
@@ -407,25 +406,6 @@ class PDb_Manage_Fields {
     }
 
     /**
-     * sets up the fields data
-     * 
-     * @global wpdb $wpdb
-     * @return null 
-     */
-    protected function setup_field_data()
-    {
-      global $wpdb;
-      // get the defined groups
-      $this->groups = Participants_Db::get_groups( 'name' );
-      // get an array with all the defined fields
-      foreach ( $this->groups as $group ) {
-
-        $sql = "SELECT f.id,f.name,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
-        $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
-      }
-    }
-
-    /**
      * sets up the groups management iterator
      * 
      * @return null 
@@ -434,10 +414,13 @@ class PDb_Manage_Fields {
     {
       $this->group_defs = array();
       foreach ( Participants_Db::get_groups('`id`,`order`,`mode`,`name`,`title`,`description`,`admin`,`display`') as $group => $defs ) {
+        // mode is the 1.8.5 group visibility mode
+        // this converts the previous visibility settings to the new mode
         if ( ! isset( $defs['mode'] ) || empty( $defs['mode'] ) ) {
           switch ( true ) {
             case $defs['admin'] == 0 && $defs['display'] == 0:
-              $defs['mode'] = 'private';
+              // we set to 'public' not 'private' #1817
+              $defs['mode'] = 'public';
               break;
             case $defs['admin'] == 0 && $defs['display'] == 1:
             case $defs['admin'] == 1 && $defs['display'] == 1:
@@ -446,9 +429,40 @@ class PDb_Manage_Fields {
             case $defs['admin'] == 1 && $defs['display'] == 0:
               $defs['mode'] = 'admin';
           }
-          unset($defs['admin'],$defs['display']);
+          $this->fix_group_mode($defs);
         }
-        $this->group_defs[$group] = $defs;
+        unset($defs['admin'],$defs['display']); // not needed
+        // only include groups with main database display modes
+        if ( in_array( $defs['mode'], array_keys( $this->group_display_modes() ) ) ) {
+          $this->group_defs[$group] = $defs;
+        }
+      }
+    }
+    
+    /**
+     * provides an array of group names
+     * 
+     * @return array
+     */
+    private function groups()
+    {
+      return array_keys( $this->group_defs );
+    }
+
+    /**
+     * sets up the fields data
+     * 
+     * @global wpdb $wpdb
+     * @return null 
+     */
+    protected function setup_field_data()
+    {
+      global $wpdb;
+      // get an array with all the defined fields
+      foreach ( $this->groups() as $group ) {
+
+        $sql = "SELECT f.id,f.name,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
+        $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
       }
     }
     
@@ -503,6 +517,18 @@ class PDb_Manage_Fields {
       $string = isset( $this->i18n[$string] ) ? $this->i18n[$string] : $string;
 
       return str_replace( array('_'), array(" "), $string );
+    }
+    
+    /**
+     * fixes an old format group definition by storing the mode value
+     * 
+     * @global wpdb $wpdb
+     * @param array $group array of group properties
+     */
+    private function fix_group_mode( $group )
+    {
+      global $wpdb;
+      $wpdb->update( Participants_Db::$groups_table, array( 'mode' => $group['mode'] ), array( 'name' => $group['name'] ) );
     }
 
     /**
