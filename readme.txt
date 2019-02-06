@@ -291,7 +291,6 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.8.4.9 =
 * fixed fatal error on first install in multisite
-* debug script now called on the correct action
 
 = 1.8.4.8 =
 * fixed debug log white screen issue
