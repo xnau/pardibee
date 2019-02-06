@@ -436,6 +436,6 @@ class PDb_Pagination {
   private function _sprintf($link, $pagenum)
   {
     return str_replace('%1$s', $pagenum, $link);
-}
+  }
 
 }
