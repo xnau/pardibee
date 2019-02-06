@@ -861,7 +861,7 @@ abstract class PDb_Shortcode {
       $display_where = '';
       if ( $public_only ) {
         // using the new 'mode' value
-        $display_where = 'AND ( g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"';
+        $display_where = 'AND ( g.mode IS NULL AND g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"';
       }
       switch ( $this->module ) {
         case 'signup':
@@ -869,7 +869,7 @@ abstract class PDb_Shortcode {
           $sql = 'SELECT DISTINCT g.name 
                   FROM ' . Participants_Db::$groups_table . ' g  
                   JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
-                  WHERE f.signup = "1" AND g.display = "1" OR g.mode = "public" ORDER BY ' . $orderby;
+                  WHERE f.signup = "1" AND ( g.mode IS NULL AND g.display = "1" ) OR g.mode = "public" ORDER BY ' . $orderby;
           break;
         
         case 'record':
