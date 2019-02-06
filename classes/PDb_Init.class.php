@@ -3,7 +3,7 @@
 /**
  * plugin initialization class
  *
- * @version 1.7
+ * @version 1.8
  *
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the "delta"
@@ -263,7 +263,7 @@ class PDb_Init {
    */
   public static function do_network_operation( $callback )
   {
-    add_action('switch_blog', array( $this, 'switch_blog' ), 10, 2 );
+    add_action('switch_blog', 'PDb_Init::switch_blog', 10, 2 );
     
     global $wpdb;
 
@@ -288,7 +288,7 @@ class PDb_Init {
    * @param int $new_blog id
    * @param int $current_blog id
    */
-  public function switch_blog ( $new_blog, $current_blog ) { 
+  public static function switch_blog ( $new_blog, $current_blog ) { 
     if ( $new_blog != $current_blog ) {
       Participants_Db::setup_source_names();
     }
