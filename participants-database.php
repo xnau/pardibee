@@ -1115,23 +1115,13 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_groups( $column = '*', $exclude = false )
   {
-    $cachekey = false;
-    // check for the cached default return value
-    if ( $column === '*' && $exclude === false ) {
-      $cachekey = 'pdb-groups-array';
-      $groups = wp_cache_get( $cachekey );
-      if ( $groups ) {
-        return $groups;
-      }
-    }
-
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE `mode` IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '")';
 
     if ( $exclude ) {
 
-      $where = ' WHERE `name` ';
+      $where = ' AND `name` ';
 
       if ( is_array( $exclude ) ) {
 
@@ -1143,14 +1133,23 @@ class Participants_Db extends PDb_Base {
     }
 
     $sql = 'SELECT ' . $column . ' FROM ' . self::$groups_table . $where . ' ORDER BY `order`,`name` ASC';
-
+    
+    $cachekey = md5( $sql );
+    
+    $result = wp_cache_get( $cachekey );
+    
+    if ( ! $result ) {
+      $result = $wpdb->get_results( $sql, ARRAY_A );
+      wp_cache_add( $cachekey,  $result, MINUTE_IN_SECONDS );
+    }
+    
     // are we looking for only one column?
     // if so, flatten the array
     if ( $column !== '*' and false === strpos( $column, ',' ) ) {
 
       $output = array();
 
-      foreach ( $wpdb->get_results( $sql, ARRAY_A ) as $row )
+      foreach ( $result as $row )
         $output[] = $row[$column];
 
       return $output;
@@ -1158,16 +1157,9 @@ class Participants_Db extends PDb_Base {
 
       $group_index = array();
 
-      $groups = $wpdb->get_results( $sql, ARRAY_A );
-
       // build an array indexed by the group's name
-      foreach ( $groups as $group )
+      foreach ( $result as $group )
         $group_index[$group['name']] = $group;
-      
-      if ( $cachekey ) {
-        // set the cache
-        wp_cache_set( $cachekey, $group_index );
-      }
 
       return $group_index;
     }
