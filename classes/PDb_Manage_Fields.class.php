@@ -225,7 +225,7 @@ class PDb_Manage_Fields {
                       
                       case 'mode':
                         $type = 'dropdown';
-                        $options = array_flip( $this->group_display_modes() );
+                        $options = array_flip( self::group_display_modes() );
                         break;
 
                       case 'description':
@@ -433,7 +433,7 @@ class PDb_Manage_Fields {
         }
         unset($defs['admin'],$defs['display']); // not needed
         // only include groups with main database display modes
-        if ( in_array( $defs['mode'], array_keys( $this->group_display_modes() ) ) ) {
+        if ( in_array( $defs['mode'], array_keys( self::group_display_modes() ) ) ) {
           $this->group_defs[$group] = $defs;
         }
       }
@@ -473,7 +473,7 @@ class PDb_Manage_Fields {
      * 
      * @return array
      */
-    protected function group_display_modes()
+    public static function group_display_modes()
     {
       /**
        * @filter pdb-group_display_modes
