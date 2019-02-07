@@ -304,11 +304,13 @@ abstract class PDb_Shortcode {
     if ( ! isset( $this->shortcode_atts[$attribute] ) ) {
       return $state;
     }
+    if ( is_bool( $this->shortcode_atts[$attribute] ) ) {
+      return $this->shortcode_atts[$attribute];
+    }
     switch ($this->shortcode_atts[$attribute]) {
       case 'true':
       case '1':
       case 'yes':
-      case true:
         $state = true;
         break;
     }
