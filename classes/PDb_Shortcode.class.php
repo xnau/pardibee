@@ -195,6 +195,7 @@ abstract class PDb_Shortcode {
   /**
    * instantiates the shortcode object
    *
+   * @global WP_Post $post
    * @param array  $shortcode_atts              the raw parameters passed in from the shortcode
    * @param array  $subclass_shortcode_defaults additional shortcode attributes to use as defined
    *                                            in the instantiating subclass
@@ -287,6 +288,31 @@ abstract class PDb_Shortcode {
      * @param object the currently instanted shortcode class
      */
     do_action( Participants_Db::$prefix . 'shortcode_set', $this );
+  }
+  
+  /**
+   * provides the boolean value for a shortcode attribute
+   * 
+   * this allows for various different ways of stating the value of the attribute 
+   * in the shortcode
+   * 
+   * @param string $attribute
+   * @return bool
+   */
+  public function attribute_true( $attribute ) {
+    $state = false;
+    if ( ! isset( $this->shortcode_atts[$attribute] ) ) {
+      return $state;
+    }
+    switch ($this->shortcode_atts[$attribute]) {
+      case 'true':
+      case '1':
+      case 'yes':
+      case true:
+        $state = true;
+        break;
+    }
+    return $state;
   }
 
   /**
