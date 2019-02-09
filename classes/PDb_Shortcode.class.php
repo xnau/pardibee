@@ -285,7 +285,7 @@ abstract class PDb_Shortcode {
 
     /**
      * @action pdb-shortcode_set
-     * @param object the currently instanted shortcode class
+     * @param object the current shortcode class object
      */
     do_action( Participants_Db::$prefix . 'shortcode_set', $this );
   }
