@@ -96,6 +96,9 @@ class PDb_Template_Email extends xnau_Template_Email {
     if ( isset( $this->data['id'] ) && is_numeric( $this->data['id'] ) ) {
       // add the admin record link tag
       $this->data['admin_record_link'] = Participants_Db::get_admin_record_link( $this->data['id'] );
+      
+      // add the single record link tag
+      $this->data['single_record_link'] = Participants_Db::single_record_url( $this->data['id'] );
     }
 
     // add the date tag

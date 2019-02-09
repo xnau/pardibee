@@ -1,0 +1,715 @@
+<?php
+
+/**
+ * handles updating the field and group definitions
+ *
+ * @package    WordPress
+ * @subpackage Participants Database Plugin
+ * @author     Roland Barker <webdesign@xnau.com>
+ * @copyright  2018  xnau webdesign
+ * @license    GPL3
+ * @version    0.1
+ * @link       http://xnau.com/wordpress-plugins/
+ * @depends    
+ */
+class PDb_Manage_Fields_Updates {
+
+  /**
+   * @var string action key
+   */
+  const action_key = 'pdb-manage-fields';
+
+  /**
+   * instantiate the class
+   * 
+   * @return null 
+   */
+  function __construct()
+  {
+    add_action( 'wp_ajax_' . self::action_key, array($this, 'process_ajax_submit') );
+    add_action( 'admin_post_update_fields', array($this, 'update_fields') );
+    add_action( 'admin_post_add_field', array($this, 'add_field') );
+    add_action( 'admin_post_add_group', array($this, 'add_group') );
+    add_action( 'admin_post_update_groups', array($this, 'update_groups') );
+    
+    PDb_Admin_Notices::post_info( sprintf('The Participants Database Manage Database Fields page has been completely redesigned. Use the "Help" tab for %sinstructions on using the new interface!%s','<a href="https://xnau.com/the-manage-database-fields-page/" target="_blank">','</a>'), __( 'Manage Database Fields', 'participants-database' ));
+  }
+
+  /**
+   * process the field definition update submission
+   * 
+   * @global wpdb $wpdb
+   */
+  public function update_fields()
+  {
+    global $wpdb;
+
+    foreach ( $this->sanitized_post() as $name => $row ) {
+
+      // unescape quotes in values
+      foreach ( $row as $k => $rowvalue ) {
+        if ( !is_array( $rowvalue ) ) {
+          $row[$k] = stripslashes( $rowvalue );
+        }
+      }
+
+      if ( $row['status'] === 'changed' ) {
+
+        $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
+
+        foreach ( array( 'values', 'options', 'attributes' ) as $attname ) {
+          
+          /*
+           * format the value for attributes that use a values array
+           * 
+           * also, if the deprecated 'values' attribute is present, place its 
+           * data into the correct attribute
+           */
+          
+          if ( isset( $row[$attname] ) ) {
+            
+            $attvalue = $row[$attname];
+            
+            if ( $attname === 'values' && strlen( $attvalue ) > 0 ) {
+              $correct_attribute = PDb_FormElement::is_value_set($row['form_element']) ? 'options' : 'attributes';
+              if ( strlen( $row[$correct_attribute] ) === 0 ) {
+                $attname = $correct_attribute;
+                $row['values'] = '';
+              } 
+            }
+            $row[$attname] = self::string_notation_to_array( $attvalue );
+          }
+        }
+
+        if ( !empty( $row['validation'] ) && !in_array( $row['validation'], array('yes', 'no') ) ) {
+
+          $row['validation'] = str_replace( '\\\\', '\\', $row['validation'] );
+        }
+
+        /*
+         * modify the datatype if necessary
+         * 
+         * the 'datatype_warning' needs to be accepted for this to take place
+         */
+        if ( isset( $row['group'] ) && $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['form_element'] ) ) {
+          if ( !isset( $row['datatype_warning'] ) || ( isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) ) {
+            $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
+          } else {
+            unset( $row['form_element'] ); // prevent this from getting changed
+          }
+        }
+        unset( $row['datatype_warning'] );
+
+        /*
+         * add some form-element-specific processing
+         */
+        if ( isset( $row['form_element'] ) ) {
+          switch ( $row['form_element'] ) {
+            case 'captcha':
+              foreach ( array('title', 'help_text', 'default') as $field ) {
+                if ( isset( $row[$field] ) )
+                  $row[$field] = stripslashes( $row[$field] );
+              }
+              $row['validation'] = 'captcha';
+              foreach ( array('display_column', 'admin_column', 'CSV', 'persistent', 'sortable') as $c )
+                $row[$c] = 0;
+              $row['readonly'] = 1;
+              break;
+            case 'decimal':
+              if ( !isset( $row['attributes']['step'] ) ) {
+                $row['attributes']['step'] = 'any';
+              }
+              break;
+          }
+        }
+
+        $status = array_intersect_key( $row, array('id' => '', 'status' => '', 'name' => '') );
+
+        // remove the fields we won't be updating
+        unset( $row['status'], $row['id'], $row['name'], $row['selectable'] );
+
+        foreach ( $row as $name => $row_item ) {
+          if ( is_array( $row_item ) ) {
+            $row[$name] = serialize( $row[$name] );
+          }
+        }
+
+        /**
+         * provides access to the field definition parameters as the field is getting updated
+         * 
+         * @filter pdb-update_field_def
+         * @param array of field definition parameters
+         * @param array of non-saved status values for the field: id, status, name 
+         * @return array
+         */
+        $result = $wpdb->update( Participants_Db::$fields_table, Participants_Db::apply_filters( 'update_field_def', $row, $status ), array('id' => $id) );
+        if ( PDB_DEBUG > 1 ) {
+          Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
+        }
+        if ( $result ) {
+          PDb_Admin_Notices::post_success( __( 'Fields Updated', 'participants-database' ) );
+          /**
+           * @action pdb-field_defs_updated
+           * @param string action
+           * @param string last query
+           */
+          do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_fields', $wpdb->last_query );
+        }
+      }
+    }
+    $this->return_to_the_manage_database_fields_page();
+  }
+
+  /**
+   * provides a sanitized post array
+   * 
+   * only the row data is included, all other elements are discarded
+   * 
+   * @return array
+   */
+  private function sanitized_post()
+  {
+    $keys = array_filter( array_keys( $_POST ), function ($v) {
+      return preg_match( '/^row_[0-9]{1,3}$/', $v ) === 1;
+    } );
+
+    return filter_input_array( INPUT_POST, array_fill_keys( $keys, array(
+        'filter' => FILTER_SANITIZE_STRING,
+        'flags' => FILTER_REQUIRE_ARRAY,
+            ) ) );
+  }
+
+  /**
+   * adds a new field
+   * 
+   * @global wpdb $wpdb
+   */
+  public function add_field()
+  {
+    // set up the new field's parameters
+    $params = array(
+        'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
+        'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
+        'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
+        'order' => '0',
+        'validation' => 'no',
+        'form_element' => filter_input( INPUT_POST, 'form_element', FILTER_SANITIZE_STRING ),
+    );
+
+    if ( empty( $params['name'] ) ) {
+      $this->return_to_the_manage_database_fields_page(); // ignore empty field name
+    }
+
+    // if they're trying to use a reserved name, stop them
+    if ( in_array( $params['name'], Participants_Db::$reserved_names ) ) {
+
+      Participants_Db::set_admin_message( sprintf(
+                      '<strong>%s</strong> %s: %s', __( 'Cannot add a field with that name', 'participants-database' ), __( 'This name is reserved; please choose another. Reserved names are', 'participants-database' ), implode( ', ', Participants_Db::$reserved_names )
+              ), 'error' );
+      $this->return_to_the_manage_database_fields_page();
+    }
+
+    // if they're trying to use the same name as one that already exists
+    if ( array_key_exists( $params['name'], Participants_Db::$fields ) ) {
+
+      Participants_Db::set_admin_message( sprintf(
+                      '<strong>%s</strong> %s', __( 'Cannot add a field with that name', 'participants-database' ), __( 'The name must be unique: a field with that name has been previously defined.', 'participants-database' )
+              ), 'error' );
+      $this->return_to_the_manage_database_fields_page();
+    }
+
+    // prevent name from beginning with a number
+    if ( preg_match( '/^\d/', $params['name'] ) === 1 ) {
+
+      Participants_Db::set_admin_message( sprintf(
+                      '<strong>%s</strong> %s', __( 'The name cannot begin with a number', 'participants-database' ), __( 'Please choose another.', 'participants-database' )
+              ), 'error' );
+      $this->return_to_the_manage_database_fields_page();
+    }
+
+    $result = Participants_Db::add_blank_field( $params );
+
+    if ( $result ) {
+      Participants_Db::set_admin_message( __( 'The new field was added.', 'participants-database' ), 'update' );
+      if ( PDb_FormElement::is_value_set( $params['form_element'] ) )
+        Participants_Db::set_admin_message( __( 'Remember to define the "options" for your new field.', 'participants-database' ), 'update' );
+    } else {
+      Participants_Db::set_admin_message( __( 'The field could not be added.', 'participants-database' ), 'error' );
+    }
+
+    $this->return_to_the_manage_database_fields_page();
+  }
+
+  /**
+   * adds a new group
+   * 
+   * @global wpdb $wpdb
+   */
+  public function add_group()
+  {
+    global $wpdb;
+    $atts = array(
+        'name' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
+        'title' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
+        'order' => $_POST['group_order'],
+        'display' => 1,
+        'admin' => 0,
+        'description' => '',
+    );
+
+    // if the name already exists, add a numeral to make it unique
+    $extant_groups = $wpdb->get_col( 'SELECT `name` FROM ' . Participants_Db::$groups_table );
+    $i = 1;
+    $stem = $atts['name'];
+    while ( in_array( $atts['name'], $extant_groups ) ) {
+      $atts['name'] = $stem . '-' . $i++;
+    }
+
+    $result = $wpdb->insert( Participants_Db::$groups_table, $atts );
+
+    if ( $result ) {
+      Participants_Db::set_admin_message( __( 'The new group was added.', 'participants-database' ), 'update' );
+    }
+
+    $this->return_to_the_manage_database_fields_page();
+  }
+
+  /**
+   * processes the groups update submission
+   * 
+   * @global wpdb $wpdb
+   */
+  public function update_groups()
+  {
+
+    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
+      return;
+    }
+
+    unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'], $_POST['group_title'], $_POST['group_order'] );
+
+    global $wpdb;
+
+    $result = false;
+    $data = array();
+
+    foreach ( $_POST as $group_name => $row ) {
+
+      $data['title'] = filter_var( $row['title'], FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') );
+      $data['description'] = filter_var( $row['description'], FILTER_SANITIZE_STRING );
+      $data['mode'] = filter_var( $row['mode'], FILTER_SANITIZE_STRING );
+      $data['display'] = $data['mode'] === 'public' ? '1' : '0';
+      $data['admin'] = $data['mode'] === 'admin' ? '1' : '0';
+
+      $result = $wpdb->update( Participants_Db::$groups_table, $data, array('name' => stripslashes( $group_name )) );
+    }
+
+    if ( $result === false ) {
+      if ( $wpdb->last_error ) {
+        Participants_Db::set_admin_message( $this->parse_db_error( $wpdb->last_error, $action ), 'error' );
+      } elseif ( empty( Participants_Db::$admin_message ) ) {
+        Participants_Db::set_admin_message( __( 'There was an error; the settings were not saved.', 'participants-database' ), 'error' );
+      }
+    } elseif ( $result ) {
+      /**
+       * @action pdb-field_defs_updated
+       * @param string action
+       * @param string last query
+       */
+      do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_groups', $wpdb->last_query );
+      Participants_Db::set_admin_message( __( 'Your groups have been updated', 'participants-database' ), 'updated' );
+    }
+
+    $this->return_to_the_manage_database_fields_page();
+  }
+
+  /**
+   * processes the ajax submission
+   * 
+   * @global wpdb $wpdb
+   */
+  public function process_ajax_submit()
+  {
+    if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
+      wp_send_json( 'failed' );
+    }
+
+    global $wpdb;
+
+    switch ( filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ) ) {
+
+      case 'delete_field':
+
+        $list = $this->sanitize_id_list();
+
+        if ( count( $list ) < 1 ) {
+          wp_send_json( 'error:no valid id list' );
+        }
+
+        $result = $wpdb->query( '
+      DELETE FROM ' . Participants_Db::$fields_table . '
+      WHERE id IN ("' . implode( '","', $list ) . '")'
+        );
+
+        wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+
+      case 'delete_group':
+
+        $group = current( $_POST['list'] );
+
+        $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
+
+        $result = false;
+
+        if ( $group_count == 0 )
+          $result = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"', $group ) );
+
+        if ( $result ) {
+          wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+        } else {
+          wp_send_json( 'error:could not delete group' );
+        }
+
+      case 'update_param':
+
+        $list = $this->sanitize_id_list();
+
+        if ( count( $list ) < 1 ) {
+          wp_send_json( 'error:no valid id list' );
+        }
+
+        $param = filter_input( INPUT_POST, 'param', FILTER_SANITIZE_STRING );
+        $setting = filter_input( INPUT_POST, 'setting', FILTER_SANITIZE_STRING ) === 'true' ? 1 : 0;
+
+        $result = $wpdb->query( '
+      UPDATE ' . Participants_Db::$fields_table . '
+      SET `' . $param . '` = "' . $setting . '" 
+      WHERE id IN ("' . implode( '","', $list ) . '")'
+        );
+
+        wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Field settings updated.', 'participants-database' ) )) );
+
+      case 'reorder_fields':
+        parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
+        $update = array();
+        foreach ( $list as $key => $value ) {
+          $update[] = 'WHEN `id` = "' . filter_var( str_replace( 'row_', '', $key ), FILTER_SANITIZE_NUMBER_INT ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
+        }
+        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$fields_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END' );
+
+        wp_send_json( array('status' => $result ? 'success' : 'failed') );
+
+      case 'reorder_groups':
+        parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
+        $update = array();
+        foreach ( $list as $key => $value ) {
+          $update[] = 'WHEN `name` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
+        }
+        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$groups_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END' );
+
+        wp_send_json( array('status' => $result ? 'success' : 'failed') );
+
+      case 'open_close_editor':
+        $fieldid = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+        switch ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) ) {
+          case 'open':
+            $_SESSION[self::action_key]['editoropen'][$fieldid] = true;
+            break;
+          case 'close':
+            unset( $_SESSION[self::action_key]['editoropen'][$fieldid] );
+        }
+        wp_send_json( 'set' );
+
+      case 'open_close_all':
+
+        $list = $this->sanitize_id_list();
+
+        if ( count( $list ) < 1 ) {
+          wp_send_json( 'error:no valid id list' );
+        }
+
+        foreach ( $list as $id ) {
+          if ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) === 'open' ) {
+            $_SESSION[self::action_key]['editoropen'][$id] = true;
+          } else {
+            unset( $_SESSION[self::action_key]['editoropen'][$id] );
+          }
+        }
+        wp_send_json( 'set' );
+        
+      default:
+        /**
+         * @action pdb-with_selected_field_edit_action
+         * @param string name of the task
+         * @param array of selected ids
+         */
+        do_action( Participants_Db::$prefix . 'with_selected_field_edit_action', filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ), $this->sanitize_id_list() );
+    }
+  }
+
+  /**
+   * redirects back to the manage database fields page after processing the submission
+   */
+  private function return_to_the_manage_database_fields_page()
+  {
+    wp_redirect( add_query_arg( 'page', 'participants-database-manage_fields', admin_url( 'admin.php' ) ) );
+    exit();
+  }
+  
+
+  /**
+   * prepares a serialized array for display
+   * 
+   * displays an array as a series of comma-separated strings
+   * 
+   * @param string|array $array of field options or attributes
+   * @return string the prepared string
+   */
+  public static function array_to_string_notation( $array )
+  {
+
+    $value_list = maybe_unserialize( $array );
+
+    if ( !is_array( $value_list ) ) {
+      return $value_list;
+    }
+    /**
+     * @see PDb_Manage_Fields::prep_values_array()
+     */
+    $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
+    $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
+
+    if ( PDb_FormElement::is_assoc( $value_list ) ) {
+      
+      /*
+       * here, we create a string representation of an associative array, using 
+       * :: to denote a name=>value pair
+       */
+      $temp = array();
+      foreach ( $value_list as $k => $v ) {
+        $temp[] = $k . $pair_delim . $v;
+      }
+      $value_list = $temp;
+    }
+
+    return implode( $option_delim, $value_list );
+  }
+
+  /**
+   * breaks the submitted comma-separated string of values into elements for use in 
+   * select/radio/checkbox type form elements
+   * 
+   * if the substrings contain a '::' we split that, with the first substring being 
+   * the key (title) and the second the value
+   * 
+   * there is no syntax checking...if there is no key string before the ::, the element 
+   * will have an empty key, but it will be obvious to the user
+   * 
+   * @param string $values in the field settings notation
+   * @return array as $title => $value
+   */
+  public static function string_notation_to_array( $values )
+  {
+    /**
+     * allows for alternate strings to be used in structuring the field options 
+     * definition string 
+     * 
+     * @filter pdb-field_options_pair_delim
+     * @filter pdb-field_options_option_delim
+     * @param string the default string
+     * @return string the string to use for the structure
+     */
+    $pair_delim = Participants_Db::apply_filters( 'field_options_pair_delim', '::' );
+    $option_delim = Participants_Db::apply_filters( 'field_options_option_delim', ',' );
+
+    $has_labels = strpos( $values, $pair_delim ) !== false;
+    $values_array = array();
+    $term_list = explode( $option_delim, stripslashes( $values ) );
+    if ( $has_labels ) {
+      foreach ( $term_list as $term ) {
+        if ( strpos( $term, $pair_delim ) !== false && strpos( $term, $pair_delim ) !== 0 ) {
+          list($key, $value) = explode( $pair_delim, $term );
+          /*
+           * @version 1.6
+           * this is to allow for an optgroup label that is the same as a value label...
+           * with an admittedly funky hack: adding a space to the end of the key for the 
+           * optgroup label. In most cases it will be unnoticed.
+           */
+          $array_key = in_array( $value, array('false', 'optgroup', false), true ) ? trim( $key ) . ' ' : trim( $key );
+          $values_array[$array_key] = self::prep_value( trim( $value ), true );
+        } else {
+          // strip out the double colon in case it is present
+          $term = str_replace( array($pair_delim), '', $term );
+          $values_array[self::prep_value( $term, true )] = self::prep_value( $term, true );
+        }
+      }
+    } else {
+      foreach ( $term_list as $term ) {
+        $attribute = self::prep_value( $term, true );
+        $values_array[$attribute] = $attribute;
+      }
+    }
+    return PDb_Base::cleanup_array( $values_array );
+  }
+
+  /**
+   * prepares a string for storage in the database
+   * 
+   * @param string $value
+   * @param bool $single_encode if true, don't encode entities 
+   * @return string
+   */
+  private static function prep_value( $value, $single_encode = false )
+  {
+    if ( $single_encode )
+      return trim( stripslashes( $value ) );
+    else
+      return htmlentities( trim( stripslashes( $value ) ), ENT_QUOTES, "UTF-8", true );
+  }
+
+  /**
+   * 
+   * makes a legal database column name
+   * 
+   * @param string the proposed name
+   * @retun string the legal name
+   */
+  public static function make_name( $string )
+  {
+    /*
+     * truncate to 64 characters, then replace any characters that would cause problems 
+     * in queries
+     */
+    $name = strtolower( str_replace(
+                    array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), stripslashes( substr( $string, 0, 64 ) )
+            ) );
+    /*
+     * allow only proper unicode letters, numerals and legal symbols
+     */
+    if ( function_exists( 'mb_check_encoding' ) ) {
+      $name = mb_check_encoding( $name, 'UTF-8' ) ? $name : mb_convert_encoding( $name, 'UTF-8' );
+    }
+    return preg_replace( '#[^\p{L}\p{N}_]#u', '', $name );
+  }
+
+  /**
+   * sanitizes the group ot field title
+   * 
+   * @param string $title
+   * @return string
+   */
+  public static function make_title( $title )
+  {
+    return filter_var( $title, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_BACKTICK) );
+  }
+
+  /**
+   * sanitizes a list of ids
+   * 
+   * @param string $name of the $_POST element
+   * @return array
+   */
+  private function sanitize_id_list( $name = 'list' )
+  {
+    return filter_var_array( $_POST[$name], FILTER_SANITIZE_NUMBER_INT );
+  }
+
+  /**
+   * checks for the need to change the field datatype
+   * 
+   * @global wpdb $wpdb
+   * @param string  $fieldname
+   * @param string $form_element the field form element
+   * @return string|bool false if no change, new datatype if changed
+   */
+  protected function new_datatype( $fieldname, $form_element )
+  {
+    global $wpdb;
+    $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . ' WHERE `field` = "%s"';
+    $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
+    $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'form_element' => $form_element) );
+    $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
+    return $this->datatype_has_changed( $current_type, $new_type ) ? $new_type : false;
+  }
+
+  /**
+   * compares two field datatypes and tells if the are different
+   * 
+   * doesn't compare the value in parentheses so that decimals and other datatypes 
+   * can be customized in the database table
+   * 
+   * @param string  $current_type
+   * @param string  $default_type
+   * 
+   * @return bool true if the two types are different
+   */
+  private function datatype_has_changed( $current_type, $default_type )
+  {
+    $replace_pattern = '/^(.*)\(.+\)$/';
+    // strip out the parenthesized part
+    return preg_replace( $replace_pattern, '\1', $current_type ) !== preg_replace( $replace_pattern, '\1', $default_type );
+  }
+
+  /**
+   * makes a readable string out of a database error
+   * 
+   * @param string $error
+   * @param string $context
+   * @return string
+   */
+  function parse_db_error( $error, $context )
+  {
+
+    // unless we find a custom message, use the class error message
+    $message = $error;
+
+    $item = false;
+
+    switch ( $context ) {
+
+      case $this->i18n( 'add group' ):
+
+        $item = $this->i18n( 'group' );
+        break;
+
+      case $this->i18n( 'add field' ):
+
+        $item = $this->i18n( 'field' );
+        break;
+    }
+
+    if ( $item && false !== stripos( $error, 'duplicate' ) ) {
+
+      $message = sprintf( __( 'The %1$s was not added. There is already a %1$s with that name, please choose another.', 'participants-database' ), $item );
+    }
+
+    return $message;
+  }
+
+  /**
+   * provides a dismissable admin message
+   * 
+   * @param string $message
+   * @param string $key id key for the message
+   * @param string $type message type
+   * @return string html
+   */
+  protected function dismissable_message( $message, $key = 'field_update', $type = 'notice' )
+  {
+    return '<div id="pdb-manage_fields_' . $key . '" class="updated settings-error ' . $type . ' is-dismissible"> 
+<p><strong>' . $message . '</strong></p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
+  }
+
+  /**
+   * provides translation strings
+   * 
+   * @param string $key
+   * @return string translated string
+   */
+  private function i18n( $name )
+  {
+    $i18n = PDb_Manage_Fields::get_i18n();
+    return isset( $i18n['name'] ) ? $i18n['name'] : $name;
+  }
+
+}

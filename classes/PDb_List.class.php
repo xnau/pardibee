@@ -151,7 +151,7 @@ class PDb_List extends PDb_Shortcode {
         'template' => 'default',
         'module' => 'list',
         'action' => '',
-        'suppress' => '',
+        'suppress' => 'false',
     );
 
     // run the parent class initialization to set up the parent methods 
@@ -171,12 +171,7 @@ class PDb_List extends PDb_Shortcode {
 
     $this->_set_single_record_url();
 
-    /*
-     * if the 'suppress' shortcode attribute is set
-     */
-    if ( !empty( $this->shortcode_atts['suppress'] ) ) {
-      $this->suppress = filter_var( $this->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
-    }
+    $this->suppress= $this->attribute_true('suppress');
 
     global $wp_query;
 
@@ -277,10 +272,12 @@ class PDb_List extends PDb_Shortcode {
     // the list query object can be modified at this point to add a custom search
     do_action( Participants_Db::$prefix . 'list_query_object', $this->list_query );
 
-    /*
+    /**
      * allow the query to be altered before the records are retrieved
      * 
-     * pdb-list_query
+     * @filter pdb-list_query
+     * @param string the list query
+     * @return string list query
      */
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
 
@@ -730,10 +727,7 @@ class PDb_List extends PDb_Shortcode {
    */
   public function print_list_count( $wrap_tag = false, $print = true )
   {
-
-    $display_count_shortcode = ($this->shortcode_atts['display_count'] != '0');
-
-    if ( $display_count_shortcode ) {
+    if ( $this->attribute_true( 'display_count' ) ) {
       if ( !$wrap_tag )
         $wrap_tag = '<caption class="%s" >';
       $wrap_tag_close = '';
@@ -1041,10 +1035,9 @@ class PDb_List extends PDb_Shortcode {
    */
   private function _sort_filter_mode()
   {
+    $mode = $this->attribute_true( 'sort' ) ? 'sort' : 'none';
 
-    $mode = $this->shortcode_atts['sort'] == 'true' ? 'sort' : 'none';
-
-    return $this->shortcode_atts['search'] == 'true' ? ( $mode == 'sort' ? 'both' : 'filter' ) : $mode;
+    return $this->attribute_true( 'search' ) ? ( $mode === 'sort' ? 'both' : 'filter' ) : $mode;
   }
 
   /**

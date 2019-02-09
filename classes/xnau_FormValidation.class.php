@@ -126,11 +126,8 @@ class xnau_FormValidation {
 
     foreach ($this->errors as $field => $error) :
 
-      // set a default element type
-      $element = 'input';
-
-      if ($element)
-        $this->error_CSS[] = $element . '[name="' . $field_atts->name . '"]';
+      // default selector
+      $this->error_CSS[] = 'input[name="' . $field . '"]';
 
       if (isset($this->error_messages[$error])) {
         $error_messages[] = sprintf($this->error_messages[$error], $field);

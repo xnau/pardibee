@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -76,6 +76,7 @@ class PDb_Debug {
   public function assets( $hook )
   {
     if ( strpos( $hook, 'participants-database-pdb_debugging' ) !== false ) {
+      
       wp_localize_script( Participants_Db::$prefix . 'debug', 'PDb_Debug', array(
           'action' => $this->action,
           'spinner' => Participants_Db::get_loading_spinner(),

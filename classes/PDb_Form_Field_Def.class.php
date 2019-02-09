@@ -82,7 +82,7 @@ class PDb_Form_Field_Def {
   /**
    * @var bool field is included in CSV export
    */
-  public $CSV;
+  public $csv;
 
   /**
    * @var bool field is persistent
@@ -98,6 +98,11 @@ class PDb_Form_Field_Def {
    * @var bool field is read only
    */
   protected $readonly;
+  
+  /**
+   * @var string holds the validation message
+   */
+  public $validation_message;
 
   /**
    * @var string name of the current module
@@ -107,12 +112,12 @@ class PDb_Form_Field_Def {
   /**
    * @var array element attributes
    */
-  public $attributes;
+  public $attributes = array();
 
   /**
    * @var array element options
    */
-  public $options;
+  public $options = array();
 
   /**
    * instantiates the object
@@ -146,11 +151,19 @@ class PDb_Form_Field_Def {
    */
   public static function is_field( $fieldname )
   {
-    global $wpdb;
-    $sql = 'SELECT COUNT(*) 
-            FROM ' . Participants_Db::$fields_table . ' v 
-            WHERE v.name = %s';
-    return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $fieldname ) );
+    $cachekey = 'pdb-is_field';
+    $is = wp_cache_get( $fieldname, $cachekey, false, $found );
+    
+    if ( ! $found ) {
+      global $wpdb;
+      $sql = 'SELECT COUNT(*) 
+              FROM ' . Participants_Db::$fields_table . ' v 
+              WHERE v.name = %s';
+      $is = (bool) $wpdb->get_var( $wpdb->prepare( $sql, $fieldname ) );
+      wp_cache_set( $fieldname, $is, $cachekey, Participants_Db::cache_expire() );
+    }
+    
+    return $is;
   }
 
   /**
@@ -162,21 +175,56 @@ class PDb_Form_Field_Def {
    */
   private static function get_field_def( $fieldname )
   {
-    global $wpdb;
-    $cachekey = 'participants-database-field-definitions';
+    $cachekey = 'pdb-field_def';
+    $def = wp_cache_get( $fieldname, $cachekey );
     
-    $all_defs = wp_cache_get( $cachekey );
-    if ( ! $all_defs ) {
-      $raw_defs = $wpdb->get_results( 'SELECT * FROM ' . Participants_Db::$fields_table );
-      
-      $all_defs = array();
-      foreach( $raw_defs as $def ) {
-        $all_defs[$def->name] = $def;
-      }
-      wp_cache_set( $cachekey, $all_defs );
+    if ( ! $def ) {
+      global $wpdb;
+      $sql = 'SELECT v.* 
+              FROM ' . Participants_Db::$fields_table . ' v 
+              WHERE v.name = %s';
+      $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
+      wp_cache_set( $fieldname, $def, $cachekey, Participants_Db::cache_expire() );
     }
     
-    return $all_defs[$fieldname];
+    return $def;
+  }
+  
+  /**
+   * provides the value of the named property
+   * 
+   * this is an an explicit version of the __get magic method
+   * 
+   * @param string $prop property name
+   * @return mixed null if property method does not exist
+   */
+  public function get_prop( $prop )
+  {
+    switch ( $prop ) {
+      case 'form_element':
+      case 'title':
+      case 'default_value':
+      case 'name':
+      case 'group':
+      case 'options':
+      case 'attributes':
+      case 'help_text':
+      case 'validation':
+      case 'validation_message':
+        return $this->{$prop}();
+      case 'sortable':
+      case 'csv':
+      case 'persistent':
+      case 'signup':
+      case 'readonly':
+        return $this->{'is_' . $prop}();
+      case 'default':
+        return $this->default_value();
+      case 'id':
+        return $this->id;
+      default:
+        return null;
+    }
   }
 
   /**
@@ -190,10 +238,26 @@ class PDb_Form_Field_Def {
 //    error_log(__METHOD__.' getting property: '.$prop.' 
 //      
 //trace: '.print_r(wp_debug_backtrace_summary(),1));
-    switch ( $prop ) {
-      default:
-        return $this->{$prop};
-    }
+//    switch ( $prop ) {
+//      case 'form_element':
+//      case 'title':
+//      case 'default':
+//      case 'name':
+//      case 'group':
+//      case 'options':
+//      case 'attributes':
+//      case 'help_text':
+//      case 'validation_message':
+//      case 'sortable':
+//      case 'csv':
+//      case 'persistent':
+//      case 'signup':
+//      case 'readonly':
+//        return $this->{$prop}();
+//      default:
+//        return property_exists(get_class($this), $prop) ? $this->{$prop} : null;
+//    }
+    return $this->get_prop( $prop );
   }
 
   /**
@@ -266,7 +330,27 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
-    return is_null( $this->default ) ? '' : $this->default;
+    return Participants_Db::apply_filters( 'translate_string', $this->default );
+  }
+
+  /**
+   * provides the validation type field
+   * 
+   * @return string
+   */
+  public function validation()
+  {
+    return $this->validation;
+  }
+
+  /**
+   * provides the validation message for the field
+   * 
+   * @return string
+   */
+  public function validation_message()
+  {
+    return Participants_Db::apply_filters( 'translate_string', $this->validation_message );
   }
 
   /**
@@ -280,6 +364,17 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * provides the display title of the field's form element
+   * 
+   * @return string title for the form element
+   */
+  public function form_element_title()
+  {
+    $types = PDb_FormElement::get_types();
+    return  isset( $types[$this->form_element] ) ? $types[$this->form_element] : $this->form_element;
+  }
+
+  /**
    * tells the field group
    * 
    * @return string
@@ -287,6 +382,58 @@ class PDb_Form_Field_Def {
   public function group()
   {
     return $this->group;
+  }
+
+  /**
+   * provides the field options
+   * 
+   * this is really only valid with form elements that have options
+   * 
+   * @retrun array of options as $title => $value
+   */
+  public function options()
+  {
+    return $this->options;
+  }
+
+  /**
+   * provides an array of option values
+   * 
+   * this provides an indexed array of just the values, titles are ignored
+   * 
+   * @return array of option values
+   */
+  public function option_values()
+  {
+    return array_values( $this->options );
+  }
+
+  /**
+   * provides the attributes array
+   * 
+   * these are typically printed in the HTML as attributes to the main tag
+   * 
+   * @return array as $name => $value
+   */
+  public function attributes()
+  {
+    /**
+     * @filter pdb-form_field_attributes
+     * @param array the field attributes
+     * @param PDb_Form_Field_Def current instance
+     * @return array as $name => $value
+     */
+    return Participants_Db::apply_filters( 'form_field_attributes', $this->attributes, $this );
+  }
+  
+  /**
+   * provides the help text
+   * 
+   * @return string
+   */
+  public function help_text()
+  {
+    return Participants_Db::apply_filters( 'translate_string', $this->help_text );
   }
 
   /**
@@ -379,6 +526,58 @@ class PDb_Form_Field_Def {
   {
     return (bool) $this->persistent;
   }
+  
+  /**
+   * tells if the field is sortable
+   * 
+   * @return bool
+   */
+  public function is_sortable()
+  {
+    return (bool) $this->sortable;
+  }
+  
+  /**
+   * tells if the field is sortable
+   * 
+   * @return bool
+   */
+  public function is_read_only()
+  {
+    return (bool) $this->readonly;
+  }
+  
+  /**
+   * tells if the field is to be included in the signup form by default
+   * 
+   * @return bool
+   */
+  public function is_signup()
+  {
+    return (bool) $this->signup;
+  }
+  
+  /**
+   * tells if the field is to be included in the csv export
+   * 
+   * alias
+   * 
+   * @return bool
+   */
+  public function is_csv()
+  {
+    return $this->is_csv_exported();
+  }
+  
+  /**
+   * tells if the field is to be included in the csv export
+   * 
+   * @return bool
+   */
+  public function is_csv_exported()
+  {
+    return (bool) $this->csv;
+  }
 
   /**
    * tells if the field has a default value
@@ -387,7 +586,17 @@ class PDb_Form_Field_Def {
    */
   public function has_default()
   {
-    return $this->default_value() !== '';
+    return strlen( $this->default ) > 0;
+  }
+
+  /**
+   * tells if the field has a default value
+   * 
+   * @return bool true if the default is non-empty
+   */
+  public function has_validation_message()
+  {
+    return strlen( $this->validation_message ) > 0;
   }
 
   /**
@@ -415,49 +624,11 @@ class PDb_Form_Field_Def {
    */
   public function values_array()
   {
+//    $calling_class = $this->get_calling_class();
+//    if ( $calling_class !== get_class() ) {
+//      error_log(__METHOD__.' calling deprecated method: '. print_r( wp_debug_backtrace_summary(),1 ) );
+//    }
     return (array) maybe_unserialize( $this->values );
-  }
-
-  /**
-   * provides the field options
-   * 
-   * this is really only valid with form elements that have options
-   * 
-   * @retrun array of options as $title => $option
-   */
-  public function options()
-  {
-    return $this->options;
-  }
-
-  /**
-   * provides an array of option values
-   * 
-   * this provides an indexed array of just the values, titles are ignored
-   * 
-   * @return array of option values
-   */
-  public function option_values()
-  {
-    return array_values( $this->options );
-  }
-
-  /**
-   * provides the attributes array
-   * 
-   * these are typically printed in the HTML as attributes to the main tag
-   * 
-   * @return array as $name => $value
-   */
-  public function attributes()
-  {
-    /**
-     * @filter pdb-form_field_attributes
-     * @param array the field attributes
-     * @param PDb_Form_Field_Def current instance
-     * @return array as $name => $value
-     */
-    return Participants_Db::apply_filters( 'form_field_attributes', is_array( $this->attributes ) ? $this->attributes : array(), $this );
   }
 
   /**
@@ -481,9 +652,9 @@ class PDb_Form_Field_Def {
         case 'values':
 
           $this->values = $def->values;
-
+          
           // if the values parameter has a value, then the field def is of the old format
-          if ( $def->values !== '' && !is_null( $def->values ) ) {
+          if ( $def->values !== '' && !is_null($def->values) ) {
             $values = $this->values_array();
             /*
              * for "value set" fields, the values parameter defines the options; for 
@@ -499,10 +670,8 @@ class PDb_Form_Field_Def {
 
         case 'attributes':
         case 'options':
-
-          if ( !empty($value) ) {
-            $this->{$prop} = (array) maybe_unserialize( $value );
-          }
+          
+          $this->{$prop} = (array) maybe_unserialize($value);
           break;
 
         default:

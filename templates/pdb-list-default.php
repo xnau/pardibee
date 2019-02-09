@@ -10,9 +10,6 @@
  * If you need more control over the display, look at the detailed template
  * (pdb-list-detailed.php) for an example of how this can be done
  *
- * Please note that if you have more than one list on a page, searching, sorting
- * and pagination will not work correctly.
- *
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?>" id="<?php echo $this->list_anchor ?>">

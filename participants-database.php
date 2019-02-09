@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.8.4.9
+ * Version: 1.8.5
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -101,7 +101,7 @@ class Participants_Db extends PDb_Base {
    * 
    * @var string current Db version
    */
-  public static $db_version = '1.0';
+  public static $db_version = '1.1';
 
   /**
    * name of the WP option where the current db version is stored
@@ -488,6 +488,9 @@ class Participants_Db extends PDb_Base {
      */
     new PDb_Update_Notices( __FILE__ );
     
+    // set up the fields update processor
+    new PDb_Manage_Fields_Updates();
+    
     /**
      * sets the admin notices class
      * 
@@ -619,19 +622,18 @@ class Participants_Db extends PDb_Base {
   /**
    * processes the admin includes
    * 
-   * uses WP hook 'admin_enqueue_scripts''
+   * uses WP hook 'admin_enqueue_scripts'
    * 
    * @param string $hook the admin menu hook as provided by the WP filter
    * @return null
    */
   public static function admin_includes( $hook )
   {
-
     /*
      * register admin scripts and stylesheets
      */
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/jquery_cookie.js', __FILE__ ) );
-    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'manage_fields', plugins_url( 'js/manage_fields.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '1.9.6', true );
     wp_register_script( self::$prefix . 'settings_script', plugins_url( 'js/settings.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', plugins_url( 'js/record_edit.js', __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
@@ -654,7 +656,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '2.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
 //      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
@@ -683,10 +685,14 @@ class Participants_Db extends PDb_Base {
     if ( false !== stripos( $hook, 'participants-database-manage_fields' ) ) {
       wp_localize_script( self::$prefix . 'manage_fields', 'manageFields', array('uri' => $_SERVER['REQUEST_URI']) );
       wp_localize_script( self::$prefix . 'manage_fields', 'PDb_L10n', array(
+          '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
+          'action' => PDb_Manage_Fields_Updates::action_key,
           /* translators: don't translate the words in brackets {} */
           'must_remove' => '<h4>' . __( 'You must remove all fields from the {name} group before deleting it.', 'participants-database' ) . '</h4>',
           /* translators: don't translate the words in brackets {} */
-          'delete_confirm' => '<h4>' . __( 'Delete the "{name}" {thing}?', 'participants-database' ) . '</h4>',
+          'delete_confirm' => '<h4>' . __( 'Delete the {name} {thing}?', 'participants-database' ) . '</h4>',
+          'delete_confirm_field' => '<h4>' . __( 'Delete the selected field?', 'participants-database' ) . '</h4>',
+          'delete_confirm_fields' => '<h4>' . __( 'Delete the selected fields?', 'participants-database' ) . '</h4>',
           'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
           'datatype_confirm' => '<h4 class="dashicons-before dashicons-info warning">' . __( 'Changing the form element on a field that has stored data can result in data loss.', 'participants-database' ) .'</h4><p><a href="https://wp.me/p48Sj5-Zb" target="_blank">' . __( 'More information here…', 'participants-database' ) . '</a></p>',
           'datatype_confirm_button' => __( 'Yes, change the form element', 'participants-database' ),
@@ -1109,23 +1115,13 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_groups( $column = '*', $exclude = false )
   {
-    $cachekey = false;
-    // check for the cached default return value
-    if ( $column === '*' && $exclude === false ) {
-      $cachekey = 'pdb-groups-array';
-      $groups = wp_cache_get( $cachekey );
-      if ( $groups ) {
-        return $groups;
-      }
-    }
-
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE `mode` IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '")';
 
     if ( $exclude ) {
 
-      $where = ' WHERE `name` ';
+      $where = ' AND `name` ';
 
       if ( is_array( $exclude ) ) {
 
@@ -1137,14 +1133,23 @@ class Participants_Db extends PDb_Base {
     }
 
     $sql = 'SELECT ' . $column . ' FROM ' . self::$groups_table . $where . ' ORDER BY `order`,`name` ASC';
-
+    
+    $cachekey = md5( $sql );
+    
+    $result = wp_cache_get( $cachekey );
+    
+    if ( ! $result ) {
+      $result = $wpdb->get_results( $sql, ARRAY_A );
+      wp_cache_add( $cachekey,  $result, MINUTE_IN_SECONDS );
+    }
+    
     // are we looking for only one column?
     // if so, flatten the array
     if ( $column !== '*' and false === strpos( $column, ',' ) ) {
 
       $output = array();
 
-      foreach ( $wpdb->get_results( $sql, ARRAY_A ) as $row )
+      foreach ( $result as $row )
         $output[] = $row[$column];
 
       return $output;
@@ -1152,16 +1157,9 @@ class Participants_Db extends PDb_Base {
 
       $group_index = array();
 
-      $groups = $wpdb->get_results( $sql, ARRAY_A );
-
       // build an array indexed by the group's name
-      foreach ( $groups as $group )
+      foreach ( $result as $group )
         $group_index[$group['name']] = $group;
-      
-      if ( $cachekey ) {
-        // set the cache
-        wp_cache_set( $cachekey, $group_index );
-      }
 
       return $group_index;
     }
@@ -2276,12 +2274,12 @@ class Participants_Db extends PDb_Base {
   {
     if ( $value === false || is_null( $value ) || !self::is_column( $term ) )
       return false;
-    
+
     $cachekey = 'pdb-record_by_term_' . $term;
     $output = wp_cache_get( $value, $cachekey, false, $found );
     
     if ( ! $found ) {
-      global $wpdb;
+    global $wpdb;
 
       $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
       $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
@@ -2289,11 +2287,11 @@ class Participants_Db extends PDb_Base {
       if ( !is_array( $result ) ) {
         $output = false;
       } else {
-        $output = array();
+    $output = array();
 
-        foreach ( $result as $id ) {
-          $output[] = current( $id );
-        }
+    foreach ( $result as $id ) {
+      $output[] = current( $id );
+    }
       }
       wp_cache_set($value, $output, $cachekey);
     }
@@ -2301,7 +2299,7 @@ class Participants_Db extends PDb_Base {
     if ( $output === false ) {
       return false;
     } else {
-      return $single ? current( $output ) : $output;  
+      return $single ? current( $output ) : $output;
     }
   }
   
@@ -2430,37 +2428,12 @@ class Participants_Db extends PDb_Base {
    * 
    * displays an array as a series of comma-separated strings
    * 
-   * @param string $string
+   * @param string|array $array of field options or attributes
    * @return string the prepared string
    */
-  public static function array_to_string_notation( $string )
+  public static function array_to_string_notation( $array )
   {
-
-    $value = maybe_unserialize( $string );
-
-    if ( !is_array( $value ) ) {
-      return $value;
-    }
-    /**
-     * @see PDb_Manage_Fields::prep_values_array()
-     */
-    $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
-    $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
-
-    if ( PDb_FormElement::is_assoc( $value ) ) {
-      
-      /*
-       * here, we create a string representation of an associative array, using 
-       * :: to denote a name=>value pair
-       */
-      $temp = array();
-      foreach ( $value as $k => $v ) {
-        $temp[] = $k . $pair_delim . $v;
-      }
-      $value = $temp;
-    }
-
-    return implode( $option_delim, $value );
+    return PDb_Manage_Fields_Updates::array_to_string_notation($array);
   }
 
   /**
@@ -2969,7 +2942,7 @@ class Participants_Db extends PDb_Base {
     if ( $count > $max_tries ) {
 
 // too many tries, come back tomorrow
-      error_log( 'Participants Database Plugin: IP blocked for too many retrieval attempts from IP ' . self::user_ip() . ' in 24-hour period.' );
+      self::debug_log( 'Participants Database Plugin: IP blocked for too many retrieval attempts from IP ' . self::user_ip() . ' in 24-hour period.' );
       return;
     }
     $count++;
@@ -3403,9 +3376,7 @@ class Participants_Db extends PDb_Base {
   private static function print_list_search_result( $post, $instance )
   {
     
-//    error_log(__METHOD__.' sess id: '.Participants_Db::$session->get_id().' 
-//     
-//session: '.print_r(Participants_Db::$session,1));
+//    error_log(__METHOD__.' session: '.print_r($_SESSION,1));
     
     /*
      * get the attributes array; these values were saved in the session array by 
@@ -3564,6 +3535,8 @@ class Participants_Db extends PDb_Base {
   
   /**
    * sets up the plugin admin menus
+   * 
+   * fired on the admin_menu hook
    * 
    * fired on the admin_menu hook
    * 

@@ -621,7 +621,7 @@ abstract class xnau_Image_Handler {
     $result = wp_cache_get($uri, self::group, false, $found );
     if ($found === false) {
       $result = @getimagesize($uri);
-      wp_cache_set($uri, $result, self::group);
+      wp_cache_set( $uri, $result, self::group, Participants_Db::cache_expire() );
     }
     return $result;
   }

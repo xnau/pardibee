@@ -7,14 +7,14 @@ $mode = isset( $_POST['action'] ) && $_POST['action'] == 'success' ? 'success' :
  ?>
 <div class="wrap <?php echo $this->wrap_class .  'mode-' . $mode ?> " >
   
-  <h4><?php _e( 'Request your Private Link', 'participants-database' ) ?></h4>
+  <h4><?php echo Participants_Db::plugin_setting( 'retrieve_link_title', __( 'Request your Private Link', 'participants-database' ) ) ?></h4>
 
   <?php // output any validation errors
   $this->print_errors(); ?>
   
   <?php if ($mode == 'success') : ?>
   
-    <h5><?php _e('Success: your private link has been emailed to you.','participants-database') ?></h5>
+    <h5><?php echo Participants_Db::plugin_setting( 'retrieve_link_success', __('Success: your private link has been emailed to you.','participants-database') ) ?></h5>
   
   <?php else : ?>
 

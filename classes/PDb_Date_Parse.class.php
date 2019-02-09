@@ -249,8 +249,9 @@ class PDb_Date_Parse {
         $errors = false;
       }
       if ( is_array( $errors ) ) {
-        if ( PDB_DEBUG )
-          Participants_Db::debug_log( __METHOD__ . ' DateTime parse error: ' . implode( ', ', $errors ) );
+        if ( PDB_DEBUG ) {
+          Participants_Db::debug_log( __METHOD__ . ' value: ' . $this->input .' error: ' . print_r($errors,1) );
+        }
 
         return;
       }

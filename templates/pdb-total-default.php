@@ -35,6 +35,7 @@ if (empty($this->shortcode_atts['fields'])) {
           }
         }
       }
+      
   endwhile;
 
   echo $total;

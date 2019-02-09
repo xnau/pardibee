@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6.2
+ * @version    1.6.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -171,7 +171,7 @@ class PDb_FormElement extends xnau_FormElement {
    * this supplants the function Participants_Db::prep_field_for_display
    * 
    * @param object|string $field a PDb_Field_Item object or field name
-   * @param bool   $html  if true, retuns the value wrapped in HTML, false returns 
+   * @param bool   $html  if true, returns the value wrapped in HTML, false returns 
    *                      the formatted value alone
    * @return string the object's current value, formatted
    */
@@ -208,6 +208,7 @@ class PDb_FormElement extends xnau_FormElement {
 
         
         case 'image-upload' :
+          
           switch ( $field->module() ) {
             case 'single':
             case 'list':
@@ -752,22 +753,8 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_value_titles( $values, $fieldname )
   {
-    $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
-    $return = array();
-    if ( is_array( $options_array ) ) {
-      $i = 0;
-      foreach ( $options_array as $index => $option_value ) {
-        if ( !is_string( $index ) or $index == 'other' ) {
-          // we use the stored value
-          $return[$option_value] = $option_value;
-        } elseif ( $option_value == $values[$i] ) {
-          // grab the option title
-          $return[$option_value] = $index;
-        }
-        $i++;
-      }
-    }
-    return $return;
+    $options_array = Participants_Db::$fields[$fieldname]->options();
+    return array_flip( $options_array );
   }
 
   /**
@@ -786,7 +773,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_value_title( $value, $fieldname )
   {
-    $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
+    $field = PDb_Form_Field_Def::is_field( $fieldname ) ? Participants_Db::$fields[$fieldname] : false;
     /* @var $field PDb_Form_field_Def */
     if ( $field && $field->is_value_set() ) {
       foreach ( $field->options() as $option_title => $option_value ) {
@@ -799,7 +786,6 @@ class PDb_FormElement extends xnau_FormElement {
         }
       }
     }
-
     return $value;
   }
 
@@ -816,7 +802,9 @@ class PDb_FormElement extends xnau_FormElement {
   public static function get_title_value( $title, $fieldname )
   {
     $value = $title; // if no title is found, return the title argument
-    if ( isset( Participants_Db::$fields[$fieldname] ) && self::is_value_set( Participants_Db::$fields[$fieldname]->form_element ) ) {
+    $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
+    /* @var $field PDb_Form_Field_Def */
+    if ( $field && $field->is_value_set() ) {
       $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
       if ( is_array( $options_array ) && array_search( $title, $options_array ) === false ) {
         if ( isset( $options_array[$title] ) ) {
@@ -881,11 +869,12 @@ class PDb_FormElement extends xnau_FormElement {
     return parent::_attributes( $attributes_array );
   }
 
-  /*
-   * static function for assembling the types array
+  /**
+   * provides a list of all defined form elements
+   * 
+   * @return array as $name => $title
    * 
    */
-
   public static function get_types()
   {
     $types = array(
@@ -913,9 +902,12 @@ class PDb_FormElement extends xnau_FormElement {
         'placeholder' => __( 'Placeholder', 'participants-database' ),
 //         'timestamp'          => __('Timestamp', 'participants-database'),
     );
-    /*
+    /**
      * this gives access to the list of form element types for alteration before
      * it is set
+     * @filter pdb-set_form_element_types
+     * @param array of core form element types
+     * @return array of all form element types
      */
     return Participants_Db::apply_filters( 'set_form_element_types', $types );
   }
@@ -989,15 +981,18 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_datatype( $element )
   {
+    $form_element = is_array( $element ) ? $element['form_element'] : $element;
+    $fieldname = is_array( $element ) ? $element['name'] : '';
     /**
      * @version 1.7.0.7
      * @filter pdb-form_element_datatype
      * 
      * @param string $datatype the datatype found by the parent method
      * @param string  $form_element the name of the form element
+     * @param string name of the field if defined
      * @return string $datatype 
      */
-    return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $element ), is_array( $element ) ? $element['form_element'] : $element  );
+    return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $form_element ), $form_element, $fieldname );
   }
 
 }

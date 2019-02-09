@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -908,6 +908,30 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => 'email',
         )
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'retrieve_link_title',
+        'title' => __( 'Lost Private Link Form Title', 'participants-database' ),
+        'group' => 'pdb-resend',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'the title shown above the link request form', 'participants-database' ),
+            'value' => __( 'Request your Private Link', 'participants-database' ),
+        )
+    );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'retrieve_link_success',
+        'title' => __( 'Lost Private Link Success Message', 'participants-database' ),
+        'group' => 'pdb-resend',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'the message shown when a private link is successfully sent', 'participants-database' ),
+            'value' => __('Success: your private link has been emailed to you.','participants-database'),
+        )
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'id_field_prompt',
@@ -1449,7 +1473,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
 
     $key = ($with_none ? '1' : '0') . ($with_blank ? '1' : '0');
-    $pagelist = wp_cache_get( $key, 'get_pagelist' );
+    $pagelist = wp_cache_get( $key, 'pdb-get_pagelist' );
 
     if ( $pagelist === false ) {
 
@@ -1459,11 +1483,11 @@ class PDb_Settings extends xnau_Plugin_Settings {
       if ( $with_none )
         $pagelist[__( 'Same Page', 'participants-database' )] = 'none';
 
-      $pages = wp_cache_get( 'pagelist_posts' );
+      $pages = wp_cache_get( 'pdb-pagelist_posts' );
 
       if ( $pages === false ) {
         $pages = get_posts( array('post_type' => 'page', 'posts_per_page' => -1) );
-        wp_cache_set( 'pagelist_posts', $pages );
+        wp_cache_set( 'pdb-pagelist_posts', $pages );
       }
 
       foreach ( $pages as $page ) {
@@ -1483,7 +1507,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
         }
        */
-      wp_cache_set( $key, $pagelist, 'get_pagelist' );
+      wp_cache_set( $key, $pagelist, 'pdb-get_pagelist' );
     }
 
     return $pagelist;
@@ -1516,7 +1540,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
    */
   public static function _get_identifier_columns( $null = true )
   {
-    $columnlist = wp_cache_get( 'id_columns' );
+    $columnlist = wp_cache_get( 'pdb-id_columns' );
 
     if ( $columnlist === false ) {
 
@@ -1541,7 +1565,7 @@ ORDER BY g.order, v.order';
 
       $columnlist = self::column_dropdown_options( $columns, $columnlist );
 
-      wp_cache_set( 'id_columns', $columnlist );
+      wp_cache_set( 'pdb-id_columns', $columnlist, '', Participants_Db::cache_expire() );
     }
 
     return $columnlist;

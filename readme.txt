@@ -336,6 +336,10 @@ You can define a "captcha" form element which will show a simple math question f
 = 1.8.3.1 =
 * bugfix: field attributes missing in backend record edit
 
+= 1.8.5 =
+* redesigned Manage Database Fields page
+* important changes to how fields are defined
+
 = 1.8.3 =
 * bugfix for single record display no record
 

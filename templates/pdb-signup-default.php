@@ -1,6 +1,9 @@
 <?php
-/*
+/**
+ * 
  * default template for signup form
+ * 
+ * @version 0.4
  *
  * If the signup form setting "Show Field Groups" is selected, the form fields
  * will be grouped by the field groups that have their "visible" attribute
@@ -30,7 +33,8 @@
       <?php while ( $this->have_groups() ) : $this->the_group(); ?>
 
       <tbody class="field-group field-group-<?php echo $this->group->name ?>">
-        <?php if ( $this->group->printing_title() ) : // are we printing group titles and descriptions? ?>
+        
+        <?php if ( $this->group->has_fields() && $this->group->printing_title() ) : // are we printing group titles and descriptions? ?>
         <tr class="signup-group">
           <td colspan="2">
         

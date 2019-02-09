@@ -455,6 +455,7 @@ input[type="color"] {
 }
 .dashicons-sort:before {
   white-space: nowrap;
+  color: #0073aa;
 }
 .dashicons-no:before,
 .dashicons-info.warning:before {

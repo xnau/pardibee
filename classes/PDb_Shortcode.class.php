@@ -195,6 +195,7 @@ abstract class PDb_Shortcode {
   /**
    * instantiates the shortcode object
    *
+   * @global WP_Post $post
    * @param array  $shortcode_atts              the raw parameters passed in from the shortcode
    * @param array  $subclass_shortcode_defaults additional shortcode attributes to use as defined
    *                                            in the instantiating subclass
@@ -284,9 +285,36 @@ abstract class PDb_Shortcode {
 
     /**
      * @action pdb-shortcode_set
-     * @param object the currently instanted shortcode class
+     * @param object the current shortcode class object
      */
     do_action( Participants_Db::$prefix . 'shortcode_set', $this );
+  }
+  
+  /**
+   * provides the boolean value for a shortcode attribute
+   * 
+   * this allows for various different ways of stating the value of the attribute 
+   * in the shortcode
+   * 
+   * @param string $attribute
+   * @return bool
+   */
+  public function attribute_true( $attribute ) {
+    $state = false;
+    if ( ! isset( $this->shortcode_atts[$attribute] ) ) {
+      return $state;
+    }
+    if ( is_bool( $this->shortcode_atts[$attribute] ) ) {
+      return $this->shortcode_atts[$attribute];
+    }
+    switch ($this->shortcode_atts[$attribute]) {
+      case 'true':
+      case '1':
+      case 'yes':
+        $state = true;
+        break;
+    }
+    return $state;
   }
 
   /**
@@ -858,15 +886,32 @@ abstract class PDb_Shortcode {
 
       $orderby = empty( $this->shortcode_atts['fields'] ) ? 'g.order ASC' : 'FIELD( g.name, "' . implode( '","', $groups ) . '")';
 
-      if ( $this->module === 'signup' ) {
-        $sql = 'SELECT DISTINCT g.name 
-                  FROM ' . Participants_Db::$groups_table . ' g 
+      $display_where = '';
+      if ( $public_only ) {
+        // using the new 'mode' value
+        $display_where = 'AND ( g.mode IS NULL AND g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"';
+      }
+      switch ( $this->module ) {
+        case 'signup':
+          // get only signup-enabled fields from public groups
+          $sql = 'SELECT DISTINCT g.name 
+                  FROM ' . Participants_Db::$groups_table . ' g  
                   JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
-                  WHERE f.signup = "1" ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' AND f.form_element <> "hidden" ORDER BY ' . $orderby;
-      } else {
-        $sql = 'SELECT g.name 
+                  WHERE f.signup = "1" AND ( g.mode IS NULL AND g.display = "1" ) OR g.mode = "public" ORDER BY ' . $orderby;
+          break;
+        
+        case 'record':
+          // get field from public and private groups
+          $sql = 'SELECT DISTINCT g.name 
+                FROM ' . Participants_Db::$groups_table . ' g 
+                WHERE g.display = "1" OR g.mode = "public" OR ( g.display = g.admin ) OR g.mode = "private" ORDER BY ' . $orderby;
+          break;
+    
+        default:
+          // get fields from all groups or only public groups
+          $sql = 'SELECT g.name 
                 FROM ' . Participants_Db::$groups_table . ' g
-                  WHERE 1=1 ' . ( $public_only ? 'AND g.display = "1"' : '' ) . ' ORDER BY ' . $orderby;
+                  WHERE 1=1 ' . ( $public_only ? 'AND ( g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"' : '' ) . ' ORDER BY ' . $orderby;
       }
 
       $result = $wpdb->get_results( $sql, ARRAY_N );

@@ -2,7 +2,7 @@
 
 /*
 Participants DB Admin CSS 
-version 1.5 
+version 2.1 
 date 5-2017
 */
 
@@ -23,26 +23,6 @@ body[class*='participants-database']  .widefat tr:nth-child(even) {
 {
   width: 99%;
   max-width: 520px;
-}
-.widefat.manage-fields td.focused {
-  position: relative;
-  z-index: 10000;
-  overflow: visible;
-}
-.widefat.manage-fields input.focused {
-  position:absolute;
-  margin-top:-1em;
-  z-index: 200;
-  width: 400px;
-}
-.participants_db input.add_field {
-  width: 250px;
-}
-.manage-fields.widefat td,
-.manage-fields.widefat th {
-  padding: 8px 5px;
-  position: relative;
-  z-index: 1;
 }
 .participants_db input[disabled] {
   color: inherit;
@@ -285,9 +265,6 @@ body[class*='participants-database'] a.delete {
 body[class*='participants-database'] .form-table {
   /*  margin-bottom:4em;*/
 }
-#manage_main_fields .dashicons {
-  font-size: 140%;
-}
 .pdb-list .image-field-wrap img {
   height: 30px;
   width: auto;
@@ -486,94 +463,204 @@ body[class*='participants-database'] .text-block li {
 }
 
 /***  MANAGE FIELDS  ***/
-div.manage-fields-wrap {
-  min-width:1100px;
-}
-.manage-fields thead > tr {
-  height:6.5em;
-}
-#internal .manage-fields thead > tr {
-  height:5.3em;
-}
-#field_groups .manage-fields thead > tr {
-  height:5em;
-}
-.manage-fields.widefat th {
-  padding:0 0 0 10px;
-  vertical-align:text-top;
-  text-align:left;
-}
-.manage-fields th.sortable {
-  /*padding:7px 7px 8px;*/
-}
-.id, .order, .persistent, .sortable, .admin_column, .display_column, .CSV {
-  text-align:center;
-}
-body[class*="participants-database"] .manage-fields tr.highlighted {
-  background-color:#E0EDF9;
-}
-th.vertical-title  {
-  width:25px;
-}
-th.vertical-title.number-column {
-  width: 3em;
-}
-th.form_element {
-  width:150px;
-}
-th.validation, th.title, th.default, th.group, th.name {
-  width:8%;
-}
-#internal th.name, #internal th.title {
-  width:auto;
-}
-#internal table.manage-fields {
-  width: 360px;
-}
-#field_groups th.title {
-  width:auto;
-}
-.manage-fields th.vertical-title {
-  vertical-align:text-top;
-  padding: 5px 0 0 0;
-}
-.manage-fields th.vertical-title span {
-  /*  writing-mode:vertical-rl;*/
-  transform: rotate(90deg);
-  transform-origin: left bottom;
 
-  -moz-transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
+.manage-fields-wrap .def-fieldset {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  min-height: 6em;
+  padding: 0.5em 0.5em 0.5em 3.3em;
+  margin: 0.5em 0;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 30px 7px 7px 30px;
+  overflow: hidden;
+}
+.manage-fields-wrap .attribute-control {
+  margin: 0.7em 0.5em 0.5em 0.5em;
+  width: auto !important;
+}
+.manage-fields-wrap .attribute-control label {
+  display: block;
+  opacity: 0.8;
+}
+.manage-fields-wrap .attribute-control.checkbox-control-wrap label {
+  opacity: 1;
+}
+.def-fieldset break {
+  flex-basis: 100%;
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
+}
 
-  -moz-transform-origin: left bottom;
-  -webkit-transform-origin: left bottom;
-  -o-transform-origin: left bottom;
-  -ms-transform-origin: left bottom;
+.def-fieldset .field-header {
+  margin: 0;
+  padding: 0.6em 0.8em 1.7em 0.5em;
+  width: auto !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: calc( 100% - 2.2em );
+}
 
+.editor-closed.def-fieldset .field-header {
+  padding: 16px 0.8em 12px 0.5em;
+  position: relative;
+  left: -44px;
+  top: 4px;
+  height: 100%;
+  margin: -12px 0;
+}
+
+.def-fieldset .form-element-label {
+  align-self: center;
+  font-size: 130%;
+}
+.editor-open.def-fieldset .form-element-label {
+  display: none;
+}
+
+.manage-field-groups .def-fieldset .field-header {
+  padding: 1.4em 0.8em 0.9em 0.5em;
+  text-align: center;
+}
+
+.manage-fields .attribute-control input[type="checkbox"],
+.manage-fields .field-header input[type="checkbox"] {
+  width: 1em;
+}
+.participants_db .validation-attribute input.otherfield {
+  max-width: inherit;
+}
+.editor-opener {
+  cursor: pointer;
+}
+.editor-opener:hover {
+  background: rgba( 0,0,0,0.1);
+}
+
+.dashicons.field-open-icon::before {
+    /* content: "\f139"; /* arrow-right */
+    content: "\f345"; /* dashicons-arrow-right-alt2 (chevron)) */
+}
+.dashicons.field-close-icon::before {
+    /* content: "\f140"; /* arrow-down */
+    content: "\f347"; /* dashicons-arrow-down-alt2 (chevron)) */
+}
+
+.editor-open .editor-opener.field-open-icon {
+  display: none;
+}
+.editor-closed .editor-opener.field-close-icon {
+  display: none;
+}
+.participants_db .field-header h4 {
+  font-weight: normal;
+  font-size: 1.4em;
+} 
+.editor-open .field-header h4 {
+  display: none;
+} 
+.editor-open .field-header input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
+}
+.def-fieldset.editor-closed {
+  min-height: 2.5em;
+}
+.editor-closed .attribute-control {
+  display: none !important;
+}
+.editor-closed .attribute-control.field-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 15em;
+  padding-right: 0.5em;
+}
+.participants_db .editor-closed .field-header h4 {
+  display: inline-block;
+  margin: 0 1em;
+}
+.editor-closed .field-header a.delete,
+.editor-closed .field-header a.dragger {
+  display: inline-block;
+}
+
+.wp-core-ui .general_fields_control_header .button-secondary {
+  line-height: 24px;
+  margin-left: 0.5em;
+}
+
+.manage-fields-wrap input[readonly] {
+  border: 1px solid #ddd;
+  background: inherit;
+}
+
+.general_fields_control_header .add-field-submit {
+  display: inline-block;
+  margin: 1em 0 0 0;
+  font-size: 110%;
+}
+
+.general_fields_control_header .manage-fields-update {
+  margin-left: 4em;
+}
+
+.attribute-control input, 
+.participants_db .attribute-control select, 
+.attribute-control textarea {
+  width: auto;
+}
+button .dashicons {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+/*  font-size: 24px;*/
+  line-height: 24px;
+  margin-left: -5px;
+}
+.general_fields_control_header .check-all {
   display: inline-block;
   height: auto;
-  left: 0.6em;
-  line-height: 1.1;
-  position: relative;
-  top: -2em;
-  white-space: nowrap;
-  width: auto;
-  word-wrap: normal;
+  line-height: 24px;
+  width: 3.2em;
+  text-align: center;
 }
-.ie8 .manage-fields th.vertical-title span {
-  top:0;
+.manage-fields-actions,
+.with-selected-control {
+  display: block;
+  width:auto;
+  max-width: 40em;
+  margin: 0.55em 0 0.25em 0;
+  padding: 0.5em;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
 }
-.manage-field-groups th.vertical-title span {
-  top: -1em;
+.participants_db .manage-fields-actions label, 
+.participants_db .manage-fields-actions input {
+  display: block;
+  margin-top: 0.5em;
 }
-.manage-fields th.admin_column span, .manage-fields th.display_column span {
-  /*  left:18px;*/
+.participants_db .manage-fields-actions label {
+
 }
-.manage-fields input, 
-.manage-fields textarea {
-  width:100%;
+.participants_db .manage-fields-actions label {
+  text-transform: capitalize;
+}
+
+.participants_db .manage-fields-wrap input,
+.participants_db .manage-fields-wrap  select,
+.participants_db .manage-fields-wrap textarea {
+  font-size: 120%;
+}
+.participants_db .manage-fields-wrap input.title-field {
+  font-weight: bold;
+}
+.participants_db input.otherfield {
+  max-width: 10em;
 }
 .manage-fields input[type="checkbox"], 
 .manage-fields input[type="radio"] {
@@ -582,28 +669,18 @@ th.validation, th.title, th.default, th.group, th.name {
   top:-1px;
 }
 .manage-fields textarea {
-  height:3.5em;
+  height: 3.3em;
 }
-.manage-field-groups th.name {
-  width:160px;
+.field-header a.dragger,
+.field-header a.delete {
+  text-decoration: none;
+  display: block;
 }
-
-.manage-field-groups th.fields {
-  width:30px;
-}
-.manage-field-groups td[id^='field_count'] {
-  text-align:center;
-}
-.manage-field-groups th.column span {
-  position:relative;
-  left:5px;
-}
-td.order {
-  padding:3px 0;
-  text-align: center;
-}
-a.dragger {
+.field-header a.dragger {
   cursor: move;
+}
+.field-header a.delete {
+  cursor: pointer;
 }
 .dashicons.dashicons-sort:after {
   white-space: nowrap;
@@ -615,6 +692,17 @@ a.dragger {
   line-height: 18px;
   font-size: 22px;
 }
+
+.manage-field-groups th.vertical-title {
+  width: 3em;
+}
+
+.manage-fields label a {
+  text-decoration: none;
+}
+
+
+
 .mirror {
   display:block; 
   -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
@@ -624,6 +712,117 @@ a.dragger {
 }
 #message {
   font-size: 16px;
+}
+.color-text {
+  background-color: hsl(190, 60%, 95%);
+  border-color: hsl(205.7, 75%, 89%); /* #cae4e9 */
+}
+.color-text .field-header {
+  background-color: hsl(205.7, 75%, 89%); /*  hsl(190.6, 47.2%, 85.9%) */
+}
+.color-text .form-element-label {
+  color: hsl(205.7, 60%, 80%);
+}
+
+.color-selector {
+  background-color: hsl(150, 50%, 95%);
+  border-color: hsl(152.1, 40%, 86.3%);
+}
+.color-selector .field-header {
+  background-color: hsl(152.1, 40%, 86.3%);
+}
+.color-selector .form-element-label {
+  color: hsl(149.4, 45%, 78.6%);
+}
+
+.color-numeric {
+  background-color: hsl(55, 60%, 95%);
+  border-color: hsl(54.7, 50.6%, 82.5%);
+}
+.color-numeric .field-header {
+  background-color: hsl(54.7, 50.6%, 82.5%);
+}
+.color-numeric .form-element-label {
+  color: hsl(54.8, 56.1%, 67.8%);
+}
+
+
+.color-upload {
+  background-color: hsl(30, 65%, 95%);
+  border-color: hsl(31.8, 48.6%, 86.3%);
+}
+.color-upload .field-header {
+  background-color: hsl(31.8, 48.6%, 86.3%);
+}
+.color-upload .form-element-label {
+  color: hsl(30, 65%, 80%);
+}
+
+.color-captcha {
+  background-color: hsl(0, 40%, 95%);
+  border-color: hsl(0, 40%, 90%);
+}
+.color-captcha .field-header {
+  background-color: hsl(0, 40%, 90%);
+}
+.color-captcha .form-element-label {
+  color: hsl(0, 40%, 80%);
+}
+
+.color-utility {
+  background-color: hsl(0, 10%, 95%);
+  border-color: hsl(0, 11.5%, 88%);
+}
+.color-utility .field-header {
+  background-color: hsl(0, 11.5%, 88%);
+}
+.color-utility .form-element-label {
+  color: hsl(0, 10%, 80%);
+}
+
+.color-group {
+  background-color: hsl(192, 60%, 95.1%);
+  border-color: hsl(192.9, 51.9%, 89.4%);
+}
+.color-group .field-header {
+  background-color: hsl(192.9, 51.9%, 89.4%);
+}
+.color-group .form-element-label {
+  color: hsl(192.9, 51.9%, 89.4%);
+}
+
+.color-group.view-mode-private {
+  background-color: hsl(0, 100%, 97.5%);
+  border-color: hsl(0, 50%, 92.2%);
+}
+.color-group.view-mode-private .field-header {
+  background-color: hsl(0, 50%, 92.2%);
+}
+.color-group.view-mode-private .form-element-label {
+  color: hsl(0, 50%, 92.2%);
+}
+
+.color-group.view-mode-admin {
+  background-color: hsl(92, 60%, 95.1%);
+  border-color: hsl(92, 60%, 90%);
+}
+.color-group.view-mode-admin .field-header {
+  background-color: hsl(92, 45.5%, 87.1%);
+}
+.color-group.view-mode-admin .form-element-label {
+  color: hsl(92, 60%, 80%);
+}
+
+
+.color-custom {
+  background-color: hsl(220, 60%, 95%);
+  border-color: hsl(220, 60%, 90%);
+}
+.color-custom .field-header {
+  background-color: hsl(220, 60%, 90%);
+}
+.color-custom .form-element-label {
+  color: hsl(220, 60%, 80%);
 }
 
 /* SETTINGS PAGE */
@@ -736,6 +935,11 @@ a.dragger {
 .participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active a {
   background-color: rgba(0,0,0,0);
   padding-bottom: 11px;
+  font-weight: bold;
+}
+.participants_db .ui-tabs-nav .utility a {
+  background-color: hsla(0, 0%, 0%, 0.2);
+  color: hsla(0,0%,44.3%,1);
 }
 .participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active .mask {
   visibility: visible;
@@ -888,6 +1092,9 @@ a.dragger {
   cursor: pointer;
   margin: 0.5em 0.4em 0.5em 0;
   line-height: 1.8;
+}
+.participants-database-confirm.ui-dialog .ui-button-text {
+  display: inline;
 }
 .participants-database-confirm.ui-dialog .ui-state-hover {
   border: 1px solid #b3b3b3;
