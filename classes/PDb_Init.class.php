@@ -1046,13 +1046,15 @@ class PDb_Init {
         continue 1;
       }
       switch ( true ) {
+        case $group->display == '0' && $group->admin == '1':
+        case $group->name === 'admin':
+        case $group->name === 'internal':
+          $mode = 'admin';
+          break;
         case $group->display == '1' && $group->admin == '1':
         case $group->display == '1' && $group->admin == '0':
         case $group->display == '0' && $group->admin == '0':
           $mode = 'public';
-          break;
-        case $group->display == '0' && $group->admin == '1':
-          $mode = 'admin';
           break;
       }
       $wpdb->update( Participants_Db::$groups_table, array('mode' => $mode), array('id' => $group->id) );
