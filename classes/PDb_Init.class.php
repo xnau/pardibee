@@ -2,16 +2,17 @@
 
 /**
  * plugin initialization class
+ * 
+ * handles installation, activation, deactivation, deletion, updates
  *
- * @version 1.9
+ * @version 2.1
  *
  * The way db updates will work is we will first set the "fresh install" db
- * initialization to the latest version's structure. Then, we add the "delta"
+ * initialization to the latest version's structure. Then, we add the update
  * queries to the series of upgrade steps that follow. Whichever version the
  * plugin comes in with when activated, it will jump into the series at that
  * point and complete the series to bring the database up to date.
  *
- * we're not using WP's dbDelta for updates because it's too fussy
  */
 if ( !defined( 'ABSPATH' ) )
   die;
@@ -36,7 +37,7 @@ class PDb_Init {
   {
     if ( !$mode )
       wp_die( 'class must be called on the activation hooks', 'object not correctly instantiated' );
-    
+
     switch ( $mode ) {
       case 'activate' :
         $this->_activate();
@@ -97,7 +98,7 @@ class PDb_Init {
   }
 
   /**
-   * remove all plugin settings and database tables
+   * handle creating a new blog on a network
    */
   public static function new_blog( $blog_id )
   {
@@ -105,7 +106,7 @@ class PDb_Init {
   }
 
   /**
-   * remove all plugin settings and database tables
+   * handle deleting a blog on a network
    * 
    * @param int $blog_id of the blog to delete
    * @param bool  $drop if true, delete tables
@@ -130,8 +131,8 @@ class PDb_Init {
 
     // install the db tables if needed
     $this->maybe_install();
-    
-    if ( is_callable( 'EAMann\WPSession\DatabaseHandler::create_table' ) ) 
+
+    if ( is_callable( 'EAMann\WPSession\DatabaseHandler::create_table' ) )
       EAMann\WPSession\DatabaseHandler::create_table();
 
     do_action( 'pdb-plugin_activation' );
@@ -142,11 +143,10 @@ class PDb_Init {
   /**
    * performs the activation on a network
    * 
-   * @global wpdb $wpdb
    */
   private function _network_activate()
   {
-    self::do_network_operation( array( $this, 'maybe_install' ) );
+    self::do_network_operation( array($this, 'maybe_install') );
 
     do_action( 'pdb-plugin_network_activation' );
 
@@ -170,7 +170,7 @@ class PDb_Init {
       switch_to_blog( $current_blog );
     }
   }
-  
+
   /**
    * deletes a blog's PDB tables
    * 
@@ -181,29 +181,31 @@ class PDb_Init {
   private function _delete_blog( $blog_id )
   {
     global $wpdb;
-    
+
     // store the currently active blog id
     $current_blog = $wpdb->blogid;
     switch_to_blog( $blog_id );
     Participants_Db::setup_source_names();
-    
+
 
     // delete tables
     $sql = 'DROP TABLE `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
     $wpdb->query( $sql );
-    
+
     // return to the current blog selection
     switch_to_blog( $current_blog );
   }
 
   /**
    * triggers a database install if needed
+   * 
+   * @global wpdb $wpdb
    */
   public function maybe_install()
   {
     global $wpdb;
     Participants_Db::setup_source_names();
-    
+
     if ( $this->needs_install() ) {
       $this->_install_database();
     }
@@ -212,6 +214,7 @@ class PDb_Init {
   /**
    * checks for the need to install the tables
    * 
+   * @global wpdb $wpdb
    * @return bool true if the tables do not exist
    */
   private function needs_install()
@@ -251,7 +254,7 @@ class PDb_Init {
    */
   private function _network_uninstall()
   {
-    self::do_network_operation( array( $this, '_uninstall' ) );
+    self::do_network_operation( array($this, '_uninstall') );
 
     do_action( 'pdb-plugin_network_uninstall' );
   }
@@ -259,12 +262,13 @@ class PDb_Init {
   /**
    * performs a network-wide operation
    * 
+   * @global wpdb $wpdb
    * @param array|string $callback a PHP callable to execute on each blog
    */
   public static function do_network_operation( $callback )
   {
-    add_action('switch_blog', 'PDb_Init::switch_blog', 10, 2 );
-    
+    add_action( 'switch_blog', 'PDb_Init::switch_blog', 10, 2 );
+
     global $wpdb;
 
     // store the currently active blog id
@@ -280,7 +284,7 @@ class PDb_Init {
     // return to the current blog selection
     switch_to_blog( $current_blog );
   }
-  
+
   /**
    * handles switching the blog
    * 
@@ -288,7 +292,8 @@ class PDb_Init {
    * @param int $new_blog id
    * @param int $current_blog id
    */
-  public static function switch_blog ( $new_blog, $current_blog ) { 
+  public static function switch_blog( $new_blog, $current_blog )
+  {
     if ( $new_blog != $current_blog ) {
       Participants_Db::setup_source_names();
     }
@@ -303,9 +308,9 @@ class PDb_Init {
   {
     Participants_Db::initialize();
     Participants_Db::setup_source_names();
-    
+
     do_action( 'participants_database_uninstall' );
-    
+
     global $wpdb;
 
 // delete tables
@@ -326,13 +331,13 @@ class PDb_Init {
         '%' . Participants_Db::$prefix . 'signup-email-sent',
         '%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%',
         '%' . PDb_Aux_Plugin::throttler . '%'
-        );
+    );
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $transient_delete_keys ) . '"';
     $transients = $wpdb->get_col( $sql );
     foreach ( $transients as $name ) {
       delete_transient( $name );
     }
-    
+
     PDb_Session::uninstall();
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin uninstalled' );
@@ -344,7 +349,7 @@ class PDb_Init {
    * this could potentially interfere with another plugin that might use WP_Sessions, 
    * but they're meant to be temporary, so it would only result in some minor disruption
    * 
-   * @global object $wpdb
+   * @global wpdb $wpdb
    */
   public static function delete_user_sessions()
   {
@@ -359,11 +364,13 @@ class PDb_Init {
 
   /**
    * installs the plugin database tables and default fields
+   * 
+   * @global wpdb $wpdb
    */
   private function _install_database()
   {
-
     global $wpdb;
+    
 // define the arrays for loading the initial db records
     $this->_define_init_arrays();
 
@@ -405,7 +412,7 @@ class PDb_Init {
           `order` INT(3) NOT NULL DEFAULT 0,
           `mode` VARCHAR(64) NOT NULL,
           `display` BOOLEAN DEFAULT 1,
-          `admin` BOOLEAN NOT NULL DEFAULT 0,
+          `admin` BOOLEAN DEFAULT 0,
           `title` TINYTEXT NOT NULL,
           `name` VARCHAR(64) NOT NULL,
           `description` TEXT NULL,
@@ -452,7 +459,6 @@ class PDb_Init {
     $wpdb->query( $sql );
 
 // save the db version
-    add_option( Participants_Db::$db_version_option );
     update_option( Participants_Db::$db_version_option, Participants_Db::$db_version );
 
 // now load the default values into the database
@@ -467,9 +473,9 @@ class PDb_Init {
         $defaults['order'] = $i;
         $defaults['validation'] = isset( $defaults['validation'] ) ? $defaults['validation'] : 'no';
 
-        if ( isset( $defaults['values'] ) && is_array( $defaults['values'] ) ) {
+        if ( isset( $defaults['options'] ) && is_array( $defaults['options'] ) ) {
 
-          $defaults['values'] = serialize( $defaults['values'] );
+          $defaults['options'] = serialize( $defaults['options'] );
         }
 
         $wpdb->insert( Participants_Db::$fields_table, $defaults );
@@ -497,19 +503,22 @@ class PDb_Init {
 
   /**
    * performs an update to the database if needed
+   * 
+   * @global wpdb $wpdb
    */
   public static function on_update()
   {
-
     global $wpdb;
 
 // determine the actual version status of the database
     self::set_database_real_version();
 
-    if ( PDB_DEBUG )
-      Participants_Db::debug_log( 'participants database db version determined to be: ' . get_option( Participants_Db::$db_version_option ) );
+    $db_version = get_option( Participants_Db::$db_version_option );
 
-    if ( false === get_option( Participants_Db::$db_version_option ) || '0.1' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( PDB_DEBUG )
+      Participants_Db::debug_log( 'participants database db version determined to be: ' . $db_version );
+
+    if ( false === $db_version || '0.1' == $db_version ) {
 
       /*
        * updates version 0.1 database to 0.2
@@ -528,7 +537,7 @@ class PDb_Init {
         add_option( Participants_Db::$db_version_option );
 
         // set the version number this step brings the db to
-        update_option( Participants_Db::$db_version_option, '0.2' );
+        $db_version = '0.2';
       }
 
       // load some preset values into new column
@@ -545,7 +554,7 @@ class PDb_Init {
       }
     }
 
-    if ( '0.2' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.2' == $db_version ) {
 
       /*
        * updates version 0.2 database to 0.3
@@ -559,11 +568,11 @@ class PDb_Init {
       if ( false !== $wpdb->query( $sql ) ) {
 
         // set the version number this step brings the db to
-        update_option( Participants_Db::$db_version_option, '0.3' );
+        $db_version = '0.3';
       }
     }
 
-    if ( '0.3' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.3' == $db_version ) {
 
       /*
        * updates version 0.3 database to 0.4
@@ -626,10 +635,10 @@ class PDb_Init {
       endif;
 
       // set the version number this step brings the db to
-      update_option( Participants_Db::$db_version_option, '0.4' );
+      $db_version = '0.4';
     }
 
-    if ( '0.4' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.4' == $db_version ) {
 
       /*
        * updates version 0.4 database to 0.5
@@ -642,13 +651,13 @@ class PDb_Init {
       if ( false !== $wpdb->query( $sql ) ) {
 
         // set the version number this step brings the db to
-        update_option( Participants_Db::$db_version_option, '0.5' );
+        $db_version = '0.5';
       }
     }
 
     /* this fixes an error I made in the 0.5 DB update
      */
-    if ( '0.5' == get_option( Participants_Db::$db_version_option ) && false === Participants_Db::get_participant() ) {
+    if ( '0.5' == $db_version && false === Participants_Db::get_participant() ) {
 
       // define the arrays for loading the initial db records
       $this->_define_init_arrays();
@@ -666,9 +675,9 @@ class PDb_Init {
           $defaults['order'] = $i;
           $defaults['validation'] = isset( $defaults['validation'] ) ? $defaults['validation'] : 'no';
 
-          if ( isset( $defaults['values'] ) && is_array( $defaults['values'] ) ) {
+          if ( isset( $defaults['options'] ) && is_array( $defaults['options'] ) ) {
 
-            $defaults['values'] = serialize( $defaults['values'] );
+            $defaults['options'] = serialize( $defaults['options'] );
           }
 
           $wpdb->insert( Participants_Db::$fields_table, $defaults );
@@ -677,14 +686,14 @@ class PDb_Init {
         }
       }
       // set the version number this step brings the db to
-      update_option( Participants_Db::$db_version_option, '0.5.1' );
+      $db_version = '0.5.1';
     }
 
     /*
      * this is to fix a problem with the timestamp having it's datatype
      * changed when the field attributes are edited
      */
-    if ( '0.51' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.51' == $db_version ) {
 
       $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . " WHERE `field` IN ('date_recorded','date_updated')";
       $field_info = $wpdb->get_results( $sql );
@@ -750,7 +759,7 @@ class PDb_Init {
       if ( false !== $wpdb->query( $sql ) ) {
 
         // update the stored DB version number
-        update_option( Participants_Db::$db_version_option, '0.55' );
+        $db_version = '0.55';
       }
     }
 
@@ -758,7 +767,7 @@ class PDb_Init {
      * this database version adds the "last_accessed" column to the main database
      * 
      */
-    if ( '0.55' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.55' == $db_version ) {
 
       /*
        * add the "last_accessed" column
@@ -782,10 +791,10 @@ class PDb_Init {
       if ( false !== $wpdb->insert( Participants_Db::$fields_table, $data ) ) {
 
         // update the stored DB version number
-        update_option( Participants_Db::$db_version_option, '0.6' );
+        $db_version = '0.6';
       }
     }
-    if ( '0.6' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.6' == $db_version ) {
       /*
        * this database version changes the internal timestamp fields from "date" 
        * type to "timestamp" type fields, also sets the 'readonly' flag of internal 
@@ -796,10 +805,10 @@ class PDb_Init {
       $sql = "UPDATE " . Participants_Db::$fields_table . " p SET p.form_element = 'timestamp', p.readonly = '1' WHERE p.name IN ('date_recorded','last_accessed','date_updated')";
       if ( $wpdb->query( $sql ) !== false ) {
         // update the stored DB version number
-        update_option( Participants_Db::$db_version_option, '0.65' );
+        $db_version = '0.65';
       }
     }
-    if ( '0.65' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.65' == $db_version ) {
       /*
        * adds a new column to the goups database so a group cna be designated as a "admin" group
        */
@@ -807,12 +816,12 @@ class PDb_Init {
 
       if ( $wpdb->query( $sql ) !== false ) {
         // update the stored DB version number
-        update_option( Participants_Db::$db_version_option, '0.7' );
+        $db_version = '0.7';
       }
       $sql = "UPDATE " . Participants_Db::$groups_table . " g SET g.admin = '1' WHERE g.name ='internal'";
       $wpdb->query( $sql );
     }
-    if ( '0.7' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.7' == $db_version ) {
       /*
        * changes all date fields' datatype to BIGINT unless the user has modified the datatype
        */
@@ -827,7 +836,7 @@ class PDb_Init {
       if ( count( $fields ) === 0 ) {
 
         // nothing to change, update the version number
-        update_option( Participants_Db::$db_version_option, '0.8' );
+        $db_version = '0.8';
       } else {
 
         $results = $wpdb->get_results( "SHOW COLUMNS FROM `" . Participants_Db::$participants_table . "`" );
@@ -840,11 +849,11 @@ class PDb_Init {
 
         if ( false !== $wpdb->query( $sql ) ) {
           // set the version number this step brings the db to
-          update_option( Participants_Db::$db_version_option, '0.8' );
+          $db_version = '0.8';
         }
       }
     }
-    if ( '0.8' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.8' == $db_version ) {
       /*
        * all field and group names need more staorage space, changing the datatype to VARCHAR(64)
        */
@@ -856,12 +865,12 @@ class PDb_Init {
 
         if ( false !== $wpdb->query( $sql ) ) {
           // set the version number this step brings the db to
-          update_option( Participants_Db::$db_version_option, '0.9' );
+          $db_version = '0.9';
         }
       }
     }
 
-    if ( '0.9' == get_option( Participants_Db::$db_version_option ) ) {
+    if ( '0.9' == $db_version ) {
       /*
        * set TIMESTAMP fields to allow NULL and set the default to NULL
        */
@@ -899,31 +908,34 @@ class PDb_Init {
       if ( $success === false ) {
         error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
       } else {
-        update_option( Participants_Db::$db_version_option, '1.0' );
+        $db_version = '1.0';
       }
     }
-    
+
     // update from 1.0 to 1.1
-    if ( '1.0' == get_option( Participants_Db::$db_version_option ) ) {
-      
-      $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `options` LONGTEXT NULL AFTER `values`");
+    if ( '1.0' == $db_version ) {
+
+      $success = $wpdb->query( "ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `options` LONGTEXT NULL AFTER `values`" );
       if ( $success !== false )
-        $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `attributes` TEXT NULL AFTER `options`");
+        $success = $wpdb->query( "ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `attributes` TEXT NULL AFTER `options`" );
       if ( $success !== false )
-        $success = $wpdb->query("ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `validation_message` TEXT NULL AFTER `validation`");
+        $success = $wpdb->query( "ALTER TABLE " . Participants_Db::$fields_table . " ADD COLUMN `validation_message` TEXT NULL AFTER `validation`" );
       if ( $success !== false )
-        $success = $wpdb->query("ALTER TABLE " . Participants_Db::$groups_table . " ADD COLUMN `mode` VARCHAR(64) NULL AFTER `order`");
-      
+        $success = $wpdb->query( "ALTER TABLE " . Participants_Db::$groups_table . " ADD COLUMN `mode` VARCHAR(64) NULL AFTER `order`" );
+
 
       if ( $success === false ) {
         error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
       } else {
-        update_option( Participants_Db::$db_version_option, '1.1' );
+        self::set_mode_column_values();
+        $db_version = '1.1';
       }
+    }
+    
+    update_option( Participants_Db::$db_version_option, $db_version );
 
-      if ( PDB_DEBUG && $success )
-        Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . get_option( Participants_Db::$db_version_option ) );
-      
+    if ( PDB_DEBUG && $success ) {
+      Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . $db_version );
     }
   }
 
@@ -942,87 +954,109 @@ class PDb_Init {
   {
 
     global $wpdb;
+    $current_version = '0.1';
 
 // set up the option starting with the first version
-    add_option( Participants_Db::$db_version_option );
-    update_option( Participants_Db::$db_version_option, '0.1' );
+    add_option( Participants_Db::$db_version_option, $current_version );
 
 // check to see if the update to 0.2 has been performed
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$fields_table . ' LIKE "column"' );
-    if ( empty( $column_test ) )
-      update_option( Participants_Db::$db_version_option, '0.2' );
-    else
-      return;
+    if ( empty( $column_test ) ) {
+      $current_version = '0.2';
+    }
 
 // check for version 0.4
     $column_test = $wpdb->get_results( 'SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "values"' );
-    if ( strtolower( $column_test[0]->DATA_TYPE ) == 'longtext' )
+    if ( strtolower( $column_test[0]->DATA_TYPE ) == 'longtext' ) {
 // we're skipping update 3 because all it does is insert default values
-      update_option( Participants_Db::$db_version_option, '0.4' );
-    else
-      return;
+      $current_version = '0.4';
+    }
 
 // check for version 0.51
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$fields_table . ' LIKE "import"' );
-    if ( empty( $column_test ) )
-      update_option( Participants_Db::$db_version_option, '0.51' );
-    else
-      return;
-
+    if ( empty( $column_test ) ) {
+      $current_version = '0.51';
+    }
 // check for version 0.55
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$fields_table . ' LIKE "readonly"' );
-    if ( !empty( $column_test ) )
-      update_option( Participants_Db::$db_version_option, '0.55' );
-    else
-      return;
+    if ( !empty( $column_test ) ) {
+      $current_version = '0.55';
+    }
 
 // check for version 0.6
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$participants_table . ' LIKE "last_accessed"' );
-    if ( !empty( $column_test ) )
-      update_option( Participants_Db::$db_version_option, '0.6' );
-    else
-      return;
+    if ( !empty( $column_test ) ) {
+      $current_version = '0.6';
+    }
 
 // check for version 0.65
     $value_test = $wpdb->get_var( 'SELECT `form_element` FROM ' . Participants_Db::$fields_table . ' WHERE `name` = "date_recorded"' );
-
-
-    if ( $value_test == 'timestamp' )
-      update_option( Participants_Db::$db_version_option, '0.65' );
-    else
-      return;
+    if ( $value_test == 'timestamp' ) {
+      $current_version = '0.65';
+    }
 
 // check for version 0.7
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$groups_table . ' LIKE "admin"' );
-
-
-    if ( !empty( $column_test ) )
-      update_option( Participants_Db::$db_version_option, '0.7' );
-    else
-      return;
+    if ( !empty( $column_test ) ) {
+      $current_version = '0.7';
+    }
 
 // check for version 0.9
     $column_test = $wpdb->get_results( 'SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "name"' );
-    if ( $column_test[0]->CHARACTER_MAXIMUM_LENGTH === '64' )
-      update_option( Participants_Db::$db_version_option, '0.9' );
-    else
-      return;
-    
+    if ( $column_test[0]->CHARACTER_MAXIMUM_LENGTH === '64' ) {
+      $current_version = '0.9';
+    }
+
     // check for version 1.0
     $table_status = $wpdb->get_results( "SHOW TABLE STATUS WHERE `name` = '" . Participants_Db::$participants_table . "'" );
-    if ( current( $table_status )->Collation == 'utf8_unicode_ci' )
-      update_option( Participants_Db::$db_version_option, '1.0' );
-    else
-      return;
-    
+    if ( current( $table_status )->Collation == 'utf8_unicode_ci' ) {
+      $current_version = '1.0';
+    }
+
     // check for version 1.1
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$groups_table . ' LIKE "mode"' );
-    if ( !empty( $column_test ) )
-      update_option( Participants_Db::$db_version_option, '1.1' );
-    else
-      return;
-    
+    if ( !empty( $column_test ) ) {
+      $current_version = '1.1';
+    }
+
+    update_option( Participants_Db::$db_version_option, $current_version );
+
     return;
+  }
+
+  /**
+   * fills the new group mode column with values based on the old data
+   * 
+   * @global wpdb $wpdb
+   */
+  private static function set_mode_column_values()
+  {
+    global $wpdb;
+
+    $group_data_list = $wpdb->get_results( 'SELECT * FROM ' . Participants_Db::$groups_table );
+
+    if ( !is_array( $group_data_list ) ) {
+      error_log( __METHOD__ . ' groups data not obtained' );
+      return;
+    }
+
+    $update = array();
+    foreach ( $group_data_list as $group ) {
+      if ( !empty( $group->mode ) ) {
+        continue 1;
+      }
+      switch ( true ) {
+        case $group->display == '1' && $group->admin == '1':
+        case $group->display == '1' && $group->admin == '0':
+        case $group->display == '0' && $group->admin == '0':
+          $mode = 'public';
+          break;
+        case $group->display == '0' && $group->admin == '1':
+          $mode = 'admin';
+          break;
+      }
+      $wpdb->update( Participants_Db::$groups_table, array('mode' => $mode), array('id' => $group->id) );
+    }
   }
 
   /**
@@ -1172,7 +1206,7 @@ class PDb_Init {
             'title' => 'Email',
             'form_element' => 'text-line',
             'admin_column' => 4,
-            'validation' => '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i',
+            'validation' => 'email-regex',
             'signup' => 1,
             'CSV' => 1,
         ),
@@ -1184,7 +1218,7 @@ class PDb_Init {
             'form_element' => 'checkbox',
             'CSV' => 1,
             'default' => 'Yes',
-            'values' => array(
+            'options' => array(
                 'Yes',
                 'No',
             ),
@@ -1204,7 +1238,7 @@ class PDb_Init {
         'interests' => array(
             'title' => 'Interests or Hobbies',
             'form_element' => 'multi-select-other',
-            'values' => array(
+            'options' => array(
                 'Sports' => 'sports',
                 'Photography' => 'photography',
                 'Art/Crafts' => 'crafts',
@@ -1221,7 +1255,7 @@ class PDb_Init {
             'sortable' => 1,
             'form_element' => 'checkbox',
             'default' => 'no',
-            'values' => array(
+            'options' => array(
                 'yes',
                 'no',
             ),
