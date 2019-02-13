@@ -224,7 +224,7 @@ class PDb_Field_Editor {
             '<div class="field-header">',
             '<span class="editor-opener dashicons field-close-icon" title="' . _x('Close', 'label for a "close" control', 'participants-database') . '" ></span>',
             '<span class="editor-opener dashicons field-open-icon" title="' . _x('Open for editing','label for an "open" control', 'participants-database') . '" ></span>',
-            $this->field_def->is_internal_field() ? '' : $field_def_att->html(),
+            $field_def_att->html(),
         );
         break;
 
