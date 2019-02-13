@@ -185,6 +185,7 @@ class PDb_Form_Field_Def {
               WHERE v.name = %s';
       $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
       wp_cache_set( $fieldname, $def, $cachekey, Participants_Db::cache_expire() );
+      
     }
     
     return $def;
@@ -642,13 +643,17 @@ class PDb_Form_Field_Def {
       switch ( $prop ) {
 
         case 'sortable':
-        case 'CSV':
         case 'persistent':
         case 'signup':
         case 'readonly':
           $this->{$prop} = (bool) $value;
           break;
-
+        
+        case 'CSV':
+        case 'csv':
+          $this->csv = (bool) $value;
+          break;
+        
         case 'values':
 
           $this->values = $def->values;
