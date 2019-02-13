@@ -531,6 +531,7 @@ class PDb_Field_Editor {
           'signup' => false,
           'readonly' => false,
           'persistent' => false,
+          'csv' => true,
               )
       );
     }
@@ -604,6 +605,7 @@ class PDb_Field_Def_Parameter {
         $this->config['attributes']['title'] = __('Select this field', 'participants-database');
         break;
     }
+    
     return PDb_FormElement::get_element( $this->config );
   }
   
