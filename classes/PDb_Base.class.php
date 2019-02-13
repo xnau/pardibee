@@ -1505,11 +1505,13 @@ class PDb_Base {
    * 
    * this is to prevent persistent caches from holding on to the cached values too long
    * 
+   * this is tuned to generously cover a single page load
+   * 
    * @return int cache valid time in seconds
    */
   public static function cache_expire()
   {
-    return Participants_Db::apply_filters( 'general_cache_expiration', HOUR_IN_SECONDS );
+    return Participants_Db::apply_filters( 'general_cache_expiration', 10 );
   }
 
   /**
