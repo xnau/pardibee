@@ -37,7 +37,7 @@ class PDb_Manage_Fields {
    * @var array of error messages
    */
   var $error_msgs = array();
-  
+
   /**
    * @var string base URL to the help page
    */
@@ -78,7 +78,7 @@ class PDb_Manage_Fields {
           <?php
           $mask = '<span class="mask"></span>';
           foreach ( $this->group_defs as $group ) {
-            echo '<li class="display-' . $group['mode'] . '"><a href="#' . $group['name'] . '" id="tab_' . $group['name'] . '">' . $this->group_title($group['name']) . '</a>' . $mask . '</li>';
+            echo '<li class="display-' . $group['mode'] . '"><a href="#' . $group['name'] . '" id="tab_' . $group['name'] . '">' . $this->group_title( $group['name'] ) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -105,20 +105,15 @@ class PDb_Manage_Fields {
        */
       protected function print_group_tab_content( $group )
       {
-        $internal_group = $group === 'internal';
         $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
-
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
 
         $last_order = $num_group_rows > 1 ? $this->fields_data[$group][$num_group_rows - 1]['order'] + 1 : 1;
         ?>
         <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $this->fields_data[$group][0]['group_id'] ?>" >
-          <h3><?php echo $this->group_title($group) . ' ' . $this->i18n['fields'] ?></h3>
-          <?php
-          if ( !$internal_group )
-            $this->general_fields_control( $group );
-          ?>
+          <h3><?php echo $this->group_title( $group ) . ' ' . $this->i18n['fields'] ?></h3>
+          <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
             <div class="pdb-horiz-scroll-scroller">
               <div class="pdb-horiz-scroll-width">
@@ -212,7 +207,7 @@ class PDb_Manage_Fields {
                   <div class="field-header">
                     <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
                     <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
-                    <div id="field_count_<?php echo $group ?>" title="<?php _e('field count', 'participants-database') ?>"><?php echo $group_count ?></div>
+                    <div id="field_count_<?php echo $group ?>" title="<?php _e( 'field count', 'participants-database' ) ?>"><?php echo $group_count ?></div>
                   </div>
                   <?php
                   foreach ( $group_def as $column => $value ) {
@@ -222,7 +217,7 @@ class PDb_Manage_Fields {
                     $name = '';
 
                     switch ( $column ) {
-                      
+
                       case 'mode':
                         $type = 'dropdown';
                         $options = array_flip( self::group_display_modes() );
@@ -236,7 +231,7 @@ class PDb_Manage_Fields {
                         $type = 'text';
                         $attributes = array('readonly' => 'readonly');
                         break;
-                        
+
                       case 'title':
                         $type = 'text';
                         break;
@@ -269,14 +264,14 @@ class PDb_Manage_Fields {
             </p>
           </form>
           <script type="text/javascript">
-          jQuery(function($){
-            var setmode = function(el) {
-              el.closest('.def-fieldset').removeClass('view-mode-public view-mode-private view-mode-admin').addClass('view-mode-'+el.val());
-            };
-            $('.manage-field-groups .mode-attribute select').on('change', function(){
-              setmode($(this));
+            jQuery(function ($) {
+              var setmode = function (el) {
+                el.closest('.def-fieldset').removeClass('view-mode-public view-mode-private view-mode-admin').addClass('view-mode-' + el.val());
+              };
+              $('.manage-field-groups .mode-attribute select').on('change', function () {
+                setmode($(this));
+              });
             });
-          });
           </script>
         </div><!-- groups tab panel -->
         <?php
@@ -311,52 +306,56 @@ class PDb_Manage_Fields {
           <div id="check-all-<?php echo $group ?>" class="check-all">
             <input id="select-all-checkbox-<?php echo $group ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo $group ?>" style="display:none" ><?php echo $this->i18n['all'] ?></label>
           </div>
-          <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo $group ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n['add field'] ?></button>
+          <?php if ( $group !== 'internal' ) : ?>
+            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo $group ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n['add field'] ?></button>
+          <?php endif ?>
           <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n['all'] ?></button>
-          <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions">
-            <h4><?php echo $this->i18n['add field'] ?></h4>
-            <label><?php echo $this->i18n['new field title'] ?></label>
-            <?php
-            PDb_FormElement::print_element( array(
-                'type' => 'hidden',
-                'name' => 'group',
-                'value' => $group,
-                    )
-            );
-            PDb_FormElement::print_element( array(
-                'type' => 'text',
-                'name' => 'title',
-                'value' => '',
-                'attributes' => array(
-                    'class' => 'add_field'
-                )
-                    )
-            );
-            ?>
-            <label><?php echo $this->i18n['new field form element'] ?></label>
-            <?php
-            PDb_FormElement::print_element( array(
-                'type' => 'dropdown',
-                'options' => array_flip( PDb_FormElement::get_types() ) + array('null_select' => false),
-                'name' => 'form_element',
-                'value' => '',
-                'attributes' => array(
-                    'class' => 'add_field'
-                )
-                    )
-            );
-            ?>
-            <div class="add-field-submit-wrap">
-              <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n['add field'] ?></button>
-              <button class="button button-secondary add-field-submit" name="add-field-cancel" ><?php _e('Cancel', 'participants-database') ?></button>
+          <?php if ( $group !== 'internal' ) : ?>
+            <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions">
+              <h4><?php echo $this->i18n['add field'] ?></h4>
+              <label><?php echo $this->i18n['new field title'] ?></label>
+              <?php
+              PDb_FormElement::print_element( array(
+                  'type' => 'hidden',
+                  'name' => 'group',
+                  'value' => $group,
+                      )
+              );
+              PDb_FormElement::print_element( array(
+                  'type' => 'text',
+                  'name' => 'title',
+                  'value' => '',
+                  'attributes' => array(
+                      'class' => 'add_field'
+                  )
+                      )
+              );
+              ?>
+              <label><?php echo $this->i18n['new field form element'] ?></label>
+              <?php
+              PDb_FormElement::print_element( array(
+                  'type' => 'dropdown',
+                  'options' => array_flip( PDb_FormElement::get_types() ) + array('null_select' => false),
+                  'name' => 'form_element',
+                  'value' => '',
+                  'attributes' => array(
+                      'class' => 'add_field'
+                  )
+                      )
+              );
+              ?>
+              <div class="add-field-submit-wrap">
+                <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n['add field'] ?></button>
+                <button class="button button-secondary add-field-submit" name="add-field-cancel" ><?php _e( 'Cancel', 'participants-database' ) ?></button>
+              </div>
             </div>
-          </div>
+          <?php endif ?>
           <div id="with-selected-control-<?php echo $group ?>" class="with-selected-control">
             <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n['with selected'] ?>: </label>
             <?php
             PDb_FormElement::print_element( array(
                 'type' => 'dropdown',
-                'options' => array_flip( $this->with_selected_options() ),
+                'options' => array_flip( $this->with_selected_options( $group ) ),
                 'name' => 'with_selected_action_selection',
                 'value' => '',
                 'attributes' => array(
@@ -386,13 +385,22 @@ class PDb_Manage_Fields {
     /**
      * provides the "with selected" actions
      * 
+     * @param string $group name of the current group
      * @return array as $title => $value
      */
-    protected function with_selected_options()
+    protected function with_selected_options( $group )
     {
+      if ( $group === 'internal' ) {
+        // provide a limited list for the internal group
+        return array(
+        'add_csv' => __( 'Add to CSV', 'participants-database' ),
+        'remove_csv' => __( 'Remove from CSV', 'participants-database' ),
+        );
+      }
       /**
        * @filter pdb-manage_fields_with_selected_actions
        * @param array of tasks as $task => $title
+       * @param string name of the current group
        * @return array
        */
       return Participants_Db::apply_filters( 'manage_fields_with_selected_actions', array(
@@ -413,10 +421,10 @@ class PDb_Manage_Fields {
     protected function setup_group_data()
     {
       $this->group_defs = array();
-      foreach ( Participants_Db::get_groups('`id`,`order`,`mode`,`name`,`title`,`description`,`admin`,`display`') as $group => $defs ) {
+      foreach ( Participants_Db::get_groups( '`id`,`order`,`mode`,`name`,`title`,`description`,`admin`,`display`' ) as $group => $defs ) {
         // mode is the 1.8.5 group visibility mode
         // this converts the previous visibility settings to the new mode
-        if ( ! isset( $defs['mode'] ) || empty( $defs['mode'] ) ) {
+        if ( !isset( $defs['mode'] ) || empty( $defs['mode'] ) ) {
           switch ( true ) {
             case $defs['admin'] == 0 && $defs['display'] == 0:
               // we set to 'public' not 'private' #1817
@@ -429,16 +437,16 @@ class PDb_Manage_Fields {
             case $defs['admin'] == 1 && $defs['display'] == 0:
               $defs['mode'] = 'admin';
           }
-          $this->fix_group_mode($defs);
+          $this->fix_group_mode( $defs );
         }
-        unset($defs['admin'],$defs['display']); // not needed
+        unset( $defs['admin'], $defs['display'] ); // not needed
         // only include groups with main database display modes
         if ( in_array( $defs['mode'], array_keys( self::group_display_modes() ) ) ) {
           $this->group_defs[$group] = $defs;
         }
       }
     }
-    
+
     /**
      * provides an array of group names
      * 
@@ -465,7 +473,7 @@ class PDb_Manage_Fields {
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
       }
     }
-    
+
     /**
      * provides the array of group modes
      * 
@@ -480,13 +488,13 @@ class PDb_Manage_Fields {
        * @param array as $name => $title
        * @return array
        */
-      return Participants_Db::apply_filters('group_display_modes', array(
-          'public' => __('Public', 'participants-database'),
-          'private' => __('Private', 'participants-database'),
-          'admin' => _x('Admin', 'short form of "administrator"', 'participants-database'),
-      ));
+      return Participants_Db::apply_filters( 'group_display_modes', array(
+                  'public' => __( 'Public', 'participants-database' ),
+                  'private' => __( 'Private', 'participants-database' ),
+                  'admin' => _x( 'Admin', 'short form of "administrator"', 'participants-database' ),
+      ) );
     }
-    
+
     /**
      * provides the title string for a group
      * 
@@ -518,7 +526,7 @@ class PDb_Manage_Fields {
 
       return str_replace( array('_'), array(" "), $string );
     }
-    
+
     /**
      * fixes an old format group definition by storing the mode value
      * 
@@ -528,7 +536,7 @@ class PDb_Manage_Fields {
     private function fix_group_mode( $group )
     {
       global $wpdb;
-      $wpdb->update( Participants_Db::$groups_table, array( 'mode' => $group['mode'] ), array( 'name' => $group['name'] ) );
+      $wpdb->update( Participants_Db::$groups_table, array('mode' => $group['mode']), array('name' => $group['name']) );
     }
 
     /**
