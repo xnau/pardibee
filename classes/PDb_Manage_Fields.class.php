@@ -8,13 +8,11 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.0
+ * @version    2.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
   die;
-if ( !Participants_Db::current_user_has_plugin_role( 'admin', 'manage fields' ) )
-  exit;
 
 class PDb_Manage_Fields {
 
@@ -50,14 +48,16 @@ class PDb_Manage_Fields {
    */
   function __construct()
   {
-    $this->i18n = self::get_i18n();
+    if ( Participants_Db::current_user_has_plugin_role( 'admin', 'manage fields' ) ) {
+      $this->i18n = self::get_i18n();
 
-    $this->setup_group_data();
-    $this->setup_field_data();
+      $this->setup_group_data();
+      $this->setup_field_data();
 
-    $this->print_header();
-    $this->print_group_tabs();
-    $this->print_footer();
+      $this->print_header();
+      $this->print_group_tabs();
+      $this->print_footer();
+    }
   }
 
   /**
