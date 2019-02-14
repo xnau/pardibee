@@ -252,8 +252,7 @@ class PDb_Manage_Fields_Updates {
         'name' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
         'title' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
         'order' => $_POST['group_order'],
-        'display' => 1,
-        'admin' => 0,
+        'mode' => 'public',
         'description' => '',
     );
 
