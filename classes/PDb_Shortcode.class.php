@@ -718,6 +718,7 @@ abstract class PDb_Shortcode {
              * @return PDb_Field_item
              */
             do_action( 'pdb-before_field_added_to_iterator', $field );
+    
             $this->record->$group_name->fields->{$field->name()} = $field;
           }
         }
