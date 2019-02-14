@@ -656,7 +656,7 @@ class PDb_Form_Field_Def {
         
         case 'values':
 
-          $this->values = $def->values;
+          $this->values = $def->values; // this is for backward compatibility
           
           // if the values parameter has a value, then the field def is of the old format
           if ( $def->values !== '' && !is_null($def->values) ) {
@@ -666,8 +666,10 @@ class PDb_Form_Field_Def {
              * other fields, it defines the attributes
              */
             if ( $this->is_value_set() ) {
-              $this->options = $values;
-            } else {
+              if ( empty( $def->options ) ) {
+                $this->options = $values;
+                }
+            } elseif ( empty( $def->attributes ) ) {
               $this->attributes = $values;
             }
           }
@@ -676,7 +678,9 @@ class PDb_Form_Field_Def {
         case 'attributes':
         case 'options':
           
-          $this->{$prop} = (array) maybe_unserialize($value);
+          if ( empty( $this->{$prop} ) ) {
+            $this->{$prop} = (array) maybe_unserialize($value);
+          }
           break;
 
         default:
