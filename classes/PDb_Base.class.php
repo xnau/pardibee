@@ -1384,9 +1384,10 @@ class PDb_Base {
     // none found
     if ( empty( $matches ) )
       return false;
+    
     // check each one for a plugin shortcode
     foreach ( $matches as $shortcode ) {
-      if ( false !== strpos( $shortcode[0], $tag ) ) {
+      if ( false !== strpos( $shortcode[0], $tag ) && false === strpos( $shortcode[0], '[[' ) ) {
         return true;
       }
     }
