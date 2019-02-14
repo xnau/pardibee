@@ -151,6 +151,9 @@ class PDb_Form_Field_Def {
    */
   public static function is_field( $fieldname )
   {
+    if ( ! is_string($fieldname) ) {
+      return false;
+    }
     $cachekey = 'pdb-is_field';
     $is = wp_cache_get( $fieldname, $cachekey, false, $found );
     
