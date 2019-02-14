@@ -1084,7 +1084,7 @@ class Participants_Db extends PDb_Base {
               ORDER BY v.order';
       $result = $wpdb->get_results( $sql );
       foreach ( $result as $column ) {
-        self::$fields[$column->name] = new PDb_Form_Field_Def( $column );
+        self::$fields[$column->name] = new PDb_Form_Field_Def( $column->name );
       }
     endif;
   }
