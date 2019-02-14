@@ -429,7 +429,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function fix_shortcode_special_chars( $content )
   {
-    if ( strpos( $content, '[pdb_list' ) !== false || strpos( $content, '[pdb_total' ) !== false ) {
+    if ( self::has_shortcode( $content ) ) {
       // one of the two shortcodes are present, now do the replacements
       $content = preg_replace_callback( 
               '/\[pdb_(?:list|total)(.+)\]/', 
@@ -604,6 +604,8 @@ class Participants_Db extends PDb_Base {
    * this function is fired on the 'wp' action
    * 
    * action fired is: pdb-shortcode_present
+   * 
+   * @global WP_Post $post
    */
   public static function check_for_shortcode()
   {
@@ -1021,7 +1023,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_signup_class_form( $params )
   {
-
     $params['post_id'] = get_the_ID();
 
     return PDb_Signup::print_form( $params );
@@ -1035,7 +1036,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_signup_form( $params )
   {
-
     $params['module'] = 'signup';
 
     return self::print_signup_class_form( $params );
@@ -3344,16 +3344,6 @@ class Participants_Db extends PDb_Base {
 
     self::$instance_index = empty( $postinput['target_instance'] ) ? $postinput['instance_index'] : $postinput['target_instance'];
 
-    /**
-     * @version 1.6.3
-     * we don't check nonces for list search/sort/pagination requests as these are 
-     * generally made by not-logged-in users so there is no point in checking a 
-     * nonce for them, it also can break AJAX functionality if page caching is in 
-     * use
-     */
-//    if ( !self::nonce_check( $postinput['filterNonce'], PDb_List::$list_filter_nonce_key ) )
-//      die( 'failed nonce check' );
-
     global $post;
 
     if ( !is_object( $post ) )
@@ -3461,7 +3451,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _set_i18n()
   {
-
     self::$i18n = array(
         'submit' => __( 'Submit', 'participants-database' ),
         'apply' => __( 'Apply', 'participants-database' ),
@@ -3490,6 +3479,7 @@ class Participants_Db extends PDb_Base {
   /**
    * sets some custom body classes
    * 
+   * @global WP_Post $post
    * @param array $classes
    */
   public static function add_body_class( $classes )
