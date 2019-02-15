@@ -1121,7 +1121,7 @@ class Participants_Db extends PDb_Base {
 
     if ( $exclude ) {
 
-      $where = ' AND `name` ';
+      $where .= ' AND `name` ';
 
       if ( is_array( $exclude ) ) {
 
@@ -1140,7 +1140,8 @@ class Participants_Db extends PDb_Base {
     
     if ( ! $result ) {
       $result = $wpdb->get_results( $sql, ARRAY_A );
-      wp_cache_add( $cachekey,  $result, MINUTE_IN_SECONDS );
+    
+      wp_cache_add( $cachekey,  $result, '', self::cache_expire() );
     }
     
     // are we looking for only one column?
@@ -1356,61 +1357,63 @@ class Participants_Db extends PDb_Base {
   {
 
     global $wpdb;
+    
+    $where = 'WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") ';
 
     if ( is_array( $filter ) ) {
-      $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
+      $where .= 'AND v.name IN ("' . implode( '","', $filter ) . '")';
     } else {
       switch ( $filter ) {
 
         case 'signup':
 
-          $where = 'WHERE v.signup = 1 AND v.form_element <> "placeholder"';
+          $where .= 'AND v.signup = 1 AND v.form_element <> "placeholder"';
           break;
 
         case 'sortable':
 
-          $where = 'WHERE v.sortable = 1 AND v.form_element <> "placeholder"';
+          $where .= 'AND v.sortable = 1 AND v.form_element <> "placeholder"';
           break;
 
         case 'CSV':
 
-          $where = 'WHERE v.CSV = 1 ';
+          $where .= 'AND v.CSV = 1 ';
           break;
 
         case 'all':
 
-          $where = '';
+          $where .= '';
           break;
 
         case 'frontend_list':
 
-          $where = 'WHERE v.display_column > 0 ';
+          $where .= 'AND g.mode = "public" ';
           break;
 
         case 'frontend': // record and single modules
 
-          $where = 'WHERE g.display = 1 AND v.form_element <> "placeholder"';
+          $where .= 'AND g.mode = "public" AND v.form_element <> "placeholder"';
           break;
 
         case 'readonly':
 
-          $where = 'WHERE v.group = "internal" OR v.readonly = 1';
+          $where .= 'AND v.group = "internal" OR v.readonly = 1';
           break;
 
         case 'backend':
 
-          $where = 'WHERE v.name <> "id" AND v.form_element <> "captcha" AND v.form_element <> "placeholder"';
+          $where .= 'AND v.name <> "id" AND v.form_element <> "captcha" AND v.form_element <> "placeholder"';
           if ( !current_user_can( self::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
             // don't show non-displaying groups to non-admin users
             // the "approved" field is an exception; it should be visible to editor users
-            $where .= 'AND g.admin = 0 OR v.name = "approved"';
+            $where .= 'AND g.mode <> "admin" OR v.name = "approved"';
           }
           break;
 
         case 'new':
         default:
 
-          $where = 'WHERE v.name <> "id"  AND v.form_element <> "captcha"';
+          $where .= 'AND v.name <> "id"  AND v.form_element <> "captcha"';
       }
     }
 
