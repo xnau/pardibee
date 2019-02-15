@@ -1,4 +1,4 @@
-  <?php
+<?php
 /**
  * this file is called by the admin menu item, also a link in the admin record list
  * 
@@ -70,7 +70,6 @@ if ( $participant_values ) :
       PDb_FormElement::print_hidden_fields( $hidden );
 
       // get the columns and output form
-      $readonly_columns = Participants_Db::get_readonly_fields();
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
 
         $column = new PDb_Field_Item( $backend_column->name );
@@ -81,7 +80,7 @@ if ( $participant_values ) :
         $attributes = $column->attributes();
 
         // set a new section
-        if ( $column->group != $section ) {
+        if ( $column->group != $section ) :
           if ( !empty( $section ) ) {
             ?>
             </table>
@@ -98,11 +97,11 @@ if ( $participant_values ) :
         <table class="form-table">
           <tbody>
             <?php
-          }
+          endif; // new section
           echo $id_line;
           ?>
 
-            <tr class="<?php echo ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' ?>">
+          <tr class="<?php echo ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' ?>">
             <?php
             $column_title = str_replace( array('"', "'"), array('&quot;', '&#39;'), Participants_Db::apply_filters( 'translate_string', stripslashes( $column->title ) ) );
             if ( $options['mark_required_fields'] && $column->validation != 'no' ) {
@@ -133,8 +132,8 @@ if ( $participant_values ) :
                  */
                 if (
                         Participants_Db::apply_filters( 'field_readonly_override', !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ), $column ) ||
-                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true )  
-                        ) {
+                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true )
+                ) {
                   $attributes['readonly'] = 'readonly';
                 }
                 $add_title[] = __( 'read only', 'participants-database' );
@@ -151,7 +150,7 @@ if ( $participant_values ) :
 
               // handle the persistent feature
               if ( empty( $participant_values[$column->name()] ) ) {
-                $column->set_value( $column->is_persistent() ? $column->default : '' );
+                $column->set_value( $column->is_persistent() ? $column->default : ''  );
               }
 
               // get the existing value if any
@@ -191,7 +190,7 @@ if ( $participant_values ) :
                   if ( $column->has_content() ) {
                     $value = PDb_FormElement::dummy;
                   }
-                  $column->set_value($value);
+                  $column->set_value( $value );
                   break;
 
                 case 'hidden':
@@ -202,7 +201,7 @@ if ( $participant_values ) :
                 case 'timestamp':
 
                   if ( !PDb_Date_Parse::is_mysql_timestamp( $column->value() ) )
-                    $column->set_value('');
+                    $column->set_value( '' );
                   break;
               }
 
@@ -227,7 +226,7 @@ if ( $participant_values ) :
                     'module' => 'admin-edit',
                     'link' => $column->link(),
                 );
-                
+
                 PDb_FormElement::print_element( $params );
               }
 
@@ -281,8 +280,5 @@ if ( $participant_values ) :
   </form>
   </div>
   <?php
-
-
-
 
  endif;
