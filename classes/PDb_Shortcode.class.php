@@ -873,7 +873,7 @@ abstract class PDb_Shortcode {
          * get a list of all defined groups
          */
         $sql = 'SELECT g.name 
-                  FROM ' . Participants_Db::$groups_table . ' g ORDER BY FIELD( g.name, "' . implode( '","', $group_list ) . '")';
+                  FROM ' . Participants_Db::$groups_table . ' g WHERE g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY FIELD( g.name, "' . implode( '","', $group_list ) . '")';
 
         $result = $wpdb->get_results( $sql, ARRAY_N );
         foreach ( $result as $group ) {
@@ -890,7 +890,7 @@ abstract class PDb_Shortcode {
       $display_where = '';
       if ( $public_only ) {
         // using the new 'mode' value
-        $display_where = 'AND ( g.mode IS NULL AND g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"';
+        $display_where = 'AND g.mode = "public"';
       }
       switch ( $this->module ) {
         case 'signup':
@@ -898,27 +898,36 @@ abstract class PDb_Shortcode {
           $sql = 'SELECT DISTINCT g.name 
                   FROM ' . Participants_Db::$groups_table . ' g  
                   JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
-                  WHERE f.signup = "1" AND ( g.mode IS NULL AND g.display = "1" ) OR g.mode = "public" ORDER BY ' . $orderby;
+                  WHERE f.signup = "1" AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY ' . $orderby;
           break;
         
         case 'record':
           // get field from public and private groups
           $sql = 'SELECT DISTINCT g.name 
                 FROM ' . Participants_Db::$groups_table . ' g 
-                WHERE g.display = "1" OR g.mode = "public" OR ( g.display = g.admin ) OR g.mode = "private" ORDER BY ' . $orderby;
+                WHERE g.mode IN ("public","private") ORDER BY ' . $orderby;
           break;
     
         default:
           // get fields from all groups or only public groups
           $sql = 'SELECT g.name 
                 FROM ' . Participants_Db::$groups_table . ' g
-                  WHERE 1=1 ' . ( $public_only ? 'AND ( g.display = "1" AND g.admin <> "1" ) OR g.mode = "public"' : '' ) . ' ORDER BY ' . $orderby;
+                WHERE 1=1 ' . ( $public_only ? 'AND g.mode = "public"' : 'AND g.mode IN ("public","private")' ) . ' ORDER BY ' . $orderby;
       }
+      
+      $cachekey = md5($sql);
+      
+      $groups = wp_cache_get($cachekey);
+      
+      if ( ! $groups ) {
 
-      $result = $wpdb->get_results( $sql, ARRAY_N );
+        $result = $wpdb->get_results( $sql, ARRAY_N );
 
-      foreach ( $result as $group ) {
-        $groups[] = current( $group );
+        foreach ( $result as $group ) {
+          $groups[] = current( $group );
+        }
+        
+        wp_cache_set( $cachekey, $groups, '', Participants_Db::cache_expire() );
       }
     }
     $this->display_groups = $groups;
