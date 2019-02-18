@@ -177,11 +177,20 @@ class PDb_Field_Editor {
         );
         break;
       case 'attributes':
-      case 'options':
         $config = array(
             'type' => 'text-area',
             'attributes' => array(
                 'class' => 'parameter-list'
+            ),
+        );
+        break;
+      case 'options':
+        $config = array(
+            'type' => 'text-area',
+            'attributes' => array(
+                'class' => 'parameter-list option-list',
+                'required' => 'required',
+                'data-message' => __('You must define options for this field', 'participants-database'),
             ),
         );
         break;
