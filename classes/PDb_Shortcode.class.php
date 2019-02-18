@@ -275,9 +275,7 @@ abstract class PDb_Shortcode {
     $this->wrap_class = $this->prefix . $this->module . ' ' . $this->prefix . 'instance-' . $this->instance_index;
 
     $this->_set_display_columns();
-
-    $public_groups_only = $this->module === 'retrieve' ? false : true;
-    $this->_set_display_groups( $public_groups_only );
+    $this->_set_display_groups();
 
     $this->wrap_class = trim( $this->wrap_class ) . ' ' . trim( $this->shortcode_atts['class'] );
     // set the template to use
@@ -842,11 +840,10 @@ abstract class PDb_Shortcode {
    * if the shortcode "groups" attribute is used, it overrides the gobal group 
    * visibility settings
    *
-   * @global object $wpdb
-   * @param  bool $public_only if true, include only public groups, if false, include all groups
+   * @global wpdb $wpdb
    * @return null
    */
-  protected function _set_display_groups( $public_only = true )
+  protected function _set_display_groups()
   {
     global $wpdb;
     $groups = array();
@@ -885,20 +882,15 @@ abstract class PDb_Shortcode {
     }
     if ( count( $groups ) === 0 ) {
 
-      $orderby = empty( $this->shortcode_atts['fields'] ) ? 'g.order ASC' : 'FIELD( g.name, "' . implode( '","', $groups ) . '")';
-
-      $display_where = '';
-      if ( $public_only ) {
-        // using the new 'mode' value
-        $display_where = 'AND g.mode = "public"';
-      }
+      $orderby = 'g.order ASC';
+      
       switch ( $this->module ) {
         case 'signup':
           // get only signup-enabled fields from public groups
           $sql = 'SELECT DISTINCT g.name 
                   FROM ' . Participants_Db::$groups_table . ' g  
                   JOIN ' . Participants_Db::$fields_table . ' f ON f.group = g.name 
-                  WHERE f.signup = "1" AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY ' . $orderby;
+                  WHERE f.signup = "1" AND g.mode = "public" ORDER BY ' . $orderby;
           break;
         
         case 'record':
@@ -907,12 +899,19 @@ abstract class PDb_Shortcode {
                 FROM ' . Participants_Db::$groups_table . ' g 
                 WHERE g.mode IN ("public","private") ORDER BY ' . $orderby;
           break;
+        
+        case 'retrieve':
+          // fields from all groups are available here
+          $sql = 'SELECT DISTINCT g.name 
+                FROM ' . Participants_Db::$groups_table . ' g 
+                ORDER BY ' . $orderby;
+          break;
     
         default:
-          // get fields from all groups or only public groups
+          
           $sql = 'SELECT g.name 
                 FROM ' . Participants_Db::$groups_table . ' g
-                WHERE 1=1 ' . ( $public_only ? 'AND g.mode = "public"' : 'AND g.mode IN ("public","private")' ) . ' ORDER BY ' . $orderby;
+                WHERE 1=1 AND g.mode = "public" ORDER BY ' . $orderby;
       }
       
       $cachekey = md5($sql);
