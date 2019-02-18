@@ -68,7 +68,7 @@ if ( $participant_values ) :
     <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>" enctype="multipart/form-data" autocomplete="off" >
       <?php
       PDb_FormElement::print_hidden_fields( $hidden );
-
+      
       // get the columns and output form
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
 
@@ -87,7 +87,7 @@ if ( $participant_values ) :
         </div>
         <?php
       } else {
-        $id_line = '<tr><th>' . _x( 'ID', 'abbreviation for "identification"', 'participants-database' ) . '</th><td>' . ( false === $participant_id ? _x( '(new record)', 'indicates a new record is being entered', 'participants-database' ) : $participant_id ) . '</td></tr>';
+//        $id_line = '<tr><th>' . _x( 'ID', 'abbreviation for "identification"', 'participants-database' ) . '</th><td>' . ( false === $participant_id ? _x( '(new record)', 'indicates a new record is being entered', 'participants-database' ) : $participant_id ) . '</td></tr>';
       }
       $section = $column->group()
       ?>
@@ -114,6 +114,7 @@ if ( $participant_values ) :
             if ( $column->is_hidden_field() ) {
               $add_title[] = __( 'hidden', 'participants-database' );
             }
+            
             if ( $column->is_readonly() ) {
 
               if (
@@ -121,6 +122,7 @@ if ( $participant_values ) :
                       $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) === false ) {
                 // don't mark these fields as read-only if editing is enabled
                 $column->make_readonly( false );
+                
               } else {
 
                 $attributes['class'] = 'readonly-field';
@@ -131,8 +133,9 @@ if ( $participant_values ) :
                  * @return bool if true the field is rendered as readonly
                  */
                 if (
-                        Participants_Db::apply_filters( 'field_readonly_override', !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ), $column ) ||
-                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true )
+                        !Participants_Db::current_user_has_plugin_role( 'admin', 'readonly access' ) && Participants_Db::apply_filters( 'field_readonly_override', true, $column ) ||
+                        $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ||
+                        $column->name() === 'id' && Participants_Db::apply_filters( 'record_id_is_read_only', true )
                 ) {
                   $attributes['readonly'] = 'readonly';
                 }
@@ -216,7 +219,7 @@ if ( $participant_values ) :
                 );
               } else {
 
-                $params = array(
+                PDb_FormElement::print_element( array(
                     'type' => $column->form_element(),
                     'value' => $column->get_value(),
                     'name' => $column->name(),
@@ -225,9 +228,7 @@ if ( $participant_values ) :
                     'attributes' => $attributes,
                     'module' => 'admin-edit',
                     'link' => $column->link(),
-                );
-
-                PDb_FormElement::print_element( $params );
+                ) );
               }
 
               if ( !empty( $column->help_text ) ) :
