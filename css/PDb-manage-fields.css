@@ -1,0 +1,248 @@
+
+/***  Participants Database MANAGE FIELDS  ***/
+
+/*
+ * @version 1.0
+ */
+
+.manage-fields-wrap .def-fieldset {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  min-height: 6em;
+  padding: 0.5em 0.5em 0.5em 3.3em;
+  margin: 0.5em 0;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 30px 7px 7px 30px;
+  overflow: hidden;
+}
+.manage-fields-wrap .attribute-control {
+  margin: 0.7em 0.5em 0.5em 0.5em;
+  width: auto !important;
+}
+.manage-fields-wrap .attribute-control label {
+  display: block;
+  opacity: 0.8;
+}
+.manage-fields-wrap .attribute-control.checkbox-control-wrap label {
+  opacity: 1;
+}
+.def-fieldset break {
+  flex-basis: 100%;
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
+}
+
+.def-fieldset .field-header {
+  margin: 0;
+  padding: 0.6em 0.8em 1.7em 0.5em;
+  width: auto !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: calc( 100% - 2.2em );
+}
+
+.editor-closed.def-fieldset .field-header {
+  padding: 16px 0.8em 12px 0.5em;
+  position: relative;
+  left: -44px;
+  top: 4px;
+  height: 100%;
+  margin: -12px 0;
+}
+
+.def-fieldset .form-element-label {
+  align-self: center;
+  font-size: 130%;
+}
+.editor-open.def-fieldset .form-element-label {
+  display: none;
+}
+
+.manage-field-groups .def-fieldset .field-header {
+  padding: 1.4em 0.8em 0.9em 0.5em;
+  text-align: center;
+}
+
+.manage-fields .attribute-control input[type="checkbox"],
+.manage-fields .field-header input[type="checkbox"] {
+  width: 1em;
+}
+.participants_db .validation-attribute input.otherfield {
+  max-width: inherit;
+}
+.editor-opener {
+  cursor: pointer;
+}
+.editor-opener:hover {
+  background: rgba( 0,0,0,0.1);
+}
+
+.dashicons.field-open-icon::before {
+    /* content: "\f139"; /* arrow-right */
+    content: "\f345"; /* dashicons-arrow-right-alt2 (chevron)) */
+}
+.dashicons.field-close-icon::before {
+    /* content: "\f140"; /* arrow-down */
+    content: "\f347"; /* dashicons-arrow-down-alt2 (chevron)) */
+}
+
+.editor-open .editor-opener.field-open-icon {
+  display: none;
+}
+.editor-closed .editor-opener.field-close-icon {
+  display: none;
+}
+.participants_db .field-header h4 {
+  font-weight: normal;
+  font-size: 1.4em;
+} 
+.editor-open .field-header h4 {
+  display: none;
+} 
+.editor-open .field-header input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
+}
+.def-fieldset.editor-closed {
+  min-height: 2.5em;
+}
+.editor-closed .attribute-control {
+  display: none !important;
+}
+.editor-closed .attribute-control.field-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 15em;
+  padding-right: 0.5em;
+}
+.participants_db .editor-closed .field-header h4 {
+  display: inline-block;
+  margin: 0 1em;
+}
+.editor-closed .field-header a.delete,
+.editor-closed .field-header a.dragger {
+  display: inline-block;
+}
+
+.wp-core-ui .general_fields_control_header .button-secondary {
+  line-height: 24px;
+  margin-left: 0.5em;
+}
+
+.manage-fields-wrap input[readonly] {
+  border: 1px solid #ddd;
+  background: inherit;
+}
+
+.general_fields_control_header .add-field-submit {
+  display: inline-block;
+  margin: 1em 0 0 0;
+  font-size: 110%;
+}
+
+.general_fields_control_header .manage-fields-update {
+  margin-left: 4em;
+}
+
+.attribute-control input, 
+.participants_db .attribute-control select, 
+.attribute-control textarea {
+  width: auto;
+}
+button .dashicons {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+/*  font-size: 24px;*/
+  line-height: 24px;
+  margin-left: -5px;
+}
+.general_fields_control_header .check-all {
+  display: inline-block;
+  height: auto;
+  line-height: 24px;
+  width: 3.2em;
+  text-align: center;
+}
+.manage-fields-actions,
+.with-selected-control {
+  display: block;
+  width:auto;
+  max-width: 40em;
+  margin: 0.55em 0 0.25em 0;
+  padding: 0.5em;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
+}
+.participants_db .manage-fields-actions label, 
+.participants_db .manage-fields-actions input {
+  display: block;
+  margin-top: 0.5em;
+}
+.participants_db .manage-fields-actions label {
+
+}
+.participants_db .manage-fields-actions label {
+  text-transform: capitalize;
+}
+
+.participants_db .manage-fields-wrap input,
+.participants_db .manage-fields-wrap  select,
+.participants_db .manage-fields-wrap textarea {
+  font-size: 120%;
+}
+.participants_db .manage-fields-wrap input.title-field {
+  font-weight: bold;
+}
+.participants_db input.otherfield {
+  max-width: 10em;
+}
+.manage-fields input[type="checkbox"], 
+.manage-fields input[type="radio"] {
+  width:auto;
+  position:relative;
+  top:-1px;
+}
+.manage-fields textarea {
+  height: 3.3em;
+}
+.field-header a.dragger,
+.field-header a.delete {
+  text-decoration: none;
+  display: block;
+}
+.field-header a.dragger {
+  cursor: move;
+}
+.field-header a.delete {
+  cursor: pointer;
+}
+.dashicons.dashicons-sort:after {
+  white-space: nowrap;
+}
+.dashicons.dashicons-no:after {
+  color: #D64E07;
+}
+.widefat.pdb-list .dashicons {
+  line-height: 18px;
+  font-size: 22px;
+}
+
+.manage-field-groups th.vertical-title {
+  width: 3em;
+}
+
+.manage-fields label a {
+  text-decoration: none;
+}
+
+.manage-fields input:invalid,
+.manage-fields textarea:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
