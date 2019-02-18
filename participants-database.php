@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.8.5
+ * Version: 1.9.0
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -659,6 +659,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '2.1' );
+    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), '1.0' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
 //      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
@@ -701,6 +702,7 @@ class Participants_Db extends PDb_Base {
           'datatype_cancel_button' => __( 'No, don\'t change the form element', 'participants-database' ),
       ) );
       wp_enqueue_script( self::$prefix . 'manage_fields' );
+      wp_enqueue_style( self::$prefix . 'manage_fields' );
     }
 
     // global admin enqueues
@@ -1401,8 +1403,10 @@ class Participants_Db extends PDb_Base {
           break;
 
         case 'backend':
-
-          $where .= 'AND v.name <> "id" AND v.form_element <> "captcha" AND v.form_element <> "placeholder"';
+          
+          $omit_element_types = self::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder') );
+          $where .= 'AND v.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
+          
           if ( !current_user_can( self::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
             // don't show non-displaying groups to non-admin users
             // the "approved" field is an exception; it should be visible to editor users
@@ -1418,8 +1422,10 @@ class Participants_Db extends PDb_Base {
     }
 
     $sql = 'SELECT v.*, g.order FROM ' . self::$fields_table . ' v INNER JOIN ' . self::$groups_table . ' g ON v.group = g.name ' . $where . ' ORDER BY g.order, v.order';
+    
+    $result = $wpdb->get_results( $sql, OBJECT_K );
 
-    return $wpdb->get_results( $sql, OBJECT_K );
+    return $result;
   }
 
   /**
