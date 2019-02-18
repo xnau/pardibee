@@ -911,6 +911,17 @@ class PDb_FormElement extends xnau_FormElement {
      */
     return Participants_Db::apply_filters( 'set_form_element_types', $types );
   }
+  
+  /**
+   * tells if the string matches a defined form element type
+   * 
+   * @param string $form_element
+   * @return bool true if the form element type is defined
+   */
+  public static function is_form_element( $form_element )
+  {
+    return array_key_exists( $form_element, self::get_types() );
+  }
 
   /**
    *  tells if a field stores it's value as an array
