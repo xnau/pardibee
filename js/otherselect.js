@@ -90,8 +90,10 @@ var PDbOtherSelect = (function ($) {
     var control = el.find('[name]').first();
     var name = control.attr('name'); //.replace(/\[[^\]]*\]/, '');
     var otherinput = el.find('input.otherfield');
-    el.data(nameData, name);
-    otherinput.attr('name', otherinput.attr('name').replace(name, tempName));
+    if ( otherinput.length ) {
+      el.data(nameData, name);
+      otherinput.attr('name', otherinput.attr('name').replace(name, tempName));
+    }
   };
   $.fn.PDb_is_checkbox = function () {
     return this.closest('.selectother[class*="checkbox"]').length > 0;
