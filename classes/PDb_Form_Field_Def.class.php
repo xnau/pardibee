@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -305,6 +305,18 @@ class PDb_Form_Field_Def {
   public function set_readonly( $state = true )
   {
     $this->readonly = (bool) $state;
+  }
+  
+  /**
+   * sets the form_element property
+   * 
+   * @param string $form_element
+   */
+  public function set_form_element( $form_element )
+  {
+    if ( PDb_FormElement::is_form_element( $form_element ) ) {
+      $this->form_element = esc_sql($form_element);
+    }
   }
 
   /**
