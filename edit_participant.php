@@ -72,8 +72,12 @@ if ( $participant_values ) :
       // get the columns and output form
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
 
-        $column = new PDb_Field_Item( $backend_column->name );
-        $column->set_value( $participant_values[$column->name()] );
+        $column = new PDb_Field_Item( array(
+            'name' => $backend_column->name,
+            'module' => 'backend-edit',
+            'value' => $participant_values[$backend_column->name] ),
+                $participant_id
+                );
 
         $id_line = '';
 
@@ -197,8 +201,11 @@ if ( $participant_values ) :
                   break;
 
                 case 'hidden':
-
-                  $column->form_element = 'text-line';
+                  
+                  $column->set_form_element( 'text-line' );
+                  if (!Participants_Db::current_user_has_plugin_role( 'admin', 'readonly access' ) ) {
+                    $column->make_readonly();
+                  }
                   break;
 
                 case 'timestamp':
