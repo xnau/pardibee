@@ -396,6 +396,7 @@ abstract class PDb_Shortcode {
   {
 
     $custom_template_file = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
+    
     /**
      * @version 1.6 'pdb-template_select' filter added
      */
