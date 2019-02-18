@@ -62,7 +62,7 @@ PDbManageFields = (function ($) {
               data : {
                 list : [row_id],
                 action : PDb_L10n.action,
-                task:'delete_'+thing,
+                task : 'delete_' + thing,
                 _wpnonce : PDb_L10n._wpnonce
               },
               beforeSend : function () {
@@ -141,8 +141,8 @@ PDbManageFields = (function ($) {
     var el = $(this);
     var flag;
     var initState = el.data('initState');
-    if ( el.closest('.manage-field-groups').length ) {
-      flag = $('#status_'+el.closest('.def-fieldset').data('id'));
+    if (el.closest('.manage-field-groups').length) {
+      flag = $('#status_' + el.closest('.def-fieldset').data('id'));
     } else {
       var matches = el.closest('.def-fieldset').attr('id').match(/(\d+)/);
       flag = $('#status_' + matches[1]);
@@ -248,12 +248,12 @@ PDbManageFields = (function ($) {
     return message;
   };
   var open_field_editor = function () {
-    switch_field_editor($(this),'open');
+    switch_field_editor($(this), 'open');
   }
   var close_field_editor = function () {
-    switch_field_editor($(this),'close');
+    switch_field_editor($(this), 'close');
   }
-  var switch_field_editor = function (el,action) {
+  var switch_field_editor = function (el, action) {
     switch (action) {
       case 'close':
         el.closest('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
@@ -270,7 +270,7 @@ PDbManageFields = (function ($) {
       _wpnonce : PDb_L10n._wpnonce,
     });
   }
-  var open_close_all_field_editors = function (container,action) {
+  var open_close_all_field_editors = function (container, action) {
     switch (action) {
       case 'close':
         container.find('.def-fieldset').removeClass('editor-open').addClass('editor-closed');
@@ -318,7 +318,7 @@ PDbManageFields = (function ($) {
     if (list.length) {
       switch (ws_action) {
         case 'delete':
-          delete_selected_fields(list,$(this).closest('.manage-fields-wrap').attr('id'));
+          delete_selected_fields(list, $(this).closest('.manage-fields-wrap').attr('id'));
           break;
         case 'group':
           assign_group(list, $(this).prev('select.with-selected-group-select').val());
@@ -355,7 +355,7 @@ PDbManageFields = (function ($) {
       if (response.feedback) {
         set_feedback(response.feedback);
       }
-    },'json');
+    }, 'json');
   }
   var assign_group = function (list, group) {
     $.each(list, function (index, id) {
@@ -369,7 +369,7 @@ PDbManageFields = (function ($) {
     });
     return list;
   }
-  var delete_selected_fields = function (list,group) {
+  var delete_selected_fields = function (list, group) {
 
     confirmationBox.html(list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field);
 
@@ -397,8 +397,8 @@ PDbManageFields = (function ($) {
                   $(this).remove();
                 });
               });
-              var countDisplay = $('#field_count_'+group);
-              countDisplay.html(parseInt(countDisplay.html())-list.length);
+              var countDisplay = $('#field_count_' + group);
+              countDisplay.html(parseInt(countDisplay.html()) - list.length);
               $('.with-selected-control').slideUp(effect_speed);
               set_feedback(response.feedback);
             }
@@ -430,7 +430,7 @@ PDbManageFields = (function ($) {
     helper : fixHelper,
     handle : '.dragger',
     update : function (event, ui) {
-      $.post(ajaxurl,{
+      $.post(ajaxurl, {
         action : PDb_L10n.action,
         task : 'reorder_groups',
         _wpnonce : PDb_L10n._wpnonce,
@@ -479,7 +479,7 @@ PDbManageFields = (function ($) {
         return false;
       });
       // cancel add field
-      $('button[name=add-field-cancel]').click(function(e){
+      $('button[name=add-field-cancel]').click(function (e) {
         e.preventDefault();
         $(this).closest('.button-showhide').slideUp();
         disableNew($(this).closest('.button-showhide'));
@@ -512,7 +512,7 @@ PDbManageFields = (function ($) {
         if (icon.hasClass('field-open-icon')) {
           action = 'open';
         }
-        open_close_all_field_editors($(this).closest('.manage-fields-wrap'),action);
+        open_close_all_field_editors($(this).closest('.manage-fields-wrap'), action);
         icon.toggleClass('field-close-icon field-open-icon');
       });
       // with selected action handler
@@ -521,6 +521,18 @@ PDbManageFields = (function ($) {
       $('#fields-tabs').on('click', '.notice-dismiss', function () {
         $(this).closest('div.notice').remove();
       });
+
+      // handle empty field options
+      $('textarea.option-list')
+              .on('input', function () {
+                if (!this.validity.valueMissing) {
+                  this.setCustomValidity('');
+                }
+              })
+              .on('invalid', function () {
+                this.setCustomValidity($(this).data('message'));
+                $(this).closest('.editor-closed').find('.field-open-icon').trigger('click');
+              });
     }
   };
 }(jQuery));
