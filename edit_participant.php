@@ -102,7 +102,7 @@ if ( $participant_values ) :
           <tbody>
             <?php
           endif; // new section
-          echo $id_line;
+//          echo $id_line;
           ?>
 
           <tr class="<?php echo ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' ?>">
