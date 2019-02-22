@@ -551,6 +551,13 @@ class Participants_Db extends PDb_Base {
      */
     if ( false === get_option( self::$db_version_option ) || get_option( self::$db_version_option ) != self::$db_version )
       PDb_Init::on_update();
+    
+    // gives us a way to update the fields to version 1.9.0 manually
+    add_action( 'admin_init', function () {
+      if ( array_key_exists( 'pdb-update-fields', $_GET ) ) {
+        PDb_Init::update_field_def_values();
+      }
+    });
 
     if ( self::plugin_setting_is_true( 'html_email' ) ) {
       $type = 'text/html; charset="' . get_option( 'blog_charset' ) . '"';
@@ -1357,7 +1364,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_column_atts( $filter = 'new' )
   {
-
     global $wpdb;
     
     $where = 'WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") ';
@@ -1424,6 +1430,8 @@ class Participants_Db extends PDb_Base {
     $sql = 'SELECT v.*, g.order FROM ' . self::$fields_table . ' v INNER JOIN ' . self::$groups_table . ' g ON v.group = g.name ' . $where . ' ORDER BY g.order, v.order';
     
     $result = $wpdb->get_results( $sql, OBJECT_K );
+    
+//    error_log(__METHOD__.' sql: '.$wpdb->last_query);
 
     return $result;
   }
@@ -1702,7 +1710,12 @@ class Participants_Db extends PDb_Base {
     switch ( $action ) {
 
       case 'update':
-        $sql = 'UPDATE ' . self::$participants_table . ' SET `date_updated` = NOW(), ';
+        $sql = 'UPDATE ' . self::$participants_table . ' SET ';
+        
+        if ( !$currently_importing_csv || ( $currently_importing_csv && !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) ) {
+          $sql .= ' `date_updated` = NOW(), ';
+        }
+        
         $where = " WHERE id = " . $participant_id;
         break;
 
@@ -2459,9 +2472,18 @@ class Participants_Db extends PDb_Base {
     if ( !isset( $params['name'] ) || empty( $params['name'] ) ) return;
     
     global $wpdb;
-    $wpdb->hide_errors();
 
     $field_parameters = wp_parse_args( $params, array('form_element' => 'text-line') );
+    
+    // check for a duplicate field
+    $field_check = $wpdb->get_col( $wpdb->prepare( 'SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `name` = %s', $field_parameters['name'] ) );
+    if ( count($field_check) > 0 ) {
+
+      if ( PDB_DEBUG )
+        self::debug_log( __METHOD__ . ' failed to add row ' . $params['name'] . ': duplicate field' );
+
+      return false;
+    }
 
     $wpdb->insert( self::$fields_table, $field_parameters );
 
