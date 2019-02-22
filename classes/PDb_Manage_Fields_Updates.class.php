@@ -77,7 +77,10 @@ class PDb_Manage_Fields_Updates {
                 $row['values'] = '';
               } 
             }
-            $row[$attname] = self::string_notation_to_array( $attvalue );
+            
+            if ( is_string( $attvalue ) ) {
+              $row[$attname] = self::string_notation_to_array( $attvalue );
+            }
           }
         }
 
@@ -133,7 +136,7 @@ class PDb_Manage_Fields_Updates {
             $row[$name] = serialize( $row[$name] );
           }
         }
-
+        
         /**
          * provides access to the field definition parameters as the field is getting updated
          * 
@@ -169,14 +172,62 @@ class PDb_Manage_Fields_Updates {
    */
   private function sanitized_post()
   {
-    $keys = array_filter( array_keys( $_POST ), function ($v) {
-      return preg_match( '/^row_[0-9]{1,3}$/', $v ) === 1;
-    } );
+    $postrows = array_filter( $_POST, function ($k) {
+      return preg_match( '/^row_[0-9]{1,3}$/', $k ) === 1;
+    }, ARRAY_FILTER_USE_KEY );
+    
+    $post = array();
+    foreach( $postrows as $key => $row ) {
+      $post[$key] = self::sanitize_row($row);
+    }
 
-    return filter_input_array( INPUT_POST, array_fill_keys( $keys, array(
-        'filter' => FILTER_SANITIZE_STRING,
-        'flags' => FILTER_REQUIRE_ARRAY,
-            ) ) );
+    return $post;
+  }
+  
+  /**
+   * sanitizes a field definition row
+   * 
+   * @param array $row of field parameter data
+   * @return array
+   */
+  public static function sanitize_row( $row )
+  {
+    $string_sanitize = array(
+            'filter' => FILTER_SANITIZE_STRING,
+            'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+            );
+    $text_sanitize = array(
+            'filter' => FILTER_CALLBACK,
+            'options' => 'PDb_Manage_Fields_Updates::sanitize_text'
+            );
+    $bool_sanitize = array(
+        'filter' => FILTER_CALLBACK,
+        'options' => function ($v) {
+      return $v == '1' ? '1' : '0';
+        },
+    );
+    
+    $filters = array(
+        'id' => FILTER_SANITIZE_NUMBER_INT,
+        'status' => FILTER_SANITIZE_STRING,
+        'name' => FILTER_SANITIZE_STRING,
+        'title' => $text_sanitize,
+        'group' => $string_sanitize,
+        'form_element' => $string_sanitize,
+        'help_text' => $text_sanitize,
+        'options' => $string_sanitize,
+        'validation' => $string_sanitize,
+        'validation_message' => $text_sanitize,
+        'default' => $string_sanitize,
+        'attributes' => $string_sanitize,
+        'signup' => $bool_sanitize,
+        'csv' => $bool_sanitize,
+        'readonly' => $bool_sanitize,
+        'sortable' => $bool_sanitize,
+        'persistent' => $bool_sanitize,
+    );
+    
+    return filter_var_array( $row, $filters );
   }
 
   /**
@@ -189,7 +240,7 @@ class PDb_Manage_Fields_Updates {
     // set up the new field's parameters
     $params = array(
         'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
-        'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
+        'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::sanitize_text') ),
         'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
         'order' => '0',
         'validation' => 'no',
@@ -250,7 +301,7 @@ class PDb_Manage_Fields_Updates {
     global $wpdb;
     $atts = array(
         'name' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
-        'title' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') ),
+        'title' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::sanitize_text') ),
         'order' => $_POST['group_order'],
         'mode' => 'public',
         'description' => '',
@@ -294,7 +345,7 @@ class PDb_Manage_Fields_Updates {
 
     foreach ( $_POST as $group_name => $row ) {
 
-      $data['title'] = filter_var( $row['title'], FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_title') );
+      $data['title'] = filter_var( $row['title'], FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::sanitize_text') );
       $data['description'] = filter_var( $row['description'], FILTER_SANITIZE_STRING );
       $data['mode'] = filter_var( $row['mode'], FILTER_SANITIZE_STRING );
       $data['display'] = $data['mode'] === 'public' ? '1' : '0';
@@ -580,7 +631,8 @@ class PDb_Manage_Fields_Updates {
      * in queries
      */
     $name = strtolower( str_replace(
-                    array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), stripslashes( substr( $string, 0, 64 ) )
+            array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), 
+            array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), stripslashes( substr( $string, 0, 64 ) )
             ) );
     /*
      * allow only proper unicode letters, numerals and legal symbols
@@ -592,14 +644,38 @@ class PDb_Manage_Fields_Updates {
   }
 
   /**
-   * sanitizes the group ot field title
+   * sanitizes a string that allows imple HTML tags
    * 
-   * @param string $title
+   * this includes titles, group titles, help text
+   * 
+   * @param string $string
    * @return string
    */
-  public static function make_title( $title )
+  public static function sanitize_text( $string )
   {
-    return filter_var( $title, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_BACKTICK) );
+    $allowed_html = array(
+        'span' => array(
+            'class' => true,
+            'style' => true,
+        ),
+        'em' => array(
+            'class' => true,
+            'style' => true,
+        ),
+        'strong' => array(
+            'class' => true,
+            'style' => true,
+        ),
+        'a' => array(
+            'class' => true,
+            'style' => true,
+            'href' => true,
+            'rel' => true,
+            'target' => true,
+        ),
+    );
+    return wp_kses($string, $allowed_html);
+    //return filter_var( $title, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_BACKTICK) );
   }
 
   /**
