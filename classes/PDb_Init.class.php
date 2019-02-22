@@ -928,6 +928,7 @@ class PDb_Init {
         error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
       } else {
         self::set_mode_column_values();
+        self::update_field_def_values();
         $db_version = '1.1';
       }
     }
@@ -1058,6 +1059,45 @@ class PDb_Init {
           break;
       }
       $wpdb->update( Participants_Db::$groups_table, array('mode' => $mode), array('id' => $group->id) );
+    }
+  }
+  
+  /**
+   * updates the field definitions to use the new columns as of db version 1.1
+   * 
+   * value set field now use the "options" column to hold the options values, other 
+   * fields use only the attributes column
+   * 
+   * @global wpdb $wpdb
+   */
+  public static function update_field_def_values()
+  {
+    global $wpdb;
+    $field_def_list = $wpdb->get_results( 'SELECT v.* 
+              FROM ' . Participants_Db::$fields_table . ' v 
+              ORDER BY v.order' );
+    
+    foreach ( $field_def_list as $field_def ) {
+      if ( Participants_Db::$fields[$field_def->name]->is_value_set() ) {
+        $update = array( 'values' => NULL );
+        if ( empty( $field_def->options ) ) {
+          $update['options'] = $field_def->values;
+        }
+        $wpdb->update( Participants_Db::$fields_table, 
+                $update, 
+                array( 
+                    'id' => $field_def->id 
+                ) );
+      } elseif ( empty( $field_def->attributes ) && ! empty( $field_def->values ) ) {
+        $wpdb->update( Participants_Db::$fields_table, 
+                array( 
+                    'attributes' => $field_def->values, 
+                    'values' => NULL 
+                    ), 
+                array( 
+                    'id' => $field_def->id 
+                ) );
+      }
     }
   }
 
