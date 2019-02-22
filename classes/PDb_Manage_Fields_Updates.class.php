@@ -675,7 +675,6 @@ class PDb_Manage_Fields_Updates {
         ),
     );
     return wp_kses($string, $allowed_html);
-    //return filter_var( $title, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_BACKTICK) );
   }
 
   /**
