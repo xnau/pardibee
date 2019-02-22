@@ -141,7 +141,7 @@ class PDb_List_Query {
     $this->_reset_filters();
     $this->set_sort( $List->shortcode_atts['orderby'], $List->shortcode_atts['order'] );
     $this->_set_columns( $List->display_columns );
-    $this->suppress = filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
+    $this->suppress = $List->attribute_true('suppress');  // filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
     $this->_add_filter_from_shortcode_filter( $List->shortcode_atts['filter'] );
     
     /*
