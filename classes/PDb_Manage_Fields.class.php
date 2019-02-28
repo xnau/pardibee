@@ -206,7 +206,9 @@ class PDb_Manage_Fields {
                   <input type="hidden" name="<?php echo $group ?>[status]" id="status_<?php echo $group ?>" value />
                   <div class="field-header">
                     <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
-                    <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
+                    <?php if ( $group_def['name'] !== 'internal' ) : ?>
+                      <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
+                    <?php endif ?>
                     <div id="field_count_<?php echo $group ?>" title="<?php _e( 'field count', 'participants-database' ) ?>"><?php echo $group_count ?></div>
                   </div>
                   <?php
@@ -421,7 +423,7 @@ class PDb_Manage_Fields {
     protected function setup_group_data()
     {
       $this->group_defs = array();
-      foreach ( Participants_Db::get_groups( '`id`,`order`,`mode`,`name`,`title`,`description`,`admin`,`display`' ) as $group => $defs ) {
+      foreach ( Participants_Db::get_groups( ) as $group => $defs ) {
         // mode is the 1.8.5 group visibility mode
         // this converts the previous visibility settings to the new mode
         if ( !isset( $defs['mode'] ) || empty( $defs['mode'] ) ) {
