@@ -371,13 +371,13 @@ class PDb_Update_Notices {
                 continue;
               }
               if ( empty( $contrib_username ) ) {
-                $contrib_username = preg_replace( '/^.+\/(.+)\/?$/', '\1', $contrib_profile );
+                $contrib_username = preg_replace( '/^.+\/(.+)\/?$/', '\1', $contrib_profile['profile'] );
               }
               $contrib_username = sanitize_user( $contrib_username );
-              if ( empty( $contrib_profile ) ) {
+              if ( empty( $contrib_profile['profile'] ) ) {
                 echo "<li><img src='https://wordpress.org/grav-redirect.php?user={$contrib_username}&amp;s=36' width='18' height='18' alt='' />{$contrib_username}</li>";
               } else {
-                echo "<li><a href='{$contrib_profile}' target='_blank'><img src='https://wordpress.org/grav-redirect.php?user={$contrib_username}&amp;s=36' width='18' height='18' alt='' />{$contrib_username}</a></li>";
+                echo "<li><a href='{$contrib_profile['profile']}' target='_blank'><img src='https://wordpress.org/grav-redirect.php?user={$contrib_username}&amp;s=36' width='18' height='18' alt='' />{$contrib_username}</a></li>";
               }
             }
             ?>
