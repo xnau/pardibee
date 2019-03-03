@@ -445,7 +445,7 @@ class PDb_Manage_Fields_Updates {
         foreach ( $list as $key => $value ) {
           $update[] = 'WHEN `id` = "' . filter_var( str_replace( 'row_', '', $key ), FILTER_SANITIZE_NUMBER_INT ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
         }
-        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$fields_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END' );
+        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$fields_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END WHERE `id` IN ("' . implode( '","', array_keys( $list ) ) . '")' );
 
         wp_send_json( array('status' => $result ? 'success' : 'failed') );
 
@@ -453,9 +453,9 @@ class PDb_Manage_Fields_Updates {
         parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
         $update = array();
         foreach ( $list as $key => $value ) {
-          $update[] = 'WHEN `name` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
+          $update[] = 'WHEN `id` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
         }
-        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$groups_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END' );
+        $result = $wpdb->query( 'UPDATE ' . Participants_Db::$groups_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END WHERE `id` IN ("' . implode( '","', array_keys( $list ) ) . '")' );
 
         wp_send_json( array('status' => $result ? 'success' : 'failed') );
 
