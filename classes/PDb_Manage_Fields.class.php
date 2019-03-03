@@ -136,7 +136,7 @@ class PDb_Manage_Fields {
 
                         $field_definition_attributes = new PDb_Field_Editor( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
-                        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>">
+                      <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>" data-numid="<?php echo $database_row['id'] ?>" data-groupid="<?php echo $this->fields_data[$group][0]['group_id'] ?>">
 
                           <?php
                           while ( $control_html = $field_definition_attributes->get_next_control() ) {
@@ -202,7 +202,7 @@ class PDb_Manage_Fields {
 
                 $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                 ?>
-                <div class="def-fieldset def-line color-group view-mode-<?php echo $group_def['mode'] ?>" data-id="<?php echo $group ?>">
+                <div class="def-fieldset def-line color-group view-mode-<?php echo $group_def['mode'] ?>" data-id="<?php echo $group ?>" data-numid="<?php echo $group_def['id'] ?>" data-groupid="0">
                   <input type="hidden" name="<?php echo $group ?>[status]" id="status_<?php echo $group ?>" value />
                   <div class="field-header">
                     <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
