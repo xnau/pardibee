@@ -674,17 +674,17 @@ class PDb_Form_Field_Def {
           $this->values = $def->values; // this is for backward compatibility
           
           // if the values parameter has a value, then the field def is of the old format
-          if ( $def->values !== '' && !is_null($def->values) ) {
+          if ( $def->values !== '' && !is_null($def->values) && $def->values !== 'a:0:{}' ) {
             $values = $this->values_array();
             /*
              * for "value set" fields, the values parameter defines the options; for 
              * other fields, it defines the attributes
              */
             if ( $this->is_value_set() ) {
-              if ( empty( $def->options ) ) {
+              if ( empty( $def->options ) || $def->options === 'a:0:{}' ) {
                 $this->options = $values;
-                }
-            } elseif ( empty( $def->attributes ) ) {
+              }
+            } elseif ( empty( $def->attributes ) || $def->attributes === 'a:0:{}' ) {
               $this->attributes = $values;
             }
           }
