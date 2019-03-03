@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.1
+ * @version 2.2
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -186,24 +186,18 @@ PDbManageFields = (function ($) {
     el.find('[type=submit]').removeClass('enabled').addClass('disabled').prop('disabled', true);
   };
   var serializeList = function (container) {
-    /*
-     * grabs the id's of the anchor tags and puts them in a string for the 
-     * ajax reorder functionality
-     */
-    var str = '';
     var n = 0;
-    var els = container.find('a');
-    for (var i = 0; i < els.length; ++i) {
-      var el = els[i];
-      var p = el.id.lastIndexOf('_');
-      if (p != -1) {
-        if (str !== '')
-          str = str + '&';
-        str = str + el.id + '=' + n;
-        ++n;
+    var query = '';
+    container.find('.def-line').each( function () {
+      var el = $(this);
+      var index = n + (el.data('groupid')*1000);
+      if (query !== '') {
+        query = query + '&';
       }
-    }
-    return str;
+      query = query + el.data('numid') + '=' + index;
+      n++;
+    });
+    return query;
   };
   var cancelReturn = function (event) {
     // disable autocomplete
