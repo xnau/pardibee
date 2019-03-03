@@ -1,11 +1,11 @@
 === Participants Database ===
 Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
-Tags: supporter, member, volunteer, database, sign up form, survey, management, non-profit, political, community, organization, mailing list, team, records
+Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
 Tested up to: 5.1
 Requires PHP: 5.6
-Stable tag: 1.8.4.9
+Stable tag: 1.9.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,10 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.1 =
+* fixed manage database fields order issue 
+* fixed issue with chosen dropdown options not showing
 
 = 1.9.0 =
 * redesigned Manage Database Fields page
@@ -1148,8 +1152,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.0 =
-Version 1.9.0 is a major update featuring a completely redesigned UI for the Manage Database Fields page and numerous other improvements to the plugin.
+= 1.9.1 =
+Version 1.9.1 is a bugfix release
 
 == Plugin Support ==
 
