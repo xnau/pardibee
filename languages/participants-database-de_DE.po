@@ -1,27 +1,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database 1.5\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/participants-"
-"database\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/participants-database\n"
 "POT-Creation-Date: 2015-02-08 18:28:00+00:00\n"
-"PO-Revision-Date: Fri Aug 12 2016 13:55:37 GMT+0200\n"
+"PO-Revision-Date: 2019-03-09 13:41-1000\n"
 "Last-Translator: msauter <martin.sauter@gmx.ch>\n"
 "Language-Team: http://getvoip.com/\n"
-"Language: German\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Loco - https://localise.biz/\n"
+"X-Generator: Poedit 2.2.1\n"
 "X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;__:1;"
+"_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;_x:1,2c;"
+"_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;esc_attr__:1;"
+"esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;esc_html_x:1,2c;"
+"comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Loco-Target-Locale: de_DE\n"
 "X-Poedit-SearchPath-0: ..\n"
-"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
-"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
-"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
-"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
-"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
-"X-Loco-Target-Locale: de_DE"
 
 #: participants-database.php:579
 msgid "The changes you made will be lost if you navigate away from this page."
@@ -32,7 +31,7 @@ msgstr ""
 #: participants-database.php:2681
 #, c-format
 msgid "The file selected for \"%s\" must be one of these types: %s. "
-msgstr "Die Datei für \"%\" muss von folgendem Typ sein: %s."
+msgstr "Die Datei für “%s” muss von folgendem Typ sein: %s."
 
 #: participants-database.php:2714
 #, c-format
@@ -49,11 +48,10 @@ msgstr "Das Verzeichnis für den Datei-Upload (%s) konnte nicht angelegt werden.
 #: participants-database.php:3045
 #, c-format
 msgid ""
-"The date for \"%s\" was invalid. Please input the date with the exact format "
-"shown"
+"The date for \"%s\" was invalid. Please input the date with the exact format shown"
 msgstr ""
-"Das Datum für \"%s\" ist ungültig. Bitte geben Sie das Datum exakt im "
-"angegebenen Format ein."
+"Das Datum für \"%s\" ist ungültig. Bitte geben Sie das Datum exakt im angegebenen "
+"Format ein"
 
 #: participants-database.php:3166
 #, c-format
@@ -71,8 +69,8 @@ msgstr "Bewertung oder Besprechung einreichen"
 #: participants-database.php:3286
 msgid "Free tech support and continued development relies on your support:"
 msgstr ""
-"Der kostenlose Support und die kontinuierliche Weiterentwicklung ist nur mit "
-"Ihrer Unterstützung möglich:"
+"Der kostenlose Support und die kontinuierliche Weiterentwicklung ist nur mit Ihrer "
+"Unterstützung möglich:"
 
 #: participants-database.php:3286
 msgid "contribute"
@@ -105,9 +103,9 @@ msgstr "http://xnau.com"
 #: classes/PDb_Settings.class.php:803
 #, c-format
 msgid ""
-"template for displaying the list count. %1$s - total number of records found,"
-" %2$s - number of records shown per page, %3$s - starting record number, "
-"%4$s - ending record number, %5$s - the current page number"
+"template for displaying the list count. %1$s - total number of records found, %2$s "
+"- number of records shown per page, %3$s - starting record number, %4$s - ending "
+"record number, %5$s - the current page number"
 msgstr ""
 "Template für die Anzeige der Anzahl Treffer. Sie können folgende Platzhalter "
 "benutzen:<br />\n"
@@ -120,18 +118,16 @@ msgstr ""
 #: classes/PDb_Settings.class.php:971
 #, c-format
 msgid ""
-"This forces date inputs to be interpreted strictly according to the \"Input "
-"Date Format\" setting. You should tell your users what format you are "
-"expecting them to use. This also applies to date values used in [pdb_list] "
-"shortcode filters. The date with your current setting looks like this: "
-"<strong>%s</strong> %s"
+"This forces date inputs to be interpreted strictly according to the \"Input Date "
+"Format\" setting. You should tell your users what format you are expecting them to "
+"use. This also applies to date values used in [pdb_list] shortcode filters. The "
+"date with your current setting looks like this: <strong>%s</strong> %s"
 msgstr ""
-"Datumseingaben nur im definierten Format zulassen<br />Damit erzwingen Sie, "
-"dass Datumseingaben immer im gewünschten Format erfolgen. Sinnvollerweise "
-"geben Sie den Benutzern einen Hinweis, welches Format Sie erwarten. Die "
-"Einstellung, die Sie hier machen, gilt auch für die Filter im Shortcode "
-"[pdb_list]. Das aktuelle Datumsformat (siehe unten) bewirkt eine Ausgabe in "
-"der folgenden Form: <strong>%s</strong> %s\n"
+"Datumseingaben nur im definierten Format zulassen<br />Damit erzwingen Sie, dass "
+"Datumseingaben immer im gewünschten Format erfolgen. Sinnvollerweise geben Sie den "
+"Benutzern einen Hinweis, welches Format Sie erwarten. Die Einstellung, die Sie hier "
+"machen, gilt auch für die Filter im Shortcode [pdb_list]. Das aktuelle Datumsformat "
+"(siehe unten) bewirkt eine Ausgabe in der folgenden Form: <strong>%s</strong> %s"
 
 #: classes/PDb_Settings.class.php:1067
 msgid "Allow Empty Search"
@@ -150,22 +146,22 @@ msgstr "Editor"
 msgid "%s matching record updated"
 msgid_plural "%s matching records updated"
 msgstr[0] "%s Datensatz aktualisiert"
-msgstr[1] "% Datensätze aktualisiert"
+msgstr[1] "%s Datensätze aktualisiert"
 
 #: classes/xnau_CSV_Import.class.php:106
 #, c-format
 msgid "%s duplicate record skipped"
 msgid_plural "%s duplicate records skipped"
 msgstr[0] "%s Doublette übersprungen"
-msgstr[1] "&s Doubletten übersprungen"
+msgstr[1] "%s Doubletten übersprungen"
 
 #: manage_fields_help.php:37
 msgid ""
-"Persistent fields will also use their set default value in record edit forms "
-"where no value has been set in the record being edited"
+"Persistent fields will also use their set default value in record edit forms where "
+"no value has been set in the record being edited"
 msgstr ""
-"In Formularen zur Bearbeitung von Datensätzen bewirken persistente Felder "
-"zudem, dass in leere Felder der definierte Standardwert eingefügt wird. "
+"In Formularen zur Bearbeitung von Datensätzen bewirken persistente Felder zudem, "
+"dass in leere Felder der definierte Standardwert eingefügt wird"
 
 #: classes/PDb_Settings.class.php:840
 msgid "Admin List Default Sort"
@@ -177,7 +173,7 @@ msgstr "Standard-Sortierung (Reihenfolge)"
 
 #: classes/PDb_Settings.class.php:915
 msgid "Use WordPress&#39; auto formatting on rich text fields."
-msgstr "Auto-Formatierung von WordPress für Richt-Text-Felder benutzen"
+msgstr "Auto-Formatierung von WordPress für Richt-Text-Felder benutzen."
 
 #: classes/PDb_Settings.class.php:1080
 msgid "Use PHP Sessions"
@@ -186,8 +182,8 @@ msgstr "PHP Sessions"
 #: classes/PDb_Settings.class.php:1085
 msgid "uncheck this if PHP sessions are not working."
 msgstr ""
-"PHP Sessions nutzen. (Deaktivieren Sie diese Option, falls PHP Sessions "
-"nicht funktionieren.)"
+"PHP Sessions nutzen. (Deaktivieren Sie diese Option, falls PHP Sessions nicht "
+"funktionieren.)"
 
 #: classes/PDb_Settings.class.php:1099
 msgid "Custom Plugin Stylesheet"
@@ -211,17 +207,17 @@ msgstr "ID"
 #. defined by the user, they are used here only as examples.
 #: classes/PDb_Settings.class.php:725
 msgid ""
-"Body of the the email sent when a user updates their record. Any field from "
-"the form can be included by using a replacement code of the form: "
-"[field_name]. For instance: [last_name],[address],[email] etc. (The field "
-"name is under the \"name\" column on the \"Manage Database Fields\" page.)  Also "
-"available is [date] which will show the date and time of the update and "
-"[admin_record_link] tag for a link to edit the record in the admin."
+"Body of the the email sent when a user updates their record. Any field from the "
+"form can be included by using a replacement code of the form: [field_name]. For "
+"instance: [last_name],[address],[email] etc. (The field name is under the \"name\" "
+"column on the \"Manage Database Fields\" page.)  Also available is [date] which "
+"will show the date and time of the update and [admin_record_link] tag for a link to "
+"edit the record in the admin."
 msgstr ""
-"Text des Benachrichtigung, welche nach der Aktualisierung eines Datensatzes "
-"durch einen Benutzer verschickt wird. Sie können Feld-Platzhalter in der "
-"Form [feldname] verwenden (z.B. \"Das Mitglied [vorname] [nachname] aus [ort] "
-"hat gerade seinen Datensatz aktualisiert.\")"
+"Text des Benachrichtigung, welche nach der Aktualisierung eines Datensatzes durch "
+"einen Benutzer verschickt wird. Sie können Feld-Platzhalter in der Form [feldname] "
+"verwenden (z.B. \"Das Mitglied [vorname] [nachname] aus [ort] hat gerade seinen "
+"Datensatz aktualisiert.\")"
 
 #: classes/PDb_Settings.class.php:751
 msgid "Single Record Link Field"
@@ -230,8 +226,8 @@ msgstr "Verlinktes Feld"
 #: classes/PDb_Settings.class.php:791
 msgid "Show the list count on list displays. Can also be set in the shortcode."
 msgstr ""
-"Zeige die Anzahl der Datensätze in der Liste an. (Diese Option kann "
-"alternativ auch über einen Parameter direkt im Shortcode aktiviert werden.)"
+"Zeige die Anzahl der Datensätze in der Liste an. (Diese Option kann alternativ auch "
+"über einen Parameter direkt im Shortcode aktiviert werden.)"
 
 #: classes/PDb_FormElement.class.php:581
 msgid "Dropdown/Other"
@@ -251,34 +247,34 @@ msgstr "CAPTCHA"
 
 #: classes/PDb_Settings.class.php:291
 msgid ""
-"after they register, send them to this page for a thank you message. This "
-"page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
-"have to do that if you have them go back to the same page. You can also use "
-"a Post ID for posts and custom post types."
+"after they register, send them to this page for a thank you message. This page is "
+"where you put the [pdb_signup_thanks] shortcode, but you don&#39;t have to do that "
+"if you have them go back to the same page. You can also use a Post ID for posts and "
+"custom post types."
 msgstr ""
-"Seite, auf welche der Benutzer nach der Registrierung weitergeleitet wird, "
-"um dort eine Bestätigungsmeldung anzuzeigen. Auf dieser Seite muss der "
-"Shortcode [pdb_signup_thanks] eingebaut sein. Alternativ können Sie die "
-"Bestätigungsmeldung auf der gleichen Seite anzeigen. Sie können auch die ID "
-"eines Beitrags oder eines Custom Post Types benutzen."
+"Seite, auf welche der Benutzer nach der Registrierung weitergeleitet wird, um dort "
+"eine Bestätigungsmeldung anzuzeigen. Auf dieser Seite muss der Shortcode "
+"[pdb_signup_thanks] eingebaut sein. Alternativ können Sie die Bestätigungsmeldung "
+"auf der gleichen Seite anzeigen. Sie können auch die ID eines Beitrags oder eines "
+"Custom Post Types benutzen."
 
 #: classes/PDb_Settings.class.php:415
 msgid ""
-"Note to display on the web page after someone has submitted a signup form. "
-"Can include HTML and placeholders (see above)"
+"Note to display on the web page after someone has submitted a signup form. Can "
+"include HTML and placeholders (see above)"
 msgstr ""
 "Meldung, welche auf der Webseite angezeigt wird, nachdem jemand das "
-"Registrierungsformular abgeschickt hat. Kann HTML und Feld-Platzhalter "
-"enthalten (siehe oben)."
+"Registrierungsformular abgeschickt hat. Kann HTML und Feld-Platzhalter enthalten "
+"(siehe oben)."
 
 #: classes/PDb_Settings.class.php:529
 msgid ""
-"The field used to identify the user&#39;s account. This must be a unique "
-"identifier for the record"
+"The field used to identify the user&#39;s account. This must be a unique identifier "
+"for the record"
 msgstr ""
-"Das Feld, welches benutzt werden soll, um ein Benutzerkonto zu "
-"identifizieren. Die Werte in diesem Feld müssen eindeutig sein, d.h. es darf "
-"niemals mehrere Datensätze mit demselben Wert geben!"
+"Das Feld, welches benutzt werden soll, um ein Benutzerkonto zu identifizieren. Die "
+"Werte in diesem Feld müssen eindeutig sein, d.h. es darf niemals mehrere Datensätze "
+"mit demselben Wert geben!"
 
 #: classes/PDb_Settings.class.php:537
 msgid "ID Field Help Text"
@@ -286,26 +282,25 @@ msgstr "Hilfetext für Identifikation"
 
 #: classes/PDb_Settings.class.php:541
 msgid "help text for the record identification field"
-msgstr "Hilfetext für das Feld, das zur Identifizierung des Datensatzes dient."
+msgstr "Hilfetext für das Feld, das zur Identifizierung des Datensatzes dient"
 
 #: classes/PDb_Settings.class.php:629
 msgid ""
-"The page where your participant record ([pdb_record] shortcode) is displayed."
-" You can use a Post ID for posts and custom post types."
+"The page where your participant record ([pdb_record] shortcode) is displayed. You "
+"can use a Post ID for posts and custom post types."
 msgstr ""
-"Die Seite, auf welcher die Daten eines Mitglieds bearbeitet werden können, d."
-"h. die Seite mit dem Shortcode [pdb_record]. Sie können wahlweise auch die "
-"ID eines Beitrags oder eines Custom Post Types benutzen."
+"Die Seite, auf welcher die Daten eines Mitglieds bearbeitet werden können, d.h. die "
+"Seite mit dem Shortcode [pdb_record]. Sie können wahlweise auch die ID eines "
+"Beitrags oder eines Custom Post Types benutzen."
 
 #: classes/PDb_Settings.class.php:701
 msgid ""
-"Send an email notification that a record has been updated. These will be "
-"sent to the email addresses listed in the \"Signup Notification Recipients\" "
-"setting."
+"Send an email notification that a record has been updated. These will be sent to "
+"the email addresses listed in the \"Signup Notification Recipients\" setting."
 msgstr ""
-"E-Mail-Benachrichtigung senden, wenn ein Datensatz aktualisiert wurde. Diese "
-"E-Mails werden an diejenigen Adressen verschickt, welche unter \"Empfänger "
-"für Registrierungs-Benachrichtigung\" aufgeführt sind."
+"E-Mail-Benachrichtigung senden, wenn ein Datensatz aktualisiert wurde. Diese E-"
+"Mails werden an diejenigen Adressen verschickt, welche unter \"Empfänger für "
+"Registrierungs-Benachrichtigung\" aufgeführt sind."
 
 #: classes/PDb_Settings.class.php:709
 msgid "Record Update Email Subject"
@@ -321,29 +316,28 @@ msgstr "Cookie-Meldung"
 
 #: classes/PDb_Settings.class.php:475
 msgid ""
-"this plugin doesn't work if the user has cookies disabled. Show this message "
-"in place of the signup form if the user has cookies disabled."
+"this plugin doesn't work if the user has cookies disabled. Show this message in "
+"place of the signup form if the user has cookies disabled."
 msgstr ""
-"Dieses Plug-in funktioniert nicht ohne Cookies. Diese Meldung anzeigen statt "
-"des Registierungsformulars, falls der Benutzer Cookies deaktiviert hat."
+"Dieses Plug-in funktioniert nicht ohne Cookies. Diese Meldung anzeigen statt des "
+"Registierungsformulars, falls der Benutzer Cookies deaktiviert hat."
 
 #: classes/PDb_Settings.class.php:476
 msgid "Please enable cookies in your browser to use this feature."
 msgstr ""
-"Sie müssen in Ihren Browser-Einstellungen Cookies aktivieren, um dieses "
-"Feature nutzen zu können."
+"Sie müssen in Ihren Browser-Einstellungen Cookies aktivieren, um dieses Feature "
+"nutzen zu können."
 
 #: classes/PDb_Settings.class.php:611
 msgid ""
-"Message shown when a record matching the retrieve link idenifier cannot be "
-"found"
+"Message shown when a record matching the retrieve link idenifier cannot be found"
 msgstr ""
-"Diese Meldung wird angezeigt, wenn bei der Identifikation kein "
-"übereinstimmender Datensatz gefunden wurde."
+"Diese Meldung wird angezeigt, wenn bei der Identifikation kein übereinstimmender "
+"Datensatz gefunden wurde"
 
 #: classes/PDb_List_Admin.class.php:601
 msgid "that"
-msgstr " "
+msgstr "das"
 
 #: classes/PDb_Manage_Fields.class.php:278
 msgid "Edit / Add / Remove Field Groups"
@@ -363,7 +357,8 @@ msgstr "CSV-Export"
 
 #: classes/PDb_Settings.class.php:1035
 msgid "If checked, users with the plugin editor role can export a CSV."
-msgstr "Auch Benutzer mit der Rolle \"Editor\" dürfen Daten im CSV-Format exportieren"
+msgstr ""
+"Auch Benutzer mit der Rolle \"Editor\" dürfen Daten im CSV-Format exportieren."
 
 #: classes/PDb_Settings.class.php:1402
 #, c-format
@@ -380,122 +375,116 @@ msgstr[1] "%s Datensätze hinzugefügt"
 #: manage_fields_help.php:5
 #, c-format
 msgid ""
-"Please visit the %sParticipants Database help pages%s for up-to-date "
-"information on using this plugin."
+"Please visit the %sParticipants Database help pages%s for up-to-date information on "
+"using this plugin."
 msgstr ""
 "Bitte nutzen Sie die %sParticipants Database Help Pages%s, um aktuelle "
 "Informationen zur Nutzung dieses Plug-ins zu erhalten."
 
 #: manage_fields_help.php:10
 msgid ""
-"Click on the red \"X\" to delete a field. If there are existing records with "
-"this data field, that information will not be deleted from the database, but "
-"you will no longer be able to display or edit it."
+"Click on the red \"X\" to delete a field. If there are existing records with this "
+"data field, that information will not be deleted from the database, but you will no "
+"longer be able to display or edit it."
 msgstr ""
-"Klicken sie auf das rote \"X\", um ein Feld zu löschen. Falls bereits "
-"Datensätze existieren, welche dieses Feld benutzt haben, so werden die darin "
-" gespeicherten Daten nicht aus der Datenbank gelöscht, aber sie können nicht "
-"mehr anzeigt oder bearbeitet werden."
+"Klicken sie auf das rote \"X\", um ein Feld zu löschen. Falls bereits Datensätze "
+"existieren, welche dieses Feld benutzt haben, so werden die darin  gespeicherten "
+"Daten nicht aus der Datenbank gelöscht, aber sie können nicht mehr anzeigt oder "
+"bearbeitet werden."
 
 #: manage_fields_help.php:12
 msgid ""
-"Click and drag to reorder the fields. You do not need to click on \"Update\" "
-"for the change to take effect."
+"Click and drag to reorder the fields. You do not need to click on \"Update\" for "
+"the change to take effect."
 msgstr ""
-"Klicken und ziehen Sie die Felder, um deren Reihenfolge anzupassen. Sie "
-"müssen nicht auf \"Aktualisieren\" klicken, damit die Änderungen wirksam "
-"werden."
+"Klicken und ziehen Sie die Felder, um deren Reihenfolge anzupassen. Sie müssen "
+"nicht auf \"Aktualisieren\" klicken, damit die Änderungen wirksam werden."
 
 #: manage_fields_help.php:14
 msgid ""
-"This is the display title for your field. You can change it at any time, it "
-"won&#39;t affect the field in any way other than to change how it is labeled "
-"in forms.<p>"
+"This is the display title for your field. You can change it at any time, it won&#39;"
+"t affect the field in any way other than to change how it is labeled in forms.<p>"
 msgstr ""
 "Die Feldbeschriftung kann jederzeit geändert werden, sie hat keinen weiteren "
-"Einfluss auf das Feld."
+"Einfluss auf das Feld"
 
 #: manage_fields_help.php:20
 msgid ""
-"When a form is displayed, sometimes it is a good idea to explain something "
-"about the information you want in a field. Any text you put in here will be "
-"displayed next to the field. HTML is allowed, but be careful with that, you "
-"can break things!"
+"When a form is displayed, sometimes it is a good idea to explain something about "
+"the information you want in a field. Any text you put in here will be displayed "
+"next to the field. HTML is allowed, but be careful with that, you can break things!"
 msgstr ""
 "Manchmal hilft es beim Ausfüllen eines Formulars, wenn man erklärt, welche "
-"Informationen in ein bestimmtes Feld gehören. Der Text, den Sie unter "
-"\"Hilfe\" erfassen, wird neben dem entsprechenden Feld angezeigt. Sie können "
-"auch HTML benutzen, aber seien Sie vorsichtig damit, damit die Formulare "
-"weiterhin korrekt angezeigt werden!"
+"Informationen in ein bestimmtes Feld gehören. Der Text, den Sie unter \"Hilfe\" "
+"erfassen, wird neben dem entsprechenden Feld angezeigt. Sie können auch HTML "
+"benutzen, aber seien Sie vorsichtig damit, damit die Formulare weiterhin korrekt "
+"angezeigt werden!"
 
 #: manage_fields_help.php:22
 msgid ""
-"If your piece of information is a simple line of text (like a name), it "
-"should be presented in the form as a text field. If a longer piece of text "
-"is called for, a text-field would be a better choice, and so forth. This is "
-"where you can determine what kind of form element this particular piece of "
-"information will be preseted with."
+"If your piece of information is a simple line of text (like a name), it should be "
+"presented in the form as a text field. If a longer piece of text is called for, a "
+"text-field would be a better choice, and so forth. This is where you can determine "
+"what kind of form element this particular piece of information will be preseted "
+"with."
 msgstr ""
-"Durch die Wahl eines Formularelements beeinflussen sie die Möglichkeiten, "
-"welche ein Benutzer beim Ausfüllen des Formulars hat. Für einen Namen "
-"beispielsweise empfiehlt sich ein einzeiliges Textfeld, während für die "
-"Anrede ein Radiobutton mit den Optionen \"Frau\" und \"Herr\" besser geeignet "
-"ist, und für die Eingabe eines Landes empfiehlt sich in der Regel ein "
-"Dropdown-Menü. Die richtige Wahl des Formularelements macht nicht nur das "
-"Ausfüllen des Formulars einfacher, sondern liefert auch bessere Daten."
+"Durch die Wahl eines Formularelements beeinflussen sie die Möglichkeiten, welche "
+"ein Benutzer beim Ausfüllen des Formulars hat. Für einen Namen beispielsweise "
+"empfiehlt sich ein einzeiliges Textfeld, während für die Anrede ein Radiobutton mit "
+"den Optionen \"Frau\" und \"Herr\" besser geeignet ist, und für die Eingabe eines "
+"Landes empfiehlt sich in der Regel ein Dropdown-Menü. Die richtige Wahl des "
+"Formularelements macht nicht nur das Ausfüllen des Formulars einfacher, sondern "
+"liefert auch bessere Daten."
 
 #: manage_fields_help.php:23
 msgid ""
-"Under the multiple-choice dropdown are the form elements you can choose from."
-" It is really best to avoid changing this once you have begun adding records "
-"to the database using this field&hellip;unpredictable things can happen, and "
-"although you won&#39;t lose any data, it can make a mess! That said, it "
-"<em>is</em> possible to change between similar elements, like text/text-"
-"field or select/dropdown or select-other/dropdown-other. Be warned, it&#39;s "
-"safest to set this up before you start getting data for the field."
+"Under the multiple-choice dropdown are the form elements you can choose from. It is "
+"really best to avoid changing this once you have begun adding records to the "
+"database using this field&hellip;unpredictable things can happen, and although you "
+"won&#39;t lose any data, it can make a mess! That said, it <em>is</em> possible to "
+"change between similar elements, like text/text-field or select/dropdown or select-"
+"other/dropdown-other. Be warned, it&#39;s safest to set this up before you start "
+"getting data for the field."
 msgstr ""
-"Es empfiehlt sich, das Formularelement eines Felds nicht mehr zu ändern, "
-"sobald Datensätze in der Datenbank erfasst werden. Tun Sie es dennoch, so "
-"werden zwar keine Daten verloren gehen, aber es ist mit unvorhersehbaren "
-"Effekten zu rechnen."
+"Es empfiehlt sich, das Formularelement eines Felds nicht mehr zu ändern, sobald "
+"Datensätze in der Datenbank erfasst werden. Tun Sie es dennoch, so werden zwar "
+"keine Daten verloren gehen, aber es ist mit unvorhersehbaren Effekten zu rechnen."
 
 #: manage_fields_help.php:26
 msgid ""
-"Don&#39;t try to have a comma in one of your options, though! It&#39;s "
-"posiible to break things by trying to include other (mostly non-text and "
-"punctuation) characters, so test things, and if you get erratic behavior in "
-"the form, you may have characters here that are messing things up. Most "
-"international language characters should be fine, just type them in. Don&#39;"
-"t try to use HTML entities or codes, it just won&#39;t work."
+"Don&#39;t try to have a comma in one of your options, though! It&#39;s posiible to "
+"break things by trying to include other (mostly non-text and punctuation) "
+"characters, so test things, and if you get erratic behavior in the form, you may "
+"have characters here that are messing things up. Most international language "
+"characters should be fine, just type them in. Don&#39;t try to use HTML entities or "
+"codes, it just won&#39;t work."
 msgstr ""
-"Die einzelnen Optionen selbst dürfen keine Kommas enthalten! Auch andere "
-"Satz- und Sonderzeichen führen in der Regel zu Problemen. Umlaute, "
-"Buchstaben mit Akzenten etc. sind hingegen erlaubt und können direkt "
-"eingegeben werden; benutzen Sie keine HTML-Entitäten oder Codes, diese "
-"werden nicht funktionieren."
+"Die einzelnen Optionen selbst dürfen keine Kommas enthalten! Auch andere Satz- und "
+"Sonderzeichen führen in der Regel zu Problemen. Umlaute, Buchstaben mit Akzenten "
+"etc. sind hingegen erlaubt und können direkt eingegeben werden; benutzen Sie keine "
+"HTML-Entitäten oder Codes, diese werden nicht funktionieren."
 
 #: manage_fields_help.php:28
 msgid ""
-"If you wish certain fields to be required or have a specific kind of content,"
-" you can set that here. \"Not Required\" means you don&#39;t care if the field "
-"is filled in or not. \"Required\" simply means the field must have something "
-"in it. \"match/regex\" gives you some advanced options for validating a field. "
-"To match the field to the value of another field, put the name of that field "
-"in the box. You can also use a regex to validate the field, but it is for "
-"advanced users, so if you don&#39;t know what a regex is, get some help "
-"before trying to use this feature."
+"If you wish certain fields to be required or have a specific kind of content, you "
+"can set that here. \"Not Required\" means you don&#39;t care if the field is filled "
+"in or not. \"Required\" simply means the field must have something in it. \"match/"
+"regex\" gives you some advanced options for validating a field. To match the field "
+"to the value of another field, put the name of that field in the box. You can also "
+"use a regex to validate the field, but it is for advanced users, so if you don&#39;"
+"t know what a regex is, get some help before trying to use this feature."
 msgstr ""
-"Falls der Inhalt eines Felds bestimmte Bedingungen erfüllen muss, dann "
-"können Sie dies unter \"Validierung\" definieren. \"Nicht erforderlich\" "
-"bedeutet, dass dieses Feld auch leer bleiben darf. \"Erforderlich\" bedeutet "
-"entsprechend, dass das Feld zwingend ausgefüllt werden muss (Pflichtfeld).\n"
+"Falls der Inhalt eines Felds bestimmte Bedingungen erfüllen muss, dann können Sie "
+"dies unter \"Validierung\" definieren. \"Nicht erforderlich\" bedeutet, dass dieses "
+"Feld auch leer bleiben darf. \"Erforderlich\" bedeutet entsprechend, dass das Feld "
+"zwingend ausgefüllt werden muss (Pflichtfeld).\n"
 "\n"
-"Die Option \"Match/Regex\" gibt Ihnen zusätzliche Möglichkeiten, um den "
-"Feldinhalt zu validieren. Falls der Wert in diesem Feld mit dem Wert eines "
-"anderen Feldes übereinstimmen muss, dann geben Sie ganz einfach den Namen "
-"dieses zweiten Felds hier ein (\"Match\"). Sie können den Feldinhalt auch mit "
-"einem Regulären Ausdruck (\"Regex\") überprüfen, dies ist aber eine Anwendung "
-"für Fortgeschrittene und wird hier nicht weiter beschrieben."
+"Die Option \"Match/Regex\" gibt Ihnen zusätzliche Möglichkeiten, um den Feldinhalt "
+"zu validieren. Falls der Wert in diesem Feld mit dem Wert eines anderen Feldes "
+"übereinstimmen muss, dann geben Sie ganz einfach den Namen dieses zweiten Felds "
+"hier ein (\"Match\"). Sie können den Feldinhalt auch mit einem Regulären Ausdruck "
+"(\"Regex\") überprüfen, dies ist aber eine Anwendung für Fortgeschrittene und wird "
+"hier nicht weiter beschrieben."
 
 #: manage_fields_help.php:29
 msgid "Admin Column"
@@ -503,22 +492,21 @@ msgstr "Spalte (Backend)"
 
 #: manage_fields_help.php:30
 msgid ""
-"This only affects the \"List Participants\" page of the plugin. On that page, "
-"the database records are listed. Since it would be impractical to include "
-"every field as a column in this list, you can select which fields are shown "
-"here. \"0\" means don&#39;t display it, a number sets the order in which the "
-"column will appear. You have to make sure the numbers make sense, if you "
-"have multiple items with the same number (other than 0), only the last one "
-"with the number will appear."
+"This only affects the \"List Participants\" page of the plugin. On that page, the "
+"database records are listed. Since it would be impractical to include every field "
+"as a column in this list, you can select which fields are shown here. \"0\" means "
+"don&#39;t display it, a number sets the order in which the column will appear. You "
+"have to make sure the numbers make sense, if you have multiple items with the same "
+"number (other than 0), only the last one with the number will appear."
 msgstr ""
-"Diese Angabe beeinflusst lediglich die Seite \"Mitglieder\" im WordPress "
-"Backend, wo alle Datensätze aufgelistet werden. Da es in der Regel nicht "
-"möglich ist, in dieser Liste sämtliche Felder anzuzeigen, können Sie "
-"auswählen, ob ein Feld angezeigt werden soll oder nicht. Wenn Sie hier \"0\" "
-"eingeben, so wird das Feld nicht angezeigt; jede andere Zahl bewirkt, dass "
-"das Feld angezeigt wird, und bestimmt zugleich die Reihenfolge. Bitte "
-"stellen Sie sicher, dass jede Zahl nur einmal vorkommt; falls Sie dieselbe "
-"Zahl mehrfach vergeben, wird nur das letzte dieser Felder angezeigt."
+"Diese Angabe beeinflusst lediglich die Seite \"Mitglieder\" im WordPress Backend, "
+"wo alle Datensätze aufgelistet werden. Da es in der Regel nicht möglich ist, in "
+"dieser Liste sämtliche Felder anzuzeigen, können Sie auswählen, ob ein Feld "
+"angezeigt werden soll oder nicht. Wenn Sie hier \"0\" eingeben, so wird das Feld "
+"nicht angezeigt; jede andere Zahl bewirkt, dass das Feld angezeigt wird, und "
+"bestimmt zugleich die Reihenfolge. Bitte stellen Sie sicher, dass jede Zahl nur "
+"einmal vorkommt; falls Sie dieselbe Zahl mehrfach vergeben, wird nur das letzte "
+"dieser Felder angezeigt."
 
 #: manage_fields_help.php:31
 msgid "Display Column"
@@ -526,21 +514,21 @@ msgstr "Spalte (Frontend)"
 
 #: manage_fields_help.php:32
 msgid ""
-"When using the [pdb_list] shortcode to display the list of records, this "
-"column determines whether the column will be shown and in what order."
+"When using the [pdb_list] shortcode to display the list of records, this column "
+"determines whether the column will be shown and in what order."
 msgstr ""
-"Hiermit legen Sie fest, ob und an welcher Position ein Feld angezeigt wird, "
-"wenn Sie über den Shortcode [pdb_list] im Frontend Ihrer Website eine Liste "
-"der Datensätze ausgeben. \"0\" bewirkt, dass das Feld nicht angezeigt wird."
+"Hiermit legen Sie fest, ob und an welcher Position ein Feld angezeigt wird, wenn "
+"Sie über den Shortcode [pdb_list] im Frontend Ihrer Website eine Liste der "
+"Datensätze ausgeben. \"0\" bewirkt, dass das Feld nicht angezeigt wird."
 
 #: manage_fields_help.php:39
 msgid ""
-"<strong>Readonly</strong> means that plugin users can see the value of the "
-"field, but cannot edit it. The field will be editable in the admin."
+"<strong>Readonly</strong> means that plugin users can see the value of the field, "
+"but cannot edit it. The field will be editable in the admin."
 msgstr ""
-"<strong>Nur lesen</strong> bedeutet, dass normale Benutzer den Inhalt eines "
-"Felds zwar sehen, aber nicht ändern können. Diese Felder sind nur im "
-"WordPress Backend bearbeitbar."
+"<strong>Nur lesen</strong> bedeutet, dass normale Benutzer den Inhalt eines Felds "
+"zwar sehen, aber nicht ändern können. Diese Felder sind nur im WordPress Backend "
+"bearbeitbar."
 
 #: participants-database.php:3164
 msgid "The new record has been added."
@@ -549,44 +537,43 @@ msgstr "Der neue Datensatz wurde hinzugefügt."
 #: participants-database.php:3165
 #, c-format
 msgid "No record was added on query: %s"
-msgstr "Es wurde kein neuer Datensatz hinzugefügt. Query: &s"
+msgstr "Es wurde kein neuer Datensatz hinzugefügt. Query: %s"
 
 #: participants-database.php:3231
 msgid "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr ""
-"Möchten Sie Vorschläge für dieses Plug-in machen oder Kritik äussern? Ich "
-"freue mich auf Ihr Feedback per E-Mail an "
+"Möchten Sie Vorschläge für dieses Plug-in machen oder Kritik äussern? Ich freue "
+"mich auf Ihr Feedback per E-Mail an "
 
 #: participants-database.php:3234
 #, c-format
 msgid ""
-"Please consider contributing to the continued support and development of "
-"this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin "
-"a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s "
-"Thanks!"
+"Please consider contributing to the continued support and development of this "
+"software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin a %2$srating"
+"%3$s or review, or dropping something in the %1$stip jar.%3$s Thanks!"
 msgstr ""
-"Bitte unterstützen Sie Support und Weiterentwicklung dieser Software, indem "
-"Sie die %1$sPlug-in Website besuchen%3$s, das %2$sPlug-in bewerten%3$s oder "
-"dem Entwickler ein %1$sTrinkgeld%3$s zukommen lassen. Danke!"
+"Bitte unterstützen Sie Support und Weiterentwicklung dieser Software, indem Sie die "
+"%1$sPlug-in Website besuchen%3$s, das %2$sPlug-in bewerten%3$s oder dem Entwickler "
+"ein %1$sTrinkgeld%3$s zukommen lassen. Danke!"
 
 #: upload_csv.php:74
 #, c-format
 msgid ""
-"This means your spreadsheet needs to have %s columns, and the heading in "
-"each of those columns needs to match exactly the names above. If there is no "
-"data for a particular column, you can include it and leave it blank, or "
-"leave it out entirely. The order of the columns doesn&#39;t matter."
+"This means your spreadsheet needs to have %s columns, and the heading in each of "
+"those columns needs to match exactly the names above. If there is no data for a "
+"particular column, you can include it and leave it blank, or leave it out entirely. "
+"The order of the columns doesn&#39;t matter."
 msgstr ""
 "Dies bedeutet, dass Ihre CSV-Datei %s Spalten enthalten muss und dass die "
-"Spaltenüberschriften exakt mit den oben angegebenen Bezeichnungen "
-"übereinstimmen müssen. Falls für eine bestimmte Spalte keinerlei Daten "
-"vorliegen, kann die Spalte leer gelassen oder ganz weggelassen werden. Die "
-"Reihenfolge der Spalten ist nicht relevant."
+"Spaltenüberschriften exakt mit den oben angegebenen Bezeichnungen übereinstimmen "
+"müssen. Falls für eine bestimmte Spalte keinerlei Daten vorliegen, kann die Spalte "
+"leer gelassen oder ganz weggelassen werden. Die Reihenfolge der Spalten ist nicht "
+"relevant."
 
 #: upload_csv.php:84
 msgid ""
-"Exported CSV files should be comma-delimited and enclosed with double-quotes "
-"(\"). Encoding should be \"UTF-8.\""
+"Exported CSV files should be comma-delimited and enclosed with double-quotes (\"). "
+"Encoding should be \"UTF-8.\""
 msgstr ""
 "Achten Sie beim Export auf folgende Einstellungen:<br />Trennzeichen = Komma "
 "(,)<br />Feldbegrenzer = doppeltes Anführungszeichen (\")<br />Zeichensatz "
@@ -594,17 +581,17 @@ msgstr ""
 
 #: upload_csv.php:95
 msgid "Enclosure character"
-msgstr "Feldbegrenzer:&nbsp;"
+msgstr "Gehege"
 
 #: upload_csv.php:110
 msgid "Delimiter character"
-msgstr "Trennzeichen:&nbsp;"
+msgstr "Feldbegrenzer"
 
 #: upload_csv.php:163
 #, c-format
 msgid ""
-"%sCreate New%s adds all imported records as new records without checking for "
-"a match."
+"%sCreate New%s adds all imported records as new records without checking for a "
+"match."
 msgstr ""
 "%sNeuer Datensatz%s importiert sämtliche Daten in der CSV-Datei als neue "
 "Datensätze. (Es findet keine Doubletten-Kontrolle statt, und es werden keine "
@@ -613,24 +600,22 @@ msgstr ""
 #: upload_csv.php:164
 #, c-format
 msgid ""
-"%sOverwrite%s an existing record with a matching %s will be updated with the "
-"data from the imported record. Blank or missing fields will not overwrite "
-"existing data."
+"%sOverwrite%s an existing record with a matching %s will be updated with the data "
+"from the imported record. Blank or missing fields will not overwrite existing data."
 msgstr ""
-"%sÜberschreibe%s existierende Datensätze mit übereinstimmenden Werten im "
-"Feld \"%s\" durch die importierten Datensätze. (Leere oder fehlende Felder "
-"werden keine bestehenden Daten überschreiben.)"
+"%sÜberschreibe%s existierende Datensätze mit übereinstimmenden Werten im Feld \"%s"
+"\" durch die importierten Datensätze. (Leere oder fehlende Felder werden keine "
+"bestehenden Daten überschreiben.)"
 
 #: upload_csv.php:165
 #, c-format
 msgid ""
-"%sDon&#39;t Import%s does not import the new record if it matches the %s of "
-"an existing one."
+"%sDon&#39;t Import%s does not import the new record if it matches the %s of an "
+"existing one."
 msgstr ""
 "%sNicht importieren%s überspringt Datensätze in der CSV-Datei, wenn Sie den "
 "gleichen Wert im Feld \"%s\" haben wie ein existierender Datensatz. (Es werden "
-"keine Daten überschrieben, aber unter Umständen werden nicht alle Daten "
-"importiert.)"
+"keine Daten überschrieben, aber unter Umständen werden nicht alle Daten importiert.)"
 
 #: classes/PDb_FormElement.class.php:576
 msgid "Rich Text"
@@ -686,14 +671,14 @@ msgstr "oder"
 
 #: classes/PDb_List_Admin.class.php:647
 msgid "Number of filters to use: "
-msgstr "Anzahl Filter:&nbsp;"
+msgstr "Anzahl Filter:"
 
 #: classes/PDb_List_Admin.class.php:679
 #, c-format
 msgid "%s record found, sorted by: %s."
 msgid_plural "%s records found, sorted by: %s."
-msgstr[0] "%s Datensatz"
-msgstr[1] "%s Datensätze, sortiert nach \"%s\""
+msgstr[0] "%s Rekord gefunden, sortiert durch: %s."
+msgstr[1] "%s Rekord gefunden, sortiert durch: %s."
 
 #: classes/PDb_Manage_Fields.class.php:610
 msgid "The name cannot begin with a number"
@@ -746,28 +731,25 @@ msgstr "Eigenes CSS"
 
 #: classes/PDb_Settings.class.php:33
 msgid ""
-"User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try "
-"this tutorial to help you get started: <a href=\"http://www.ostraining."
-"com/blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress "
-"Themes.</a></p>"
+"User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try this "
+"tutorial to help you get started: <a href=\"http://www.ostraining.com/blog/"
+"wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress Themes.</a></p>"
 msgstr ""
-"CSS-Anweisungen zur Formatierung der Plug-in-Ausgabe</h4><p>Falls Sie noch "
-"keine Erfahrung mit CSS haben, dann hilft Ihnen möglicherweise dieses "
-"Tutorial, den Einstieg zu finden: <a href=\"http://www.ostraining."
-"com/blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress "
-"Themes</a>.</p>"
+"CSS-Anweisungen zur Formatierung der Plug-in-Ausgabe</h4><p>Falls Sie noch keine "
+"Erfahrung mit CSS haben, dann hilft Ihnen möglicherweise dieses Tutorial, den "
+"Einstieg zu finden: <a href=\"http://www.ostraining.com/blog/wordpress/firebug-"
+"wordpress-css/\">Use Firebug for Editing WordPress Themes</a>.</p>"
 
 #: classes/PDb_Settings.class.php:204
 #, c-format
 msgid ""
-"the message shown when a field's value does match the value of another field."
-" The first %s will show the name of the field, the second will show the name "
-"of the field it must match."
+"the message shown when a field's value does match the value of another field. The "
+"first %s will show the name of the field, the second will show the name of the "
+"field it must match."
 msgstr ""
-"Diese Meldung wird angezeigt, falls ein Feldwert nicht mit dem Wert eines "
-"anderen Felds übereinstimmt. Die Namen der beiden Felder, welche "
-"übereinstimmen müssen, können jeweils über den Platzhalter %s ausgegeben "
-"werden."
+"Diese Meldung wird angezeigt, falls ein Feldwert nicht mit dem Wert eines anderen "
+"Felds übereinstimmt. Die Namen der beiden Felder, welche übereinstimmen müssen, "
+"können jeweils über den Platzhalter %s ausgegeben werden."
 
 #: classes/PDb_Settings.class.php:217
 #, c-format
@@ -930,7 +912,7 @@ msgstr "ist kleiner als"
 #: classes/PDb_List_Admin.class.php:710
 #, c-format
 msgid "Show %s items per page."
-msgstr "Zeige %s Einträge pro Seite"
+msgstr "Zeige %s Einträge pro Seite."
 
 #: classes/PDb_List_Admin.class.php:770
 msgid "Edit"
@@ -958,16 +940,15 @@ msgstr "Spaltenbezeichnungen einbeziehen"
 
 #: classes/PDb_List_Admin.class.php:930
 msgid ""
-"This will download the whole list of participants that match your search "
-"terms, and in the order specified by the sort. The export will include "
-"records on all list pages. The fields included in the export are defined in "
-"the \"CSV\" column on the Manage Database Fields page."
+"This will download the whole list of participants that match your search terms, and "
+"in the order specified by the sort. The export will include records on all list "
+"pages. The fields included in the export are defined in the \"CSV\" column on the "
+"Manage Database Fields page."
 msgstr ""
 "Damit laden Sie eine Liste aller Mitglieder herunter, welche dem Suchbegriff "
-"entsprechen. Die Reihenfolge entspricht dem festgelegten Sortierkriterium. "
-"Der Export enthält alle Datensätze aller Seiten. Die in der Export-Datei "
-"enthaltenen Felder können Sie unter \"Datenbank-Felder\" über die Spalte \"CSV\" "
-"definieren."
+"entsprechen. Die Reihenfolge entspricht dem festgelegten Sortierkriterium. Der "
+"Export enthält alle Datensätze aller Seiten. Die in der Export-Datei enthaltenen "
+"Felder können Sie unter \"Datenbank-Felder\" über die Spalte \"CSV\" definieren."
 
 #: classes/PDb_Manage_Fields.class.php:82 participants-database.php:483
 #: participants-database.php:484
@@ -1005,8 +986,7 @@ msgstr "Kann kein Feld mit diesem Namen hinzufügen"
 #: classes/PDb_Manage_Fields.class.php:603
 msgid "This name is reserved; please choose another. Reserved names are"
 msgstr ""
-"Dieser Name ist reserviert; bitte einen anderen Namen wählen. Reservierte "
-"Namen sind"
+"Dieser Name ist reserviert; bitte einen anderen Namen wählen. Reservierte Namen sind"
 
 #: classes/PDb_Manage_Fields.class.php:665 classes/PDb_Settings.class.php:679
 msgid "Your information has been updated"
@@ -1015,11 +995,11 @@ msgstr "Ihre Informationen wurden aktualisiert"
 #: classes/PDb_Manage_Fields.class.php:801
 #, c-format
 msgid ""
-"The %1$s was not added. There is already a %1$s with that name, please "
-"choose another."
+"The %1$s was not added. There is already a %1$s with that name, please choose "
+"another."
 msgstr ""
-"%1$s wurde nicht hinzugefügt. Es besteht bereits %1$s mit diesem Namen. "
-"Bitte einen anderen Namenw wählen."
+"%1$s wurde nicht hinzugefügt. Es besteht bereits %1$s mit diesem Namen. Bitte einen "
+"anderen Namenw wählen."
 
 #: classes/PDb_Manage_Fields.class.php:855
 msgid "Not Required"
@@ -1169,19 +1149,19 @@ msgstr "Erweiterte Einstellungen"
 
 #: classes/PDb_Settings.class.php:28
 msgid ""
-"Settings for the [pdb_record] shortcode, which is used to show a user-"
-"editable form on the website."
+"Settings for the [pdb_record] shortcode, which is used to show a user-editable form "
+"on the website."
 msgstr ""
-"Einstellungen für den Shortcode [pdb_record], welcher dem Benutzer ein "
-"Formular zur Bearbeitung seiner Daten anzeigt"
+"Einstellungen für den Shortcode [pdb_record], welcher dem Benutzer ein Formular zur "
+"Bearbeitung seiner Daten anzeigt."
 
 #: classes/PDb_Settings.class.php:29
 msgid ""
-"Settings for the [pdb_list] shortcode, which is used to show a list of "
-"records from the database."
+"Settings for the [pdb_list] shortcode, which is used to show a list of records from "
+"the database."
 msgstr ""
-"Einstellungen für den Shortcode [pdb_list], welcher eine Liste der "
-"gespeicherten Datensätze ausgibt"
+"Einstellungen für den Shortcode [pdb_list], welcher eine Liste der gespeicherten "
+"Datensätze ausgibt."
 
 #: classes/PDb_Settings.class.php:30
 msgid ""
@@ -1189,15 +1169,15 @@ msgid ""
 "registration form on the website."
 msgstr ""
 "Einstellungen für den Shortcode [pdb_signup], welcher ein Anmelde- oder "
-"Registrierungsformular anzeigt"
+"Registrierungsformular anzeigt."
 
 #: classes/PDb_Settings.class.php:31
 msgid "Settings for the lost private link resend function."
-msgstr "Einstellungen für den Versand von Private Links"
+msgstr "Einstellungen für den Versand von Private Links."
 
 #: classes/PDb_Settings.class.php:32
 msgid "Settings for special configurations."
-msgstr "Einstellungen für spezielle Konfigurationen"
+msgstr "Einstellungen für spezielle Konfigurationen."
 
 #: classes/PDb_Settings.class.php:42
 msgid "Save Plugin Settings"
@@ -1209,15 +1189,15 @@ msgstr "Verzeichnis für Datei-Upload"
 
 #: classes/PDb_Settings.class.php:86
 msgid ""
-"This defines where the uploaded files will go, relative to the WordPress "
-"root. The default location is '/wp-content/uploads/participants-database'<br "
-"/>Don't put it in the plugin folder, the images and files could get deleted "
-"when the plugin is updated."
+"This defines where the uploaded files will go, relative to the WordPress root. The "
+"default location is '/wp-content/uploads/participants-database'<br />Don't put it "
+"in the plugin folder, the images and files could get deleted when the plugin is "
+"updated."
 msgstr ""
-"Speicherort der hochgeladenen Dateien, relativ zum WordPress-Root-"
-"Verzeichnis. Das Standard-Verzeichnis ist '/wp-content/uploads/participants-"
-"database'<br />Benutzen Sie <em>nicht</em> das Plug-in-Verzeichnis, da die "
-"Upload-Dateien sonst beim Update des Plug-ins gelöscht werden könnten."
+"Speicherort der hochgeladenen Dateien, relativ zum WordPress-Root-Verzeichnis. Das "
+"Standard-Verzeichnis ist '/wp-content/uploads/participants-database'<br />Benutzen "
+"Sie <em>nicht</em> das Plug-in-Verzeichnis, da die Upload-Dateien sonst beim Update "
+"des Plug-ins gelöscht werden könnten."
 
 #: classes/PDb_Settings.class.php:93
 msgid "File Upload Limit"
@@ -1236,10 +1216,10 @@ msgid ""
 "list of allowed file types by file extension. Please be aware that there are "
 "security risks in allowing file uploads."
 msgstr ""
-"Liste der erlaubten Dateitypen für den Datei-Upload. Geben Sie die "
-"Dateiendungen durch Kommas getrennt ein (z.B. \"doc,rtf,zip,jpg,png\"). Bitte "
-"seien Sie sich bewusst, dass gewisse Dateitypen ein Risiko für die "
-"Sicherheit Ihrer Website darstellen können."
+"Liste der erlaubten Dateitypen für den Datei-Upload. Geben Sie die Dateiendungen "
+"durch Kommas getrennt ein (z.B. \"doc,rtf,zip,jpg,png\"). Bitte seien Sie sich "
+"bewusst, dass gewisse Dateitypen ein Risiko für die Sicherheit Ihrer Website "
+"darstellen können."
 
 #: classes/PDb_Settings.class.php:115
 msgid "Default Image"
@@ -1247,13 +1227,12 @@ msgstr "Platzhalter-Bild"
 
 #: classes/PDb_Settings.class.php:119
 msgid ""
-"Path (relative to WP root) of an image file to show if no image has been "
-"defined for an image field. Leave blank for no default image."
+"Path (relative to WP root) of an image file to show if no image has been defined "
+"for an image field. Leave blank for no default image."
 msgstr ""
-"Dieses Bild wird angezeigt, solange für einen Datensatz kein Bild "
-"hochgeladen wurde. Geben Sie den Bildpfad relativ zum WordPress-"
-"Rootverzeichnis ein. Falls Sie kein Platzhalter-Bild nutzen wollen, lassen "
-"Sie dieses Feld leer."
+"Dieses Bild wird angezeigt, solange für einen Datensatz kein Bild hochgeladen "
+"wurde. Geben Sie den Bildpfad relativ zum WordPress-Rootverzeichnis ein. Falls Sie "
+"kein Platzhalter-Bild nutzen wollen, lassen Sie dieses Feld leer."
 
 #: classes/PDb_Settings.class.php:126
 msgid "Link Image to Fullsize"
@@ -1264,8 +1243,8 @@ msgid ""
 "place a link to the full-size image on images. This link will work with most "
 "\"lightbox\" plugins."
 msgstr ""
-"Link zur Grossansicht des Bildes einfügen. Dieser Link funktioniert mit den "
-"meisten Plug-ins, welche eine Lightbox implementieren."
+"Link zur Grossansicht des Bildes einfügen. Dieser Link funktioniert mit den meisten "
+"Plug-ins, welche eine Lightbox implementieren."
 
 #: classes/PDb_Settings.class.php:139
 msgid "Allow File Delete"
@@ -1286,8 +1265,8 @@ msgid ""
 "if a \"text-line\" field looks like a link (begins with \"http\" or is an email "
 "address) make it clickable"
 msgstr ""
-"Felder, die eine E-Mail-Adresse oder eine URL (mit \"http\" beginnend) "
-"enthalten, als klickbare Links ausgeben (nur für einzeilige Textfelder)"
+"Felder, die eine E-Mail-Adresse oder eine URL (mit \"http\" beginnend) enthalten, "
+"als klickbare Links ausgeben (nur für einzeilige Textfelder)"
 
 #: classes/PDb_Settings.class.php:165
 msgid "Protect Email Addresses"
@@ -1304,8 +1283,8 @@ msgstr "Fehlermeldung für fehlendes Feld"
 #: classes/PDb_Settings.class.php:182
 #, c-format
 msgid ""
-"the message shown when a field is required, but left empty (the %s is "
-"replaced by the name of the field)"
+"the message shown when a field is required, but left empty (the %s is replaced by "
+"the name of the field)"
 msgstr ""
 "Diese Meldung wird angezeigt, wenn ein Pflichtfeld leer gelassen wurde. Der "
 "Platzhalter %s wird durch den Feldnamen ersetzt."
@@ -1323,7 +1302,7 @@ msgstr "Fehlermeldung für ungültiges Feld"
 msgid "the message shown when a field's value does not pass the validation test"
 msgstr ""
 "Diese Meldung wird angezeigt, wenn ein ungültiger Wert eingegeben wurde. Der "
-"Platzhalter %s wird durch den Feldnamen ersetzt."
+"Platzhalter %s wird durch den Feldnamen ersetzt"
 
 #: classes/PDb_Settings.class.php:194
 #, c-format
@@ -1345,7 +1324,7 @@ msgstr "Fehlermeldung für CAPTCHA"
 
 #: classes/PDb_Settings.class.php:216
 msgid "the message shown when the CAPTCHA (verify human) test failed"
-msgstr "Diese Meldung wird angezeigt, wenn der CAPTCHA-Code falsch eingegeben wurde."
+msgstr "Diese Meldung wird angezeigt, wenn der CAPTCHA-Code falsch eingegeben wurde"
 
 #: classes/PDb_Settings.class.php:223
 msgid "Field Error Style"
@@ -1353,11 +1332,11 @@ msgstr "Formatierung von Fehlern"
 
 #: classes/PDb_Settings.class.php:227
 msgid ""
-"the CSS style applied to an input or text field that is missing or has not "
-"passed validation. This must be a valid CSS rule"
+"the CSS style applied to an input or text field that is missing or has not passed "
+"validation. This must be a valid CSS rule"
 msgstr ""
 "CSS-Style für nicht ausgefüllte Pflichtfelder oder für Felder, welche die "
-"Validierungskriterien nicht erfüllen."
+"Validierungskriterien nicht erfüllen"
 
 #: classes/PDb_Settings.class.php:234
 msgid "Mark Required Fields"
@@ -1365,7 +1344,7 @@ msgstr "Pflichtfelder kennzeichnen"
 
 #: classes/PDb_Settings.class.php:239
 msgid "mark the title of required fields?"
-msgstr "Pflichtfelder über die Beschriftung kennzeichnen"
+msgstr "Pflichtfelder über die Beschriftung kennzeichnen?"
 
 #: classes/PDb_Settings.class.php:247
 msgid "Required Field Marker"
@@ -1374,11 +1353,11 @@ msgstr "Kennzeichnung von Pflichtfeldern"
 #: classes/PDb_Settings.class.php:251
 #, c-format
 msgid ""
-"html added to field title for required fields if selected above (the %s is "
-"replaced by the title of the field)"
+"html added to field title for required fields if selected above (the %s is replaced "
+"by the title of the field)"
 msgstr ""
-"HTML-Code, welcher für die Kennzeichnung von Pflichtfeldern benutzt wird "
-"(falls oben angewählt). Der Platzhalter %s steht für die Feld-Beschriftung."
+"HTML-Code, welcher für die Kennzeichnung von Pflichtfeldern benutzt wird (falls "
+"oben angewählt). Der Platzhalter %s steht für die Feld-Beschriftung."
 
 #: classes/PDb_Settings.class.php:276
 msgid "Signup Button Text"
@@ -1403,7 +1382,7 @@ msgstr "Feldgruppen"
 
 #: classes/PDb_Settings.class.php:305
 msgid "Show groups and group descriptions in the signup form."
-msgstr "Gruppen und Gruppenbeschriftungen im Registrierungsformular anzeigen"
+msgstr "Gruppen und Gruppenbeschriftungen im Registrierungsformular anzeigen."
 
 #: classes/PDb_Settings.class.php:313 upload_csv.php:147
 msgid "Duplicate Record Check Field"
@@ -1411,11 +1390,11 @@ msgstr "Feld für Doubletten-Kontrolle"
 
 #: classes/PDb_Settings.class.php:318
 msgid ""
-"when a signup is submitted or CSV record is imported, this field is checked "
-"for a duplicate"
+"when a signup is submitted or CSV record is imported, this field is checked for a "
+"duplicate"
 msgstr ""
-"Feld, welches für die Doubletten-Prüfung genutzt wird, wenn eine neue "
-"Registrierung erfolgt oder ein Datensatz importiert wird."
+"Feld, welches für die Doubletten-Prüfung genutzt wird, wenn eine neue Registrierung "
+"erfolgt oder ein Datensatz importiert wird"
 
 #: classes/PDb_Settings.class.php:325 upload_csv.php:131
 msgid "Duplicate Record Preference"
@@ -1423,14 +1402,14 @@ msgstr "Vorgehen bei Doubletten"
 
 #: classes/PDb_Settings.class.php:330
 msgid ""
-"when the submission matches the Duplicate Record Check Field of an existing "
-"record. This also applies to importing records from a CSV file."
+"when the submission matches the Duplicate Record Check Field of an existing record. "
+"This also applies to importing records from a CSV file."
 msgstr ""
-"Legen Sie hier fest, was geschehen soll, wenn eine Doublette erkannt wird, d."
-"h. wenn ein neuer Datensatz im \"Feld für die Doubletten-Kontrolle\" (siehe "
-"oben) denselben Wert enthält wie ein bereits bestehender Datensatz. Diese "
-"Einstellung gilt unabhängig davon, ob der neue Datensatz über das "
-"Registrierungsformular oder über einen CSV-Import entsteht."
+"Legen Sie hier fest, was geschehen soll, wenn eine Doublette erkannt wird, d.h. "
+"wenn ein neuer Datensatz im \"Feld für die Doubletten-Kontrolle\" (siehe oben) "
+"denselben Wert enthält wie ein bereits bestehender Datensatz. Diese Einstellung "
+"gilt unabhängig davon, ob der neue Datensatz über das Registrierungsformular oder "
+"über einen CSV-Import entsteht."
 
 #: classes/PDb_Settings.class.php:333 upload_csv.php:137
 msgid "Create a new record with the submission"
@@ -1451,19 +1430,18 @@ msgstr "Fehlermeldung bei Doubletten"
 #: classes/PDb_Settings.class.php:347
 msgid ""
 "If \"Show a validation error message\" is selected above, this message will be "
-"shown if a signup is made with a \"check field\" that matches an existing "
-"record."
+"shown if a signup is made with a \"check field\" that matches an existing record."
 msgstr ""
-"Text für die Fehlermeldung, welche beim Auftreten einer Doublette angezeigt "
-"wird (sofern oben unter \"Vorgehen bei Doubletten\" die Option \"Zeige "
-"Fehlermeldung\" ausgewählt ist)"
+"Text für die Fehlermeldung, welche beim Auftreten einer Doublette angezeigt wird "
+"(sofern oben unter \"Vorgehen bei Doubletten\" die Option \"Zeige Fehlermeldung\" "
+"ausgewählt ist)"
 
 #: classes/PDb_Settings.class.php:348
 #, c-format
 msgid "A record with that %s already exists. Please choose another."
 msgstr ""
-"Ein Datensatz mit dieser %s existiert bereits. Bitte benutzen Sie eine "
-"andere %s."
+"Ein Datensatz mit dieser %1$s existiert bereits. Bitte benutzen Sie eine andere "
+"%1$s."
 
 #: classes/PDb_Settings.class.php:354
 msgid "Send Signup Response Email"
@@ -1480,13 +1458,13 @@ msgstr "Absenderadresse"
 #: classes/PDb_Settings.class.php:370
 msgid ""
 "the \"From\" address on signup receipt emails. If the recipient hits \"reply\", "
-"their reply will go to this address. It is a good idea to use an email "
-"address from the same domain as this website."
+"their reply will go to this address. It is a good idea to use an email address from "
+"the same domain as this website."
 msgstr ""
-"Die Absenderadresse des E-Mails, das zur Bestätigung einer Registrierung "
-"verschickt wird. Wenn der Empfänger auf \"Antworten\", klickt, geht die "
-"Antwort an diese E-Mail-Adresse. Es empfiehlt sich, eine E-Mail-Adresse mit "
-"der gleichen Domain wie die Webseite zu verwenden."
+"Die Absenderadresse des E-Mails, das zur Bestätigung einer Registrierung verschickt "
+"wird. Wenn der Empfänger auf \"Antworten\", klickt, geht die Antwort an diese E-"
+"Mail-Adresse. Es empfiehlt sich, eine E-Mail-Adresse mit der gleichen Domain wie "
+"die Webseite zu verwenden."
 
 #: classes/PDb_Settings.class.php:377
 msgid "Signup Email From Name"
@@ -1504,8 +1482,7 @@ msgstr "Betreffzeile für Registrierungs-Bestätigung"
 
 #: classes/PDb_Settings.class.php:392
 msgid ""
-"subject line for the signup response email; placeholder tags can be used "
-"(see below)"
+"subject line for the signup response email; placeholder tags can be used (see below)"
 msgstr ""
 "Betreffzeile für das E-Mail, das nach einer Registrierung verschickt wird. "
 "Platzhalter sind erlaubt (siehe unten)."
@@ -1522,32 +1499,30 @@ msgstr "Mail-Text für Registrierungs-Bestätigung"
 #: classes/PDb_Settings.class.php:403
 msgid ""
 "Body of the email a visitor gets when they sign up. It includes a link "
-"([record_link]) back to their record so they can fill it out. Can include "
-"HTML, placeholders:[first_name],[last_name],[email],[record_link]. You can "
-"only use placeholders for fields that are present in the signup form, "
-"including hidden fields."
+"([record_link]) back to their record so they can fill it out. Can include HTML, "
+"placeholders:[first_name],[last_name],[email],[record_link]. You can only use "
+"placeholders for fields that are present in the signup form, including hidden "
+"fields."
 msgstr ""
 "Text des E-Mails, welches Besucher nach der Registrierung erhalten. Das Mail "
-"enthält sinnvollerweise einen Link auf ein Formular, über welches die "
-"registrierten Personen ihren eigenen Datensatz vervollständigen können "
-"(Platzhalter [record_link]). Das Mail kann HTML-Code oder auch Feld-"
-"Platzhalter (z.B. [vorname], [nachname], [record_link]) enthalten, "
-"allerdings können nur Felder verwendet werden, die auch im "
-"Registrierungsformular enthalten sind (inkl. Hidden Fields)."
+"enthält sinnvollerweise einen Link auf ein Formular, über welches die registrierten "
+"Personen ihren eigenen Datensatz vervollständigen können (Platzhalter "
+"[record_link]). Das Mail kann HTML-Code oder auch Feld-Platzhalter (z.B. [vorname], "
+"[nachname], [record_link]) enthalten, allerdings können nur Felder verwendet "
+"werden, die auch im Registrierungsformular enthalten sind (inkl. Hidden Fields)."
 
 #. translators: the %s will be the name of the website
 #: classes/PDb_Settings.class.php:405
 #, c-format
 msgid ""
-"<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete "
-"your registration with additional information or update your information by "
-"visiting this private link at any time: <a "
-"href=\"[record_link]\">[record_link]</a>.</p>"
+"<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete your "
+"registration with additional information or update your information by visiting "
+"this private link at any time: <a href=\"[record_link]\">[record_link]</a>.</p>"
 msgstr ""
 "<p>Danke, [first_name], für die Eintragung bei %s.</p><p>Sie können Ihre "
-"Registrierung mit weiteren Angaben oder die Änderung von Angeben jederzeit "
-"ändern, indem Sie hren Private Link besuchen:  <a "
-"href=\"[record_link]\">[record_link]</a>.</p>"
+"Registrierung mit weiteren Angaben oder die Änderung von Angeben jederzeit ändern, "
+"indem Sie hren Private Link besuchen:  <a href=\"[record_link]\">[record_link]</a>."
+"</p>"
 
 #: classes/PDb_Settings.class.php:411
 msgid "Signup Thanks Message"
@@ -1557,12 +1532,12 @@ msgstr "Willkommens-Nachricht"
 msgid ""
 "<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
 "acknowledgement shortly. You may complete your registration with additional "
-"information or update your information by visiting the link provided in the "
-"email.</p>"
+"information or update your information by visiting the link provided in the email.</"
+"p>"
 msgstr ""
-"<p>Vielen Dank [first_name] für Ihre Registrierung!</p><p>Sie werden in "
-"Kürze eine Bestätigung per E-Mail erhalten. Mit dem darin enthaltenen Link "
-"können Sie dann Ihre Registrierung mit weiteren Angaben vervollständigen.</p>"
+"<p>Vielen Dank [first_name] für Ihre Registrierung!</p><p>Sie werden in Kürze eine "
+"Bestätigung per E-Mail erhalten. Mit dem darin enthaltenen Link können Sie dann "
+"Ihre Registrierung mit weiteren Angaben vervollständigen.</p>"
 
 #: classes/PDb_Settings.class.php:422
 msgid "Send Signup Notification Email"
@@ -1589,8 +1564,8 @@ msgstr "Betreffzeile für Registrierungs-Benachrichtigung"
 #: classes/PDb_Settings.class.php:451 classes/PDb_Settings.class.php:588
 msgid "subject of the notification email; placeholder tags can be used (see above)"
 msgstr ""
-"Betreffzeile des Benachrichtigung-Mails nach einer Registrierung. Feld-"
-"Platzhalter sind zulässig (siehe oben)."
+"Betreffzeile des Benachrichtigung-Mails nach einer Registrierung. Feld-Platzhalter "
+"sind zulässig (siehe oben)."
 
 #. translators: the %s will be the name of the website
 #: classes/PDb_Settings.class.php:453
@@ -1607,20 +1582,20 @@ msgid ""
 "notification email body. The [admin_record_link] tag will supply the URL for "
 "editing the record in the admin."
 msgstr ""
-"Text des E-Mails, das zur Benachrichtigung nach einer Registrierung "
-"verschickt wird. Benutzen Sie den Platzhalter [admin_record_link], um einen "
-"Link zu erzeugen, über den der Datensatz direkt bearbeitet werden kann. Feld-"
-"Platzhalter sind zulässig (siehe oben)."
+"Text des E-Mails, das zur Benachrichtigung nach einer Registrierung verschickt "
+"wird. Benutzen Sie den Platzhalter [admin_record_link], um einen Link zu erzeugen, "
+"über den der Datensatz direkt bearbeitet werden kann. Feld-Platzhalter sind "
+"zulässig (siehe oben)."
 
 #: classes/PDb_Settings.class.php:464
 msgid ""
-"<p>A new signup has been submitted</p><ul><li>Name: [first_name] "
-"[last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a "
-"href=\"[admin_record_link]\">[admin_record_link]</a></p>"
+"<p>A new signup has been submitted</p><ul><li>Name: [first_name] [last_name]</"
+"li><li>Email: [email]</li></ul><p>Edit this new record here: <a href="
+"\"[admin_record_link]\">[admin_record_link]</a></p>"
 msgstr ""
 "<p>Eine neue Registrierung ist eingegangen</p><ul><li>Name: [first_name] "
-"[last_name]</li><li>E-Mail: [email]</li></ul><p>Neuen Eintrag hier "
-"bearbeiten: <a href=\"[admin_record_link]\">[admin_record_link]</a></p>"
+"[last_name]</li><li>E-Mail: [email]</li></ul><p>Neuen Eintrag hier bearbeiten: <a "
+"href=\"[admin_record_link]\">[admin_record_link]</a></p>"
 
 #: classes/PDb_Settings.class.php:488
 msgid "Enable Lost Private Link"
@@ -1628,11 +1603,11 @@ msgstr "Link-Versand aktivieren"
 
 #: classes/PDb_Settings.class.php:493
 msgid ""
-"Show a link on the signup form allowing users to have their private link "
-"emailed to them."
+"Show a link on the signup form allowing users to have their private link emailed to "
+"them."
 msgstr ""
-"Link im Registrierungsformular anzeigen, der es den Benutzern erlaubt, sich "
-"ihren Private Link per E-Mail zuschicken zu lassen."
+"Link im Registrierungsformular anzeigen, der es den Benutzern erlaubt, sich ihren "
+"Private Link per E-Mail zuschicken zu lassen."
 
 #: classes/PDb_Settings.class.php:501
 msgid "Lost Private Link Text"
@@ -1641,14 +1616,14 @@ msgstr "Link-Text"
 #: classes/PDb_Settings.class.php:505
 msgid "clickable text shown in the signup form"
 msgstr ""
-"Klickbarer Text im Registrierungsformular, der den Versand eines Private "
-"Links einleitet."
+"Klickbarer Text im Registrierungsformular, der den Versand eines Private Links "
+"einleitet"
 
 #: classes/PDb_Settings.class.php:506 templates/pdb-signup-bootstrap.php:56
 msgid "Forget your private link? Click here to have it emailed to you."
 msgstr ""
-"Sie haben Ihren Private Link vergessen? Klicken Sie hier, und er wird Ihnen "
-"per E-Mail gesendet."
+"Sie haben Ihren Private Link vergessen? Klicken Sie hier, und er wird Ihnen per E-"
+"Mail gesendet."
 
 #: classes/PDb_Settings.class.php:511
 msgid "Lost Private Link Page"
@@ -1667,7 +1642,7 @@ msgstr "Identifikation"
 #: classes/PDb_Settings.class.php:542
 #, c-format
 msgid "Type in your %s, your private link will be emailed to you."
-msgstr " "
+msgstr "Geben Sie Ihre %s ein. Ihr Private Link wird Ihnen per E-Mail zugestellt."
 
 #: classes/PDb_Settings.class.php:548
 msgid "Lost Private Link Email Subject"
@@ -1675,12 +1650,12 @@ msgstr "Betreffzeile"
 
 #: classes/PDb_Settings.class.php:552
 msgid "subject line for the lost private link email"
-msgstr "Betreffzeile für das E-Mail, mit dem ein Private Link zugestellt wird."
+msgstr "Betreffzeile für das E-Mail, mit dem ein Private Link zugestellt wird"
 
 #: classes/PDb_Settings.class.php:553
 #, c-format
 msgid "Here is your private link on %s"
-msgstr "Hier ist ihr Private Link auf %s."
+msgstr "Hier ist ihr Private Link auf %s"
 
 #: classes/PDb_Settings.class.php:559
 msgid "Lost Private Link Email"
@@ -1689,14 +1664,14 @@ msgstr "Mail-Text"
 #: classes/PDb_Settings.class.php:563
 msgid "Body of the email sent when a lost private link is requested."
 msgstr ""
-"Text des E-Mails, das an den Benutzer verschickt wird, wenn er einen Private "
-"Link anfordert."
+"Text des E-Mails, das an den Benutzer verschickt wird, wenn er einen Private Link "
+"anfordert."
 
 #. translators: the %s will be the name of the website
 #: classes/PDb_Settings.class.php:565
 #, c-format
 msgid "Here is the private link you requested from %s:"
-msgstr "Hier ist der Private Link, den Sie auf %s angefordert haben."
+msgstr "Hier ist der Private Link, den Sie auf %s angefordert haben"
 
 #: classes/PDb_Settings.class.php:571
 msgid "Send Lost Private Link Notification Email"
@@ -1704,12 +1679,11 @@ msgstr "Benachrichtigung"
 
 #: classes/PDb_Settings.class.php:576
 msgid ""
-"Send an email notification that a lost private link has been requested. This "
-"email will go to the \"Signup Notification Recipients.\""
+"Send an email notification that a lost private link has been requested. This email "
+"will go to the \"Signup Notification Recipients.\""
 msgstr ""
-"Sende eine E-Mail-Benachrichtigung, wenn ein Private Link angefordert wurde. "
-"Dieses E-Mail geht an dieselben Empfänger wie die Registrierungs-"
-"Benachrichtigung. "
+"Sende eine E-Mail-Benachrichtigung, wenn ein Private Link angefordert wurde. Dieses "
+"E-Mail geht an dieselben Empfänger wie die Registrierungs-Benachrichtigung."
 
 #: classes/PDb_Settings.class.php:584
 msgid "Lost Private Link Notification Email Subject"
@@ -1727,7 +1701,7 @@ msgstr "Mail-Text für Benachrichtigung"
 
 #: classes/PDb_Settings.class.php:600
 msgid "notification email body"
-msgstr "Text für das Benachrichtigungs-Mail beim Versand eines Private Links."
+msgstr "Text für das Benachrichtigungs-Mail beim Versand eines Private Links"
 
 #: classes/PDb_Settings.class.php:601
 msgid ""
@@ -1757,9 +1731,9 @@ msgstr "Beschreibungen der Feldgruppen"
 #: classes/PDb_Settings.class.php:642
 msgid "Show the group description under each group title in the record form."
 msgstr ""
-"Beschreibungstexte zu den Feldgruppen im Formular anzeigen. (Die Hilfetexte "
-"zu den einzelnen Feldern werden unabhängig von dieser Einstellung "
-"<em>immer</em> angezeigt.)"
+"Beschreibungstexte zu den Feldgruppen im Formular anzeigen. (Die Hilfetexte zu den "
+"einzelnen Feldern werden unabhängig von dieser Einstellung <em>immer</em> "
+"angezeigt.)"
 
 #: classes/PDb_Settings.class.php:650
 msgid "Save Changes Label"
@@ -1793,8 +1767,7 @@ msgstr "Bestätigungsmeldung"
 #: classes/PDb_Settings.class.php:678
 msgid "the message shown when a record form has been successfully submitted"
 msgstr ""
-"Diese Meldung wird angezeigt, wenn ein Datensatz erfolgreich gespeichert "
-"wurde."
+"Diese Meldung wird angezeigt, wenn ein Datensatz erfolgreich gespeichert wurde"
 
 #: classes/PDb_Settings.class.php:685
 msgid "Record Not Found Error Message"
@@ -1802,13 +1775,12 @@ msgstr "Fehlermeldung"
 
 #: classes/PDb_Settings.class.php:689
 msgid ""
-"message to show if the record page was accessed without a valid identifier. "
-"Leave this empty if you want nothing at all to show."
+"message to show if the record page was accessed without a valid identifier. Leave "
+"this empty if you want nothing at all to show."
 msgstr ""
-"Diese Fehlermeldung wird angezeigt, wenn die Seite mit dem "
-"Bearbeitungsformular (also die Seite mit dem Shortcode [pdb_record]) nicht "
-"über einen gültigen Private Link aufgerufen wurde. Leer lassen, falls keine "
-"Meldung angezeigt werden soll."
+"Diese Fehlermeldung wird angezeigt, wenn die Seite mit dem Bearbeitungsformular "
+"(also die Seite mit dem Shortcode [pdb_record]) nicht über einen gültigen Private "
+"Link aufgerufen wurde. Leer lassen, falls keine Meldung angezeigt werden soll."
 
 #: classes/PDb_Settings.class.php:690
 msgid "No record was found."
@@ -1820,12 +1792,11 @@ msgstr "Benachrichtigung aktivieren"
 
 #: classes/PDb_Settings.class.php:713
 msgid ""
-"subject line for the record update notification email; placeholders can be "
-"used."
+"subject line for the record update notification email; placeholders can be used."
 msgstr ""
 "Betreffzeile für das E-Mail, das nach der Aktualisierung eines Datensatzes "
-"verschickt wird. Sie können Feld-Platzhalter in der Form [feldname] "
-"verwenden (z.B. \"Aktualisierung des Eintrags von [vorname] [nachname]\")"
+"verschickt wird. Sie können Feld-Platzhalter in der Form [feldname] verwenden (z.B. "
+"\"Aktualisierung des Eintrags von [vorname] [nachname]\")"
 
 #: classes/PDb_Settings.class.php:714
 #, c-format
@@ -1835,15 +1806,14 @@ msgstr "Ein Datensatz wurde soeben aktualisiert auf %s"
 #: classes/PDb_Settings.class.php:726
 msgid ""
 "<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
-"[last_name]</li><li>Address: [address]</li><li>[city], [state], "
-"[country]</li><li>Phone: [phone]</li><li>Email: [email]</li></ul><p>Edit "
-"this record <a href=\"[admin_record_link]\">here.</a></p>"
+"[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
+"li><li>Phone: [phone]</li><li>Email: [email]</li></ul><p>Edit this record <a href="
+"\"[admin_record_link]\">here.</a></p>"
 msgstr ""
 "<p>Der folgende Datensatz wurde aktualisiert am [date]:</p><ul><li>Name: "
 "[first_name] [last_name]</li><li>Adresse: [address]</li><li>[city], [state], "
-"[country]</li><li>Phone: [phone]</li><li>Email: "
-"[email]</li></ul><p>Datensatz hier bearbeiten <a href=\"[admin_record_link]\">."
-"</a></p>"
+"[country]</li><li>Phone: [phone]</li><li>Email: [email]</li></ul><p>Datensatz hier "
+"bearbeiten <a href=\"[admin_record_link]\">.</a></p>"
 
 #: classes/PDb_Settings.class.php:739
 msgid "Records per Page"
@@ -1851,15 +1821,15 @@ msgstr "Datensätze pro Seite"
 
 #: classes/PDb_Settings.class.php:743
 msgid "the number of records to show on each page"
-msgstr " "
+msgstr "Die Anzahl von Datensätzen, die pro Seite angezeigt werden soll"
 
 #: classes/PDb_Settings.class.php:756
 msgid ""
-"select the field on which to put a link to the [pdb_single] shortcode. Leave "
-"blank or set to \"none\" for no link."
+"select the field on which to put a link to the [pdb_single] shortcode. Leave blank "
+"or set to \"none\" for no link."
 msgstr ""
-"Feld, welches mit der Detailansicht des Datensatzes (siehe unten) verlinkt "
-"werden soll."
+"Feld, welches mit der Detailansicht des Datensatzes (siehe unten) verlinkt werden "
+"soll."
 
 #: classes/PDb_Settings.class.php:763
 msgid "Single Record Page"
@@ -1867,14 +1837,13 @@ msgstr "Detailansicht"
 
 #: classes/PDb_Settings.class.php:769
 msgid ""
-"this is the page where the [pdb_single] shortcode is located. If you want to "
-"assign a post or custom post type, select \"Post ID\" and enter the post ID in "
-"the \"other\" box."
+"this is the page where the [pdb_single] shortcode is located. If you want to assign "
+"a post or custom post type, select \"Post ID\" and enter the post ID in the \"other"
+"\" box."
 msgstr ""
-"Die Seite, welche den Shortcut [pdb-single] enthält. Falls Sie stattdessen "
-"einen Beitrag oder einen Custom Post Type für die Detailansicht benutzen "
-"wollen, dann wählen Sie die Option \"Post ID\" und tragen die entsprechende ID "
-"ein."
+"Die Seite, welche den Shortcut [pdb_single] enthält. Falls Sie stattdessen einen "
+"Beitrag oder einen Custom Post Type für die Detailansicht benutzen wollen, dann "
+"wählen Sie die Option \"Post ID\" und tragen die entsprechende ID ein."
 
 #: classes/PDb_Settings.class.php:776
 msgid "No Records Message"
@@ -1910,9 +1879,8 @@ msgid ""
 "The record list shown by the list shortcode will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
 msgstr ""
-"Feld, nach dem die Datensätze im Frontend sortiert werden. (Hier stehen nur "
-"Felder zur Auswahl, welche unter \"Datenbank-Felder\" als \"sortierbar\" "
-"definiert wurden.)"
+"Feld, nach dem die Datensätze im Frontend sortiert werden. (Hier stehen nur Felder "
+"zur Auswahl, welche unter \"Datenbank-Felder\" als \"sortierbar\" definiert wurden.)"
 
 #: classes/PDb_Settings.class.php:827
 msgid "List Default Sort Order"
@@ -1920,20 +1888,20 @@ msgstr "Standard-Sortierung (Reihenfolge)"
 
 #: classes/PDb_Settings.class.php:831
 msgid "Sets the default order of the records shown by the list shortcode."
-msgstr " "
+msgstr "Setzt die Default-Reihenfolge der Datensätze des Listen-Shortcodes."
 
 #: classes/PDb_Settings.class.php:846
 msgid ""
-"The record list shown in the admin section will be sorted by this field by "
-"default. (Field must be checked \"sortable.\")"
+"The record list shown in the admin section will be sorted by this field by default. "
+"(Field must be checked \"sortable.\")"
 msgstr ""
-"Feld, nach dem die Datensätze auf der Seite \"Mitglieder\" standardmässig "
-"sortiert werden. (Hier stehen nur diejenigen Felder zur Auswahl, welche "
-"unter \"Datenbank-Felder\" als \"sortierbar\" definiert wurden.)"
+"Feld, nach dem die Datensätze auf der Seite \"Mitglieder\" standardmässig sortiert "
+"werden. (Hier stehen nur diejenigen Felder zur Auswahl, welche unter \"Datenbank-"
+"Felder\" als \"sortierbar\" definiert wurden.)"
 
 #: classes/PDb_Settings.class.php:857
 msgid "Sets the default order of the record list in the admin."
-msgstr " "
+msgstr "Setzt die Default-Sortierung der Datensatzliste im Admin-Bereich."
 
 #: classes/PDb_Settings.class.php:865
 msgid "Show Image Thumbnails in Admin List"
@@ -1946,8 +1914,7 @@ msgstr "CSS des Plug-ins benutzen"
 #: classes/PDb_Settings.class.php:889
 msgid "use the plugin's CSS to style the output of shortcodes"
 msgstr ""
-"CSS Stylesheet des Plug-ins benutzen, um die Ausgabe der Shortcodes zu "
-"formatieren"
+"CSS Stylesheet des Plug-ins benutzen, um die Ausgabe der Shortcodes zu formatieren"
 
 #: classes/PDb_Settings.class.php:897
 msgid "Use Rich Text Editor"
@@ -1956,14 +1923,13 @@ msgstr "Verwende Rich-Text Editor"
 #: classes/PDb_Settings.class.php:902
 msgid ""
 "enable the rich text editor on \"rich-text\" fields for front-end users. If "
-"deselected, \"rich-text\" fields will appear as text-area fields. This does "
-"not affect admin users, who always have the use of the rich-text editor."
+"deselected, \"rich-text\" fields will appear as text-area fields. This does not "
+"affect admin users, who always have the use of the rich-text editor."
 msgstr ""
-"Im Frontend den Rich-Text Editor für Felder vom Typ \"Formatierter Text\" "
-"benutzen. Falls diese Option deaktiviert ist, werden diese Felder als "
-"normale Textfelder (Textarea) angezeigt. Diese Einstellung gilt "
-"<em>nicht</em> für Administratoren, welche immer den Rich-Text Editor nutzen "
-"können."
+"Im Frontend den Rich-Text Editor für Felder vom Typ \"Formatierter Text\" benutzen. "
+"Falls diese Option deaktiviert ist, werden diese Felder als normale Textfelder "
+"(Textarea) angezeigt. Diese Einstellung gilt <em>nicht</em> für Administratoren, "
+"welche immer den Rich-Text Editor nutzen können."
 
 #: classes/PDb_Settings.class.php:910
 msgid "Use WordPress Auto Formatting"
@@ -1975,7 +1941,7 @@ msgstr "Primäre E-Mail-Adresse"
 
 #: classes/PDb_Settings.class.php:944
 msgid "this field is the primary email address for the record"
-msgstr "Dieses Feld enthält die primäre E-Mail-Adresse eines Datensatzes."
+msgstr "Dieses Feld enthält die primäre E-Mail-Adresse eines Datensatzes"
 
 #: classes/PDb_Settings.class.php:952
 msgid "Send HTML Email"
@@ -1983,12 +1949,11 @@ msgstr "E-Mail-Format"
 
 #: classes/PDb_Settings.class.php:957
 msgid ""
-"use rich text in plugin emails? If you turn this off, be sure to remove all "
-"HTML tags from the email body settings for the plugin."
+"use rich text in plugin emails? If you turn this off, be sure to remove all HTML "
+"tags from the email body settings for the plugin."
 msgstr ""
-"E-Mails im HTML-Format (Rich-Text) versenden (Falls Sie diese Option "
-"deaktivieren, dann denken Sie bitte daran, alle HTML-Tags aus Ihren E-Mail-"
-"Texten zu entfernen.)"
+"E-Mails im HTML-Format (Rich-Text) versenden (Falls Sie diese Option deaktivieren, "
+"dann denken Sie bitte daran, alle HTML-Tags aus Ihren E-Mail-Texten zu entfernen.)"
 
 #: classes/PDb_Settings.class.php:965
 msgid "Strict Date Format"
@@ -2004,14 +1969,13 @@ msgstr "Datumsformat"
 
 #: classes/PDb_Settings.class.php:987
 msgid ""
-"date formatting string for all plugin date inputs when \"Strict Date Format\" "
-"is enabled. You should use this for all localized (non-American English) "
-"date formats."
+"date formatting string for all plugin date inputs when \"Strict Date Format\" is "
+"enabled. You should use this for all localized (non-American English) date formats."
 msgstr ""
-"Format für Kalenderdaten (<a href=\"http://php.net/manual/de/function.date."
-"php\" target=\"_blank\">Dokumentation</a>). Falls oben die Option \"Datumsformat "
-"prüfen\" aktiviert ist, dann werden Datumseingaben nur akzeptiert, wenn sie "
-"diesem Format entsprechen."
+"Format für Kalenderdaten (<a href=\"http://php.net/manual/de/function.date.php\" "
+"target=\"_blank\">Dokumentation</a>). Falls oben die Option \"Datumsformat prüfen\" "
+"aktiviert ist, dann werden Datumseingaben nur akzeptiert, wenn sie diesem Format "
+"entsprechen."
 
 #: classes/PDb_Settings.class.php:994
 msgid "Show Timestamp Time"
@@ -2028,8 +1992,8 @@ msgstr "Rolle für Datenbearbeitung"
 #: classes/PDb_Settings.class.php:1011
 msgid "sets the user access level for adding, editing and listing records."
 msgstr ""
-"Benutzer mit dieser Rolle sind berechtigt, Datensätze hinzuzufügen, zu "
-"bearbeiten und einzusehen."
+"Benutzer mit dieser Rolle sind berechtigt, Datensätze hinzuzufügen, zu bearbeiten "
+"und einzusehen."
 
 #: classes/PDb_Settings.class.php:1019
 msgid "Plugin Admin Access Level"
@@ -2037,12 +2001,12 @@ msgstr "Rolle für Konfiguration"
 
 #: classes/PDb_Settings.class.php:1023
 msgid ""
-"sets the user access level for fields management, plugin settings, deleting "
-"records and CSV operations."
+"sets the user access level for fields management, plugin settings, deleting records "
+"and CSV operations."
 msgstr ""
-"Benutzer mit dieser Rolle sind berechtigt, Felder zu konfigurieren, die Plug-"
-"in-Einstellungen zu bearbeiten, Datensätze zu löschen und Daten im CSV-"
-"Format zu importieren/exportieren."
+"Benutzer mit dieser Rolle sind berechtigt, Felder zu konfigurieren, die Plug-in-"
+"Einstellungen zu bearbeiten, Datensätze zu löschen und Daten im CSV-Format zu "
+"importieren/exportieren."
 
 #: classes/PDb_Settings.class.php:1043
 msgid "Strict User Searching"
@@ -2050,15 +2014,15 @@ msgstr "Exakte Suche"
 
 #: classes/PDb_Settings.class.php:1048
 msgid ""
-"When checked, the frontend list search must match the whole field exactly. "
-"If unchecked, the search will match if the search term is found in part of "
-"the field. Searches are not case-sensitive either way."
+"When checked, the frontend list search must match the whole field exactly. If "
+"unchecked, the search will match if the search term is found in part of the field. "
+"Searches are not case-sensitive either way."
 msgstr ""
-"Falls diese Option angewählt ist, muss bei der Suche im Frontend der "
-"Feldinhalt exakt mit dem Suchbegriff übereinstimmen, um gefunden zu werden. "
-"Andernfalls erfolgt eine fragmentarische Suche, d.h. nur ein Tell des "
-"Feldinhalts muss übereinstimmen. Klein- und Grossschreibung werden bei der "
-"Suche generell nicht unterschieden."
+"Falls diese Option angewählt ist, muss bei der Suche im Frontend der Feldinhalt "
+"exakt mit dem Suchbegriff übereinstimmen, um gefunden zu werden. Andernfalls "
+"erfolgt eine fragmentarische Suche, d.h. nur ein Tell des Feldinhalts muss "
+"übereinstimmen. Klein- und Grossschreibung werden bei der Suche generell nicht "
+"unterschieden."
 
 #: classes/PDb_Settings.class.php:1055
 msgid "Enable AJAX Search Functionality"
@@ -2066,30 +2030,28 @@ msgstr "AJAX-Suche"
 
 #: classes/PDb_Settings.class.php:1060
 msgid ""
-"This enables list search results that are updated without reloading the page."
-" It requires Javascript, but search will still work if Javascript is "
-"disabled in the user's browser."
+"This enables list search results that are updated without reloading the page. It "
+"requires Javascript, but search will still work if Javascript is disabled in the "
+"user's browser."
 msgstr ""
-"Wenn diese Option aktiviert ist, werden die Suchergebnisse aktualisiert, "
-"ohne dass die Seite neu geladen werden muss. Erfordert JavaScript. (Die "
-"Suche funktioniert auch, falls ein Benutzer JavaScript in seinem Browser "
-"deaktiviert hat, dann aber im normalen Modus.)"
+"Wenn diese Option aktiviert ist, werden die Suchergebnisse aktualisiert, ohne dass "
+"die Seite neu geladen werden muss. Erfordert JavaScript. (Die Suche funktioniert "
+"auch, falls ein Benutzer JavaScript in seinem Browser deaktiviert hat, dann aber im "
+"normalen Modus.)"
 
 #: classes/PDb_Settings.class.php:1104
 msgid ""
-"use this to add your own styles or override styles applied to the output of "
-"all plugin shortcodes"
+"use this to add your own styles or override styles applied to the output of all "
+"plugin shortcodes"
 msgstr ""
-"Hier können Sie eigene Styles hinzufügen oder bestehende Styles "
-"überschreiben. Diese Styles gelten für die Bildschirm-Ausgabe sämtlicher "
-"Shortcodes dieses Plug-ins."
+"Hier können Sie eigene Styles hinzufügen oder bestehende Styles überschreiben. "
+"Diese Styles gelten für die Bildschirm-Ausgabe sämtlicher Shortcodes dieses Plug-ins"
 
 #: classes/PDb_Settings.class.php:1119
 msgid "use this to format the printed output of all plugin shortcodes"
 msgstr ""
-"Hier können Sie eigene Styles hinzufügen oder bestehende Styles "
-"überschreiben. Diese Styles gelten für die Druck-Ausgabe sämtlicher "
-"Shortcodes dieses Plug-ins."
+"Hier können Sie eigene Styles hinzufügen oder bestehende Styles überschreiben. "
+"Diese Styles gelten für die Druck-Ausgabe sämtlicher Shortcodes dieses Plug-ins"
 
 #: classes/PDb_Settings.class.php:1136
 msgid "Same Page"
@@ -2116,11 +2078,11 @@ msgstr "Einstellungen"
 #, c-format
 msgctxt "message to show if the plugin cannot find the template"
 msgid ""
-"<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is "
-"correct and the template file is in the correct location."
+"<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is correct "
+"and the template file is in the correct location."
 msgstr ""
-"<%1$s> das Template %2$s wurde nicht gefunden. Prüfe, ob der  Name korrekt "
-"und die Template-Datei im richtigen Verzeichnis steht."
+"<%1$s> das Template %2$s wurde nicht gefunden. Prüfe, ob der  Name korrekt und die "
+"Template-Datei im richtigen Verzeichnis steht."
 
 #: classes/xnau_CSV_Import.class.php:91
 #, c-format
@@ -2133,11 +2095,11 @@ msgstr "Keine Einträge importiert"
 
 #: classes/xnau_CSV_Import.class.php:115
 msgid ""
-"There was an error uploading the file. This could be a problem with "
-"permissions on the uploads directory."
+"There was an error uploading the file. This could be a problem with permissions on "
+"the uploads directory."
 msgstr ""
-"Beim Hochladen der Datei ist ein Fehler aufgetreten. Ursache könnte "
-"ungenügende Zugriffsrechte für das Upload-Verzeichnis sein."
+"Beim Hochladen der Datei ist ein Fehler aufgetreten. Ursache könnte ungenügende "
+"Zugriffsrechte für das Upload-Verzeichnis sein."
 
 #: classes/xnau_CSV_Import.class.php:115 classes/xnau_CSV_Import.class.php:121
 msgid "Destination"
@@ -2145,11 +2107,10 @@ msgstr "Ziel"
 
 #: classes/xnau_CSV_Import.class.php:121
 msgid ""
-"Target directory does not exist and could not be created. Try creating it "
-"manually."
+"Target directory does not exist and could not be created. Try creating it manually."
 msgstr ""
-"Zielverzeichnis existiert nicht und kann nicht angelegt werden. Versuche es "
-"manuell anzulegen."
+"Zielverzeichnis existiert nicht und kann nicht angelegt werden. Versuche es manuell "
+"anzulegen."
 
 #. translators: the %s will be the name of the file
 #: classes/xnau_CSV_Import.class.php:175
@@ -2160,21 +2121,20 @@ msgstr "Fehler beim Hinzufügen der Daten in die Datenbank"
 #, c-format
 msgid "Input file does not exist or path is incorrect.<br />Attempted to load: %s"
 msgstr ""
-"Eingabedatei existiert nicht oder Pfadangabe ist falsch.<br />Versucht zu "
-"laden: %s"
+"Eingabedatei existiert nicht oder Pfadangabe ist falsch.<br />Versucht zu laden: %s"
 
 #: classes/xnau_CSV_Import.class.php:225
 #, c-format
 msgid ""
-"The number of items in line %s is incorrect.<br />There are %s and there "
-"should be %s."
+"The number of items in line %s is incorrect.<br />There are %s and there should be "
+"%s."
 msgstr ""
-"Die Anzahl der Felder in Zeile %s ist inkorrekt. <br />Es sind %s aber es "
-"sollten %s sein."
+"Die Anzahl der Felder in Zeile %s ist inkorrekt. <br />Es sind %s aber es sollten "
+"%s sein."
 
 #: classes/xnau_CSV_Import.class.php:234
 msgid "Number of values does not match number of columns"
-msgstr "Anzahl der Werte stimmt nicht mit Anzahl der Spalten überein."
+msgstr "Anzahl der Werte stimmt nicht mit Anzahl der Spalten überein"
 
 #: classes/xnau_FormElement.class.php:240
 msgctxt "indicates a write-in choice"
@@ -2215,15 +2175,14 @@ msgstr "Datensatz speichern"
 
 #: edit_participant.php:238
 msgid ""
-"<strong>Submit:</strong> save record and return to list<br><strong>Apply:"
-"</strong> save record and continue with same record<br><strong>Next:"
-"</strong> save record and then start a new one"
+"<strong>Submit:</strong> save record and return to list<br><strong>Apply:</strong> "
+"save record and continue with same record<br><strong>Next:</strong> save record and "
+"then start a new one"
 msgstr ""
-"<strong>Speichern & zurück:</strong> Speichert den aktuellen Datensatz und "
-"wechselt zur Liste aller Datensätze<br /><strong>Speichern:</strong> "
-"Speichert den aktuellen Datensatz, ohne das Formular zu verlassen<br "
-"/><strong>Speichern & nächster:</strong> Speichert den aktuellen Datensatz "
-"und springt direkt zum nächsten Datensatz"
+"<strong>Speichern & zurück:</strong> Speichert den aktuellen Datensatz und wechselt "
+"zur Liste aller Datensätze<br /><strong>Speichern:</strong> Speichert den aktuellen "
+"Datensatz, ohne das Formular zu verlassen<br /><strong>Speichern & nächster:</"
+"strong> Speichert den aktuellen Datensatz und springt direkt zum nächsten Datensatz"
 
 #: edit_participant.php:240
 msgid "<strong>Previous:</strong> save and move to previous record"
@@ -2239,33 +2198,30 @@ msgstr "Definition der Datenbank-Felder"
 
 #: manage_fields_help.php:7
 msgid ""
-"The database stores information about people. On this page, you can "
-"determine what pieces of information are stored and how they are presented "
-"and interacted with. Take a look at the \"Add Participant\" page to see how "
-"the form is presented. You will be able to see your changes to how the "
-"fields are set up by checking this page."
+"The database stores information about people. On this page, you can determine what "
+"pieces of information are stored and how they are presented and interacted with. "
+"Take a look at the \"Add Participant\" page to see how the form is presented. You "
+"will be able to see your changes to how the fields are set up by checking this page."
 msgstr ""
-"Diese Datenbank speichert Informationen zu Personen, kann aber auch für "
-"andere Dinge verwendet werden. Auf dieser Seite wird festgelegt, welche "
-"Informationen gespeichert und wie diese dargestellt werden. Rufen Sie die "
-"Seite  \"Mitglied hinzufügen\" auf um zu sehen, wie das entsprechende Formular "
-"aussieht und welche Auswirkungen Änderungen an den Feldern haben."
+"Diese Datenbank speichert Informationen zu Personen, kann aber auch für andere "
+"Dinge verwendet werden. Auf dieser Seite wird festgelegt, welche Informationen "
+"gespeichert und wie diese dargestellt werden. Rufen Sie die Seite  \"Mitglied "
+"hinzufügen\" auf um zu sehen, wie das entsprechende Formular aussieht und welche "
+"Auswirkungen Änderungen an den Feldern haben."
 
 #: manage_fields_help.php:8
 msgid ""
-"<strong>Important:</strong> Some of the changes you can make here will "
-"affect existing records in the database. It is best to set up your database "
-"before you begin adding records, but it is possible to add fields to the "
-"database at any time. Any records that were entered before the new field was "
-"added will have no value for the field. This can be filled in by then "
-"editing the record."
+"<strong>Important:</strong> Some of the changes you can make here will affect "
+"existing records in the database. It is best to set up your database before you "
+"begin adding records, but it is possible to add fields to the database at any time. "
+"Any records that were entered before the new field was added will have no value for "
+"the field. This can be filled in by then editing the record."
 msgstr ""
-"<strong>Wichtig:</strong> Gewisse Änderungen können sich auf bereits "
-"bestehende Datensätze auswirken. Es empfiehlt sich deshalb, die "
-"Datenbankstruktur zu definieren, bevor die Daten erfasst werden. Neue "
-"Datenbankfelder können allerdings jederzeit hinzugefügt werden; bei bereits "
-"bestehenden Datensätzen werden diese neuen Felder zuerst leer sein und "
-"müssen nacherfasst werden."
+"<strong>Wichtig:</strong> Gewisse Änderungen können sich auf bereits bestehende "
+"Datensätze auswirken. Es empfiehlt sich deshalb, die Datenbankstruktur zu "
+"definieren, bevor die Daten erfasst werden. Neue Datenbankfelder können allerdings "
+"jederzeit hinzugefügt werden; bei bereits bestehenden Datensätzen werden diese "
+"neuen Felder zuerst leer sein und müssen nacherfasst werden."
 
 #: manage_fields_help.php:9
 msgid "Delete"
@@ -2286,8 +2242,8 @@ msgstr "Standardwert"
 #: manage_fields_help.php:16
 msgid "If you wish to pre-load a field with a value, you can put it here."
 msgstr ""
-"Falls ein Feld mit einem bestimmten Wert vorausgefüllt werden soll, so "
-"können Sie diesen Standard-Wert hier eintragen."
+"Falls ein Feld mit einem bestimmten Wert vorausgefüllt werden soll, so können Sie "
+"diesen Standard-Wert hier eintragen."
 
 #: manage_fields_help.php:17
 msgid "Group"
@@ -2295,13 +2251,13 @@ msgstr "Gruppe"
 
 #: manage_fields_help.php:18
 msgid ""
-"The database fields are organized into groups, and you can select which "
-"group the database field belongs to here. You can edit the groups under the "
-"\"Field Groups\" tab."
+"The database fields are organized into groups, and you can select which group the "
+"database field belongs to here. You can edit the groups under the \"Field Groups\" "
+"tab."
 msgstr ""
-"Die Datenbankfelder sind in Gruppen organisiert, und Sie können bestimmen, "
-"zu welcher Gruppe ein Feld gehört. Die Gruppen selbst können im Register "
-"\"Feldgruppen\" definiert werden."
+"Die Datenbankfelder sind in Gruppen organisiert, und Sie können bestimmen, zu "
+"welcher Gruppe ein Feld gehört. Die Gruppen selbst können im Register \"Feldgruppen"
+"\" definiert werden."
 
 #: manage_fields_help.php:19
 msgid "Help Text"
@@ -2317,13 +2273,12 @@ msgstr "Werte"
 
 #: manage_fields_help.php:25
 msgid ""
-"For form elements that have multiple choices, you need to define those "
-"choices here. Type in a comma-separated list of the options you want to "
-"present."
+"For form elements that have multiple choices, you need to define those choices "
+"here. Type in a comma-separated list of the options you want to present."
 msgstr ""
 "Für Formularelemente mit vorgegebenen Antwortmöglichkeiten (z.B. Checkboxes, "
-"Radiobuttons, Dropdowns) geben Sie hier die verfügbaren Optionen durch "
-"Kommas getrennt ein."
+"Radiobuttons, Dropdowns) geben Sie hier die verfügbaren Optionen durch Kommas "
+"getrennt ein."
 
 #: manage_fields_help.php:27
 msgid "Validation"
@@ -2335,55 +2290,51 @@ msgstr "Checkboxen"
 
 #: manage_fields_help.php:34
 msgid ""
-"<strong>Sortable</strong> means the list presented on the \"List "
-"Participants\" page can be sorted by this field. Of course, it must have a "
-"non-zero value in \"Column\" to be seen at all."
+"<strong>Sortable</strong> means the list presented on the \"List Participants\" "
+"page can be sorted by this field. Of course, it must have a non-zero value in "
+"\"Column\" to be seen at all."
 msgstr ""
-"<strong>Sortierbar</strong> bedeutet, dass die Liste auf der Seite "
-"\"Mitglieder\" im WordPress Backend nach diesem Feld sortiert werden kann. "
-"Dies Einstellung hat allerdings nur dann eine Wirkung, wenn die Spalte auch "
-"sichtbar ist, d.h. wenn unter \"Spalte (Backend)\" ein anderer Wert als \"0\" "
-"eingetragen ist."
+"<strong>Sortierbar</strong> bedeutet, dass die Liste auf der Seite \"Mitglieder\" "
+"im WordPress Backend nach diesem Feld sortiert werden kann. Dies Einstellung hat "
+"allerdings nur dann eine Wirkung, wenn die Spalte auch sichtbar ist, d.h. wenn "
+"unter \"Spalte (Backend)\" ein anderer Wert als \"0\" eingetragen ist."
 
 #: manage_fields_help.php:35
 msgid ""
-"<strong>CSV</strong> means the field is one that can be imported or exported "
-"with a CSV file. If you are using CSV files to bring in records, you should "
-"set these switches based on which fields you are planning to import. When "
-"exporting a CSV, this switch determines whether the field will be exported."
-"<p>"
+"<strong>CSV</strong> means the field is one that can be imported or exported with a "
+"CSV file. If you are using CSV files to bring in records, you should set these "
+"switches based on which fields you are planning to import. When exporting a CSV, "
+"this switch determines whether the field will be exported.<p>"
 msgstr ""
-"<strong>CSV</strong> bedeutet, dass dieses Feld mittels einer CSV-Datei "
-"sowohl importiert als auch exportiert werden kann. Wenn Sie eine CSV-Datei "
-"importieren, dann sollten Sie diese Checkbox für diejenigen Felder "
-"aktivieren, welche in der Importdatei enthalten sind. Beim CSV-Export "
-"bestimmen Sie über diese Checkbox, ob das Feld in der Exportdatei enthalten "
-"sein wird.<p>"
+"<strong>CSV</strong> bedeutet, dass dieses Feld mittels einer CSV-Datei sowohl "
+"importiert als auch exportiert werden kann. Wenn Sie eine CSV-Datei importieren, "
+"dann sollten Sie diese Checkbox für diejenigen Felder aktivieren, welche in der "
+"Importdatei enthalten sind. Beim CSV-Export bestimmen Sie über diese Checkbox, ob "
+"das Feld in der Exportdatei enthalten sein wird.<p>"
 
 #: manage_fields_help.php:36
 msgid ""
-"<strong>Persistent</strong> is a convenience feature helpful when you are "
-"manually entering a series of records in the admin. If set, it means the "
-"field will carry over to the next blank entry. For instance, if a group of "
-"records from the same city are being entered, set the \"city\" field to be "
-"persistent, then once a city value has been entered in the first record of "
-"the series, the next blank record will have this city pre-filled."
+"<strong>Persistent</strong> is a convenience feature helpful when you are manually "
+"entering a series of records in the admin. If set, it means the field will carry "
+"over to the next blank entry. For instance, if a group of records from the same "
+"city are being entered, set the \"city\" field to be persistent, then once a city "
+"value has been entered in the first record of the series, the next blank record "
+"will have this city pre-filled."
 msgstr ""
-"<strong>Persistent</strong> ist eine Komfortfunktion für den Fall, dass Sie "
-"eine grössere Anzahl von Datensätzen über das WordPress Backend erfassen "
-"müssen. Sie bewirkt, dass der Feldwert des gerade gespeicherten Datensatzes "
-"als Standardwert für den nächsten Datensatz übernommen wird. Dies kann "
-"beispielsweise hilfreich sein wenn Sie viele Adressen aus derselben Stadt "
-"erfassen müssen."
+"<strong>Persistent</strong> ist eine Komfortfunktion für den Fall, dass Sie eine "
+"grössere Anzahl von Datensätzen über das WordPress Backend erfassen müssen. Sie "
+"bewirkt, dass der Feldwert des gerade gespeicherten Datensatzes als Standardwert "
+"für den nächsten Datensatz übernommen wird. Dies kann beispielsweise hilfreich sein "
+"wenn Sie viele Adressen aus derselben Stadt erfassen müssen."
 
 #: manage_fields_help.php:38
 msgid ""
-"<strong>Signup</strong> selects this field for use in the brief signup form "
-"that is presented with the [pdb_signup] shortcode."
+"<strong>Signup</strong> selects this field for use in the brief signup form that is "
+"presented with the [pdb_signup] shortcode."
 msgstr ""
 "<strong>Registrierung</strong> legt fest, ob das betreffende Feld im "
-"Registrierungsformular enthalten ist, welches über den Shortcode "
-"[pdb_signup] angezeigt wird."
+"Registrierungsformular enthalten ist, welches über den Shortcode [pdb_signup] "
+"angezeigt wird."
 
 #. Plugin Name of the plugin/theme
 #: participants-database.php:365
@@ -2410,8 +2361,8 @@ msgstr "Datensatz bearbeiten"
 #: participants-database.php:577
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr ""
-"Sie müssen alle Felder aus der {name} Gruppe entfernen, bevor die Gruppe "
-"gelöscht werden kann."
+"Sie müssen alle Felder aus der {name} Gruppe entfernen, bevor die Gruppe gelöscht "
+"werden kann."
 
 #: participants-database.php:578
 msgid "Delete the \"{name}\" {thing}?"
@@ -2445,8 +2396,8 @@ msgstr "Der Datensatz wurde aktualisiert."
 #: participants-database.php:3227
 msgid "Helping organizations manage their volunteers, members and participants."
 msgstr ""
-"Hilft Organisationen und Unternehmen, ihre Mitglieder, Mitarbieter, "
-"Teilnehmer, Kunden etc. zu verwalten."
+"Hilft Organisationen und Unternehmen, ihre Mitglieder, Mitarbieter, Teilnehmer, "
+"Kunden etc. zu verwalten."
 
 #: participants-database.php:3230
 msgid "Developed by"
@@ -2462,17 +2413,17 @@ msgstr "Ihr Private Link wird Ihnen per E-Mail zugeschickt."
 
 #: upload_csv.php:57
 msgid "Prepare a spreadsheet file with the correct format:"
-msgstr "Schritt 1: Formatierung der Import-Datei"
+msgstr "Schritt 1: Formatierung der Import-Datei:"
 
 #: upload_csv.php:59
 msgid ""
-"To properly import your membership data, the columns in your spreadsheet "
-"must match exactly the columns in the database. Currently, the CSV import "
-"columns are as follows:"
+"To properly import your membership data, the columns in your spreadsheet must match "
+"exactly the columns in the database. Currently, the CSV import columns are as "
+"follows:"
 msgstr ""
-"Damit die Daten korrekt importiert werden, müssen die Spalten in Ihrer "
-"Import-Datei exakt mit den Spalten in der Datenbank übereinstimmen. Aktuell "
-"sind dies folgende Spalten:"
+"Damit die Daten korrekt importiert werden, müssen die Spalten in Ihrer Import-Datei "
+"exakt mit den Spalten in der Datenbank übereinstimmen. Aktuell sind dies folgende "
+"Spalten:"
 
 #: upload_csv.php:75
 msgid ""
@@ -2480,22 +2431,19 @@ msgid ""
 "imported and used. If a column name does not match a defined column in the "
 "database, the data from that column will be discarded"
 msgstr ""
-"Wenn eine CSV-Datei Spalten enthält, welche nicht in der Datenbank "
-"existieren (oder anders benannt sind), dann kann die CSV-Datei dennoch "
-"importiert werden, aber die Daten der nicht übereinstimmenden Spalten werden "
-"ignoriert."
+"Wenn eine CSV-Datei Spalten enthält, welche nicht in der Datenbank existieren (oder "
+"anders benannt sind), dann kann die CSV-Datei dennoch importiert werden, aber die "
+"Daten der nicht übereinstimmenden Spalten werden ignoriert"
 
 #: upload_csv.php:76
 msgid "Get Blank CSV File"
 msgstr "Vorlage für CSV-Datei"
 
 #: upload_csv.php:76
-msgid ""
-"You can download this file, then open it in Open Office, Excel or Google "
-"Docs."
+msgid "You can download this file, then open it in Open Office, Excel or Google Docs."
 msgstr ""
-"Diese Datei kann heruntergeladen und anschliessend in Apache OpenOffice, "
-"Microsoft Excel oder Google Docs bearbeitet werden."
+"Diese Datei kann heruntergeladen und anschliessend in Apache OpenOffice, Microsoft "
+"Excel oder Google Docs bearbeitet werden."
 
 #: upload_csv.php:81
 msgid "Export the .csv file"
@@ -2503,14 +2451,14 @@ msgstr "Schritt 2: CSV-Datei exportieren"
 
 #: upload_csv.php:83
 msgid ""
-"When you have your spreadsheet properly set up and filled with data, export "
-"it as any of the following: \"comma-delimited csv\", or just \"csv\". Save it to "
-"your computer then upload it here."
+"When you have your spreadsheet properly set up and filled with data, export it as "
+"any of the following: \"comma-delimited csv\", or just \"csv\". Save it to your "
+"computer then upload it here."
 msgstr ""
-"Wenn Sie Ihre Tabelle gemäss den obigen Angaben formatiert und mit Daten "
-"gefüllt haben, dann exportieren Sie sie im CSV-Format (wird auch als "
-"\"Kommagetrennte Werte\" oder \"Komma-separierter Text\" bezeichnet). Speichern "
-"Sie die CSV-Datei auf Ihrem Computer und laden Sie sie anschliessend hoch."
+"Wenn Sie Ihre Tabelle gemäss den obigen Angaben formatiert und mit Daten gefüllt "
+"haben, dann exportieren Sie sie im CSV-Format (wird auch als \"Kommagetrennte Werte"
+"\" oder \"Komma-separierter Text\" bezeichnet). Speichern Sie die CSV-Datei auf "
+"Ihrem Computer und laden Sie sie anschliessend hoch."
 
 #: upload_csv.php:88
 msgid "Upload the .csv file"
@@ -2518,17 +2466,16 @@ msgstr "Schritt 3: CSV-Datei hochladen"
 
 #: upload_csv.php:159
 msgid ""
-"<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" "
-"setting, imported records are checked against existing records by the field "
-"set in the \"Duplicate Record Check Field\" setting. If a record matching an "
-"existing record is imported, one of three things can happen, based on the "
-"\"Duplicate Record Preference\" setting:"
+"<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" setting, "
+"imported records are checked against existing records by the field set in the "
+"\"Duplicate Record Check Field\" setting. If a record matching an existing record "
+"is imported, one of three things can happen, based on the \"Duplicate Record "
+"Preference\" setting:"
 msgstr ""
-"<strong>Bitte beachten:</strong> Beim Import wird jeder importierten "
-"Datensätze mit den bereits bestehenden Datensätzen verglichen. Enthält das "
-"Feld, das als \"Feld für Doubletten-Kontrolle\" festgelegt wurde, einen Wert, "
-"der bereits in der Datenbank existiert, so gilt die unter \"Vorgehen bei "
-"Doubletten\" gewählte Regel."
+"<strong>Bitte beachten:</strong> Beim Import wird jeder importierten Datensätze mit "
+"den bereits bestehenden Datensätzen verglichen. Enthält das Feld, das als \"Feld "
+"für Doubletten-Kontrolle\" festgelegt wurde, einen Wert, der bereits in der "
+"Datenbank existiert, so gilt die unter \"Vorgehen bei Doubletten\" gewählte Regel:"
 
 #: upload_csv.php:160
 msgid "Current Setting"
