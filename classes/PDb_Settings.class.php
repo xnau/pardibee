@@ -1009,7 +1009,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-resend',
         'options' => array(
             'type' => 'text-area',
-            'help_text' => __( 'Message shown when a record matching the retrieve link idenifier cannot be found', 'participants-database' ),
+            'help_text' => __( 'Message shown when a record matching the retrieve link identifier cannot be found. The %s in the message will be replaced by the name of the identifier field.', 'participants-database' ),
             'value' => __( 'A record matching that %s cannot be found.', 'participants-database' ),
         )
     );
