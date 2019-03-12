@@ -113,7 +113,77 @@ class PDb_Field_Editor {
    * 
    * @return string
    */
-  private function get_att_control( $attribute )
+  protected function get_att_control( $attribute )
+  {
+    $config = $this->attribute_config($attribute);
+    
+    if ( ! $config ) return '';
+
+    $field_def_att = new PDb_Field_Def_Parameter( $attribute, Participants_Db::array_merge2( array(
+                'name' => 'row_' . $this->field_def->id . '[' . $attribute . ']',
+                'value' => $this->attribute_value( $attribute ),
+                'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
+            ), $config ) );
+    
+    switch ( true ) {
+
+      case ( $attribute === 'selectable' ):
+        $lines = array(
+            '<div class="field-header">',
+            '<span class="editor-opener dashicons field-close-icon" title="' . _x('Close', 'label for a "close" control', 'participants-database') . '" ></span>',
+            '<span class="editor-opener dashicons field-open-icon" title="' . _x('Open for editing','label for an "open" control', 'participants-database') . '" ></span>',
+            $field_def_att->html(),
+        );
+        break;
+
+      case ( $attribute === 'orderable' ):
+        $lines = array(
+            $field_def_att->html(),
+        );
+        break;
+
+      case ( $attribute === 'deletable' ):
+        $title = $this->field_def->title();
+        $lines = array(
+            $this->field_def->is_internal_field() ? '' : $field_def_att->html(),
+            '<h4>' . ( empty( $title ) ? $this->field_def->name() : $title ) . '</h4>',
+            '</div>
+              <div class="form-element-label" >' . $this->field_def->form_element_title() . '</div>',
+        );
+        break;
+
+      case ( $field_def_att->is_checkbox() ):
+        $lines = array(
+            $this->first_checkbox ? '<break></break>' : '',
+            '<div class="attribute-control ' . $attribute . '-attribute ' . $field_def_att->type() . '-control-wrap">',
+            $field_def_att->has_label() ? '<label for="row_' . $this->field_def->id . '_' . $attribute . '">' . $field_def_att->label() : '',
+            $field_def_att->html(),
+            $field_def_att->has_label() ? '</label>' : '',
+            '</div>',
+        );
+        $this->first_checkbox = false;
+        break;
+
+      default:
+        $lines = array(
+            $field_def_att->is_hidden() ? '' : '<div class="attribute-control ' . $attribute . '-attribute ' . $field_def_att->type() . '-control-wrap">',
+            $field_def_att->html(),
+            $field_def_att->has_label() ? '<label for="row_' . $this->field_def->id . '_' . $attribute . '">' . $field_def_att->label() . '</label>' : '',
+            $field_def_att->is_hidden() ? '' : '</div>',
+        );
+    }
+
+    return implode( $lines, PHP_EOL );
+  }
+  
+  
+  /**
+   * provides the configuration array for a specific attribute
+   * 
+   * @param string $attribute name of the attribute
+   * @return array|bool false if the attribute is undefined
+   */
+  protected function attribute_config( $attribute )
   {
     switch ( $attribute ) {
       case 'id':
@@ -216,65 +286,9 @@ class PDb_Field_Editor {
         );
         break;
       default:
-        error_log( __METHOD__ . ' undefined attribute: ' . $attribute );
-        return '';
+        $config = false;
     }
-
-    $field_def_att = new PDb_Field_Def_Parameter( $attribute, Participants_Db::array_merge2( array(
-                'name' => 'row_' . $this->field_def->id . '[' . $attribute . ']',
-                'value' => $this->attribute_value( $attribute ),
-                'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
-            ),$config ) );
-    
-    switch ( true ) {
-
-      case ( $attribute === 'selectable' ):
-        $lines = array(
-            '<div class="field-header">',
-            '<span class="editor-opener dashicons field-close-icon" title="' . _x('Close', 'label for a "close" control', 'participants-database') . '" ></span>',
-            '<span class="editor-opener dashicons field-open-icon" title="' . _x('Open for editing','label for an "open" control', 'participants-database') . '" ></span>',
-            $field_def_att->html(),
-        );
-        break;
-
-      case ( $attribute === 'orderable' ):
-        $lines = array(
-            $field_def_att->html(),
-        );
-        break;
-
-      case ( $attribute === 'deletable' ):
-        $title = $this->field_def->title();
-        $lines = array(
-            $this->field_def->is_internal_field() ? '' : $field_def_att->html(),
-            '<h4>' . ( empty( $title ) ? $this->field_def->name() : $title ) . '</h4>',
-            '</div>
-              <div class="form-element-label" >' . $this->field_def->form_element_title() . '</div>',
-        );
-        break;
-
-      case ( $field_def_att->is_checkbox() ):
-        $lines = array(
-            $this->first_checkbox ? '<break></break>' : '',
-            '<div class="attribute-control ' . $attribute . '-attribute ' . $field_def_att->type() . '-control-wrap">',
-            $field_def_att->has_label() ? '<label for="row_' . $this->field_def->id . '_' . $attribute . '">' . $field_def_att->label() : '',
-            $field_def_att->html(),
-            $field_def_att->has_label() ? '</label>' : '',
-            '</div>',
-        );
-        $this->first_checkbox = false;
-        break;
-
-      default:
-        $lines = array(
-            $field_def_att->is_hidden() ? '' : '<div class="attribute-control ' . $attribute . '-attribute ' . $field_def_att->type() . '-control-wrap">',
-            $field_def_att->html(),
-            $field_def_att->has_label() ? '<label for="row_' . $this->field_def->id . '_' . $attribute . '">' . $field_def_att->label() . '</label>' : '',
-            $field_def_att->is_hidden() ? '' : '</div>',
-        );
-    }
-
-    return implode( $lines, PHP_EOL );
+    return $config;
   }
 
   /**
@@ -284,7 +298,7 @@ class PDb_Field_Editor {
    * @param array $config
    * @return string
    */
-  private function attribute_value( $attribute )
+  protected function attribute_value( $attribute )
   {
     switch ( $attribute ) {
       case 'form_element':
@@ -357,7 +371,7 @@ class PDb_Field_Editor {
    * 
    * @return array
    */
-  private function default_def_att_switches()
+  protected function default_def_att_switches()
   {
     return array(
         'id' => true,
@@ -396,7 +410,7 @@ class PDb_Field_Editor {
    * 
    * @return array
    */
-  private function form_element_atts()
+  protected function form_element_atts()
   {
     // set up the built-in form elements
     switch ( $this->field_def->form_element() ) {
@@ -683,7 +697,7 @@ class PDb_Field_Def_Parameter {
    * 
    * @return string
    */
-  private function get_label()
+  protected function get_label()
   {
     $titles = PDb_Manage_Fields::get_i18n();
 
