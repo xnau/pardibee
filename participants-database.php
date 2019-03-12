@@ -691,8 +691,8 @@ class Participants_Db extends PDb_Base {
     if ( false !== stripos( $hook, 'participants-database-edit_participant' ) ) {
       //wp_enqueue_script(self::$prefix.'record_edit_script');
     }
-
-    if ( false !== stripos( $hook, 'participants-database-manage_fields' ) ) {
+    
+    if ( false !== stripos( $hook, 'participants-database-manage_fields' ) || false !== stripos( $hook, 'pdb-participant_log_settings' ) ) {
       wp_localize_script( self::$prefix . 'manage_fields', 'manageFields', array('uri' => $_SERVER['REQUEST_URI']) );
       wp_localize_script( self::$prefix . 'manage_fields', 'PDb_L10n', array(
           '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
@@ -2506,6 +2506,13 @@ class Participants_Db extends PDb_Base {
         return false;
       }
     }
+    
+    /**
+     * @action pdb-new_field_added
+     * @param array of initial field parameters
+     */
+    do_action( Participants_Db::$prefix . 'new_field_added', $field_parameters );
+    
     return true;
   }
 
