@@ -875,7 +875,7 @@ abstract class PDb_Shortcode {
 
         $result = $wpdb->get_results( $sql, ARRAY_N );
         foreach ( $result as $group ) {
-          if ( in_array( current( $group ), $group_list ) || $public_only === false ) {
+          if ( in_array( current( $group ), $group_list ) ) {
             $groups[] = current( $group );
           }
         }
