@@ -61,7 +61,7 @@ class PDb_Manage_Fields {
   }
 
   /**
-   * print the edit form header
+   * print the page header
    * 
    * @return null
    */
