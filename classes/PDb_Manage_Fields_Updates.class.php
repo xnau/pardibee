@@ -282,8 +282,9 @@ class PDb_Manage_Fields_Updates {
 
     if ( $result ) {
       Participants_Db::set_admin_message( __( 'The new field was added.', 'participants-database' ), 'update' );
-      if ( PDb_FormElement::is_value_set( $params['form_element'] ) )
+      if ( PDb_FormElement::is_value_set( $params['form_element'] ) ) {
         Participants_Db::set_admin_message( __( 'Remember to define the "options" for your new field.', 'participants-database' ), 'update' );
+      }
     } else {
       Participants_Db::set_admin_message( __( 'The field could not be added.', 'participants-database' ), 'error' );
     }
@@ -395,6 +396,18 @@ class PDb_Manage_Fields_Updates {
         if ( count( $list ) < 1 ) {
           wp_send_json( 'error:no valid id list' );
         }
+        
+        /**
+         * @action pdb-fields_deleted
+         * @param array of field defs that are about to be deleted
+         */
+        $deleted_fields= array();
+        foreach ( Participants_Db::$fields as $field_def ) {
+          if ( in_array( $field_def->get_prop('id'), $list ) ) {
+            $deleted_fields[] = $field_def;
+          }
+        }
+        do_action( Participants_Db::$prefix . 'fields_deleted', $deleted_fields );
 
         $result = $wpdb->query( '
       DELETE FROM ' . Participants_Db::$fields_table . '
