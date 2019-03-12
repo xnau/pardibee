@@ -289,6 +289,11 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.2 =
+* fixed admin list pagination in alternate session mode
+* fixed missing link recovery error message
+* several minor bug fixes
+
 = 1.9.1 =
 * fixed manage database fields order issue 
 * fixed issue with chosen dropdown options not showing
@@ -1152,8 +1157,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.1 =
-Version 1.9.1 is a bugfix release
+= 1.9.2 =
+Version 1.9.2 is a bugfix release
 
 == Plugin Support ==
 
