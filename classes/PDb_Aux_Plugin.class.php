@@ -650,7 +650,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      *                       6 - help text
      *                       7 - setting options array
      *                       8 - select string
-     *                       9 - attribtues array
+     *                       9 - attributes array
      * @return string HTML
      */
     protected function _build_text( $values )
