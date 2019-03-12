@@ -222,9 +222,12 @@ class PDb_List_Admin {
 
     // set the pagination object
     $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array('options' => array('default' => 1, 'min_range' => 1)) );
+    
+    // include the session ID if using the alternate method
+    $sess = Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ? '&' . PDb_Session::id_var . '=' . session_id() : '';
 
     self::$pagination = new PDb_Pagination( array(
-        'link' => self::prepare_page_link( $_SERVER['REQUEST_URI'] ) . '&' . self::$list_page . '=%1$s',
+        'link' => self::prepare_page_link( $_SERVER['REQUEST_URI'] ) . $sess . '&' . self::$list_page . '=%1$s',
         'page' => $current_page,
         'size' => self::$page_list_limit,
         'total_records' => self::$num_records,
@@ -1301,7 +1304,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
   public static function get_filter()
   {
     $filter = Participants_Db::$session->getArray( self::$filter_transient );
-
+    
     return $filter ? $filter : self::$default_filter;
   }
 
