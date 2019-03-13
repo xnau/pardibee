@@ -17,22 +17,22 @@ class PDb_Field_Editor {
   /**
    * @var array of attribute statuses
    */
-  private $definition_attributes;
+  protected $definition_attributes;
 
   /**
    * @var PDb_Form_Field_Def the current field definition
    */
-  private $field_def;
+  protected $field_def;
 
   /**
    * @var the row color class
    */
-  private $colorclass;
+  protected $colorclass;
   
   /**
    * @var bool we use this to class the first checkbox field
    */
-  private $first_checkbox = true;
+  protected $first_checkbox = true;
 
   /**
    * creates the object
