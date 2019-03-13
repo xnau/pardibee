@@ -222,7 +222,7 @@ class PDb_Manage_Fields_Updates {
         'attributes' => $string_sanitize,
         'signup' => $bool_sanitize,
         'csv' => $bool_sanitize,
-        'readonly' => $bool_sanitize,
+        'readonly' => FILTER_SANITIZE_NUMBER_INT,
         'sortable' => $bool_sanitize,
         'persistent' => $bool_sanitize,
     );
