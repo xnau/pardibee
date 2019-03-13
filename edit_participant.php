@@ -137,7 +137,7 @@ if ( $participant_values ) :
                  * @return bool if true the field is rendered as readonly
                  */
                 if (
-                        !Participants_Db::current_user_has_plugin_role( 'admin', 'readonly access' ) && Participants_Db::apply_filters( 'field_readonly_override', true, $column ) ||
+                        !Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ) && Participants_Db::apply_filters( 'field_readonly_override', true, $column ) ||
                         $column->name() === 'private_id' && Participants_Db::apply_filters( 'private_id_is_read_only', true ) ||
                         $column->name() === 'id' && Participants_Db::apply_filters( 'record_id_is_read_only', true )
                 ) {
