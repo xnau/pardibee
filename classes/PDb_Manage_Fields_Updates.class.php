@@ -512,11 +512,22 @@ class PDb_Manage_Fields_Updates {
 
   /**
    * redirects back to the manage database fields page after processing the submission
+   * 
+   * @link https://tommcfarlin.com/wordpress-admin-redirect/
    */
   private function return_to_the_manage_database_fields_page()
   {
-    wp_redirect( add_query_arg( 'page', 'participants-database-manage_fields', admin_url( 'admin.php' ) ) );
-    exit();
+    if ( ! isset( $_POST['_wp_http_referer'] ) ) { // Input var okay.
+      $_POST['_wp_http_referer'] = wp_login_url();
+    }
+    
+    $url = sanitize_text_field(
+      wp_unslash( $_POST['_wp_http_referer'] ) // Input var okay.
+    );
+    	
+    wp_safe_redirect( urldecode( $url ) );
+    
+    exit;
   }
   
 
@@ -716,6 +727,7 @@ class PDb_Manage_Fields_Updates {
     $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
     $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'form_element' => $form_element) );
     $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
+    $new_type = Participants_Db::apply_filters('new_field_form_element', $new_type, $current_type );
     return $this->datatype_has_changed( $current_type, $new_type ) ? $new_type : false;
   }
 
