@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.9.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -384,7 +384,7 @@ class PDb_Template {
           'type' => $field->form_element,
           'name' => $field->name,
           'value' => $field->value,
-          'options' => $field->values,
+          'options' => $field->options,
           'class' => Participants_Db::$prefix . $field->form_element,
           'attributes' => $field->attributes,
       );
