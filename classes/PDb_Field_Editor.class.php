@@ -571,7 +571,15 @@ class PDb_Field_Editor {
   private function column_has_data( $fieldname )
   {
     global $wpdb;
-    $result = $wpdb->get_col( 'SELECT `' . $fieldname . '` FROM ' . Participants_Db::$participants_table );
+    /**
+     * @filter pdb-field_data_table
+     * 
+     * @param string default table name
+     * @param string field name
+     * @return string table to use for this field
+     */
+    $table = Participants_Db::apply_filters('field_data_table', Participants_Db::$participants_table, $fieldname );
+    $result = $wpdb->get_col( 'SELECT `' . $fieldname . '` FROM ' . $table );
     return count( array_filter( $result ) ) > 0;
   }
 
@@ -723,7 +731,7 @@ class PDb_Field_Def_Parameter {
       default:
         $name = $this->name;
     }
-    return isset( $titles[$name] ) ? $titles[$name] : $name;
+    return isset( $titles[$name] ) ? $titles[$name] : Participants_Db::apply_filters( 'translate_string', $name );
   }
 
 }
