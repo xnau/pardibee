@@ -460,7 +460,7 @@ class PDb_Manage_Fields_Updates {
         }
         $result = $wpdb->query( 'UPDATE ' . Participants_Db::$fields_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END WHERE `id` IN ("' . implode( '","', array_keys( $list ) ) . '")' );
 
-        wp_send_json( array('status' => $result ? 'success' : 'failed') );
+        wp_send_json( array('status' => $result !== false ? 'success' : 'failed') );
 
       case 'reorder_groups':
         parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
@@ -623,6 +623,7 @@ class PDb_Manage_Fields_Updates {
         $values_array[$attribute] = $attribute;
       }
     }
+    
     return PDb_Base::cleanup_array( $values_array );
   }
 
