@@ -1065,7 +1065,7 @@ abstract class xnau_FormElement {
     else
       $max_size = ( ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
 
-    $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value) ) );
+    $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value), false ) );
 
     if ( !isset( $this->attributes['readonly'] ) ) {
       $this->_addline( $this->_input_tag( 'file' ) );
