@@ -753,42 +753,12 @@ abstract class PDb_Shortcode {
     }
   }
 
-  /*   * **************
-   * RECORD FIELDS
-   */
-
-  /**
-   *  gets the field attribues for named field
-   * 
-   * if given an array, returns an array of field objects
-   * 
-   * 
-   * @param string|array $fields
-   * @global object $wpdb
-   * @return single object or array of objects, indexed by field name
-   */
-  protected function _get_record_field( $fields )
-  {
-
-    global $wpdb;
-    $columns = array('name', 'title', 'default', 'help_text', 'form_element', 'validation', 'readonly', 'values', 'persistent');
-    $field_objects = array();
-
-    $sql = 'SELECT v.*, "' . $this->module . '" AS "module" 
-            FROM ' . Participants_Db::$fields_table . ' v 
-            WHERE v.name IN ("' . implode( '","', (array) $fields ) . '") 
-            ORDER BY v.order';
-    $result = $wpdb->get_results( $sql, OBJECT_K );
-
-    return is_array( $fields ) ? $result : current( $result );
-  }
-
   /*
    * FIELD GROUPS
    */
 
   /**
-   * gets the field attribues for all fields in a specified group
+   * gets the field attributes for all fields in a specified group
    * 
    * @var string $group the name of the group of fields to get
    * @return array of field objects
@@ -796,40 +766,15 @@ abstract class PDb_Shortcode {
   private function _get_group_fields( $group )
   {
     $group_fields = array();
-    foreach ( Participants_Db::$fields as $field ) {
+    foreach ( $this->display_columns as $column ) {
+      $field = Participants_Db::$fields[$column];
       /* @var $field PDb_Form_Field_Def */
-      if ( $field->group() == $group && in_array( $field->name(), $this->display_columns ) ) {
+      if ( $field->group() == $group ) {
         $group_fields[$field->name()] = new PDb_Field_Item( $field );
         $group_fields[$field->name()]->set_module( $this->module );
       }
     }
     return $group_fields;
-  }
-
-  /**
-   * determines if a group has fields to display in the module context
-   *
-   * @param string $group name of the group to check
-   * @return bool
-   */
-  private function _has_group_fields( $group )
-  {
-    foreach ( Participants_Db::$fields as $field ) {
-      /* @var $field PDb_Form_Field_Def */
-      if ( $field->group() == $group ) {
-        switch ( $this->module ) {
-          case 'signup':
-          case 'thanks':
-            if ( $field->signup > 0 ) {
-              return true;
-            }
-            break;
-          default:
-            return true;
-        }
-      }
-    }
-    return false;
   }
 
   /**
