@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.11
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -105,6 +105,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     switch ( $prop ) {
       case 'value':
         $this->set_value( $value );
+        break;
     }
   }
 
@@ -392,6 +393,18 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       return $v !== '';
     } );
   }
+  
+  /**
+   * adds a string to the element class
+   * 
+   * @param string $classname
+   */
+  public function add_class( $classname )
+  {
+    $classes = explode( ' ', $this->get_attribute( 'class' ) );
+    $classes[] = esc_attr( $classname );
+    $this->attributes['class'] = implode( ' ', $classes );
+  }
 
   /**
    * assigns the object properties that match properties in the supplied object
@@ -471,7 +484,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_class()
   {
-
     // for compatibility we are not prefixing the form element class name
     echo PDb_Template_Item::prep_css_class_string( $this->form_element );
 
@@ -496,12 +508,20 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $this->attributes['id'] = PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name );
     $this->print_element();
   }
-
+  
   /**
-   * prints the field element
-   *
+   * prints the form element HTML
    */
   public function print_element()
+  {
+    echo $this->get_element();
+  }
+
+  /**
+   * gets the field element HTML
+   *
+   */
+  public function get_element()
   {
     $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array( $this->form_element(), array('text-line', 'date', 'timestamp') ) ? ' regular-text' : '' );
 
@@ -519,13 +539,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       if ( !in_array( $this->form_element(), array('rich-text') ) ) {
 
         $this->attributes['readonly'] = 'readonly';
-        $this->_print();
+        return $this->_get_element();
       } else {
-        echo '<span class="pdb-readonly ' . $this->field_class . '" >' . $this->get_value_display() . '</span>';
+        return '<span class="pdb-readonly ' . $this->field_class . '" >' . $this->get_value_display() . '</span>';
       }
     } else {
 
-      $this->_print();
+      return $this->_get_element();
     }
   }
 
@@ -535,6 +555,24 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function _print()
   {
     PDb_FormElement::print_element( array(
+        'type' => $this->form_element(),
+        'value' => $this->value(),
+        'name' => $this->name(),
+        'options' => $this->options(),
+        'class' => $this->field_class,
+        'attributes' => $this->attributes(),
+        'module' => $this->module(),
+        'link' => $this->link(),
+            )
+    );
+  }
+
+  /**
+   * prints the element
+   */
+  private function _get_element()
+  {
+    return PDb_FormElement::get_element( array(
         'type' => $this->form_element(),
         'value' => $this->value(),
         'name' => $this->name(),
