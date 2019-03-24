@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 4.0
-Tested up to: 5.1
+Tested up to: 5.1.1
 Requires PHP: 5.6
-Stable tag: 1.9.0
+Stable tag: 1.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.3 =
+* fixed issue with display field order when using the fields attribute in the shortcode
+* access to edit readonly fields is now given to editor users
+* fixed issue with field options when using the PDb_Template class in a custom template
 
 = 1.9.2 =
 * fixed admin list pagination in alternate session mode
@@ -1157,8 +1162,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.2 =
-Version 1.9.2 is a bugfix release
+= 1.9.3 =
+Version 1.9.3 is a bugfix release
 
 == Plugin Support ==
 
