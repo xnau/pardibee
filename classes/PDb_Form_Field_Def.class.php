@@ -443,6 +443,18 @@ class PDb_Form_Field_Def {
   }
   
   /**
+   * provides the named attribute value
+   * 
+   * @param string $attribute name of the attribute to get
+   * @return string empty string if attribute empty or not set
+   */
+  public function get_attribute( $attribute )
+  {
+    $attributes = $this->attributes();
+    return isset( $attributes[$name] ) ? $attributes[$name] : '';
+  }
+  
+  /**
    * provides the help text
    * 
    * @return string
