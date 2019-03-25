@@ -472,8 +472,11 @@ class PDb_Manage_Fields {
       foreach ( $this->groups() as $group ) {
 
         $sql = "SELECT f.id,f.name,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
+        
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
+      
       }
+      
     }
 
     /**
