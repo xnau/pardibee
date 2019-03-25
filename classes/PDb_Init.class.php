@@ -134,6 +134,18 @@ class PDb_Init {
 
     if ( is_callable( 'EAMann\WPSession\DatabaseHandler::create_table' ) )
       EAMann\WPSession\DatabaseHandler::create_table();
+    
+    if ( version_compare( Participants_Db::$plugin_version, '1.9.3.1', '<' ) ) {
+      // fix internal field edit bug in 1.9.3
+      $fields = array( "id","private_id");
+      foreach( $fields as $fieldname ) {
+        $wpdb->update( Participants_Db::$fields_table, array('group' => 'internal', 'form_element' => 'text-line'), array('name' => $fieldname) );
+      }
+      $fields = array( "date_recorded","date_updated","last_accessed");
+      foreach( $fields as $fieldname ) {
+        $wpdb->update( Participants_Db::$fields_table, array('group' => 'internal', 'form_element' => 'timestamp'), array('name' => $fieldname) );
+      }
+    }
 
     do_action( 'pdb-plugin_activation' );
 
