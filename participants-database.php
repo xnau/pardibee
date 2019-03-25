@@ -1713,7 +1713,7 @@ class Participants_Db extends PDb_Base {
       case 'update':
         $sql = 'UPDATE ' . $db_table . ' SET ';
         
-        if ( !$currently_importing_csv || ( $currently_importing_csv && !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) ) {
+        if ( !$currently_importing_csv || ( $currently_importing_csv && ( !isset($post['date_updated']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) ) ) {
           $sql .= ' `date_updated` = NOW(), ';
         }
         
@@ -1723,10 +1723,10 @@ class Participants_Db extends PDb_Base {
       case 'insert':
         $sql = 'INSERT INTO ' . $db_table . ' SET ';
 
-        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) ) {
+        if ( !isset($post['date_recorded']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) ) {
           $sql .= ' `date_recorded` = NOW(), ';
         }
-        if ( !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) {
+        if ( !isset($post['date_updated']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) {
           $sql .= ' `date_updated` = NOW(), ';
         }
         $where = '';
