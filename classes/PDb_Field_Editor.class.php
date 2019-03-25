@@ -699,6 +699,16 @@ class PDb_Field_Def_Parameter {
   {
     return $this->config['type'] === 'checkbox';
   }
+  
+  /**
+   * provides the current value of the parameter
+   * 
+   * @return mixed
+   */
+  public function value()
+  {
+    return $this->config['value'];
+  }
 
   /**
    *  provides the attribute label
