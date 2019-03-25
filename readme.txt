@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 4.0
 Tested up to: 5.1.1
 Requires PHP: 5.6
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.3.1 =
+* fixed issue with disappearing internal fields when updating values on Manage Database Fields page
+* fixed text values of 0 not shown in admin record editor
+* fixed warnings on date_updated and date_recorded fields when importing CSV
 
 = 1.9.3 =
 * fixed issue with display field order when using the fields attribute in the shortcode
@@ -1163,7 +1168,7 @@ Taking defensive precautions against other plugins in the admin:
 == Upgrade Notice ==
 
 = 1.9.3 =
-Version 1.9.3 is a bugfix release
+Version 1.9.3.1 is a bugfix release
 
 == Plugin Support ==
 
