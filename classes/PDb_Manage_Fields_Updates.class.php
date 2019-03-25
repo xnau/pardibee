@@ -88,6 +88,14 @@ class PDb_Manage_Fields_Updates {
 
           $row['validation'] = str_replace( '\\\\', '\\', $row['validation'] );
         }
+        
+        // remove empty values
+        // prevents these attributes from getting cleared
+        foreach ( array('group', 'form_element') as $att ) {
+          if ( isset( $row[$att] ) && empty( $row[$att] ) ) {
+            unset( $row[$att] );
+          } 
+        }
 
         /*
          * modify the datatype if necessary
