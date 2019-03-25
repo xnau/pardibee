@@ -156,8 +156,8 @@ if ( $participant_values ) :
                */
 
               // handle the persistent feature
-              if ( empty( $participant_values[$column->name()] ) ) {
-                $column->set_value( $column->is_persistent() ? $column->default : ''  );
+              if ( $column->is_persistent() && strlen( $participant_values[$column->name()] ) == 0 ) {
+                $column->set_value(  $column->default  );
               }
 
               // get the existing value if any
