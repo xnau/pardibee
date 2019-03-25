@@ -639,6 +639,28 @@ class PDb_Form_Field_Def {
   {
     return PDb_FormElement::is_multi( $this->form_element );
   }
+  
+  /**
+   * tells if the field's value is to be treated as a number
+   * 
+   * @return bool
+   */
+  public function is_numeric()
+  {
+    /**
+     * makes it possible to register a custom form element as numeric
+     * 
+     * @filter pdb-numeric_fields
+     * @param array of numeric form element names
+     * @return array
+     */
+    return in_array( $this->form_element, Participants_Db::apply_filters('numeric_fields', array(
+        'numeric',
+        'decimal',
+        'currency',
+        'date',
+    )));
+  }
 
   /**
    * provides the values array
