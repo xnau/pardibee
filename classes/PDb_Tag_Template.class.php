@@ -213,7 +213,7 @@ class PDb_Tag_Template {
    */
   private function data_cache_key()
   {
-    return $this->data['id'] . '-' . count( $this->data ) . '-' . strval($this->raw) . strval($this->html);
+    return $this->data['id'] . '-' . count( $this->data ) . '-' . strval($this->raw) . hash( 'crc32', implode('', array_keys($this->data)));
   }
 
   /**
