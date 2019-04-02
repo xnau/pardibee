@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 4.0
 Tested up to: 5.1.1
 Requires PHP: 5.6
-Stable tag: 1.9.3
+Stable tag: 1.9.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -288,6 +288,12 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.3.2 =
+* added better fix for disappearing internal fields bug
+* fixed missing fields with bootstrap signup template
+* fixed blank title issue on manage list columns page
+* several minor bug fixes
 
 = 1.9.3.1 =
 * fixed issue with disappearing internal fields when updating values on Manage Database Fields page
@@ -1167,8 +1173,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.3 =
-Version 1.9.3.1 is a bugfix release
+= 1.9.3.2 =
+Version 1.9.3.2 is a bugfix release
 
 == Plugin Support ==
 
