@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -121,7 +121,7 @@ class PDb_Manage_List_Columns {
   private function admin_field_list()
   {
     $where = 'WHERE v.form_element <> "captcha"';
-    return $this->field_list( $where );
+    return $this->_field_list( $where );
   }
 
   /**
@@ -132,7 +132,7 @@ class PDb_Manage_List_Columns {
   private function public_field_list()
   {
     $where = 'WHERE v.form_element <> "captcha"';
-    return $this->field_list( $where );
+    return $this->_field_list( $where );
   }
 
   /**
@@ -148,7 +148,7 @@ class PDb_Manage_List_Columns {
     $list = array();
     foreach ( $this->{$type . '_field_list'}() as $field ) {
       if ( $field->{$column} == '0' ) {
-        $field->title = Participants_Db::apply_filters( 'translate_string', $field->title );
+        $field->title = $field->title === '' ? $field->name : Participants_Db::apply_filters( 'translate_string', $field->title );
         $list[$field->id] = $field;
       }
     }
@@ -184,7 +184,7 @@ class PDb_Manage_List_Columns {
    * @param string $where the where clause
    * @return array of data objects
    */
-  private function field_list( $where )
+  private function _field_list( $where )
   {
     global $wpdb;
 
