@@ -568,7 +568,7 @@ class PDb_Field_Editor {
    * @param string $fieldname
    * @return bool true if the colum has data
    */
-  private function column_has_data( $fieldname )
+  public function column_has_data( $fieldname )
   {
     global $wpdb;
     /**
