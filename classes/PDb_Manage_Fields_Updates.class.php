@@ -91,7 +91,7 @@ class PDb_Manage_Fields_Updates {
         
         // remove empty values
         // prevents these attributes from getting cleared
-        foreach ( array('group', 'form_element') as $att ) {
+        foreach ( array('group', 'form_element', 'validation') as $att ) {
           if ( isset( $row[$att] ) && empty( $row[$att] ) ) {
             unset( $row[$att] );
           } 
