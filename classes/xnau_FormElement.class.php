@@ -1144,7 +1144,7 @@ abstract class xnau_FormElement {
 
     // checkboxes are grouped, radios are not
     $this->group = $type === 'checkbox';
-
+    
     // checkboxes are given a null select so an "unchecked" state is possible
     $null_select = (isset( $this->options['null_select'] )) ? $this->options['null_select'] : ($type == 'checkbox' ? true : false);
 
