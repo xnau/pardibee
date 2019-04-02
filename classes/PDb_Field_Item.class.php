@@ -703,7 +703,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function option_match_found( $value, $option_list )
   {
     foreach ( $option_list as $option ) {
-      if ( trim( $value ) === $option ) {
+      if ( trim( html_entity_decode($value) ) === $option ) {
         return true;
       }
     }
