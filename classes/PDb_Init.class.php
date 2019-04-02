@@ -5,7 +5,7 @@
  * 
  * handles installation, activation, deactivation, deletion, updates
  *
- * @version 2.1
+ * @version 2.2
  *
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the update
@@ -135,8 +135,9 @@ class PDb_Init {
     if ( is_callable( 'EAMann\WPSession\DatabaseHandler::create_table' ) )
       EAMann\WPSession\DatabaseHandler::create_table();
     
-    if ( version_compare( Participants_Db::$plugin_version, '1.9.3.1', '<' ) ) {
-      // fix internal field edit bug in 1.9.3
+    // check for the need to run the fix for issue #2039
+    $check = $wpdb->get_results('SELECT count(*) FROM `' . Participants_Db::$fields_table . '` WHERE `group` = ""');
+    if ( $check > 0 ) {
       $fields = array( "id","private_id");
       foreach( $fields as $fieldname ) {
         $wpdb->update( Participants_Db::$fields_table, array('group' => 'internal', 'form_element' => 'text-line'), array('name' => $fieldname) );
