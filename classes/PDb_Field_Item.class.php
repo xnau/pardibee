@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    2.0
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -68,8 +68,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     parent::__construct( $config->name );
 
-    if ( $id )
+    if ( $id ) {
       $this->record_id = $id;
+    }
 
     // load the object properties
     $this->assign_props( $config );
@@ -407,26 +408,28 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * assigns the object properties that match properties in the supplied object
+   * assigns the object properties from matching properties in the supplied object
    * 
    * @param object $config the field data object
    */
   protected function assign_props( $config )
-  {
-    // assigns the dynamic contextual properties
-    if ( property_exists( $config, 'value' ) ) {
-      $this->_set_value( $config->value );
+  { 
+    foreach( $config as $prop => $value ) {
+      
+      if ( $prop === 'name' ) {
+        continue 1;
+      }
+      if ( $prop === 'record_id' && ! empty( $this->record_id ) ) {
+        continue 1;
+      }
+      
+      if ( method_exists( $this, 'set_' . $prop ) ) {
+        $this->{'set_' . $prop}($value);
+      } elseif ( property_exists( $this, $prop ) ) {
+        $this->{$prop} = $value;
+      }
     }
-    if ( property_exists( $config, 'record_id' ) ) {
-      $this->set_record_id( $config->record_id );
-    }
-    if ( property_exists( $config, 'module' ) ) {
-      $this->set_module( $config->module );
-    }
-    if ( property_exists( $config, 'attributes' ) ) {
-      $this->attributes = $config->attributes;
-    }
-
+    
     if ( $this->is_valid_single_record_link_field() ) {
       $this->set_link( Participants_Db::single_record_url( $this->record_id ) );
     }
