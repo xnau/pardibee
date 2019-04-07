@@ -104,7 +104,7 @@ class PDb_Manage_Fields_Updates {
          */
         if ( isset( $row['group'] ) && $row['group'] != 'internal' && $new_type = $this->new_datatype( $row['name'], $row['form_element'] ) ) {
           if ( !isset( $row['datatype_warning'] ) || ( isset( $row['datatype_warning'] ) && $row['datatype_warning'] === 'accepted' ) ) {
-            $wpdb->query( "ALTER TABLE " . Participants_Db::$participants_table . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
+            $wpdb->query( "ALTER TABLE " . Participants_Db::participants_table() . " MODIFY COLUMN `" . esc_sql( $row['name'] ) . "` " . $new_type );
           } else {
             unset( $row['form_element'] ); // prevent this from getting changed
           }
@@ -235,7 +235,13 @@ class PDb_Manage_Fields_Updates {
         'persistent' => $bool_sanitize,
     );
     
-    return filter_var_array( $row, $filters );
+    /**
+     * @see https://www.php.net/manual/en/filter.filters.php
+     * @filter pdb-field_update_sanitize_filters
+     * @param array of php filters
+     * @return array
+     */
+    return filter_var_array( $row, Participants_Db::apply_filters( 'field_update_sanitize_filters', $filters ) );
   }
 
   /**
@@ -732,7 +738,7 @@ class PDb_Manage_Fields_Updates {
   protected function new_datatype( $fieldname, $form_element )
   {
     global $wpdb;
-    $sql = "SHOW FIELDS FROM " . Participants_Db::$participants_table . ' WHERE `field` = "%s"';
+    $sql = "SHOW FIELDS FROM " . Participants_Db::participants_table() . ' WHERE `field` = "%s"';
     $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
     $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'form_element' => $form_element) );
     $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
