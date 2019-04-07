@@ -1705,13 +1705,11 @@ class Participants_Db extends PDb_Base {
     }
     // set the insert status value
     self::$insert_status = $action;
-    
-    $db_table = self::apply_filters('process_form_table', self::$participants_table );
 
     switch ( $action ) {
 
       case 'update':
-        $sql = 'UPDATE ' . $db_table . ' SET ';
+        $sql = 'UPDATE ' . self::participants_table() . ' SET ';
         
         if ( !$currently_importing_csv || ( $currently_importing_csv && ( !isset($post['date_updated']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) ) ) {
           $sql .= ' `date_updated` = NOW(), ';
@@ -1721,7 +1719,7 @@ class Participants_Db extends PDb_Base {
         break;
 
       case 'insert':
-        $sql = 'INSERT INTO ' . $db_table . ' SET ';
+        $sql = 'INSERT INTO ' . self::participants_table() . ' SET ';
 
         if ( !isset($post['date_recorded']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) ) {
           $sql .= ' `date_recorded` = NOW(), ';
@@ -2534,7 +2532,7 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * adds a new column (field) to the databse
+   * adds a new column (field) to the database
    * 
    * @global object $wpdb
    * @param array $atts a set of attributrs to define the new columns
@@ -2547,7 +2545,7 @@ class Participants_Db extends PDb_Base {
 
     $datatype = PDb_FormElement::get_datatype( $atts );
 
-    $sql = 'ALTER TABLE `' . self::$participants_table . '` ADD `' . $atts['name'] . '` ' . $datatype . ' NULL';
+    $sql = 'ALTER TABLE `' . self::participants_table() . '` ADD `' . $atts['name'] . '` ' . $datatype . ' NULL';
 
     return $wpdb->query( $sql );
   }
