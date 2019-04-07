@@ -593,17 +593,17 @@ class PDb_Field_Def_Parameter {
   /**
    * @var array the control form element configuration array
    */
-  private $config;
+  protected $config;
 
   /**
    * @var string name of the attribute
    */
-  private $name;
+  protected $name;
 
   /**
    * @var string
    */
-  private $label;
+  protected $label;
 
   /**
    * sets up the item
