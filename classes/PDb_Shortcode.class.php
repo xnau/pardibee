@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /*
  * Shortcode class
@@ -767,10 +767,14 @@ abstract class PDb_Shortcode {
   {
     $group_fields = array();
     foreach ( $this->display_columns as $column ) {
+      
       $field = Participants_Db::$fields[$column];
       /* @var $field PDb_Form_Field_Def */
+      
       if ( $field->group() == $group ) {
+        
         $group_fields[$field->name()] = new PDb_Field_Item( $field );
+        
         $group_fields[$field->name()]->set_module( $this->module );
       }
     }
