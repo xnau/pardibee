@@ -252,6 +252,16 @@ class PDb_Base {
     
     return self::get_list( $config, $columns );
   }
+  
+  /**
+   * provides the name of the main database table
+   * 
+   * @return string
+   */
+  public static function participants_table()
+  {
+    return Participants_Db::apply_filters('participants_table', Participants_Db::$participants_table );
+  }
 
   /**
    * supplies a list of PDB record data given a configuration object
