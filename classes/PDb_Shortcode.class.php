@@ -1,6 +1,5 @@
- <?php
-
-/*
+<?php
+/**
  * Shortcode class
  *
  * provides basic functionality for rendering a shortcode's output
@@ -879,7 +878,8 @@ abstract class PDb_Shortcode {
         wp_cache_set( $cachekey, $groups, '', Participants_Db::cache_expire() );
       }
     }
-    $this->display_groups = $groups;
+    
+    $this->display_groups = empty($groups) ? array() : $groups;
   }
 
   /**
