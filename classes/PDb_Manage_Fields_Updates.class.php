@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -31,8 +31,8 @@ class PDb_Manage_Fields_Updates {
     add_action( 'admin_post_add_field', array($this, 'add_field') );
     add_action( 'admin_post_add_group', array($this, 'add_group') );
     add_action( 'admin_post_update_groups', array($this, 'update_groups') );
-    
-    PDb_Admin_Notices::post_info( sprintf('The Participants Database Manage Database Fields page has been completely redesigned. Use the "Help" tab for %sinstructions on using the new interface!%s','<a href="https://xnau.com/the-manage-database-fields-page/" target="_blank">','</a>'), __( 'Manage Database Fields', 'participants-database' ));
+
+    PDb_Admin_Notices::post_info( sprintf( 'The Participants Database Manage Database Fields page has been completely redesigned. Use the "Help" tab for %sinstructions on using the new interface!%s', '<a href="https://xnau.com/the-manage-database-fields-page/" target="_blank">', '</a>' ), __( 'Manage Database Fields', 'participants-database' ) );
   }
 
   /**
@@ -44,7 +44,7 @@ class PDb_Manage_Fields_Updates {
   {
     global $wpdb;
 
-    foreach ( $this->sanitized_post() as $name => $row ) {
+    foreach ( $this->sanitized_field_post() as $name => $row ) {
 
       // unescape quotes in values
       foreach ( $row as $k => $rowvalue ) {
@@ -57,27 +57,27 @@ class PDb_Manage_Fields_Updates {
 
         $id = filter_var( $row['id'], FILTER_VALIDATE_INT );
 
-        foreach ( array( 'values', 'options', 'attributes' ) as $attname ) {
-          
+        foreach ( array('values', 'options', 'attributes') as $attname ) {
+
           /*
            * format the value for attributes that use a values array
            * 
            * also, if the deprecated 'values' attribute is present, place its 
            * data into the correct attribute
            */
-          
+
           if ( isset( $row[$attname] ) ) {
-            
+
             $attvalue = $row[$attname];
-            
+
             if ( $attname === 'values' && strlen( $attvalue ) > 0 ) {
-              $correct_attribute = PDb_FormElement::is_value_set($row['form_element']) ? 'options' : 'attributes';
+              $correct_attribute = PDb_FormElement::is_value_set( $row['form_element'] ) ? 'options' : 'attributes';
               if ( strlen( $row[$correct_attribute] ) === 0 ) {
                 $attname = $correct_attribute;
                 $row['values'] = '';
-              } 
+              }
             }
-            
+
             if ( is_string( $attvalue ) ) {
               $row[$attname] = self::string_notation_to_array( $attvalue );
             }
@@ -88,13 +88,13 @@ class PDb_Manage_Fields_Updates {
 
           $row['validation'] = str_replace( '\\\\', '\\', $row['validation'] );
         }
-        
+
         // remove empty values
         // prevents these attributes from getting cleared
         foreach ( array('group', 'form_element', 'validation') as $att ) {
           if ( isset( $row[$att] ) && empty( $row[$att] ) ) {
             unset( $row[$att] );
-          } 
+          }
         }
 
         /*
@@ -144,7 +144,7 @@ class PDb_Manage_Fields_Updates {
             $row[$name] = serialize( $row[$name] );
           }
         }
-        
+
         /**
          * provides access to the field definition parameters as the field is getting updated
          * 
@@ -171,78 +171,6 @@ class PDb_Manage_Fields_Updates {
     $this->return_to_the_manage_database_fields_page();
   }
 
-  /**
-   * provides a sanitized post array
-   * 
-   * only the row data is included, all other elements are discarded
-   * 
-   * @return array
-   */
-  private function sanitized_post()
-  {
-    $postrows = array_filter( $_POST, function ($k) {
-      return preg_match( '/^row_[0-9]{1,3}$/', $k ) === 1;
-    }, ARRAY_FILTER_USE_KEY );
-    
-    $post = array();
-    foreach( $postrows as $key => $row ) {
-      $post[$key] = self::sanitize_row($row);
-    }
-
-    return $post;
-  }
-  
-  /**
-   * sanitizes a field definition row
-   * 
-   * @param array $row of field parameter data
-   * @return array
-   */
-  public static function sanitize_row( $row )
-  {
-    $string_sanitize = array(
-            'filter' => FILTER_SANITIZE_STRING,
-            'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
-            );
-    $text_sanitize = array(
-            'filter' => FILTER_CALLBACK,
-            'options' => 'PDb_Manage_Fields_Updates::sanitize_text'
-            );
-    $bool_sanitize = array(
-        'filter' => FILTER_CALLBACK,
-        'options' => function ($v) {
-      return $v == '1' ? '1' : '0';
-        },
-    );
-    
-    $filters = array(
-        'id' => FILTER_SANITIZE_NUMBER_INT,
-        'status' => FILTER_SANITIZE_STRING,
-        'name' => FILTER_SANITIZE_STRING,
-        'title' => $text_sanitize,
-        'group' => $string_sanitize,
-        'form_element' => $string_sanitize,
-        'help_text' => $text_sanitize,
-        'options' => $string_sanitize,
-        'validation' => $string_sanitize,
-        'validation_message' => $text_sanitize,
-        'default' => $string_sanitize,
-        'attributes' => $string_sanitize,
-        'signup' => $bool_sanitize,
-        'csv' => $bool_sanitize,
-        'readonly' => FILTER_SANITIZE_NUMBER_INT,
-        'sortable' => $bool_sanitize,
-        'persistent' => $bool_sanitize,
-    );
-    
-    /**
-     * @see https://www.php.net/manual/en/filter.filters.php
-     * @filter pdb-field_update_sanitize_filters
-     * @param array of php filters
-     * @return array
-     */
-    return filter_var_array( $row, Participants_Db::apply_filters( 'field_update_sanitize_filters', $filters ) );
-  }
 
   /**
    * adds a new field
@@ -346,23 +274,20 @@ class PDb_Manage_Fields_Updates {
    */
   public function update_groups()
   {
-
     if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
       return;
     }
-
-    unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'], $_POST['group_title'], $_POST['group_order'] );
 
     global $wpdb;
 
     $result = false;
     $data = array();
 
-    foreach ( $_POST as $group_name => $row ) {
+    foreach ( $this->sanitized_group_post() as $group_name => $row ) {
 
-      $data['title'] = filter_var( $row['title'], FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::sanitize_text') );
-      $data['description'] = filter_var( $row['description'], FILTER_SANITIZE_STRING );
-      $data['mode'] = filter_var( $row['mode'], FILTER_SANITIZE_STRING );
+      $data['title'] = $row['title'];
+      $data['description'] = $row['description'];
+      $data['mode'] = $row['mode'];
       $data['display'] = $data['mode'] === 'public' ? '1' : '0';
       $data['admin'] = $data['mode'] === 'admin' ? '1' : '0';
 
@@ -382,7 +307,7 @@ class PDb_Manage_Fields_Updates {
        * @param string last query
        */
       do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_groups', $wpdb->last_query );
-      Participants_Db::set_admin_message( __( 'Your groups have been updated', 'participants-database' ), 'updated' );
+      PDb_Admin_Notices::post_success( __( 'Your groups have been updated', 'participants-database' ) );
     }
 
     $this->return_to_the_manage_database_fields_page();
@@ -410,14 +335,14 @@ class PDb_Manage_Fields_Updates {
         if ( count( $list ) < 1 ) {
           wp_send_json( 'error:no valid id list' );
         }
-        
+
         /**
          * @action pdb-fields_deleted
          * @param array of field defs that are about to be deleted
          */
-        $deleted_fields= array();
+        $deleted_fields = array();
         foreach ( Participants_Db::$fields as $field_def ) {
-          if ( in_array( $field_def->get_prop('id'), $list ) ) {
+          if ( in_array( $field_def->get_prop( 'id' ), $list ) ) {
             $deleted_fields[] = $field_def;
           }
         }
@@ -513,7 +438,7 @@ class PDb_Manage_Fields_Updates {
           }
         }
         wp_send_json( 'set' );
-        
+
       default:
         /**
          * @action pdb-with_selected_field_edit_action
@@ -523,6 +448,152 @@ class PDb_Manage_Fields_Updates {
         do_action( Participants_Db::$prefix . 'with_selected_field_edit_action', filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ), $this->sanitize_id_list() );
     }
   }
+  
+  /**
+   * provides a sanitized post array
+   * 
+   * only the row data is included, all other elements are discarded
+   * 
+   * @return array
+   */
+  private function sanitized_field_post()
+  {
+    $postrows = array_filter( $_POST, function ($k) {
+      return preg_match( '/^row_[0-9]{1,3}$/', $k ) === 1;
+    }, ARRAY_FILTER_USE_KEY );
+
+    $post = array();
+    foreach ( $postrows as $key => $row ) {
+      $post[$key] = self::sanitize_field_row( $row );
+    }
+
+    return $post;
+  }
+
+  /**
+   * sanitizes a field definition row
+   * 
+   * @param array $row of field parameter data
+   * @return array
+   */
+  private static function sanitize_field_row( $row )
+  {
+    $filters = array(
+        'id' => FILTER_SANITIZE_NUMBER_INT,
+        'status' => FILTER_SANITIZE_STRING,
+        'name' => FILTER_SANITIZE_STRING,
+        'title' => self::text_sanitize(),
+        'group' => self::string_sanitize(),
+        'form_element' => self::string_sanitize(),
+        'help_text' => self::text_sanitize(),
+        'options' => self::string_sanitize(),
+        'validation' => self::string_sanitize(),
+        'validation_message' => self::text_sanitize(),
+        'default' => self::string_sanitize(),
+        'attributes' => self::string_sanitize(),
+        'signup' => self::bool_sanitize(),
+        'csv' => self::bool_sanitize(),
+        'readonly' => FILTER_SANITIZE_NUMBER_INT,
+        'sortable' => self::bool_sanitize(),
+        'persistent' => self::bool_sanitize(),
+    );
+
+    /**
+     * @see https://www.php.net/manual/en/filter.filters.php
+     * @filter pdb-field_update_sanitize_filters
+     * @param array of php filters
+     * @return array
+     */
+    return filter_var_array( $row, Participants_Db::apply_filters( 'field_update_sanitize_filters', $filters ) );
+  }
+
+  /**
+   * provides a sanitized post array
+   * 
+   * only the row data is included, all other elements are discarded
+   * 
+   * @return array
+   */
+  private function sanitized_group_post()
+  {
+    $postrows = array_filter( $_POST, function ($v) {
+      return is_array( $v );
+    } );
+
+    $post = array();
+    foreach ( $postrows as $key => $row ) {
+      $post[$key] = self::sanitize_group_row( $row );
+    }
+
+    return $post;
+  }
+
+  /**
+   * sanitizes a group definition row
+   * 
+   * @param array $row of field parameter data
+   * @return array
+   */
+  private static function sanitize_group_row( $row )
+  {
+    $filters = array(
+        'id' => FILTER_SANITIZE_NUMBER_INT,
+        'status' => FILTER_SANITIZE_STRING,
+        'name' => FILTER_SANITIZE_STRING,
+        'title' => self::text_sanitize(),
+        'description' => self::text_sanitize(),
+        'mode' => self::string_sanitize(),
+    );
+
+    /**
+     * @see https://www.php.net/manual/en/filter.filters.php
+     * @filter pdb-group_update_sanitize_filters
+     * @param array of php filters
+     * @return array
+     */
+    return filter_var_array( $row, Participants_Db::apply_filters( 'group_update_sanitize_filters', $filters ) );
+  }
+  
+  /**
+   * provides the sanitize filter config for a string
+   * 
+   * @return array
+   */
+  protected static function string_sanitize()
+  {
+    return array(
+        'filter' => FILTER_SANITIZE_STRING,
+        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+    );
+  }
+  
+  /**
+   * provides a text sanitizing filter config
+   * 
+   * @return array
+   */
+  protected static function text_sanitize()
+  {
+    return array(
+        'filter' => FILTER_CALLBACK,
+        'options' => 'PDb_Manage_Fields_Updates::sanitize_text'
+    );
+  }
+  
+  /**
+   * provides a boolean sanitize filter config
+   * 
+   * @return array
+   */
+  protected static function bool_sanitize()
+  {
+    return array(
+        'filter' => FILTER_CALLBACK,
+        'options' => function ($v) {
+          return $v == '1' ? '1' : '0';
+        },
+    );
+  }
 
   /**
    * redirects back to the manage database fields page after processing the submission
@@ -531,19 +602,18 @@ class PDb_Manage_Fields_Updates {
    */
   private function return_to_the_manage_database_fields_page()
   {
-    if ( ! isset( $_POST['_wp_http_referer'] ) ) { // Input var okay.
+    if ( !isset( $_POST['_wp_http_referer'] ) ) { // Input var okay.
       $_POST['_wp_http_referer'] = wp_login_url();
     }
-    
+
     $url = sanitize_text_field(
-      wp_unslash( $_POST['_wp_http_referer'] ) // Input var okay.
+            wp_unslash( $_POST['_wp_http_referer'] ) // Input var okay.
     );
-    	
+
     wp_safe_redirect( urldecode( $url ) );
-    
+
     exit;
   }
-  
 
   /**
    * prepares a serialized array for display
@@ -564,11 +634,11 @@ class PDb_Manage_Fields_Updates {
     /**
      * @see PDb_Manage_Fields::prep_values_array()
      */
-    $pair_delim = Participants_Db::apply_filters('field_options_pair_delim', '::' );
-    $option_delim = Participants_Db::apply_filters('field_options_option_delim', ',' );
+    $pair_delim = Participants_Db::apply_filters( 'field_options_pair_delim', '::' );
+    $option_delim = Participants_Db::apply_filters( 'field_options_option_delim', ',' );
 
     if ( PDb_FormElement::is_assoc( $value_list ) ) {
-      
+
       /*
        * here, we create a string representation of an associative array, using 
        * :: to denote a name=>value pair
@@ -637,7 +707,7 @@ class PDb_Manage_Fields_Updates {
         $values_array[$attribute] = $attribute;
       }
     }
-    
+
     return PDb_Base::cleanup_array( $values_array );
   }
 
@@ -670,8 +740,7 @@ class PDb_Manage_Fields_Updates {
      * in queries
      */
     $name = strtolower( str_replace(
-            array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), 
-            array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), stripslashes( substr( $string, 0, 64 ) )
+                    array(' ', '-', '/', "'", '"', '\\', '#', '.', '$', '&', '%', '>', '<', '`'), array('_', '_', '_', '', '', '', '', '', '', 'and', 'pct', '', '', ''), stripslashes( substr( $string, 0, 64 ) )
             ) );
     /*
      * allow only proper unicode letters, numerals and legal symbols
@@ -683,7 +752,7 @@ class PDb_Manage_Fields_Updates {
   }
 
   /**
-   * sanitizes a string that allows imple HTML tags
+   * sanitizes a string that allows simple HTML tags
    * 
    * this includes titles, group titles, help text
    * 
@@ -713,7 +782,7 @@ class PDb_Manage_Fields_Updates {
             'target' => true,
         ),
     );
-    return wp_kses($string, $allowed_html);
+    return wp_kses( $string, $allowed_html );
   }
 
   /**
@@ -742,7 +811,7 @@ class PDb_Manage_Fields_Updates {
     $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
     $new_type = PDb_FormElement::get_datatype( array('name' => $fieldname, 'form_element' => $form_element) );
     $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
-    $new_type = Participants_Db::apply_filters('new_field_form_element', $new_type, $current_type );
+    $new_type = Participants_Db::apply_filters( 'new_field_form_element', $new_type, $current_type );
     return $this->datatype_has_changed( $current_type, $new_type ) ? $new_type : false;
   }
 
