@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -416,18 +416,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   { 
     foreach( $config as $prop => $value ) {
       
-      if ( $prop === 'name' ) {
-        continue 1;
-      }
-      if ( $prop === 'record_id' && ! empty( $this->record_id ) ) {
-        continue 1;
+      switch (true) {
+        case ( $prop === 'name' ):
+        case ( $prop === 'record_id' && ! empty( $this->record_id ) ):
+          break;
+        case ( method_exists( $this, 'set_' . $prop ) ):
+          $this->{'set_' . $prop}($value);
+          break;
+        case ($prop === 'attributes'):
+        case ($prop === 'options'):
+          break;
+        case ( property_exists( $this, $prop ) ):
+          $this->{$prop} = $value;
+          break;
       }
       
-      if ( method_exists( $this, 'set_' . $prop ) ) {
-        $this->{'set_' . $prop}($value);
-      } elseif ( property_exists( $this, $prop ) ) {
-        $this->{$prop} = $value;
-      }
     }
     
     if ( $this->is_valid_single_record_link_field() ) {
