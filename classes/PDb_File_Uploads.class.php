@@ -153,7 +153,7 @@ class PDb_File_Uploads {
     }
     
     if ( PDB_DEBUG ) {
-      Participants_Db::debug_log( sprintf( "The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
+      Participants_Db::debug_log( sprintf( __METHOD__ . ": The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
     }
 
     /*
