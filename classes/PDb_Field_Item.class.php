@@ -170,6 +170,18 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
+   * provides the current value of the field as an associative array or string
+   * 
+   * alias for the value method
+   * 
+   * @return array|string the current value of the field
+   */
+  public function get_value()
+  {
+    return $this->value();
+  }
+
+  /**
    * provides the dynamic value for a dynamic hidden field
    *
    * @return string
@@ -201,13 +213,79 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * provides the current value of the field as an associative array or string
+   * provides the field value as an exportable string
    * 
-   * @return array|string the current value of the field
+   * @return string
    */
-  public function get_value()
+  public function export_value()
   {
-    return $this->value();
+    /**
+     * filters the raw value of the field
+     * 
+     * subsequent processing can be skipped by setting the $column->form_element property to 'skip'
+     * 
+     * @version 1.7.1
+     * @filter pdb-csv_export_value_raw
+     * @param mixed the raw value
+     * @param object the field object
+     * @return mixed
+     */
+    $value = Participants_Db::apply_filters( 'csv_export_value_raw', $this->value, $this );
+
+    switch ( $this->form_element ) {
+
+      case 'date':
+        $value = PDb_Date_Display::get_date( $this->value, 'export value' );
+        break;
+
+      case 'link':
+
+        $link = maybe_unserialize( $this->value );
+        if ( is_array( $link ) ) {
+
+          if ( empty( $link[0] ) )
+            $value = '';
+          else {
+            $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
+            $value = vsprintf( $pattern, $link );
+          }
+        }
+        break;
+        
+      case 'rich-text':
+
+        /*
+         * what we need to do here is add the missing markup (wpautop does 
+         * this) and then remove all line breaks and such so the whole thing 
+         * looks like one field
+         */
+        $value = preg_replace( '/^\s+|\n|\r|\s+$/m', '', wpautop( $this->value, true ) );
+        break;
+
+      case 'skip':
+        // do nothing; we can use this to skip the normal value in the filter above
+        break;
+
+      default:
+
+        $value = maybe_unserialize( $this->value );
+
+        /*
+         * as of version 1.7.9 multi-type fields export their values as a 
+         * comma-separated list of values; values that contain a comma will use 
+         * the &#44; entity to represent them
+         */
+        if ( $this->is_multi() ) {
+          $value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
+        } elseif ( is_array( $value ) ) {
+          // if it is an array, serialize it
+          $value = html_entity_decode( serialize( $value ), ENT_QUOTES, "UTF-8" );
+        } else {
+          $value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
+        }
+    }
+    
+    return $value;
   }
 
   /**
@@ -394,7 +472,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       return $v !== '';
     } );
   }
-  
+
   /**
    * adds a string to the element class
    * 
@@ -413,15 +491,15 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @param object $config the field data object
    */
   protected function assign_props( $config )
-  { 
-    foreach( $config as $prop => $value ) {
-      
-      switch (true) {
+  {
+    foreach ( $config as $prop => $value ) {
+
+      switch ( true ) {
         case ( $prop === 'name' ):
-        case ( $prop === 'record_id' && ! empty( $this->record_id ) ):
+        case ( $prop === 'record_id' && !empty( $this->record_id ) ):
           break;
         case ( method_exists( $this, 'set_' . $prop ) ):
-          $this->{'set_' . $prop}($value);
+          $this->{'set_' . $prop}( $value );
           break;
         case ($prop === 'attributes'):
         case ($prop === 'options'):
@@ -430,9 +508,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           $this->{$prop} = $value;
           break;
       }
-      
     }
-    
+
     if ( $this->is_valid_single_record_link_field() ) {
       $this->set_link( Participants_Db::single_record_url( $this->record_id ) );
     }
@@ -514,7 +591,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $this->attributes['id'] = PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name );
     $this->print_element();
   }
-  
+
   /**
    * prints the form element HTML
    */
@@ -579,15 +656,15 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function _get_element()
   {
     return PDb_FormElement::get_element( array(
-        'type' => $this->form_element(),
-        'value' => $this->value(),
-        'name' => $this->name(),
-        'options' => $this->options(),
-        'class' => $this->field_class,
-        'attributes' => $this->attributes(),
-        'module' => $this->module(),
-        'link' => $this->link(),
-            )
+                'type' => $this->form_element(),
+                'value' => $this->value(),
+                'name' => $this->name(),
+                'options' => $this->options(),
+                'class' => $this->field_class,
+                'attributes' => $this->attributes(),
+                'module' => $this->module(),
+                'link' => $this->link(),
+                    )
     );
   }
 
@@ -709,7 +786,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function option_match_found( $value, $option_list )
   {
     foreach ( $option_list as $option ) {
-      if ( trim( html_entity_decode($value) ) === $option ) {
+      if ( trim( html_entity_decode( $value ) ) === $option ) {
         return true;
       }
     }
@@ -760,18 +837,17 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function set_link_field_value()
   {
-    if ( is_serialized( $this->value) ) {
-      
+    if ( is_serialized( $this->value ) ) {
+
       $parts = unserialize( $this->value );
 
-      if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) && ! $this->has_link() ) {
+      if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) && !$this->has_link() ) {
         $this->link = $parts[0];
       }
 
       if ( $this->has_link() ) {
         $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
       }
-      
     } elseif ( filter_var( $this->value, FILTER_VALIDATE_URL ) ) {
       $this->link = $this->value;
     }
