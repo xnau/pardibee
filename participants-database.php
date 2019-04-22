@@ -1510,7 +1510,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_form( $post, $action, $participant_id = false, $column_names = false )
   {
-    
     /**
      * reject submissions that aren't properly tagged
      */
@@ -1527,8 +1526,6 @@ class Participants_Db extends PDb_Base {
     global $wpdb;
 
     if ( !empty( $_FILES ) && !$currently_importing_csv ) {
-      
-//      error_log(__METHOD__.' files: '.print_r($_FILES,1));
 
       foreach ( $_FILES as $fieldname => $attributes ) {
 
@@ -1945,9 +1942,17 @@ class Participants_Db extends PDb_Base {
 
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
                 if ( $participant_id && ( self::$plugin_options['file_delete'] == 1 || is_admin() ) ) {
-                  $participant_record = self::get_participant($participant_id);
                   
-                  self::delete_file( $participant_record[$column->name] );
+                  if ( array_key_exists( $column->name, $_POST ) ) {
+                    $filename = filter_input( INPUT_POST, $column->name, FILTER_SANITIZE_STRING );
+                  }
+                  
+                  if ( empty( $filename ) ) {
+                    $participant_record = self::get_participant($participant_id);
+                    $filename = $participant_record[$column->name];
+                  }
+                  
+                  self::delete_file( $filename );
                 }
                 unset( $_POST[$column->name] );
                 $post[$column->name] = '';
@@ -2510,7 +2515,7 @@ class Participants_Db extends PDb_Base {
     }
 
     // if this column does not exist in the DB, add it
-    if ( count( $wpdb->get_results( "SHOW COLUMNS FROM `" . self::$participants_table . "` LIKE '" . $field_parameters['name'] . "'", ARRAY_A ) ) < 1 ) {
+    if ( count( $wpdb->get_results( "SHOW COLUMNS FROM `" . self::participants_table() . "` LIKE '" . $field_parameters['name'] . "'", ARRAY_A ) ) < 1 ) {
 
       if ( false === ( self::_add_db_column( $field_parameters ) ) ) {
 
@@ -3304,11 +3309,13 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_loading_spinner()
   {
+    $bitmap_source = plugins_url( 'ui/ajax-loader.gif', __FILE__ );
+    $svg_source = plugins_url( 'ui/ajax-loader.svg', __FILE__ );
     /**
      * @version 1.6.3
      * @filter pdb-loading_spinner_html
      */
-    return self::apply_filters( 'loading_spinner_html', '<span class="ajax-loading"><img src="' . plugins_url( 'ui/ajax-loader.gif', __FILE__ ) . '" /></span>' );
+    return self::apply_filters( 'loading_spinner_html', '<span class="ajax-loading"><object data="' . $svg_source . '"><img src="' . $bitmap_source . '" /></object></span>' );
   }
 
   /**
