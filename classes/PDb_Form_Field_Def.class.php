@@ -445,10 +445,10 @@ class PDb_Form_Field_Def {
   /**
    * provides the named attribute value
    * 
-   * @param string $attribute name of the attribute to get
+   * @param string $name name of the attribute to get
    * @return string empty string if attribute empty or not set
    */
-  public function get_attribute( $attribute )
+  public function get_attribute( $name )
   {
     $attributes = $this->attributes();
     return isset( $attributes[$name] ) ? $attributes[$name] : '';
