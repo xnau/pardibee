@@ -1147,7 +1147,7 @@ class PDb_Base {
      * @since 1.7.6.2
      * @filter pdb-delete_file
      * @param string filename
-     * @return string|bool filename or bool success
+     * @return string|bool filename or bool false to skip deletion
      */
     $result = self::apply_filters( 'delete_file', $filename );
 
