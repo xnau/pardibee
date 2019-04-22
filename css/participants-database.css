@@ -255,6 +255,9 @@ input[type="color"] {
 .pdb-searchform .radio-group {
   display: inline-block;
 }
+.ajax-loading object {
+  margin: 0;
+}
 .ajax-loading {
   display: inline-block;
   margin-left: 5px;
