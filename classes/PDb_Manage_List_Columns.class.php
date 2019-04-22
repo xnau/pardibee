@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -120,7 +120,7 @@ class PDb_Manage_List_Columns {
    */
   private function admin_field_list()
   {
-    $where = 'WHERE v.form_element <> "captcha"';
+    $where = 'WHERE v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
     return $this->_field_list( $where );
   }
 
@@ -131,8 +131,23 @@ class PDb_Manage_List_Columns {
    */
   private function public_field_list()
   {
-    $where = 'WHERE v.form_element <> "captcha"';
+    $where = 'WHERE v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
     return $this->_field_list( $where );
+  }
+  
+  /**
+   * provides a list of excluded form elements
+   * 
+   * @return array
+   */
+  private function excluded_form_elements()
+  {
+    /**
+     * @filter pdb-list_columns_excluded_form_elements
+     * @param array of form element names
+     * @return array
+     */
+    return Participants_Db::apply_filters('list_columns_excluded_form_elements', array('captcha'));
   }
 
   /**
@@ -188,9 +203,11 @@ class PDb_Manage_List_Columns {
   {
     global $wpdb;
 
-    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' ORDER BY g.order, v.order';
+    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY g.order, v.order';
 
-    return $wpdb->get_results( $sql, OBJECT_K );
+    $result = $wpdb->get_results( $sql, OBJECT_K );
+ 
+    return $result;
   }
 
   /**
