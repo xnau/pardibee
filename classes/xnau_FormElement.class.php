@@ -1146,15 +1146,15 @@ abstract class xnau_FormElement {
     $this->group = $type === 'checkbox';
     
     // checkboxes are given a null select so an "unchecked" state is possible
-    $null_select = (isset( $this->options['null_select'] )) ? $this->options['null_select'] : ($type == 'checkbox' ? true : false);
+    $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
 
-    if ( $null_select !== false ) {
+    if ( $null_select !== false && $null_select !== 'false' ) {
       $id = $this->element_id();
       $this->attributes['id'] = $id . '-default';
       $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) ? $null_select : '' ), false ), 1 );
       $this->attributes['id'] = $id;
     }
-    unset( $this->options['null_select'] );
+    unset( $this->options[self::null_select_key()] );
 
     $this->_addline( '<div class="' . $type . '-group" >' );
 
@@ -1239,7 +1239,9 @@ abstract class xnau_FormElement {
 
       $title = Participants_Db::apply_filters( 'translate_string', $title );
       
-      if ( ($value === false || $value === 'false' || $value === 'optgroup') && strlen( $title ) > 0 ) {
+      if ( $value == 'false' && $title === 'null_select ' ) {
+        continue 1;
+      } elseif ( $value === 'optgroup' && strlen( $title ) > 0 ) {
         $this->_add_options_divider( $title );
       } elseif ( $value === 'other' ) {
         $otherlabel = $title;
@@ -1561,23 +1563,37 @@ abstract class xnau_FormElement {
    */
   protected function _set_null_select()
   {
-
     /*
      * if the null_select option is a string, use it as the name of the null select 
      * option, unless it is the string 'false', then make it boolean false. If it is any 
      * other value or not set at all, make it boolean false
      */
-    $null_select = isset( $this->options['null_select'] ) ? ($this->options['null_select'] === 'false' ? false : $this->options['null_select']) : false;
-    // remove the null_select from the options array
-    if ( isset( $this->options['null_select'] ) )
-      unset( $this->options['null_select'] );
-
-    $null_select_label = is_string( $null_select ) && strlen( $null_select ) > 0 ? $null_select : '&nbsp;';
+    $null_select = false;
+    if ( isset( $this->options[self::null_select_key()] ) ) {
+      if ( $this->options[self::null_select_key()] !== 'false' ) {
+        $null_select = $this->options[self::null_select_key()];
+        $null_select_label = strlen( $null_select ) > 0 ? $null_select : '&nbsp;';
+      } else {
+        $null_select = true;
+      }
+      // remove the null_select from the options array
+      unset( $this->options[self::null_select_key()] );
+    }
 
     if ( $null_select !== false ) {
       $selected = $this->value === '' ? $this->_set_selected( true, true, 'selected' ) : '';
       $this->_addline( '<option value="" ' . $selected . '  >' . esc_html( $null_select_label ) . '</option>' );
     }
+  }
+  
+  /**
+   * provides the null select key string
+   * 
+   * @return string
+   */
+  public static function null_select_key()
+  {
+    return 'null_select ';
   }
 
   /**
