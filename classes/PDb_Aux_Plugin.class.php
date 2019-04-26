@@ -918,7 +918,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     protected function field_selector( $allowed )
     {
       $available_fields = array();
-      foreach ( \Participants_Db::$fields as $fieldname => $field ) {
+      foreach ( Participants_Db::field_defs() as $fieldname => $field ) {
         /* @var $field \PDB_Form_Field_Def */
         if (
                 in_array( $field->form_element(), explode( ',', str_replace( ' ', '', $allowed ) ) )
