@@ -512,7 +512,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function init()
   {
-    
     /*
      * instantiate the settings class; this only sets up the settings values, 
      * the WP Settings API may not be available at this point, so we register the 
@@ -1085,17 +1084,23 @@ class Participants_Db extends PDb_Base {
    */
   private static function _setup_fields()
   {
-    if ( empty( self::$fields ) ) :
+    $cachekey = 'pdb_fields_array';
+    self::$fields = wp_cache_get($cachekey);
+    
+    if ( ! self::$fields ) {
       global $wpdb;
       self::$fields = array();
       $sql = 'SELECT v.* 
               FROM ' . self::$fields_table . ' v 
               ORDER BY v.order';
       $result = $wpdb->get_results( $sql );
+      
       foreach ( $result as $column ) {
         self::$fields[$column->name] = new PDb_Form_Field_Def( $column->name );
       }
-    endif;
+      
+      wp_cache_set($cachekey, self::$fields, '', self::cache_expire() );
+    }
   }
 
   /**
@@ -2155,7 +2160,12 @@ class Participants_Db extends PDb_Base {
   {
     $sql = 'SELECT f.name,f.default,f.form_element 
             FROM ' . self::$fields_table . ' f
-            WHERE f.group != "internal" AND f.form_element != "placeholder"';
+              JOIN ' . self::$groups_table . ' g 
+                ON f.group = g.name
+                
+            WHERE f.group != "internal" 
+            AND f.form_element != "placeholder" 
+            AND g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")';
 
     global $wpdb;
 
@@ -2252,10 +2262,7 @@ class Participants_Db extends PDb_Base {
 
     global $wpdb;
 
-    $columns = array();
-    foreach ( self::$fields as $field ) {
-      $columns[] = $field->name;
-    }
+    $columns = array_keys( self::field_defs() );
 
     $sql = 'SELECT p.' . implode( ',p.', $columns ) . ' FROM ' . self::$participants_table . ' p WHERE p.id = %s';
 
