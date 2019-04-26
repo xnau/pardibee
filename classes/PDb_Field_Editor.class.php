@@ -275,7 +275,7 @@ class PDb_Field_Editor {
       case 'form_element':
         $config = array(
             'type' => 'dropdown',
-            'options' => array_flip( PDb_FormElement::get_types() ) + array('null_select' => false),
+            'options' => array_flip( PDb_FormElement::get_types() ) + array(PDb_FormElement::null_select_key() => false),
             'attributes' => array('class' => $this->column_has_data( $this->field_def->name() ) ? 'column-has-values' : 'column-empty'),
         );
         break;
@@ -340,7 +340,7 @@ class PDb_Field_Editor {
    */
   private function validation_methods()
   {
-    $base_methods = array_flip( PDb_FormValidation::validation_methods() ) + array('null_select' => false);
+    $base_methods = array_flip( PDb_FormValidation::validation_methods() ) + array(PDb_FormElement::null_select_key() => false);
     foreach ( current( $this->definition_attributes ) as $method => $switch ) {
       if ( !$switch ) {
         unset( $base_methods[$method] );
@@ -361,7 +361,7 @@ class PDb_Field_Editor {
       if ( $group_data['name'] === 'internal' ) continue;
       $options[$group_data['title']] = $group_data['name'];
     }
-    return $options + array('null_select' => false);
+    return $options + array(PDb_FormElement::null_select_key() => false);
   }
 
   /**
@@ -628,7 +628,7 @@ class PDb_Field_Def_Parameter {
     switch ( $this->name ) {
       case 'attributes':
       case 'options':
-        $this->config['value'] = PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] );
+        $this->config['value'] = htmlspecialchars( PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] ) );
         break;
       case 'deletable':
         return $this->delete_button();
