@@ -742,7 +742,7 @@ abstract class PDb_Shortcode {
    */
   protected function _setup_hidden_fields()
   {
-    foreach ( Participants_Db::$fields as $field ) {
+    foreach ( Participants_Db::field_defs() as $field ) {
       /* @var $field PDb_Form_Field_Def */
       if ( $field->is_hidden_field() ) {
         $field_item = new PDb_Field_Item( $field );
@@ -1252,7 +1252,7 @@ abstract class PDb_Shortcode {
   public function __get( $name )
   {
     if ( $name === 'fields' ) {
-      return Participants_Db::$fields;
+      return Participants_Db::field_defs();
     }
     return null;
   }
@@ -1265,7 +1265,7 @@ abstract class PDb_Shortcode {
   {
     $this->fields = array();
 
-    foreach ( Participants_Db::$fields as $column ) {
+    foreach ( Participants_Db::field_defs() as $column ) {
       /* @var $column PDb_Form_Field_Def */
       $this->fields[$column->name()] = new PDb_Field_Item( (object) array(
                   'name' => $column->name(),
