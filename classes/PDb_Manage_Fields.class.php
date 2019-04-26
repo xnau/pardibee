@@ -337,7 +337,7 @@ class PDb_Manage_Fields {
               <?php
               PDb_FormElement::print_element( array(
                   'type' => 'dropdown',
-                  'options' => array_flip( PDb_FormElement::get_types() ) + array('null_select' => false),
+                  'options' => array_flip( PDb_FormElement::get_types() ) + array(PDb_FormElement::null_select_key() => false),
                   'name' => 'form_element',
                   'value' => '',
                   'attributes' => array(
