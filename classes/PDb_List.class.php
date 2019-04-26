@@ -555,7 +555,7 @@ class PDb_List extends PDb_Shortcode {
           'name' => 'search_field' . ($multi ? '[]' : ''),
           'value' => $value,
           'class' => 'search-item',
-          'options' => array($all_string => 'none', 'null_select' => false) + $search_columns,
+          'options' => array($all_string => 'none', PDb_FormElement::null_select_key() => false) + $search_columns,
       );
     } else {
       $element = array(
@@ -680,7 +680,7 @@ class PDb_List extends PDb_Shortcode {
     if ( !in_array( $value, $this->sortables ) ) {
       $default_sort_field = Participants_Db::plugin_setting('list_default_sort', '');
       if ( empty($default_sort_field) ) {
-        $options = array('null_select' => '');
+        $options = array(PDb_FormElement::null_select_key() => '');
       } else {
         $sort_field_def = Participants_Db::$fields[$default_sort_field];
         $options = array( $sort_field_def->title => $default_sort_field );
