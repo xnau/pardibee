@@ -255,7 +255,7 @@ class PDb_Signup extends PDb_Shortcode {
    */
   protected function _setup_hidden_fields()
   {
-    foreach ( Participants_Db::$fields as $field ) {
+    foreach ( Participants_Db::field_defs() as $field ) {
       /* @var $field PDb_Form_Field_Def */
       if ( $field->is_hidden_field() && $field->signup ) {
         $field_item = new PDb_Field_Item( $field );
