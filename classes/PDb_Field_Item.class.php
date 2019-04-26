@@ -105,7 +105,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     switch ( $prop ) {
       case 'value':
-        $this->set_value( $value );
+        $this->_set_value( $value );
         break;
     }
   }
@@ -251,7 +251,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           }
         }
         break;
-        
+
       case 'rich-text':
 
         /*
@@ -284,7 +284,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           $value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
         }
     }
-    
+
     return $value;
   }
 
@@ -453,7 +453,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * processes a field value into an array 
    * 
-   * this is used for values as they com ein from a database or imported from CSV
+   * this is used for values as they come in from a database or imported from CSV
    * 
    * @param string|array $value
    * @return array
@@ -503,6 +503,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           break;
         case ($prop === 'attributes'):
         case ($prop === 'options'):
+          break;
+        case ($prop === 'value'):
+          $this->_set_value( $value );
           break;
         case ( property_exists( $this, $prop ) ):
           $this->{$prop} = $value;
@@ -786,7 +789,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function option_match_found( $value, $option_list )
   {
     foreach ( $option_list as $option ) {
-      if ( trim( html_entity_decode( $value ) ) === $option ) {
+      // both terms are decoded for comparison #2063
+      if ( trim( html_entity_decode( $value ) ) === html_entity_decode( $option ) ) {
         return true;
       }
     }
@@ -803,21 +807,28 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function _set_value( $raw_value )
   {
-    if ( $this->is_multi() && $this->form_element !== 'link' ) {
+    switch ( true ) {
+      
+      case ( $this->form_element === 'link' ):
+        
+        $this->value = $this->prepare_value( $raw_value );
+        $this->set_link_field_value();
+        break;
+      
+      case ( $this->is_multi() ):
 
-      $value_list = array();
-      foreach ( self::field_value_array( $raw_value ) as $value ) {
-        $value_list[] = str_replace( ',', '&#44;', $this->prepare_value( $value ) );
-      }
+        $value_list = array();
+        foreach ( self::field_value_array( $raw_value ) as $value ) {
+          // this is to allow commas in values when the entity is needed in the field def #2063
+          $value_list[] = str_replace( '&#44;', ',', $this->prepare_value( $value ) );
+        }
 
-      $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
-    } elseif ( $this->form_element === 'link' ) {
-
-      $this->value = $this->prepare_value( $raw_value );
-      $this->set_link_field_value();
-    } else {
-
-      $this->value = $this->prepare_value( $raw_value );
+        $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
+        break;
+        
+      default:
+        
+        $this->value = $this->prepare_value( $raw_value );
     }
   }
 
