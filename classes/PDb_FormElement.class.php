@@ -422,15 +422,15 @@ class PDb_FormElement extends xnau_FormElement {
     $this->group = $type === 'checkbox';
 
     // checkboxes are given a null select so an "unchecked" state is possible
-    $null_select = (isset( $this->options['null_select'] )) ? $this->options['null_select'] : ($type == 'checkbox' ? true : false);
+    $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
 
     if ( $null_select !== false ) {
       $id = $this->element_id();
       $this->attributes['id'] = $id . '-default';
-      $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) ? $null_select : '' ), false ), 1 );
+      $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) && $null_select !== 'false' ? $null_select : '' ), false ), 1 );
       $this->attributes['id'] = $id;
     }
-    unset( $this->options['null_select'] );
+    unset( $this->options[self::null_select_key()] );
 
     $this->_addline( '<div class="' . $type . '-group" >' );
 
@@ -445,7 +445,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       $option_key = Participants_Db::apply_filters( 'translate_string', stripslashes( $option_key ) );
 
-      if ( ($option_value === false or $option_value === 'false' or $option_value === 'optgroup') and ! empty( $option_key ) ) {
+      if ( ( $option_value === 'optgroup') and ! empty( $option_key ) ) {
         if ( $optgroup ) {
           $this->_addline( '</fieldset>' );
         }
@@ -616,7 +616,6 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _set_null_select()
   {
-
     $field = Participants_Db::get_column( $this->name );
 
     $default = '';
@@ -628,8 +627,8 @@ class PDb_FormElement extends xnau_FormElement {
      * this is to add a blank mull select option if there is no default, no defined 
      * null select and no set field value
      */
-    if ( self::is_empty( $default ) && !isset( $this->options['null_select'] ) && self::is_empty( $this->value ) ) {
-      $this->options['null_select'] = '';
+    if ( self::is_empty( $default ) && !isset( $this->options[self::null_select_key()] ) && self::is_empty( $this->value ) ) {
+      $this->options[self::null_select_key()] = '';
     }
 
     parent::_set_null_select();
