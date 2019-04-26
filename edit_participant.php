@@ -55,6 +55,8 @@ if ( $participant_values ) :
   }
 
   $section = '';
+  
+  do_action('pdb-before_edit_participant_body');
   ?>
   <div class="wrap pdb-admin-edit-participant participants_db">
     <h2><?php echo $page_title ?></h2>
@@ -288,5 +290,5 @@ if ( $participant_values ) :
   </form>
   </div>
   <?php
-
+  do_action('pdb-after_edit_participant_body');
  endif;
