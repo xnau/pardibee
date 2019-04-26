@@ -145,7 +145,7 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
                           __( 'Create a new record with the submission', 'participants-database' ) => 0,
                           __( 'Update matching record with new data', 'participants-database' ) => 1,
                           __( "Don't import the record", 'participants-database' ) => 2,
-                        'null_select' => false,
+                        PDb_FormElement::null_select_key() => false,
                       )
                  );
                   PDb_FormElement::print_element( $parameters );
