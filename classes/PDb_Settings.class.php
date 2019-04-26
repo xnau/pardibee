@@ -433,7 +433,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
                 __( 'Create a new record with the submission', 'participants-database' ) => 0,
                 __( 'Overwrite matching record with new data', 'participants-database' ) => 1,
                 __( 'Show a validation error message', 'participants-database' ) => 2,
-                'null_select' => false,
+                PDb_FormElement::null_select_key() => false,
             ),
         ),
     );
@@ -821,7 +821,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'dropdown',
             'help_text' => __( 'Sets the default order of the records shown by the list shortcode.', 'participants-database' ),
             'value' => 'desc',
-            'options' => array(__( 'Ascending', 'participants-database' ) => 'asc', __( 'Descending', 'participants-database' ) => 'desc', 'null_select' => false),
+            'options' => array(__( 'Ascending', 'participants-database' ) => 'asc', __( 'Descending', 'participants-database' ) => 'desc', PDb_FormElement::null_select_key() => false),
         )
     );
 
@@ -1307,7 +1307,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'dropdown',
             'help_text' => __( 'Sets the default order of the record list in the admin.', 'participants-database' ),
             'value' => 'desc',
-            'options' => array(__( 'Ascending', 'participants-database' ) => 'asc', __( 'Descending', 'participants-database' ) => 'desc', 'null_select' => false),
+            'options' => array(__( 'Ascending', 'participants-database' ) => 'asc', __( 'Descending', 'participants-database' ) => 'desc', PDb_FormElement::null_select_key() => false),
         )
     );
 
@@ -1478,7 +1478,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
     if ( $pagelist === false ) {
 
       if ( $with_blank )
-        $pagelist['null_select'] = '';
+        $pagelist[PDb_FormElement::null_select_key()] = '';
 
       if ( $with_none )
         $pagelist[__( 'Same Page', 'participants-database' )] = 'none';
@@ -1516,7 +1516,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
   private function _get_display_columns()
   {
 
-    $columnlist = array(__( 'None', 'participants-database' ) => 'none', 'null_select' => false);
+    $columnlist = array(__( 'None', 'participants-database' ) => 'none', PDb_FormElement::null_select_key() => false);
 
     $columns = Participants_Db::get_column_atts( 'all' );
 
@@ -1546,7 +1546,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
       global $wpdb;
 
-      $columnlist = $null ? array('null_select' => '') : array('null_select' => false);
+      $columnlist = $null ? array(PDb_FormElement::null_select_key() => '') : array(PDb_FormElement::null_select_key() => false);
 
       /**
        * @version 1.7.0.7
@@ -1575,7 +1575,7 @@ ORDER BY g.order, v.order';
   private function _get_sort_columns()
   {
 
-    $columnlist = array('null_select' => false);
+    $columnlist = array(PDb_FormElement::null_select_key() => false);
 
     $columns = Participants_Db::get_column_atts( 'sortable' );
 
@@ -1628,7 +1628,7 @@ ORDER BY g.order, v.order';
         __( 'Author', 'participants-database' ) => 'edit_published_posts',
         __( 'Editor', 'participants-database' ) => 'edit_others_posts',
         __( 'Admin', 'participants-database' ) => 'manage_options',
-        'null_select' => false,
+        PDb_FormElement::null_select_key() => false,
     );
     global $wp_roles;
     if ( !is_object( $wp_roles ) ) {
@@ -1667,7 +1667,7 @@ ORDER BY g.order, v.order';
     global $wpdb;
     $character_sets = $wpdb->get_results( 'SHOW CHARACTER SET' );
 
-    $return = array('null_select' => false);
+    $return = array(PDb_FormElement::null_select_key() => false);
     foreach ( $character_sets as $set ) {
       $return[$set->Description] = $set->{'Default collation'};
     }
