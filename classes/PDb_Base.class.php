@@ -241,7 +241,7 @@ class PDb_Base {
   {
     if ( !isset( $config['fields'] ) ) {
       // get all column names
-      $columns = array_keys(Participants_Db::$fields);
+      $columns = array_keys(self::field_defs());
     } else {
       $columns = explode(',', str_replace(' ','',$config['fields'] ) );
       if ( array_search( 'id', $columns ) ) {
@@ -251,6 +251,40 @@ class PDb_Base {
     }
     
     return self::get_list( $config, $columns );
+  }
+  
+  /**
+   * provides an array of field definitions from main groups only
+   * 
+   * @global wpdb $wpdb
+   * @return array of PDb_Form_Field_Def objects
+   */
+  public static function field_defs()
+ {
+    $cachekey = 'pdb_field_def_array';
+    $fieldlist = wp_cache_get($cachekey);
+    
+    if ( ! $fieldlist ) {
+      
+      global $wpdb;
+      
+      $fieldlist = array();
+      
+      $sql = 'SELECT v.* 
+              FROM ' . Participants_Db::$fields_table . ' v 
+              JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name
+              WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")
+              ORDER BY v.order';
+      
+      $result = $wpdb->get_results( $sql );
+      
+      foreach ( $result as $column ) {
+        $fieldlist[$column->name] = new PDb_Form_Field_Def( $column->name );
+      }
+      
+      wp_cache_set($cachekey, $fieldlist, '', self::cache_expire() );
+    }
+    return $fieldlist;
   }
   
   /**
@@ -483,9 +517,6 @@ class PDb_Base {
 
   /**
    * prepares a string for storage
-   *
-   * gets the string ready by getting rid of slashes and converting quotes and
-   * other undesirables to HTML entities
    * 
    * @param string $string the string to prepare
    */
