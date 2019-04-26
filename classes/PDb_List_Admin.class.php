@@ -818,7 +818,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
                               'name' => 'operator[' . $i . ']',
                               'value' => $filter_set['operator'],
                               'options' => array(
-                                  'null_select' => false,
+                                  PDb_FormElement::null_select_key() => false,
                                   __( 'is', 'participants-database' ) => '=',
                                   __( 'is not', 'participants-database' ) => '!=',
                                   __( 'contains', 'participants-database' ) => 'LIKE',
