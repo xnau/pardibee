@@ -637,20 +637,18 @@ class PDb_Manage_Fields_Updates {
     $pair_delim = Participants_Db::apply_filters( 'field_options_pair_delim', '::' );
     $option_delim = Participants_Db::apply_filters( 'field_options_option_delim', ',' );
 
-    if ( PDb_FormElement::is_assoc( $value_list ) ) {
-
-      /*
-       * here, we create a string representation of an associative array, using 
-       * :: to denote a name=>value pair
-       */
-      $temp = array();
-      foreach ( $value_list as $k => $v ) {
-        $temp[] = $k . $pair_delim . $v;
-      }
-      $value_list = $temp;
+    /*
+     * here, we create a string representation of an associative array, using 
+     * :: to denote a name=>value pair but only if the name and the value are different
+     */
+    $temp = array();
+    foreach ( $value_list as $key => $value ) {
+      $key = trim($key); // remove the space hack for the field setting display
+      $temp[] = $key === $value ? $value : $key . $pair_delim . $value;
     }
+    $value_list = $temp;
 
-    return implode( $option_delim, $value_list );
+    return implode( $option_delim . ' ', $value_list );
   }
 
   /**
@@ -689,12 +687,20 @@ class PDb_Manage_Fields_Updates {
           list($key, $value) = explode( $pair_delim, $term );
           /*
            * @version 1.6
-           * this is to allow for an optgroup label that is the same as a value label...
-           * with an admittedly funky hack: adding a space to the end of the key for the 
-           * optgroup label. In most cases it will be unnoticed.
+           * this is to allow for an optgroup label that is the same as a value 
+           * label with an admittedly funky hack: adding a space to the end of the 
+           * key for the optgroup label. This space is not seen by the user, it's 
+           * for internal use only.
            */
-          $array_key = in_array( $value, array('false', 'optgroup', false), true ) ? trim( $key ) . ' ' : trim( $key );
+          $array_key = $value === 'optgroup' ? trim( $key ) . ' ' : trim( $key );
+          
+          if ( strpos($array_key,'null_select') !== false ) {
+            // make sure we are using the correct null_select key
+            $array_key = PDb_FormElement::null_select_key();
+          }
+          
           $values_array[$array_key] = self::prep_value( trim( $value ), true );
+          
         } else {
           // strip out the double colon in case it is present
           $term = str_replace( array($pair_delim), '', $term );
