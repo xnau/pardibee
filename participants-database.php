@@ -1946,21 +1946,23 @@ class Participants_Db extends PDb_Base {
             case 'file-upload':
 
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
+                
                 if ( $participant_id && ( self::$plugin_options['file_delete'] == 1 || is_admin() ) ) {
                   
+                  $filename = '';
                   if ( array_key_exists( $column->name, $_POST ) ) {
-                    $filename = filter_input( INPUT_POST, $column->name, FILTER_SANITIZE_STRING );
+                    $post_filename = filter_input( INPUT_POST, $column->name, FILTER_SANITIZE_STRING );
+                    
+                    global $wpdb;
+                    $record_filename = $wpdb->get_var( $wpdb->prepare('SELECT `' . $column->name . '` FROM ' . self::participants_table() . ' WHERE id = %s', $participant_id ) );
+                    
+                    if ( $post_filename === $record_filename ) {
+                      self::delete_file( $record_filename );
+                      unset( $_POST[$column->name] );
+                      $post[$column->name] = '';
+                    }
                   }
-                  
-                  if ( empty( $filename ) ) {
-                    $participant_record = self::get_participant($participant_id);
-                    $filename = $participant_record[$column->name];
-                  }
-                  
-                  self::delete_file( $filename );
                 }
-                unset( $_POST[$column->name] );
-                $post[$column->name] = '';
               }
               $new_value = self::_prepare_string_mysql( trim( $post[$column->name] ) );
               break;
