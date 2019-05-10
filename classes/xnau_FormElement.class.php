@@ -1571,6 +1571,7 @@ abstract class xnau_FormElement {
      * other value or not set at all, make it boolean false
      */
     $null_select = true;
+    $null_select_label = '';
     
     if ( isset( $this->options[self::null_select_key()] ) ) {
       
