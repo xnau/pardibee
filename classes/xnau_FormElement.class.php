@@ -662,9 +662,11 @@ abstract class xnau_FormElement {
     $value = isset( $this->value ) ? $this->value : '';
 
     wp_editor(
-            htmlspecialchars_decode( $value ), preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), strtolower( $this->prefix . $this->name ) ), array(
-        'media_buttons' => false,
-        'textarea_name' => $this->name,
+            htmlspecialchars_decode( $value ), 
+            Participants_Db::rich_text_editor_id( $this->name ), 
+            array(
+              'media_buttons' => false,
+              'textarea_name' => $this->name,
             )
     );
   }
@@ -1239,7 +1241,7 @@ abstract class xnau_FormElement {
 
       $title = Participants_Db::apply_filters( 'translate_string', $title );
       
-      if ( $value == 'false' && $title === 'null_select ' ) {
+      if ( $value == 'false' && $title === self::null_select_key() ) {
         continue 1;
       } elseif ( $value === 'optgroup' && strlen( $title ) > 0 ) {
         $this->_add_options_divider( $title );
@@ -1568,13 +1570,15 @@ abstract class xnau_FormElement {
      * option, unless it is the string 'false', then make it boolean false. If it is any 
      * other value or not set at all, make it boolean false
      */
-    $null_select = false;
+    $null_select = true;
+    
     if ( isset( $this->options[self::null_select_key()] ) ) {
+      
       if ( $this->options[self::null_select_key()] !== 'false' ) {
         $null_select = $this->options[self::null_select_key()];
         $null_select_label = strlen( $null_select ) > 0 ? $null_select : '&nbsp;';
       } else {
-        $null_select = true;
+        $null_select = false;
       }
       // remove the null_select from the options array
       unset( $this->options[self::null_select_key()] );
