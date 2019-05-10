@@ -572,7 +572,7 @@ class PDb_Form_Field_Def {
    */
   public function is_read_only()
   {
-    return (bool) $this->readonly;
+    return $this->readonly();
   }
   
   /**
