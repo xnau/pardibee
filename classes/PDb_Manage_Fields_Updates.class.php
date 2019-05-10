@@ -682,6 +682,7 @@ class PDb_Manage_Fields_Updates {
     $values_array = array();
     $term_list = explode( $option_delim, stripslashes( $values ) );
     if ( $has_labels ) {
+      
       foreach ( $term_list as $term ) {
         if ( strpos( $term, $pair_delim ) !== false && strpos( $term, $pair_delim ) !== 0 ) {
           list($key, $value) = explode( $pair_delim, $term );
