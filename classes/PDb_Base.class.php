@@ -329,7 +329,7 @@ class PDb_Base {
     $list->module = 'API';
     $list->instance_index = 1;
     
-    $list_query = new PDb_List_Query( $list );
+    $list_query = new PDb_List_Query( new PDb_List( $list ) );
     
     global $wpdb;
     if ( count( $list->display_columns ) === 1 ) {
@@ -523,6 +523,26 @@ class PDb_Base {
   public static function _prepare_string_mysql( $string )
   {
     return stripslashes( $string );
+  }
+  
+  /**
+   * provides a rich text editor element ID
+   * 
+   * there are special rules in the wp_editor function for the $editor_id parameter
+   * 
+   * @param string $name usually the field name
+   * @return string
+   */
+  public static function rich_text_editor_id( $name )
+  {
+    $texnum = array(
+        '0' => 'zero','1' => 'one','2' => 'two','3' => 'three','4' => 'four','5' => 'five','6' => 'six','7' => 'seven','8' => 'eight','9' => 'nine'
+    );
+    $text_numbered = preg_replace_callback('/[0-9]/', function ($d) use ($texnum) {
+      return '_' . $texnum[intval(current($d))];
+    }, strtolower( Participants_Db::$prefix . $name ) );
+    
+    return preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), $text_numbered );
   }
   
   
