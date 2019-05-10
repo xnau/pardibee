@@ -385,7 +385,7 @@ class PDb_Init {
     global $wpdb;
     
 // define the arrays for loading the initial db records
-    $this->_define_init_arrays();
+    self::_define_init_arrays();
 
 // create the field values table
     $sql = 'CREATE TABLE ' . Participants_Db::$fields_table . ' (
@@ -673,7 +673,7 @@ class PDb_Init {
     if ( '0.5' == $db_version && false === Participants_Db::get_participant() ) {
 
       // define the arrays for loading the initial db records
-      $this->_define_init_arrays();
+      self::_define_init_arrays();
 
       // load the default values into the database
       $i = 0;
@@ -1119,7 +1119,7 @@ class PDb_Init {
    *
    * @return void
    */
-  private function _define_init_arrays()
+  private static function _define_init_arrays()
   {
 
 // define the default field groups
