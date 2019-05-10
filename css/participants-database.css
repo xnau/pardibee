@@ -255,14 +255,20 @@ input[type="color"] {
 .pdb-searchform .radio-group {
   display: inline-block;
 }
-.ajax-loading object {
-  margin: 0;
-}
 .ajax-loading {
   display: inline-block;
   margin-left: 5px;
   margin-right: 5px;
   visibility: visible;
+  position: relative;
+  width: 32px;
+}
+.ajax-loading object {
+  height: 32px;
+  width: 32px;
+  margin-top: -50%;
+  position: absolute;
+  top: 50%;
 }
 
 /* pagination */
