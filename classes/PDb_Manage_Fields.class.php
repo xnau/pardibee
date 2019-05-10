@@ -110,8 +110,10 @@ class PDb_Manage_Fields {
         $num_group_rows = count( $this->fields_data[$group] );
 
         $last_order = $num_group_rows > 1 ? $this->fields_data[$group][$num_group_rows - 1]['order'] + 1 : 1;
+        
+        $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
         ?>
-        <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $this->fields_data[$group][0]['group_id'] ?>" >
+        <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $data_group_id ?>" >
           <h3><?php echo $this->group_title( $group ) . ' ' . $this->i18n['fields'] ?></h3>
           <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
