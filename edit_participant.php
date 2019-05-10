@@ -74,10 +74,12 @@ if ( $participant_values ) :
       // get the columns and output form
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
 
+        $value = isset($participant_values[$backend_column->name]) ? $participant_values[$backend_column->name] : '';
+      
         $column = new PDb_Field_Item( array(
             'name' => $backend_column->name,
             'module' => 'backend-edit',
-            'value' => $participant_values[$backend_column->name] ),
+            'value' => $value ),
                 $participant_id
                 );
 
@@ -220,7 +222,7 @@ if ( $participant_values ) :
               if ( 'rich-text' == $column->form_element ) {
 
                 wp_editor(
-                        $column->value(), preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), Participants_Db::$prefix . $column->name() ), array(
+                        $column->value(), Participants_Db::rich_text_editor_id( $column->name() ), array(
                     'media_buttons' => false,
                     'textarea_name' => $column->name(),
                     'editor_class' => $field_class,
