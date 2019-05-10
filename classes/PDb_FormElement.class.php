@@ -624,7 +624,7 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     /*
-     * this is to add a blank mull select option if there is no default, no defined 
+     * this is to add a blank null select option if there is no default, no defined 
      * null select and no set field value
      */
     if ( self::is_empty( $default ) && !isset( $this->options[self::null_select_key()] ) && self::is_empty( $this->value ) ) {
