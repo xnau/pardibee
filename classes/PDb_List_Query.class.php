@@ -126,7 +126,7 @@ class PDb_List_Query {
    *                    suppress    if true, the query should return zero results if no search is used
    *    @param array  $columns      an array of column names to use in the SELECT statement
    */
-  function __construct( $List )
+  function __construct( PDb_List $List )
   {
     /*
      *  internal filters for search term keys
