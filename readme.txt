@@ -293,6 +293,7 @@ You can define a "captcha" form element which will show a simple math question f
 * added new SVG "loading" spinner
 * fixed several bugs in dropdown field options settings
 * fixed issue with duplicate IDs for rich text editors
+* fixed error message on duplicate record when importing a CSV
 
 = 1.9.3.4 =
 * fixed minor technical issue when updating or adding records 
