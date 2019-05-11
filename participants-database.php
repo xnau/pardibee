@@ -2058,7 +2058,7 @@ class Participants_Db extends PDb_Base {
     $db_error_message = '';
     if ( $result === 0 ) {
       $db_error_message = sprintf( self::$i18n['zero_rows_error'], $wpdb->last_query );
-      self::$insert_status = 'error';
+      self::$insert_status = 'skip';
     } elseif ( $result === false ) {
       $db_error_message = sprintf( self::$i18n['database_error'], $wpdb->last_query, $wpdb->last_error );
       self::$insert_status = 'error';
