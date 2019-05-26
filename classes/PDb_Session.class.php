@@ -62,6 +62,7 @@ class PDb_Session {
   public function record_id( $pid_only = false )
   {
     if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
+      $id = 0;
       if ( ! $pid_only && array_key_exists( Participants_Db::$single_query, $_GET )  ) {
         $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
       } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )  ) {
