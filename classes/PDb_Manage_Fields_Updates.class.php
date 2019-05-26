@@ -768,19 +768,14 @@ class PDb_Manage_Fields_Updates {
    */
   public static function sanitize_text( $string )
   {
+    $def_atts = array(
+            'class' => true,
+            'style' => true,
+        );
     $allowed_html = array(
-        'span' => array(
-            'class' => true,
-            'style' => true,
-        ),
-        'em' => array(
-            'class' => true,
-            'style' => true,
-        ),
-        'strong' => array(
-            'class' => true,
-            'style' => true,
-        ),
+        'span' => $def_atts,
+        'em' => $def_atts,
+        'strong' => $def_atts,
         'a' => array(
             'class' => true,
             'style' => true,
@@ -788,8 +783,13 @@ class PDb_Manage_Fields_Updates {
             'rel' => true,
             'target' => true,
         ),
+        'br' => $def_atts,
+        'b' => $def_atts,
+        'i' => $def_atts,
+        'ul' => $def_atts,
+        'li' => $def_atts,
     );
-    return wp_kses( $string, $allowed_html );
+    return wp_kses( $string, Participants_Db::apply_filters( 'field_def_allowed_tags', $allowed_html ) );
   }
 
   /**
