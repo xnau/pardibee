@@ -98,7 +98,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    * @return string
    */
   function process_value( $value, $column = '' ) {
-    return Participants_Db::apply_filters( 'csv_import_value', esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure)), $column );
+    return Participants_Db::apply_filters( 'csv_import_value', $this->_enclosure_trim($value, '', $this->CSV->enclosure), $column );
   }
   
   /**
