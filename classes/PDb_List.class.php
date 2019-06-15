@@ -288,7 +288,8 @@ class PDb_List extends PDb_Shortcode {
     global $wpdb;
 
     // get the number of records returned
-    $this->num_records = $wpdb->get_var( preg_replace( '#^SELECT.+FROM #', 'SELECT COUNT(*) FROM ', $list_query ) );
+//    $this->num_records = $wpdb->get_var( preg_replace( '#^SELECT.+FROM #', 'SELECT COUNT(*) FROM ', $list_query ) );
+    $this->num_records = count( $wpdb->get_results( $list_query ) );
 
     $this->_set_list_limit();
 
@@ -547,7 +548,13 @@ class PDb_List extends PDb_Shortcode {
 
     $all_string = false === $all ? '(' . __( 'select', 'participants-database' ) . ')' : $all;
 
-    $search_columns = $this->searchable_columns( self::field_list( $columns ? $columns : $this->shortcode_atts['search_fields']  ) );
+    /**
+     * @filter pdb-searchable_columns
+     * 
+     * @param array of column $title => $name
+     * @return array
+     */
+    $search_columns = Participants_Db::apply_filters( 'searchable_columns', $this->searchable_columns( self::field_list( $columns ? $columns : $this->shortcode_atts['search_fields']  ) ) );
 
     if ( count( $search_columns ) > 1 ) {
       $element = array(
