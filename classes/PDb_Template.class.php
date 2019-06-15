@@ -505,6 +505,7 @@ class PDb_Template {
   private function _setup_fields()
   {
     $this->base_type = get_class( $this->shortcode_object );
+    
     $this->values = $this->base_type !== 'PDb_List' ? $this->shortcode_object->participant_values : Participants_Db::get_participant( $this->shortcode_object->record->record_id );
     $this->set_edit_page();
     $this->set_detail_page();
@@ -535,7 +536,7 @@ class PDb_Template {
           break;
         }
         $this->record = clone $this->shortcode_object->record;
-        foreach ( Participants_Db::$fields as $name => $field ) {
+        foreach ( Participants_Db::field_defs() as $name => $field ) {
           /* @var $field PDb_Form_Field_Def */
           $this->fields->{$name} = new PDb_Field_Item( $field );
           $this->fields->{$name}->set_record_id($this->shortcode_object->participant_id);
