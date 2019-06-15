@@ -3282,13 +3282,27 @@ class Participants_Db extends PDb_Base {
        * decode HTML entities and convert line breaks to <br>, then pass to a filter 
        * for processing before being added to the output array
        */
-      $output_value = Participants_Db::apply_filters( 'csv_export_value', str_replace( array("\n", "\r"), '<br />', stripslashes( $value ) ), $column );
+      $output_value = Participants_Db::apply_filters( 'csv_export_value', self::unix_linebreaks($value), $column ); // str_replace( array("\n", "\r"), '<br />', stripslashes( $value )
       $output[$key] = $output_value;
 
       $column = next( $columns );
     }
 
     return $output;
+  }
+  
+  /**
+   * converts line breaks to standard unix format
+   * 
+   * @param string $s
+   * @return string
+   */
+  public static function unix_linebreaks( $s )
+  {
+    $s = str_replace("\r\n", "\n", $s);
+    $s = str_replace("\r", "\n", $s);
+    $s = preg_replace("/\n{2,}/", "\n\n", $s);
+    return $s;
   }
 
   /**
