@@ -115,15 +115,7 @@ class PDb_Field_Editor {
    */
   protected function get_att_control( $attribute )
   {
-    $config = $this->attribute_config($attribute);
-    
-    if ( ! $config ) return '';
-
-    $field_def_att = new PDb_Field_Def_Parameter( $attribute, Participants_Db::array_merge2( array(
-                'name' => 'row_' . $this->field_def->id . '[' . $attribute . ']',
-                'value' => $this->attribute_value( $attribute ),
-                'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
-            ), $config ) );
+    $field_def_att = $this->def_att_object($attribute);
     
     switch ( true ) {
 
@@ -174,6 +166,21 @@ class PDb_Field_Editor {
     }
 
     return implode( $lines, PHP_EOL );
+  }
+  
+  /**
+   * provides the field definition attribute object
+   * 
+   * @param string $attribute name of the attribute
+   * @return PDb_Field_Def_Parameter object
+   */
+  protected function def_att_object( $attribute )
+  {
+    return new PDb_Field_Def_Parameter( $attribute, Participants_Db::array_merge2( array(
+                'name' => 'row_' . $this->field_def->id . '[' . $attribute . ']',
+                'value' => $this->attribute_value( $attribute ),
+                'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
+            ), $this->attribute_config($attribute) ) );
   }
   
   
@@ -558,6 +565,7 @@ class PDb_Field_Editor {
               )
       );
     }
+    
     return $def;
   }
 
