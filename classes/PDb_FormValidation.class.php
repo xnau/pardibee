@@ -783,6 +783,16 @@ class PDb_Validation_Error_Message {
   {
     $this->error_message = $message;
   }
+  
+  /**
+   * provides the title of the field
+   * 
+   * @return string
+   */
+  public function field_title()
+  {
+    return $this->field_def->title();
+  }
 
   /**
    * sets up the config values
