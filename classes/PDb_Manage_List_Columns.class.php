@@ -203,7 +203,7 @@ class PDb_Manage_List_Columns {
   {
     global $wpdb;
 
-    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY g.order, v.order';
+    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY g.order, v.order';
 
     $result = $wpdb->get_results( $sql, OBJECT_K );
  
@@ -239,17 +239,17 @@ class PDb_Manage_List_Columns {
         <div class='available-fields'>
           <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="pubfields-source" class='field-list fields-sortable'>
-            <?php foreach ( $this->source_fields( 'public' ) as $field ) : ?>
-              <li class="ui-state-default" data-id="<?php echo $field->id ?>" data-fieldname="<?php echo $field->name ?>"><?php echo $field->title ?></li>
-            <?php endforeach ?>
+            <?php foreach ( $this->source_fields( 'public' ) as $field ) {
+              echo $this->field_item($field);
+            } ?>
           </ul>
         </div>
         <div class='columns-setup'>
           <h3><?php _e( 'List Columns', 'participants-database' ) ?></h3>
           <ul id="pubfields-chosen" class='field-list columnsetup fields-sortable'>
-            <?php foreach ( $this->configured_fields( 'public' ) as $field ) : ?>
-              <li class="ui-state-default" data-id="<?php echo $field->id ?>" data-fieldname="<?php echo $field->name ?>"><?php echo $field->title ?></li>
-            <?php endforeach ?>
+            <?php foreach ( $this->configured_fields( 'public' ) as $field ) {
+              echo $this->field_item($field);
+            } ?>
           </ul>
         </div>
       </div>
@@ -259,22 +259,33 @@ class PDb_Manage_List_Columns {
         <div class='available-fields'>
           <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="adminfields-source" class='field-list fields-sortable'>
-            <?php foreach ( $this->source_fields( 'admin' ) as $field ) : ?>
-              <li class="ui-state-default" data-id="<?php echo $field->id ?>" data-fieldname="<?php echo $field->name ?>"><?php echo $field->title ?></li>
-            <?php endforeach ?>
+            <?php foreach ( $this->source_fields( 'admin' ) as $field ) {
+              echo $this->field_item($field);
+            } ?>
           </ul>
         </div>
         <div class='columns-setup'>
           <h3><?php _e( 'List Columns', 'participants-database' ) ?></h3>
           <ul id="adminfields-chosen" class='field-list columnsetup fields-sortable'>
-            <?php foreach ( $this->configured_fields( 'admin' ) as $field ) : ?>
-              <li class="ui-state-default" data-id="<?php echo $field->id ?>" data-fieldname="<?php echo $field->name ?>"><?php echo $field->title ?></li>
-            <?php endforeach ?>
+            <?php foreach ( $this->configured_fields( 'admin' ) as $field ) {
+              echo $this->field_item($field);
+            } ?>
           </ul>
         </div>
       </div>
     </div>
     <?php
+  }
+  
+  /**
+   * provides the individual field item HTML
+   * 
+   * @param PDb_Field_Item $field
+   * @return string HTML
+   */
+  private function field_item( $field )
+  {
+    return sprintf( '<li class="ui-state-default %s" data-id="%s" data-fieldname="%s">%s</li>', 'color-' . $this->colorclass($field), $field->id, $field->name, $field->title );
   }
 
   /**
@@ -348,14 +359,16 @@ class PDb_Manage_List_Columns {
         padding: 5px 10px;
         border-radius: 5px;
         -moz-border-radius: 5px;
-        background: #fff;
+/*        background: #fff;*/
         margin: 5px;
         vertical-align: bottom;
-        border: 1px solid #ccc;
+        border-width: 2px;
+        border-style: solid;
+        /*border: 1px solid #ccc;*/
       }
 
       .field-list.columnsetup li {
-        background-color: #f1f1f1;
+/*        background-color: #f1f1f1;*/
       }
 
       .columns-setup {
@@ -373,6 +386,81 @@ class PDb_Manage_List_Columns {
 
     </style>
     <?php
+  }
+  
+  /**
+   * provides a color class string for a field
+   * 
+   * @param PDb_Field_Item $field
+   * @return string
+   */
+  private function colorclass( $field )
+  {
+    switch ( $field->form_element ) {
+      
+      case 'text-line':
+      case 'text-area':
+      case 'rich-text':
+      case 'password':
+        $colorclass = 'text';
+        break;
+      
+      case 'checkbox':
+      case 'radio':
+      case 'dropdown':
+      case 'dropdown-other':
+      case 'multi-checkbox':
+      case 'multi-dropdown':
+      case 'select-other':
+      case 'multi-select-other':
+        $colorclass = 'selector';
+        break;
+      
+      case 'date':
+      case 'numeric':
+      case 'decimal':
+      case 'currency':
+        $colorclass = 'numeric';
+        break;
+      
+      case 'link':
+      case 'image-upload':
+      case 'file-upload':
+        $colorclass = 'upload';
+        break;
+      
+      case 'hidden':
+        $colorclass = 'utility';
+        break;
+      
+      case 'captcha':
+        $colorclass = 'captcha';
+        break;
+      
+      case 'placeholder':
+        
+        $colorclass = 'utility';
+        break;
+      
+      case 'timestamp':
+        
+        $colorclass = 'numeric';
+        break;
+      
+      default:
+        
+        /**
+         * sets the color classname for the elemenmt
+         * 
+         * @filter pdb-{$form_element_name}_form_element_colorclass
+         * 
+         * @param string default classname
+         * @return string classname
+         */
+        $colorclass = Participants_Db::apply_filters( $field->form_element . '_form_element_colorclass', 'custom' );
+    }
+    
+    return $colorclass;
   }
 
 }
