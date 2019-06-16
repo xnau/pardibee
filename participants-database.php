@@ -2325,6 +2325,7 @@ class Participants_Db extends PDb_Base {
     if ( $value === false || is_null( $value ) || !self::is_column( $term ) )
       return false;
 
+    $found = false;
     $cachekey = 'pdb-record_by_term_' . $term;
     $output = wp_cache_get( $value, $cachekey, false, $found );
     
