@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.6
+ * version: 1.7
  * 
  * xnau webdesign xnau.com
  * 
@@ -148,6 +148,7 @@ PDbListFilter = (function ($) {
       url : PDb_ajax.ajaxurl,
       data : submission,
       beforeSend : function () {
+        pagination.find('a').prop('disabled',true);
         buttonParent.append(spinner);
       },
       success : function (html, status) {
@@ -179,6 +180,7 @@ PDbListFilter = (function ($) {
           });
         }
         spinner.remove();
+        pagination.find('a').prop('disabled',false);
         // trigger a general-purpose event
         $('html').trigger('pdbListAjaxComplete');
       },
