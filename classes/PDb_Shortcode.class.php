@@ -1235,7 +1235,7 @@ abstract class PDb_Shortcode {
       $path = $this->template;
     } else {
       $path = '';
-      $paths = explode( '/', $this->template );
+      $paths = explode( '/', str_replace( '\\', '/', $this->template ) );
       for ( $i = 3; $i > 0; $i-- ) {
         $path = '/' . array_pop( $paths ) . $path;
       }
