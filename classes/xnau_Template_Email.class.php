@@ -127,7 +127,7 @@ class xnau_Template_Email {
    */
   protected function _mail( $recipients, $subject, $body )
   {
-    if ( PDB_DEBUG )
+    if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ . '
       
 context: '. $this->context . '
@@ -138,6 +138,7 @@ subj.: ' . $subject . '
 message:
 ' . $body
             );
+    }
 
     $sent = wp_mail( $recipients, $subject, $body, $this->email_header(), $this->attachments );
 
