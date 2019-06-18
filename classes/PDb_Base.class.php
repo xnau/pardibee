@@ -630,21 +630,18 @@ class PDb_Base {
   public static function get_field_allowed_extensions( $values )
   {
     $value_list = array_filter( self::unserialize_array( $values ) );
-
-    // check if our values parameter is a bare list of allowed extensions
-    $bare_list = true;
-    foreach ( $value_list as $k => $v ) {
-      if ( $k !== $v ) {
-        $bare_list = false;
-        break;
+    
+    foreach( array('rel','download','target','type') as $att ) {
+      if ( array_key_exists( $att, $value_list ) ) {
+        unset( $value_list[$att] ); 
       }
     }
-    if ( !$bare_list ) {
-      if ( array_key_exists( 'allowed', $value_list ) ) {
+    
+    // if the allowed attribute is used, return its values
+    if ( array_key_exists( 'allowed', $value_list ) ) {
         return str_replace( '|', ',', $value_list['allowed'] );
-      } else
-        return '';
     }
+    
     return implode( ',', $value_list );
   }
 
