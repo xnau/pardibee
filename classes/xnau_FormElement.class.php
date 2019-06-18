@@ -558,6 +558,12 @@ abstract class xnau_FormElement {
 
         $return = $html ? '<span class="' . self::class_attribute( 'textarea richtext' ) . '">' . $field->value . '</span>' : $field->value;
         break;
+      
+      case 'decimal':
+        
+        $return = floatval( $field->value );
+        break;
+      
       default :
 
         $return = $field->value;
@@ -1407,24 +1413,22 @@ abstract class xnau_FormElement {
   public static function html_attributes( $attributes, $allowed = false )
   {
     $output = array();
-    $pattern = '%s="%s"';
 
     foreach ( (array) $attributes as $name => $value ) {
       
-      if ( ( $allowed && in_array( $name, $allowed ) ) || !is_array( $allowed ) ) :
+      if ( ( $allowed && in_array( $name, $allowed ) ) || !is_array( $allowed ) ) {
 
-      if ( $value === false ) {
-        continue;
-      } elseif ( $value === true ) {
-        $value = $name;
-      } elseif ( preg_match('/^\d/', $name) ) {
-        // indexed element: use the value as the name
-        $name = $value;
+        if ( $value === false ) {
+          continue;
+        } elseif ( $value === true ) {
+          $output[] = sprintf( '%1$s="%1$s"', esc_attr( $name ) );
+        } elseif ( preg_match('/^\d+$/', $name) || $value === $name ) {
+          $output[] = esc_attr( $value );
+        } else {
+          $output[] = sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );
+        }
+      
       }
-      
-      $output[] = sprintf( $pattern, esc_attr( $name ), esc_attr( $value ) );
-      
-      endif;
       
     }
 
