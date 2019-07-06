@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -680,7 +680,8 @@ class PDb_Manage_Fields_Updates {
 
     $has_labels = strpos( $values, $pair_delim ) !== false;
     $values_array = array();
-    $term_list = explode( $option_delim, stripslashes( $values ) );
+    $term_list = explode( $option_delim, $values );
+    
     if ( $has_labels ) {
       
       foreach ( $term_list as $term ) {
@@ -700,7 +701,14 @@ class PDb_Manage_Fields_Updates {
             $array_key = PDb_FormElement::null_select_key();
           }
           
-          $values_array[$array_key] = self::prep_value( trim( $value ), true );
+          $strip_slashes = true;
+          
+          if ( $array_key === 'pattern' ) {
+            // slashes are allowed in regex patterns #2116
+            $strip_slashes = false;
+          }
+          
+          $values_array[$array_key] = self::prep_value( $value, true, $strip_slashes );
           
         } else {
           // strip out the double colon in case it is present
@@ -722,15 +730,19 @@ class PDb_Manage_Fields_Updates {
    * prepares a string for storage in the database
    * 
    * @param string $value
-   * @param bool $single_encode if true, don't encode entities 
+   * @param bool $single_encode if true, don't encode entities
+   * @param bool $strip_slashes if true, strip slashes from the value
    * @return string
    */
-  private static function prep_value( $value, $single_encode = false )
+  private static function prep_value( $value, $single_encode = false, $strip_slashes = true )
   {
+    if ( $strip_slashes ) {
+      $value = stripslashes($value);
+    }
     if ( $single_encode )
-      return trim( stripslashes( $value ) );
+      return trim( $value );
     else
-      return htmlentities( trim( stripslashes( $value ) ), ENT_QUOTES, "UTF-8", true );
+      return htmlentities( trim( $value ), ENT_QUOTES, "UTF-8", true );
   }
 
   /**
