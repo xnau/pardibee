@@ -168,7 +168,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-main',
         'options' => array(
             'type' => 'text',
-            'help_text' => sprintf( __( "This defines where the uploaded files will go, relative to the %s. The default location is '/wp-content/uploads/participants-database'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated.", 'participants-database' ), $this->files_base_label() ) . $this->settings_help( 'File-Upload-Location' ),
+            'help_text' => sprintf( __( "This defines where the uploaded files will go, relative to the %s. The default location is '%s'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated.", 'participants-database' ), $this->files_base_label(), 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' ) . $this->settings_help( 'File-Upload-Location' ),
             'value' => 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/',
         )
     );
