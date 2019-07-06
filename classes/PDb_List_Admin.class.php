@@ -928,16 +928,28 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
              */
 //            do_action(Participants_Db::$prefix . 'admin_list_form_top', $this);
             do_action( Participants_Db::$prefix . 'admin_list_form_top' );
+            
+            $with_selection_actions = array();
+            
+            // add the approval actions
+            $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
+            if ( isset( Participants_Db::$fields[$approval_field_name] ) ) {
             $with_selection_actions = array(
                         __( 'approve', 'participants-database' ) => 'approve',
                         __( 'unapprove', 'participants-database' ) => 'unapprove',
                     );
+            }
+            
+            // add the delete action
             if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) {
               $with_selection_actions = array(
                         __( 'delete', 'participants-database' ) => 'delete'
                     ) + $with_selection_actions;
             }
+            
             /**
+             * filter to add additional actions to the with selected selector
+             * 
              * @filter pdb-admin_list_with selected actions
              * @param array as $title => $action of actions to apply to selected records
              */
