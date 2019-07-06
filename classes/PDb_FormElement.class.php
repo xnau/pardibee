@@ -298,7 +298,7 @@ class PDb_FormElement extends xnau_FormElement {
           $linkdata = maybe_unserialize( $field->value() );
           
           if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
-            list( $url, $value ) = $linkdata;
+            list( $url, $value ) = $linkdata + array('','');
           } else {
             $url = $field->link();
             $value = $field->value();
