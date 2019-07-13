@@ -345,7 +345,7 @@ class PDb_Field_Editor {
    * 
    * @return array of validation methods
    */
-  private function validation_methods()
+  protected function validation_methods()
   {
     $base_methods = array_flip( PDb_FormValidation::validation_methods() ) + array(PDb_FormElement::null_select_key() => false);
     foreach ( current( $this->definition_attributes ) as $method => $switch ) {
