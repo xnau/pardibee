@@ -494,6 +494,23 @@ class PDb_Form_Field_Def {
   {
     return (bool) $this->readonly;
   }
+  
+  /**
+   * tells if the field is some kind of file upload field
+   * 
+   * @return bool
+   */
+  public function is_upload_field()
+  {
+    /**
+     * @filter pdb-upload_field_types
+     * @param array of upload field form element names
+     * @return array
+     */
+    $upload_fields = Participants_Db::apply_filters( 'upload_field_types', array( 'file-upload', 'image-upload' ) );
+    
+    return in_array( $this->form_element(), $upload_fields );
+  }
 
   /**
    * tells if the field is an internal field
