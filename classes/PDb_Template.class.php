@@ -402,6 +402,17 @@ class PDb_Template {
   {
     echo $this->get_form_element( $name );
   }
+  
+  /**
+   * provides the URI for an uploaded file
+   * 
+   * @param string $name of the field
+   * @return string empty if no file is uploaded
+   */
+  public function file_uri( $name )
+  {
+    return $this->fields->{$name}->file_uri();
+  }
 
   /**
    * adds a value to an url
