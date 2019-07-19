@@ -377,16 +377,26 @@ class PDb_FormElement extends xnau_FormElement {
           break;
 
         case 'decimal':
-          // this is to remove any trailing zeroes
-          $field->set_value( floatval( $field->value() ) );
         case 'currency':
         case 'numeric':
+          
+          // localize the display value
+          switch ( $field->form_element() ) {
+            case 'decimal':
+              // this is to remove any trailing zeroes
+              $field->set_value( PDb_Localization::display_number( floatval( $field->value() ), $field ) );
+              break;
+            case 'currency':
+              $field->set_value( PDb_Localization::display_currency( $field->value(), $field ) );
+              break;
+          }
 
           if ( isset( $field->attributes['data-before'] ) && $field->has_content() ) {
             $field->set_value( '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value() ) . '</span>' );
           } elseif ( isset( $field->attributes['data-after'] ) && $field->has_content() ) {
             $field->set_value( '<span class="pdb-added-content">' . esc_html( $field->value() ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>' );
           }
+          
           $return = $field->value();
           break;
 
