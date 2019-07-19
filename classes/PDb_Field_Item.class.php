@@ -484,6 +484,25 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $classes[] = esc_attr( $classname );
     $this->attributes['class'] = implode( ' ', $classes );
   }
+  
+  /**
+   * provides the file URI for an upload type field
+   * 
+   * @return string empty if not an upload field or no file has been uploaded
+   */
+  public function file_uri()
+  {
+    $uri = '';
+    if ( $this->is_upload_field() ) {
+      if ( function_exists( 'get_attachment_url_by_slug') ) {
+        $uri = get_attachment_url_by_slug( $this->value );
+      }
+      if ( $uri === '' ) {
+        $uri = trailingslashit( Participants_Db::files_uri() ) . $this->value;
+      }
+    }
+    return $uri;
+  }
 
   /**
    * assigns the object properties from matching properties in the supplied object
@@ -604,8 +623,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * gets the field element HTML
+   * gets the field form element HTML
    *
+   * @return string
    */
   public function get_element()
   {
@@ -654,7 +674,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * prints the element
+   * supplies the form element HTML
+   * 
+   * @return string
    */
   private function _get_element()
   {
@@ -673,6 +695,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
   /**
    * tells if the help_text is defined
+   * 
+   * @return bool
    */
   public function has_help_text()
   {
@@ -724,6 +748,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * adds the required marker to a field label as needed
    *
+   * @return string
    */
   private function _label()
   {
