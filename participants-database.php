@@ -1999,7 +1999,7 @@ class Participants_Db extends PDb_Base {
     // if the validation object exists and there are errors, stop here
     if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
 
-      // error_log( __METHOD__.' errors exist; returning');
+      // error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
       return false;
     } elseif ( !empty( self::$admin_message ) and 'error' == self::$admin_message_type ) {
