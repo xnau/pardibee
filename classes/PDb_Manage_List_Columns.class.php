@@ -68,8 +68,6 @@ class PDb_Manage_List_Columns {
     $sql = 'UPDATE ' . Participants_Db::$fields_table . ' SET ' . $column . ' = CASE name ' . PHP_EOL . implode( PHP_EOL, $setlist ) . PHP_EOL . ' END';
 
     $wpdb->query( $sql );
-
-//    error_log( __METHOD__ . ' query: ' . $wpdb->last_query );
   }
 
   /**
