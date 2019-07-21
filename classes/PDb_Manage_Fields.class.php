@@ -108,8 +108,6 @@ class PDb_Manage_Fields {
         $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
-
-        $last_order = $num_group_rows > 1 ? $this->fields_data[$group][$num_group_rows - 1]['order'] + 1 : 1;
         
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
         ?>
@@ -122,7 +120,7 @@ class PDb_Manage_Fields {
               <?php endif ?>
               <form id="manage_<?php echo $group ?>_fields" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
                 <?php
-                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $last_order) );
+                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group ) ) );
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
@@ -139,6 +137,7 @@ class PDb_Manage_Fields {
                         $field_definition_attributes = new PDb_Field_Editor( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
                       <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>" data-numid="<?php echo $database_row['id'] ?>" data-groupid="<?php echo $this->fields_data[$group][0]['group_id'] ?>">
+                        <?php /* <input type="hidden" name="row_<?php echo $database_row['id'] ?>[order]" value="<?php echo $database_row['order'] ?>" /> */?>
 
                           <?php
                           while ( $control_html = $field_definition_attributes->get_next_control() ) {
@@ -334,6 +333,12 @@ class PDb_Manage_Fields {
                   )
                       )
               );
+              PDb_FormElement::print_element( array(
+                  'type' => 'hidden',
+                  'name' => 'order',
+                  'value' => $this->next_field_order($group),
+                      )
+              );
               ?>
               <label><?php echo $this->i18n['new field form element'] ?></label>
               <?php
@@ -517,6 +522,20 @@ class PDb_Manage_Fields {
        */
       $title_limit = Participants_Db::apply_filters( 'admin_group_title_length_limit', 30 );
       return empty( $group_title ) || strlen( $group_title ) > $title_limit ? ucwords( str_replace( '_', ' ', $group ) ) : $group_title;
+    }
+    
+    /**
+     * provides the group order value
+     * 
+     * @param string $group name
+     * @return string order number
+     */
+    private function next_field_order( $group )
+    {
+      // number of rows in the group
+      $num_group_rows = count( $this->fields_data[$group] );
+
+      return $num_group_rows > 1 ? $this->fields_data[$group][$num_group_rows - 1]['order'] + 1 : 1;
     }
 
     /**
