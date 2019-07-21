@@ -225,7 +225,8 @@ class PDb_Form_Field_Def {
       case 'default':
         return $this->default_value();
       case 'id':
-        return $this->id;
+      case 'order':
+        return $this->{$prop};
       default:
         return null;
     }
