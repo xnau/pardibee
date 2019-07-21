@@ -2166,7 +2166,7 @@ class Participants_Db extends PDb_Base {
                 ON f.group = g.name
                 
             WHERE f.group != "internal" 
-            AND f.form_element != "placeholder" 
+            AND f.form_element NOT IN ("placeholder","link")  
             AND g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")';
 
     global $wpdb;
