@@ -873,9 +873,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function set_link_field_value()
   {
-    if ( is_serialized( $this->value ) ) {
-
-      $parts = unserialize( $this->value );
+    $parts = maybe_unserialize( $this->value );
+    
+    if ( is_array( $parts ) ) {
 
       if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) && !$this->has_link() ) {
         $this->link = $parts[0];
@@ -887,6 +887,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     } elseif ( filter_var( $this->value, FILTER_VALIDATE_URL ) ) {
       $this->link = $this->value;
     }
+    
   }
 
 }
