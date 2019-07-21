@@ -529,14 +529,15 @@ class PDb_Template {
     switch ( $this->base_type ) {
       case 'PDb_List':
         foreach ( $this->shortcode_object->record->fields as $field_object ) {
-          $name = $field_object->name;
-          $value = isset( $field_object->value ) ? $field_object->value : '';
-          $this->fields->{$name} = new PDb_Field_Item( Participants_Db::$fields[$name] );
-          $this->fields->{$name}->set_module( $this->shortcode_object->module );
-          $this->fields->{$name}->set_value( $value );
+          /* @var $field_object PDb_Field_Item */
+        
+          $name = $field_object->name();
+          $this->fields->{$name} = clone $field_object;
+          $this->fields->{$name}->set_record_id( $this->id );
         }
         reset( $this->shortcode_object->record->fields );
         $this->_setup_list_record_object();
+        
         break;
       case 'PDb_Signup':
       case 'PDb_Single':
@@ -583,8 +584,8 @@ class PDb_Template {
     $this->record = new stdClass();
     $this->_setup_record_groups();
     foreach ( $this->fields as $name => $field ) {
-      /* @var $field PDb_Form_Field_Def */
-      $this->groups[$field->group]->fields[$field->order] = $name;
+      /* @var $field PDb_Field_Item */
+      $this->groups[$field->group()]->fields[$field->order] = $name;
       if ( isset( $this->record->{$field->group} ) ) {
         $this->record->{$field->group}->fields->{$name} = $field; // formerly cloned
       }
