@@ -3691,7 +3691,15 @@ class Participants_Db extends PDb_Base {
       <?php echo wpautop( $greeting ); ?>
       </div>
       <?php endif; ?>
-    <?php if ( self::apply_filters( 'show_plugin_colophon', true ) ) : ?>
+    <?php 
+    /**
+     * @filter pdb-show_plugin_colophon
+     * @param bool
+     * @return bool true if colophon should be shown
+     */
+    if ( self::apply_filters( 'show_plugin_colophon', true ) ) :
+      ob_start();
+    ?>
     <div id="PDb_footer" class="pdb-footer widefat redfade postbox">
       <div class="section">
         <h4><?php echo 'Participants Database ', self::$plugin_version ?><br /><?php _e( 'WordPress Plugin', 'participants-database' ) ?></h4>
@@ -3706,6 +3714,12 @@ class Participants_Db extends PDb_Base {
       </div>
     </div>
     <?php
+    /**
+     * @filter pdb-plugin_colophon_html
+     * @param string HTML
+     * @return string HTML
+     */
+      echo Participants_Db::apply_filters('plugin_colophon_html', ob_get_clean() );
     endif;
   }
   
