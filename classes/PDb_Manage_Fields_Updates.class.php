@@ -392,6 +392,7 @@ class PDb_Manage_Fields_Updates {
         wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Field settings updated.', 'participants-database' ) )) );
 
       case 'reorder_fields':
+        
         parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
         $update = array();
         foreach ( $list as $key => $value ) {
