@@ -257,7 +257,9 @@ class PDb_List extends PDb_Shortcode {
     $records_per_page = $this->shortcode_atts['list_limit'];
     $filtering = $this->shortcode_atts['filtering'];
 
-    include $this->template;
+    if ( is_readable( $this->template ) ) {
+      include $this->template;
+    }
   }
 
   /**
