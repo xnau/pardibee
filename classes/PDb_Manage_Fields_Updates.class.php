@@ -184,7 +184,7 @@ class PDb_Manage_Fields_Updates {
         'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::make_name') ),
         'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array('options' => 'PDb_Manage_Fields_Updates::sanitize_text') ),
         'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
-        'order' => '0',
+        'order' => filter_input( INPUT_POST, 'order', FILTER_SANITIZE_NUMBER_INT ),
         'validation' => 'no',
         'form_element' => filter_input( INPUT_POST, 'form_element', FILTER_SANITIZE_STRING ),
     );
