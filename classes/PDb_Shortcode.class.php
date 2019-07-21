@@ -20,7 +20,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -247,7 +247,7 @@ abstract class PDb_Shortcode {
         'id' => 0,
     );
 
-//     error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
+//    error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
     // set up the shortcode_atts property
     $this->_setup_shortcode_atts( $shortcode_atts, $subclass_shortcode_defaults );
 
@@ -423,7 +423,8 @@ abstract class PDb_Shortcode {
     }
 
     if ( !file_exists( $template ) ) {
-      error_log( __METHOD__ . ' template not found: ' . $template );
+      Participants_Db::debug_log( __METHOD__ . ' template not found: ' . $template );
+      $template = false;
     }
     $this->template = $template;
     $this->get_template_version();
@@ -435,11 +436,13 @@ abstract class PDb_Shortcode {
    */
   protected function get_template_version()
   {
-    $contents = file_get_contents( $this->template );
-    $findversion = preg_match( '/@version (.+)\b/', $contents, $matches );
     $version = 0;
-    if ( $findversion === 1 ) {
-      $version = $matches[1];
+    if ( $this->template ) {
+      $contents = file_get_contents( $this->template );
+      $findversion = preg_match( '/@version (.+)\b/', $contents, $matches );
+      if ( $findversion === 1 ) {
+        $version = $matches[1];
+      }
     }
     $this->template_version = $version;
   }
