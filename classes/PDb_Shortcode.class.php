@@ -853,10 +853,10 @@ abstract class PDb_Shortcode {
           break;
         
         case 'retrieve':
-          // fields from all groups are available here
+          // fields from all display groups are available here
           $sql = 'SELECT DISTINCT g.name 
                 FROM ' . Participants_Db::$groups_table . ' g 
-                ORDER BY ' . $orderby;
+                WHERE g.mode IN ("public","private", "admin") ORDER BY ' . $orderby;
           break;
     
         default:
