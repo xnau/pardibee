@@ -310,10 +310,8 @@ class PDb_Base {
    * 
    * @return array of record values (if single column) or id-indexed array of data objects
    */
-  private static function get_list( $config, $columns )
+  private static function get_list( $config, Array $columns )
   {
-    $list = new stdClass();
-
     $shortcode_defaults = array(
         'sort' => 'false',
         'search' => 'false',
@@ -322,14 +320,14 @@ class PDb_Base {
         'orderby' => Participants_Db::plugin_setting( 'list_default_sort' ),
         'order' => Participants_Db::plugin_setting( 'list_default_sort_order' ),
         'suppress' => false,
+        'module' => 'API',
+        'fields' => implode(',',$columns),
+        'instance_index' => '1',
     );
-    $list->shortcode_atts = shortcode_atts( $shortcode_defaults, $config );
+    $shortcode_atts = shortcode_atts( $shortcode_defaults, $config );
     
-    $list->display_columns = $columns;
-    $list->module = 'API';
-    $list->instance_index = 1;
-    
-    $list_query = new PDb_List_Query( new PDb_List( $list ) );
+    $list = new PDb_List( $shortcode_atts );
+    $list_query = new PDb_List_Query( $list );
     
     global $wpdb;
     if ( count( $list->display_columns ) === 1 ) {
@@ -337,7 +335,6 @@ class PDb_Base {
     } else {
       $result = $wpdb->get_results( $list_query->get_list_query(), OBJECT_K );
     }
-//    error_log(__METHOD__.' query: ' . $wpdb->last_query . ' result: '.print_r($result,1));
     
     return $result;
   }
