@@ -250,6 +250,8 @@ abstract class PDb_Shortcode {
 //    error_log(__METHOD__.' incoming shorcode atts:'.print_r($shortcode_atts,1));
     // set up the shortcode_atts property
     $this->_setup_shortcode_atts( $shortcode_atts, $subclass_shortcode_defaults );
+    
+//    error_log(__METHOD__.' shorcode atts:'.print_r($this->shortcode_atts,1));
 
     $this->module = $this->shortcode_atts['module'];
 
