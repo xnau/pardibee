@@ -191,10 +191,12 @@ class PDb_List extends PDb_Shortcode {
 
       wp_enqueue_script( Participants_Db::$prefix . 'list-filter' );
     }
+    
     /*
      * instantiate the List Query object
      */
     $this->set_list_query_object();
+    
     if ( $search_error = $this->list_query->get_search_error() ) {
       $this->search_error( $search_error );
     }
