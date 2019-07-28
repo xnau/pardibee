@@ -735,7 +735,6 @@ abstract class xnau_FormElement {
    */
   protected function _radio()
   {
-
     $this->_add_radio_series();
   }
 
