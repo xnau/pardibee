@@ -477,7 +477,7 @@ class PDb_Form_Field_Def {
       foreach ( $this->options as $option_title => $option_value ) {
         if ( !is_string( $option_title ) || $option_title === 'other' ) {
           // do nothing: we use the stored value
-        } elseif ( $option_value === $value ) { // strip out spaces in the option because we did that to the value
+        } elseif ( $option_value === $value ) {
           // grab the option title
           return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
         }
