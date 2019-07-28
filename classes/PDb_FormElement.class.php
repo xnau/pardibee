@@ -182,6 +182,7 @@ class PDb_FormElement extends xnau_FormElement {
       // now we can use our field class methods
       $field = new PDb_Field_Item( $field );
     }
+    
     /* @var $field PDb_Field_Item */
 
     $return = false;
@@ -470,7 +471,7 @@ class PDb_FormElement extends xnau_FormElement {
         $this->attributes['id'] = $this->legal_name( $this->prefix . $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_value ) )) );
         $this->_addline( '<label ' . $this->_class() . ' for="' . esc_attr( $this->attributes['id'] ) . '">' );
         $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
-        $this->_addline( esc_html( $option_key ) . '</label>' );
+        $this->_addline( $option_key . '</label>' );
         $this->attributes['id'] = $id;
       }
     }
@@ -501,18 +502,18 @@ class PDb_FormElement extends xnau_FormElement {
    * 
    * for multi-select form elements
    * 
-   * @param object $field the field object
+   * @param PDb_FIeld_Item $field the field object
    * 
    * @return string the array presented as a string
    */
   static function array_display( $field )
   {
     $titles = array();
-    foreach ( self::field_value_array( $field->value ) as $value ) {
-      $titles[] = self::get_value_title( $value, $field->name );
+    foreach ( self::field_value_array( $field->value() ) as $value ) {
+      $titles[] = $field->value_title( $value );
     }
 
-    return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
+    return sanitize_post( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
   }
 
   /*   * *********************** 
@@ -817,39 +818,62 @@ class PDb_FormElement extends xnau_FormElement {
     $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
     /* @var $field PDb_Form_Field_Def */
     if ( $field && $field->is_value_set() ) {
-      $options_array = maybe_unserialize( Participants_Db::$fields[$fieldname]->values );
-      if ( is_array( $options_array ) && array_search( $title, $options_array ) === false ) {
-        if ( isset( $options_array[$title] ) ) {
-          $value = $options_array[$title];
-        } else {
-          /*
-           * we still haven't located the corresponding value, maybe we're looking for 
-           * a match within the title or for a case-insensitive match
-           * 
-           * this is necessary when titles are tagged with translations: the search 
-           * can take place in multiple languages, and a match will still happen
-           * 
-           * we're expecting a title with translations to look like this:
-           * [en:]English[de:]Deutsch[es:]Espanol[:]
-           * 
-           * this will match the title within any of the defined title values of 
-           * the field options
-           * 
-           */
+      
+      $options_array = $field->options();
+      
+      // first check if there is a direct match
+      if ( isset( $options_array[$title] ) ) {
+        return $options_array[$title];
+      }
+      
+      $options_array = self::sanitize_keys($field->options());
+      
+      // first check if there is a direct match with a sanitized title
+      if ( isset( $options_array[$title] ) ) {
+        return $options_array[$title];
+      }
+      
+     /*
+      * we still haven't located the corresponding value, maybe we're looking for 
+      * a match within the title or for a case-insensitive match
+      * 
+      * this is necessary when titles are tagged with translations: the search 
+      * can take place in multiple languages, and a match will still happen
+      * 
+      * we're expecting a title with translations to look like this:
+      * [en:]English[de:]Deutsch[es:]Espanol[:]
+      * 
+      * this will match the title within any of the defined title values of 
+      * the field options
+      * 
+      */
 //          error_log(__METHOD__.' title: '.$title.' options array: '.print_r($options_array,1));
-          /**
-           * @version 1.6.2.6
-           * 
-           * added filter: pdb-value_title_match_pattern
-           */
-          $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
-          if ( $match = current( preg_grep( sprintf( $title_pattern, preg_quote( $title, '/' ) ), array_keys( $options_array ) ) ) ) {
-            $value = $options_array[$match];
-          }
-        }
+     /**
+      * @version 1.6.2.6
+      * 
+      * added filter: pdb-value_title_match_pattern
+      */
+      $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
+      if ( $match = current( preg_grep( sprintf( $title_pattern, preg_quote( $title, '/' ) ), array_keys( $options_array ) ) ) ) {
+        $value = $options_array[$match];
       }
     }
     return $value;
+  }
+  
+  /**
+   * provides an options array with sanitized keys
+   * 
+   * @param array
+   * @return array
+   */
+  protected static function sanitize_keys( $array )
+  {
+    $sanitized = array();
+    foreach ( $array as $key => $value ) {
+      $sanitized[strip_tags($key)] = $value;
+    }
+    return $sanitized;
   }
 
   /**
