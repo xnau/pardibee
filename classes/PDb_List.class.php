@@ -146,6 +146,7 @@ class PDb_List extends PDb_Shortcode {
         'order' => Participants_Db::plugin_setting( 'list_default_sort_order' ),
         'fields' => '',
         'search_fields' => '',
+        'default_search_field' => '',
         'single_record_link' => '',
         'display_count' => Participants_Db::plugin_setting( 'show_count' ),
         'template' => 'default',
@@ -550,8 +551,6 @@ class PDb_List extends PDb_Shortcode {
       $value = isset( $values[$multifield_count] ) ? $values[$multifield_count] : '';
     }
 
-    $all_string = false === $all ? '(' . __( 'select', 'participants-database' ) . ')' : $all;
-
     /**
      * @filter pdb-searchable_columns
      * 
@@ -559,6 +558,16 @@ class PDb_List extends PDb_Shortcode {
      * @return array
      */
     $search_columns = Participants_Db::apply_filters( 'searchable_columns', $this->searchable_columns( self::field_list( $columns ? $columns : $this->shortcode_atts['search_fields']  ) ) );
+    
+    $all_string = false === $all ? '(' . __( 'select', 'participants-database' ) . ')' : $all;
+    $base_array = array( $all_string => 'none', PDb_FormElement::null_select_key() => false );
+    
+    if ( in_array( $this->shortcode_atts['default_search_field'], $search_columns ) ) {
+      $base_array = array(PDb_FormElement::null_select_key() => false);
+      if ( $value === false ) {
+        $value = $this->shortcode_atts['default_search_field'];
+      }
+    }
 
     if ( count( $search_columns ) > 1 ) {
       $element = array(
@@ -566,7 +575,7 @@ class PDb_List extends PDb_Shortcode {
           'name' => 'search_field' . ($multi ? '[]' : ''),
           'value' => $value,
           'class' => 'search-item',
-          'options' => array($all_string => 'none', PDb_FormElement::null_select_key() => false) + $search_columns,
+          'options' => $base_array + $search_columns,
       );
     } else {
       $element = array(
