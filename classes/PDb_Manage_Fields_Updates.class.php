@@ -70,6 +70,7 @@ class PDb_Manage_Fields_Updates {
 
             $attvalue = $row[$attname];
 
+            // handle depricated "values" parameter
             if ( $attname === 'values' && strlen( $attvalue ) > 0 ) {
               $correct_attribute = PDb_FormElement::is_value_set( $row['form_element'] ) ? 'options' : 'attributes';
               if ( strlen( $row[$correct_attribute] ) === 0 ) {
@@ -134,11 +135,13 @@ class PDb_Manage_Fields_Updates {
           }
         }
 
+        // produce a status array for the pdb-update_field_def filter
         $status = array_intersect_key( $row, array('id' => '', 'status' => '', 'name' => '') );
 
         // remove the fields we won't be updating
         unset( $row['status'], $row['id'], $row['name'], $row['selectable'] );
 
+        // serialize all array values
         foreach ( $row as $name => $row_item ) {
           if ( is_array( $row_item ) ) {
             $row[$name] = serialize( $row[$name] );
@@ -487,7 +490,7 @@ class PDb_Manage_Fields_Updates {
         'group' => self::string_sanitize(),
         'form_element' => self::string_sanitize(),
         'help_text' => self::text_sanitize(),
-        'options' => self::string_sanitize(),
+        'options' => self::text_sanitize(),
         'validation' => self::string_sanitize(),
         'validation_message' => self::text_sanitize(),
         'default' => self::string_sanitize(),
@@ -603,12 +606,12 @@ class PDb_Manage_Fields_Updates {
    */
   private function return_to_the_manage_database_fields_page()
   {
-    if ( !isset( $_POST['_wp_http_referer'] ) ) { // Input var okay.
+    if ( !isset( $_POST['_wp_http_referer'] ) ) {
       $_POST['_wp_http_referer'] = wp_login_url();
     }
 
     $url = sanitize_text_field(
-            wp_unslash( $_POST['_wp_http_referer'] ) // Input var okay.
+            wp_unslash( $_POST['_wp_http_referer'] )
     );
 
     wp_safe_redirect( urldecode( $url ) );
@@ -626,17 +629,11 @@ class PDb_Manage_Fields_Updates {
    */
   public static function array_to_string_notation( $array )
   {
-
     $value_list = maybe_unserialize( $array );
 
     if ( !is_array( $value_list ) ) {
       return $value_list;
     }
-    /**
-     * @see PDb_Manage_Fields::prep_values_array()
-     */
-    $pair_delim = Participants_Db::apply_filters( 'field_options_pair_delim', '::' );
-    $option_delim = Participants_Db::apply_filters( 'field_options_option_delim', ',' );
 
     /*
      * here, we create a string representation of an associative array, using 
@@ -645,11 +642,23 @@ class PDb_Manage_Fields_Updates {
     $temp = array();
     foreach ( $value_list as $key => $value ) {
       $key = trim($key); // remove the space hack for the field setting display
-      $temp[] = $key === $value ? $value : $key . $pair_delim . $value;
+      $temp[] = $key === $value ? self::encode_delimiter($value) : self::encode_delimiter( $key ) . self::option_pair_delimiter() . self::encode_delimiter($value);
     }
     $value_list = $temp;
 
-    return implode( $option_delim . ' ', $value_list );
+    return implode( self::option_delimiter() . ' ', $value_list );
+  }
+  
+  /**
+   * substitutes the option delimiter with the html entity
+   * 
+   * @param string $input
+   * @param string string with the delimiter converted to an entity
+   */
+  private static function encode_delimiter( $input )
+  {
+    $delimiter = self::option_delimiter();
+    return str_replace( $delimiter, '&#' . ord( $delimiter ) . ';', $input );
   }
 
   /**
@@ -667,21 +676,11 @@ class PDb_Manage_Fields_Updates {
    */
   public static function string_notation_to_array( $values )
   {
-    /**
-     * allows for alternate strings to be used in structuring the field options 
-     * definition string 
-     * 
-     * @filter pdb-field_options_pair_delim
-     * @filter pdb-field_options_option_delim
-     * @param string the default string
-     * @return string the string to use for the structure
-     */
-    $pair_delim = Participants_Db::apply_filters( 'field_options_pair_delim', '::' );
-    $option_delim = Participants_Db::apply_filters( 'field_options_option_delim', ',' );
+    $pair_delim = self::option_pair_delimiter();
 
     $has_labels = strpos( $values, $pair_delim ) !== false;
     $values_array = array();
-    $term_list = explode( $option_delim, $values );
+    $term_list = explode( self::option_delimiter(), $values );
     
     if ( $has_labels ) {
       
@@ -709,17 +708,17 @@ class PDb_Manage_Fields_Updates {
             $strip_slashes = false;
           }
           
-          $values_array[$array_key] = self::prep_value( $value, true, $strip_slashes );
+          $values_array[ self::prep_value( $array_key ) ] = self::prep_value( filter_var( $value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES ), $strip_slashes );
           
         } else {
           // strip out the double colon in case it is present
           $term = str_replace( array($pair_delim), '', $term );
-          $values_array[self::prep_value( $term, true )] = self::prep_value( $term, true );
+          $values_array[ self::prep_value( $term ) ] = self::prep_value( $term );
         }
       }
     } else {
       foreach ( $term_list as $term ) {
-        $attribute = self::prep_value( $term, true );
+        $attribute = self::prep_value( $term );
         $values_array[$attribute] = $attribute;
       }
     }
@@ -731,19 +730,47 @@ class PDb_Manage_Fields_Updates {
    * prepares a string for storage in the database
    * 
    * @param string $value
-   * @param bool $single_encode if true, don't encode entities
    * @param bool $strip_slashes if true, strip slashes from the value
    * @return string
    */
-  private static function prep_value( $value, $single_encode = false, $strip_slashes = true )
+  private static function prep_value( $value, $strip_slashes = true )
   {
     if ( $strip_slashes ) {
-      $value = stripslashes($value);
+      $value = stripslashes( $value );
     }
-    if ( $single_encode )
-      return trim( $value );
-    else
-      return htmlentities( trim( $value ), ENT_QUOTES, "UTF-8", true );
+    
+    // convert the html entity for the delimiter to its literal
+    return trim( html_entity_decode($value) );
+  }
+  
+  /**
+   * provides the option delimiter for a string representation of an array
+   * 
+   * @return string delimiter character
+   */
+  public static function option_delimiter()
+  {
+    /**
+     * @filter pdb-field_options_option_delim
+     * @param string default character to use
+     * @return string
+     */
+    return  Participants_Db::apply_filters( 'field_options_option_delim', ',' );
+  }
+  
+  /**
+   * provides the value pair delimiter for a string representation of an array
+   * 
+   * @return string delimiter character
+   */
+  public static function option_pair_delimiter()
+  {
+    /**
+     * @filter pdb-field_options_pair_delim
+     * @param string default character to use
+     * @return string
+     */
+    return Participants_Db::apply_filters( 'field_options_pair_delim', '::' );
   }
 
   /**
@@ -801,6 +828,7 @@ class PDb_Manage_Fields_Updates {
         'i' => $def_atts,
         'ul' => $def_atts,
         'li' => $def_atts,
+        'abbr' => $def_atts,
     );
     return wp_kses( $string, Participants_Db::apply_filters( 'field_def_allowed_tags', $allowed_html ) );
   }
