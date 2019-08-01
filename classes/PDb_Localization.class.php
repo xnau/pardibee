@@ -16,6 +16,23 @@
 class PDb_Localization {
   
   /**
+   * @var NumberFormatter
+   */
+  private $formatter;
+  
+  /**
+   * initializes the class
+   */
+  private function __construct()
+  {
+    if ( self::intl_available() ) {
+      $this->formatter = new NumberFormatter( get_locale(), NumberFormatter::DECIMAL );
+    } else {
+      Participants_Db::debug_log('php intl module not available: numeric displays will not be localized');
+    }
+  }
+  
+  /**
    * provides the localized display number
    * 
    * @param int|float $number raw number in mysql format
@@ -26,11 +43,11 @@ class PDb_Localization {
   {
     $display = Participants_Db::apply_filters('number_display', $number, $field );
     
-    if ( $display === $number /* && strpos( $number, '.' ) !== false */ ) {
-      $numberFormatter = new NumberFormatter( get_locale(), NumberFormatter::DECIMAL );
-      $numberFormatter->setAttribute(NumberFormatter::GROUPING_USED, true );
-      
-      $display = $numberFormatter->format($number);
+    $localization = new self;
+    
+    if ( $display === $number && self::intl_available() ) {
+      $localization->formatter->setAttribute(NumberFormatter::GROUPING_USED, true );
+      $display = $localization->formatter->format($number);
     }
     
     return $display;
@@ -49,10 +66,11 @@ class PDb_Localization {
   {
     $display = Participants_Db::apply_filters('number_display', $number, $field );
     
-    if ( $display === $number ) {
-      $numberFormatter = new NumberFormatter( get_locale(), NumberFormatter::DECIMAL );
-      $numberFormatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
-      $display = $numberFormatter->format($number);
+    $localization = new self;
+    
+    if ( $display === $number && self::intl_available() ) {
+      $localization->formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+      $display = $localization->formatter->format($number);
     }
     
     return $display;
