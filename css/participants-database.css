@@ -10,6 +10,9 @@
 [class|="pdb"] .selectother + .helptext {
   display: block;
 }
+.readonly-element .helptext {
+  display: none;
+}
 .textarea {
     white-space: pre-wrap;
 }
@@ -265,6 +268,7 @@ input[type="color"] {
   visibility: visible;
   position: relative;
   width: 32px;
+  height: 32px;
 }
 .ajax-loading object {
   height: 32px;
