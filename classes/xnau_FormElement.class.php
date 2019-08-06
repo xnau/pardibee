@@ -1601,7 +1601,7 @@ abstract class xnau_FormElement {
    */
   public static function null_select_key()
   {
-    return 'null_select ';
+    return 'null_select';
   }
 
   /**
