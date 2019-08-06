@@ -584,13 +584,15 @@ class PDb_Form_Field_Def {
   }
   
   /**
-   * tells if the field is sortable
+   * tells if the field is read only
+   * 
+   * alias for is_readonly
    * 
    * @return bool
    */
   public function is_read_only()
   {
-    return $this->readonly();
+    return $this->is_readonly();
   }
   
   /**
