@@ -439,10 +439,15 @@ class PDb_FormElement extends xnau_FormElement {
     $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
 
     if ( $null_select !== false ) {
-      $id = $this->element_id();
-      $this->attributes['id'] = $id . '-default';
-      $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) && $null_select !== 'false' ? $null_select : '' ), false ), 1 );
-      $this->attributes['id'] = $id;
+      if ( $type === 'checkbox' ) {
+        $id = $this->element_id();
+        $this->attributes['id'] = $id . '-default';
+        $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) && $null_select !== 'false' ? $null_select : '' ), false ), 1 );
+        $this->attributes['id'] = $id;
+      } elseif ( $this->options[self::null_select_key()] !== 'false' ) { 
+        // for radio buttons, include a "none" if configured
+        $this->options[$this->options[self::null_select_key()]] = '';
+      }
     }
     unset( $this->options[self::null_select_key()] );
 
