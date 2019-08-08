@@ -288,7 +288,7 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.9.2.12 =
+= 1.9.3.12 =
 * fixed issue with numeric field value formatting when using PDb_Template class
 * fixed duplicate element id issue with file upload fields
 
@@ -1218,8 +1218,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.3.11 =
-Version 1.9.3.11 is a minor bugfix release
+= 1.9.3.12 =
+Version 1.9.3.12 is a minor bugfix release
 
 == Plugin Support ==
 
