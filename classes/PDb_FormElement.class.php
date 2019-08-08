@@ -381,24 +381,26 @@ class PDb_FormElement extends xnau_FormElement {
         case 'currency':
         case 'numeric':
           
+          $field_display = $field->get_value();
+          
           // localize the display value
           switch ( $field->form_element() ) {
             case 'decimal':
               // this is to remove any trailing zeroes
-              $field->set_value( PDb_Localization::display_number( floatval( $field->value() ), $field ) );
+              $field_display = PDb_Localization::display_number( floatval( $field->value() ), $field );
               break;
             case 'currency':
-              $field->set_value( PDb_Localization::display_currency( $field->value(), $field ) );
+              $field_display = PDb_Localization::display_currency( $field->value(), $field );
               break;
           }
 
           if ( isset( $field->attributes['data-before'] ) && $field->has_content() ) {
-            $field->set_value( '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field->value() ) . '</span>' );
+            $field_display = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field_display ) . '</span>';
           } elseif ( isset( $field->attributes['data-after'] ) && $field->has_content() ) {
-            $field->set_value( '<span class="pdb-added-content">' . esc_html( $field->value() ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>' );
+            $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>';
           }
           
-          $return = $field->value();
+          $return = $field_display;
           break;
 
         case 'hidden':
@@ -607,8 +609,10 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline( $this->_input_tag( 'file' ) );
 
       // add the delete checkbox if there is a file defined
-      if ( $this->value !== $field_def->default_value() && $this->module !== 'signup' )
+      if ( $this->value !== $field_def->default_value() && $this->module !== 'signup' ) {
+        unset($this->attributes['id']);
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
+      }
     }
 
     $this->_addline( '</div>' );
