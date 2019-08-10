@@ -129,7 +129,7 @@ class PDb_Signup extends PDb_Shortcode {
     } elseif ( $shortcode_atts['module'] === 'signup' && $this->participant_id === false ) {
       $this->_clear_multipage_session();
     }
-
+    
     /*
      * if no ID is set, no submission has been received
      */
@@ -144,7 +144,12 @@ class PDb_Signup extends PDb_Shortcode {
          */
         $shortcode_atts['module'] = 'retrieve';
       }
-      if ( $shortcode_atts['module'] == 'signup' ) {
+      /**
+       * @filter pdb-signup_module_name
+       * @prarm array of signup module names
+       * @return array
+       */
+      if ( in_array($shortcode_atts['module'], Participants_Db::apply_filters( 'signup_module_name', array('signup') ) ) ) {
         /*
          * we're showing the signup form
          */
