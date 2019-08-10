@@ -1668,10 +1668,6 @@ class Participants_Db extends PDb_Base {
 
           case '2': // error/skip
 
-            /*
-             * version 1.6.2.6 we removed check for multipage form so this validation 
-             * now takes pace in a multipage form
-             */
             // set the error message
             if ( !is_object( self::$validation_errors ) ) {
               self::$validation_errors = new PDb_FormValidation();
@@ -1999,7 +1995,7 @@ class Participants_Db extends PDb_Base {
     // if the validation object exists and there are errors, stop here
     if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
 
-      // error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
+//       error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
       return false;
     } elseif ( !empty( self::$admin_message ) and 'error' == self::$admin_message_type ) {
