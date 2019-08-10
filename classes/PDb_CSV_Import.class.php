@@ -104,9 +104,12 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   /**
    * stores the record in the database
    * 
-   * @param array $post asscitative array of imported data
+   * @param array $post associative array of imported data
    */
   function store_record( $post ) {
+    
+    // reset the validation object
+    Participants_Db::$validation_errors = new PDb_FormValidation();
     
     /**
      * @version 1.6.3
