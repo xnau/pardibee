@@ -1112,7 +1112,7 @@ class Participants_Db extends PDb_Base {
    * @global object $wpdb
    * @param string $field the name of the field to get
    * @param string $atts depricated
-   * @return stdClass 
+   * @return PDb_Form_Field_Def 
    */
   public static function get_field_atts( $field = false, $atts = '*' )
   {
@@ -1321,7 +1321,7 @@ class Participants_Db extends PDb_Base {
    * gets a single column object
    * 
    * @param string $name the column name
-   * @return object|bool false if no field defined for the given name
+   * @return PDb_Form_Field_Def|bool false if no field defined for the given name
    */
   public static function get_column( $name )
   {
@@ -1622,11 +1622,10 @@ class Participants_Db extends PDb_Base {
        * @param bool  $record_match true if a matching record has been found
        * @param array $post         the submitted post data
        * @param int   $duplicate_record_preference 1 = update matched record, 2 = prevent duplicate
-       * @param bool  $currently_importing_csv if true, a CSV import is being processed
        * 
        * @return bool true if a matching record is found
        */
-      $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post, $duplicate_record_preference, $currently_importing_csv );
+      $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post, $duplicate_record_preference );
 
       if ( $record_match ) {
         /*
@@ -1776,7 +1775,7 @@ class Participants_Db extends PDb_Base {
 
       // the validation object is only instantiated when this method is called
       // by a form submission
-      if ( is_object( self::$validation_errors ) ) {
+      if ( is_object( self::$validation_errors ) && ! $currently_importing_csv ) {
         self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post, $participant_id );
       }
       
@@ -3155,10 +3154,9 @@ class Participants_Db extends PDb_Base {
    */
   public static function column_title( $column )
   {
+    $field = self::get_column( $column );
 
-    $field = self::get_field_atts( $column, 'title' );
-
-    return $field->title;
+    return $field->title();
   }
 
   /**
