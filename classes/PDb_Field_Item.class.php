@@ -205,11 +205,24 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( $this->is_value_set() ) {
       $titles = array();
       foreach ( self::field_value_array( $this->value ) as $value ) {
-        $titles[] = $this->value_title( $value );
+        $titles[] = $this->sanitize_option_title( $this->value_title( $value ) );
       }
-      return esc_html( implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles ) );
+      return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
     }
     return $this->value();
+  }
+  
+  /**
+   * sanitizes an option title
+   * 
+   * option titles are allowed a limited set of HTML tags
+   * 
+   * @param string $title
+   * @return string sanitized
+   */
+  private function sanitize_option_title( $title )
+  {
+    return PDb_Manage_Fields_Updates::sanitize_text($title);
   }
 
   /**
