@@ -291,7 +291,7 @@ class PDb_FormElement extends xnau_FormElement {
            * these elements are stored as serialized arrays of values, the data is displayed 
            * a comma-separated string of the values, using the value titles if defined
            */
-          $return = self::array_display( $field );
+          $return = $field->display_array_value();
           break;
 
         case 'link' :
@@ -362,6 +362,7 @@ class PDb_FormElement extends xnau_FormElement {
           } else {
             $return = $field->value();
           }
+          
           break;
 
         case 'placeholder':
@@ -690,14 +691,14 @@ class PDb_FormElement extends xnau_FormElement {
 
     // clean up the provided string
     $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->get_value() ) ) );
-
+    
     if ( $field->has_link() ) {
       /*
        * the field is a single record link or other field with the link property 
        * set, which becomes our href
        */
       $URI = $field->link();
-      $linktext = wp_kses_post( $field->get_value() );
+      $linktext = PDb_Manage_Fields_Updates::sanitize_text($field->get_value());
     } elseif ( filter_var( $URI, FILTER_VALIDATE_URL ) !== false && Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
 
       // convert the get array to a get string and add it to the URI
@@ -715,7 +716,7 @@ class PDb_FormElement extends xnau_FormElement {
         list( $URI, $linktext ) = explode( '@', $URI, 2 );
         $template = '<a class="obfuscate" data-email-values=\'{"name":"%1$s","domain":"%2$s"}\'>%1$s AT %2$s</a>';
       } else {
-        $linktext = esc_html( $URI );
+        $linktext = strip_tags( $URI );
         $URI = 'mailto:' . $URI;
       }
     } elseif ( filter_var( $URI, FILTER_VALIDATE_EMAIL ) !== false && Participants_Db::plugin_setting_is_true( 'email_protect' ) && !Participants_Db::$sending_email ) {
@@ -727,12 +728,7 @@ class PDb_FormElement extends xnau_FormElement {
       return $URI;
     } else {
       // if it is neither URL nor email address simply display the sanitized text
-      if ( Participants_Db::plugin_setting_is_true( 'allow_tags' ) && ( self::is_admin_list_page() || in_array( $field->form_element(), array('text-line','placeholder') ) ) ) {
-        $sanitized = wp_kses_post( $field->get_value() );
-      } else {
-        $sanitized = strip_tags( $field->get_value() );
-      }
-      return $sanitized;
+      return PDb_Manage_Fields_Updates::sanitize_text($field->get_value());
     }
 
     // default template for links
