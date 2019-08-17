@@ -2483,7 +2483,7 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * adds a blank field type record
+   * adds a blank field to the field definitions
    * 
    * @global wpdb $wpdb
    * @param array $params the setup parameters for the new field
@@ -2491,12 +2491,16 @@ class Participants_Db extends PDb_Base {
    */
   public static function add_blank_field( $params )
   {
-    //error_log(__METHOD__.' params: '.print_r($params,1));
+//    error_log(__METHOD__.' params: '.print_r($params,1));
     // prevent spurious field creation
     if ( !isset( $params['name'] ) || empty( $params['name'] ) ) return;
     
     global $wpdb;
+    
+    // remove any invalid columns
+    $params = array_intersect_key( $params, self::fields_table_columns() );
 
+    // set up the params with needed default values
     $field_parameters = wp_parse_args( $params, array('form_element' => 'text-line') );
     
     // check for a duplicate field
@@ -2544,12 +2548,11 @@ class Participants_Db extends PDb_Base {
    * adds a new column (field) to the database
    * 
    * @global object $wpdb
-   * @param array $atts a set of attributrs to define the new columns
+   * @param array $atts a set of attributes to define the new columns
    * @retun bool success of the operation
    */
   private static function _add_db_column( $atts )
   {
-
     global $wpdb;
 
     $datatype = PDb_FormElement::get_datatype( $atts );
@@ -2557,6 +2560,24 @@ class Participants_Db extends PDb_Base {
     $sql = 'ALTER TABLE `' . self::participants_table() . '` ADD `' . $atts['name'] . '` ' . $datatype . ' NULL';
 
     return $wpdb->query( $sql );
+  }
+  
+  /**
+   * provides an array of column info from the field def table
+   * 
+   * @global wpdb $wpdb
+   * @return array as $name => $type
+   */
+  public static function fields_table_columns()
+  {
+    global $wpdb;
+    $columns = array();
+    
+    foreach( $wpdb->get_results('SHOW COLUMNS FROM ' . self::$fields_table ) as $column ) {
+      $columns[$column->Field] = $column->Type;
+    }
+    
+    return $columns;
   }
 
   /**
