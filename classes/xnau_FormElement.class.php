@@ -932,7 +932,7 @@ abstract class xnau_FormElement {
     $this->group = true;
 
     $link_placeholder = '(URL)';
-    $linktext_placeholder = $this->i18n['linktext'];
+    $linktext_placeholder = isset( $this->attributes['placeholder'] ) ? $this->attributes['placeholder'] : $this->i18n['linktext'];
     
     // set the correct format for an empty value
     if ( $this->value === array() || is_null( $this->value ) || ( is_string( $this->value ) && strlen( $this->value ) === 0 ) ) {
