@@ -931,7 +931,7 @@ abstract class xnau_FormElement {
     // this element's value is stored as an array
     $this->group = true;
 
-    $link_placeholder = '(URL)';
+    $link_placeholder = isset( $this->attributes['url_placeholder'] ) ? $this->attributes['url_placeholder'] : '(URL)';
     $linktext_placeholder = isset( $this->attributes['placeholder'] ) ? $this->attributes['placeholder'] : $this->i18n['linktext'];
     
     // set the correct format for an empty value
