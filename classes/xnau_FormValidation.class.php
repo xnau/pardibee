@@ -145,13 +145,13 @@ class xnau_FormValidation {
   /**
    * adds an arbitrary error to the object
    * 
-   * @param string $name field name
-   * @param string $message message handle or liter message string
+   * @param string $fieldname field name
+   * @param string $message message handle or literal message string
    * @param bool $overwrite if true, overwrites an existing error on the same field
    */
-  public function add_error($name, $message, $overwrite = true)
+  public function add_error($fieldname, $message, $overwrite = true)
   {
-    $this->_add_error($name, $message, $overwrite);
+    $this->_add_error($fieldname, $message, $overwrite);
   }
 
   /**
