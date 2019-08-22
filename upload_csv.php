@@ -142,9 +142,9 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
                      'name' => 'match_preference',
                      'value' => $match_preference,
                      'options' => array(
-                          __( 'Create a new record with the submission', 'participants-database' ) => 0,
-                          __( 'Update matching record with new data', 'participants-database' ) => 1,
-                          __( "Don't import the record", 'participants-database' ) => 2,
+                          __( 'Create a new record with the submission', 'participants-database' ) => 'add',
+                          __( 'Update matching record with new data', 'participants-database' ) => 'update',
+                          __( "Don't import the record", 'participants-database' ) => 'skip',
                         PDb_FormElement::null_select_key() => false,
                       )
                  );
@@ -160,7 +160,7 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
                 'type' => 'dropdown',
                 'name' => 'match_field',
                 'value' => $match_field,
-                      'options' => array_merge( PDb_Settings::_get_identifier_columns(false), array( 'Record ID' => 'id' ) ),
+                      'options' => PDb_Settings::_get_identifier_columns(false),
             );
                   PDb_FormElement::print_element( $parameters );
              ?>
