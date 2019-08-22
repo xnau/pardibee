@@ -1527,6 +1527,8 @@ class Participants_Db extends PDb_Base {
             }
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
+    
+    $record_match = new submission\incoming_record_match($post, $participant_id);
 
     global $wpdb;
 
@@ -1548,46 +1550,17 @@ class Participants_Db extends PDb_Base {
         }
       }
     }
-    /*
-     * checks for a record with a matching field so we can exercise the
-     * duplicate record preference
-     * 
-     * 0 - create new record
-     * 1 - update matching record
-     * 2 - show validation error
-     */
-    if ( $currently_importing_csv ) {
-      // a CSV upload brings in it's own match preference
-      $duplicate_record_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING );
-      $match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING );
-    } else {
-      $duplicate_record_preference = self::plugin_setting( 'unique_email', '0' );
-      $match_field = self::plugin_setting( 'unique_field', 'id' );
-
-      if ( self::plugin_setting('admin_edits_validated', '0' ) == '0' && is_admin() && self::current_user_has_plugin_role( 'admin', 'csv upload' ) ) {
-        /*
-         * set the preference to 0 if current user is an admin in the admin and not 
-         * importing a CSV
-         * 
-         * this allows administrators to create new records without being affected 
-         * by the duplicate record preference
-         */
-        $duplicate_record_preference = '0';
-      }
-    }
 
     /*
-     * to prevent possible exposure of private data when using multipage forms we 
-     * don't allow the "update" preference for multipage forms
+     * conditionally check for matching records:
      * 
-     * we also don't allow the "insert" preference because duplicate records can be 
-     * created if the user goes back to the signup form page
+     * if we are adding a record and need to know if an incoming record matches 
+     * an existing record
+     * 
+     * or if we are updating records and need to know if the update should be 
+     * skipped
      */
-    if ( self::is_multipage_form() ) {
-      $duplicate_record_preference = '2';
-    }
-
-    if ( ( $action === 'insert' && $duplicate_record_preference !== '0' ) || ( $action === 'update' && $duplicate_record_preference === '2' ) ) {
+    if ( ( $action === 'insert' && $record_match->match_mode() !== 'add' ) || ( $action === 'update' && $record_match->match_mode() === 'skip' ) ) {
 
       /**
        * @version 1.6.2.6
@@ -1596,52 +1569,16 @@ class Participants_Db extends PDb_Base {
        * on a matching record if the intent is to add a new record
        */
       if ( is_admin() && $action === 'insert' && ( ! defined('DOING_AJAX') || ! DOING_AJAX ) && ! $currently_importing_csv ) {
-        $duplicate_record_preference = '2';
+        $record_match->set_match_mode( 'skip' );
       }
 
-      $match_field_value = isset( $post[$match_field] ) ? filter_var( $post[$match_field], FILTER_SANITIZE_STRING ) : '';
-
-      /*
-       *  prevent updating record from matching itself if we are avoiding duplicates
-       */
-      $mask_id = $duplicate_record_preference === '2' ? $participant_id : 0;
-      
-      /*
-       * if true, incoming record matches existing record or updated record matches another record
-       */
-      $record_match = $match_field_value !== '' && self::field_value_exists( $match_field_value, $match_field, $mask_id );
-      
-      /**
-       * @since 1.6
-       * the $record_match status variable is made available to a filter so a custom 
-       * record matching method can be implemented
-       * 
-       * @since 1.7.8.11 added duplicate preference and csv import state
-       * 
-       * @filter pdb-incoming_record_match
-       * @param bool  $record_match true if a matching record has been found
-       * @param array $post         the submitted post data
-       * @param int   $duplicate_record_preference 1 = update matched record, 2 = prevent duplicate
-       * 
-       * @return bool true if a matching record is found
-       */
-      $record_match = self::apply_filters( 'incoming_record_match', $record_match, $post, $duplicate_record_preference );
-
-      if ( $record_match ) {
+      if ( $record_match->is_matched() ) {
         /*
          * we have found a match
          */
-        switch ( $duplicate_record_preference ) {
+        switch ( $record_match->match_mode() ) {
 
-          case '1': // update matching
-            // record with same field value exists...get the id and update the existing record
-            if ( 'id' == strtolower( $match_field ) )
-              $participant_id = intval( $match_field_value );
-            else
-              $participant_id = self::_get_participant_id_by_term( $match_field, $match_field_value );
-            // get the first one
-            if ( is_array( $participant_id ) )
-              $participant_id = current( $participant_id );
+          case 'update':
             
             /**
              * @since 1.7.2
@@ -1652,53 +1589,42 @@ class Participants_Db extends PDb_Base {
              * 
              * @return int the id of the matched record
              */
-            $participant_id = self::apply_filters('process_form_matched_record', $participant_id, $post );
+            $participant_id = self::apply_filters('process_form_matched_record', $record_match->matched_record_id(), $post );
 
             // set the update mode
             $action = 'update';
-            /**
-             * empty any private ID that signup assigned, the record will already have one
-             * 
-             * @version 1.6.2.6 we let the "add participants" script set the private ID
-             */
-            //$post['private_id'] = '';
 
             break;
 
-          case '2': // error/skip
+          case 'skip': // or set error
 
-            // set the error message
-            if ( !is_object( self::$validation_errors ) ) {
-              self::$validation_errors = new PDb_FormValidation();
-            }
-            self::$validation_errors->add_error( $match_field, 'duplicate' );
+            $record_match->setup_matched_field_message();
+            
             // we won't be saving this record
             $action = 'skip';
             // go on validating the rest of the form
             break;
         }
-      } elseif ( $duplicate_record_preference === '1' and strtolower( $match_field ) === 'id' and is_numeric( $match_field_value ) ) {
+      } elseif ( $record_match->is_id_update_mode() ) {
+        
         /*
-         * if the "OVERWRITE" option is set to "id" and the record contains an id, use it to create the record
+         * if we are updating by record id, but there is no matching record to update, 
+         * try to get the record id from the incoming record data then add a new record
+         * 
          */
-        $participant_id = intval( $match_field_value );
+        $participant_id = $record_match->matched_record_id();
+        
         if ( $participant_id !== 0 ) {
           $action = 'insert';
         } else
           $participant_id = false;
-      }
-    } elseif ( $action === 'insert' && $duplicate_record_preference === '0' ) {
+        }
+        
+    } elseif ( $action === 'insert' && $record_match->match_mode() === 'add' ) {
       /*
-       * if the setting is to add a record, matching or not, we don't allow a Record 
-       * ID or a private ID to be stored, we let the plugin assign them so that they 
-       * will be certain to be unique
+       * don't set the record id from the incoming data
        */
       unset( $post['id'] );
-      /**
-       * 
-       * @version 1.6.2.6 we let the "add participants" script set the private ID
-       */
-      //$post['private_id'] = '';
     }
     // set the insert status value
     self::$insert_status = $action;
@@ -2453,7 +2379,7 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * returns > 0 if a record has a value matching the checked field
+   * tells if there is a record in the db with a matching value
    *
    * @param string $value the value of the field to test
    * @param string $field the field to test
@@ -2462,11 +2388,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
-    global $wpdb;
-
-    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . self::$participants_table . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
-
-    return is_null($match_count) ? false : (bool) $match_count;
+    return submission\incoming_record_match::field_value_exists($value, $field, $mask_id);
   }
 
   /**
@@ -3851,6 +3773,8 @@ function PDb_class_loader( $class )
 {
 
   if ( !class_exists( $class ) ) {
+    
+    $file = ltrim(str_replace('\\', '/', $class), '/') . '.class.php';
 
     /**
      * allows class overrides
@@ -3859,7 +3783,7 @@ function PDb_class_loader( $class )
      * @param string the absolute path to the class file
      * @return string
      */
-    $class_file = apply_filters( 'pdb-autoloader_class_path', plugin_dir_path( __FILE__ ) . 'classes/' . $class . '.class.php' );
+    $class_file = apply_filters( 'pdb-autoloader_class_path', plugin_dir_path( __FILE__ ) . 'classes/' . $file ); // $class . '.class.php'
         
     if ( is_file( $class_file ) ) {
 
