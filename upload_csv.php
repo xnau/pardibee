@@ -171,9 +171,9 @@ update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
             <h4 class="inset" id="match-preferences"><?php _e( 'Current Setting', 'participants-database' ) ?>: 
             <?php
             $preferences = array(
-                  '0' => sprintf( __( '%sCreate New%s adds all imported records as new records without checking for a match.', 'participants-database' ), '<span class="emphasized">', '</span>', '</span>' ),
-                  '1' => sprintf( __( '%sOverwrite%s an existing record with a matching %s will be updated with the data from the imported record. Blank or missing fields will not overwrite existing data.', 'participants-database' ), '<span class="emphasized">', '</span>', '<em class="match-field">' . Participants_Db::$fields[$match_field]->title . '</em>' ),
-                  '2' => sprintf( __( '%sDon&#39;t Import%s does not import the new record if it matches the %s of an existing one.', 'participants-database' ), '<span class="emphasized">', '</span>', '<em class="match-field">' . Participants_Db::$fields[$match_field]->title . '</em>' ),
+                  'add' => sprintf( __( '%sCreate New%s adds all imported records as new records without checking for a match.', 'participants-database' ), '<span class="emphasized">', '</span>', '</span>' ),
+                  'update' => sprintf( __( '%sOverwrite%s an existing record with a matching %s will be updated with the data from the imported record. Blank or missing fields will not overwrite existing data.', 'participants-database' ), '<span class="emphasized">', '</span>', '<em class="match-field">' . Participants_Db::$fields[$match_field]->title . '</em>' ),
+                  'skip' => sprintf( __( '%sDon&#39;t Import%s does not import the new record if it matches the %s of an existing one.', 'participants-database' ), '<span class="emphasized">', '</span>', '<em class="match-field">' . Participants_Db::$fields[$match_field]->title . '</em>' ),
             );
               foreach ($preferences as $i => $preference) {
               $hide = $i == $match_preference ? '' : 'style="display:none"';
