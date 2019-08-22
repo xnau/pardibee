@@ -1431,7 +1431,7 @@ class Participants_Db extends PDb_Base {
       }
     }
 
-    $sql = 'SELECT v.*, g.order FROM ' . self::$fields_table . ' v INNER JOIN ' . self::$groups_table . ' g ON v.group = g.name ' . $where . ' ORDER BY g.order, v.order';
+    $sql = 'SELECT v.*, g.order, g.title AS grouptitle FROM ' . self::$fields_table . ' v INNER JOIN ' . self::$groups_table . ' g ON v.group = g.name ' . $where . ' ORDER BY g.order, v.order';
     
     $result = $wpdb->get_results( $sql, OBJECT_K );
     
@@ -3774,7 +3774,7 @@ function PDb_class_loader( $class )
 
   if ( !class_exists( $class ) ) {
     
-    $file = ltrim(str_replace('\\', '/', $class), '/') . '.class.php';
+    $file = ltrim(str_replace('\\', '/', $class), '/') . '.php';
 
     /**
      * allows class overrides
