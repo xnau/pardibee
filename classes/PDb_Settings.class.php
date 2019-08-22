@@ -1513,12 +1513,28 @@ class PDb_Settings extends xnau_Plugin_Settings {
     return $pagelist;
   }
 
+  /**
+   * provides the dropdown options for selecting linkable fields
+   * 
+   * a linkable field is one that can be wrapped in an anchor tag
+   * 
+   * @global wpdb $wpdb
+   * @return array of dropdown options
+   */
   private function _get_display_columns()
   {
-
+    global $wpdb;
     $columnlist = array(__( 'None', 'participants-database' ) => 'none', PDb_FormElement::null_select_key() => false);
 
-    $columns = Participants_Db::get_column_atts( 'all' );
+    $sql = '
+SELECT v.name, v.form_element, v.title, g.title AS grouptitle 
+FROM ' . Participants_Db::$fields_table . ' v 
+  INNER JOIN ' . Participants_Db::$groups_table . ' g 
+    ON v.group = g.name 
+      WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") 
+ORDER BY g.order, v.order';
+
+    $columns = $wpdb->get_results( $sql, OBJECT_K );
 
     $linkable = array();
 
@@ -1554,7 +1570,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
        * we exclude array-type and other inappropriate field types instead of explicitly including a list of types
        */
       $sql = '
-SELECT v.name, v.title 
+SELECT v.name, v.title, g.title AS grouptitle 
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
@@ -1592,7 +1608,13 @@ ORDER BY g.order, v.order';
    */
   public static function column_dropdown_options( $columns, $columnlist = array() )
   {
+    $grouptitle = current( $columns )->grouptitle;
+    $columnlist[$grouptitle] = 'optgroup';
     foreach ( $columns as $column ) {
+      if ( $column->grouptitle !== $grouptitle ) {
+        $grouptitle = $column->grouptitle;
+        $columnlist[$column->grouptitle] = 'optgroup';
+      }
       $columnlist[Participants_Db::title_key( $column->title, $column->name )] = $column->name;
     }
     return $columnlist;
