@@ -102,7 +102,7 @@ class incoming_record_match {
        * @param incoming_record_match this object
        * @return bool true if a match was found
        */
-      $record_match = Participants_Db::apply_filters( 'incoming_record_match_object', false, $this );
+      $record_match = \Participants_Db::apply_filters( 'incoming_record_match_object', false, $this );
       $filtered = true;
     }
 
@@ -117,7 +117,7 @@ class incoming_record_match {
        * 
        * @return bool true if a matching record is found
        */
-      $record_match = Participants_Db::apply_filters( 'incoming_record_match', $record_match, $this->post, $this->match_mode_numeric() );
+      $record_match = \Participants_Db::apply_filters( 'incoming_record_match', $record_match, $this->post, $this->match_mode_numeric() );
       $filtered = true;
     }
 
@@ -238,7 +238,7 @@ class incoming_record_match {
     if ( $this->match_field === 'id' ) {
       $id = intval( $this->match_field_value() );
     } else {
-      $id = Participants_Db::get_record_id_by_term( $this->match_field, $this->match_field_value() );
+      $id = \Participants_Db::get_record_id_by_term( $this->match_field, $this->match_field_value() );
     }
 
     return is_array( $id ) ? current( $id ) : intval( $id );
@@ -249,11 +249,11 @@ class incoming_record_match {
    */
   public function setup_matched_field_message()
   {
-    if ( !is_object( Participants_Db::$validation_errors ) ) {
-      Participants_Db::$validation_errors = new PDb_FormValidation();
+    if ( !is_object( \Participants_Db::$validation_errors ) ) {
+      \Participants_Db::$validation_errors = new PDb_FormValidation();
     }
     
-    Participants_Db::$validation_errors->add_error( $this->match_field, $this->message_key );
+    \Participants_Db::$validation_errors->add_error( $this->match_field, $this->message_key );
   }
   
   /**
@@ -274,7 +274,7 @@ class incoming_record_match {
      */
     $mask_id = $this->skip_mode() ? $this->record_id : 0;
 
-    return $this->match_field_value() !== '' && Participants_Db::field_value_exists( $this->match_field_value(), $this->match_field, $mask_id );
+    return $this->match_field_value() !== '' && \Participants_Db::field_value_exists( $this->match_field_value(), $this->match_field, $mask_id );
   }
 
   /**
@@ -290,7 +290,7 @@ class incoming_record_match {
   {
     global $wpdb;
 
-    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . Participants_Db::$participants_table . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
+    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::$participants_table . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
 
     return is_null( $match_count ) ? false : (bool) $match_count;
   }
@@ -303,12 +303,12 @@ class incoming_record_match {
     if ( $this->is_csv_import() ) {
       $this->set_match_mode( filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING ) );
     } else {
-      $this->set_match_mode( Participants_Db::plugin_setting( 'unique_email', '0' ) );
+      $this->set_match_mode( \Participants_Db::plugin_setting( 'unique_email', '0' ) );
     }
 
     if ( !$this->is_csv_import() ) {
 
-      if ( Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && is_admin() && Participants_Db::current_user_has_plugin_role( 'admin', 'csv upload' ) ) {
+      if ( \Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && is_admin() && \Participants_Db::current_user_has_plugin_role( 'admin', 'csv upload' ) ) {
         /*
          * set the preference to 0 if current user is an admin in the admin and not 
          * importing a CSV
@@ -326,7 +326,7 @@ class incoming_record_match {
        * we also don't allow the "insert" preference because duplicate records can be 
        * created if the user goes back to the signup form page
        */
-      if ( Participants_Db::is_multipage_form() ) {
+      if ( \Participants_Db::is_multipage_form() ) {
         $this->set_match_mode( 'skip' );
       }
     }
@@ -338,7 +338,7 @@ class incoming_record_match {
    */
   private function set_match_field()
   {
-    $this->match_field = $this->csv_import ? filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING ) : Participants_Db::plugin_setting( 'unique_field', 'id' );
+    $this->match_field = $this->csv_import ? filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING ) : \Participants_Db::plugin_setting( 'unique_field', 'id' );
   }
 
 }
