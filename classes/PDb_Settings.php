@@ -49,7 +49,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'pdb-css' => __( 'User CSS rules for styling plugin displays.</h4><p>If you\'re new to CSS, try this tutorial to help you get started: <a target="_blank" href="http://shrsl.com/?dnf8">Use Firebug for Editing WordPress Themes.</a></p>', 'participants-database' ),
     );
     // determine the type of text-area elements to use for email body settings
-    $this->textarea_type = Participants_Db::$plugin_options['html_email'] == '1' ? 'rich-text' : 'text-area';
+    $this->textarea_type = Participants_Db::plugin_setting_is_true('html_email') ? 'rich-text' : 'text-area';
 
 
     // run the parent class initialization to finish setting up the class 
