@@ -316,7 +316,7 @@ class PDb_Date_Parse {
    */
   private function default_input_format()
   {
-    return $this->strict ? Participants_Db::$plugin_options['input_date_format'] : get_option('date_format');
+    return $this->strict ? Participants_Db::plugin_setting_value('input_date_format') : get_option('date_format');
   }
   
   /**
@@ -344,7 +344,7 @@ class PDb_Date_Parse {
           $this->input_format = isset( $config[$name] ) ? $config[$name] : $this->default_input_format();
           break;
         case 'strict':
-          $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : Participants_Db::$plugin_options['strict_dates'] == 1 );
+          $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : Participants_Db::plugin_setting_is_true('strict_dates') );
           break;
         case 'european_order':
         case 'zero_time':
