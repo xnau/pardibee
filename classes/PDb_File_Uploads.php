@@ -74,7 +74,7 @@ class PDb_File_Uploads {
      * extension
      */
     $field_allowed_extensions = Participants_Db::get_field_allowed_extensions( $field_atts->values );
-    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
+    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::plugin_setting_value('allowed_file_types') : $field_allowed_extensions;
     
     $test = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $file['name'] ), $matches );
     
@@ -130,9 +130,9 @@ class PDb_File_Uploads {
       }
     }
 
-    if ( $file['size'] > Participants_Db::$plugin_options['image_upload_limit'] * 1024 ) {
+    if ( $file['size'] > intval( Participants_Db::plugin_setting_value('image_upload_limit') ) * 1024 ) {
 
-      Participants_Db::validation_error( sprintf( __( 'The file you tried to upload is too large. The file must be smaller than %sK.', 'participants-database' ), Participants_Db::$plugin_options['image_upload_limit'] ), $field_name );
+      Participants_Db::validation_error( sprintf( __( 'The file you tried to upload is too large. The file must be smaller than %sK.', 'participants-database' ), Participants_Db::plugin_setting_value('image_upload_limit') ), $field_name );
       
       if ( PDB_DEBUG ) {
         Participants_Db::debug_log( sprintf( "File upload is too large: %s is %s K bytes.", $file['name'], round( $file['size']/1024 ) ) );
