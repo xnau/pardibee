@@ -149,7 +149,7 @@ class PDb_Image extends xnau_Image_Handler {
           '<span class="%1$s">',
           '</span>'
       );
-    } elseif (Participants_Db::$plugin_options['image_link'] == 1 and $this->image_defined) {
+    } elseif ( Participants_Db::plugin_setting_is_true ('image_link') && $this->image_defined ) {
 
       $this->image_wrap = array(
           '<span class="%1$s"><a href="%2$s" %4$s title="%3$s" >',
