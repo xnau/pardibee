@@ -534,7 +534,7 @@ class PDb_FormElement extends xnau_FormElement {
   protected function _rich_text_field()
   {
 
-    if ( !is_admin() and ! Participants_Db::$plugin_options['rich_text_editor'] )
+    if ( !is_admin() and ! Participants_Db::plugin_setting_is_true('rich_text_editor') )
       $this->_text_field();
     else
       parent::_rich_text_field();
