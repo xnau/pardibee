@@ -612,7 +612,7 @@ class PDb_Base {
   public static function is_allowed_file_extension( $filename, $allowed = '' )
   {
     $field_allowed_extensions = self::get_field_allowed_extensions( $allowed );
-    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::$plugin_options['allowed_file_types'] : $field_allowed_extensions;
+    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::plugin_setting_value('allowed_file_types') : $field_allowed_extensions;
 
     $result = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches );
     return $result !== 0;
@@ -930,8 +930,8 @@ class PDb_Base {
    */
   public static function string_static_translation( $string )
   {
-    //error_log(__METHOD__.' string: '.$string . ' called by: '. print_r(wp_debug_backtrace_summary( null, 3 ),1) );
-    return is_string( $string ) && !is_numeric( $string ) ? __( $string ) : $string;
+//    error_log(__METHOD__.' string: '.$string . ' called by: '. print_r(wp_debug_backtrace_summary( null, 3 ),1) );
+    return is_string( $string ) && !is_numeric( $string ) ? __( $string, 'participants-database' ) : $string;
   }
 
   /**
@@ -947,7 +947,7 @@ class PDb_Base {
     if ( empty( $name ) ) {
       return Participants_Db::apply_filters( 'translate_string', $title );
     }
-    return sprintf( '%s (%s)', Participants_Db::apply_filters( 'translate_string', $title ), $name );
+    return sprintf( '%s (%s)', self::apply_filters( 'translate_string', $title ), $name );
   }
 
   /**
@@ -959,13 +959,26 @@ class PDb_Base {
    */
   public static function plugin_setting( $name, $default = false )
   {
+    return self::apply_filters( 'translate_string', self::plugin_setting_value( $name, $default ) );
+  }
+
+  /**
+   * provides a plugin setting
+   * 
+   * this one does not send the value through the translation filter
+   * 
+   * @param string $name setting name
+   * @param string|int|float $default a default value
+   * @return string the plugin setting value or provided default
+   */
+  public static function plugin_setting_value( $name, $default = false )
+  {
     /**
      * @filter pdb-{$setting_name}_setting_value
      * @param mixed the setting value
      * @return mixed setting value
      */
-    $setting = self::apply_filters( $name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
-    return Participants_Db::apply_filters( 'translate_string', $setting );
+    return self::apply_filters( $name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
   }
 
   /**
@@ -992,7 +1005,7 @@ class PDb_Base {
   {
 
     if ( isset( Participants_Db::$plugin_options[$name] ) ) {
-      return filter_var( Participants_Db::plugin_setting( $name ), FILTER_VALIDATE_BOOLEAN );
+      return filter_var( self::plugin_setting_value( $name ), FILTER_VALIDATE_BOOLEAN );
     } else {
       return (bool) $default;
     }
