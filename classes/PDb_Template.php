@@ -305,7 +305,7 @@ class PDb_Template {
   public function set_edit_page( $page = '' )
   {
     if ( empty( $page ) ) {
-      $page = Participants_Db::$plugin_options['registration_page'];
+      $page = Participants_Db::plugin_setting_value('registration_page');
     }
     $this->edit_page = Participants_Db::find_permalink( $page );
   }
