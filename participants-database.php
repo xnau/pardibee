@@ -563,7 +563,7 @@ class Participants_Db extends PDb_Base {
     } else {
       $type = 'text/plain; charset=us-ascii';
     }
-    $email_headers = "From: " . self::$plugin_options['receipt_from_name'] . " <" . self::$plugin_options['receipt_from_address'] . ">\n" .
+    $email_headers = "From: " . self::plugin_setting_value('receipt_from_name') . " <" . self::plugin_setting_value('receipt_from_address') . ">\n" .
             "Content-Type: " . $type . "\n";
 
     self::$email_headers = self::apply_filters( 'email_headers', $email_headers );
@@ -825,7 +825,7 @@ class Participants_Db extends PDb_Base {
      * @param string  single record page base url
      * @return string URL
      */
-    return self::apply_filters( 'single_record_page', get_permalink( self::$plugin_options['single_record_page'] ) );
+    return self::apply_filters( 'single_record_page', get_permalink( self::plugin_setting_value('single_record_page') ) );
   }
 
   /**
@@ -1868,7 +1868,7 @@ class Participants_Db extends PDb_Base {
 
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
                 
-                if ( $participant_id && ( self::$plugin_options['file_delete'] == 1 || is_admin() ) ) {
+                if ( $participant_id && ( self::plugin_setting_is_true('file_delete') || is_admin() ) ) {
                   
                   $filename = '';
                   if ( array_key_exists( $column->name, $_POST ) ) {
@@ -2372,8 +2372,8 @@ class Participants_Db extends PDb_Base {
   public static function email_exists( $email )
   {
 
-    if ( !empty( Participants_Db::$plugin_options['primary_email_address_field'] ) ) {
-      return self::_id_exists( $email, Participants_Db::$plugin_options['primary_email_address_field'] );
+    if ( Participants_Db::plugin_setting_is_set('primary_email_address_field') ) {
+      return self::_id_exists( $email, Participants_Db::plugin_setting('primary_email_address_field') );
     } else
       return false;
   }
@@ -2637,9 +2637,9 @@ class Participants_Db extends PDb_Base {
           if ( !is_object( self::$validation_errors ) )
             self::$validation_errors = new PDb_FormValidation();
 
-          self::$validation_errors->add_error( '', self::$plugin_options['record_updated_message'] );
+          self::$validation_errors->add_error( '', self::plugin_setting('record_updated_message') );
 
-          if ( self::$plugin_options['send_record_update_notify_email'] && !self::is_multipage_form() ) {
+          if ( self::plugin_setting_is_true('send_record_update_notify_email') && !self::is_multipage_form() ) {
 
             PDb_Template_Email::send( array(
                 'to' => self::plugin_setting( 'email_signup_notify_addresses' ),
@@ -3039,7 +3039,7 @@ class Participants_Db extends PDb_Base {
      * @param string the content to be processed
      * @return string filter mode to use
      */
-    $filter_mode = self::apply_filters( 'rich_text_filter_mode', Participants_Db::$plugin_options['enable_wpautop'], $string );
+    $filter_mode = self::apply_filters( 'rich_text_filter_mode', Participants_Db::plugin_setting_is_true('enable_wpautop'), $string );
     switch ( $filter_mode ) {
       case '1':
       case 'the_content':
@@ -3314,7 +3314,7 @@ class Participants_Db extends PDb_Base {
   public static function get_record_link( $PID, $target_page = '' )
   {
 
-    $target_page = $target_page === '' ? self::$plugin_options['registration_page'] : $target_page;
+    $target_page = $target_page === '' ? self::plugin_setting('registration_page') : $target_page;
 
     if ( false === $registration_page = self::find_permalink( $target_page ) ) {
       //error_log( 'Participants Database: "Participant Record Page" setting is invalid.' );
