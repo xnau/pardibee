@@ -594,7 +594,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * @param PDb_Field_Item
      * @return bool
      */
-    return Participants_Db::apply_filters( 'add_required_mark', Participants_Db::$plugin_options['mark_required_fields'] && $this->validation != 'no' && !in_array( $this->module, array('list', 'search', 'total', 'single') ), $this );
+    return Participants_Db::apply_filters( 'add_required_mark', Participants_Db::plugin_setting_is_true('mark_required_fields') && $this->validation != 'no' && !in_array( $this->module, array('list', 'search', 'total', 'single') ), $this );
   }
 
   /**
@@ -770,7 +770,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     if ( $this->place_required_mark() ) {
 
-      $label = sprintf( Participants_Db::$plugin_options['required_field_marker'], $label );
+      $label = sprintf( Participants_Db::plugin_setting_value('required_field_marker'), $label );
     }
 
     return $label;
