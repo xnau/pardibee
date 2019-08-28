@@ -89,6 +89,7 @@ class incoming_record_match {
   /**
    * provides the current match status
    * 
+   * 
    * @return bool true if a matching record was found
    */
   public function is_matched()
@@ -122,10 +123,13 @@ class incoming_record_match {
     }
 
     if ( !$filtered ) {
-      $record_match = $this->simple_match();
+      // use the configured match
+      $record_match = $this->_match_check();
     }
     
-    $this->setup_matched_field_message();
+    if ( $record_match ) {
+      $this->setup_matched_field_message();
+    }
 
     return $record_match;
   }
@@ -152,6 +156,7 @@ class incoming_record_match {
       case '0';
       case 'add':
         $this->match_mode = 'add';
+        break;
     }
   }
 
@@ -172,7 +177,7 @@ class incoming_record_match {
    */
   public function skip_mode()
   {
-    return $this->match_mode == '2';
+    return $this->match_mode == 'skip';
   }
 
   /**
@@ -263,18 +268,21 @@ class incoming_record_match {
    */
 
   /**
-   * calculates a simple match based on the match field value
+   * calculates a match based on the match field value
    * 
    * @return bool
    */
-  private function simple_match()
+  private function _match_check()
   {
+    if ( $this->match_mode() === 'add' ) {
+      return false;
+    }
     /*
      *  prevent updating record from matching itself if we are avoiding duplicates
      */
     $mask_id = $this->skip_mode() ? $this->record_id : 0;
 
-    return $this->match_field_value() !== '' && \Participants_Db::field_value_exists( $this->match_field_value(), $this->match_field, $mask_id );
+    return $this->match_field_value() !== '' && self::field_value_exists( $this->match_field_value(), $this->match_field, $mask_id );
   }
 
   /**
@@ -283,14 +291,18 @@ class incoming_record_match {
    * @param string $value the value of the field to test
    * @param string $field the field to test
    * @param int $mask_id optional record id to exclude
-   * @global wpdb $wpdb
+   * @global \wpdb $wpdb
    * @return bool true if there is a matching value for the field
    */
   public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
     global $wpdb;
 
-    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::$participants_table . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
+    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::participants_table() . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
+    
+    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 1 ) {
+      \Participants_Db::debug_log(__METHOD__.' query: '.$wpdb->last_query );
+    }
 
     return is_null( $match_count ) ? false : (bool) $match_count;
   }
