@@ -124,10 +124,10 @@ class PDb_Signup extends PDb_Shortcode {
      */
     if ( $shortcode_atts['module'] === 'signup' && $this->participant_id !== false && !isset( $shortcode_atts['action'] ) && Participants_Db::is_multipage_form() ) {
       $this->participant_id = false;
-      $this->_clear_multipage_session();
-      $this->_clear_captcha_session();
+      $this->clear_multipage_session();
+      $this->clear_captcha_session();
     } elseif ( $shortcode_atts['module'] === 'signup' && $this->participant_id === false ) {
-      $this->_clear_multipage_session();
+      $this->clear_multipage_session();
     }
     
     /*
@@ -215,14 +215,14 @@ class PDb_Signup extends PDb_Shortcode {
 
       $this->_send_email();
 
-      $this->_clear_captcha_session();
+      $this->clear_captcha_session();
     }
     
     // print the shortcode output
     $this->_print_from_template();
     
     if ( $this->submitted ) {
-      $this->_clear_multipage_session();
+      $this->clear_multipage_session();
     }
   }
 
@@ -567,17 +567,7 @@ class PDb_Signup extends PDb_Shortcode {
   /**
    * clears the multipage form session values
    */
-  function _clear_multipage_session()
-  {
-    foreach ( array('pdbid', 'form_status', 'previous_multipage') as $value ) {
-      Participants_Db::$session->clear( $value );
-    }
-  }
-
-  /**
-   * clears the multipage form session values
-   */
-  function _clear_captcha_session()
+  public function clear_captcha_session()
   {
     foreach ( array('captcha_vars', 'captcha_result') as $value ) {
       Participants_Db::$session->clear( $value );
