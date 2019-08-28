@@ -221,7 +221,7 @@ class PDb_Record extends PDb_Shortcode {
   protected function _setup_multipage() {
     $this->previous_multipage = Participants_Db::$session->get('previous_multipage', '');
     if (strlen($this->previous_multipage) === 0) {
-      Participants_Db::$session->clear('pdbid');
+      $this->clear_multipage_session();
     }
   }
   
