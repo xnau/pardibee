@@ -1369,6 +1369,16 @@ abstract class PDb_Shortcode {
   }
 
   /**
+   * clears the multipage form session values
+   */
+  public function clear_multipage_session()
+  {
+    foreach ( array('pdbid', 'form_status', 'previous_multipage') as $value ) {
+      Participants_Db::$session->clear( $value );
+    }
+  }
+
+  /**
    * sets up the pdb_data_keys value
    * 
    * the purpose of this value is to tell the submission processor which fields 
