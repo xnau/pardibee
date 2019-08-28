@@ -2512,7 +2512,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_page_request()
   {
-
     $post_sanitize = array(
         'subsource' => FILTER_SANITIZE_STRING,
         'action' => FILTER_SANITIZE_STRING,
