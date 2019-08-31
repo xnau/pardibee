@@ -152,15 +152,41 @@ class PDb_Session {
   private function obtain_session_id()
   {
     $sessid = false;
-    $validator = array('options' => array('regexp' => '/^[0-9a-zA-Z,-]{22,40}$/') );
+    $validator = array('options' => array(
+        'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
+        'flags' => FILTER_NULL_ON_FAILURE
+        ) );
     if ( array_key_exists( self::id_var, $_POST ) ) {
       $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
     } elseif ( array_key_exists( self::id_var, $_GET ) ) {
       $sessid = filter_input( INPUT_GET, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
     }
+    
+    if ( !$sessid ) {
+      $value = false;
+      /**
+       * @filter pdb-session_get_var_keys
+       * @param array of get var keys to check
+       * @return string
+       */
+      $get_var_keys = Participants_Db::apply_filters('session_get_var_keys', array('cm') );
+      foreach ( $get_var_keys as $key ) {
+        $value = filter_input( INPUT_GET, 'cm', FILTER_VALIDATE_REGEXP, $validator );
+        if ( $value ) {
+          break;
+        }
+      }
+      $sessid = $value;
+    }
+    
     if ( $sessid ) {
       $this->set_session_from_id( $sessid );
     }
+    
+    if ( PDB_DEBUG > 1 ) {
+      Participants_Db::debug_log(__METHOD__.' obtaining session id by alternate method: '.$sessid );
+    }
+    
     return $sessid;
   }
   
