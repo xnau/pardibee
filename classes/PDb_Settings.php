@@ -1275,6 +1275,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
                 __('off', 'participants-database') => 0, 
                 __('plugin debug', 'participants-database') => 1,
                 __('all errors', 'participants-database') => 2,
+                __('verbose', 'participants-database') => 3,
                 ),
         ),
     );
