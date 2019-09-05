@@ -589,7 +589,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
         } else {
           self::$list_query .= 'WHERE ';
           for ( $i = 0; $i <= count( self::$filter['search'] ) - 1; $i++ ) {
-            if ( self::$filter['search'][$i]['search_field'] !== 'none' && self::$filter['search'][$i]['search_field'] !== '' ) {
+            if ( self::$filter['search'][$i]['search_field'] !== 'none' && self::$filter['search'][$i]['search_field'] !== '' && Participants_Db::is_column( self::$filter['search'][$i]['search_field'] ) ) {
               self::_add_where_clause( self::$filter['search'][$i] );
             }
             if ( $i === count( self::$filter['search'] ) - 1 ) {
