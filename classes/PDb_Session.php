@@ -154,7 +154,6 @@ class PDb_Session {
     $sessid = false;
     $validator = array('options' => array(
         'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
-        'flags' => FILTER_NULL_ON_FAILURE
         ) );
     if ( array_key_exists( self::id_var, $_POST ) ) {
       $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
@@ -181,10 +180,10 @@ class PDb_Session {
     
     if ( $sessid ) {
       $this->set_session_from_id( $sessid );
-    }
     
-    if ( PDB_DEBUG > 1 ) {
-      Participants_Db::debug_log(__METHOD__.' obtaining session id by alternate method: '.$sessid );
+      if ( PDB_DEBUG > 1 ) {
+        Participants_Db::debug_log(__METHOD__.' obtaining session id by alternate method: '.$sessid );
+      }
     }
     
     return $sessid;
