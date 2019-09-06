@@ -235,11 +235,10 @@ class PDb_List extends PDb_Shortcode {
    * which captures the output and returns it for display
    *
    * @param array $shortcode_atts parameters passed by the shortcode
-   * @return string form HTML
+   * @return string list HTML
    */
   public static function get_list( $shortcode_atts )
   {
-
     self::$instance = new PDb_List( $shortcode_atts );
 
     return self::$instance->output;
