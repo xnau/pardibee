@@ -425,7 +425,10 @@ abstract class PDb_Shortcode {
     }
 
     if ( !file_exists( $template ) ) {
-      Participants_Db::debug_log( __METHOD__ . ' template not found: ' . $template );
+      if ( $this->module !== 'API' ) {
+        // API calls don't use a template
+        Participants_Db::debug_log( __METHOD__ . ' template not found: ' . $template );
+      }
       $template = false;
     }
     $this->template = $template;
