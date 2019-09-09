@@ -1201,6 +1201,7 @@ class Participants_Db extends PDb_Base {
    * as of 1.5 fields named in the $fields array don't need to have their 'sortable' 
    * flag set in order to be included.
    *
+   * @global wpdb $wpdb
    * @param string $type   if 'sortable' will only select fields flagged as sortable  
    * @param array  $fields array of field names defining the fields listed for the 
    *                       purpose of overriding the default selection
@@ -1228,27 +1229,33 @@ class Participants_Db extends PDb_Base {
     $where = empty( $where_clauses ) ? '' : "WHERE " . implode( ' AND ', $where_clauses );
 
     switch ( $sort ) {
+      
       case 'alpha':
         $sql = "
-          SELECT f.name, REPLACE(f.title,'\\\','') as title
+          SELECT f.name, REPLACE(f.title,'\\\','') AS title
           FROM " . self::$fields_table . " f
           " . $where . "
           ORDER BY f.name";
         break;
-      case 'order':
+      
+      case 'column':
+        $column = (is_admin() ? 'admin_column' : 'display_column');
         $sql = "
-          SELECT f.name, REPLACE(f.title,'\\\',''), g.order as title
+          SELECT f.name, REPLACE(f.title,'\\\','') AS title
+          FROM " . self::$fields_table . " f
+          $where 
+          ORDER BY CASE WHEN f.$column = 0 THEN f.order END ASC, f.$column ASC";
+        break;
+      
+      case 'order':
+      default:
+        $sql = "
+          SELECT f.name, REPLACE(f.title,'\\\','') AS title, g.order
           FROM " . self::$fields_table . " f
           INNER JOIN " . self::$groups_table . " g ON f.group = g.name
           " . $where . "
           ORDER BY g.order, f.order";
         break;
-      default:
-        $sql = "
-          SELECT f.name, REPLACE(f.title,'\\\','') as title
-          FROM " . self::$fields_table . " f
-          " . $where . "
-          ORDER BY f." . (is_admin() ? 'admin_column' : 'display_column');
     }
 
     $result = $wpdb->get_results( $sql, ARRAY_N );
@@ -1436,6 +1443,7 @@ class Participants_Db extends PDb_Base {
     $result = $wpdb->get_results( $sql, OBJECT_K );
     
 //    error_log(__METHOD__.' sql: '.$wpdb->last_query);
+//    error_log(__METHOD__.' result: '.print_r($result,1));
 
     return $result;
   }
@@ -3273,11 +3281,17 @@ class Participants_Db extends PDb_Base {
   {
     $bitmap_source = plugins_url( 'ui/ajax-loader.gif', __FILE__ );
     $svg_source = plugins_url( 'ui/ajax-loader.svg', __FILE__ );
+    $template = array(
+        '<span class="ajax-loading"><object data="%1$s"><img src="%2$s" /></object></span>',
+        '<svg class="ajax-loading" width="16" height="16"><image xlink:href="%1$s" src="%2$s" width="16" height="16" /></svg>'
+    );
     /**
      * @version 1.6.3
      * @filter pdb-loading_spinner_html
+     * @param string html
+     * @return string
      */
-    return self::apply_filters( 'loading_spinner_html', '<span class="ajax-loading"><object data="' . $svg_source . '"><img src="' . $bitmap_source . '" /></object></span>' );
+    return self::apply_filters( 'loading_spinner_html', sprintf( $template[1], $svg_source, $bitmap_source ) );
   }
 
   /**
