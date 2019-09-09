@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.11
+ * @version    Release: 1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -79,11 +79,6 @@ class PDb_List_Admin {
    * @var array of field objects
    */
   static $display_columns;
-
-  /**
-   * @var array holds the list of sortable columns
-   */
-  static $sortables;
 
   /**
    * @var array holds the settings for the list filtering and sorting
@@ -176,8 +171,6 @@ class PDb_List_Admin {
     self::$registration_page_url = get_bloginfo( 'url' ) . '/' . Participants_Db::plugin_setting( 'registration_page', '' );
 
     self::setup_display_columns();
-
-    self::$sortables = Participants_Db::get_field_list( false, false, 'alpha' );
 
     // set up the basic values
     self::$default_filter = array(
@@ -792,15 +785,20 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
           $filter_count = intval( self::$filter['list_filter_count'] );
           //build the list of columns available for filtering
           $filter_columns = array();
+          $group_title = '';
           foreach ( Participants_db::get_column_atts( 'backend' ) as $column ) {
+            
+            if ( $column->grouptitle !== $group_title ) {
+              $group_title = $column->grouptitle;
+              $filter_columns[$group_title] = 'optgroup';
+            }
+            
             // add the field name if a field with the same title is already in the list
             $title = Participants_Db::apply_filters( 'translate_string', $column->title );
             $select_title = ( isset( $filter_columns[$column->title] ) || strlen( $column->title ) === 0 ) ? $title . ' (' . $column->name . ')' : $title;
 
             $filter_columns[$select_title] = $column->name;
           }
-          $record_id_field = Participants_Db::$fields['id'];
-          $filter_columns += array(Participants_Db::apply_filters( 'translate_string', $record_id_field->title ) => 'id');
           
           ?>
           <div class="pdb-searchform">
@@ -822,7 +820,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
                               'type' => 'dropdown',
                               'name' => 'search_field[' . $i . ']',
                               'value' => $filter_set['search_field'],
-                              'options' => array('' => 'none') + $filter_columns,
+                              'options' => $filter_columns,
                           );
                           PDb_FormElement::print_element( $element );
                           _ex( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' );
@@ -882,7 +880,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
                             'type' => 'dropdown',
                             'name' => 'sortBy',
                             'value' => self::$filter['sortBy'],
-                            'options' => self::$sortables,
+                            'options' => $filter_columns,
                         );
                         PDb_FormElement::print_element( $element );
 
