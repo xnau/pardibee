@@ -618,6 +618,7 @@ abstract class xnau_Image_Handler {
    */
   public static function getimagesize($uri)
   {
+    $found = false;
     $result = wp_cache_get($uri, self::group, false, $found );
     if ($found === false) {
       $result = @getimagesize($uri);
