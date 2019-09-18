@@ -447,7 +447,7 @@ class PDb_List_Query {
   private function _add_filter_from_get()
   {
     $this->get_input = filter_input_array( INPUT_GET, self::single_search_input_filter() );
-
+      
     if ( isset( $this->get_input ) && (isset( $this->get_input['search_field'] ) || isset( $this->get_input['sortBy'] )) ) {
       /*
        * fill in some assumed defaults in case an abbreviated get string is used
@@ -908,11 +908,8 @@ class PDb_List_Query {
 
     if ( $operator === 0 )
       return false; // no valid operator; skip to the next statement
-
-
-
       
-// get the parts
+    // get the parts
     list( $string, $column, $op_char, $search_term ) = $matches;
 
     $this->_add_single_statement( $column, $op_char, $search_term, $logic, true );
@@ -1460,7 +1457,10 @@ class PDb_List_Query {
             'filter' => FILTER_CALLBACK,
             'options' => array(__CLASS__, 'prepare_search_field')
         ),
-        'operator' => FILTER_SANITIZE_STRING,
+        'operator' => array(
+            'filter' => FILTER_CALLBACK,
+            'options' => array(__CLASS__, 'sanitize_operator')
+        ),
         'sortstring' => FILTER_SANITIZE_STRING,
         'orderstring' => FILTER_SANITIZE_STRING,
             ), self::_common_search_input_filter()
@@ -1530,6 +1530,32 @@ class PDb_List_Query {
       $field = '';
     }
     return strtolower( urldecode( $field ) );
+  }
+  
+  /**
+   * filters the allowed operators for a GET search
+   * 
+   * @param string $operator
+   * @return bool true if allowed
+   */
+  public static function sanitize_operator ($operator )
+  {
+   switch ( urldecode($operator) ) {
+     case '<':
+       return 'lt';
+     case '>':
+       return 'gt';
+     case '=':
+       return 'eq';
+     case 'lt':
+     case 'gt':
+     case '~':
+     case 'eq':
+     case 'ne':
+       return $operator;
+     default:
+       return '';
+   }
   }
 
 }
