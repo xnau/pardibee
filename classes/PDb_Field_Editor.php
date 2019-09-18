@@ -740,6 +740,9 @@ class PDb_Field_Def_Parameter {
       case 'readonly':
         $name = 'readonly';
         break;
+      case 'validation':
+        $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-validation" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+        break;
       case 'options':
         $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-options" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
         break;
