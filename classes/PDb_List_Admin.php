@@ -1237,7 +1237,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
    */
   private static function user_can_use_with_selected()
   {
-    return current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) || current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'with selected actions' ) );
+    return current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) || current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'with selected actions' ) );
   }
 
   /**
