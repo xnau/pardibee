@@ -1428,7 +1428,7 @@ abstract class PDb_Shortcode {
     if ( $field === false ) {
       $field = $this->field;
     }
-    $emptyclass = 'image-upload' == $field->form_element() ? 'image-' . self::emptyclass : self::emptyclass;
+    $emptyclass = strpos( $field->form_element(), 'image' ) !== false ? 'image-' . self::emptyclass : self::emptyclass;
 
     /**
      * @filter pdb-field_empty_class
@@ -1436,7 +1436,18 @@ abstract class PDb_Shortcode {
      * @param PDb_Field_Item the current field
      * @return string the empty class to use
      */
-    return Participants_Db::apply_filters( 'field_empty_class', ( $this->_empty( $field->get_value() ) && $this->_empty( $field->link ) ? $emptyclass : '' ), $field );
+    return Participants_Db::apply_filters( 'field_empty_class', ( $this->apply_empty_class( $field ) ? $emptyclass : '' ), $field );
+  }
+  
+  /**
+   * tells whether to apply the empty class to the element
+   * 
+   * @param PDb_Field_Item $field
+   * @return bool true to apply the emapty class
+   */
+  protected function apply_empty_class( $field )
+  {
+    return $this->_empty( $field->get_value() ) && $this->_empty( $field->link ) && $this->_empty( $field->default_value() );
   }
 
   /**
