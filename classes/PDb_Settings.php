@@ -1471,8 +1471,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
   private function _get_pagelist( $with_none = false, $with_blank = false )
   {
-
-
     $key = ($with_none ? '1' : '0') . ($with_blank ? '1' : '0');
     $pagelist = wp_cache_get( $key, 'pdb-get_pagelist' );
 
