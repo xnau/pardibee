@@ -67,8 +67,9 @@ class PDb_Manage_Fields {
    */
   protected function print_header()
   {
+    $top_space = Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ? 'top-bar-space' : '';
     ?>
-    <div class="wrap participants_db">
+    <div class="wrap participants_db <?php echo $top_space ?>">
       <?php Participants_Db::admin_page_heading() ?>
       <h3><?php _e( 'Manage Database Fields', 'participants-database' ) ?></h3>
       <?php Participants_Db::admin_message(); ?>
@@ -108,7 +109,7 @@ class PDb_Manage_Fields {
         $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
-        
+
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
         ?>
         <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $data_group_id ?>" >
@@ -119,8 +120,14 @@ class PDb_Manage_Fields {
               <div class="pdb-horiz-scroll-width">
               <?php endif ?>
               <form id="manage_<?php echo $group ?>_fields" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
+
+                <div class="submit top-bar-submit">
+                  <span class="field-group-title"><?php echo $this->group_title( $group ) ?></span>
+                  <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n['update fields'] ?></button>
+                </div>
+
                 <?php
-                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group ) ) );
+                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group )) );
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
@@ -136,8 +143,8 @@ class PDb_Manage_Fields {
 
                         $field_definition_attributes = new PDb_Field_Editor( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
-                      <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>" data-numid="<?php echo $database_row['id'] ?>" data-groupid="<?php echo $this->fields_data[$group][0]['group_id'] ?>">
-                        <?php /* <input type="hidden" name="row_<?php echo $database_row['id'] ?>[order]" value="<?php echo $database_row['order'] ?>" /> */?>
+                        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>" data-numid="<?php echo $database_row['id'] ?>" data-groupid="<?php echo $this->fields_data[$group][0]['group_id'] ?>">
+                          <?php /* <input type="hidden" name="row_<?php echo $database_row['id'] ?>[order]" value="<?php echo $database_row['order'] ?>" /> */ ?>
 
                           <?php
                           while ( $control_html = $field_definition_attributes->get_next_control() ) {
@@ -176,6 +183,13 @@ class PDb_Manage_Fields {
         ?>
         <div id="field_groups" class="manage-fields-wrap">
           <form id="manage_field_groups" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
+
+            <div class="submit top-bar-submit">
+              <span class="field-group-title"><?php _e( 'Field Groups', 'participants-database' ) ?></span>
+              <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n['update groups'] ?></button>
+            </div>
+
+
             <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
             <h3><?php _e( 'Edit / Add / Remove Field Groups', 'participants-database' ) ?></h3>
             <p class="add-group-inputs">
@@ -336,7 +350,7 @@ class PDb_Manage_Fields {
               PDb_FormElement::print_element( array(
                   'type' => 'hidden',
                   'name' => 'order',
-                  'value' => $this->next_field_order($group),
+                  'value' => $this->next_field_order( $group ),
                       )
               );
               ?>
@@ -402,8 +416,8 @@ class PDb_Manage_Fields {
       if ( $group === 'internal' ) {
         // provide a limited list for the internal group
         return array(
-        'add_csv' => __( 'Add to CSV', 'participants-database' ),
-        'remove_csv' => __( 'Remove from CSV', 'participants-database' ),
+            'add_csv' => __( 'Add to CSV', 'participants-database' ),
+            'remove_csv' => __( 'Remove from CSV', 'participants-database' ),
         );
       }
       /**
@@ -430,7 +444,7 @@ class PDb_Manage_Fields {
     protected function setup_group_data()
     {
       $this->group_defs = array();
-      foreach ( Participants_Db::get_groups( ) as $group => $defs ) {
+      foreach ( Participants_Db::get_groups() as $group => $defs ) {
         // mode is the 1.8.5 group visibility mode
         // this converts the previous visibility settings to the new mode
         if ( !isset( $defs['mode'] ) || empty( $defs['mode'] ) ) {
@@ -479,11 +493,9 @@ class PDb_Manage_Fields {
       foreach ( $this->groups() as $group ) {
 
         $sql = "SELECT f.id,f.name,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
-        
+
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
-      
       }
-      
     }
 
     /**
@@ -504,7 +516,7 @@ class PDb_Manage_Fields {
                   'public' => __( 'Public', 'participants-database' ),
                   'private' => __( 'Private', 'participants-database' ),
                   'admin' => _x( 'Admin', 'short form of "administrator"', 'participants-database' ),
-      ) );
+              ) );
     }
 
     /**
@@ -523,7 +535,7 @@ class PDb_Manage_Fields {
       $title_limit = Participants_Db::apply_filters( 'admin_group_title_length_limit', 30 );
       return empty( $group_title ) || strlen( $group_title ) > $title_limit ? ucwords( str_replace( '_', ' ', $group ) ) : $group_title;
     }
-    
+
     /**
      * provides the group order value
      * 
