@@ -51,7 +51,7 @@ class Participants_Db extends PDb_Base {
   /**
    * @var string sets the min PHP version level required
    */
-  const min_php_version = '5.4';
+  const min_php_version = '5.6';
 
   /**
    *
@@ -1117,6 +1117,17 @@ class Participants_Db extends PDb_Base {
   public static function get_field_atts( $field = false, $atts = '*' )
   {
     return self::get_column( $field );
+  }
+  
+  /**
+   * provides a field definition given the field name
+   * 
+   * @param string $fieldname
+   * @return PDb_Form_Field_Def|bool false if no field with the name
+   */
+  public static function get_field_def( $fieldname )
+  {
+    return self::get_column( $fieldname );
   }
 
   /**
@@ -3283,7 +3294,7 @@ class Participants_Db extends PDb_Base {
     $svg_source = plugins_url( 'ui/ajax-loader.svg', __FILE__ );
     $template = array(
         '<span class="ajax-loading"><object data="%1$s"><img src="%2$s" /></object></span>',
-        '<svg class="ajax-loading" width="16" height="16"><image xlink:href="%1$s" src="%2$s" width="16" height="16" /></svg>'
+        '<svg class="ajax-loading" ><image xlink:href="%1$s" src="%2$s" /></svg>'
     );
     /**
      * @version 1.6.3
