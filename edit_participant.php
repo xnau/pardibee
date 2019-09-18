@@ -57,8 +57,10 @@ if ( $participant_values ) :
   $section = '';
   
   do_action('pdb-before_edit_participant_body');
+  
+  $top_space = Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ? 'top-bar-space' : '';
   ?>
-  <div class="wrap pdb-admin-edit-participant participants_db">
+  <div class="wrap pdb-admin-edit-participant participants_db <?php echo $top_space ?>">
     <h2><?php echo $page_title ?></h2>
     <?php
     if ( is_object( Participants_Db::$validation_errors ) ) {
@@ -70,6 +72,18 @@ if ( $participant_values ) :
     <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>" enctype="multipart/form-data" autocomplete="off" >
       <?php
       PDb_FormElement::print_hidden_fields( $hidden );
+      
+      if ( Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ) :
+        ?>
+      <div class="top-bar-submit">
+        <span class="field-group-title"><?php _e( 'Save the Record', 'participants-database' ) ?></span>
+        <?php if ( !empty( $participant_id ) ) : ?><input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button"><?php endif ?>
+              <input class="button button-primary" type="submit" value="<?php echo self::$i18n['submit'] ?>" name="submit_button">
+              <input class="button button-primary" type="submit" value="<?php echo self::$i18n['apply'] ?>" name="submit_button">
+              <input class="button button-default button-rightarrow" type="submit" value="<?php echo self::$i18n['next'] ?>" name="submit_button">
+      </div>
+      <?php
+      endif;
       
       // get the columns and output form
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
@@ -261,7 +275,7 @@ if ( $participant_values ) :
         <?php if ( is_admin() ) : ?>
           <tr>
             <td class="submit-buttons">
-              <?php if ( !empty( $input_id ) ) : ?><input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button"><?php endif ?>
+              <?php if ( !empty( $participant_id ) ) : ?><input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button"><?php endif ?>
               <input class="button button-primary" type="submit" value="<?php echo self::$i18n['submit'] ?>" name="submit_button">
               <input class="button button-primary" type="submit" value="<?php echo self::$i18n['apply'] ?>" name="submit_button">
               <input class="button button-default button-rightarrow" type="submit" value="<?php echo self::$i18n['next'] ?>" name="submit_button">
@@ -272,7 +286,7 @@ if ( $participant_values ) :
               <?php _e( '<strong>Submit:</strong> save record and return to list<br><strong>Apply:</strong> save record and continue with same record<br><strong>Next:</strong> save record and then start a new one', 'participants-database' ) ?>
               <br />
               <?php
-              if ( !empty( $input_id ) ) {
+              if ( !empty( $participant_id ) ) {
                 _e( '<strong>Previous:</strong> save and move to previous record', 'participants-database' );
               }
               ?>
