@@ -26,7 +26,7 @@ class PDb_Manage_List_Columns {
   {
     $ui = new self();
     $ui->CSS();
-    $ui->js();
+    wp_add_inline_script( 'pdb-admin', $ui->js() );
     $ui->display();
   }
 
@@ -58,7 +58,7 @@ class PDb_Manage_List_Columns {
   {
     global $wpdb;
 
-    $column = $this->list_column($type);
+    $column = $this->list_column( $type );
 
     $setlist = array();
     foreach ( $this->fieldlist( $update_list ) as $field => $order ) {
@@ -81,11 +81,11 @@ class PDb_Manage_List_Columns {
   private function fieldlist( $update_list )
   {
     $fieldlist = $this->field_reset_array();
-    
+
     if ( count( $update_list ) === 0 ) {
       return $fieldlist;
     }
-    
+
     foreach ( $update_list as $i => $rawname ) {
       $fieldname = filter_var( $rawname, FILTER_SANITIZE_STRING );
       if ( isset( $fieldlist[$fieldname] ) ) { // check against list of defined fields before adding
@@ -132,7 +132,7 @@ class PDb_Manage_List_Columns {
     $where = 'WHERE v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
     return $this->_field_list( $where );
   }
-  
+
   /**
    * provides a list of excluded form elements
    * 
@@ -145,13 +145,13 @@ class PDb_Manage_List_Columns {
      * @param array of form element names
      * @return array
      */
-    return Participants_Db::apply_filters('list_columns_excluded_form_elements', array('captcha'));
+    return Participants_Db::apply_filters( 'list_columns_excluded_form_elements', array('captcha') );
   }
 
   /**
    * provides the list of source fields
    * 
-   * @param string $typw 'admin or 'public'
+   * @param string $type 'admin or 'public'
    * @return array of data objects
    */
   private function source_fields( $type )
@@ -201,10 +201,10 @@ class PDb_Manage_List_Columns {
   {
     global $wpdb;
 
-    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY g.order, v.order';
+    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element, ( (g.order * 10000) + v.order ) AS sortorder FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY sortorder';
 
     $result = $wpdb->get_results( $sql, OBJECT_K );
- 
+
     return $result;
   }
 
@@ -233,57 +233,65 @@ class PDb_Manage_List_Columns {
       </p>
       <div class='column-setup-pair' id="publicfields">
         <h3><?php _e( 'Public List Column Setup', 'participants-database' ) ?></h3>
-      <p><?php _e( 'Set up the columns for list displays using the [pdb_list] shortcode.', 'participants-database' ) ?></p>
+        <p><?php _e( 'Set up the columns for list displays using the [pdb_list] shortcode.', 'participants-database' ) ?></p>
         <div class='available-fields'>
           <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="pubfields-source" class='field-list fields-sortable'>
-            <?php foreach ( $this->source_fields( 'public' ) as $field ) {
-              echo $this->field_item($field);
-            } ?>
+            <?php
+            foreach ( $this->source_fields( 'public' ) as $field ) {
+              echo $this->field_item( $field );
+            }
+            ?>
           </ul>
         </div>
         <div class='columns-setup'>
           <h3><?php _e( 'List Columns', 'participants-database' ) ?></h3>
           <ul id="pubfields-chosen" class='field-list columnsetup fields-sortable'>
-            <?php foreach ( $this->configured_fields( 'public' ) as $field ) {
-              echo $this->field_item($field);
-            } ?>
+            <?php
+            foreach ( $this->configured_fields( 'public' ) as $field ) {
+              echo $this->field_item( $field );
+            }
+            ?>
           </ul>
         </div>
       </div>
       <div class='column-setup-pair' id="adminfields">
         <h3><?php _e( 'Admin List Column Setup', 'participants-database' ) ?></h3>
-      <p><?php _e( 'Set up the columns for list displays on the List Participants admin page.', 'participants-database' ) ?></p>
+        <p><?php _e( 'Set up the columns for list displays on the List Participants admin page.', 'participants-database' ) ?></p>
         <div class='available-fields'>
           <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="adminfields-source" class='field-list fields-sortable'>
-            <?php foreach ( $this->source_fields( 'admin' ) as $field ) {
-              echo $this->field_item($field);
-            } ?>
+            <?php
+            foreach ( $this->source_fields( 'admin' ) as $field ) {
+              echo $this->field_item( $field );
+            }
+            ?>
           </ul>
         </div>
         <div class='columns-setup'>
           <h3><?php _e( 'List Columns', 'participants-database' ) ?></h3>
           <ul id="adminfields-chosen" class='field-list columnsetup fields-sortable'>
-            <?php foreach ( $this->configured_fields( 'admin' ) as $field ) {
-              echo $this->field_item($field);
-            } ?>
+            <?php
+            foreach ( $this->configured_fields( 'admin' ) as $field ) {
+              echo $this->field_item( $field );
+            }
+            ?>
           </ul>
         </div>
       </div>
     </div>
     <?php
   }
-  
+
   /**
    * provides the individual field item HTML
    * 
-   * @param PDb_Field_Item $field
+   * @param object $field
    * @return string HTML
    */
   private function field_item( $field )
   {
-    return sprintf( '<li class="ui-state-default %s" data-id="%s" data-fieldname="%s">%s</li>', 'color-' . $this->colorclass($field), $field->id, $field->name, $field->title );
+    return sprintf( '<li class="ui-state-default %s" data-id="%s" data-fieldname="%s" data-order="%s">%s</li>', 'color-' . $this->colorclass( $field ), $field->id, $field->name, $field->sortorder, $field->title );
   }
 
   /**
@@ -296,6 +304,9 @@ class PDb_Manage_List_Columns {
     <script>
       jQuery(document).ready(function ($) {
         var columngroup;
+        var itemsort = function (a,b) {
+          return +a.dataset.order - +b.dataset.order;
+        };
         $(".fields-sortable").sortable({
           placeholder : "ui-state-highlight",
           start : function (event, ui) {
@@ -312,14 +323,18 @@ class PDb_Manage_List_Columns {
             };
             $.post(ajaxurl, data);
             var sourcelist = columngroup.find('.available-fields ul.field-list');
-            sourcelist.find('li').sort(function (a, b) {
-              return +a.dataset.id - +b.dataset.id;
-            })
+            sourcelist.find('li')
+                    .sort(itemsort)
                     .appendTo(sourcelist);
           },
         }).disableSelection();
         $('#publicfields .fields-sortable').sortable("option", "connectWith", "#publicfields .fields-sortable");
         $('#adminfields .fields-sortable').sortable("option", "connectWith", "#adminfields .fields-sortable");
+        $('.available-fields ul.field-list').each(function () {
+          $(this).find('li')
+                  .sort(itemsort)
+                  .appendTo($(this));
+        });
       });
     </script>
     <?php
@@ -339,6 +354,8 @@ class PDb_Manage_List_Columns {
       }
 
       .field-list {
+        display: flex;
+        flex-wrap: wrap;
         padding: 0;
         height: auto;
         background-color: white;
@@ -357,7 +374,7 @@ class PDb_Manage_List_Columns {
         padding: 5px 10px;
         border-radius: 5px;
         -moz-border-radius: 5px;
-/*        background: #fff;*/
+        /*        background: #fff;*/
         margin: 5px;
         vertical-align: bottom;
         border-width: 2px;
@@ -366,7 +383,7 @@ class PDb_Manage_List_Columns {
       }
 
       .field-list.columnsetup li {
-/*        background-color: #f1f1f1;*/
+        /*        background-color: #f1f1f1;*/
       }
 
       .columns-setup {
@@ -385,7 +402,7 @@ class PDb_Manage_List_Columns {
     </style>
     <?php
   }
-  
+
   /**
    * provides a color class string for a field
    * 
@@ -395,14 +412,14 @@ class PDb_Manage_List_Columns {
   private function colorclass( $field )
   {
     switch ( $field->form_element ) {
-      
+
       case 'text-line':
       case 'text-area':
       case 'rich-text':
       case 'password':
         $colorclass = 'text';
         break;
-      
+
       case 'checkbox':
       case 'radio':
       case 'dropdown':
@@ -413,40 +430,40 @@ class PDb_Manage_List_Columns {
       case 'multi-select-other':
         $colorclass = 'selector';
         break;
-      
+
       case 'date':
       case 'numeric':
       case 'decimal':
       case 'currency':
         $colorclass = 'numeric';
         break;
-      
+
       case 'link':
       case 'image-upload':
       case 'file-upload':
         $colorclass = 'upload';
         break;
-      
+
       case 'hidden':
         $colorclass = 'utility';
         break;
-      
+
       case 'captcha':
         $colorclass = 'captcha';
         break;
-      
+
       case 'placeholder':
-        
+
         $colorclass = 'utility';
         break;
-      
+
       case 'timestamp':
-        
+
         $colorclass = 'numeric';
         break;
-      
+
       default:
-        
+
         /**
          * sets the color classname for the elemenmt
          * 
@@ -457,7 +474,7 @@ class PDb_Manage_List_Columns {
          */
         $colorclass = Participants_Db::apply_filters( $field->form_element . '_form_element_colorclass', 'custom' );
     }
-    
+
     return $colorclass;
   }
 
