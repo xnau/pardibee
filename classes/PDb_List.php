@@ -158,7 +158,12 @@ class PDb_List extends PDb_Shortcode {
     // run the parent class initialization to set up the parent methods 
     parent::__construct( $shortcode_atts, $shortcode_defaults );
 
-    $this->list_anchor = 'participants-list-' . $this->instance_index;
+    /**
+     * @filter pdb-list_anchor_name
+     * @param string the default list anchor name
+     * @return string
+     */
+    $this->list_anchor = Participants_Db::apply_filters( 'list_anchor_name', 'participants-list-' . $this->instance_index );
 
     $this->list_page = Participants_Db::$list_page;
 
