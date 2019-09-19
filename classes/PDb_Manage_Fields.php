@@ -527,7 +527,7 @@ class PDb_Manage_Fields {
      */
     protected function group_title( $group )
     {
-      $group_title = $this->group_defs[$group]['title'];
+      $group_title = stripslashes($this->group_defs[$group]['title']);
       /**
        * @since 1.7.3.2
        * group titles on tabs and such are limited to 30 characters to preserve layout
