@@ -92,7 +92,6 @@ class PDb_Base {
     $asset_filename = self::asset_filename( $asset );
     
     if ( ! is_readable( trailingslashit(Participants_Db::$plugin_path) . $asset_filename ) ) {
-      error_log(__METHOD__.' not readable: '.$asset_filename);
       $asset_filename = $asset; // revert to the original name
     }
     
@@ -109,7 +108,14 @@ class PDb_Base {
     
     $info = pathinfo($asset);
     
-    $presuffix = defined('WP_DEBUG') && WP_DEBUG ? '' : '.min';
+    /**
+     * @filter pdb-use_minified_assets
+     * @param bool default: true if WP_DEBUG is enabled
+     * @return bool
+     */
+    $use_minified = Participants_Db::apply_filters( 'use_minified_assets', defined('WP_DEBUG') && WP_DEBUG );
+    
+    $presuffix = $use_minified ? '' : '.min';
     
     return ($info['dirname'] ? $info['dirname'] . DIRECTORY_SEPARATOR : '') 
         . $info['filename'] 
