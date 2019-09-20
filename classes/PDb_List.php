@@ -645,11 +645,22 @@ class PDb_List extends PDb_Shortcode {
 //    error_log(__METHOD__.' target: '.$this->shortcode_atts['target_instance'].' module: '.$this->module);
 
     $search_term = PDb_FormElement::get_value_title( $this->list_query->current_filter( 'search_term' ), $this->list_query->current_filter( 'search_field' ) );
+    
+    $search_input_config = array(
+        'name' => 'value',
+        'type' => 'text-line',
+        'attributes' => Participants_Db::apply_filters( 'search_input_attributes' , array(
+            'id' => 'participant_search_term',
+            'class' => 'search-item',
+        ) ),
+        'value' => $search_term,
+    );
 
     $output = array();
 
     $output[] = '<input name="operator" type="hidden" class="search-item" value="' . ( Participants_Db::plugin_setting_is_true( 'strict_search' ) ? '=' : 'LIKE' ) . '" />';
-    $output[] = '<input id="participant_search_term" type="text" name="value" class="search-item" value="' . esc_attr( $search_term ) . '">';
+    $output[] = PDb_FormElement::get_element($search_input_config);
+    //$output[] = '<input id="participant_search_term" type="text" name="value" class="search-item" value="' . esc_attr( $search_term ) . '">';
     $output[] = $this->search_submit_buttons();
 
     /**
