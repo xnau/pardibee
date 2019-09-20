@@ -808,10 +808,7 @@ class PDb_FormElement extends xnau_FormElement {
   }
 
   /**
-   * gets the value that corresponds to a value title
-   * 
-   * @version 1.6.2.6 checks for the "title" in the values so that a value doesn't 
-   *                  get treated as though it were a title
+   * gets the value that corresponds to a value title from a set of field options
    * 
    * @param string $title the title of the value
    * @param string $fieldname the name of the field
@@ -820,8 +817,10 @@ class PDb_FormElement extends xnau_FormElement {
   public static function get_title_value( $title, $fieldname )
   {
     $value = $title; // if no title is found, return the title argument
+    
     $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
     /* @var $field PDb_Form_Field_Def */
+    
     if ( $field && $field->is_value_set() ) {
       
       $options_array = $field->options();
@@ -839,29 +838,35 @@ class PDb_FormElement extends xnau_FormElement {
       }
       
      /*
-      * we still haven't located the corresponding value, maybe we're looking for 
-      * a match within the title or for a case-insensitive match
+      * if a direct match doesn't find it, use a regex to find a close exact match
       * 
-      * this is necessary when titles are tagged with translations: the search 
-      * can take place in multiple languages, and a match will still happen
-      * 
-      * we're expecting a title with translations to look like this:
-      * [en:]English[de:]Deutsch[es:]Espanol[:]
-      * 
-      * this will match the title within any of the defined title values of 
-      * the field options
+      * if that doesn't find a match, get a set of possible close matches and choose 
+      * the closest one from that subset
       * 
       */
-//          error_log(__METHOD__.' title: '.$title.' options array: '.print_r($options_array,1));
-     /**
-      * @version 1.6.2.6
-      * 
-      * added filter: pdb-value_title_match_pattern
-      */
-      $title_pattern = Participants_Db::apply_filters( 'value_title_match_pattern', "/%s/i" );
-      if ( $match = current( preg_grep( sprintf( $title_pattern, preg_quote( $title, '/' ) ), array_keys( $options_array ) ) ) ) {
+      
+      // first try to find a full match
+      if ( $match = current( preg_grep( '/^' . preg_quote( $title, '/' ) . '$/i', array_keys( $options_array ) ) ) ) {
         $value = $options_array[$match];
+      } else {
+        
+        // get a list of the substring matches from the options
+        $match_list = preg_grep( '/' . preg_quote( $title, '/' ) . '/i', array_keys( $options_array ) );
+        
+        // if we find a substring match, find the closest mathching title
+        if ( ! empty( $match_list ) ) {
+          // find the closest match
+          $ranked_matches = array();
+          foreach( $match_list as $match ) {
+            similar_text( strtolower($title), strtolower($match), $rank );
+            $ranked_matches[(string)$rank] = $match;
+          }
+          ksort( $ranked_matches, SORT_NUMERIC );
+
+          $value = $options_array[ end($ranked_matches) ];
+        }
       }
+      
     }
     return $value;
   }
