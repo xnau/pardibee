@@ -1550,6 +1550,7 @@ class PDb_List_Query {
      case 'lt':
      case 'gt':
      case '~':
+     case 'LIKE':
      case 'eq':
      case 'ne':
        return $operator;
