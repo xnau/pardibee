@@ -50,6 +50,21 @@ if ( ! defined( 'ABSPATH' ) ) die;
     }
     
   }
+  
+  /**
+   * determines if the field should be added to the iterator
+   * 
+   * @param PDb_Field_Item $field
+   * @return bool true if the field is to be added
+   */
+  protected function field_should_be_added( $field )
+  {  
+    $add = !$field->is_hidden_field();
+    if ( $add ) {
+      $add = !$field->is_match_validation();
+    }
+    return $add;
+  }
 
 	/**
 	 * prints a signup form called by a shortcode
