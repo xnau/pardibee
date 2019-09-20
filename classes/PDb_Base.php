@@ -78,6 +78,44 @@ class PDb_Base {
     }
     return $scheme . trailingslashit( implode( '/', $common ) );
   }
+  
+  /**
+   * provides the asset include path
+   * 
+   * @param string $asset name of the asset file with its subdirectory
+   * @return asset URL
+   */
+  public static function asset_url( $asset )
+  {
+    $basepath = Participants_Db::$plugin_path . '/participants-database/';
+    
+    $asset_filename = self::asset_filename( $asset );
+    
+    if ( ! is_readable( trailingslashit(Participants_Db::$plugin_path) . $asset_filename ) ) {
+      error_log(__METHOD__.' not readable: '.$asset_filename);
+      $asset_filename = $asset; // revert to the original name
+    }
+    
+    return plugins_url( $asset_filename, $basepath );
+  }
+  
+  /**
+   * adds the minify extension to an asset filename
+   * 
+   * @param string $asset
+   * @return asset filename with the minify extension
+   */
+  protected static function asset_filename( $asset ) {
+    
+    $info = pathinfo($asset);
+    
+    $presuffix = defined('WP_DEBUG') && WP_DEBUG ? '' : '.min';
+    
+    return ($info['dirname'] ? $info['dirname'] . DIRECTORY_SEPARATOR : '') 
+        . $info['filename'] 
+        . $presuffix . '.' 
+        . $info['extension'];
+  }
 
   /**
    * provides a simplified way to add or update a participant record
