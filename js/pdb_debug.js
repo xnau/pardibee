@@ -33,4 +33,3 @@ jQuery(document).ready(function ($) {
   });
   pdb_scroll_down();
 });
-

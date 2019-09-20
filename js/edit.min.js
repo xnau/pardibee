@@ -1,0 +1,1 @@
+jQuery(document).ready(function(a){a(".edit-participant input.date_field").datepicker()});

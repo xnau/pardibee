@@ -1,0 +1,1 @@
+jQuery(document).on("click",".pdb_admin_notices-notice .notice-dismiss",function(a){a=jQuery(a.target).parent(".pdb_admin_notices-notice").data("dismiss");jQuery.ajax({url:ajaxurl,data:{action:PDb_Notices.action,msgid:a,nonce:PDb_Notices.nonce}})});
