@@ -661,6 +661,17 @@ class PDb_Form_Field_Def {
   }
   
   /**
+   * tells if the field validation is a match to another field
+   * 
+   * @return bool
+   */
+  public function is_match_validation()
+  {
+    $methods = array_keys( PDb_FormValidation::validation_methods() );
+    return $this->validation !== '' && ! in_array( $this->validation, $methods ) && !xnau_FormValidation::is_regex( $this->validation );
+  }
+  
+  /**
    * tells if the field's value is to be treated as a number
    * 
    * @return bool
