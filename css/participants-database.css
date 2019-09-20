@@ -270,6 +270,10 @@ input[type="color"] {
   width: 32px;
   height: 32px;
 }
+svg.ajax-loading image {
+  height: 32px;
+  width: 32px;
+}
 .ajax-loading object {
   height: 32px;
   width: 32px;
