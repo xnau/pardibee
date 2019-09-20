@@ -75,7 +75,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     
     if ( $this->printing_groups() and ! empty( $this->description ) ) {
       
-      $output = $start_tag.$this->prepare_display_value( $this->description ).$end_tag;
+      $output = $start_tag.$this->prepare_display_value( stripslashes($this->description) ).$end_tag;
       
       if ( $echo ) echo $output;
       else return $output;
