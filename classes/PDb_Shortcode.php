@@ -710,7 +710,13 @@ abstract class PDb_Shortcode {
          * hidden fields are stored separately for modules that use them as
          * hidden input fields
          */
-        if ( !$field->is_hidden_field() ) {
+        /**
+         * @filter pdb-add_field_to_iterator
+         * @param bool default setting
+         * @param PDb_Shortcode current object
+         * @return bool
+         */
+        if ( Participants_Db::apply_filters( 'add_field_to_iterator', $this->field_should_be_added( $field ), $this ) ) {
           /*
            * add the field object to the record object
            */
@@ -739,6 +745,17 @@ abstract class PDb_Shortcode {
 
     // save the number of groups
     $this->group_count = count( (array) $this->record );
+  }
+  
+  /**
+   * determines if the field should be added to the iterator
+   * 
+   * @param PDb_Field_Item $field
+   * @return bool true if the field is to be added
+   */
+  protected function field_should_be_added( $field )
+  {  
+    return !$field->is_hidden_field();
   }
 
   /**
