@@ -665,7 +665,7 @@ class PDb_Base {
   /**
    * provides an array of allowed extensions from the field def "values" parameter
    * 
-   * @param string $values possibly serialized array of field attributes or allowed extensions
+   * @param string|array $values possibly serialized array of field attributes or allowed extensions
    * @return string comma-separated list of allowed extensions, empty string if not defined in the field
    */
   public static function get_field_allowed_extensions( $values )
