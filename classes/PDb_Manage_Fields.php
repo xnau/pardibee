@@ -120,12 +120,12 @@ class PDb_Manage_Fields {
               <div class="pdb-horiz-scroll-width">
               <?php endif ?>
               <form id="manage_<?php echo $group ?>_fields" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
-
+                <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
                 <div class="submit top-bar-submit">
                   <span class="field-group-title"><?php echo $this->group_title( $group ) ?></span>
                   <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n['update fields'] ?></button>
                 </div>
-
+                <?php endif ?>
                 <?php
                 PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group )) );
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
@@ -183,12 +183,12 @@ class PDb_Manage_Fields {
         ?>
         <div id="field_groups" class="manage-fields-wrap">
           <form id="manage_field_groups" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
-
+            <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
             <div class="submit top-bar-submit">
               <span class="field-group-title"><?php _e( 'Field Groups', 'participants-database' ) ?></span>
               <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n['update groups'] ?></button>
             </div>
-
+            <?php endif ?>
 
             <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
             <h3><?php _e( 'Edit / Add / Remove Field Groups', 'participants-database' ) ?></h3>
