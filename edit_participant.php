@@ -73,7 +73,7 @@ if ( $participant_values ) :
       <?php
       PDb_FormElement::print_hidden_fields( $hidden );
       
-      if ( Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ) :
+      if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) :
         ?>
       <div class="top-bar-submit">
         <span class="field-group-title"><?php _e( 'Save the Record', 'participants-database' ) ?></span>
