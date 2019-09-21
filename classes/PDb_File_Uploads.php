@@ -114,12 +114,10 @@ class PDb_File_Uploads {
 
     if ( $is_image ) {
       /*
-    if ( $ty
        * we perform a validity check on the image files, this also makes sure only 
        * images are uploaded in image upload fields
        */
-      $fileinfo = PDb_Image::getimagesize( $file['tmp_name'] );
-      $valid_image = in_array( $fileinfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WBMP) );
+      $valid_image = preg_match( '/(gif|jpeg|png)/', mime_content_type( $file['tmp_name'] ) ) === 1;
 
       if ( !$valid_image ) {
 
