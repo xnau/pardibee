@@ -394,12 +394,12 @@ table.spreadsheet {
 }
 body[class*='participants-database'] .text-block {
   max-width: 35em;
-  font-size: 1.3em;
   line-height: 1;
 }
 body[class*='participants-database'] .text-block p,
 body[class*='participants-database'] .text-block li {
-  line-height: 1.2;
+  line-height: 1.3;
+  font-size: 110%;
 }
 /* now using WP defaults
 .participants_db input[type="submit"] {
