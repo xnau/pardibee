@@ -1,11 +1,5 @@
 @charset "UTF-8";
 
-/*
-Participants DB Admin CSS 
-version 2.1 
-date 5-2017
-*/
-
 /*** PARTICIPANT LIST ***/
 body[class*='participants-database'] .widefat td {
   vertical-align:middle;
@@ -186,6 +180,9 @@ aside.attribution {
   border-left: 2px solid HSL(0, 0%, 86.7%);
   z-index: 100;
 }
+p.submit.top-bar-submit  {
+  margin-top: 0;
+}
 .top-bar-submit .field-group-title {
   width: auto;
   border-bottom: none;
@@ -195,6 +192,9 @@ aside.attribution {
 }
 .top-bar-space {
   margin-top: 50px;
+}
+.mobile .top-bar-submit .field-group-title {
+  display: block;
 }
 
 /*** LIVE NOTIFICATIONS ***/
@@ -323,7 +323,7 @@ body[class*='participants-database'] .form-table {
 .participants_db script+.helptext,
 .participants_db .wp-editor-wrap+.helptext,
 .participants_db textarea+.helptext {
-  width:390px;
+  max-width:390px;
 }
 .participants_db input[type='text']+.helptext,
 .participants_db input[type='email']+.helptext,
