@@ -355,12 +355,13 @@ class PDb_FormElement extends xnau_FormElement {
         case 'dropdown-other':
         case 'select-other':
 
-          $field->set_value( $field->display_array_value() );
-
           if ( $html ) {
+            $temp = $field->value();
+            $field->set_value( $field->display_array_value() );
             $return = sprintf( '<span %s>%s</span>', self::class_attribute( $field->form_element() ), self::make_link( $field ) );
+            $field->set_value( $temp );
           } else {
-            $return = $field->value();
+            $return = $field->display_array_value();
           }
           
           break;
@@ -784,7 +785,6 @@ class PDb_FormElement extends xnau_FormElement {
    * if there is no title defined, or if the values are stored as a simple string, 
    * the value is returned unchanged
    * 
-   * @global object $wpdb
    * @param string $value
    * @param string $fieldname
    * @return string the title matching the value
@@ -793,18 +793,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $field = PDb_Form_Field_Def::is_field( $fieldname ) ? Participants_Db::$fields[$fieldname] : false;
     /* @var $field PDb_Form_field_Def */
-    if ( $field && $field->is_value_set() ) {
-      foreach ( $field->options() as $option_title => $option_value ) {
-
-        if ( !is_string( $option_title ) || $option_title === 'other' ) {
-          // do nothing: we use the stored value
-        } elseif (  $option_value === $value ) { // strip out spaces in the option because we did that to the value
-          // grab the option title
-          return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
-        }
-      }
-    }
-    return $value;
+    return $field ? $field->value_title($value) : $value;
   }
 
   /**
