@@ -80,6 +80,7 @@ class PDb_List_Query_Filter {
    * 'logic'     => $logic
    * 'term'      => $search_term
    * 'shortcode' => $shortcode
+   * 'parenthesis_logic' => true to parenthesize OR statements
    */
   public function __construct( $params = array() )
   {
