@@ -82,7 +82,7 @@ class xnau_Plugin_Settings {
     // set up the HTML for the built-in display functions
     // these are generic settings to be modified by the subclass
     $this->help_text_wrap = '<span class="helptext">%s</span>';
-    $this->submit_wrap = '<p class="submit">%s</p>';
+    $this->submit_wrap = '<p class="%s">%s</p>';
     $this->submit_class = 'button-primary';
     $this->submit_button = 'Save Settings';
 
@@ -244,7 +244,7 @@ class xnau_Plugin_Settings {
         'name' => 'submit_button',
     );
 
-    printf( $this->submit_wrap, PDb_FormElement::get_element( $args ) );
+    printf( $this->submit_wrap, 'submit', PDb_FormElement::get_element( $args ) );
     ?>
     </form>
       <?php

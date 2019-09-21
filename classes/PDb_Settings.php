@@ -1271,7 +1271,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'dropdown',
             'help_text' => sprintf(__( 'this will enable writing to the %s debugging log.', 'participants-database' ), Participants_Db::$plugin_title ) . $this->settings_help( 'enable-debugging'),
             'value' => $this->debug_value(),
-            'options' => array( 
+            'options' => array(
+                'null_select' => false,
                 __('off', 'participants-database') => 0, 
                 __('plugin debug', 'participants-database') => 1,
                 __('all errors', 'participants-database') => 2,
@@ -1339,6 +1340,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'admin_horiz_scroll',
+        'title' => __( 'Plugin Admin Horizontal Scrolling', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'use horizontal scrolling on list and fields management screens', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'record_edit_capability',
@@ -1353,14 +1367,14 @@ class PDb_Settings extends xnau_Plugin_Settings {
     );
 
     $this->plugin_settings[] = array(
-        'name' => 'plugin_admin_capability',
-        'title' => __( 'Plugin Admin Access Level', 'participants-database' ),
+        'name' => 'top_bar_submit',
+        'title' => __( 'Top Settings Submit', 'participants-database' ),
         'group' => 'pdb-admin',
         'options' => array(
-            'type' => 'dropdown',
-            'help_text' => __( 'sets the user access level for fields management, plugin settings, deleting records and CSV operations.', 'participants-database' ),
-            'value' => 'manage_options',
-            'options' => $this->get_role_select(),
+            'type' => 'checkbox',
+            'help_text' => __( 'show a submit button at the top of admin settings and configuration pages', 'participants-database' ),
+            'value' => 1,
+            'options' => array(1, 0),
         )
     );
     
@@ -1741,7 +1755,12 @@ ORDER BY g.order, v.order';
           do_settings_sections( $this->settings_page );
           ?>
         </div>
-        <?php printf( '<p class="submit">%s</p>', PDb_FormElement::get_element( $submit_button_args ) ); ?>
+        <?php 
+        if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) {
+          printf( $this->submit_wrap, 'submit top-bar-submit', PDb_FormElement::get_element( $submit_button_args ) );
+        }
+        printf( $this->submit_wrap, 'submit', PDb_FormElement::get_element( $submit_button_args ) ); 
+        ?>
 
       </form>
 
