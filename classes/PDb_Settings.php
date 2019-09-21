@@ -46,7 +46,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'pdb-resend' => __( 'Settings for the lost private link resend function.', 'participants-database' ),
         'pdb-advanced' => __( 'Settings for special configurations.', 'participants-database' ),
         'pdb-admin' => __( 'Settings for the plugin backend.', 'participants-database' ),
-        'pdb-css' => __( 'User CSS rules for styling plugin displays.</h4><p>If you\'re new to CSS, try this tutorial to help you get started: <a target="_blank" href="http://shrsl.com/?dnf8">Use Firebug for Editing WordPress Themes.</a></p>', 'participants-database' ),
+        'pdb-css' => sprintf( __( 'User CSS rules for styling plugin displays.</h4><p>If you\'re new to CSS, try this tutorial to help you get started: %s</p>', 'participants-database' ), '<a href="https://xnau.com/simple-css-techniques-for-wordpress-part-1/" target="_blank" >Simple CSS Techniques for WordPress</a>' ),
     );
     // determine the type of text-area elements to use for email body settings
     $this->textarea_type = Participants_Db::plugin_setting_is_true('html_email') ? 'rich-text' : 'text-area';
