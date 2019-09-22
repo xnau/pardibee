@@ -939,7 +939,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
             }
             
             // add the delete action
-            if ( current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'delete participants' ) ) ) {
+            if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
               $with_selection_actions = array(
                         __( 'delete', 'participants-database' ) => 'delete'
                     ) + $with_selection_actions;
