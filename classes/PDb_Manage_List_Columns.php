@@ -201,7 +201,7 @@ class PDb_Manage_List_Columns {
   {
     global $wpdb;
 
-    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element, ( (g.order * 10000) + v.order ) AS sortorder FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY sortorder';
+    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element,v.group,g.title AS grouptitle,((g.order * 10000) + v.order) AS sortorder FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY sortorder';
 
     $result = $wpdb->get_results( $sql, OBJECT_K );
 
@@ -356,7 +356,7 @@ class PDb_Manage_List_Columns {
       .field-list {
         display: flex;
         flex-wrap: wrap;
-        padding: 0;
+        padding: 5px;
         height: auto;
         background-color: white;
         min-height: 1.7em;
@@ -380,6 +380,13 @@ class PDb_Manage_List_Columns {
         border-width: 2px;
         border-style: solid;
         /*border: 1px solid #ccc;*/
+      }
+      .field-list li.break {
+        flex-basis: 100%;
+        height: 0;
+        padding: 0;
+        border: none;
+        margin: 0;
       }
 
       .field-list.columnsetup li {
