@@ -56,7 +56,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   public function print_title( $start_tag = '<h3 class="pdb-group-title">', $end_tag = '</h3>', $echo = true ) {
     
     if ( $this->printing_title() ) {
-      $output = $start_tag.$this->title.$end_tag;
+      $output = $start_tag.stripslashes($this->title).$end_tag;
       if ( $echo ) echo $output;
       else return $output;
     }
