@@ -1328,6 +1328,18 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
   {
     $filter = Participants_Db::$session->getArray( self::$filter_transient );
     
+    // set invalid fields to default values
+    if ( isset( $filter['sort_by'] ) && !Participants_Db::is_column( $filter['sort_by'] ) ) {
+      $filter['sort_by'] = 'date_recorded';
+    }
+    if ( isset( $filter['search'] ) && is_array( $filter['search'] ) ) {
+      foreach ( $filter['search'] as $search ) {
+        if ( !Participants_Db::is_column( $search['search_field'] ) ) {
+          $search['search_field'] = 'none';
+        }
+      }
+    }
+    
     return $filter ? $filter : self::$default_filter;
   }
 
