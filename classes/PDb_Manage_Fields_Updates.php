@@ -288,8 +288,8 @@ class PDb_Manage_Fields_Updates {
 
     foreach ( $this->sanitized_group_post() as $group_name => $row ) {
 
-      $data['title'] = $row['title'];
-      $data['description'] = $row['description'];
+      $data['title'] = stripslashes($row['title']);
+      $data['description'] = stripslashes($row['description']);
       $data['mode'] = $row['mode'];
       $data['display'] = $data['mode'] === 'public' ? '1' : '0';
       $data['admin'] = $data['mode'] === 'admin' ? '1' : '0';
