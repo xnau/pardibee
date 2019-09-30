@@ -132,7 +132,6 @@ class PDb_FormValidation extends xnau_FormValidation {
       return;
     }
 
-
     /*
      * if the validation method is set and the field has not already been
      * validated (error_type == false) we test the submitted field for empty using
