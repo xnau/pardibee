@@ -234,7 +234,7 @@ class PDb_Tag_Template {
   }
 
   /**
-   * prepares an inidividual display value
+   * prepares an individual display value
    * 
    * @param string  $fieldname  name of the field
    * @param string $value field value
@@ -255,7 +255,13 @@ class PDb_Tag_Template {
        */
       $field->html_mode( ! $this->raw );
       
-      $value = $field->get_value_display();
+      /**
+       * @filter pdb-tag_template_field_display_value
+       * @param string display value
+       * @param PDb_Field_Item
+       * @return string display
+       */
+      $value = Participants_Db::apply_filters('tag_template_field_display_value', $field->get_value_display(), $field );
     }
     return $value;
   }
