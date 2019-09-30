@@ -19,7 +19,7 @@ if ( !defined( 'ABSPATH' ) )
   exit;
 
 class PDb_Template_Email extends xnau_Template_Email {
-  
+
   /**
    * sets up the class
    * 
@@ -40,7 +40,10 @@ class PDb_Template_Email extends xnau_Template_Email {
     if ( !isset( $config['from'] ) || empty( $config['from'] ) ) {
       $config['from'] = self::email_from_name();
     }
-    add_action( 'phpmailer_init', array( $this, 'set_return_path' ) );
+    add_action( 'phpmailer_init', array($this, 'set_return_path') );
+    
+    add_filter('pdb-tag_template_field_display_value', array( $this, 'clean_display_values' ), 10, 2 );
+    
     $this->setup_data( $data );
     parent::__construct( $config, $this->data );
     Participants_Db::$sending_email = true;
@@ -78,7 +81,9 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   protected function send_email()
   {
-    return $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text_raw( $this->email_subject, $this->data ), PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) );
+    $success = $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text_raw( $this->email_subject, $this->data ), PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) );
+    remove_filter('pdb-tag_template_field_display_value', array( $this, 'clean_display_values' ) );
+    return $success;
   }
 
   /**
@@ -96,7 +101,7 @@ class PDb_Template_Email extends xnau_Template_Email {
     if ( isset( $this->data['id'] ) && is_numeric( $this->data['id'] ) ) {
       // add the admin record link tag
       $this->data['admin_record_link'] = Participants_Db::get_admin_record_link( $this->data['id'] );
-      
+
       // add the single record link tag
       $this->data['single_record_link'] = Participants_Db::single_record_url( $this->data['id'] );
     }
@@ -110,21 +115,23 @@ class PDb_Template_Email extends xnau_Template_Email {
     /**
      * @version 1.6.3
      * @filter pdb-template_email_tag_map
+     * @param array as $tag => value
+     * @return array
      */
     $this->data = Participants_Db::apply_filters( 'template_email_tag_map', $this->data, $this->context );
-
   }
-  
+
   /**
    * sets the return path to match the "from" header
    * 
    * @param object $phpmailer
    */
-  public function set_return_path( $phpmailer ) {
+  public function set_return_path( $phpmailer )
+  {
     if ( Participants_Db::apply_filters( 'set_return_path_to_sender', true ) ) {
-	  	$phpmailer->Sender = Participants_Db::apply_filters('return_path_email_header', $phpmailer->From );
+      $phpmailer->Sender = Participants_Db::apply_filters( 'return_path_email_header', $phpmailer->From );
     }
-	}
+  }
 
   /**
    * supplies an email header
@@ -141,7 +148,7 @@ class PDb_Template_Email extends xnau_Template_Email {
      */
     return Participants_Db::apply_filters( 'template_email_header', $this->base_header() . 'X-Generator: ' . Participants_Db::$plugin_title . "\n", $this->context );
   }
-  
+
   /**
    * supplies the base header string
    * 
@@ -151,7 +158,7 @@ class PDb_Template_Email extends xnau_Template_Email {
   {
     $base_header = Participants_Db::$email_headers;
     if ( isset( $this->email_from ) && strpos( $this->email_from, '<>' ) === false ) {
-     $base_header = preg_replace('/^From: .+$/m', 'From: ' . $this->email_from, $base_header );
+      $base_header = preg_replace( '/^From: .+$/m', 'From: ' . $this->email_from, $base_header );
     }
     return $base_header;
   }
@@ -167,6 +174,41 @@ class PDb_Template_Email extends xnau_Template_Email {
   public static function email_from_name( $context = '' )
   {
     return Participants_Db::apply_filters( 'email_from_name', Participants_Db::plugin_setting( 'receipt_from_name' ) . " <" . Participants_Db::plugin_setting( 'receipt_from_address' ) . ">", $context );
+  }
+
+  /**
+   * clear out unneeded HTML from the display values
+   * 
+   * certain form elements should be inserted into an email as bare values, we do 
+   * that by walking through the data array and stripping out the HTML on such fields
+   * 
+   * called on the pdb-tag_template_field_display_value filter
+   * 
+   * @param string $display_value
+   * @param PDb_Field_Item $field
+   * @return string value
+   */
+  public function clean_display_values( $display_value, $field )
+  {
+    if ( in_array( $field->form_element(), $this->striplist() ) ) {
+      $display_value = strip_tags( $display_value );
+    }
+    return $display_value;
+  }
+
+  /**
+   * defines a list of form elements that should have HTML stripped out
+   * 
+   * @return array
+   */
+  protected function striplist()
+  {
+    /**
+     * @filter pdb-email_tag_form_element_strip_html
+     * @param array of form element names that should have tags stripped out in an email template
+     * @return array
+     */
+    return Participants_Db::apply_filters( 'email_tag_form_element_strip_html', array('text-line', 'checkbox', 'dropdown', 'radio', 'dropdown-other', 'multi-checkbox', 'multi-dropdown', 'select-other', 'multi-select-other', 'hidden', 'password') );
   }
 
   /**
