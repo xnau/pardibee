@@ -128,7 +128,11 @@ class PDb_Form_Field_Def {
   {
     $def = is_string( $field ) ? self::get_field_def( $field ) : $field;
 
-    $this->assign_def_props( $def );
+    if ( $def ) {
+      $this->assign_def_props( $def );
+    } elseif (PDB_DEBUG > 1) {
+      Participants_Db::debug_log(__METHOD__.' invalid field name: '.$field);
+    }
   }
 
   /**
@@ -154,19 +158,20 @@ class PDb_Form_Field_Def {
     if ( ! is_string($fieldname) ) {
       return false;
     }
-    $cachekey = 'pdb-is_field';
-    $is = wp_cache_get( $fieldname, $cachekey, false, $found );
     
-    if ( ! $found ) {
+    $cachekey = 'pdb-field_list';
+    $field_list = wp_cache_get( $cachekey );
+    
+    if ( ! $field_list ) {
       global $wpdb;
-      $sql = 'SELECT COUNT(*) 
-              FROM ' . Participants_Db::$fields_table . ' v 
-              WHERE v.name = %s';
-      $is = (bool) $wpdb->get_var( $wpdb->prepare( $sql, $fieldname ) );
-      wp_cache_set( $fieldname, $is, $cachekey, Participants_Db::cache_expire() );
+      $sql = 'SELECT v.name 
+              FROM ' . Participants_Db::$fields_table . ' v';
+      $field_list = $wpdb->get_col( $sql );
+      
+      wp_cache_set( $cachekey, $field_list, '', Participants_Db::cache_expire() );
     }
     
-    return $is;
+    return in_array( $fieldname, $field_list );
   }
 
   /**
