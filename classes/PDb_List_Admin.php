@@ -116,6 +116,15 @@ class PDb_List_Admin {
 
     self::_setup_i18n();
 
+    /**
+     * @filter pdb-admin_list_with_selected_action_conf_messages
+     * 
+     * @param array of feedback messages, keyed by the name of the action in the 
+     *              form: $action => array( 
+     *                'singular' => $singular_message,  
+     *                'plural' => $plural_message )
+     * @return array
+     */
     $apply_confirm_messages = Participants_Db::apply_filters( 'admin_list_with_selected_action_conf_messages', array(
                 'delete' => array(
                     "singular" => __( "Do you really want to delete the selected record?", 'participants-database' ),
@@ -148,6 +157,11 @@ class PDb_List_Admin {
         'apply' => self::$i18n['apply'],
         'apply_confirm' => $apply_confirm_messages,
         'send_limit' => (int) Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit ),
+        /**
+         * @filter pdb-unlimited_with_selected_actions
+         * @param array of actions that are not quantity limited
+         * @return array
+         */
         'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array('delete','approve','unapprove') ),
             )
     );
@@ -403,27 +417,30 @@ class PDb_List_Admin {
 
         //case self::$i18n['delete_checked']:
         case self::$i18n['apply']:
+          $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
           /**
            * @version 1.7.1
-           * @filter  'pdb-before_list_admin_with_selected_action'
+           * @filter  pdb-before_list_admin_with_selected_action
            * @param array $selected_ids list of ids to apply the list action to
+           * @param string action called
+           * @return array
            */
           $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input_array( INPUT_POST, array(
                               'pid' => array(
                                   'filter' => FILTER_VALIDATE_INT,
                                   'flags' => FILTER_REQUIRE_ARRAY,
                               )
-                          ) ) );
+                          ) ), $selected_action );
           $selected_ids = $selected_ids['pid'];
-          $selected_count = count( $selected_ids );
           $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
+          $selected_count = count( $selected_ids );
           self::set_admin_user_setting('with_selected', $selected_action );
           switch ( $selected_action ) {
 
             case 'delete':
               /**
                * @version 1.6.3
-               * @filter  'pdb-before_admin_delete_record'
+               * @filter  pdb-before_admin_delete_record
                * @param array $selected_ids list of ids to delete
                */
               $selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $selected_ids );
@@ -509,7 +526,7 @@ class PDb_List_Admin {
 
             default:
               /**
-               * @action pdb_admin_list_with_selected/{$selected_action}
+               * @action pdb-admin_list_with_selected_{$selected_action}
                * 
                * this action is executed if none of the default actions were selected 
                * so that a custom action can be performed
@@ -950,6 +967,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
              * 
              * @filter pdb-admin_list_with selected actions
              * @param array as $title => $action of actions to apply to selected records
+             * @return array
              */
             $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
             $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
