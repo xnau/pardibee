@@ -1542,7 +1542,7 @@ class Participants_Db extends PDb_Base {
             ( isset( $post['subsource'] ) && $post['subsource'] !== Participants_Db::PLUGIN_NAME )
             ) {
       return false;
-            }
+    }
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
     
@@ -1590,7 +1590,21 @@ class Participants_Db extends PDb_Base {
         $record_match->set_match_mode( 'skip' );
       }
 
-      if ( $record_match->is_matched() ) {
+      if ( $record_match->is_id_update_mode() ) {
+        
+        /*
+         * if we are updating by record id, but there is no matching record to update, 
+         * try to get the record id from the incoming record data then add a new record
+         * 
+         */
+        $participant_id = $record_match->matched_record_id();
+        
+        if ( $participant_id !== 0 ) {
+          $action = 'insert';
+        } else {
+          $participant_id = false;
+        }
+      }  elseif ( $record_match->is_matched() ) {
         /*
          * we have found a match
          */
@@ -1623,21 +1637,7 @@ class Participants_Db extends PDb_Base {
             // go on validating the rest of the form
             break;
         }
-      } elseif ( $record_match->is_id_update_mode() ) {
-        
-        /*
-         * if we are updating by record id, but there is no matching record to update, 
-         * try to get the record id from the incoming record data then add a new record
-         * 
-         */
-        $participant_id = $record_match->matched_record_id();
-        
-        if ( $participant_id !== 0 ) {
-          $action = 'insert';
-        } else
-          $participant_id = false;
-        }
-        
+      }
     } elseif ( $action === 'insert' && $record_match->match_mode() === 'add' ) {
       /*
        * don't set the record id from the incoming data
@@ -1991,8 +1991,9 @@ class Participants_Db extends PDb_Base {
 
     $result = $wpdb->query( $query );
 
-    if ( PDB_DEBUG )
+    if ( PDB_DEBUG ) {
       self::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
+    }
 
     $db_error_message = '';
     if ( $result === 0 ) {
@@ -2525,7 +2526,7 @@ class Participants_Db extends PDb_Base {
    * 
    * this is called on the 'init' hook
    * 
-   * @global object $wpdb
+   * @global wpdb $wpdb
    * @return null
    */
   public static function process_page_request()
@@ -2554,8 +2555,6 @@ class Participants_Db extends PDb_Base {
     // add a filter to check the submission before anything is done with it
     if ( self::apply_filters( 'check_submission', true ) === false )
       return;
-
-//     error_log( __METHOD__.' post:'.print_r( $_POST, true ) );
 
     /*
      * the originating page for a multipage form is saved in a session value
@@ -3191,7 +3190,7 @@ class Participants_Db extends PDb_Base {
 
             $link = unserialize( $value );
             if ( empty( $link[0] ) )
-              $value = '';
+              $value = isset( $value[1] ) ? $value[1] : '';
             else {
               $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
               $value = vsprintf( $pattern, $link );
