@@ -108,19 +108,27 @@ class PDb_Base {
     
     $info = pathinfo($asset);
     
-    /**
-     * @filter pdb-use_minified_assets
-     * @param bool default: true if WP_DEBUG is enabled
-     * @return bool
-     */
-    $use_minified = Participants_Db::apply_filters( 'use_minified_assets', defined('WP_DEBUG') && WP_DEBUG );
-    
-    $presuffix = $use_minified ? '' : '.min';
+    $presuffix = self::use_minified_assets() ? '.min' : '';
     
     return ($info['dirname'] ? $info['dirname'] . DIRECTORY_SEPARATOR : '') 
         . $info['filename'] 
         . $presuffix . '.' 
         . $info['extension'];
+  }
+  
+  /**
+   * tells if the minified assets should be used
+   * 
+   * @return bool true if the minified assets should be used
+   */
+  public static function use_minified_assets()
+  {
+    /**
+     * @filter pdb-use_minified_assets
+     * @param bool default: true if PDB_DEBUG not enabled
+     * @return bool
+     */
+    return Participants_Db::apply_filters( 'use_minified_assets', ! ( defined('PDB_DEBUG') && PDB_DEBUG ) );
   }
 
   /**
@@ -136,7 +144,7 @@ class PDb_Base {
     $action = 'insert';
     if ( is_numeric( $id ) ) {
       $action = Participants_Db::get_participant( $id ) === false ? 'insert' : 'update';
-    }
+    }  
     return Participants_Db::process_form( $post, $action, $id, array_keys( $post ) );
   }
 
@@ -1842,6 +1850,11 @@ class PDb_Base {
         define( 'PDB_DEBUG', 0 );
       }
     }
+    
+    if ( PDB_DEBUG > 0 && ! defined('WP_DEBUG') ) {
+      define( 'WP_DEBUG', true );
+    }
+      
     if ( PDB_DEBUG && ! is_a( $PDb_Debugging, 'PDb_Debug' ) ) {
       $PDb_Debugging = new PDb_Debug();
     }
