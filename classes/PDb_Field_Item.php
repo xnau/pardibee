@@ -257,7 +257,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         if ( is_array( $link ) ) {
 
           if ( empty( $link[0] ) )
-            $value = '';
+            $value = isset( $link[1] ) ? $link[1] : '';
           else {
             $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
             $value = vsprintf( $pattern, $link );
@@ -428,7 +428,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         $value = $this->default_value();
         break;
       case 'link':
-        $value = $this->link;
+        $value = $this->value . $this->link;
         break;
       default:
         /**
