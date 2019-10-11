@@ -484,6 +484,11 @@ body[class*='participants-database'] .text-block li {
   font-weight: normal;
 }
 
+/** manage fields feedback **/
+.wrap div.updated {
+  position: relative;
+}
+
 
 
 .mirror {
