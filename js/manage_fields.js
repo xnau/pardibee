@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.2
+ * @version 2.3
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -68,11 +68,18 @@ PDbManageFields = (function ($) {
               beforeSend : function () {
               },
               success : function (response) {
-                parent.slideUp(600, function () {
-                  parent.remove();
-                });
-                countDisplay.html(count - 1);
-                $('#tab_' + row_id).fadeOut();
+                if ( response.status === 'success' ) {
+                  parent.slideUp(600, function () {
+                    parent.remove();
+                  });
+                  countDisplay.html(count - 1);
+                  $('#tab_' + row_id).fadeOut();
+                } else {
+                  parent.css('opacity', 'inherit');      
+                  if (response.feedback) {
+                    set_feedback(response.feedback);
+                  }
+                }
               }
             });// ajax
           }, // ok
@@ -404,10 +411,10 @@ PDbManageFields = (function ($) {
       } // buttons
     });// dialog
     confirmationBox.dialog('open');
-  }
+  };
   var set_feedback = function (html) {
     $('#fields-tabs .ui-tabs-nav').after(html);
-  }
+  };
   var sortFields = {
     helper : fixHelper,
     handle : '.dragger',
