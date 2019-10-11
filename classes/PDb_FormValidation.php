@@ -235,7 +235,7 @@ class PDb_FormValidation extends xnau_FormValidation {
            * @filter pdb-captcha_validation
            */
           $regex = Participants_Db::apply_filters( 'captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
-
+          
           if ( !self::is_regex( $regex ) ) {
             $field->validation_state_is( 'invalid' );
           }
