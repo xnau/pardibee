@@ -127,7 +127,7 @@ class incoming_record_match {
       $record_match = $this->_match_check();
     }
     
-    if ( $record_match ) {
+    if ( $this->match_mode() === 'skip' && $record_match ) {
       $this->setup_matched_field_message();
     }
 
