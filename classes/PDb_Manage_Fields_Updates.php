@@ -356,7 +356,14 @@ class PDb_Manage_Fields_Updates {
       WHERE id IN ("' . implode( '","', $list ) . '")'
         );
 
-        wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+        if ( $result ) {
+          wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+        } else {
+          if ( PDB_DEBUG ) {
+            Participants_Db::debug_log(__METHOD__.' could not delete field: '.$wpdb->last_error);
+          }
+          wp_send_json( array('status' => 'failure', 'feedback' => $this->dismissable_message('error: could not delete field', 'delete_field_failure', 'error' ) ) );
+        }
 
       case 'delete_group':
 
@@ -370,9 +377,12 @@ class PDb_Manage_Fields_Updates {
           $result = $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"', $group ) );
 
         if ( $result ) {
-          wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) )) );
+          wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected group deleted', 'participants-database' ) )) );
         } else {
-          wp_send_json( 'error:could not delete group' );
+          if ( PDB_DEBUG ) {
+            Participants_Db::debug_log(__METHOD__.' could not delete group: '.$wpdb->last_error);
+          }
+          wp_send_json( array('status' => 'failure', 'feedback' => $this->dismissable_message('error: could not delete group', 'delete_group_failure', 'error' ) ) );
         }
 
       case 'update_param':
@@ -927,7 +937,7 @@ class PDb_Manage_Fields_Updates {
    */
   protected function dismissable_message( $message, $key = 'field_update', $type = 'notice' )
   {
-    return '<div id="pdb-manage_fields_' . $key . '" class="updated settings-error ' . $type . ' is-dismissible"> 
+    return '<div id="pdb-manage_fields_' . $key . '" class="notice updated settings-error ' . $type . ' is-dismissible"> 
 <p><strong>' . $message . '</strong></p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
   }
 
