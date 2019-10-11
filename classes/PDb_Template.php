@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9.1
+ * @version    2.0
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -243,7 +243,7 @@ class PDb_Template {
    */
   public function print_with_link( $name, $href )
   {
-    if ( is_object( $this->fields->{$name} ) && !empty( $href ) ) {
+    if ( $this->is_defined_field( $name ) && !empty( $href ) ) {
       $this->_set_link( $name, $href );
       $this->_print( $name );
     }
@@ -258,7 +258,8 @@ class PDb_Template {
    */
   public function get_field_prop( $name, $prop )
   {
-    return (isset( $this->fields->{$name}->{$prop} ) ? maybe_unserialize( $this->fields->{$name}->{$prop} ) : '');
+    $field = $this->get_field( $name );
+    return (isset( $field->{$prop} ) ? maybe_unserialize( $field->{$prop} ) : '');
   }
 
   /**
@@ -336,11 +337,7 @@ class PDb_Template {
    */
   public function has_content( $name )
   {
-    $value = $this->fields->{$name}->value;
-    if ( is_array( $value ) ) {
-      $value = implode( '', array_values( $value ) );
-    }
-    return strlen( $value ) !== 0;
+    return $this->is_defined_field($name) ? $this->get_field( $name )->has_content() : false;
   }
 
   /**
@@ -366,6 +363,35 @@ class PDb_Template {
       return false;
     }
   }
+  
+  /**
+   * tells if the name is a defined field
+   * 
+   * @param string $name
+   * @return bool true if the field is defined
+   */
+  public function is_defined_field( $name )
+  {
+    return isset( $this->fields->{$name} );
+  }
+  
+  /**
+   * provides the field object
+   * 
+   * @param string $name name of the field
+   * @return PDb_Field_Item|stdClass
+   */
+  public function get_field( $name )
+  {
+    if ( $this->is_defined_field( $name ) ) {
+      return $this->fields->{$name};
+    } else {
+      if ( PDB_DEBUG ) {
+        Participants_Db::debug_log(__METHOD__.' accessed undefined field: ' . $name );
+      }
+      return new stdClass();
+    }
+  }
 
   /**
    * provides the field's form element
@@ -376,8 +402,8 @@ class PDb_Template {
   public function get_form_element( $name )
   {
     if ( property_exists( $this->fields, $name ) ) {
-      $field = $this->fields->{$name};
-      if ( !property_exists( $this->fields, 'attributes' ) ) {
+      $field = $this->get_field( $name );
+      if ( !property_exists( $field, 'attributes' ) ) {
         $field->attributes = array();
       }
       $element = array(
@@ -411,7 +437,7 @@ class PDb_Template {
    */
   public function file_uri( $name )
   {
-    return $this->fields->{$name}->file_uri();
+    return $this->get_field( $name )->file_uri();
   }
 
   /**
@@ -446,7 +472,7 @@ class PDb_Template {
         /**
          * @version 1.7 modified to get the currently submitted value if available
          */
-        return isset( $this->fields->{$name}->value ) && $this->has_content( $name ) ? $this->fields->{$name}->value : ( isset($this->values[$name]) ? $this->values[$name] : '' );
+        return $this->get_field( $name )->has_content() ? $this->get_field( $name )->get_value() : ( isset($this->values[$name]) ? $this->values[$name] : '' );
     }
   }
 
@@ -465,10 +491,10 @@ class PDb_Template {
       case 'PDb_Single':
       default:
         $this->values[$name] = is_array( $value ) ? serialize( $value ) : $value;
-        if ( !isset( $this->fields->{$name} ) ) {
-          $this->fields->{$name} = new stdClass();
+        $field = $this->get_field( $name );
+        if ( is_a( $field, 'PDb_Field_Item' ) ) {
+          $field->set_value($value);
         }
-        $this->fields->{$name}->value = $value;
     }
   }
 
@@ -480,8 +506,8 @@ class PDb_Template {
    */
   protected function _print( $name )
   {
-    if ( isset( $this->fields->{$name} ) ) {
-      echo PDb_FormElement::get_field_value_display( $this->fields->{$name} );
+    if ( $this->is_defined_field( $name ) ) {
+      echo $this->get_field( $name )->get_value_display();
     }
   }
 
