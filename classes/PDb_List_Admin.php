@@ -171,6 +171,11 @@ class PDb_List_Admin {
     // set up email error feedback
     add_action( 'wp_mail_failed', array( __CLASS__, 'get_email_error_feedback' ) );
     add_action( 'pdb-list_admin_head', array( __CLASS__, 'show_email_error_feedback' ) );
+    
+    // delete images and files when record is deleted
+    if ( Participants_Db::plugin_setting_is_true( 'delete_uploaded_files', false ) ) {
+      add_action( 'pdb-list_admin_with_selected_delete', array( 'submission\delete_uploads', 'delete_record_uploaded_files' ) );
+    }
 
     $current_user = wp_get_current_user();
 
