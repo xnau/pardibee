@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.1
+ * @version    2.2
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -69,7 +69,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     parent::__construct( $config->name );
 
     if ( $id ) {
-      $this->record_id = $id;
+      $this->set_record_id( $id );
     }
 
     // load the object properties
@@ -330,6 +330,22 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $this->_set_value( $value );
   }
+  
+  /**
+   * sets the record id prop and value if available
+   * 
+   * @param int $record_id
+   */
+  public function set_record_id( $record_id )
+  {
+    if ( $id = intval( $record_id ) ) {
+      $this->record_id = $id;
+      $data = Participants_Db::get_participant($id);
+      if ( $data && isset( $data[$this->name] ) ) {
+        $this->set_value($data[$this->name]);
+      }
+    }
+  }
 
   /**
    * sets the field's module
@@ -349,16 +365,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function set_link( $url )
   {
     $this->link = $url;
-  }
-
-  /**
-   * sets the current record id
-   * 
-   * @param int  $record_id of the pdb record
-   */
-  public function set_record_id( $record_id )
-  {
-    $this->record_id = $record_id;
   }
 
   /**
@@ -515,6 +521,26 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       }
     }
     return $uri;
+  }
+  
+  /**
+   * tells if the field has an uploaded file
+   * 
+   * this only applies to files uploaded via Participants Database, it does not 
+   * count files uploaded to the Media Library using the Image Expansion Kit add-on
+   * 
+   * @return bool
+   */
+  public function has_uploaded_file()
+  {
+    if ( ! $this->is_upload_field() ) {
+      return false;
+    }
+    if ( $this->has_content() ) {
+      $filepath = trailingslashit( Participants_Db::files_path() ) . $this->value;
+      return is_file( $filepath );
+    }
+    return false;
   }
 
   /**
