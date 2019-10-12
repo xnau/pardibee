@@ -1341,19 +1341,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
-    
-    $this->plugin_settings[] = array(
-        'name' => 'admin_horiz_scroll',
-        'title' => __( 'Plugin Admin Horizontal Scrolling', 'participants-database' ),
-        'group' => 'pdb-admin',
-        'options' => array
-            (
-            'type' => 'checkbox',
-            'help_text' => __( 'use horizontal scrolling on list and fields management screens', 'participants-database' ),
-            'value' => 0,
-            'options' => array(1, 0),
-        ),
-    );
 
     $this->plugin_settings[] = array(
         'name' => 'record_edit_capability',
@@ -1402,6 +1389,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => '0',
             'options' => array(1, 0),
         )
+    );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'delete_uploaded_files',
+        'title' => __( 'Delete Uploaded Files with Record', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'when a record is deleted, delete all images and files uploaded with the record', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
     );
     
 
