@@ -8,12 +8,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-03-28 22:14-1000\n"
+"PO-Revision-Date: 2019-10-12 20:06-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: xnau <support@xnau.com>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: en_US\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 2.2.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: classes/PDb_FormElement.class.php:324 classes/xnau_FormElement.class.php:986
@@ -1900,7 +1900,7 @@ msgstr ""
 
 #: upload_csv.php:52
 msgid "Export the .csv file"
-msgstr ""
+msgstr "Creating the .csv file"
 
 #: upload_csv.php:54
 msgid ""
