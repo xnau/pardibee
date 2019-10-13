@@ -340,7 +340,17 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     if ( $id = intval( $record_id ) ) {
       $this->record_id = $id;
-      $data = Participants_Db::get_participant($id);
+      $this->set_value_from_db();
+    }
+  }
+  
+  /**
+   * sets the value from the db
+   */
+  private function set_value_from_db()
+  {
+    if ( $this->record_id > 0 ) {
+      $data = Participants_Db::get_participant($this->record_id);
       if ( $data && isset( $data[$this->name] ) ) {
         $this->set_value($data[$this->name]);
       }
