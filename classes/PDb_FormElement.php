@@ -797,7 +797,11 @@ class PDb_FormElement extends xnau_FormElement {
   }
 
   /**
-   * gets the value that corresponds to a value title from a set of field options
+   * gets the option value that corresponds to an option title from a set of field options
+   * 
+   * this uses a progressive match, first trying an exact match, then substring 
+   * matches, then a similar string match to efficiently find direct matches but 
+   * return a best-guess close match if no direct match is found
    * 
    * @param string $title the title of the value
    * @param string $fieldname the name of the field
@@ -807,8 +811,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $value = $title; // if no title is found, return the title argument
     
-    $field = isset( Participants_Db::$fields[$fieldname] ) ? Participants_Db::$fields[$fieldname] : false;
-    /* @var $field PDb_Form_Field_Def */
+    $field = Participants_Db::get_field_def( $fieldname );
     
     if ( $field && $field->is_value_set() ) {
       
