@@ -1,10 +1,11 @@
 <?php
-/*
-
-  template for participants list shortcode output
-
-  this is a more detailed template showing how the parts of the display can be customized
-
+/**
+ * 
+ * @version 0.2
+ * 
+ * template for participants list shortcode output
+ * 
+ * this is a more detailed template showing how the parts of the display can be customized
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?>" id="<?php echo $this->list_anchor ?>">
@@ -187,7 +188,7 @@
 
       <tbody>
         <tr>
-          <td><?php if ( $this->is_search_result === true ) echo Participants_Db::$plugin_options['no_records_message'] ?></td>
+          <td><?php if ( $this->is_search_result === true ) echo Participants_Db::plugin_setting('no_records_message') ?></td>
         </tr>
       </tbody>
 

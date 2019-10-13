@@ -1,10 +1,11 @@
 <?php
-/*
-
-  template for participants list shortcode output
-
-  this template demonstrates a "table-less" reponsive layout for the list of records
-
+/**
+ * 
+ * @version 0.2
+ * 
+ * template for participants list shortcode output
+ * 
+ * this template demonstrates a "table-less" reponsive layout for the list of records
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?>" id="<?php echo $this->list_anchor ?>">
@@ -101,7 +102,7 @@
 
     <?php else : // if there are no records ?>
 
-      <h4><?php if ( $this->is_search_result === true ) echo Participants_Db::$plugin_options['no_records_message'] ?></h4>
+      <h4><?php if ( $this->is_search_result === true ) echo Participants_Db::plugin_setting('no_records_message') ?></h4>
 
     <?php endif; // $record_count > 0 ?>
   </div>

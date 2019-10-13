@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 0.5
+ * @version 0.6
  * 
  * template for participants list shortcode output
  *
@@ -81,7 +81,7 @@
 
       <tbody>
         <tr>
-          <td><?php if ( $this->is_search_result ) echo Participants_Db::$plugin_options['no_records_message'] ?></td>
+          <td><?php if ( $this->is_search_result ) echo Participants_Db::plugin_setting('no_records_message') ?></td>
         </tr>
       </tbody>
 
