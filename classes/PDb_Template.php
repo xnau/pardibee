@@ -259,7 +259,7 @@ class PDb_Template {
   public function get_field_prop( $name, $prop )
   {
     $field = $this->get_field( $name );
-    return (isset( $field->{$prop} ) ? maybe_unserialize( $field->{$prop} ) : '');
+    return $this->is_defined_field($name) && isset( $field->{$prop} ) ? maybe_unserialize( $field->{$prop} ) : '';
   }
 
   /**
@@ -379,17 +379,17 @@ class PDb_Template {
    * provides the field object
    * 
    * @param string $name name of the field
-   * @return PDb_Field_Item|stdClass
+   * @return PDb_Field_Item|bool false if no field matches the name given
    */
   public function get_field( $name )
   {
     if ( $this->is_defined_field( $name ) ) {
       return $this->fields->{$name};
     } else {
-      if ( PDB_DEBUG ) {
+      if ( PDB_DEBUG > 2 ) {
         Participants_Db::debug_log(__METHOD__.' accessed undefined field: ' . $name );
       }
-      return new stdClass();
+      return false;
     }
   }
 
@@ -437,7 +437,7 @@ class PDb_Template {
    */
   public function file_uri( $name )
   {
-    return $this->get_field( $name )->file_uri();
+    return $this->is_defined_field($name) ? $this->get_field( $name )->file_uri() : '';
   }
 
   /**
@@ -472,7 +472,7 @@ class PDb_Template {
         /**
          * @version 1.7 modified to get the currently submitted value if available
          */
-        return $this->get_field( $name )->has_content() ? $this->get_field( $name )->get_value() : ( isset($this->values[$name]) ? $this->values[$name] : '' );
+        return $this->is_defined_field($name) && $this->get_field( $name )->has_content() ? $this->get_field( $name )->get_value() : ( isset($this->values[$name]) ? $this->values[$name] : '' );
     }
   }
 
