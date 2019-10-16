@@ -157,23 +157,31 @@ class PDb_Tag_Template {
    */
   private function _replace_tags()
   {
+    /**
+     * provides a way to add custom tags before the template is parsed
+     * 
+     * @filter pdb-tag_template_data_before_replace
+     * @param array as $tag => $value
+     * @return array
+     */
+    $tag_data = Participants_Db::apply_filters('tag_template_data_before_replace', $this->data );
 
     $placeholders = array();
 
-    for ( $i = 1; $i <= count( $this->data ); $i++ ) {
+    for ( $i = 1; $i <= count( $tag_data ); $i++ ) {
       $placeholders[] = '%' . $i . '$s';
     }
 
     // gets the tag strings and wrap them in brackets to match them in the template
     $tags = array_map( function ( $v ) {
       return '[' . $v . ']';
-    }, array_keys( $this->data ) );
+    }, array_keys( $tag_data ) );
 
     // replace the tags with variables
     $pattern = str_replace( $tags, $placeholders, $this->template );
 
     // replace the variables with strings
-    $fulltext = vsprintf( $pattern, $this->data );
+    $fulltext = vsprintf( $pattern, $tag_data );
 
 //    error_log(__METHOD__.' pattern: '.$pattern.' data: '.print_r($this->data,1));
 //    error_log(__METHOD__.' rich text? '.($this->rich_text?'yes':'no'). '   '.$fulltext);
