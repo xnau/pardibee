@@ -672,8 +672,7 @@ class PDb_Form_Field_Def {
    */
   public function is_match_validation()
   {
-    $methods = array_keys( PDb_FormValidation::validation_methods() );
-    return $this->validation !== '' && ! in_array( $this->validation, $methods ) && !xnau_FormValidation::is_regex( $this->validation );
+    return self::is_field( $this->validation );
   }
   
   /**
