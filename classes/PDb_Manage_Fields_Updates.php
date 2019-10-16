@@ -833,6 +833,11 @@ class PDb_Manage_Fields_Updates {
             'rel' => true,
             'target' => true,
         ),
+        'img' => array(
+            'class' => true,
+            'style' => true,
+            'src' => true,
+        ),
         'br' => $def_atts,
         'b' => $def_atts,
         'i' => $def_atts,
