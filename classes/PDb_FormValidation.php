@@ -195,14 +195,14 @@ class PDb_FormValidation extends xnau_FormValidation {
           break;
         default:
           /*
-           * check all the validated fields for empty first
-           * 
-           * regexes aren't checked for empty, we rely on the regex to do that
+           * check all the simple validated fields for empty
            */
-          if ( $this->is_empty( $field->value ) && !self::is_regex( $field->validation ) ) {
-            $field->validation_state_is( 'empty' );
-          } elseif ( $field->validation === 'yes' ) {
-            $field->validation_state_is( 'valid' );
+          if ( $field->validation === 'yes' ) {
+            if ( $this->is_empty( $field->value ) ) {
+              $field->validation_state_is( 'empty' );
+            } else {
+              $field->validation_state_is( 'valid' );
+            }
           }
       }
     }
@@ -261,7 +261,7 @@ class PDb_FormValidation extends xnau_FormValidation {
       }
 
       if ( $test_value !== false ) {
-        if ( $field->value !== $test_value ) {
+        if ( ! $this->verify_field_is_valid( $test_value, $field ) ) {
           $field->validation_state_is( 'nonmatching' );
         } else {
           // set the state to valid because it matches
@@ -313,6 +313,41 @@ class PDb_FormValidation extends xnau_FormValidation {
     }
 
     return $field->value;
+  }
+  
+  /**
+   * validates a verify field
+   * 
+   * a verify field is a field that is supposed to match the value of another field. 
+   * It should only be checked if the other field is getting changed. If the other 
+   * field is not getting changed, this field should validate as true
+   * 
+   * @param mixed $test_value
+   * @param PDb_Validating_Field $field
+   * @return bool true if the field is valid
+   */
+  protected function verify_field_is_valid( $test_value, $field )
+  {
+    if ( $test_value != $this->saved_test_value( $field ) ) {
+      return $test_value == $field->value;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * provides the field's value from the db
+   * 
+   * this can be used to tell if the field's value is getting changed
+   * 
+   * @param PDb_Validating_Field $field
+   * @return mixed the saved value
+   */
+  protected function saved_test_value( $field )
+  {
+    $record = Participants_Db::get_participant($field->record_id());
+    
+    return isset( $record[$field->validation] ) ? $record[$field->validation] : '';
   }
 
   /**
@@ -547,6 +582,16 @@ class PDb_Validating_Field {
     foreach ( get_object_vars( $this ) as $prop => $val ) {
       $this->{$prop} = $$prop;
     }
+  }
+  
+  /**
+   * supplies the record id
+   * 
+   * @return int
+   */
+  public function record_id()
+  {
+    return $this->record_id ? $this->record_id : 0;
   }
 
   /**
