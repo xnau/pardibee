@@ -75,10 +75,10 @@ PDbManageFields = (function ($) {
                   countDisplay.html(count - 1);
                   $('#tab_' + row_id).fadeOut();
                 } else {
-                  parent.css('opacity', 'inherit');      
-                  if (response.feedback) {
-                    set_feedback(response.feedback);
-                  }
+                  parent.css('opacity', 'inherit');
+                }      
+                if (response.feedback) {
+                  set_feedback(response.feedback);
                 }
               }
             });// ajax
