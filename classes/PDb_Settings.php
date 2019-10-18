@@ -1071,6 +1071,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
                 ),
         ),
     );
+    
+      $this->plugin_settings[] = array(
+        'name' => 'scroll_to_error',
+        'title' => __( 'Scroll to Error Message', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'when a form validation error is shown, scroll to the error message', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
 
     /**
      * @version 1.6
