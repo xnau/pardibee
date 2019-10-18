@@ -456,22 +456,22 @@ svg.ajax-loading image {
 
 /* ERRORS / MESSAGES */
 
-.pdb-error {
+.pdb-error, .pdb-message {
   display:inline-block;
-  background: none repeat scroll 0 0 #fff;
-  border-left: 4px solid #dd3d36;
+  background-color: #fff;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  padding: 1px 12px;
+  padding: 10px 20px;
+  margin: 2em 0;
+}
+
+.pdb-error {
+  border-left: 4px solid #dd3d36;
 }
 .pdb-error li {
   margin:0.5em 20px;
 }
 .pdb-message {
-  display:inline-block;
-  background-color: #fff;
   border-left: 4px solid #7ad03a;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  padding: 10px 20px;
 }
 .pdb-error p, .pdb-message p {
   margin:0;
