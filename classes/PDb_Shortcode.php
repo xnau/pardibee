@@ -272,8 +272,15 @@ abstract class PDb_Shortcode {
 
       Participants_Db::$session->update( 'shortcode_atts', $this->shortcode_session() );
     }
+    
+    /**
+     * @filter pdb-dynamic_wrap_class
+     * @prarm string the current dynamic class names
+     * @return string
+     */
+    $dynamic_class = Participants_Db::apply_filters( 'dynamic_wrap_class', Participants_Db::plugin_setting_is_true('scroll_to_error', false ) ? 'pdb-scroll-to-error' : '' );
 
-    $this->wrap_class = $this->prefix . $this->module . ' ' . $this->prefix . 'instance-' . $this->instance_index;
+    $this->wrap_class = $this->prefix . $this->module . ' ' . $this->prefix . 'instance-' . $this->instance_index . ' ' . $dynamic_class;
 
     $this->_set_display_columns();
     $this->_set_display_groups();
