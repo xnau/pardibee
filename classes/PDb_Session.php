@@ -216,8 +216,8 @@ class PDb_Session {
    * there is an element key match, the element from $b will be present in the 
    * return value
    * 
-   * @param array $a
-   * @param array $b
+   * @param array $array1
+   * @param array $array2
    * @return array
    */
   public static function deep_merge( array $array1, array $array2 )
@@ -233,23 +233,6 @@ class PDb_Session {
     }
     return $merged;
   }
-
-//  public static function deep_merge( $a, $b )
-//  {
-//    $a = (array) $a;
-//    $b = (array) $b;
-//    $c = $b;
-//    foreach ( $a as $k => $v ) {
-//      if ( isset( $b[$k] ) ) {
-//        if ( is_array( $v ) && is_array( $b[$k] ) ) {
-//          $c[$k] = self::deep_merge( $v, $b[$k] );
-//        }
-//      } else {
-//        $c[$k] = $v;
-//      }
-//    }
-//    return $c;
-//  }
   
   /**
    * deletes the session table on uninstall
