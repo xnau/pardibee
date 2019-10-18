@@ -1,15 +1,16 @@
 /*
  * Participants Database Plugin
  * 
- * @version 0.10
+ * @version 1.0
  * 
  * xnau webdesign xnau.com
  * 
  * 
  *  functionality added here:
- *    disable submit after submit to prevent multiple submits
+ *    disable submit after submit click to prevent multiple submissions
  *    perform email obfuscation if enabled
  *    before and after content
+ *    scroll to validation error message
  */
 PDbShortcodes = (function ($) {
   var submitOnce = function (e) {
@@ -64,6 +65,15 @@ PDbShortcodes = (function ($) {
       $('[data-after]').each(function () {
         postcontent($(this));
       });
+      var errormsg = $('.pdb-scroll-to-error .pdb-error').filter(':visible');
+      if (errormsg.length) {
+        $("body,html").animate(
+                {
+                  scrollTop : errormsg.offset().top - 50
+                },
+                300 //speed
+                );
+      }
     }
   }
 }(jQuery));
