@@ -117,10 +117,11 @@ PDbListFilter = (function ($) {
   };
   var scroll_to_top = function () {
     var instance = submission.instance_index;
-    if ( instance ) {
+    var listoffset = $("#participants-list-" + instance).offset().top;
+    if ( instance && $('html, body').scrollTop() - listoffset > 300 ) {
       $('html, body').animate({
-        scrollTop : $("#participants-list-" + instance).offset().top
-      }, 200);
+        scrollTop : listoffset
+      }, 500);
     }
   }
   var add_value_to_submission = function (el, submission) {
