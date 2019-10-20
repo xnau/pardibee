@@ -1335,7 +1335,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
    */
   public static function save_filter( $value )
   {
-    Participants_Db::$session->set( self::$filter_transient, $value );
+    update_option(self::$filter_transient, $value);
   }
 
   /**
@@ -1349,10 +1349,10 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
    */
   public static function get_filter()
   {
-    $filter = Participants_Db::$session->getArray( self::$filter_transient );
+    $filter = get_option( self::$filter_transient );
     
     // set invalid fields to default values
-    if ( isset( $filter['sortBy'] ) && !Participants_Db::is_column( $filter['sortBy'] ) ) {
+    if ( ! isset( $filter['sortBy'] ) || ( isset( $filter['sortBy'] ) && !Participants_Db::is_column( $filter['sortBy'] ) ) ) {
       $filter['sortBy'] = 'date_recorded';
     }
     if ( isset( $filter['search'] ) && is_array( $filter['search'] ) ) {
@@ -1361,6 +1361,9 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
           $search['search_field'] = 'none';
         }
       }
+    }
+    if ( !isset( $filter['list_filter_count'] ) || empty( $filter['list_filter_count'] ) ) {
+      $filter['list_filter_count'] = 1;
     }
     
     return $filter ? $filter : self::$default_filter;
@@ -1433,12 +1436,12 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
   {
 
     $settings = array();
-    $saved_settings = Participants_Db::$session->getArray( $setting_name );
+    $saved_settings = get_option( $setting_name );
     if ( is_array( $saved_settings ) ) {
       $settings = $saved_settings;
     }
     $settings[$name] = $value;
-    Participants_Db::$session->set( $setting_name, $settings );
+    update_option( $setting_name, $settings );
   }
 
   /**
@@ -1451,7 +1454,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
    */
   public static function get_user_setting( $name, $setting, $setting_name )
   {
-    if ( $settings = Participants_Db::$session->getArray( $setting_name ) ) {
+    if ( $settings = (array) get_option( $setting_name ) ) {
       $setting = isset( $settings[$name] ) ? $settings[$name] : $setting;
     }
     return $setting;
