@@ -335,17 +335,28 @@ class PDb_Init {
     delete_option( Participants_Db::$db_version_option );
     delete_option( Participants_Db::$default_options );
     delete_option( Participants_Db::one_time_notice_flag );
+    
+// clear user options
+    $delete_keys = array(
+        Participants_Db::$prefix . PDb_List_Admin::$user_setting_name . '%',
+        Participants_Db::$prefix . PDb_List_Admin::$filter_option . '%',
+    );
+    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $delete_keys ) . '"';
+    $options = $wpdb->get_col( $sql );
+    foreach ( $options as $name ) {
+      delete_option( $name );
+    }
 
 // clear transients
     delete_transient( Participants_Db::$last_record );
-    $transient_delete_keys = array(
-        '%' . PDb_List_Admin::$user_settings . '%',
+    $delete_keys = array(
+        '%' . PDb_List_Admin::$user_setting_name . '%',
         '%' . Participants_Db::$prefix . 'captcha_key',
         '%' . Participants_Db::$prefix . 'signup-email-sent',
         '%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%',
-        '%' . PDb_Aux_Plugin::throttler . '%'
+        PDb_Aux_Plugin::throttler . '%'
     );
-    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $transient_delete_keys ) . '"';
+    $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $delete_keys ) . '"';
     $transients = $wpdb->get_col( $sql );
     foreach ( $transients as $name ) {
       delete_transient( $name );
