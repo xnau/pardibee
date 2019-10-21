@@ -2810,7 +2810,7 @@ class Participants_Db extends PDb_Base {
            * base filename is now saved as a preference
            */
           global $user_ID;
-          PDb_List_Admin::$user_settings = Participants_Db::$prefix . PDb_List_Admin::$user_settings . '-' . $user_ID;
+          PDb_List_Admin::$user_settings = Participants_Db::$prefix . PDb_List_Admin::$user_setting_name . '-' . $user_ID;
           PDb_List_Admin::set_admin_user_setting( 'csv_base_filename', $base_filename );
 
           // create a file pointer connected to the output stream
