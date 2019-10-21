@@ -54,11 +54,6 @@ class PDb_List_Admin {
   static $list_anchor = 'participants-list';
 
   /**
-   *  @var string name of the list limit transient
-   */
-  static $user_settings = 'admin-user-settings';
-
-  /**
    * @var int the number of records after filtering
    */
   static $num_records;
@@ -86,10 +81,20 @@ class PDb_List_Admin {
   static $filter;
 
   /**
-   * 
-   * @var string name of the filter transient
+   *  @var string base name of admin user options
    */
-  public static $filter_transient = 'admin_list_filter';
+  static $user_setting_name = 'admin-user-settings';
+
+  /**
+   *  @var string name of admin user options
+   */
+  static $user_settings;
+
+  /**
+   * 
+   * @var string name of the admin user filter option
+   */
+  public static $filter_option = 'admin_list_filter';
 
   /**
    * @var array set of values making up the default list filter
@@ -180,8 +185,8 @@ class PDb_List_Admin {
     $current_user = wp_get_current_user();
 
     // set up the user settings transient
-    self::$user_settings = Participants_Db::$prefix . self::$user_settings . '-' . $current_user->ID;
-    self::$filter_transient = Participants_Db::$prefix . self::$filter_transient . '-' . $current_user->ID;
+    self::$user_settings = Participants_Db::$prefix . self::$user_setting_name . '-' . $current_user->ID;
+    self::$filter_option = Participants_Db::$prefix . self::$filter_option . '-' . $current_user->ID;
 
 //    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
 
@@ -1335,7 +1340,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
    */
   public static function save_filter( $value )
   {
-    update_option(self::$filter_transient, $value);
+    update_option(self::$filter_option, $value);
   }
 
   /**
@@ -1349,7 +1354,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
    */
   public static function get_filter()
   {
-    $filter = get_option( self::$filter_transient );
+    $filter = get_option( self::$filter_option, self::$default_filter );
     
     // set invalid fields to default values
     if ( ! isset( $filter['sortBy'] ) || ( isset( $filter['sortBy'] ) && !Participants_Db::is_column( $filter['sortBy'] ) ) ) {
