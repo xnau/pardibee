@@ -220,7 +220,7 @@ class PDb_Session {
    * @param array $array2
    * @return array
    */
-  public static function deep_merge( array $array1, array $array2 )
+  public static function deep_merge( Array $array1, Array $array2 )
   {
     $merged = $array1;
 
