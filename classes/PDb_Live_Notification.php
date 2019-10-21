@@ -43,8 +43,8 @@ class PDb_Live_Notification {
      * @version 1.7.0.6
      * fix assumed availability of $this in the closure #1321
      */
-    $self =& $this;
-    add_filter( 'pdb-live_notification_' . $this->name, function ( $content ) use ( &$self ) {
+    $self = $this;
+    add_filter( 'pdb-live_notification_' . $this->name, function ( $content ) use ( $self ) {
       return $self->content_filter( $content, $self->analytics_vars() );
     } );
   }
