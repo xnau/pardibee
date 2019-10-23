@@ -150,7 +150,7 @@ PDbListFilter = (function ($) {
       data : submission,
       beforeSend : function () {
         pagination.find('a').prop('disabled',true);
-        buttonParent.append(spinner);
+        buttonParent.after(spinner);
       },
       success : function (html, status) {
         if (/^failed/.test(html)) {
