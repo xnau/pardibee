@@ -3295,6 +3295,7 @@ class Participants_Db extends PDb_Base {
   {
     $bitmap_source = plugins_url( 'ui/ajax-loader.gif', __FILE__ );
     $svg_source = plugins_url( 'ui/ajax-loader.svg', __FILE__ );
+    $index = stripos( $_SERVER['HTTP_USER_AGENT'], 'safari' ) !== false ? 0 : 1;
     $template = array(
         '<span class="ajax-loading"><object data="%1$s"><img src="%2$s" /></object></span>',
         '<svg class="ajax-loading" ><image xlink:href="%1$s" src="%2$s" /></svg>'
@@ -3305,8 +3306,9 @@ class Participants_Db extends PDb_Base {
      * @param string html
      * @return string
      */
-    return self::apply_filters( 'loading_spinner_html', sprintf( $template[1], $svg_source, $bitmap_source ) );
+    return self::apply_filters( 'loading_spinner_html', sprintf( $template[$index], $svg_source, $bitmap_source ) );
   }
+  
 
   /**
    * attempt to create the uploads directory
