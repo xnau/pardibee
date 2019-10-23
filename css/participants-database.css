@@ -286,11 +286,13 @@ svg.ajax-loading image {
 .pdb-list .pagination,
 .pdb-pagination {
   overflow:auto;
+  text-align: left;
 }
 .pdb-list .pagination ul,
 .pdb-pagination ul {
   margin:0;
   list-style:none;
+  display: inline-block;
 }
 .pdb-list .pagination li,
 .pdb-pagination li {
