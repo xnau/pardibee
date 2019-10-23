@@ -205,7 +205,13 @@ class PDb_Date_Display {
    */
   private function format()
   {
-    return Participants_Db::apply_filters( 'date_display_format', $this->format );
+    /**
+     * @filter pdb-date_display_format
+     * @param string date format php date format
+     * @param string context
+     * @return string date format string
+     */
+    return Participants_Db::apply_filters( 'date_display_format', $this->format, $this->context );
   }
 
   /**
