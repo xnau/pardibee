@@ -335,6 +335,7 @@ class PDb_Init {
     delete_option( Participants_Db::$db_version_option );
     delete_option( Participants_Db::$default_options );
     delete_option( Participants_Db::one_time_notice_flag );
+    delete_option( Participants_Db::$prefix . 'csv_import_params' );
     
 // clear user options
     $delete_keys = array(
