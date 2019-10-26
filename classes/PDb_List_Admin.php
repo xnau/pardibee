@@ -591,9 +591,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
     switch ( $submit ) {
 
       case self::$i18n['clear'] :
-        for ( $i = 0; $i < self::$filter['list_filter_count']; $i++ ) {
-          self::$filter['search'][$i] = self::$default_filter['search'][0];
-        }
+        self::$filter = self::$default_filter;
         self::save_filter( self::$filter );
       case self::$i18n['sort']:
       case self::$i18n['filter']:
