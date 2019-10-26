@@ -930,9 +930,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         $this->link = $parts[0];
       }
 
-      if ( $this->has_link() ) {
-        $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
-      }
+      // remove the URL component from the value
+      $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
+      
     } elseif ( filter_var( $this->value, FILTER_VALIDATE_URL ) ) {
       $this->link = $this->value;
     }
