@@ -365,6 +365,9 @@ input[type="checkbox"],
     display: inline;
     margin-right:0;*/
 }
+.participants_db .inline-controls input[type='text'] {
+  max-width: 20em;
+}
 .pdb-admin-edit-participant .pdb-upload input[type=file] {
   vertical-align: middle;
 }
