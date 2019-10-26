@@ -117,7 +117,15 @@ class PDb_File_Uploads {
        * we perform a validity check on the image files, this also makes sure only 
        * images are uploaded in image upload fields
        */
-      $valid_image = preg_match( '/(gif|jpeg|png)/', mime_content_type( $file['tmp_name'] ) ) === 1;
+      if ( function_exists( 'mime_content_type' ) ) {
+        $valid_image = preg_match( '/(gif|jpeg|png)/', mime_content_type( $file['tmp_name'] ) ) === 1;
+      } else {
+        if ( PDB_DEBUG ) {
+          Participants_Db::debug_log('missing php fileinfo extension');
+        }
+        $fileinfo = PDb_Image::getimagesize( $file['tmp_name'] );
+        $valid_image = in_array( $fileinfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WBMP) );
+      }
 
       if ( !$valid_image ) {
 
