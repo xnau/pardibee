@@ -391,8 +391,12 @@ class xnau_FormValidation {
 
     if (!is_string($string) || strlen($string) === 0)
       return false;
+    
+    if ( preg_match( '/^[a-zA-Z0-9\\\]/', $string ) === 1 ) {
+      return false;
+    }
 
-    return @preg_match($string,'test string') !== false;
+    return is_int( @preg_match($string,'' ) );
   }
 
   /**
