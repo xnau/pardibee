@@ -116,11 +116,13 @@ PDbListFilter = (function ($) {
     $('.wrap.pdb-list').PDb_idFix();
   };
   var scroll_to_top = function () {
-    var instance = submission.instance_index;
-    var listoffset = $("#participants-list-" + instance).offset().top;
-    if ( instance && $('html, body').scrollTop() - listoffset > 300 ) {
+    
+    var listinstance = $("#participants-list-" + submission.instance_index); 
+    
+    // if the list is taller than the window, scroll after paginating
+    if ( listinstance.length && listinstance.height() > $(window).innerHeight() ) {
       $('html, body').animate({
-        scrollTop : listoffset
+        scrollTop : listinstance.offset().top
       }, 500);
     }
   }
