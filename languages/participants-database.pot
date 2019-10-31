@@ -3,15 +3,15 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2019-10-22 20:29-1000\n"
+"POT-Creation-Date: 2019-10-30 15:24-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
-"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: participants-database.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -112,7 +112,7 @@ msgid ""
 "There is something wrong with the file you tried to upload. Try another."
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:85 classes/PDb_File_Uploads.php:124
+#: classes/PDb_File_Uploads.php:85 classes/PDb_File_Uploads.php:132
 #, php-format
 msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
 msgstr ""
@@ -122,18 +122,18 @@ msgstr ""
 msgid "The file selected for \"%s\" must be one of these types: %s. "
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:136
+#: classes/PDb_File_Uploads.php:144
 #, php-format
 msgid ""
 "The file you tried to upload is too large. The file must be smaller than %sK."
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:147
+#: classes/PDb_File_Uploads.php:155
 msgid "The file could not be saved."
 msgstr ""
 
-#: classes/PDb_FormElement.php:616 classes/PDb_List_Admin.php:971
-#: classes/PDb_List_Admin.php:1491 classes/xnau_FormElement.php:1082
+#: classes/PDb_FormElement.php:616 classes/PDb_List_Admin.php:969
+#: classes/PDb_List_Admin.php:1489 classes/xnau_FormElement.php:1082
 msgid "delete"
 msgstr ""
 
@@ -241,19 +241,19 @@ msgstr ""
 msgid "regex/match"
 msgstr ""
 
-#: classes/PDb_Init.php:1138
+#: classes/PDb_Init.php:1139
 msgid "Participant Info"
 msgstr ""
 
-#: classes/PDb_Init.php:1139
+#: classes/PDb_Init.php:1140
 msgid "Personal Info"
 msgstr ""
 
-#: classes/PDb_Init.php:1140
+#: classes/PDb_Init.php:1141
 msgid "Administrative Info"
 msgstr ""
 
-#: classes/PDb_Init.php:1141
+#: classes/PDb_Init.php:1142
 msgid "Record Info"
 msgstr ""
 
@@ -275,7 +275,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: classes/PDb_List.php:462 classes/PDb_List_Admin.php:904
+#: classes/PDb_List.php:462 classes/PDb_List_Admin.php:902
 #: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:98
 #: templates/pdb-list-flexbox.php:44 templates/pdb-list-responsive.php:47
 #: templates/pdb-search-default.php:63
@@ -286,12 +286,12 @@ msgstr ""
 msgid "select"
 msgstr ""
 
-#: classes/PDb_List.php:744 classes/PDb_List_Admin.php:919
+#: classes/PDb_List.php:744 classes/PDb_List_Admin.php:917
 #: classes/PDb_Settings.php:824 classes/PDb_Settings.php:1326
 msgid "Ascending"
 msgstr ""
 
-#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:920
+#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:918
 #: classes/PDb_Settings.php:824 classes/PDb_Settings.php:1326
 msgid "Descending"
 msgstr ""
@@ -302,44 +302,44 @@ msgid ""
 "terms."
 msgstr ""
 
-#: classes/PDb_List.php:1234 classes/PDb_List_Admin.php:1207
+#: classes/PDb_List.php:1234 classes/PDb_List_Admin.php:1205
 msgid "Download CSV for this list"
 msgstr ""
 
-#: classes/PDb_List.php:1239 classes/PDb_List_Admin.php:1208
+#: classes/PDb_List.php:1239 classes/PDb_List_Admin.php:1206
 msgid "Include field titles"
 msgstr ""
 
-#: classes/PDb_List.php:1257 classes/PDb_List_Admin.php:1205
+#: classes/PDb_List.php:1257 classes/PDb_List_Admin.php:1203
 msgid "File Name"
 msgstr ""
 
-#: classes/PDb_List.php:1356 classes/PDb_List_Admin.php:1560
+#: classes/PDb_List.php:1356 classes/PDb_List_Admin.php:1558
 msgctxt "submit button label"
 msgid "Delete Checked"
 msgstr ""
 
-#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1561
+#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1559
 msgctxt "submit button label"
 msgid "Change"
 msgstr ""
 
-#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1562
+#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1560
 msgctxt "submit button label"
 msgid "Sort"
 msgstr ""
 
-#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1563
+#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1561
 msgctxt "submit button label"
 msgid "Filter"
 msgstr ""
 
-#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1564
+#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1562
 msgctxt "submit button label"
 msgid "Clear"
 msgstr ""
 
-#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1565
+#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1563
 msgctxt "search button label"
 msgid "Search"
 msgstr ""
@@ -409,82 +409,82 @@ msgid_plural "%d emails were sent."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/PDb_List_Admin.php:842
+#: classes/PDb_List_Admin.php:840
 msgid "Show only records with"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:853
+#: classes/PDb_List_Admin.php:851
 msgctxt ""
 "joins two search terms, such as in \"Show only records with last name that "
 "is Smith\""
 msgid "that"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:860
+#: classes/PDb_List_Admin.php:858
 msgid "is"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:861
+#: classes/PDb_List_Admin.php:859
 msgid "is not"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:862
+#: classes/PDb_List_Admin.php:860
 msgid "contains"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:863
+#: classes/PDb_List_Admin.php:861
 msgid "doesn&#39;t contain"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:864
+#: classes/PDb_List_Admin.php:862
 msgid "is greater than"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:865
+#: classes/PDb_List_Admin.php:863
 msgid "is less than"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:879
+#: classes/PDb_List_Admin.php:877
 msgid "and"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:880
+#: classes/PDb_List_Admin.php:878
 msgid "or"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:899
+#: classes/PDb_List_Admin.php:897
 msgid "Number of filters to use: "
 msgstr ""
 
-#: classes/PDb_List_Admin.php:931
+#: classes/PDb_List_Admin.php:929
 #, php-format
 msgid "%s record found, sorted by: %s."
 msgid_plural "%s records found, sorted by: %s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/PDb_List_Admin.php:963 classes/PDb_List_Admin.php:1492
+#: classes/PDb_List_Admin.php:961 classes/PDb_List_Admin.php:1490
 msgid "approve"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:964 classes/PDb_List_Admin.php:1493
+#: classes/PDb_List_Admin.php:962 classes/PDb_List_Admin.php:1491
 msgid "unapprove"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1016
+#: classes/PDb_List_Admin.php:1014
 #, php-format
 msgid "Show %s items per page."
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1075
+#: classes/PDb_List_Admin.php:1073
 msgid "Edit"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1169
+#: classes/PDb_List_Admin.php:1167
 msgid "No records found"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1211
+#: classes/PDb_List_Admin.php:1209
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms, and in the order specified by the sort. The export will include "
@@ -492,19 +492,19 @@ msgid ""
 "the \"CSV\" column on the Manage Database Fields page."
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1489
+#: classes/PDb_List_Admin.php:1487
 msgid "PDb Admin List With Selected: "
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1494
+#: classes/PDb_List_Admin.php:1492
 msgid "send signup email"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1566 participants-database.php:3507
+#: classes/PDb_List_Admin.php:1564 participants-database.php:3507
 msgid "Apply"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1567
+#: classes/PDb_List_Admin.php:1565
 msgctxt ""
 "phrase used just before naming the action to perform on the selected items"
 msgid "With selected"
