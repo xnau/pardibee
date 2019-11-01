@@ -328,7 +328,7 @@ class PDb_Manage_Fields {
           <?php endif ?>
           <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n['all'] ?></button>
           <?php if ( $group !== 'internal' ) : ?>
-            <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions">
+            <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions" style="display:none">
               <h4><?php echo $this->i18n['add field'] ?></h4>
               <label><?php echo $this->i18n['new field title'] ?></label>
               <?php
@@ -373,7 +373,7 @@ class PDb_Manage_Fields {
               </div>
             </div>
           <?php endif ?>
-          <div id="with-selected-control-<?php echo $group ?>" class="with-selected-control">
+          <div id="with-selected-control-<?php echo $group ?>" class="with-selected-control" style="display:none">
             <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n['with selected'] ?>: </label>
             <?php
             PDb_FormElement::print_element( array(
