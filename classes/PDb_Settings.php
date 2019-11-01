@@ -1368,6 +1368,18 @@ class PDb_Settings extends xnau_Plugin_Settings {
     );
 
     $this->plugin_settings[] = array(
+        'name' => 'plugin_admin_capability',
+        'title' => __( 'Plugin Admin Access Level', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array(
+            'type' => 'dropdown',
+            'help_text' => __( 'sets the user access level for fields management, plugin settings, deleting records and CSV operations.', 'participants-database' ),
+            'value' => 'manage_options',
+            'options' => $this->get_role_select(),
+        )
+    );
+
+    $this->plugin_settings[] = array(
         'name' => 'top_bar_submit',
         'title' => __( 'Top Settings Submit', 'participants-database' ),
         'group' => 'pdb-admin',
