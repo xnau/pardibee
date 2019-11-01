@@ -3060,7 +3060,8 @@ class Participants_Db extends PDb_Base {
      * @param string the content to be processed
      * @return string filter mode to use
      */
-    $filter_mode = self::apply_filters( 'rich_text_filter_mode', Participants_Db::plugin_setting_is_true('enable_wpautop'), $string );
+    $filter_mode = self::apply_filters( 'rich_text_filter_mode', Participants_Db::plugin_setting('enable_wpautop', 'the_content'), $string );
+    
     switch ( $filter_mode ) {
       case '1':
       case 'the_content':
