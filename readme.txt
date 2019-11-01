@@ -293,7 +293,11 @@ You can define a "captcha" form element which will show a simple math question f
 * editors can now access "with selected" function in the admin list
 * javascript minified for faster asset loading
 * preference to delete uploaded files with record delete
-* many optimizations and minor bug fixes 
+* many optimizations and minor bug fixes
+
+= 1.9.3.15 =
+* fixed error when deleted fields are an admin user search preference
+* fixed loading spinner preload time
 
 = 1.9.3.14 =
 * fixed issue with CSV import skipping records that don't validate
