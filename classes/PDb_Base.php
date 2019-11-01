@@ -894,7 +894,7 @@ class PDb_Base {
        * @param string the privilege being requested
        * @return string the WP capability that is allowed this privilege
        */
-      $capability = self::apply_filters( 'access_capability', self::plugin_setting( $cap ), $context );
+      $capability = self::apply_filters( 'access_capability', self::plugin_setting_value( $cap ), $context );
 //      global $wp_filter;
 //      error_log(__METHOD__.' filters placed on access_capability: '.print_r($wp_filter['pdb-access_capability'],1));
     }
@@ -1011,6 +1011,9 @@ class PDb_Base {
    */
   public static function plugin_setting( $name, $default = false )
   {
+    if ( $default === false ) {
+      $default = self::plugin_setting_default($name);
+    }
     return self::apply_filters( 'translate_string', self::plugin_setting_value( $name, $default ) );
   }
 
@@ -1025,12 +1028,28 @@ class PDb_Base {
    */
   public static function plugin_setting_value( $name, $default = false )
   {
+    if ( $default === false ) {
+      $default = self::plugin_setting_default($name);
+    }
     /**
      * @filter pdb-{$setting_name}_setting_value
      * @param mixed the setting value
      * @return mixed setting value
      */
     return self::apply_filters( $name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
+  }
+  
+  /**
+   * provides the default setting for an option
+   * 
+   * @param string $name of the option
+   * @return string|bool the option's default value, bool false if no default is set
+   */
+  public static function plugin_setting_default( $name )
+  {
+    $defaults = get_option( Participants_Db::$default_options );
+    
+    return isset( $defaults[$name ] ) ? $defaults[$name ] : false;
   }
 
   /**
@@ -1055,7 +1074,10 @@ class PDb_Base {
    */
   public static function plugin_setting_is_true( $name, $default = false )
   {
-
+    if ( $default === false ) {
+      $default = self::plugin_setting_default($name);
+    }
+    
     if ( isset( Participants_Db::$plugin_options[$name] ) ) {
       return filter_var( self::plugin_setting_value( $name ), FILTER_VALIDATE_BOOLEAN );
     } else {
