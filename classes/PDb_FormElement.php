@@ -347,6 +347,7 @@ class PDb_FormElement extends xnau_FormElement {
           } else {
             $return = strip_tags( esc_textarea( $field->value() ) );
           }
+          
           break;
 
         case 'dropdown':
