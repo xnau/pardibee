@@ -3734,7 +3734,7 @@ class Participants_Db extends PDb_Base {
   }
   
   /**
-   * fiters the plugin data
+   * filters the plugin data
    * 
    * @param array $plugins
    * @return array
@@ -3751,7 +3751,7 @@ class Participants_Db extends PDb_Base {
         'AuthorName' => self::apply_filters( 'plugin_author', $plugin_data['AuthorName'] ),
         'AuthorURI' => self::apply_filters( 'plugin_author_uri', $plugin_data['AuthorURI'] ),
     );
-    $plugins[$key] = array_merge( $plugin_data, $filtered_data );
+    $plugins[$key] = array_merge( (array) $plugin_data, $filtered_data );
     return $plugins;
   }
 
