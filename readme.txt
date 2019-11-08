@@ -288,8 +288,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.9.4.1 =
+= 1.9.4.2 =
 * improved access to custom record matching
+* fixed issue with editors on admin list searches
 * several minor bug fixes
 
 = 1.9.4.1 =
@@ -1247,8 +1248,8 @@ Taking defensive precautions against other plugins in the admin:
 = 1.9.4 =
 Version 1.9.4 is a refactor and feature upgrade release
 
-= 1.9.4.1 =
-Version 1.9.4.1 is a bugfix release
+= 1.9.4.2 =
+Version 1.9.4.2 is a bugfix release
 
 == Plugin Support ==
 
