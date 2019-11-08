@@ -243,7 +243,7 @@ if ( $participant_values ) :
                         )
                 );
               } else {
-
+                
                 PDb_FormElement::print_element( array(
                     'type' => $column->form_element(),
                     'value' => $column->get_value(),
