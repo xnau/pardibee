@@ -811,7 +811,12 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
           //build the list of columns available for filtering
           $filter_columns = array();
           $group_title = '';
-          foreach ( Participants_db::get_column_atts( 'backend' ) as $column ) {
+          
+          foreach ( self::filter_columns() as $column ) {
+            
+            if ( empty($column->grouptitle) ) {
+              $column->grouptitle = $column->group;
+            }
             
             if ( $column->grouptitle !== $group_title ) {
               $group_title = $column->grouptitle;
@@ -1514,6 +1519,34 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
     foreach( $errors->get_error_messages() as $code => $message ) {
       self::$error_messages[$code] = sprintf( $pattern, esc_html( $message ) );
     }
+  }
+  
+  /**
+   * provides a list columns to use in the list filter and sort
+   * 
+   * @return array of column definitions
+   */
+  private static function filter_columns()
+  {
+    add_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ), 10, 2 );
+    $columns = Participants_db::get_column_atts( 'backend' );
+    remove_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ) );
+    return $columns;
+  }
+  
+  /**
+   * filters the available columns by user role
+   * 
+   * @param $cap the plugin user capability
+   * @param string $context
+   * @return string the plugin user capability
+   */
+  public static function column_filter_user( $cap, $context )
+  {
+    if ( $context === 'access admin field groups' ) {
+      $cap = 'edit_others_posts';
+    }
+    return $cap;
   }
   
   
