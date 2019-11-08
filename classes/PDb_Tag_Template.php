@@ -88,7 +88,7 @@ class PDb_Tag_Template {
   {
     $tag_template = new self( $template, $data );
     $tag_template->rich_text = true;
-    
+
     return $tag_template->_replace_tags();
   }
 
@@ -145,7 +145,7 @@ class PDb_Tag_Template {
       $data = array((string) $data => (string) $data);
     }
     foreach ( $data as $fieldname => $value ) {
-      $data[$fieldname] = $this->value_display($fieldname, $value);
+      $data[$fieldname] = $this->value_display( $fieldname, $value );
     }
     $this->data = $data + $this->data;
   }
@@ -164,7 +164,7 @@ class PDb_Tag_Template {
      * @param array as $tag => $value
      * @return array
      */
-    $tag_data = Participants_Db::apply_filters('tag_template_data_before_replace', $this->data );
+    $tag_data = Participants_Db::apply_filters( 'tag_template_data_before_replace', $this->data );
 
     $placeholders = array();
 
@@ -204,6 +204,25 @@ class PDb_Tag_Template {
     } else {
       $this->data = array();
     }
+    if ( isset( $this->data['id'] ) ) {
+      $cached_data = wp_cache_get( $this->data_cache_key(), __METHOD__ );
+      if ( $cached_data ) {
+        $this->data = $cached_data;
+      } else {
+        $this->prepare_display_values();
+        wp_cache_add( $this->data_cache_key(), $this->data, __METHOD__ );
+      }
+    }
+  }
+
+  /**
+   * provides the data array cache key
+   * 
+   * @return string key
+   */
+  private function data_cache_key()
+  {
+    return $this->data['id'] . '-' . count( $this->data ) . '-' . strval( $this->raw ) . hash( 'crc32', implode( '', array_keys( $this->data ) ) );
   }
 
   /**
@@ -242,15 +261,15 @@ class PDb_Tag_Template {
        * @version 1.7.1.4 added "raw" mode
        * 
        */
-      $field->html_mode( ! $this->raw );
-      
+      $field->html_mode( !$this->raw );
+
       /**
        * @filter pdb-tag_template_field_display_value
        * @param string display value
        * @param PDb_Field_Item
        * @return string display
        */
-      $value = Participants_Db::apply_filters('tag_template_field_display_value', $field->get_value_display(), $field );
+      $value = Participants_Db::apply_filters( 'tag_template_field_display_value', $field->get_value_display(), $field );
     }
     return $value;
   }
