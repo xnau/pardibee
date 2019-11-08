@@ -1549,7 +1549,7 @@ class Participants_Db extends PDb_Base {
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
     
-    $record_match = new submission\incoming_record_match($post, $participant_id);
+    $record_match = new PDb_submission\incoming_record_match($post, $participant_id);
 
     global $wpdb;
 
@@ -2412,7 +2412,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
-    return submission\incoming_record_match::field_value_exists($value, $field, $mask_id);
+    return PDb_submission\incoming_record_match::field_value_exists($value, $field, $mask_id);
   }
 
   /**
