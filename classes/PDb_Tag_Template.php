@@ -193,7 +193,7 @@ class PDb_Tag_Template {
   /**
    * sets up the data source
    * 
-   * @param array|int $data
+   * @param array|int|string $data
    */
   protected function setup_data( $data = false )
   {
@@ -204,25 +204,6 @@ class PDb_Tag_Template {
     } else {
       $this->data = array();
     }
-    if ( isset( $this->data['id'] ) ) {
-      $cached_data = wp_cache_get( $this->data_cache_key(), __METHOD__ );
-      if ( $cached_data ) {
-        $this->data = $cached_data;
-      } else {
-        $this->prepare_display_values();
-        wp_cache_add( $this->data_cache_key(), $this->data, __METHOD__ );
-      }
-    }
-  }
-  
-  /**
-   * provides the data array cache key
-   * 
-   * @return string key
-   */
-  private function data_cache_key()
-  {
-    return $this->data['id'] . '-' . count( $this->data ) . '-' . strval($this->raw) . hash( 'crc32', implode('', array_keys($this->data)));
   }
 
   /**
