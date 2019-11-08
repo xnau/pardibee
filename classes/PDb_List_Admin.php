@@ -179,7 +179,7 @@ class PDb_List_Admin {
     
     // delete images and files when record is deleted
     if ( Participants_Db::plugin_setting_is_true( 'delete_uploaded_files', false ) ) {
-      add_action( 'pdb-list_admin_with_selected_delete', array( 'submission\delete_uploads', 'delete_record_uploaded_files' ) );
+      add_action( 'pdb-list_admin_with_selected_delete', array( 'PDb_submission\delete_uploads', 'delete_record_uploaded_files' ) );
     }
 
     $current_user = wp_get_current_user();
