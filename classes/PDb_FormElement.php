@@ -184,6 +184,8 @@ class PDb_FormElement extends xnau_FormElement {
     }
     
     /* @var $field PDb_Field_Item */
+    
+    $field->html_mode($html);
 
     $return = false;
 
