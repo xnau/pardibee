@@ -366,7 +366,8 @@ class PDb_Field_Editor {
     $options = array();
     foreach( Participants_Db::get_groups('name,title') as $group_data ) {
       if ( $group_data['name'] === 'internal' ) continue;
-      $options[stripslashes($group_data['title'])] = $group_data['name'];
+      $title = empty($group_data['title']) ? $group_data['name'] : $group_data['title'];
+      $options[stripslashes($title)] = $group_data['name'];
     }
     return $options + array(PDb_FormElement::null_select_key() => false);
   }
