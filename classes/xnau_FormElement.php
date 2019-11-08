@@ -948,9 +948,7 @@ abstract class xnau_FormElement {
       } elseif ( filter_var( $this->link, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $parts = array( $this->link, $parts );
       } else {
-        $linktext_placeholder = $this->value;
-        $this->value = array('');
-        $parts = array('');
+        $parts = array('', $this->value );
       }
     } elseif ( !empty( $this->link ) ) {
       $parts[0] = $this->link;
