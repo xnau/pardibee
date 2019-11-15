@@ -225,7 +225,7 @@ class PDb_List_Admin {
   list query: ' . self::list_query() );
     }
     /*
-     * save the query in a transient so it can be used by the export CSV functionality
+     * save the query in a session value so it can be used by the export CSV functionality
      */
     if ( self::user_can_export_csv() ) {
       Participants_Db::$session->set( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, self::list_query() );
@@ -808,8 +808,9 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
 
           global $post;
           $filter_count = intval( self::$filter['list_filter_count'] );
+          
           //build the list of columns available for filtering
-          $filter_columns = array();
+          $filter_columns = array('null_select' => false);
           $group_title = '';
           
           foreach ( self::filter_columns() as $column ) {
