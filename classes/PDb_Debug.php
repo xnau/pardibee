@@ -63,7 +63,8 @@ class PDb_Debug {
 
     add_action( 'participants_database_uninstall', array(__CLASS__, 'uninstall') );
 
-    if ( PDB_DEBUG > 1 ) set_error_handler( array($this, 'write_php_error') );
+    if ( PDB_DEBUG > 1 )
+      set_error_handler( array($this, 'write_php_error') );
 
     add_action( 'wp_ajax_' . $this->action, array($this, 'handle_refresh') );
   }
@@ -76,7 +77,7 @@ class PDb_Debug {
   public function assets( $hook )
   {
     if ( strpos( $hook, 'participants-database-pdb_debugging' ) !== false ) {
-      
+
       wp_localize_script( Participants_Db::$prefix . 'debug', 'PDb_Debug', array(
           'action' => $this->action,
           'spinner' => Participants_Db::get_loading_spinner(),
@@ -186,26 +187,27 @@ class PDb_Debug {
     ?>
     <div class="wrap pdb-admin-settings participants_db pdb-debugging" >
 
-      <?php Participants_Db::admin_page_heading() ?>  
+    <?php Participants_Db::admin_page_heading() ?>  
       <h2><?php echo Participants_Db::$plugin_title . ' ' . $this->log_title ?></h2>
       <div class="pdb-log-display-frame form-group">
 
         <div class="pdb-log-display">
-          <?php $this->print_log() ?>
+    <?php $this->print_log() ?>
         </div>
 
       </div>
-      <form id="pdb-debug-refresh" action="<?php echo esc_attr( $_SERVER['REQUEST_URI'] ) ?>">      
-        <?php wp_nonce_field( $this->action ) ?>
-        <div class="form-group">
-          <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participants-database' ) ?></button>
-          <button class="button-primary pdb-debugging-refresh" data-action="refresh" ><?php _e( 'Refresh', 'participants-database' ) ?></button>
-        </div>
-      </form>
+      <div class="form-group">
+        <form id="pdb-debug-refresh" action="<?php echo esc_attr( $_SERVER['REQUEST_URI'] ) ?>">      
+      <?php wp_nonce_field( $this->action ) ?>
+          <div class="form-group">
+            <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participants-database' ) ?></button>
+            <button class="button-primary pdb-debugging-refresh" data-action="refresh" ><?php _e( 'Refresh', 'participants-database' ) ?></button>
+          </div>
+        </form>
 
-      <p><?php printf( __( 'Log file: %s', 'participants-database' ), '<br/>' . $this->log_filepath() ) ?></p>
-
-    </div>
+        <p><?php printf( __( 'Log file: %s', 'participants-database' ), '<br/>' . $this->log_filepath() ) ?></p>
+            
+          </div>
     <?php
   }
 
@@ -233,12 +235,12 @@ class PDb_Debug {
    */
   public function initialize_logging()
   {
-    if ( !is_resource($this->log_file) ) {
-    
-    
+    if ( !is_resource( $this->log_file ) ) {
+
+
       $this->log_file_resource(); // set up the resource
 
-      if ( !is_resource($this->log_file) ) {
+      if ( !is_resource( $this->log_file ) ) {
         $this->clear_log_filename();
         Participants_Db::debug_log( __METHOD__ . ' unable to open file for logging: ' . $this->log_filepath() );
         PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>', array(
@@ -246,9 +248,9 @@ class PDb_Debug {
             'context' => __( 'Debugging', 'participants-database' ),
         ) );
         return;
-      } 
+      }
     }
-      
+
     $this->truncate_large_file(); // truncate the file if it's too big
 
     if ( $this->empty_log() ) {
@@ -334,7 +336,7 @@ class PDb_Debug {
     $first = fread( $this->log_file_resource(), 4096 );
     return empty( $first );
   }
-  
+
   /**
    * provides the limit to the number of lines from the log to buffer
    * 
@@ -344,7 +346,7 @@ class PDb_Debug {
   {
     return Participants_Db::apply_filters( 'debug_log_line_buffer_limit', 200 );
   }
-  
+
   /**
    * truncates the log file if it is too large
    */
@@ -352,9 +354,9 @@ class PDb_Debug {
   {
     if ( is_resource( $this->log_file ) ) {
       $stat = fstat( $this->log_file );
-      
-      $too_big = $stat['size'] > Participants_Db::apply_filters('debug_log_max_size_mb', 5 ) * MB_IN_BYTES; // 5MB
-      
+
+      $too_big = $stat['size'] > Participants_Db::apply_filters( 'debug_log_max_size_mb', 5 ) * MB_IN_BYTES; // 5MB
+
       if ( $too_big ) {
         $this->clear_log();
       }
