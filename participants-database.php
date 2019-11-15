@@ -1092,7 +1092,7 @@ class Participants_Db extends PDb_Base {
     if ( ! self::$fields ) {
       global $wpdb;
       self::$fields = array();
-      $sql = 'SELECT v.* 
+      $sql = 'SELECT v.name 
               FROM ' . self::$fields_table . ' v 
               ORDER BY v.order';
       $result = $wpdb->get_results( $sql );
