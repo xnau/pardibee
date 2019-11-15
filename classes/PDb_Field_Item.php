@@ -20,7 +20,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * @var string the field's value
    */
-  private $value = '';
+  private $value;
 
   /**
    *
@@ -345,14 +345,14 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
   
   /**
-   * sets the value from the db
+   * sets the value from the db if it has not been set
    */
   private function set_value_from_db()
   {
-    if ( $this->record_id > 0 ) {
+    if ( is_null( $this->value ) && $this->record_id > 0 ) {
       $data = Participants_Db::get_participant($this->record_id);
       if ( $data && isset( $data[$this->name] ) ) {
-        $this->set_value($data[$this->name]);
+        $this->_set_value($data[$this->name]);
       }
     }
   }
@@ -768,7 +768,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function has_error()
   {
-
     $error_array = array('no error');
 
     if ( is_object( Participants_Db::$validation_errors ) )
@@ -938,5 +937,5 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     }
     
   }
-
-}
+  
+    }
