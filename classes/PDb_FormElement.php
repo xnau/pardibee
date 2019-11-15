@@ -318,7 +318,7 @@ class PDb_FormElement extends xnau_FormElement {
           if ( $html )
             $return = sprintf( ( empty( $url ) ? '%1$s%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), $url, $value, self::html_attributes( $field->attributes ) );
           else
-            $return = $value;
+            $return = empty($url) ? $value : $url;
           break;
 
         case 'text-line' :
