@@ -1644,6 +1644,28 @@ class PDb_Base {
   }
   
   /**
+   * provides a list of orphaned field columns in the main db
+   * 
+   * @global wpdb $wpdb
+   * @return array of field names
+   */
+  public static function orphaned_db_columns()
+  {
+    global $wpdb;
+    $columns = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$participants_table );
+    
+    $orphan_columns = array();
+    
+    foreach( $columns as $column ) {
+      if ( !array_key_exists( $column->Field, Participants_Db::$fields ) ) {
+        $orphan_columns[] = $column->Field;
+      }
+    }
+    
+    return $orphan_columns;
+  }
+  
+  /**
    * provides a general cache expiration time
    * 
    * this is to prevent persistent caches from holding on to the cached values too long
