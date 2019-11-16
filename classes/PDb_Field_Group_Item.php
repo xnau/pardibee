@@ -129,6 +129,22 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   }
   
   /**
+   * provides the group's title
+   * 
+   * if the title is blank, provides the name
+   * 
+   * @return string
+   */
+  public function title()
+  {
+    if ( ! empty($this->title) ) {
+      return Participants_Db::apply_filters( 'translate_string', $this->title );
+    }
+    
+    return $this->name;
+  }
+  
+  /**
    * tells if all the group's fields are empty
    * 
    * @return bool
