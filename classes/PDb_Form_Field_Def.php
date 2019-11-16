@@ -45,6 +45,11 @@ class PDb_Form_Field_Def {
   protected $group;
 
   /**
+   * @var string title of the field's group
+   */
+  protected $grouptitle;
+
+  /**
    * @var string field help text
    */
   public $help_text;
