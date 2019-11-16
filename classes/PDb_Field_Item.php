@@ -408,6 +408,23 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->link !== '';
   }
+  
+  /**
+   * supplies the "raw" field value
+   * 
+   * this is simply the field's value without any html that might normally be 
+   * included with a display value
+   * 
+   * @return string
+   */
+  public function raw_value()
+  {
+    $temp = $this->html_output;
+    $this->html_mode(false);
+    $value = $this->get_value_display();
+    $this->html_mode($temp);
+    return $value;
+  }
 
   /**
    * tests a value for emptiness, includinf arrays with empty elements
