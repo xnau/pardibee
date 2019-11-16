@@ -231,28 +231,73 @@ class PDb_Tag_Template {
    * we use the PDb_Field_Item class to generate display strings for the various 
    * field types
    * 
-   * @depends PDb_Field_Item
-   * 
+   * tags that are not fieldnames are retained as-is
    */
   protected function prepare_display_values()
   {
     foreach ( $this->data as $fieldname => $value ) {
-      $this->data[$fieldname] = $this->value_display( $fieldname, $value );
+      $field = $this->field_item($fieldname);
+      if ( $field ) {
+        $this->data[$fieldname] = $this->value_display( $field, $value );
+        $this->data['title:'.$fieldname] = $field->title();
+        $this->data['value:'.$fieldname] = $this->raw_value( $field, $value );
+        if ( $field->is_upload_field() ) {
+          $this->data['url:'.$fieldname] = $field->file_uri(); 
+        }
+      }
     }
   }
 
   /**
    * prepares an individual display value
    * 
-   * @param string  $fieldname  name of the field
+   * @param PDb_Field_Item $field object
    * @param string $value field value
    * @return string field value display string
    */
-  private function value_display( $fieldname, $value )
+  private function value_display( $field, $value )
   {
-    /*
-     * if the fieldname is a PDB field, use the Field Item class to determine the display string
+    $field->set_value($value);
+
+    /**
+     * @filter pdb-tag_template_field_display_value
+     * @param string display value
+     * @param PDb_Field_Item
+     * @return string display
      */
+    return Participants_Db::apply_filters( 'tag_template_field_display_value', $field->get_value_display(), $field );
+  }
+
+  /**
+   * supplies the field's raw value
+   * 
+   * @param PDb_Field_Item $field object
+   * @param string $value field value
+   * @return string
+   */
+  private function raw_value( $field, $value )
+  {
+    $field->set_value($value);
+    return $field->raw_value();
+  }
+  
+  /**
+   * provides the PDb_Field_Item object
+   * 
+   * @return PDb_Field_Item|bool the field item object or bool false if no defined field found
+   */
+  private function field_item( $fieldname )
+  {
+    $found = false;
+    $cachegroup = 'tag-template-field-item';
+    $field = wp_cache_get( $fieldname, $cachegroup, false, $found );
+    
+    if ( $found ) {
+      return $field;
+    }
+    
+    $field = false;
+    
     if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
       $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'value' => $value, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null )) );
       /**
@@ -262,16 +307,9 @@ class PDb_Tag_Template {
        * 
        */
       $field->html_mode( !$this->raw );
-
-      /**
-       * @filter pdb-tag_template_field_display_value
-       * @param string display value
-       * @param PDb_Field_Item
-       * @return string display
-       */
-      $value = Participants_Db::apply_filters( 'tag_template_field_display_value', $field->get_value_display(), $field );
     }
-    return $value;
+    
+    return $field;
   }
 
 }
