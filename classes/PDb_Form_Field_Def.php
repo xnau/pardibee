@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -188,10 +188,13 @@ class PDb_Form_Field_Def {
     
     if ( ! $def ) {
       global $wpdb;
-      $sql = 'SELECT v.* 
+      $sql = 'SELECT v.*, g.title AS grouptitle 
               FROM ' . Participants_Db::$fields_table . ' v 
+                JOIN ' . Participants_Db::$groups_table . ' g
+                  ON v.group = g.name 
               WHERE v.name = %s';
       $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
+      
       wp_cache_set( $fieldname, $def, $cachekey, Participants_Db::cache_expire() );
       
     }
@@ -403,6 +406,20 @@ class PDb_Form_Field_Def {
    */
   public function group()
   {
+    return $this->group;
+  }
+
+  /**
+   * tells the field group
+   * 
+   * @return string
+   */
+  public function group_title()
+  {
+    if ( ! empty($this->grouptitle) ) {
+      return Participants_Db::apply_filters( 'translate_string', $this->grouptitle );
+    }
+    
     return $this->group;
   }
 
