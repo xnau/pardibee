@@ -3121,7 +3121,7 @@ class Participants_Db extends PDb_Base {
   {
     $field = self::get_column( $column );
 
-    return $field->title();
+    return is_object($field) ? $field->title() : $column;
   }
 
   /**
