@@ -463,7 +463,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       case 'link':
         $value = $this->value . $this->link;
         break;
+      case 'date':
+      case 'date5':
+        $value = $this->value == '0' ? '' : $this->value;
+        break;
       default:
+        $value = $this->value;
+    }
         /**
          * @filter pdb-field_has_content_test_value
          * 
@@ -471,9 +477,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
          * @param PDb_Field_Item the current field
          * @return string the value to test for content
          */
-        $value = Participants_Db::apply_filters( 'field_has_content_test_value', $this->value, $this );
-    }
-    return !$this->is_empty( $value );
+    return !$this->is_empty( Participants_Db::apply_filters( 'field_has_content_test_value', $value, $this ) );
   }
 
   /**
