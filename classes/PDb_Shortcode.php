@@ -1471,7 +1471,8 @@ abstract class PDb_Shortcode {
    */
   protected function apply_empty_class( $field )
   {
-    return $this->_empty( $field->get_value() ) && $this->_empty( $field->link ) && $this->_empty( $field->default_value() );
+//    return $this->_empty( $field->get_value() ) && $this->_empty( $field->link ) && $this->_empty( $field->default_value() );
+    return ! $field->has_content();
   }
 
   /**
