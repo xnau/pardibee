@@ -429,6 +429,51 @@ svg.ajax-loading image {
 .pdb-single span.textarea {
   height: auto;
 }
+/* SINGLE FLEX */
+.pdb-single-flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0;
+  flex-direction: column;
+}
+.pdb-single-flex section {
+  margin: 1em 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+.pdb-single-flex.flex-row section {
+  flex-direction: row;
+}
+.pdb-single-flex.flex-row section .pdb-group-title, 
+.pdb-single-flex.flex-row section .pdb-group-description {
+  flex-basis: 100%;
+}
+.pdb-single-flex.flex-row .flex-field {
+  margin: 0.5em 6px 0.5em 0;
+  padding: 10px;
+  background-color: 
+  rgba(0,0,0,0.05);
+}
+.pdb-single-flex .flex-field {
+  margin: 0.5em 0;
+}
+.pdb-single-flex .flex-field.blank-field {
+  display: none;
+}
+.pdb-single-flex .flex-label {
+  font-style: italic;
+  margin-right: 1em;
+  vertical-align: top;
+  opacity: 0.7;
+}
+.pdb-single-flex .flex-label:after {
+  content: ":";
+}
+.pdb-single-flex.flex-justify section {
+  justify-content: space-between;
+}
 
 /* images */
 
