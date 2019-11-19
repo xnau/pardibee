@@ -299,7 +299,7 @@ class PDb_Tag_Template {
     $field = false;
     
     if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
-      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'value' => $value, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null )) );
+      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null )) );
       /**
        * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
        * 
