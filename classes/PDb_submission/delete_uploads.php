@@ -20,7 +20,7 @@ class delete_uploads {
   /**
    * @var array of fields that need checking for an uploaded file
    */
-  private $upload_field_list;
+  private $upload_field_list = array();
   
   /**
    * sets up the deletion
