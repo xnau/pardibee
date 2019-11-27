@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6.3
+ * @version    1.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -125,6 +125,16 @@ class PDb_FormElement extends xnau_FormElement {
     else
       return implode( PHP_EOL, $output );
   }
+  
+  /**
+   * provides the element output
+   * 
+   * @return string
+   */
+  public function output()
+  {
+    return $this->_output();
+  }
 
   /**
    * builds an output string
@@ -184,248 +194,7 @@ class PDb_FormElement extends xnau_FormElement {
     }
     
     /* @var $field PDb_Field_Item */
-    
-    $field->html_mode($html);
-
-    $return = false;
-
-    /**
-     * @filter pdb-before_display_form_element
-     * 
-     * @param bool false
-     * @param PDb_Field_Item $field the field object
-     * @return string the field value display or false if not altering the value
-     * 
-     * formerly, this was set as "pdb-before_display_field" and included a more limited set of arguments
-     */
-    if ( has_filter( Participants_Db::$prefix . 'before_display_form_element' ) ) {
-      $return = Participants_Db::apply_filters( 'before_display_form_element', $return, $field );
-    } elseif ( has_filter( Participants_Db::$prefix . 'before_display_field' ) ) {
-      // provided for backward-compatibility
-      $return = Participants_Db::apply_filters( 'before_display_field', $return, $field->value(), $field->form_element() );
-    }
-
-    if ( $return === false ) {
-
-      switch ( $field->form_element() ) :
-
-        
-        case 'image-upload' :
-          
-          switch ( $field->module() ) {
-            case 'single':
-            case 'list':
-            case 'tag-template':
-              $display_mode = 'image';
-              break;
-            case 'signup':
-            case 'admin-edit':
-            case 'record':
-              $display_mode = 'both';
-              break;
-            default :
-              $display_mode = 'none';
-          }
-
-          $image = new PDb_Image( array(
-              'filename' => $field->value(),
-              'link' => $field->link(),
-              'module' => $field->module(),
-              'mode' => $display_mode,
-              'attributes' => $field->attributes(),
-                  ) );
-
-          if ( $html ) {
-
-            $image->set_image_wrap();
-
-            $return = $image->get_image_html();
-            
-          } elseif ( $image->file_exists ) {
-            $return = $image->get_image_file();
-          } else {
-            $return = $field->value();
-          }
-
-          break;
-
-        case 'file-upload' :
-          
-          if ( $html && $field->is_not_default() ) {
-            $return = '';
-            if ( $field->module === 'signup' ) {
-              $field->set_link( false );
-              $return = $field->value();
-            } elseif ( $field->has_content() && Participants_Db::is_allowed_file_extension( $field->value(), $field->attributes() ) ) {
-              $field->set_link( filter_var( Participants_Db::files_uri() . $field->value, FILTER_VALIDATE_URL ) );
-              if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $field->link() && strlen( $field->default ) > 0 ) {
-                $field->set_value( $field->default );
-              }
-              $return = self::make_link( $field );
-            }
-            break;
-          } else {
-            // no valid filename in the value, show a blank
-            $return = '';
-            break;
-          }
-
-        case 'date' :
-          if ( $field->has_value() ) {
-            $return = PDb_Date_Display::get_date( $field->value, __METHOD__ . ' date field' );
-          }
-          $return = $return ? $return : '';
-          break;
-
-        case 'timestamp' :
-
-          if ( $field->has_value() ) {
-            $return = Participants_Db::plugin_setting_is_true( 'show_time' ) ? PDb_Date_Display::get_date_time( $field->value(), __METHOD__ . ' timestamp field with time' ) : PDb_Date_Display::get_date( $field->value(), __METHOD__ . ' timestamp field' );
-          }
-          $return = $return ? $return : '';
-          break;
-
-        case 'multi-checkbox' :
-        case 'multi-select-other' :
-        case 'multi-dropdown':
-
-          /*
-           * these elements are stored as serialized arrays of values, the data is displayed 
-           * a comma-separated string of the values, using the value titles if defined
-           */
-          $return = $field->display_array_value();
-          break;
-
-        case 'link' :
-
-          $linkdata = maybe_unserialize( $field->value() );
-          
-          if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
-            list( $url, $value ) = $linkdata + array('','');
-          } else {
-            $url = $field->link();
-            $value = $field->value();
-          }
-          
-          if ( strlen( $value ) < 1 ) {
-            if ( strlen( $url ) > 0) {
-              $value = $field->has_default() ? $field->default : preg_replace( '#https?://#', '', $url );
-            } else {
-              $value = '';
-            }
-          }
-
-          if ( $html )
-            $return = sprintf( ( empty( $url ) ? '%1$s%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), $url, $value, self::html_attributes( $field->attributes ) );
-          else
-            $return = empty($url) ? $value : $url;
-          break;
-
-        case 'text-line' :
-
-          if ( $html ) {
-
-            $return = self::make_link( $field );
-
-            break;
-          } else {
-
-            $return = esc_html( $field->value() );
-
-            break;
-          }
-
-        case 'text-area':
-        case 'textarea':
-
-          $pattern = $html ? '<span ' . self::class_attribute( 'textarea' ) . '>%s</span>' : '%s';
-          $return = sprintf( $pattern, esc_textarea( $field->value() ) );
-          break;
-
-        case 'rich-text':
-
-          if ( $html ) {
-            $return = sprintf( '<span ' . self::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $field->value(), 'rich-text field' ) );
-          } else {
-            $return = strip_tags( esc_textarea( $field->value() ) );
-          }
-          
-          break;
-
-        case 'dropdown':
-        case 'radio':
-        case 'checkbox':
-        case 'dropdown-other':
-        case 'select-other':
-
-          if ( $html ) {
-            $temp = $field->value();
-            $field->set_value( $field->display_array_value() );
-            $return = sprintf( '<span %s>%s</span>', self::class_attribute( $field->form_element() ), self::make_link( $field ) );
-            $field->set_value( $temp );
-          } else {
-            $return = $field->display_array_value();
-          }
-          
-          break;
-
-        case 'placeholder':
-
-          $field->set_value( $field->default_value() );
-          
-          $return = $html ? self::make_link( $field ) : $field->value();
-          
-          break;
-
-        case 'password':
-          // password hashes are never shown
-          $return = '';
-          break;
-
-        case 'decimal':
-        case 'currency':
-        case 'numeric':
-          
-          $field_display = $field->get_value();
-          
-          // localize the display value
-          switch ( $field->form_element() ) {
-            case 'decimal':
-              // this is to remove any trailing zeroes
-              $field_display = PDb_Localization::display_number( floatval( $field->value() ), $field );
-              break;
-            case 'currency':
-              $field_display = PDb_Localization::display_currency( $field->value(), $field );
-              break;
-          }
-
-          if ( isset( $field->attributes['data-before'] ) && $field->has_content() ) {
-            $field_display = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $field->attributes['data-before'] ) . '</span>' . esc_html( $field_display ) . '</span>';
-          } elseif ( isset( $field->attributes['data-after'] ) && $field->has_content() ) {
-            $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . esc_html( $field->attributes['data-after'] ) . '</span></span>';
-          }
-          
-          $return = $field_display;
-          break;
-
-        case 'hidden':
-
-          if ( $field->is_dynamic_hidden_field() && !$field->is_not_default() ) {
-            // this is to prevent the dynamic value key from getting printed
-            $field->set_value( '' );
-          } elseif ( !$field->is_dynamic_hidden_field() && !$field->has_content() ) {
-            // show the default value if it's not a dynamic field value and there is no set value
-            $field->set_value( $field->default );
-          }
-        // don't break here so we can assign the return value
-        default :
-
-          $return = $html ? self::make_link( $field ) : $field->value();
-
-      endswitch;
-    }
-
-    return $return;
+    return $field->get_value_display( $html );
   }
 
   /**
@@ -669,8 +438,7 @@ class PDb_FormElement extends xnau_FormElement {
    * this func validates the link as being either an email addres or URI, then
    * (if enabled) builds the HTML and returns it
    * 
-   * @param PDb_Field_Item|object $field the field object
-   * @param string $linktext the clickable text (optional)
+   * @param PDb_Field_Item $field the field object
    * @param string $template the format of the link (optional)
    * @param array  $get an array of name=>value pairs to include in the get string
    *
@@ -679,10 +447,9 @@ class PDb_FormElement extends xnau_FormElement {
   public static function make_link( $field, $template = false, $get = false )
   {
 
-    // convert the PDb_Field_Item object to a stdClass
-    // for backward compatibility
     if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
-      if ( PDB_DEBUG ) Participants_Db::debug_log ( __METHOD__.' called with: '.print_r($field,1));
+
+      
       $field = new PDb_Field_Item( $field );
     }
     /* @var PDb_Field_Item $field */
@@ -690,7 +457,7 @@ class PDb_FormElement extends xnau_FormElement {
     /**
      * links may only be placed on string values
      */
-    if ( is_array( $field->get_value() ) )
+    if ( $field->is_multi() )
       return $field->get_value();
 
     // clean up the provided string

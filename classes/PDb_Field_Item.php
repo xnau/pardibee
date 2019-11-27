@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.2
+ * @version    2.3
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -198,11 +198,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * supplies the value in a displayable format
    * 
+   * this is specifically for fields that store their value as an array
+   * 
    * @return string
    */
   public function display_array_value()
   {
-    if ( $this->is_value_set() ) {
+    if ( $this->is_multi() ) {
       $titles = array();
       foreach ( self::field_value_array( $this->value ) as $value ) {
         $titles[] = $this->sanitize_option_title( $this->value_title( $value ) );
@@ -503,7 +505,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * processes a field value into an array 
    * 
-   * this is used for values as they come in from a database or imported from CSV
+   * this is used for values as they come in from a database or imported from CSV, 
+   * for fields that store their value as an array
    * 
    * @param string|array $value
    * @return array
@@ -959,4 +962,267 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     
   }
   
+  
+  /**
+   * returns an element value formatted for display
+   * 
+   * @param bool $html if true will provide a html-formatted value, if false, provides a raw value
+   * @return string the object's current value, formatted
+   */
+  protected function _field_value_display( $html = true )
+  {
+    $return = false;
+
+    $this->html_output = $html;
+    /**
+     * @filter pdb-before_display_form_element
+     * 
+     * @param bool false
+     * @param PDb_Field_Item $field the field object
+     * @return string the field value display or false if not altering the value
+     * 
+     * formerly, this was set as "pdb-before_display_field" and included a more limited set of arguments
+     */
+    if ( has_filter( Participants_Db::$prefix . 'before_display_form_element' ) ) {
+      $return = Participants_Db::apply_filters( 'before_display_form_element', $return, $this );
+    } elseif ( has_filter( Participants_Db::$prefix . 'before_display_field' ) ) {
+      // provided for backward-compatibility
+      $return = Participants_Db::apply_filters( 'before_display_field', $return, $this->value(), $this->form_element() );
     }
+
+    if ( $return === false ) :
+
+      switch ( $this->form_element() ) :
+        
+        case 'image-upload' :
+          
+          switch ( $this->module() ) {
+            case 'single':
+            case 'list':
+            case 'tag-template':
+              $display_mode = 'image';
+              break;
+            case 'signup':
+            case 'admin-edit':
+            case 'record':
+              $display_mode = 'both';
+              break;
+            default :
+              $display_mode = 'none';
+          }
+
+          $image = new PDb_Image( array(
+              'filename' => $this->value(),
+              'link' => $this->link(),
+              'module' => $this->module(),
+              'mode' => $display_mode,
+              'attributes' => $this->attributes(),
+                  ) );
+
+          if ( $this->html_output ) {
+
+            $image->set_image_wrap();
+
+            $return = $image->get_image_html();
+            
+          } elseif ( $image->file_exists ) {
+            $return = $image->get_image_file();
+          } else {
+            $return = $this->value();
+          }
+
+          break;
+
+        case 'file-upload' :
+          
+          if ( $this->html_output && $this->is_not_default() ) {
+            $return = '';
+            if ( $this->module === 'signup' ) {
+              $this->set_link( false );
+              $return = $this->value();
+            } elseif ( $this->has_content() && Participants_Db::is_allowed_file_extension( $this->value(), $this->attributes() ) ) {
+              $this->set_link( filter_var( Participants_Db::files_uri() . $this->value, FILTER_VALIDATE_URL ) );
+              if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $this->link() && strlen( $this->default ) > 0 ) {
+                $this->set_value( $this->default );
+              }
+              $return = $this->make_link();
+            }
+            break;
+          } else {
+            // no valid filename in the value, show a blank
+            $return = '';
+            break;
+          }
+
+        case 'date' :
+          if ( $this->has_value() ) {
+            $return = PDb_Date_Display::get_date( $this->value, __METHOD__ . ' date field' );
+          }
+          $return = $return ? $return : '';
+          break;
+
+        case 'timestamp' :
+
+          if ( $this->has_value() ) {
+            $return = Participants_Db::plugin_setting_is_true( 'show_time' ) ? PDb_Date_Display::get_date_time( $this->value(), __METHOD__ . ' timestamp field with time' ) : PDb_Date_Display::get_date( $this->value(), __METHOD__ . ' timestamp field' );
+          }
+          $return = $return ? $return : '';
+          break;
+
+        case 'multi-checkbox' :
+        case 'multi-select-other' :
+        case 'multi-dropdown':
+
+          /*
+           * these elements are stored as serialized arrays of values, the data is displayed 
+           * a comma-separated string of the values, using the value titles if defined
+           */
+          $return = $this->display_array_value();
+          break;
+
+        case 'link' :
+
+          $linkdata = maybe_unserialize( $this->value() );
+          
+          if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
+            list( $url, $value ) = $linkdata + array('','');
+          } else {
+            $url = $this->link();
+            $value = $this->value();
+          }
+          
+          if ( strlen( $value ) < 1 ) {
+            if ( strlen( $url ) > 0) {
+              $value = $this->has_default() ? $this->default : preg_replace( '#https?://#', '', $url );
+            } else {
+              $value = '';
+            }
+          }
+
+          if ( $this->html_output )
+            $return = sprintf( ( empty( $url ) ? '%1$s%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), $url, $value, PDb_FormElement::html_attributes( $this->attributes ) );
+          else
+            $return = empty($url) ? $value : $url;
+          break;
+
+        case 'text-line' :
+
+          if ( $this->html_output ) {
+
+            $return = $this->make_link();
+
+            break;
+          } else {
+
+            $return = esc_html( $this->value() );
+
+            break;
+          }
+
+        case 'text-area':
+        case 'textarea':
+
+          $pattern = $this->html_output ? '<span ' . PDb_FormElement::class_attribute( 'textarea' ) . '>%s</span>' : '%s';
+          $return = sprintf( $pattern, esc_textarea( $this->value() ) );
+          break;
+
+        case 'rich-text':
+
+          if ( $this->html_output ) {
+            $return = sprintf( '<span ' . PDb_FormElement::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $this->value(), 'rich-text field' ) );
+          } else {
+            $return = strip_tags( esc_textarea( $this->value() ) );
+          }
+          
+          break;
+
+        case 'dropdown':
+        case 'radio':
+        case 'checkbox':
+        case 'dropdown-other':
+        case 'select-other':
+
+          if ( $this->html_output ) {
+            $temp = $this->value();
+            $this->set_value( $this->display_array_value() );
+            $return = sprintf( '<span %s>%s</span>', PDb_FormElement::class_attribute( $this->form_element() ), $this->make_link() );
+            $this->set_value( $temp );
+          } else {
+            $return = $this->display_array_value();
+          }
+          
+          break;
+
+        case 'placeholder':
+
+          $this->set_value( $this->default_value() );
+          
+          $return = $this->html_output ? $this->make_link() : $this->value();
+          
+          break;
+
+        case 'password':
+          // password hashes are never shown
+          $return = '';
+          break;
+
+        case 'decimal':
+        case 'currency':
+        case 'numeric':
+          
+          $field_display = $this->get_value();
+          
+          // localize the display value
+          switch ( $this->form_element() ) {
+            case 'decimal':
+              // this is to remove any trailing zeroes
+              $field_display = PDb_Localization::display_number( floatval( $this->value() ), $field );
+              break;
+            case 'currency':
+              $field_display = PDb_Localization::display_currency( $this->value(), $field );
+              break;
+          }
+
+          if ( isset( $this->attributes['data-before'] ) && $this->has_content() ) {
+            $field_display = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $this->attributes['data-before'] ) . '</span>' . esc_html( $field_display ) . '</span>';
+          } elseif ( isset( $this->attributes['data-after'] ) && $this->has_content() ) {
+            $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . esc_html( $this->attributes['data-after'] ) . '</span></span>';
+          }
+          
+          $return = $field_display;
+          break;
+
+        case 'hidden':
+
+          if ( $this->is_dynamic_hidden_field() && !$this->is_not_default() ) {
+            // this is to prevent the dynamic value key from getting printed
+            $this->set_value( '' );
+          } elseif ( !$this->is_dynamic_hidden_field() && !$this->has_content() ) {
+            // show the default value if it's not a dynamic field value and there is no set value
+            $this->set_value( $this->default );
+          }
+          
+          $return = $this->value();
+          break;
+          
+        default :
+
+          $return = $this->html_output ? $this->make_link() : $this->value();
+
+      endswitch; // form element
+    endif; // return === false
+
+    return $return;
+  }
+  
+  /**
+   * provides a field value wrapped in an anchor tag
+   * 
+   * @return string
+   */
+  protected function make_link()
+  {
+    return PDb_FormElement::make_link( $this );
+  }
+  
+}
