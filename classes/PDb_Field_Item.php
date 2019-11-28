@@ -156,7 +156,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function get_value_display()
   {
-    return PDb_FormElement::get_field_value_display( $this, $this->html_output );
+    return $this->_field_value_display();
   }
 
   /**
