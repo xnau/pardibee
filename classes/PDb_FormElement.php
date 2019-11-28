@@ -447,9 +447,7 @@ class PDb_FormElement extends xnau_FormElement {
   public static function make_link( $field, $template = false, $get = false )
   {
 
-    if ( ! is_a( $field, 'PDb_Field_Item' ) ) {
-
-      
+    if ( ! is_a( $field, 'PDb_Field_Item' ) ) {      
       $field = new PDb_Field_Item( $field );
     }
     /* @var PDb_Field_Item $field */
