@@ -3155,97 +3155,42 @@ class Participants_Db extends PDb_Base {
 
     $output = array();
 
-    // get the column attributes
-    $columns = self::get_column_atts( 'CSV' );
+    foreach ( $raw_array as $key => $raw_value ) {
 
-    // iterate through the object as we iterate through the array
-    $column = current( $columns );
-
-    foreach ( $raw_array as $key => $value ) {
-
-      $field_def = self::$fields[$key];
-      /* @var $field_def PDb_Form_Field_Def */
+      $field = new PDb_Field_Item( $key );
       /**
-       * filters the raw value of the field
-       * 
-       * subsequent processing can be skipped by setting the $column->form_element property to 'skip'
+       * filters the raw value of the field before exporting
        * 
        * @version 1.7.1
        * @filter pdb-csv_export_value_raw
        * @param mixed the raw value
-       * @param object the field object
+       * @param PDb_Field_Item the field object
        * @return mixed
        */
-      $value = self::apply_filters( 'csv_export_value_raw', $value, $field_def );
-
-      // process any other value types
-      switch ( $field_def->form_element() ) {
-
-        case 'date':
-
-          if ( !empty( $value ) && is_numeric( $value ) ) {
-
-            $value = PDb_Date_Display::get_date( $value, __METHOD__ );
-          }
-          break;
-
-        case 'link':
-
-          // flatten the array
-          if ( is_serialized( $value ) ) {
-
-            $link = unserialize( $value );
-            if ( empty( $link[0] ) )
-              $value = isset( $value[1] ) ? $value[1] : '';
-            else {
-              $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
-              $value = vsprintf( $pattern, $link );
-            }
-          }
-          break;
-
-        case 'rich-text':
-
-          /*
-           * what we need to do here is add the missing markup (wpautop does 
-           * this) and then remove all line breaks and such so the whole thing 
-           * looks like one field
-           */
-          $value = preg_replace( '/^\s+|\n|\r|\s+$/m', '', wpautop( $value, true ) );
-          break;
-        
-        case 'skip':
-          // do nothing
-          break;
-
-        default:
-          
-          $value = maybe_unserialize( $value );
-
-          /*
-           * as of version 1.7.9 multi-type fields export their values as a 
-           * comma-separated list of values; values that contain a comma will use 
-           * the &#44; entity to represent them
-           */
-          if ( $field_def->is_multi() ) {
-            $value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
-          } elseif ( is_array( $value ) ) {
-             // if it is an array, serialize it
-            $value = html_entity_decode( serialize( $value ), ENT_QUOTES, "UTF-8" );
-          } else {
-            $value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
-          }
-          
-      }
+      $field->set_value(  self::apply_filters( 'csv_export_value_raw', $raw_value, $field ) );
 
       /*
        * decode HTML entities and convert line breaks to <br>, then pass to a filter 
        * for processing before being added to the output array
        */
-      $output_value = Participants_Db::apply_filters( 'csv_export_value', self::unix_linebreaks($value), $column ); // str_replace( array("\n", "\r"), '<br />', stripslashes( $value )
+      /**
+       * @filter pdb-csv_export_value
+       * 
+       * provides a way to make a final tweak to the export value
+       * 
+       * return bool false to skip the field, removing it from the export
+       * 
+       * @param string the export value
+       * @param PDb_Field_Item the field object
+       * @return string
+       */
+      $output_value = Participants_Db::apply_filters( 'csv_export_value', self::unix_linebreaks( $field->export_value() ), $field );
+      
+      if ( $output_value === false ) {
+        continue 1;
+      }
+      
       $output[$key] = $output_value;
-
-      $column = next( $columns );
     }
 
     return $output;
