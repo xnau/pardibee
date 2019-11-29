@@ -807,6 +807,8 @@ abstract class PDb_Shortcode {
         $group_fields[$field->name()] = new PDb_Field_Item( $field );
         
         $group_fields[$field->name()]->set_module( $this->module );
+        
+        $group_fields[$field->name()]->set_record_id( $this->participant_id );
       }
     }
     return $group_fields;
