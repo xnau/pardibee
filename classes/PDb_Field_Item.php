@@ -235,34 +235,33 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function export_value()
   {
     /**
-     * filters the raw value of the field
-     * 
-     * subsequent processing can be skipped by setting the $column->form_element property to 'skip'
+     * filters the raw value of the field for export
      * 
      * @version 1.7.1
-     * @filter pdb-csv_export_value_raw
+     * @filter pdb-field_export_value_raw
      * @param mixed the raw value
      * @param object the field object
      * @return mixed
      */
-    $value = Participants_Db::apply_filters( 'csv_export_value_raw', $this->value, $this );
+    $value = Participants_Db::apply_filters( 'field_export_value_raw', $this->value, $this );
 
     switch ( $this->form_element ) {
 
       case 'date':
-        $value = PDb_Date_Display::get_date( $this->value, 'export value' );
+        
+        $export_value = PDb_Date_Display::get_date( $value, 'export value' );
         break;
 
       case 'link':
 
-        $link = maybe_unserialize( $this->value );
+        $link = maybe_unserialize( $value );
         if ( is_array( $link ) ) {
 
           if ( empty( $link[0] ) )
-            $value = isset( $link[1] ) ? $link[1] : '';
+            $export_value = isset( $link[1] ) ? $link[1] : '';
           else {
             $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
-            $value = vsprintf( $pattern, $link );
+            $export_value = vsprintf( $pattern, $link );
           }
         }
         break;
@@ -274,16 +273,12 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
          * this) and then remove all line breaks and such so the whole thing 
          * looks like one field
          */
-        $value = preg_replace( '/^\s+|\n|\r|\s+$/m', '', wpautop( $this->value, true ) );
-        break;
-
-      case 'skip':
-        // do nothing; we can use this to skip the normal value in the filter above
+        $export_value = preg_replace( '/^\s+|\n|\r|\s+$/m', '', wpautop( $value, true ) );
         break;
 
       default:
 
-        $value = maybe_unserialize( $this->value );
+        $value = maybe_unserialize( $value );
 
         /*
          * as of version 1.7.9 multi-type fields export their values as a 
@@ -291,16 +286,16 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
          * the &#44; entity to represent them
          */
         if ( $this->is_multi() ) {
-          $value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
+          $export_value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
         } elseif ( is_array( $value ) ) {
           // if it is an array, serialize it
-          $value = html_entity_decode( serialize( $value ), ENT_QUOTES, "UTF-8" );
+          $export_value = html_entity_decode( serialize( $value ), ENT_QUOTES, "UTF-8" );
         } else {
-          $value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
+          $export_value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
         }
     }
 
-    return $value;
+    return $export_value;
   }
 
   /**
