@@ -334,6 +334,10 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     $this->add_options_to_attributes();
+    
+    if ( $this->type === 'currency' && ! isset( $this->attributes['step'] ) ) {
+      $this->attributes['step'] = '0.01';
+    } 
 
     $this->_addline( $this->_input_tag( 'number' ) );
   }
