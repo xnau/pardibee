@@ -274,6 +274,8 @@ class PDb_List extends PDb_Shortcode {
    *
    * this takes all the fields that are going to be displayed and organizes them
    * under their group so we can easily run through them in the template
+   * 
+   * @global wpdb $wpdb
    */
   public function _setup_iteration()
   {
@@ -302,7 +304,6 @@ class PDb_List extends PDb_Shortcode {
     global $wpdb;
 
     // get the number of records returned
-//    $this->num_records = $wpdb->get_var( preg_replace( '#^SELECT.+FROM #', 'SELECT COUNT(*) FROM ', $list_query ) );
     $this->num_records = count( $wpdb->get_results( $list_query ) );
 
     $this->_set_list_limit();
