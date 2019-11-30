@@ -644,6 +644,10 @@ class PDb_Field_Def_Parameter {
       case 'selectable':
         $this->config['attributes']['title'] = __('Select this field', 'participants-database');
         break;
+      case 'help_text':
+      case 'validation_message':
+        $this->config['value'] = htmlspecialchars( $this->config['value'] );
+        break;
     }
     
     return PDb_FormElement::get_element( $this->config );
