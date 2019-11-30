@@ -316,6 +316,7 @@ class PDb_Manage_Fields {
      */
     protected function general_fields_control( $group )
     {
+      $current_user = wp_get_current_user();
       ?>
       <div class="general_fields_control_header">
         <form id="general_fields_control_<?php echo $group ?>" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
@@ -380,7 +381,7 @@ class PDb_Manage_Fields {
                 'type' => 'dropdown',
                 'options' => array_flip( $this->with_selected_options( $group ) ),
                 'name' => 'with_selected_action_selection',
-                'value' => '',
+                'value' => PDb_List_Admin::get_user_setting( 'with_selected_selection', '', 'manage_fields' . $current_user->ID ),
                 'attributes' => array(
                     'class' => 'with-selected-action-select',
                     'id' => 'with_selected_action_selection_' . $group,
