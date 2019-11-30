@@ -1435,7 +1435,7 @@ abstract class xnau_FormElement {
   /**
    * merges the options array into the attributes
    * 
-   * this is used on elements that need arbitrary attribtues added
+   * this is used on elements that need arbitrary attributes added
    */
   protected function add_options_to_attributes()
   {
