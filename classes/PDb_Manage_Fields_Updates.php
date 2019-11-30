@@ -328,6 +328,7 @@ class PDb_Manage_Fields_Updates {
     }
 
     global $wpdb;
+    $current_user = wp_get_current_user();
 
     switch ( filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ) ) {
 
@@ -401,6 +402,8 @@ class PDb_Manage_Fields_Updates {
       SET `' . $param . '` = "' . $setting . '" 
       WHERE id IN ("' . implode( '","', $list ) . '")'
         );
+        
+        PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'selection', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
 
         wp_send_json( array('status' => 'success', 'feedback' => $this->dismissable_message( __( 'Field settings updated.', 'participants-database' ) )) );
 
