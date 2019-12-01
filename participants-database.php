@@ -698,6 +698,7 @@ class Participants_Db extends PDb_Base {
       wp_localize_script( self::$prefix . 'manage_fields', 'PDb_L10n', array(
           '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
           'action' => PDb_Manage_Fields_Updates::action_key,
+          'loading_indicator' => Participants_Db::get_loading_spinner(),
           /* translators: don't translate the words in brackets {} */
           'must_remove' => '<h4>' . __( 'You must remove all fields from the {name} group before deleting it.', 'participants-database' ) . '</h4>',
           /* translators: don't translate the words in brackets {} */
