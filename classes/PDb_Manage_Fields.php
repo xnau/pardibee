@@ -127,7 +127,7 @@ class PDb_Manage_Fields {
                 </div>
                 <?php endif ?>
                 <?php
-                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group )) );
+                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group ), 'with_selected' => '' ) );
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
