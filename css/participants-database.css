@@ -267,6 +267,7 @@ input[type="color"] {
   margin-right: 5px;
   visibility: visible;
   position: relative;
+  vertical-align: middle;
   width: 32px;
   height: 32px;
 }
