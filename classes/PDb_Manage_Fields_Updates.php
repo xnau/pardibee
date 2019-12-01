@@ -43,6 +43,7 @@ class PDb_Manage_Fields_Updates {
   public function update_fields()
   {
     global $wpdb;
+    $current_user = wp_get_current_user();
 
     foreach ( $this->sanitized_field_post() as $name => $row ) {
 
@@ -161,7 +162,8 @@ class PDb_Manage_Fields_Updates {
           Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
         }
         if ( $result ) {
-          PDb_Admin_Notices::post_success( __( 'Fields Updated', 'participants-database' ) );
+          PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
+          Participants_Db::set_admin_message(__( 'Fields Updated', 'participants-database' ), 'success' );
           /**
            * @action pdb-field_defs_updated
            * @param string action
@@ -945,7 +947,7 @@ class PDb_Manage_Fields_Updates {
    */
   protected function dismissable_message( $message, $key = 'field_update', $type = 'notice' )
   {
-    return '<div id="pdb-manage_fields_' . $key . '" class="notice updated settings-error ' . $type . ' is-dismissible"> 
+    return '<div id="pdb-manage_fields_' . $key . '" class="notice updated ' . $type . ' is-dismissible"> 
 <p><strong>' . $message . '</strong></p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
   }
 
