@@ -206,6 +206,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => '/wp-content/plugins/participants-database/ui/no-image.png',
         )
     );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'default_image_size',
+        'title' => __( 'Image Size', 'participants-database' ),
+        'group' => 'pdb-main',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Sets the default height of images displayed in single record and record edit displays. Defaults to pixels, but any valid CSS size value can be used.', 'participants-database' ),
+            'value' => '3em',
+            'attributes' => array('style' => 'width:5em'),
+        )
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'image_link',
@@ -852,6 +865,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => 0,
             'options' => array(1, 0),
         ),
+    );
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'list_default_image_size',
+        'title' => __( 'Image Size', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Sets the default height of images displayed in the list. Defaults to pixels, but any valid CSS size value can be used.', 'participants-database' ),
+            'value' => '50',
+            'attributes' => array('style' => 'width:5em'),
+        )
     );
 
     /*     * *****************************************************
