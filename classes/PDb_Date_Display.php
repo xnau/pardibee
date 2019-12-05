@@ -177,7 +177,8 @@ class PDb_Date_Display {
   public function output()
   {
     self::reassert_timezone();
-    return $this->timestamp ? date_i18n( $this->format(), $this->timestamp ) : '';
+    $date_func = function_exists('wp_date') ? 'wp_date' : 'date_i18n';
+    return $this->timestamp ? $date_func( $this->format(), $this->timestamp ) : '';
   }
 
   /**
