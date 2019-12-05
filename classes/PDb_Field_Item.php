@@ -1051,7 +1051,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
         case 'date' :
           if ( $this->has_value() ) {
-            $return = PDb_Date_Display::get_date( $this->value, __METHOD__ . ' date field' );
+            if ( isset( $this->attributes['format'] ) ) {
+              $return = PDb_Date_Display::get_date_with_format( $this->value, $this->attributes['format'], __METHOD__ . ' date field' );
+            } else {
+              $return = PDb_Date_Display::get_date( $this->value, __METHOD__ . ' date field' );
+            }
           }
           $return = $return ? $return : '';
           break;
@@ -1171,10 +1175,10 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           switch ( $this->form_element() ) {
             case 'decimal':
               // this is to remove any trailing zeroes
-              $field_display = PDb_Localization::display_number( floatval( $this->value() ), $field );
+              $field_display = PDb_Localization::display_number( floatval( $this->value() ), $this );
               break;
             case 'currency':
-              $field_display = PDb_Localization::display_currency( $this->value(), $field );
+              $field_display = PDb_Localization::display_currency( $this->value(), $this );
               break;
           }
 
