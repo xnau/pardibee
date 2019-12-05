@@ -599,6 +599,8 @@ class Participants_Db extends PDb_Base {
      */
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), '1.6' );
     wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$Settings->option_version() );
+    
+    wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
     wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.2' );
     wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.4' );
@@ -1868,7 +1870,7 @@ class Participants_Db extends PDb_Base {
               break;
 
             case 'password':
-              if ( !empty( $post[$column->name] ) && $post[$column->name] !== PDb_FormElement::dummy ) { // skip saving the password if it is the dummy
+              if ( !empty( $post[$column->name] ) && self::is_new_password( $post[$column->name] ) ) {
                 $new_value = wp_hash_password( trim( $post[$column->name] ) );
               } else {
                 $new_value = false;
@@ -3352,6 +3354,26 @@ class Participants_Db extends PDb_Base {
     do_action( Participants_Db::$prefix . 'list_ajax_complete', $post );
 
     exit;
+  }
+  
+  /**
+   * supplies the inline CSS for the frontend
+   * 
+   * this is where user preferences are added to the CSS
+   * 
+   * @return string
+   */
+  private static function inline_css()
+  {
+    return '
+.image-field-wrap img {
+   height:' . self::css_dimension_value( self::plugin_setting( 'default_image_size', '3em' ) ) . ';
+   max-width: inherit;
+}
+.pdb-list .image-field-wrap img {
+   height:' . self::css_dimension_value( self::plugin_setting( 'list_default_image_size', '50px' ) ) . ';
+   max-width: inherit;
+}';
   }
 
   /**
