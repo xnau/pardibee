@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2019  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -49,6 +49,13 @@ class incoming_record_match {
   private $csv_import;
   
   /**
+   * @var bool match status
+   * 
+   * null: not checked; true: matched; false:no match found
+   */
+  private $match_status;
+  
+  /**
    * @var string the matched field error message key
    * 
    * this can also be a literal message
@@ -83,32 +90,35 @@ class incoming_record_match {
         return $this->post;
       case 'match_field':
         return $this->match_field;
+      case 'match_status':
+        return $this->match_status;
     }
   }
 
   /**
    * provides the current match status
    * 
-   * 
    * @return bool true if a matching record was found
    */
   public function is_matched()
   {
-    $filtered = false;
-
-    if ( has_filter( 'pdb-incoming_record_match_object' ) ) {
+    if ( has_action( 'pdb-incoming_record_match_object' ) ) {
       /**
-       * @filter pdb-incoming_record_match_object
-       * @param bool default match state
+       * @action pdb-incoming_record_match_object
        * @param incoming_record_match this object
-       * @return bool true if a match was found
+       * 
+       * action for modifying the match object before a match check is performed
+       * 
+       * the action handler is expected to set the match_status property true/false if a match is found
+       * if it leaves the match_status property alone, the default match method will be used
+       * 
        */
-      $record_match = \Participants_Db::apply_filters( 'incoming_record_match_object', false, $this );
-      $filtered = true;
+      \Participants_Db::do_action( 'incoming_record_match_object', $this );
     }
 
     // for backward compatibility
-    if ( !$filtered && has_filter( 'pdb-incoming_record_match' ) ) {
+    if ( is_null( $this->match_status ) && has_filter( 'pdb-incoming_record_match' ) ) {
+      
       /**
        * 
        * @filter pdb-incoming_record_match
@@ -118,20 +128,20 @@ class incoming_record_match {
        * 
        * @return bool true if a matching record is found
        */
-      $record_match = \Participants_Db::apply_filters( 'incoming_record_match', $record_match, $this->post, $this->match_mode_numeric() );
-      $filtered = true;
+      $this->match_status = \Participants_Db::apply_filters( 'incoming_record_match', $this->match_status, $this->post, $this->match_mode_numeric() );
     }
 
-    if ( !$filtered ) {
+    if ( is_null( $this->match_status ) ) {
+      
       // use the configured match
-      $record_match = $this->match_check();
+      $this->_match_check();
     }
     
-    if ( $this->match_mode() === 'skip' && $record_match ) {
+    if ( $this->match_mode() === 'skip' && $this->match_status ) {
       $this->setup_matched_field_message();
     }
 
-    return $record_match;
+    return (bool) $this->match_status;
   }
   
   /**
@@ -141,7 +151,8 @@ class incoming_record_match {
    */
   protected function match_check()
   {
-    return $this->_match_check();
+    $this->_match_check();
+    return $this->match_status;
   }
 
   /**
@@ -178,6 +189,23 @@ class incoming_record_match {
   public function set_record_id( $value )
   {
     $this->record_id = intval( $value );
+  }
+  
+  /**
+   * sets the match status
+   * 
+   * @param bool $status
+   */
+  public function set_match_status( $status ) {
+    $this->match_status = (bool) $status;
+  }
+  
+  /**
+   * clears the match status
+   * 
+   */
+  public function clear_match_status( $status ) {
+    unset( $this->match_status );
   }
 
   /**
@@ -282,29 +310,22 @@ class incoming_record_match {
     
     \Participants_Db::$validation_errors->add_error( $this->match_field, $this->message_key );
   }
-  
-  /**
-   * provides the match field string
-   * 
-   * @return string
-   */
 
   /**
-   * calculates a match based on the match field value
+   * calculates a match based on the match field value and sets the match status
    * 
-   * @return bool
    */
   private function _match_check()
   {
     if ( $this->match_mode() === 'add' ) {
-      return false;
+      $this->match_status = false;
     }
     /*
      *  prevent updating record from matching itself if we are avoiding duplicates
      */
     $mask_id = $this->skip_mode() ? $this->record_id : 0;
 
-    return $this->match_field_value() !== '' && self::field_value_exists( $this->match_field_value(), $this->match_field, $mask_id );
+    $this->match_status = $this->match_field_value() !== '' && self::field_value_exists( $this->match_field_value(), $this->match_field, $mask_id );
   }
 
   /**
