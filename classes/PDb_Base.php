@@ -852,6 +852,20 @@ class PDb_Base {
     
     return strpos( $test_value, '->' ) > 0 || strpos( $test_value, ':' ) > 0 || $dynamic_value !== '';
   }
+  
+  /**
+   * tells if the string is a new password
+   * 
+   * checks if the string is an encrypted WP password or the password dummy
+   * 
+   * @param string $string the string to test
+   * @return bool true if the string is a new password
+   */
+  public static function is_new_password( $string )
+  {
+    // we're counting on the new password not beginning with $P$
+    return strpos( $string, '$P$' ) !== 0 && $string !== PDb_FormElement::dummy;
+  }
 
   /**
    * supplies a group object for the named group
@@ -1193,6 +1207,25 @@ class PDb_Base {
       file_put_contents( $stylesheet_path, $custom_css );
     }
     return true;
+  }
+  
+  /**
+   * provides a CSS dimension value with units
+   * 
+   * defaults to pixels, checks for a valid unit
+   * 
+   * @param string $value
+   * @return string
+   */
+  public static function css_dimension_value( $value )
+  {
+    $fallback = preg_replace( "/[^0-9]/", "", $value ) . 'px';
+    
+    $value = str_replace( ' ', '', $value ); // remove any spaces
+    
+    $check = preg_match('/^[0-9]+.?([0-9]+)?(px|em|rem|ex|ch|%|lh|vw|vh|vmin|vmax)$/', $value );
+    
+    return $check === 1 ? $value : $fallback;
   }
 
   /**
