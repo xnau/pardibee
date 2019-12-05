@@ -428,6 +428,11 @@ abstract class PDb_Shortcode {
     }
 
     if ( !file_exists( $template ) ) {
+      
+      if ( $this->module !== 'API' ) {
+        Participants_Db::debug_log( __METHOD__ . ' custom template not found: ' . $template );
+      }
+      
       $template = Participants_Db::$plugin_path . 'templates/pdb-' . $this->module . '-default.php';
     }
 
