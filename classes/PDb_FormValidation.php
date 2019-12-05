@@ -108,7 +108,7 @@ class PDb_FormValidation extends xnau_FormValidation {
   protected function _validate_field( $value, $name, $validation = NULL, $form_element = false, $record_id = false )
   {
     //$field = (object) compact( 'value', 'name', 'validation', 'form_element', 'error_type' );
-    $field = new PDb_Validating_Field( $value, $name, $validation, $form_element, false, $record_id );
+    $validating_field = new PDb_Validating_Field( $value, $name, $validation, $form_element, false, $record_id );
 
     /**
      * this filter sends the $field object through a filter to allow a custom 
@@ -123,12 +123,12 @@ class PDb_FormValidation extends xnau_FormValidation {
      * @param PDb_Validating_Field $field
      * 
      */
-    Participants_Db::do_action( 'before_validate_field', $field );
+    Participants_Db::do_action( 'before_validate_field', $validating_field );
 
     /*
      * if there is no validation method defined, exit here
      */
-    if ( !$field->is_validated() ) {
+    if ( !$validating_field->is_validated() ) {
       return;
     }
 
@@ -139,9 +139,10 @@ class PDb_FormValidation extends xnau_FormValidation {
      * 
      * a field that has any validation method and is empty will validate as empty first
      */
-    if ( $field->has_not_been_validated() ) {
+    if ( $validating_field->has_not_been_validated() ) {
       // we can validate each form element differently here if needed
-      switch ( $field->form_element ) {
+      switch ( $validating_field->form_element ) {
+        
         case 'file-upload':
         case 'image-upload':
 
@@ -149,59 +150,65 @@ class PDb_FormValidation extends xnau_FormValidation {
            * only "required" validation is allowed on this. Restricting file types 
            * is done in the "values" field or in the settings
            */
-          $field->validation = 'yes';
-          if ( $this->is_empty( $field->value ) ) {
-            $field->validation_state_is( 'empty' );
+          $validating_field->validation = 'yes';
+          if ( $this->is_empty( $validating_field->value ) ) {
+            $validating_field->validation_state_is( 'empty' );
           } else {
-            $field->validation_state_is( 'valid' );
+            $validating_field->validation_state_is( 'valid' );
           }
           break;
 
         case 'link':
+          
           // a "link" field only needs the first element to be filled in
-          if ( $this->is_empty( $field->value[0] ) ) {
-            $field->validation_state_is( 'empty' );
-          } elseif ( !filter_var( $field->value[0], FILTER_VALIDATE_URL ) ) {
-            $field->validation_state_is( 'invalid' );
+          if ( $this->is_empty( $validating_field->value[0] ) ) {
+            $validating_field->validation_state_is( 'empty' );
+          } elseif ( !filter_var( $validating_field->value[0], FILTER_VALIDATE_URL ) ) {
+            $validating_field->validation_state_is( 'invalid' );
           } else {
-            $field->validation_state_is( 'valid' );
+            $validating_field->validation_state_is( 'valid' );
           }
           break;
+          
         case 'checkbox':
-          $values = Participants_Db::$fields[$field->name]->option_values();
+          
+          $values = Participants_Db::$fields[$validating_field->name]->option_values();
           
           $checked_value = current( $values );
-          if ( $field->validation === 'yes' && $field->value !== $checked_value ) {
-            $field->validation_state_is( 'empty' );
-          } elseif ( $field->validation === 'yes' ) {
-            $field->validation_state_is( 'valid' );
+          if ( $validating_field->validation === 'yes' && $validating_field->value !== $checked_value ) {
+            $validating_field->validation_state_is( 'empty' );
+          } elseif ( $validating_field->validation === 'yes' ) {
+            $validating_field->validation_state_is( 'valid' );
           }
           break;
+          
         case 'password':
-          if ( $field->record_id ) {
-            $record = Participants_Db::get_participant( $field->record_id );
-            if ( isset( $record[$field->name] ) && !empty( $record[$field->name] ) ) {
-              // we don't require the password if it is already set
-              $field->validation_state_is( 'valid' );
+          
+          // if the password exists and is not being changed, it will come in as the dummy string
+          if ( $validating_field->value === PDb_FormElement::dummy ) {
+            $validating_field->validation_state_is( 'valid' );
+          }
+          
+          
+          if ( $validating_field->has_not_been_validated() ) {
+            if ( $this->is_empty( $validating_field->value ) && ! $validating_field->is_regex() ) {
+              $validating_field->validation_state_is( 'empty' );
+            } elseif ( $validating_field->validation === 'yes' ) {
+              $validating_field->validation_state_is( 'valid' );
             }
           }
-          if ( $field->has_not_been_validated() ) {
-            if ( $this->is_empty( $field->value ) && !self::is_regex( $field->validation ) ) {
-              $field->validation_state_is( 'empty' );
-            } elseif ( $field->validation === 'yes' ) {
-              $field->validation_state_is( 'valid' );
-            }
-          }
+          
           break;
+          
         default:
           /*
            * check all the simple validated fields for empty
            */
-          if ( $field->validation === 'yes' ) {
-            if ( $this->is_empty( $field->value ) ) {
-              $field->validation_state_is( 'empty' );
+          if ( $validating_field->validation === 'yes' ) {
+            if ( $this->is_empty( $validating_field->value ) ) {
+              $validating_field->validation_state_is( 'empty' );
             } else {
-              $field->validation_state_is( 'valid' );
+              $validating_field->validation_state_is( 'valid' );
             }
           }
       }
@@ -210,24 +217,24 @@ class PDb_FormValidation extends xnau_FormValidation {
     /*
      * if the field has still not been validated, we process it with the remaining validation methods
      */
-    if ( $field->has_not_been_validated() ) {
+    if ( $validating_field->has_not_been_validated() ) {
 
       $regex = '';
       $test_value = false;
 
       switch ( true ) {
 
-        case ( $field->is_email() ) :
+        case ( $validating_field->is_email() ) :
 
           $regex = Participants_Db::apply_filters( 'email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$#i' ); // version 1.7.1 long tld's allowed
           break;
 
-        case ( 'captcha' == strtolower( $field->validation ) ) :
+        case ( 'captcha' == strtolower( $validating_field->validation ) ) :
 
-          $field->value = isset( $field->value[1] ) ? $field->value[1] : '';
+          $validating_field->value = isset( $validating_field->value[1] ) ? $validating_field->value[1] : '';
 
           // grab the value and the validation key
-          list($info, $v) = (isset( $this->post_array[$field->name][1] ) ? $this->post_array[$field->name] : array($this->post_array[$field->name][0], $field->value));
+          list($info, $v) = (isset( $this->post_array[$validating_field->name][1] ) ? $this->post_array[$validating_field->name] : array($this->post_array[$validating_field->name][0], $validating_field->value));
           $info = json_decode( urldecode( $info ) );
 
           /**
@@ -237,82 +244,82 @@ class PDb_FormValidation extends xnau_FormValidation {
           $regex = Participants_Db::apply_filters( 'captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
           
           if ( !self::is_regex( $regex ) ) {
-            $field->validation_state_is( 'invalid' );
+            $validating_field->validation_state_is( 'invalid' );
           }
 
           //error_log(__METHOD__.' validate CAPTCHA $info:'.print_r($info,1).' $field->value:'.$field->value.' regex:'.$regex);
 
           break;
 
-        case ( self::is_regex( $field->validation ) ) :
+        case ( self::is_regex( $validating_field->validation ) ) :
 
-          $regex = $field->validation;
+          $regex = $validating_field->validation;
           break;
 
         /*
          * if it's not a regex, test to see if it's a valid field name for a match test
          */
-        case ( isset( $this->post_array[strtolower( $field->validation )] ) ) :
+        case ( isset( $this->post_array[strtolower( $validating_field->validation )] ) ) :
 
-          $test_value = $this->post_array[strtolower( $field->validation )];
+          $test_value = $this->post_array[strtolower( $validating_field->validation )];
           break;
 
         default:
       }
 
       if ( $test_value !== false ) {
-        if ( ! $this->verify_field_is_valid( $test_value, $field ) ) {
-          $field->validation_state_is( 'nonmatching' );
+        if ( ! $this->verify_field_is_valid( $test_value, $validating_field ) ) {
+          $validating_field->validation_state_is( 'nonmatching' );
         } else {
           // set the state to valid because it matches
-          $field->validation_state_is( 'valid' );
+          $validating_field->validation_state_is( 'valid' );
         }
       } elseif ( $regex !== false && self::is_regex( $regex ) ) {
 
-        $test_result = preg_match( $regex, $field->value );
+        $test_result = preg_match( $regex, $validating_field->value );
 
         if ( $test_result === 0 ) {
           // failed regex
-          if ( $this->is_empty( $field->value ) ) {
-            $field->error_type = 'empty';
-          } elseif( $field->validation === 'captcha' ) {
-            $field->error_type = 'captcha';
+          if ( $this->is_empty( $validating_field->value ) ) {
+            $validating_field->error_type = 'empty';
+          } elseif( $validating_field->validation === 'captcha' ) {
+            $validating_field->error_type = 'captcha';
           } else {
-            $field->error_type = 'invalid';
+            $validating_field->error_type = 'invalid';
           }
           
         } elseif ( $test_result === false ) {
           error_log( __METHOD__ . ' captcha or regex error with regex: "' . $regex . '"' );
           
         } elseif ( $test_result === 1 ) {
-          $field->validation_state_is( 'valid' );
+          $validating_field->validation_state_is( 'valid' );
           
         }
       }
     }
 
-    if ( $field->is_not_valid() ) {
-      $this->_add_error( $field->name, $field->error_type, false );
+    if ( $validating_field->is_not_valid() ) {
+      $this->_add_error( $validating_field->name, $validating_field->error_type, false );
     }
     /*
      * the result of a captcha validation are stored in a session variable
      */
-    if ( $field->is_captcha() || $field->form_element === 'captcha' ) {
-      Participants_Db::$session->set( 'captcha_result', $field->error_type );
+    if ( $validating_field->is_captcha() || $validating_field->form_element === 'captcha' ) {
+      Participants_Db::$session->set( 'captcha_result', $validating_field->error_type );
     }
 
     if ( false ) {
       error_log( __METHOD__ . '
   field: ' . $name . '
-  element: ' . $field->form_element . '
-  value: ' . (is_array( $field->value ) ? print_r( $field->value, 1 ) : $field->value) . '
-  validation: ' . (is_bool( $field->validation ) ? ($field->validation ? 'true' : 'false') : $field->validation) . '
+  element: ' . $validating_field->form_element . '
+  value: ' . (is_array( $validating_field->value ) ? print_r( $validating_field->value, 1 ) : $validating_field->value) . '
+  validation: ' . (is_bool( $validating_field->validation ) ? ($validating_field->validation ? 'true' : 'false') : $validating_field->validation) . '
   submitted? ' . ($this->not_submitted( $name ) ? 'no' : 'yes') . '
-  empty? ' . ($this->is_empty( $field->value ) ? 'yes' : 'no') . '
-  error type: ' . $field->error_type );
+  empty? ' . ($this->is_empty( $validating_field->value ) ? 'yes' : 'no') . '
+  error type: ' . $validating_field->error_type );
     }
 
-    return $field->value;
+    return $validating_field->value;
   }
   
   /**
