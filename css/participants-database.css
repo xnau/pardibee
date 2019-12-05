@@ -414,9 +414,6 @@ svg.ajax-loading image {
   width: 140px;
   margin: 0 10px 1.625em 0;
 }
-.pdb-single .image-field-wrap img {
-  height: 3em;
-}
 .pdb-single .image-field-wrap {
   float: none;
 }
@@ -491,7 +488,6 @@ svg.ajax-loading image {
   height: auto;
 }
 .image-field-wrap img {
-  height: 50px;
   width: auto;
 }
 .pdb-record .image-field-wrap,
