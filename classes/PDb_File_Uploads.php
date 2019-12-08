@@ -45,7 +45,7 @@ class PDb_File_Uploads {
 
     $field_atts = new PDb_Form_Field_Def( $field_name ); // Participants_Db::get_field_atts( $field_name );
     
-    $is_image = $field_atts->form_element() === 'image-upload';
+    $is_image_field = $field_atts->form_element() === 'image-upload';
 //    $delete_checked = (bool) (isset( $_POST[$field_name . '-deletefile'] ) and $_POST[$field_name . '-deletefile'] == 'delete');
 //    $_POST[$field_name . '-deletefile'] = '';
 
@@ -74,14 +74,14 @@ class PDb_File_Uploads {
     /* get the allowed file types and test the uploaded file for an allowed file 
      * extension
      */
-    $field_allowed_extensions = Participants_Db::get_field_allowed_extensions( $field_atts->attributes()['allowed'] );
+    $field_allowed_extensions = isset( $field_atts->attributes()['allowed'] ) ? Participants_Db::get_field_allowed_extensions( $field_atts->attributes()['allowed'] ) : '';
     $extensions = empty( $field_allowed_extensions ) ? Participants_Db::plugin_setting_value('allowed_file_types') : $field_allowed_extensions;
     
     $test = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $file['name'] ), $matches );
     
     if ( 0 === $test ) {
 
-      if ( $is_image && $this->is_empty( $field_allowed_extensions ) ) {
+      if ( $is_image_field && $this->is_empty( $field_allowed_extensions ) ) {
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title() ), $field_name );
       } else {
         Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_atts->title(), preg_replace( '#(,)(?=[^,])#U', ', ', $extensions ) ), $field_name );
@@ -112,22 +112,9 @@ class PDb_File_Uploads {
       }
     }
 
-    if ( $is_image ) {
-      /*
-       * we perform a validity check on the image files, this also makes sure only 
-       * images are uploaded in image upload fields
-       */
-      if ( function_exists( 'mime_content_type' ) ) {
-        $valid_image = preg_match( '/(gif|jpeg|png)/', mime_content_type( $file['tmp_name'] ) ) === 1;
-      } else {
-        if ( PDB_DEBUG ) {
-          Participants_Db::debug_log('missing php fileinfo extension');
-        }
-        $fileinfo = PDb_Image::getimagesize( $file['tmp_name'] );
-        $valid_image = in_array( $fileinfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WBMP) );
-      }
+    if ( $is_image_field ) {
 
-      if ( !$valid_image ) {
+      if ( ! PDb_Image::is_image_file( $file['tmp_name'] ) ) {
 
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title() ), $field_name );
         
