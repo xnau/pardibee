@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2019  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -27,9 +27,7 @@ class delete_uploads {
    */
   private function __construct()
   {
-    if ( ! is_array( $this->upload_field_list ) ) {
-      $this->setup_upload_field_list();
-    }
+    $this->setup_upload_field_list();
   }
   
   /**
