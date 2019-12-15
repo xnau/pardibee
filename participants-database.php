@@ -41,7 +41,7 @@ spl_autoload_register( 'PDb_class_loader' );
  * @category   WordPress Plugins
  * @package    wordPress
  * @author     Roland Barker <webdesign@xnau.com>
- * @copyright  2011 - 2018 7th Veil, LLC
+ * @copyright  2011 - 2019 7th Veil, LLC
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GPL2
  * @version    Release: 1.8.1
  * 
