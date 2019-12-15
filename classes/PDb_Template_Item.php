@@ -221,7 +221,7 @@ class PDb_Template_Item {
   }
   
   /**
-   * supplies the full calss name
+   * supplies the full class name
    * 
    * @return string class name
    */
