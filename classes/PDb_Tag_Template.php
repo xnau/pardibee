@@ -307,6 +307,8 @@ class PDb_Tag_Template {
        * 
        */
       $field->html_mode( !$this->raw );
+      
+      wp_cache_set( $fieldname, $field, $cachegroup, Participants_Db::cache_expire() ); 
     }
     
     return $field;
