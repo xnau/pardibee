@@ -1,7 +1,7 @@
 <?php
 /**
  * @name pdb single template bootstrap
- * @version 2.1
+ * @version 2.2
  * 
  * default template for displaying a single record for the twitter bootstrap framework
  *
@@ -29,7 +29,7 @@
       
       ?>
     
-    <dl class="dl-horizontal <?php echo Participants_Db::$prefix.$this->field->name ?> <?php echo $empty_class ?>-group">
+    <dl class="dl-horizontal <?php echo Participants_Db::$prefix.$this->field->name ?> <?php echo $empty_class ?>-group <?php echo $empty_class ?>">
       
       <dt class="<?php echo $this->field->name.' '.$empty_class?>"><?php $this->field->print_label() ?></dt>
       
