@@ -810,7 +810,7 @@ query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
           $filter_count = intval( self::$filter['list_filter_count'] );
           
           //build the list of columns available for filtering
-          $filter_columns = array('null_select' => false);
+          $filter_columns = array();
           $group_title = '';
           
           foreach ( self::filter_columns() as $column ) {
