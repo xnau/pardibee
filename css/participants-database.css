@@ -14,7 +14,7 @@
   display: none;
 }
 .textarea {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 /* SIGNUP FORM */
@@ -229,8 +229,11 @@ input[type="color"] {
   vertical-align: middle;
 }
 .pdb-list .wp-list-table th,
-.pdb-list .wp-list-table td{
+.pdb-list .wp-list-table td {
   padding: 5px;
+}
+.pdb-list .pdb-searchform {
+  margin-bottom: 1.5em;
 }
 .pdb-list .pdb-searchform fieldset,
 .pdb-list table caption {
@@ -247,6 +250,10 @@ input[type="color"] {
   max-height: 5em;
   max-width: 150px;
   overflow: auto;
+}
+.hide-titles .pdb-field-title,
+.hide-titles.pdb-list thead {
+  display: none;
 }
 .pdb-searchform input[type=text],
 .pdb-searchform input[type=submit],
@@ -283,7 +290,7 @@ svg.ajax-loading image {
   top: 50%;
 }
 
-/* pagination */
+/* list pagination */
 .pdb-list .pagination,
 .pdb-pagination {
   overflow:auto;
@@ -360,7 +367,7 @@ svg.ajax-loading image {
   margin: 8px 6px 0 0;
 }
 .pdb-pagination.csv-export-box label {
-    float: none;
+  float: none;
 }
 .wp-admin .pdb-list .pagination .dashicons, 
 .wp-admin.has-dashicons .pagination .dashicons.dashicons-last-page,
@@ -400,6 +407,85 @@ svg.ajax-loading image {
   content: "\f345\f345";
 }
 
+/* LIST FLEXBOX */
+
+.pdb-flexbox-list .list-container {
+  display: flex;
+  flex-direction: column;
+}
+.pdb-flexbox-list section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0.75em 0;
+  padding-bottom: 0.75em;
+  border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+.pdb-flexbox-list.flex-column section {
+  flex-direction: column;
+}
+.pdb-flexbox-list section:last-of-type {
+  border-bottom: none;
+}
+.pdb-flexbox-list section:first-of-type {
+  margin-top: 1.5em;
+  padding-top: 0.75em;
+  border-top: 2px solid rgba(0,0,0,0.1);
+}
+.pdb-flexbox-list .pdb-field {
+  margin-right: 1em;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.pdb-flexbox-list .pdb-field.blank-field {
+  display: none;
+}
+.pdb-flexbox-list .pdb-field-title {
+  font-weight: normal;
+  padding-right: 0.25em;
+  font-size: 70%;
+}
+.pdb-flexbox-list.pdb-list .pagination ul, .pdb-pagination ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  text-align: center;
+}
+.pdb-flexbox-list.pdb-list .pagination li, .pdb-pagination li {
+  width: 20%;
+  max-width: 4em;
+}
+.pdb-flexbox-list .pdb-pagination span.dashicons {
+  vertical-align: middle;
+}
+.pdb-flexbox-list .pdb-pagination span.ajax-loading {
+  postion: absolute;
+}
+.pdb-flexbox-list .pdb-list .pagination li > span, 
+.pdb-flexbox-list .pdb-pagination li > span, 
+.pdb-flexbox-list .pdb-list .pagination a, 
+.pdb-flexbox-list .pdb-pagination a {
+  padding: 0.5em 0;
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  /* 
+  this will hide the direct number pagination links, resulting in a more 
+  compact display 
+  */
+  .pdb-flexbox-list .pdb-pagination li.direct-page {
+    display: none;
+  }
+}
+
+
 /* SINGLE */
 .pdb-single dl {
   overflow: auto;
@@ -427,6 +513,14 @@ svg.ajax-loading image {
 .pdb-single span.textarea {
   height: auto;
 }
+.hide-titles .flex-label,
+.hide-titles dl dt,
+.hide-titles .pdb-field-title,
+.hide-blank .blank-field,
+.hide-blank .image-blank-field {
+  display: none;
+}
+
 /* SINGLE FLEX */
 .pdb-single-flex {
   display: flex;
@@ -452,7 +546,7 @@ svg.ajax-loading image {
   margin: 0.5em 6px 0.5em 0;
   padding: 10px;
   background-color: 
-  rgba(0,0,0,0.05);
+    rgba(0,0,0,0.05);
 }
 .pdb-single-flex .flex-field {
   margin: 0.5em 0;
