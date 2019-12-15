@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.3
+ * @version    2.4
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -213,7 +213,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     }
     return $this->value();
   }
-  
+
   /**
    * sanitizes an option title
    * 
@@ -224,7 +224,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function sanitize_option_title( $title )
   {
-    return PDb_Manage_Fields_Updates::sanitize_text($title);
+    return PDb_Manage_Fields_Updates::sanitize_text( $title );
   }
 
   /**
@@ -248,7 +248,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     switch ( $this->form_element ) {
 
       case 'date':
-        
+
         $export_value = PDb_Date_Display::get_date( $value, 'export value' );
         break;
 
@@ -327,7 +327,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $this->_set_value( $value );
   }
-  
+
   /**
    * sets the record id prop and value if available
    * 
@@ -340,16 +340,16 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       $this->set_value_from_db();
     }
   }
-  
+
   /**
    * sets the value from the db if it has not been set
    */
   private function set_value_from_db()
   {
     if ( is_null( $this->value ) && $this->record_id > 0 ) {
-      $data = Participants_Db::get_participant($this->record_id);
+      $data = Participants_Db::get_participant( $this->record_id );
       if ( $data && isset( $data[$this->name] ) ) {
-        $this->_set_value($data[$this->name]);
+        $this->_set_value( $data[$this->name] );
       }
     }
   }
@@ -405,7 +405,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->link !== '';
   }
-  
+
   /**
    * supplies the "raw" field value
    * 
@@ -417,9 +417,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function raw_value()
   {
     $temp = $this->html_output;
-    $this->html_mode(false);
+    $this->html_mode( false );
     $value = $this->get_value_display();
-    $this->html_mode($temp);
+    $this->html_mode( $temp );
     return $value;
   }
 
@@ -464,16 +464,20 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       case 'date5':
         $value = $this->value == '0' ? '' : $this->value;
         break;
+      case 'image-upload':
+        $image = $this->image_instance();
+        $value = $image->image_defined ? $this->value : '';
+        break;
       default:
         $value = $this->value;
     }
-        /**
-         * @filter pdb-field_has_content_test_value
-         * 
-         * @param string the value to test
-         * @param PDb_Field_Item the current field
-         * @return string the value to test for content
-         */
+    /**
+     * @filter pdb-field_has_content_test_value
+     * 
+     * @param string the value to test
+     * @param PDb_Field_Item the current field
+     * @return string the value to test for content
+     */
     return !$this->is_empty( Participants_Db::apply_filters( 'field_has_content_test_value', $value, $this ) );
   }
 
@@ -532,7 +536,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $classes[] = esc_attr( $classname );
     $this->attributes['class'] = implode( ' ', $classes );
   }
-  
+
   /**
    * provides the file URI for an upload type field
    * 
@@ -542,7 +546,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $uri = '';
     if ( $this->is_upload_field() ) {
-      if ( function_exists( 'get_attachment_url_by_slug') ) {
+      if ( function_exists( 'get_attachment_url_by_slug' ) ) {
         $uri = get_attachment_url_by_slug( $this->value );
       }
       if ( $uri === '' ) {
@@ -551,7 +555,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     }
     return $uri;
   }
-  
+
   /**
    * tells if the field has an uploaded file
    * 
@@ -562,7 +566,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function has_uploaded_file()
   {
-    if ( ! $this->is_upload_field() ) {
+    if ( !$this->is_upload_field() ) {
       return false;
     }
     if ( $this->has_content() ) {
@@ -649,7 +653,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * @param PDb_Field_Item
      * @return bool
      */
-    return Participants_Db::apply_filters( 'add_required_mark', Participants_Db::plugin_setting_is_true('mark_required_fields') && $this->validation != 'no' && !in_array( $this->module, array('list', 'search', 'total', 'single') ), $this );
+    return Participants_Db::apply_filters( 'add_required_mark', Participants_Db::plugin_setting_is_true( 'mark_required_fields' ) && $this->validation != 'no' && !in_array( $this->module, array('list', 'search', 'total', 'single') ), $this );
   }
 
   /**
@@ -824,7 +828,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     if ( $this->place_required_mark() ) {
 
-      $label = sprintf( Participants_Db::plugin_setting_value('required_field_marker'), $label );
+      $label = sprintf( Participants_Db::plugin_setting_value( 'required_field_marker' ), $label );
     }
 
     return $label;
@@ -900,13 +904,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function _set_value( $raw_value )
   {
     switch ( true ) {
-      
+
       case ( $this->form_element === 'link' ):
-        
+
         $this->value = $this->prepare_value( $raw_value );
         $this->set_link_field_value();
         break;
-      
+
       case ( $this->is_multi() ):
 
         $value_list = array();
@@ -917,9 +921,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
         $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
         break;
-        
+
       default:
-        
+
         $this->value = $this->prepare_value( $raw_value );
     }
   }
@@ -941,7 +945,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   private function set_link_field_value()
   {
     $parts = maybe_unserialize( $this->value );
-    
+
     if ( is_array( $parts ) ) {
 
       if ( isset( $parts[0] ) && filter_var( $parts[0], FILTER_VALIDATE_URL ) && !$this->has_link() ) {
@@ -950,14 +954,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
       // remove the URL component from the value
       $this->value = isset( $parts[1] ) ? $parts[1] : $this->default;
-      
     } elseif ( filter_var( $this->value, FILTER_VALIDATE_URL ) ) {
       $this->link = $this->value;
     }
-    
   }
-  
-  
+
   /**
    * returns an element value formatted for display
    * 
@@ -988,9 +989,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( $return === false ) :
 
       switch ( $this->form_element() ) :
-        
+
         case 'image-upload' :
-          
+
           switch ( $this->module() ) {
             case 'single':
             case 'list':
@@ -1006,20 +1007,19 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
               $display_mode = 'none';
           }
 
-          $image = new PDb_Image( array(
-              'filename' => $this->value(),
-              'link' => $this->link(),
-              'module' => $this->module(),
-              'mode' => $display_mode,
-              'attributes' => $this->attributes(),
-                  ) );
+          $image = $this->image_instance();
+
+          $image->display_mode = $display_mode;
 
           if ( $this->html_output ) {
 
             $image->set_image_wrap();
 
+            if ( !$image->image_defined ) {
+              $this->add_class( 'image-blank-field' );
+            }
+
             $return = $image->get_image_html();
-            
           } elseif ( $image->file_exists ) {
             $return = $image->get_image_file();
           } else {
@@ -1029,7 +1029,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           break;
 
         case 'file-upload' :
-          
+
           if ( $this->html_output && $this->is_not_default() ) {
             $return = '';
             if ( $this->module === 'signup' ) {
@@ -1082,16 +1082,16 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         case 'link' :
 
           $linkdata = maybe_unserialize( $this->value() );
-          
+
           if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
-            list( $url, $value ) = $linkdata + array('','');
+            list( $url, $value ) = $linkdata + array('', '');
           } else {
             $url = $this->link();
             $value = $this->value();
           }
-          
+
           if ( strlen( $value ) < 1 ) {
-            if ( strlen( $url ) > 0) {
+            if ( strlen( $url ) > 0 ) {
               $value = $this->has_default() ? $this->default : preg_replace( '#https?://#', '', $url );
             } else {
               $value = '';
@@ -1101,7 +1101,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           if ( $this->html_output )
             $return = sprintf( ( empty( $url ) ? '%1$s%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), $url, $value, PDb_FormElement::html_attributes( $this->attributes ) );
           else
-            $return = empty($url) ? $value : $url;
+            $return = empty( $url ) ? $value : $url;
           break;
 
         case 'text-line' :
@@ -1132,7 +1132,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           } else {
             $return = strip_tags( esc_textarea( $this->value() ) );
           }
-          
+
           break;
 
         case 'dropdown':
@@ -1149,15 +1149,15 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           } else {
             $return = $this->display_array_value();
           }
-          
+
           break;
 
         case 'placeholder':
 
           $this->set_value( $this->default_value() );
-          
+
           $return = $this->html_output ? $this->make_link() : $this->value();
-          
+
           break;
 
         case 'password':
@@ -1168,9 +1168,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         case 'decimal':
         case 'currency':
         case 'numeric':
-          
+
           $field_display = $this->get_value();
-          
+
           // localize the display value
           switch ( $this->form_element() ) {
             case 'decimal':
@@ -1187,7 +1187,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           } elseif ( isset( $this->attributes['data-after'] ) && $this->has_content() ) {
             $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . esc_html( $this->attributes['data-after'] ) . '</span></span>';
           }
-          
+
           $return = $field_display;
           break;
 
@@ -1200,10 +1200,10 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
             // show the default value if it's not a dynamic field value and there is no set value
             $this->set_value( $this->default );
           }
-          
+
           $return = $this->value();
           break;
-          
+
         default :
 
           $return = $this->html_output ? $this->make_link() : $this->value();
@@ -1213,7 +1213,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     return $return;
   }
-  
+
   /**
    * provides a field value wrapped in an anchor tag
    * 
@@ -1223,5 +1223,20 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return PDb_FormElement::make_link( $this );
   }
-  
+
+  /**
+   * provides an image object
+   * 
+   * @return PDb_Image instance
+   */
+  protected function image_instance()
+  {
+    return new PDb_Image( array(
+        'filename' => $this->value(),
+        'link' => $this->link(),
+        'module' => $this->module(),
+        'attributes' => $this->attributes(),
+            ) );
+  }
+
 }
