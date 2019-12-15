@@ -64,6 +64,13 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   }
   
   /**
+   * prints an HTML class value
+   */
+  public function print_class() {
+    echo $this->get_class() . ' ' . $this->name . '-group';
+  }
+  
+  /**
    * prints a group description
    *
    * @param array  $wrap  tags to wrap the description in; first element is
