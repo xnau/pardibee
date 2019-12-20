@@ -1180,7 +1180,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'type' => 'checkbox',
             'help_text' => sprintf(
                     __( 'This forces date inputs to be interpreted strictly according to the "Input Date Format" setting. You should tell your users what format you are expecting them to use. This also applies to date values used in [pdb_list] shortcode filters. The date with your current setting looks like this: <strong>%s</strong> %s', 'participants-database' ), strftime( xnau_Date_Format_String::to_strftime( Participants_Db::plugin_setting( 'input_date_format', get_option( 'date_format' ) ) ) ), (function_exists( 'date_create' ) ? '' : '<strong>(' . __( 'Your current PHP installation does not support this setting.', 'participants-database' ) . ' )</strong>' )
-            ),
+            )  . $this->settings_help( 'strictdateformat' ), 
             'value' => 0,
             'options' => array(1, 0),
         ),
@@ -1193,7 +1193,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'text-line',
-            'help_text' => __( 'date formatting string for all plugin date inputs when "Strict Date Format" is enabled. You should use this for all localized (non-American English) date formats.', 'participants-database' ),
+            'help_text' => __( 'date formatting string for all plugin date inputs when "Strict Date Format" is enabled. You should use this for all localized (non-American English) date formats.', 'participants-database' ) . $this->settings_help( 'inputdateformat'),
             'value' => get_option( 'date_format' ),
         ),
     );
