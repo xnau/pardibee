@@ -189,7 +189,6 @@ class PDb_FormElement extends xnau_FormElement {
   {
 
     if ( !is_a( $field, 'PDb_Field_Item' ) ) {
-      // now we can use our field class methods
       $field = new PDb_Field_Item( $field );
     }
     
@@ -350,8 +349,8 @@ class PDb_FormElement extends xnau_FormElement {
 
     $this->add_class( 'date_field' );
 
-    if ( !empty( $this->value ) ) {
-      $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ . ' date field' );
+    if ( $this->value !== ' ' ) {
+      $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ );
     }
 
     $this->_addline( $this->_input_tag() );
