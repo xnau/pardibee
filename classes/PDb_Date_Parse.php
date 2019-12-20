@@ -268,7 +268,8 @@ class PDb_Date_Parse {
   private function set_timestamp_from_datetime( DateTime $date )
   {
     if ( $this->zero_time ) {
-      $date->setTime( 0, 0 );
+      $hour = Participants_Db::apply_filters( 'zero_time_hour', 0 );
+      $date->setTime( $hour, 0 );
     }
     $this->timestamp = $date->format( 'U' );
   }
