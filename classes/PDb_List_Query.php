@@ -1007,12 +1007,12 @@ class PDb_List_Query {
        */
       $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), array(), __METHOD__ . ' ' . $field_atts->form_element . ' field' );
 
-      // if we don't get a valid date, skip this statement
-      if ( $search_term === false )
-        return false;
-
       $operator = in_array( $operator, array('>', '<', '>=', '<=') ) ? $operator : '=';
-      if ( $field_atts->form_element == 'timestamp' ) {
+      
+      if ( $search_term === false ) {
+        // the search term doesn't parse as a date
+        $statement = false;
+      } elseif ( $field_atts->form_element == 'timestamp' ) {
         /**
          * @since 1.6.3
          * 
