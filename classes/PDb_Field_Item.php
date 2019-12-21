@@ -180,6 +180,18 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return $this->value();
   }
+  
+  /**
+   * provides the value title for the current value
+   * 
+   * @param mixed $value optional value to find the title for
+   * @return string
+   */
+  public function value_title($value = false)
+  {
+    $value = $value ? : $this->value;
+    return parent::value_title($value);
+  }
 
   /**
    * provides the dynamic value for a dynamic hidden field
@@ -198,7 +210,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * supplies the value in a displayable format
    * 
-   * this is specifically for fields that store their value as an array
+   * this is specifically for fields that store their value as an array, but works for all fields
    * 
    * @return string
    */
@@ -207,11 +219,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( $this->is_multi() ) {
       $titles = array();
       foreach ( self::field_value_array( $this->value ) as $value ) {
-        $titles[] = $this->sanitize_option_title( $this->value_title( $value ) );
+        $titles[] = $this->sanitize_option_title( $this->value_title() );
       }
       return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
     }
-    return $this->value();
+    return $this->value_title();
   }
 
   /**
@@ -1142,6 +1154,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         case 'select-other':
 
           if ( $this->html_output ) {
+            
             $temp = $this->value();
             $this->set_value( $this->display_array_value() );
             $return = sprintf( '<span %s>%s</span>', PDb_FormElement::class_attribute( $this->form_element() ), $this->make_link() );
