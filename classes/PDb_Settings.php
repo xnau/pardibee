@@ -214,7 +214,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-main',
         'options' => array(
             'type' => 'text',
-            'help_text' => __( 'Sets the default height of images displayed in single record and record edit displays. Defaults to pixels, but any valid CSS size value can be used.', 'participants-database' ),
+            'help_text' => __( 'Sets the default height of images displayed in single record and record edit displays. Defaults to pixels, but any valid CSS size value can be used. Default size for the list display is under the list display tab.', 'participants-database' ),
             'value' => '3em',
             'attributes' => array('style' => 'width:5em'),
         )
