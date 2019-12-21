@@ -122,7 +122,7 @@ class PDb_Image extends xnau_Image_Handler {
     $default_image = wp_cache_get('pdb-default_image_url');
     
     if ( false === $default_image ) {
-      $default_image = $image === false ? Participants_Db::plugin_setting( 'default_image' ) : $image;
+      $default_image = $image === false ? $this->default_image_src() : $image;
 
       // check the path for a valid image
       if ( self::is_image_file( Participants_Db::base_files_path() . ltrim( $default_image, '/' ) ) ) {
@@ -132,6 +132,16 @@ class PDb_Image extends xnau_Image_Handler {
     }
     
     $this->default_image = $default_image;
+  }
+  
+  /**
+   * provides the default image source
+   * 
+   * @return string
+   */
+  protected function default_image_src()
+  {
+    return Participants_Db::plugin_setting( 'default_image' );
   }
 
   /**
