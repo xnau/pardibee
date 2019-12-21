@@ -346,10 +346,9 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _date_field()
   {
-
     $this->add_class( 'date_field' );
-
-    if ( $this->value !== ' ' ) {
+    
+    if ( $this->value !== '' ) {
       $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ );
     }
 
