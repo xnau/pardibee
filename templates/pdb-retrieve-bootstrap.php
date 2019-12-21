@@ -36,6 +36,7 @@ $mode = isset($_POST['action']) && $_POST['action'] == 'success' ? 'success' : '
             if ($this->field->name == Participants_Db::$plugin_options['retrieve_link_identifier']) {
               $this->field->help_text = sprintf(Participants_Db::plugin_setting( 'id_field_prompt' ), $this->field->title);
             }
+            $feedback_class = $this->field->has_error() ? 'error' : '';
             ?>
 
             <div class="<?php $this->field->print_element_class() ?> control-group <?php echo $feedback_class ?>">
