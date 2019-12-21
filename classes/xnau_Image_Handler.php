@@ -636,6 +636,11 @@ abstract class xnau_Image_Handler {
   public static function is_image_file( $file )
   {
     $valid_image = false;
+    
+    if ( ! is_file($file) ) {
+      return $valid_image;
+    }
+      
     if ( function_exists( 'mime_content_type' ) ) {
       $valid_image = preg_match( '/(gif|jpeg|png)/', mime_content_type( $file ) ) === 1;
     } else {
