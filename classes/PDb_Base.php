@@ -1219,6 +1219,12 @@ class PDb_Base {
    */
   public static function css_dimension_value( $value )
   {
+    $keyword_check = preg_match( '#^(auto|inherit)$#', $value );
+    
+    if ( $keyword_check === 1 ) {
+      return $value;
+    }
+    
     $fallback = preg_replace( "/[^0-9]/", "", $value ) . 'px';
     
     $value = str_replace( ' ', '', $value ); // remove any spaces
