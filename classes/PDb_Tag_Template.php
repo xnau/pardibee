@@ -205,12 +205,14 @@ class PDb_Tag_Template {
       $this->data = array();
     }
     if ( isset( $this->data['id'] ) ) {
-      $cached_data = wp_cache_get( $this->data_cache_key(), __METHOD__ );
+      
+      $cached_data = wp_cache_get( $this->data_cache_key() );
+      
       if ( $cached_data ) {
         $this->data = $cached_data;
       } else {
         $this->prepare_display_values();
-        wp_cache_add( $this->data_cache_key(), $this->data, __METHOD__ );
+        wp_cache_set( $this->data_cache_key(), $this->data );
       }
     }
   }
@@ -258,6 +260,8 @@ class PDb_Tag_Template {
   private function value_display( $field, $value )
   {
     $field->set_value($value);
+    
+    $value = $this->raw ? $field->raw_value() : $field->get_value_display();
 
     /**
      * @filter pdb-tag_template_field_display_value
@@ -265,7 +269,7 @@ class PDb_Tag_Template {
      * @param PDb_Field_Item
      * @return string display
      */
-    return Participants_Db::apply_filters( 'tag_template_field_display_value', $field->get_value_display(), $field );
+    return Participants_Db::apply_filters( 'tag_template_field_display_value', $value, $field );
   }
 
   /**
@@ -300,14 +304,7 @@ class PDb_Tag_Template {
     $field = false;
     
     if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
-      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => 'tag-template', 'record_id' => $record_id ) );
-      /**
-       * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
-       * 
-       * @version 1.7.1.4 added "raw" mode
-       * 
-       */
-      $field->html_mode( !$this->raw );
+      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => 'tag-template', 'record_id' => $record_id ) );  
       
       wp_cache_set( $fieldname.$record_id, $field, $cachegroup, Participants_Db::cache_expire() ); 
     }
