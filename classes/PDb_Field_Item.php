@@ -219,7 +219,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( $this->is_multi() ) {
       $titles = array();
       foreach ( self::field_value_array( $this->value ) as $value ) {
-        $titles[] = $this->sanitize_option_title( $this->value_title() );
+        $titles[] = $this->sanitize_option_title( $this->value_title($value) );
       }
       return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
     }
