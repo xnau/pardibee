@@ -182,18 +182,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
   
   /**
-   * provides the value title for the current value
-   * 
-   * @param mixed $value optional value to find the title for
-   * @return string
-   */
-  public function value_title($value = false)
-  {
-    $value = $value ? : $this->value;
-    return parent::value_title($value);
-  }
-
-  /**
    * provides the dynamic value for a dynamic hidden field
    *
    * @return string
@@ -223,7 +211,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       }
       return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
     }
-    return $this->value_title();
+    return $this->value_title($this->value);
   }
 
   /**
@@ -428,11 +416,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function raw_value()
   {
-    $temp = $this->html_output;
-    $this->html_mode( false );
-    $value = $this->get_value_display();
-    $this->html_mode( $temp );
-    return $value;
+    return $this->_field_value_display(false);
   }
 
   /**
@@ -1223,8 +1207,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
       endswitch; // form element
     endif; // return === false
-
-    return $return;
+    
+    return $this->html_output ? $return : strip_tags( $return );
   }
 
   /**
