@@ -290,7 +290,8 @@ class PDb_Tag_Template {
   {
     $found = false;
     $cachegroup = 'tag-template-field-item';
-    $field = wp_cache_get( $fieldname, $cachegroup, false, $found );
+    $record_id = isset( $this->data['id'] ) ? $this->data['id'] : null;
+    $field = wp_cache_get( $fieldname.$record_id, $cachegroup, false, $found );
     
     if ( $found ) {
       return $field;
@@ -299,7 +300,7 @@ class PDb_Tag_Template {
     $field = false;
     
     if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
-      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => 'tag-template', 'record_id' => ( isset( $this->data['id'] ) ? $this->data['id'] : null )) );
+      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => 'tag-template', 'record_id' => $record_id ) );
       /**
        * @version 1.7.0.8 prevent non-pdb field items from using HTML Bug #1343
        * 
@@ -308,7 +309,7 @@ class PDb_Tag_Template {
        */
       $field->html_mode( !$this->raw );
       
-      wp_cache_set( $fieldname, $field, $cachegroup, Participants_Db::cache_expire() ); 
+      wp_cache_set( $fieldname.$record_id, $field, $cachegroup, Participants_Db::cache_expire() ); 
     }
     
     return $field;
