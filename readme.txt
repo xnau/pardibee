@@ -290,6 +290,8 @@ You can define a "captcha" form element which will show a simple math question f
 
 = 1.9.5.3 =
 * fixed issue with missing multi-select field values
+* fixed warning on wp-includes/class-wp-block-parser.php
+* fixed HTML tags getting into email subjects
 
 = 1.9.5.2 =
 * fixed caching issue with template value tags
