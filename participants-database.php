@@ -1171,7 +1171,7 @@ class Participants_Db extends PDb_Base {
     if ( ! $result ) {
       $result = $wpdb->get_results( $sql, ARRAY_A );
     
-      wp_cache_add( $cachekey,  $result, '', self::cache_expire() );
+      wp_cache_set( $cachekey,  $result, '', self::cache_expire() );
     }
     
     // are we looking for only one column?
