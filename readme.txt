@@ -288,6 +288,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.5.3 =
+* fixed issue with missing multi-select field values
+
 = 1.9.5.2 =
 * fixed caching issue with template value tags
 
@@ -1270,7 +1273,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.5.2 =
+= 1.9.5.3 =
 is a minor bugfix release
 
 = 1.9.5 =
