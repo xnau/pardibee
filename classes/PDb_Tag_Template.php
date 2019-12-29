@@ -34,6 +34,11 @@ class PDb_Tag_Template {
    * @var bool  if true, replacement values will not contain HTML tags
    */
   private $raw;
+  
+  /**
+   * @var int holds a fingerprint
+   */
+  private $dataprint;
 
   /**
    * sets up the class
@@ -204,6 +209,9 @@ class PDb_Tag_Template {
     } else {
       $this->data = array();
     }
+    
+    $this->set_dataprint(); 
+    
     if ( isset( $this->data['id'] ) ) {
       
       $cached_data = wp_cache_get( $this->data_cache_key() );
@@ -212,7 +220,7 @@ class PDb_Tag_Template {
         $this->data = $cached_data;
       } else {
         $this->prepare_display_values();
-        wp_cache_set( $this->data_cache_key(), $this->data );
+        wp_cache_set( $this->data_cache_key(), $this->data, '', Participants_Db::cache_expire() );
       }
     }
   }
@@ -224,7 +232,16 @@ class PDb_Tag_Template {
    */
   private function data_cache_key()
   {
-    return $this->data['id'] . '-' . count( $this->data ) . '-' . strval( $this->raw ) . hash( 'crc32', implode( '', array_keys( $this->data ) ) );
+    return $this->data['id'] . '-' . $this->dataprint;
+  }
+  
+  /**
+   * sets the dataprint
+   * 
+   */
+  private function set_dataprint()
+  {
+    $this->dataprint = hash( 'crc32', implode( '', array_keys( $this->data ) ) );
   }
 
   /**
