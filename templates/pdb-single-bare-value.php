@@ -15,7 +15,7 @@ while ($this->have_groups()) : $this->the_group();
   while ($this->have_fields()) : $this->the_field();
   ?>
  		
-    <?php $this->field->print_value() ?>
+    <?php $this->field->raw_value() ?>
     
   <?php
     endwhile;
