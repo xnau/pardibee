@@ -856,6 +856,7 @@ class Participants_Db extends PDb_Base {
     if ( empty( $get_pid ) ) {
       $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
     }
+    
     if ( !empty( $get_pid ) ) {
       $record_id = self::get_participant_id( $get_pid );
     }
