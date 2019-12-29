@@ -661,7 +661,6 @@ abstract class xnau_Image_Handler {
    */
   public function set_image_wrap( $wrap_tags = array() )
   {
-
     if ( !empty( $wrap_tags ) ) {
       $this->image_wrap = array(
           $wrap_tags[0],
@@ -679,7 +678,6 @@ abstract class xnau_Image_Handler {
    */
   protected function _set_image_wrap()
   {
-
     $this->image_wrap = array(
         '<span class="%1$s" title="%3$s" %4$s >',
         '</span>'
