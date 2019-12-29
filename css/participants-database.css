@@ -552,7 +552,7 @@ svg.ajax-loading image {
   margin: 0.5em 0;
 }
 .pdb-single-flex .flex-field.blank-field {
-  display: none;
+  /*display: none;*/
 }
 .pdb-single-flex .flex-label {
   font-style: italic;
