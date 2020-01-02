@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP Session Manager
- * Plugin URI:  https://paypal.me/eam
+ * Plugin URI:  https://github.com/ericmann/wp-session-manager
  * Description: Session management for WordPress.
  * Version:     3.0.4
  * Author:      Eric Mann
@@ -49,5 +49,5 @@ function wp_session_manager_start_session()
 
 // Start up session management, if we're not in the CLI
 if (!defined('WP_CLI') || false === WP_CLI) {
-    add_action('plugins_loaded', 'wp_session_manager_start_session', 10, 0);
+    add_action('plugins_loaded', 'wp_session_manager_start_session', 10, -10 );
 }
