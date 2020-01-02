@@ -131,10 +131,12 @@ class Manager implements \SessionHandlerInterface {
         $manager->seedHandlerStack();
 
         /*
-         * suppress the warning if the session has been started by another script 
+         * don't attempt to set the handler if sessions are already active
          * #1943
          */
-        @session_set_save_handler($manager);
+        if ( session_status() !== PHP_SESSION_ACTIVE ) {
+          session_set_save_handler($manager);
+        }
 
         return $manager;
     }
