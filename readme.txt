@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 5.3.2
 Requires PHP: 5.6
-Stable tag: 1.9.5.2
+Stable tag: 1.9.5.3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -287,6 +287,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.5.4 =
+* better caching for templated content
+* plugin debug synced with WP_DEBUG
+* fixed several minor bugs
 
 = 1.9.5.3 =
 * fixed issue with missing multi-select field values
@@ -1275,7 +1280,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.5.3 =
+= 1.9.5.4 =
 is a minor bugfix release
 
 = 1.9.5 =
