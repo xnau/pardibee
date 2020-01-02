@@ -520,6 +520,9 @@ svg.ajax-loading image {
 .hide-blank .image-blank-field {
   display: none;
 }
+.pdb-single-flex.show-blank .flex-field.blank-field {
+  display: inherit;
+}
 
 /* SINGLE FLEX */
 .pdb-single-flex {
@@ -552,7 +555,7 @@ svg.ajax-loading image {
   margin: 0.5em 0;
 }
 .pdb-single-flex .flex-field.blank-field {
-  /*display: none;*/
+  display: none;
 }
 .pdb-single-flex .flex-label {
   font-style: italic;
