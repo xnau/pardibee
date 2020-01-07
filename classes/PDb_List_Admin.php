@@ -543,7 +543,7 @@ class PDb_List_Admin {
                * 
                * @param array of selected record ids
                */
-                do_action( 'pdb_admin_list_with_selected/' . $selected_action, $selected_ids );
+              do_action( 'pdb_admin_list_with_selected/' . $selected_action, $selected_ids );
               /**
                * @filter pdb-admin_list_action_feedback
                * 
@@ -551,10 +551,11 @@ class PDb_List_Admin {
                */
               Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', ''), 'updated' );
           }
+          
           if ( PDB_DEBUG ) {
             Participants_Db::debug_log(__METHOD__.' 
-action: ' . $selected_action . '   
-query: '.( isset($last_query) ? $last_query : $wpdb->last_query ));
+action: ' . $selected_action . ( isset($last_query) ? '   
+query: '. $last_query : '' ));
           }
           break;
 
