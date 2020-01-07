@@ -211,7 +211,7 @@ class PDb_Admin_Notices {
       }
     }
 
-    //$this->purge_transient_notices();
+    $this->purge_transient_notices();
   }
 
   /**
@@ -285,16 +285,16 @@ class PDb_Admin_Notices {
    */
   private function notice_should_be_added( pdb_admin_notice_message $notice )
   {
-    return array_key_exists($notice->id, $this->admin_notice_list) === false;
+    return array_key_exists($notice->id, $this->admin_notice_list) === false || $notice->is_dimissed();
   }
 
   /**
-   * purges all transient notices
+   * purges all non-persistent notices
    */
   private function purge_transient_notices()
   {
     $this->admin_notice_list = array_filter( $this->admin_notice_list, function ($notice) {
-      return $notice->persistent;
+      return $notice->is_persistent();
     } );
     
     $this->update_notices();
@@ -593,7 +593,7 @@ class pdb_admin_notice_message {
   }
   
   /**
-   * tells of the notice has been dismissed
+   * tells if the notice has been dismissed
    * 
    * @return bool
    */
@@ -603,13 +603,23 @@ class pdb_admin_notice_message {
   }
   
   /**
-   * tells of the notice should be shown on all admin pages
+   * tells if the notice should be shown on all admin pages
    * 
    * @return bool
    */
   public function is_global_message()
   {
     return $this->global;
+  }
+  
+  /**
+   * tells if the notice should persist across page loads
+   * 
+   * @return bool
+   */
+  public function is_persistent()
+  {
+    return $this->persistent;
   }
 
 }
