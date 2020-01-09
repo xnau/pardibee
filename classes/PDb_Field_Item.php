@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.4
+ * @version    2.5
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -240,21 +240,27 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * @version 1.7.1
      * @filter pdb-field_export_value_raw
      * @param mixed the raw value
-     * @param object the field object
+     * @param PDb_Field_Item the field object
      * @return mixed
      */
     $value = Participants_Db::apply_filters( 'field_export_value_raw', $this->value, $this );
 
+    $export_value = '';
+
     switch ( $this->form_element ) {
 
       case 'date':
-
-        $export_value = PDb_Date_Display::get_date( $value, 'export value' );
+        
+        if ( PDb_Date_Display::is_valid_timestamp( $value ) ) {
+          $export_value = PDb_Date_Display::get_date( $value, 'export value' );
+        }
         break;
 
       case 'link':
 
         $link = maybe_unserialize( $value );
+        
+        // is $link a linktext/URL array?
         if ( is_array( $link ) ) {
 
           if ( empty( $link[0] ) )
@@ -263,7 +269,17 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
             $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
             $export_value = vsprintf( $pattern, $link );
           }
+        } else {
+          
+          // instance has the linktext and link property set
+          if ( $this->has_link() ) {
+            $pattern = strlen( $link ) > 0 ? '[%2$s](%1$s)' : '<%1$s>' ;
+            $export_value = sprintf( $pattern, $this->link, $link );
+          } else {
+            $export_value = $link;
+          }
         }
+        
         break;
 
       case 'rich-text':
