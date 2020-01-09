@@ -3162,6 +3162,7 @@ class Participants_Db extends PDb_Base {
     foreach ( $raw_array as $key => $raw_value ) {
 
       $field = new PDb_Field_Item( $key );
+      
       /**
        * filters the raw value of the field before exporting
        * 
