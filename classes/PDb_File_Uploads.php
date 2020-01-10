@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -70,21 +70,16 @@ class PDb_File_Uploads {
 
       return false;
     }
-
-    /* get the allowed file types and test the uploaded file for an allowed file 
-     * extension
-     */
-    $field_allowed_extensions = isset( $field_atts->attributes()['allowed'] ) ? Participants_Db::get_field_allowed_extensions( $field_atts->attributes()['allowed'] ) : '';
-    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::plugin_setting_value('allowed_file_types') : $field_allowed_extensions;
     
-    $test = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $file['name'] ), $matches );
+    $field_allowed_extensions = $field_atts->allowed_extensions();
+    $allowed_extensions = empty( $field_allowed_extensions ) ? Participants_Db::global_allowed_extensions() : $field_allowed_extensions;
     
-    if ( 0 === $test ) {
+    if ( ! Participants_Db::is_allowed_file_extension( $file['name'], $allowed_extensions ) ) {
 
-      if ( $is_image_field && $this->is_empty( $field_allowed_extensions ) ) {
+      if ( $is_image_field && empty( $field_allowed_extensions ) ) {
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title() ), $field_name );
       } else {
-        Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_atts->title(), preg_replace( '#(,)(?=[^,])#U', ', ', $extensions ) ), $field_name );
+        Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_atts->title(), implode( ', ', $allowed_extensions ) ), $field_name );
       }
       
       if ( PDB_DEBUG ) {
@@ -95,6 +90,8 @@ class PDb_File_Uploads {
     } else {
 
       // validate and construct the new filename using only the allowed file extension
+      preg_match( '#^(.+)\.(' . implode( '|', $allowed_extensions ) . ')$#', strtolower( $file['name'] ), $matches );
+      
       /**
        * @filter pdb-file_upload_filename
        * @param string the sanitized filename (without extension)
@@ -103,6 +100,7 @@ class PDb_File_Uploads {
        * @return string filename without it's extension
        */
       $new_filename = Participants_Db::apply_filters('file_upload_filename', preg_replace( array('#\.#', "/\s+/", "/[^-\.\w]+/"), array("-", "_", ""), $matches[1] ), $field_atts, $id ) . '.' . $matches[2];
+      
       // now make sure the name is unique by adding an index if needed
       $index = 1;
       while ( file_exists( Participants_Db::files_path() . $new_filename ) ) {
@@ -151,30 +149,6 @@ class PDb_File_Uploads {
     if ( PDB_DEBUG ) {
       Participants_Db::debug_log( sprintf( __METHOD__ . ": The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
     }
-
-    /*
-     * if a previously uploaded file exists and the preference is to allow user deletes, 
-     * the previously uploaded file is deleted. If an admin wants to delete a file while 
-     * user deletes are not allowed, they must check the delete box.
-     * 
-     * as of PDB 1.5.5
-     * 
-     * as of 1.7.6.2 file deletes are only handled in the Participants_Db::process_form method
-     */
-//    if ( $id !== false ) {
-//      $record_data = Participants_Db::get_participant( $id );
-//      if ( !empty( $record_data[$field_name] ) ) {
-//        $image_obj = new PDb_Image( array('filename' => $record_data[$field_name]) );
-//        if ( $image_obj->image_defined and ( Participants_Db::$plugin_options['file_delete'] == '1' || is_admin() && $delete_checked) ) {
-//          Participants_Db::delete_file( $record_data[$field_name] );
-//        }
-//      }
-//    }
-
-    /*
-     * as of 1.3.2 we save the image as filename only; the image is retrieved from 
-     * the directory defined in the plugin setting using the Participants_Db::get_image function
-     */
 
     return $new_filename;
   }
