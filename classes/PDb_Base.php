@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -657,21 +657,40 @@ class PDb_Base {
    * tests a filename for allowed file extentions
    * 
    * @param string  $filename the filename to test
-   * @param string $allowed serialized array of allowed file extensions
+   * @param array $field_allowed_extensions array of local allowed file extensions
    * 
    * @return bool true if the extension is allowed
    */
-  public static function is_allowed_file_extension( $filename, $allowed = '' )
+  public static function is_allowed_file_extension( $filename, $field_allowed_extensions = array() )
   {
-    $field_allowed_extensions = self::get_field_allowed_extensions( $allowed );
-    $extensions = empty( $field_allowed_extensions ) ? Participants_Db::plugin_setting_value('allowed_file_types') : $field_allowed_extensions;
+    $extensions = empty( $field_allowed_extensions ) || ! is_array( $field_allowed_extensions ) ? self::global_allowed_extensions() : $field_allowed_extensions;
+    
+    if ( empty( $extensions ) ) {
+      // nothing in the whitelist, don't allow
+      return false;
+    }
 
-    $result = preg_match( '#^(.+)\.(' . implode( '|', array_map( 'trim', explode( ',', str_replace( '.', '', strtolower( $extensions ) ) ) ) ) . ')$#', strtolower( $filename ), $matches );
-    return $result !== 0;
+    $result = preg_match( '#^(.+)\.(' . implode( '|', $extensions ) . ')$#', strtolower( $filename ), $matches );
+    
+    return (bool) $result;
+  }
+  
+  /**
+   * provides a list of globally allowed file extensions
+   * 
+   * @return array
+   */
+  public static function global_allowed_extensions()
+  {
+    $global_setting = Participants_Db::plugin_setting_value('allowed_file_types');
+    
+    return explode( ',', str_replace( array( '.', ' ' ), '', strtolower( $global_setting ) ) );
   }
 
   /**
    * provides an array of allowed extensions from the field def "values" parameter
+   * 
+   * deprecated, get this from the PDb_Form_Field_Def instance
    * 
    * @param string|array $values possibly serialized array of field attributes or allowed extensions
    * @return string comma-separated list of allowed extensions, empty string if not defined in the field
@@ -1449,6 +1468,18 @@ class PDb_Base {
     $numbers = explode( '.', phpversion() );
 
     return (float) ( $numbers[0] + ( $numbers[1] / 10 ) );
+  }
+  
+  /**
+   * tells if the current operation is in the WP admin side
+   * 
+   * this won't give a positive for ajax calls
+   * 
+   * @return bool true if in the admin side
+   */
+  public static function is_admin()
+  {
+    return is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX );
   }
 
   /**
