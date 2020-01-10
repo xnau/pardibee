@@ -109,6 +109,9 @@ class PDb_Manage_Fields {
         $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
+               
+        // get a list of the defined field types
+        $field_types = PDb_FormElement::get_types();
 
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
         ?>
@@ -138,8 +141,14 @@ class PDb_Manage_Fields {
                       <p><?php _e( 'No fields in this group', 'participants-database' ) ?></p>
                       <?php
                     } else {
+                      
                       // add the rows of the group
                       foreach ( $this->fields_data[$group] as $database_row ) :
+                        
+                        if ( !array_key_exists( $database_row['form_element'], $field_types ) ) {
+                          // skip field types that are not currently registered
+                          continue;
+                        }
 
                         $field_definition_attributes = new PDb_Field_Editor( new PDb_Form_Field_Def( $database_row['name'] ) );
                         ?>
@@ -493,7 +502,7 @@ class PDb_Manage_Fields {
       // get an array with all the defined fields
       foreach ( $this->groups() as $group ) {
 
-        $sql = "SELECT f.id,f.name,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
+        $sql = "SELECT f.id,f.name,f.form_element,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
 
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
       }
