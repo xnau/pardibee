@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.5
+ * @version    2.6
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1045,21 +1045,30 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           if ( $this->html_output && $this->is_not_default() ) {
             $return = '';
             if ( $this->module === 'signup' ) {
+              
               $this->set_link( false );
               $return = $this->value();
-            } elseif ( $this->has_content() && Participants_Db::is_allowed_file_extension( $this->value(), $this->attributes() ) ) {
+              
+            } elseif ( $this->has_content() && Participants_Db::is_allowed_file_extension( $this->value(), $this->allowed_extensions() ) ) {
+              
               $this->set_link( filter_var( Participants_Db::files_uri() . $this->value, FILTER_VALIDATE_URL ) );
-              if ( (!is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) && $this->link() && strlen( $this->default ) > 0 ) {
-                $this->set_value( $this->default );
+              
+              if ( !Participants_Db::is_admin() && $this->link() && strlen( $this->default ) > 0 ) {
+                $this->value = $this->default;
+              } elseif ( strpos( $this->module, 'list' ) !== false && $this->get_attribute( 'max_link_length' ) !== '' ) {
+                // contract the value length
+                $this->value = self::contract_string( $this->value(), $this->get_attribute( 'max_link_length' ) );
               }
+              
               $return = $this->make_link();
+              
             }
-            break;
           } else {
             // no valid filename in the value, show a blank
             $return = '';
-            break;
           }
+          
+          break;
 
         case 'date' :
           if ( $this->has_value() ) {
@@ -1250,6 +1259,31 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         'module' => $this->module(),
         'attributes' => $this->attributes(),
             ) );
+  }
+  
+  /**
+   * provides a contracted version of a string
+   * 
+   * removes characters from the middle of the string
+   * 
+   * @param string $string
+   * @param int $max the maximum length of the string
+   * @return string
+   */
+  public static function contract_string( $string, $max )
+  {
+    $max = intval( $max );
+    
+    if ( strlen($string) < $max ) {
+      return $string;
+    }
+    
+    $ellipsis = Participants_Db::apply_filters( 'contract_string_ellipsis', '&hellip;' );
+    
+    $s1 = substr( $string, 0, $max / 2 );
+    $s2 = substr( $string, $max / -2 );
+    
+    return $s1 . $ellipsis . $s2;
   }
 
 }
