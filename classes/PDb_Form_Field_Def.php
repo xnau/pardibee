@@ -474,7 +474,7 @@ class PDb_Form_Field_Def {
    * provides the named attribute value
    * 
    * @param string $name name of the attribute to get
-   * @return string empty string if attribute empty or not set
+   * @return string empty string if the attribute is not set
    */
   public function get_attribute( $name )
   {
@@ -489,7 +489,21 @@ class PDb_Form_Field_Def {
    */
   public function allowed_extensions()
   {
-    return $this->get_attribute('allowed') === '' ? array() : explode( '|', strtolower( $this->get_attribute('allowed') ) );
+    if ( $this->get_attribute('allowed') === '' ) {
+      
+      /* if the depricated style of setting is present
+       * it will show up as an array where the key and value are identical
+       */
+      $extensions_array = array_filter($this->attributes(), function ($k,$v) {
+        return $k === $v;
+      }, ARRAY_FILTER_USE_BOTH );
+      
+    } else {
+      
+      $extensions_array = explode( '|', strtolower( $this->get_attribute('allowed') ) );
+    }
+    
+    return $extensions_array;
   }
   
   /**
