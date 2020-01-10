@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.8
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -480,6 +480,16 @@ class PDb_Form_Field_Def {
   {
     $attributes = $this->attributes();
     return isset( $attributes[$name] ) ? $attributes[$name] : '';
+  }
+  
+  /**
+   * provides the allowed extensions attribute for a file upload field
+   * 
+   * @return array
+   */
+  public function allowed_extensions()
+  {
+    return $this->get_attribute('allowed') === '' ? array() : explode( '|', strtolower( $this->get_attribute('allowed') ) );
   }
   
   /**
