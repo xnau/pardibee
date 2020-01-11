@@ -241,11 +241,24 @@ class PDb_Field_Editor {
         );
         break;
       case 'title':
-      case 'default':
         $config = array(
             'type' => 'text-line',
             'class' => $attribute . '-field',
         );
+        break;
+      case 'default':
+        if ( $this->field_def->is_value_set() ) {
+          $config = array(
+              'type' => 'dropdown',
+              'options' => $this->field_options_clean(),
+              'class' => $attribute . '-field',
+          );
+        } else {
+          $config = array(
+              'type' => 'text-line',
+              'class' => $attribute . '-field',
+          );
+        }
         break;
       case 'help_text':
       case 'validation_message':
@@ -370,6 +383,28 @@ class PDb_Field_Editor {
       $options[stripslashes($title)] = $group_data['name'];
     }
     return $options + array(PDb_FormElement::null_select_key() => false);
+  }
+  
+  /**
+   * provides the field's option values for use in a dropdown's options
+   * 
+   * this is to cope with the possibility that tags are present in the option title
+   * 
+   * @return array
+   */
+  protected function field_options_clean()
+  {
+    $options = array();
+    
+    foreach( $this->field_def->options() as $k => $v ) {
+      $key = strip_tags($k);
+      if ( strlen( $key ) === 0 ) {
+        $key = $v;
+      }
+      $options[$key] = $v;
+    }
+    
+    return $options;
   }
 
   /**
