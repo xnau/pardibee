@@ -1057,7 +1057,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
                 $this->value = $this->default;
               } elseif ( strpos( $this->module, 'list' ) !== false && $this->get_attribute( 'max_link_length' ) !== '' ) {
                 // contract the value length
-                $this->value = self::contract_string( $this->value(), $this->get_attribute( 'max_link_length' ) );
+                $this->value = $this->contracted_value();
               }
               
               $return = $this->make_link();
@@ -1259,6 +1259,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         'module' => $this->module(),
         'attributes' => $this->attributes(),
             ) );
+  }
+  
+  /**
+   * provides a contracted value if configured
+   * 
+   * @param string
+   * @return string
+   */
+  public function contracted_value( $string = false )
+  {
+    $value = $string ? $string : $this->value();
+    if ( $this->get_attribute('max_link_length') !== '' ) { 
+      return self::contract_string($value, $this->get_attribute('max_link_length'));
+    }
+    return $value;
   }
   
   /**
