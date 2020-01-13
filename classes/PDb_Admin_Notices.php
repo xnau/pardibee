@@ -62,6 +62,7 @@ class PDb_Admin_Notices {
         'context' => '',
         'persistent' => true,
         'global' => false,
+        'force' => false,
                     ), $params ) );
     $notice = self::get_instance();
     return $notice->notice( $type, $message, $context, $persistent, $global );
@@ -76,29 +77,30 @@ class PDb_Admin_Notices {
    * @param string  $message can inclue HTML, remember it is wrapped in a <p> tag.
    * @param string  $context a context message (goes in the message heading)
    * @param bool    $persistent if true, the message persists across page loads until dismissed
+   * @param bool    $force if true, show the message even if previously dismissed
    * 
    * @return string unique id for the notice
    */
-  public static function post_error( $message, $context = '', $persistent = false )
+  public static function post_error( $message, $context = '', $persistent = false, $force = false )
   {
     $notice = self::get_instance();
-    return $notice->error( $message, $context, $persistent );
+    return $notice->error( $message, $context, $persistent, $force );
   }
 
-  public function error( $message, $context = '', $persistent = false )
+  public function error( $message, $context = '', $persistent = false, $force = false )
   {
-    return $this->notice( 'error', $message, $context, $persistent );
+    return $this->notice( 'error', $message, $context, $persistent, false, $force );
   }
 
-  public static function post_warning( $message, $context = '', $persistent = false )
+  public static function post_warning( $message, $context = '', $persistent = false, $force = false )
   {
     $notice = self::get_instance();
-    return $notice->warning( $message, $context, $persistent );
+    return $notice->warning( $message, $context, $persistent, $force );
   }
 
-  public function warning( $message, $context = '', $persistent = false )
+  public function warning( $message, $context = '', $persistent = false, $force = false )
   {
-    return $this->notice( 'warning', $message, $context, $persistent );
+    return $this->notice( 'warning', $message, $context, $persistent, false, $force );
   }
 
   public static function post_success( $message, $context = '', $persistent = false )
@@ -359,14 +361,19 @@ class PDb_Admin_Notices {
    * @param string  $type
    * @param string  $message
    * @param string  $context a context string fro the message header
-   * @param bool    $persistent if true, message will persis across page loads
+   * @param bool    $persistent if true, message will persist across page loads
    * @param bool    $global if false, notice is only shown on plugin admin pages, true shown on all admin pages
+   * @param bool    $force if true, show even if previously dismissed
    * 
    * @return string notice ID
    */
-  private function notice( $type, $message, $context, $persistent, $global = false )
+  private function notice( $type, $message, $context, $persistent, $global = false, $force = false )
   {
     $notice = new pdb_admin_notice_message( $type, $message, $context, $persistent, $global );
+    
+    if ( $force ) {
+      $this->dismiss( $notice->id, false );
+    }
 
     if ( $this->notice_should_be_added( $notice ) ) {
       $this->admin_notice_list[$notice->id] = $notice;
