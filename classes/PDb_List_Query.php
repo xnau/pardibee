@@ -249,7 +249,7 @@ class PDb_List_Query {
     $ascdesc = $this->_to_array( $ascdesc );
     $ascdesc_value = $esc_ascdesc('asc');
     for ( $i = 0; $i < count( $fields ); $i++ ) {
-      if ( !empty( $fields[$i] ) ) {
+      if ( !empty( $fields[$i] ) && PDb_Form_Field_Def::is_field( $fields[$i] ) ) {
         $ascdesc_value = isset( $ascdesc[$i] ) ? $esc_ascdesc($ascdesc[$i]) : $ascdesc_value;
         $this->sort[$fields[$i]] = array(
             'field' => $fields[$i],
