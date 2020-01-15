@@ -109,7 +109,7 @@ class PDb_Manage_Fields {
         $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
-               
+
         // get a list of the defined field types
         $field_types = PDb_FormElement::get_types();
 
@@ -144,7 +144,7 @@ class PDb_Manage_Fields {
                       
                       // add the rows of the group
                       foreach ( $this->fields_data[$group] as $database_row ) :
-                        
+
                         if ( !array_key_exists( $database_row['form_element'], $field_types ) ) {
                           // skip field types that are not currently registered
                           continue;
@@ -537,7 +537,9 @@ class PDb_Manage_Fields {
      */
     protected function group_title( $group )
     {
-      $group_title = stripslashes($this->group_defs[$group]['title']);
+    /* Modification for polylang support : Issue Nr02
+    	Apply the filter translaton_string to the group title */
+      $group_title = stripslashes(Participants_Db::apply_filters('translate_string',$this->group_defs[$group]['title']));
       /**
        * @since 1.7.3.2
        * group titles on tabs and such are limited to 30 characters to preserve layout
