@@ -479,8 +479,10 @@ class PDb_Base {
       $id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p WHERE p.post_name = '%s' AND p.post_status = 'publish'", trim( $page, '/ ' ) ) );
 //      error_log(__METHOD__.' query: '.$wpdb->last_query);
     }
+    /* Modification for polylang support : Issue Nr03
+    	Apply the filter lang_page_id to the parameter of get_permalink */
     if ( $id )
-      $permalink = get_permalink( $id );
+      $permalink = get_permalink( Participants_Db::apply_filters('lang_page_id',$id ) );
     return $permalink;
   }
 
@@ -664,11 +666,11 @@ class PDb_Base {
   public static function is_allowed_file_extension( $filename, $field_allowed_extensions = array() )
   {
     $extensions = empty( $field_allowed_extensions ) || ! is_array( $field_allowed_extensions ) ? self::global_allowed_extensions() : $field_allowed_extensions;
-    
+
     if ( empty( $extensions ) ) {
       // nothing in the whitelist, don't allow
       return false;
-    }
+  }
 
     $result = preg_match( '#^(.+)\.(' . implode( '|', $extensions ) . ')$#', strtolower( $filename ), $matches );
     
@@ -1469,7 +1471,7 @@ class PDb_Base {
 
     return (float) ( $numbers[0] + ( $numbers[1] / 10 ) );
   }
-  
+
   /**
    * tells if the current operation is in the WP admin side
    * 
