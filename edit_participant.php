@@ -112,10 +112,15 @@ if ( $participant_values ) :
 //        $id_line = '<tr><th>' . _x( 'ID', 'abbreviation for "identification"', 'participants-database' ) . '</th><td>' . ( false === $participant_id ? _x( '(new record)', 'indicates a new record is being entered', 'participants-database' ) : $participant_id ) . '</td></tr>';
       }
       $section = $column->group()
+      /* Modification for polylang support : Issue Nr2
+      	While preparing the display of a field group title apply the filter 'translation_string' to both
+      	the group title and its description.
+      	For the title remove also the call to _e() which doesn't make sense anymore */
       ?>
       <div  class="field-group field-group-<?php echo $groups[$section]['name'] ?>" >
-        <h3 class="field-group-title"><?php _e( $groups[$section]['title'] ) ?></h3>
-        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . $groups[$section]['description'] . '</p>' ?>
+        <h3 class="field-group-title"><?php 
+        echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
+        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description']) . '</p>' ?>
         <table class="form-table">
           <tbody>
             <?php
@@ -257,8 +262,11 @@ if ( $participant_values ) :
               }
 
               if ( !empty( $column->help_text ) ) :
+              /* Modification for polylang support : Issue Nr01
+              	Apply the filter 'translate-string' to the help text
+              */
                 ?>
-                <span class="helptext"><?php _e( stripslashes( trim( $column->help_text ) ) ) ?></span>
+                <span class="helptext"><?php echo stripslashes( trim( Participants_Db::apply_filters( 'translate_string', $column->help_text ) ) ) ?></span>
               <?php endif; ?>
             </td>
           </tr>
