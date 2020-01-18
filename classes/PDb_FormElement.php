@@ -154,7 +154,7 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * builds the form element
    * 
-   * allows an external func to build the element. If that doens't happen, uses 
+   * allows an external func to build the element. If that doesn't happen, uses 
    * the parent method to build it
    * 
    * @return null
