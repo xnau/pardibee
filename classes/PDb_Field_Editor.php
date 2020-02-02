@@ -321,8 +321,8 @@ class PDb_Field_Editor {
   protected function attribute_value( $attribute )
   {
     switch ( $attribute ) {
-      case 'form_element':
       case 'title':
+      case 'form_element':
       case 'default':
       case 'name':
       case 'group':
