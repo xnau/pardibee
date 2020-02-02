@@ -1015,8 +1015,34 @@ class PDb_Base {
    */
   public static function string_static_translation( $string )
   {
-//    error_log(__METHOD__.' string: '.$string . ' called by: '. print_r(wp_debug_backtrace_summary( null, 3 ),1) );
-    return is_string( $string ) && !is_numeric( $string ) ? __( $string, 'participants-database' ) : $string;
+    if ( ! is_string( $string ) || is_numeric( $string ) ) {
+      return $string;
+    }
+    
+    if ( defined('PDB_MULTILINGUAL' ) && PDB_MULTILINGUAL && strpos( $string, '[:' ) !== false ) {
+      return( self::extract_from_multilingual_string( $string ) );
+    }
+    
+    return __( $string, 'participants-database' );
+  }
+  
+  /**
+   * extracts a language string from a multilingual string
+   * 
+   * this assumes a Q-TranslateX style multilingual string
+   * 
+   * @param string $ml_string
+   * @return string
+   */
+  private static function extract_from_multilingual_string( $ml_string )
+  {
+    if ( strpos( $ml_string, '[:' ) === false ) {
+      return $ml_string;
+    }
+    
+    $lang = strstr( get_locale(), '_', true );
+    
+    return preg_filter( '/.*\[:' . $lang . '\](([^\[]|\[[^:])*)(\[:.*|$)/s', '$1', $ml_string );
   }
 
   /**
