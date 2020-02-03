@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.12
+ * @version    Release: 1.13
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -214,7 +214,6 @@ class PDb_List_Admin {
     // merge the defaults with the $_REQUEST array so if there are any new values coming in, they're included
     self::_update_filter();
     
-    //error_log(__METHOD__.' filter:'.print_r(self::$filter,1));
     // process delete and items-per-page form submissions
     self::_process_general();
 
@@ -343,22 +342,25 @@ class PDb_List_Admin {
   private static function _update_filter()
   {
     self::$filter = self::get_filter();
-    if ( filter_input( INPUT_POST, 'action' ) === 'admin_list_filter' ) {
+    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'admin_list_filter' ) {
+      
+      $post = filter_input_array( INPUT_POST, self::list_filter_sanitize() );
+      
       unset( self::$filter['search'] );
-      for ( $i = filter_input( INPUT_POST, 'list_filter_count', FILTER_SANITIZE_NUMBER_INT ); $i > 0; $i-- ) {
+      
+      for ( $i = $post['list_filter_count']; $i > 0; $i-- ) {
         self::$filter['search'][] = current( self::$default_filter['search'] );
       }
-      foreach ( array_keys( $_POST ) as $key ) {
-        $postval = $_POST[$key];
+      
+      foreach ( $post as $key => $postval ) {
         if ( is_array( $postval ) ) {
-          $postval = filter_input( INPUT_POST, $key, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
           foreach ( $postval as $index => $value ) {
             if ( $value !== '' ) {
               self::$filter['search'][$index][$key] = $value;
             }
           }
-        } elseif ( isset( self::$filter[$key] ) ) {
-          self::$filter[$key] = filter_input( INPUT_POST, $key, FILTER_SANITIZE_STRING );
+        } elseif ( in_array( $key, array( 'list_filter_count', 'sortBy', 'ascdesc' ) ) ) {
+          self::$filter[$key] = $post[$key];
         }
       }
     } elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_SANITIZE_STRING ) ) {
@@ -371,6 +373,24 @@ class PDb_List_Admin {
       self::$filter['sortBy'] = $column_sort;
     }
     self::save_filter( self::$filter );
+  }
+  
+  /**
+   * provides the sanitize filter array for the list filter submission
+   * 
+   * @return array of filter settings
+   */
+  private static function list_filter_sanitize()
+  {
+    return array(
+        'list_filter_count' => FILTER_SANITIZE_NUMBER_INT,
+        'ascdesc'           => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(asc|desc)$/i' ) ),
+        'sortBy'            => array( 'filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name' ),
+        'search_field'      => array( 'filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name' ),
+        'operator'          => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE)$/i' ), 'flags' => FILTER_REQUIRE_ARRAY ),
+        'value'             => array( 'filter' => FILTER_SANITIZE_STRING, 'flags' => FILTER_REQUIRE_ARRAY ),
+        'logic'             => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(OR|AND)$/' ), 'flags' => FILTER_REQUIRE_ARRAY ),
+    );
   }
 
   /**
