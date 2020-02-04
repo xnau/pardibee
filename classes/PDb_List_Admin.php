@@ -342,6 +342,7 @@ class PDb_List_Admin {
   private static function _update_filter()
   {
     self::$filter = self::get_filter();
+    
     if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'admin_list_filter' ) {
       
       $post = filter_input_array( INPUT_POST, self::list_filter_sanitize() );
@@ -372,6 +373,7 @@ class PDb_List_Admin {
       }
       self::$filter['sortBy'] = $column_sort;
     }
+    
     self::save_filter( self::$filter );
   }
   
