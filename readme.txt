@@ -293,6 +293,7 @@ You can define a "captcha" form element which will show a simple math question f
 * long filenames can be contracted for display in file and image upload fields
 * better checking for allowed filename extension in upload fields
 * fixed several instances of display strings not available to multilingual plugins
+* new default value selector for field types with options in the field editor
 
 = 1.9.5.5 =
 * fixed issues with CSV export of date and link fields
