@@ -608,26 +608,23 @@ query: '. $last_query : '' ));
    */
   private static function _process_search()
   {
-
-    $submit = filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING );
-
-    switch ( $submit ) {
+    switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
 
       case self::$i18n['clear'] :
         self::$filter = self::$default_filter;
         self::save_filter( self::$filter );
+        
       case self::$i18n['sort']:
       case self::$i18n['filter']:
       case self::$i18n['search']:
         // go back to the first page to display the newly sorted/filtered list
         $_GET[self::$list_page] = 1;
+        
       default:
 
         self::$list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
 
-        if ( count( self::$filter['search'] ) === 1 && (self::$filter['search'][0]['search_field'] === 'none' || self::$filter['search'][0]['search_field'] === '') ) {
-          // do nothing, no search performed
-        } else {
+        if ( self::is_search_submission() ) {
           self::$list_query .= 'WHERE ';
           for ( $i = 0; $i <= count( self::$filter['search'] ) - 1; $i++ ) {
             if ( self::$filter['search'][$i]['search_field'] !== 'none' && self::$filter['search'][$i]['search_field'] !== '' && Participants_Db::is_column( self::$filter['search'][$i]['search_field'] ) ) {
@@ -651,6 +648,26 @@ query: '. $last_query : '' ));
         // add the sorting
         self::$list_query .= ' ORDER BY p.' . esc_sql( self::$filter['sortBy'] ) . ' ' . esc_sql( self::$filter['ascdesc'] );
     }
+  }
+  
+  /**
+   * checks the search filter for a valid search
+   * 
+   * @return bool true if a search has been submitted
+   */
+  private static function is_search_submission()
+  {
+    if ( ! isset( self::$filter['search'] ) || ! is_array( self::$filter['search'] ) ) {
+      return false;
+    }
+    
+    foreach( self::$filter['search'] as $fieldsearch ) {
+      if ( $fieldsearch['value'] !== '' ) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   /**
