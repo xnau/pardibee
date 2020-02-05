@@ -1009,9 +1009,9 @@ class PDb_Base {
    * this is meant for strings with embedded language tags, if the argument is not 
    * a non-numeric string, it is passed through
    * 
-   * @param mixed the unstranslated string
+   * @param string the unstranslated string
    * 
-   * @return mixed the translated string or unaltered input value
+   * @return string the translated string or unaltered input value
    */
   public static function string_static_translation( $string )
   {
@@ -1019,9 +1019,7 @@ class PDb_Base {
       return $string;
     }
     
-    if ( defined('PDB_MULTILINGUAL' ) && PDB_MULTILINGUAL && strpos( $string, '[:' ) !== false ) {
-      return( self::extract_from_multilingual_string( $string ) );
-    }
+    $string = self::extract_from_multilingual_string( $string );
     
     return __( $string, 'participants-database' );
   }
@@ -1031,18 +1029,30 @@ class PDb_Base {
    * 
    * this assumes a Q-TranslateX style multilingual string
    * 
+   * this function is basically a patch to let multilingual strings work on the backend
+   * 
    * @param string $ml_string
    * @return string
    */
   private static function extract_from_multilingual_string( $ml_string )
   {
-    if ( strpos( $ml_string, '[:' ) === false ) {
+    if ( has_filter( 'pdb-extract_multilingual_string' ) ) {
+      return Participants_Db::apply_filters('extract_multilingual_string', $ml_string );
+    }
+    
+    if ( strpos( $ml_string, '[:' ) === false && strpos( $ml_string, '{:' ) === false ) {
       return $ml_string;
+    }
+    
+    if ( preg_match( '/\[:[a-z]{2}/', $ml_string ) === 1 ) {
+      $brace = array( '\[', '\]' );
+    } else {
+      $brace = array( '\{', '\}' );
     }
     
     $lang = strstr( get_locale(), '_', true );
     
-    return preg_filter( '/.*\[:' . $lang . '\](([^\[]|\[[^:])*)(\[:.*|$)/s', '$1', $ml_string );
+    return preg_filter( '/.*' . $brace[0] . ':' . $lang . '' . $brace[1] . '(([^' . $brace[0] . ']|' . $brace[0] . '[^:])*)(' . $brace[0] . ':.*|$)/s', '$1', $ml_string );
   }
 
   /**
