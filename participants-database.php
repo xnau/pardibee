@@ -1593,7 +1593,7 @@ class Participants_Db extends PDb_Base {
        * if we are adding a record in the admin, we don't perform a record update 
        * on a matching record if the intent is to add a new record
        */
-      if ( is_admin() && $action === 'insert' && ( ! defined('DOING_AJAX') || ! DOING_AJAX ) && ! $currently_importing_csv ) {
+      if ( self::is_admin() && $action === 'insert' && ! $currently_importing_csv ) {
         $record_match->set_match_mode( 'skip' );
       }
 
