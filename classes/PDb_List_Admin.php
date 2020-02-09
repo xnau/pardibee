@@ -662,7 +662,7 @@ query: '. $last_query : '' ));
     }
     
     foreach( self::$filter['search'] as $fieldsearch ) {
-      if ( $fieldsearch['value'] !== '' ) {
+      if ( $fieldsearch['search_field'] !== '' ) {
         return true;
       }
     }
