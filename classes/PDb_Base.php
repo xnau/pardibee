@@ -898,7 +898,7 @@ class PDb_Base {
     $sql = 'SELECT * FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"';
     return current( $wpdb->get_results( $wpdb->prepare( $sql, $name ) ) );
   }
-
+  
   /**
    * checks a plugin permission level and passes it through a filter
    * 
@@ -1004,10 +1004,12 @@ class PDb_Base {
   }
 
   /**
-   * sends a string through a generic gettext call
+   * sends a string through a filter for affecting a multilingual translation
    * 
    * this is meant for strings with embedded language tags, if the argument is not 
    * a non-numeric string, it is passed through
+   * 
+   * @since 1.9.5.7 eliminated call to gettext
    * 
    * @param string the unstranslated string
    * 
@@ -1019,9 +1021,7 @@ class PDb_Base {
       return $string;
     }
     
-    $string = self::extract_from_multilingual_string( $string );
-    
-    return __( $string, 'participants-database' );
+    return self::extract_from_multilingual_string( $string );
   }
   
   /**
