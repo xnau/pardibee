@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.1
+ * @version 1.2
  *
  */
 if ( !defined( 'ABSPATH' ) )
@@ -114,8 +114,8 @@ if ( $participant_values ) :
       $section = $column->group()
       ?>
       <div  class="field-group field-group-<?php echo $groups[$section]['name'] ?>" >
-        <h3 class="field-group-title"><?php _e( $groups[$section]['title'] ) ?></h3>
-        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . $groups[$section]['description'] . '</p>' ?>
+        <h3 class="field-group-title"><?php echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
+        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ?>
         <table class="form-table">
           <tbody>
             <?php
@@ -134,7 +134,7 @@ if ( $participant_values ) :
             $add_title = array();
             $fieldnote_pattern = ' <span class="fieldnote">%s</span>';
             if ( $column->is_hidden_field() ) {
-              $add_title[] = __( 'hidden', 'participants-database' );
+              $add_title[] = _x( 'hidden', 'label for a hidden field', 'participants-database' );
             }
             
             if ( $column->is_readonly() ) {
@@ -258,7 +258,7 @@ if ( $participant_values ) :
 
               if ( !empty( $column->help_text ) ) :
                 ?>
-                <span class="helptext"><?php _e( stripslashes( trim( $column->help_text ) ) ) ?></span>
+                <span class="helptext"><?php Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ?></span>
               <?php endif; ?>
             </td>
           </tr>
@@ -296,7 +296,7 @@ if ( $participant_values ) :
           <tr>
             <th><h3><?php echo Participants_Db::apply_filters( 'translate_string', $options['save_changes_label'] ) ?></h3></th>
             <td class="submit-buttons">
-              <input class="button button-primary pdb-submit" type="submit" value="<?php _e( $options['save_changes_button'] ) ?>" name="save">
+              <input class="button button-primary pdb-submit" type="submit" value="<?php echo Participants_Db::apply_filters( 'translate_string', $options['save_changes_button'] ) ?>" name="save">
               <input name="submit_button" type="hidden" value="<?php echo self::$i18n['apply'] ?>">
             </td>
           </tr>
