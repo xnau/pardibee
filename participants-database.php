@@ -350,6 +350,7 @@ class Participants_Db extends PDb_Base {
     // set up the database for any new blogs
     add_action( 'wpmu_new_blog', array( 'PDb_Init', 'new_blog' ) );
     add_action( 'delete_blog', array( 'PDb_Init', 'delete_blog' ), 10, 2 );
+    
     /**
      * @since 1.6.3
      * added global constant to enable multilingual content of the type that qtranslate-x 
@@ -366,7 +367,7 @@ class Participants_Db extends PDb_Base {
      * are passed through it
      */
     if ( defined( 'PDB_MULTILINGUAL' ) && (bool) PDB_MULTILINGUAL === true ) {
-      add_filter( self::$prefix . 'translate_string', array(__CLASS__, 'string_static_translation'), 20 );
+      add_filter( 'pdb-translate_string', array(__CLASS__, 'string_static_translation'), 20 );
     }
 
     // handles ajax request from list filter
