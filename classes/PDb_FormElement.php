@@ -671,7 +671,6 @@ class PDb_FormElement extends xnau_FormElement {
           unset( $attributes_array[$att] );
         }
         break;
-      // any more filters...add them here
     }
 
     return parent::_attributes( $attributes_array );
