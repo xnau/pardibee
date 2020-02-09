@@ -288,6 +288,12 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.5.7 =
+* new French translations
+* admin list searches for blank values working
+* fixed translation filtering for several display strings
+* better support for multilingual strings
+
 = 1.9.5.6 =
 * patched an sql injection vulnerability in the admin list page
 * long filenames can be contracted for display in file and image upload fields
@@ -1292,11 +1298,9 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.5.5 =
+= 1.9.5.7 =
 is a minor bugfix release
 
-= 1.9.5 =
-Version 1.9.5 is a feature and bug fix release
 
 == Plugin Support ==
 
