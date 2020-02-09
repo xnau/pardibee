@@ -1006,6 +1006,9 @@ class PDb_Base {
   /**
    * sends a string through a filter for affecting a multilingual translation
    * 
+   * this is called on the pdb-translate_string filter, which is only enabled 
+   * when PDB_MULTILINGUAL is defined true
+   * 
    * this is meant for strings with embedded language tags, if the argument is not 
    * a non-numeric string, it is passed through
    * 
@@ -1037,6 +1040,11 @@ class PDb_Base {
   private static function extract_from_multilingual_string( $ml_string )
   {
     if ( has_filter( 'pdb-extract_multilingual_string' ) ) {
+      /**
+       * @filter pdb-extract_multilingual_string
+       * @param string the multilingual string
+       * @return the extracted string for the current language
+       */
       return Participants_Db::apply_filters('extract_multilingual_string', $ml_string );
     }
     
