@@ -592,9 +592,20 @@ class PDb_FormElement extends xnau_FormElement {
         return $options_array[$title];
       }
       
-      $options_array = self::sanitize_keys($field->options());
+      // if the "title" is actually a value, return the value
+      if ( array_search( $title, $options_array ) ) {
+        return $title;
+      }
       
-      // first check if there is a direct match with a sanitized title
+      /*
+       * if we haven't found the option yet, we perform a search on the options 
+       * array for a close match
+       * 
+       * first, strip out any tags in the keys
+       */
+      $options_array = self::striptags_keys($field->options());
+      
+      // now check if there is a direct match with a tag-stripped title
       if ( isset( $options_array[$title] ) ) {
         return $options_array[$title];
       }
@@ -634,12 +645,14 @@ class PDb_FormElement extends xnau_FormElement {
   }
   
   /**
-   * provides an options array with sanitized keys
+   * strips the tags out of the array keys
+   * 
+   * this generally used on the options array to make the elements easier to git by the index
    * 
    * @param array
    * @return array
    */
-  protected static function sanitize_keys( $array )
+  protected static function striptags_keys( $array )
   {
     $sanitized = array();
     foreach ( $array as $key => $value ) {
