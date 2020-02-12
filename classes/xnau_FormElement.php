@@ -1421,6 +1421,8 @@ abstract class xnau_FormElement {
           $output[] = sprintf( '%1$s="%1$s"', esc_attr( $name ) );
         } elseif ( preg_match('/^\d+$/', $name) || $value === $name ) {
           $output[] = esc_attr( $value );
+        } elseif ( self::is_translatable_att($name) ) {
+          $output[] = sprintf( '%s="%s"', esc_attr( $name ), esc_attr( Participants_Db::apply_filters( 'translate_string', $value ) ) );
         } else {
           $output[] = sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );
         }
@@ -1430,6 +1432,22 @@ abstract class xnau_FormElement {
     }
 
     return implode( ' ', $output );
+  }
+  
+  /**
+   * provides a list of attributes that should be passed through the translation filter
+   * 
+   * @param string $name of the attribute
+   * @return bool true if the attribute value should be passed through the translation filter
+   */
+  protected static function is_translatable_att( $name )
+  {
+    $translatable = Participants_Db::apply_filters('translatable_html_attributes', array(
+        'placeholder',
+        'title',
+    ) );
+    
+    return in_array( $name, $translatable );
   }
 
   /**

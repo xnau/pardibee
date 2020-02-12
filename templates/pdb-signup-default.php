@@ -37,7 +37,7 @@
         <?php if ( $this->group->has_fields() && $this->group->printing_title() ) : // are we printing group titles and descriptions? ?>
         <tr class="signup-group">
           <td colspan="2">
-        
+            
             <?php $this->group->print_title() ?>
             <?php $this->group->print_description() ?>
 

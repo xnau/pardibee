@@ -219,7 +219,6 @@ class PDb_Form_Field_Def {
   {
     switch ( $prop ) {
       case 'form_element':
-      case 'title':
       case 'default_value':
       case 'name':
       case 'group':
@@ -239,6 +238,7 @@ class PDb_Form_Field_Def {
         return $this->default_value();
       case 'id':
       case 'order':
+      case 'title':
         return $this->{$prop};
       default:
         return null;

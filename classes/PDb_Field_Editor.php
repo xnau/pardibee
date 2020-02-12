@@ -321,8 +321,8 @@ class PDb_Field_Editor {
   protected function attribute_value( $attribute )
   {
     switch ( $attribute ) {
-      case 'form_element':
       case 'title':
+      case 'form_element':
       case 'default':
       case 'name':
       case 'group':
@@ -336,7 +336,9 @@ class PDb_Field_Editor {
       case 'persistent':
       case 'signup':
       case 'readonly':
-        return $this->field_def->get_prop( $attribute );
+        
+        return $this->field_def->$attribute;
+//        return $this->field_def->get_prop( $attribute );
       case 'groupable':
         return $this->field_def->group();
       case 'orderable':

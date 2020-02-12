@@ -8,11 +8,12 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
 if ( ! defined( 'ABSPATH' ) ) die;
+
 class PDb_Field_Group_Item extends PDb_Template_Item {
   
   // properties
@@ -71,6 +72,16 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   }
   
   /**
+   * provides the group description
+   * 
+   * @return string
+   */
+  public function description()
+  {
+    return $this->prepare_display_value( stripslashes($this->description) );
+  }
+  
+  /**
    * prints a group description
    *
    * @param array  $wrap  tags to wrap the description in; first element is
@@ -82,7 +93,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     
     if ( $this->printing_groups() and ! empty( $this->description ) ) {
       
-      $output = $start_tag.$this->prepare_display_value( stripslashes($this->description) ).$end_tag;
+      $output = $start_tag.$this->description().$end_tag;
       
       if ( $echo ) echo $output;
       else return $output;

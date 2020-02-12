@@ -900,7 +900,7 @@ class PDb_Base {
     $sql = 'SELECT * FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"';
     return current( $wpdb->get_results( $wpdb->prepare( $sql, $name ) ) );
   }
-
+  
   /**
    * checks a plugin permission level and passes it through a filter
    * 
@@ -1006,19 +1006,63 @@ class PDb_Base {
   }
 
   /**
-   * sends a string through a generic gettext call
+   * sends a string through a filter for affecting a multilingual translation
+   * 
+   * this is called on the pdb-translate_string filter, which is only enabled 
+   * when PDB_MULTILINGUAL is defined true
    * 
    * this is meant for strings with embedded language tags, if the argument is not 
    * a non-numeric string, it is passed through
    * 
-   * @param mixed the unstranslated string
+   * @since 1.9.5.7 eliminated call to gettext
    * 
-   * @return mixed the translated string or unaltered input value
+   * @param string the unstranslated string
+   * 
+   * @return string the translated string or unaltered input value
    */
   public static function string_static_translation( $string )
   {
-//    error_log(__METHOD__.' string: '.$string . ' called by: '. print_r(wp_debug_backtrace_summary( null, 3 ),1) );
-    return is_string( $string ) && !is_numeric( $string ) ? __( $string, 'participants-database' ) : $string;
+    if ( ! is_string( $string ) || is_numeric( $string ) ) {
+      return $string;
+    }
+    
+    return self::extract_from_multilingual_string( $string );
+  }
+  
+  /**
+   * extracts a language string from a multilingual string
+   * 
+   * this assumes a Q-TranslateX style multilingual string
+   * 
+   * this function is basically a patch to let multilingual strings work on the backend
+   * 
+   * @param string $ml_string
+   * @return string
+   */
+  private static function extract_from_multilingual_string( $ml_string )
+  {
+    if ( has_filter( 'pdb-extract_multilingual_string' ) ) {
+      /**
+       * @filter pdb-extract_multilingual_string
+       * @param string the multilingual string
+       * @return the extracted string for the current language
+       */
+      return Participants_Db::apply_filters('extract_multilingual_string', $ml_string );
+    }
+    
+    if ( strpos( $ml_string, '[:' ) === false && strpos( $ml_string, '{:' ) === false ) {
+      return $ml_string;
+    }
+    
+    if ( preg_match( '/\[:[a-z]{2}/', $ml_string ) === 1 ) {
+      $brace = array( '\[', '\]' );
+    } else {
+      $brace = array( '\{', '\}' );
+    }
+    
+    $lang = strstr( get_locale(), '_', true );
+    
+    return preg_filter( '/.*' . $brace[0] . ':' . $lang . '' . $brace[1] . '(([^' . $brace[0] . ']|' . $brace[0] . '[^:])*)(' . $brace[0] . ':.*|$)/s', '$1', $ml_string );
   }
 
   /**

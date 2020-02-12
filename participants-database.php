@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.9.5.5pierre
+ * Version: 1.9.5.7pierre
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -14,7 +14,7 @@
  * 
  * 
  * 
- * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
+ * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 3, as
@@ -350,6 +350,7 @@ class Participants_Db extends PDb_Base {
     // set up the database for any new blogs
     add_action( 'wpmu_new_blog', array( 'PDb_Init', 'new_blog' ) );
     add_action( 'delete_blog', array( 'PDb_Init', 'delete_blog' ), 10, 2 );
+    
     /**
      * @since 1.6.3
      * added global constant to enable multilingual content of the type that qtranslate-x 
@@ -366,7 +367,7 @@ class Participants_Db extends PDb_Base {
      * are passed through it
      */
     if ( defined( 'PDB_MULTILINGUAL' ) && (bool) PDB_MULTILINGUAL === true ) {
-      add_filter( self::$prefix . 'translate_string', array(__CLASS__, 'string_static_translation'), 20 );
+      add_filter( 'pdb-translate_string', array(__CLASS__, 'string_static_translation'), 20 );
     }
 
     // handles ajax request from list filter
@@ -1596,7 +1597,7 @@ class Participants_Db extends PDb_Base {
        * if we are adding a record in the admin, we don't perform a record update 
        * on a matching record if the intent is to add a new record
        */
-      if ( is_admin() && $action === 'insert' && ( ! defined('DOING_AJAX') || ! DOING_AJAX ) && ! $currently_importing_csv ) {
+      if ( self::is_admin() && $action === 'insert' && ! $currently_importing_csv ) {
         $record_match->set_match_mode( 'skip' );
       }
 

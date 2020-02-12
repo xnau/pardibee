@@ -110,9 +110,6 @@ class PDb_Manage_Fields {
         // number of rows in the group
         $num_group_rows = count( $this->fields_data[$group] );
 
-        // get a list of the defined field types
-        $field_types = PDb_FormElement::get_types();
-
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
         ?>
         <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $data_group_id ?>" >
@@ -144,8 +141,8 @@ class PDb_Manage_Fields {
                       
                       // add the rows of the group
                       foreach ( $this->fields_data[$group] as $database_row ) :
-
-                        if ( !array_key_exists( $database_row['form_element'], $field_types ) ) {
+                        
+                        if ( ! $this->is_registered_type( $database_row['form_element'] ) ) {
                           // skip field types that are not currently registered
                           continue;
                         }
@@ -506,6 +503,18 @@ class PDb_Manage_Fields {
 
         $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
       }
+    }
+    
+    /**
+     * tells if the field element type is registered
+     * 
+     * @param string $form_element
+     * @return bool
+     */
+    protected function is_registered_type ( $form_element )
+    {
+      // timestamp is a special case: visible in the editor but nor chooseable otherwise
+      return PDb_FormElement::is_form_element($form_element) || $form_element === 'timestamp';
     }
 
     /**

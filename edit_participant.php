@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.1
+ * @version 1.2
  *
  */
 if ( !defined( 'ABSPATH' ) )
@@ -118,6 +118,8 @@ if ( $participant_values ) :
       	For the title remove also the call to _e() which doesn't make sense anymore */
       ?>
       <div  class="field-group field-group-<?php echo $groups[$section]['name'] ?>" >
+        <h3 class="field-group-title"><?php echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
+        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ?>
         <h3 class="field-group-title"><?php 
         echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
         <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description']) . '</p>' ?>
@@ -139,7 +141,7 @@ if ( $participant_values ) :
             $add_title = array();
             $fieldnote_pattern = ' <span class="fieldnote">%s</span>';
             if ( $column->is_hidden_field() ) {
-              $add_title[] = __( 'hidden', 'participants-database' );
+              $add_title[] = _x( 'hidden', 'label for a hidden field', 'participants-database' );
             }
             
             if ( $column->is_readonly() ) {
@@ -266,7 +268,7 @@ if ( $participant_values ) :
               	Apply the filter 'translate-string' to the help text
               */
                 ?>
-                <span class="helptext"><?php echo stripslashes( trim( Participants_Db::apply_filters( 'translate_string', $column->help_text ) ) ) ?></span>
+                <span class="helptext"><?php echo Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ?></span>
               <?php endif; ?>
             </td>
           </tr>
@@ -304,7 +306,7 @@ if ( $participant_values ) :
           <tr>
             <th><h3><?php echo Participants_Db::apply_filters( 'translate_string', $options['save_changes_label'] ) ?></h3></th>
             <td class="submit-buttons">
-              <input class="button button-primary pdb-submit" type="submit" value="<?php _e( $options['save_changes_button'] ) ?>" name="save">
+              <input class="button button-primary pdb-submit" type="submit" value="<?php echo Participants_Db::apply_filters( 'translate_string', $options['save_changes_button'] ) ?>" name="save">
               <input name="submit_button" type="hidden" value="<?php echo self::$i18n['apply'] ?>">
             </td>
           </tr>

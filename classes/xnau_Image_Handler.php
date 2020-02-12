@@ -718,8 +718,7 @@ abstract class xnau_Image_Handler {
    */
   public function in_admin()
   {
-
-    return is_admin() && !defined( 'DOING_AJAX' );
+    return Participants_Db::is_admin();
   }
 
 }

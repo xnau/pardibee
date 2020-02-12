@@ -15,7 +15,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.12
+ * @version    Release: 1.13
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -214,7 +214,6 @@ class PDb_List_Admin {
     // merge the defaults with the $_REQUEST array so if there are any new values coming in, they're included
     self::_update_filter();
     
-    //error_log(__METHOD__.' filter:'.print_r(self::$filter,1));
     // process delete and items-per-page form submissions
     self::_process_general();
 
@@ -343,22 +342,26 @@ class PDb_List_Admin {
   private static function _update_filter()
   {
     self::$filter = self::get_filter();
-    if ( filter_input( INPUT_POST, 'action' ) === 'admin_list_filter' ) {
+    
+    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'admin_list_filter' ) {
+      
+      $post = filter_input_array( INPUT_POST, self::list_filter_sanitize() );
+      
       unset( self::$filter['search'] );
-      for ( $i = filter_input( INPUT_POST, 'list_filter_count', FILTER_SANITIZE_NUMBER_INT ); $i > 0; $i-- ) {
+      
+      for ( $i = $post['list_filter_count']; $i > 0; $i-- ) {
         self::$filter['search'][] = current( self::$default_filter['search'] );
       }
-      foreach ( array_keys( $_POST ) as $key ) {
-        $postval = $_POST[$key];
+      
+      foreach ( $post as $key => $postval ) {
         if ( is_array( $postval ) ) {
-          $postval = filter_input( INPUT_POST, $key, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
           foreach ( $postval as $index => $value ) {
             if ( $value !== '' ) {
               self::$filter['search'][$index][$key] = $value;
             }
           }
-        } elseif ( isset( self::$filter[$key] ) ) {
-          self::$filter[$key] = filter_input( INPUT_POST, $key, FILTER_SANITIZE_STRING );
+        } elseif ( in_array( $key, array( 'list_filter_count', 'sortBy', 'ascdesc' ) ) ) {
+          self::$filter[$key] = $post[$key];
         }
       }
     } elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_SANITIZE_STRING ) ) {
@@ -370,7 +373,26 @@ class PDb_List_Admin {
       }
       self::$filter['sortBy'] = $column_sort;
     }
+    
     self::save_filter( self::$filter );
+  }
+  
+  /**
+   * provides the sanitize filter array for the list filter submission
+   * 
+   * @return array of filter settings
+   */
+  private static function list_filter_sanitize()
+  {
+    return array(
+        'list_filter_count' => FILTER_SANITIZE_NUMBER_INT,
+        'ascdesc'           => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(asc|desc)$/i' ) ),
+        'sortBy'            => array( 'filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name' ),
+        'search_field'      => array( 'filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name' ),
+        'operator'          => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE)$/i' ), 'flags' => FILTER_REQUIRE_ARRAY ),
+        'value'             => array( 'filter' => FILTER_SANITIZE_STRING, 'flags' => FILTER_REQUIRE_ARRAY ),
+        'logic'             => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(OR|AND)$/' ), 'flags' => FILTER_REQUIRE_ARRAY ),
+    );
   }
 
   /**
@@ -586,26 +608,23 @@ query: '. $last_query : '' ));
    */
   private static function _process_search()
   {
-
-    $submit = filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING );
-
-    switch ( $submit ) {
+    switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
 
       case self::$i18n['clear'] :
         self::$filter = self::$default_filter;
         self::save_filter( self::$filter );
+        
       case self::$i18n['sort']:
       case self::$i18n['filter']:
       case self::$i18n['search']:
         // go back to the first page to display the newly sorted/filtered list
         $_GET[self::$list_page] = 1;
+        
       default:
 
         self::$list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
 
-        if ( count( self::$filter['search'] ) === 1 && (self::$filter['search'][0]['search_field'] === 'none' || self::$filter['search'][0]['search_field'] === '') ) {
-          // do nothing, no search performed
-        } else {
+        if ( self::is_search_submission() ) {
           self::$list_query .= 'WHERE ';
           for ( $i = 0; $i <= count( self::$filter['search'] ) - 1; $i++ ) {
             if ( self::$filter['search'][$i]['search_field'] !== 'none' && self::$filter['search'][$i]['search_field'] !== '' && Participants_Db::is_column( self::$filter['search'][$i]['search_field'] ) ) {
@@ -629,6 +648,26 @@ query: '. $last_query : '' ));
         // add the sorting
         self::$list_query .= ' ORDER BY p.' . esc_sql( self::$filter['sortBy'] ) . ' ' . esc_sql( self::$filter['ascdesc'] );
     }
+  }
+  
+  /**
+   * checks the search filter for a valid search
+   * 
+   * @return bool true if a search has been submitted
+   */
+  private static function is_search_submission()
+  {
+    if ( ! isset( self::$filter['search'] ) || ! is_array( self::$filter['search'] ) ) {
+      return false;
+    }
+    
+    foreach( self::$filter['search'] as $fieldsearch ) {
+      if ( $fieldsearch['search_field'] !== '' ) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   /**
