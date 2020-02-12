@@ -258,7 +258,7 @@ if ( $participant_values ) :
 
               if ( !empty( $column->help_text ) ) :
                 ?>
-                <span class="helptext"><?php Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ?></span>
+                <span class="helptext"><?php echo Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ?></span>
               <?php endif; ?>
             </td>
           </tr>
