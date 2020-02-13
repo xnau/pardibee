@@ -2,15 +2,15 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2020-02-09 09:01-1000\n"
+"Project-Id-Version: Participants Database 1.9.5.7\n"
+"POT-Creation-Date: 2020-02-13 18:29+0100\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: participants-database.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: classes/PDb_Base.php:1570
+#: classes/PDb_Base.php:1580
 #, php-format
 msgid ""
 "Participants Database will require PHP version %1$s in future releases, you "
@@ -137,91 +137,91 @@ msgstr ""
 msgid "delete"
 msgstr ""
 
-#: classes/PDb_FormElement.php:688
+#: classes/PDb_FormElement.php:701
 msgid "Text-line"
 msgstr ""
 
-#: classes/PDb_FormElement.php:689
+#: classes/PDb_FormElement.php:702
 msgid "Text Area"
 msgstr ""
 
-#: classes/PDb_FormElement.php:690
+#: classes/PDb_FormElement.php:703
 msgid "Rich Text"
 msgstr ""
 
-#: classes/PDb_FormElement.php:691
+#: classes/PDb_FormElement.php:704
 msgid "Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:692
+#: classes/PDb_FormElement.php:705
 msgid "Radio Buttons"
 msgstr ""
 
-#: classes/PDb_FormElement.php:693
+#: classes/PDb_FormElement.php:706
 msgid "Dropdown List"
 msgstr ""
 
-#: classes/PDb_FormElement.php:694
+#: classes/PDb_FormElement.php:707
 msgid "Date Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:695
+#: classes/PDb_FormElement.php:708
 msgid "Numeric"
 msgstr ""
 
-#: classes/PDb_FormElement.php:696
+#: classes/PDb_FormElement.php:709
 msgid "Decimal"
 msgstr ""
 
-#: classes/PDb_FormElement.php:697
+#: classes/PDb_FormElement.php:710
 msgid "Currency"
 msgstr ""
 
-#: classes/PDb_FormElement.php:698
+#: classes/PDb_FormElement.php:711
 msgid "Dropdown/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:699
+#: classes/PDb_FormElement.php:712
 msgid "Multiselect Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:700
+#: classes/PDb_FormElement.php:713
 msgid "Multiselect Dropdown"
 msgstr ""
 
-#: classes/PDb_FormElement.php:701
+#: classes/PDb_FormElement.php:714
 msgid "Radio Buttons/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:702
+#: classes/PDb_FormElement.php:715
 msgid "Multiselect/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:703
+#: classes/PDb_FormElement.php:716
 msgid "Link Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:704
+#: classes/PDb_FormElement.php:717
 msgid "Image Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:705
+#: classes/PDb_FormElement.php:718
 msgid "File Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:706
+#: classes/PDb_FormElement.php:719
 msgid "Hidden Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:707
+#: classes/PDb_FormElement.php:720
 msgid "Password Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:708
+#: classes/PDb_FormElement.php:721
 msgid "CAPTCHA"
 msgstr ""
 
-#: classes/PDb_FormElement.php:709
+#: classes/PDb_FormElement.php:722
 msgid "Placeholder"
 msgstr ""
 
@@ -282,64 +282,64 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
-#: classes/PDb_List.php:572
+#: classes/PDb_List.php:574
 msgid "select"
 msgstr ""
 
-#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:963
+#: classes/PDb_List.php:747 classes/PDb_List_Admin.php:963
 #: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
 msgid "Ascending"
 msgstr ""
 
-#: classes/PDb_List.php:746 classes/PDb_List_Admin.php:964
+#: classes/PDb_List.php:748 classes/PDb_List_Admin.php:964
 #: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
 msgid "Descending"
 msgstr ""
 
-#: classes/PDb_List.php:1234
+#: classes/PDb_List.php:1238
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms."
 msgstr ""
 
-#: classes/PDb_List.php:1235 classes/PDb_List_Admin.php:1251
+#: classes/PDb_List.php:1239 classes/PDb_List_Admin.php:1251
 msgid "Download CSV for this list"
 msgstr ""
 
-#: classes/PDb_List.php:1240 classes/PDb_List_Admin.php:1252
+#: classes/PDb_List.php:1244 classes/PDb_List_Admin.php:1252
 msgid "Include field titles"
 msgstr ""
 
-#: classes/PDb_List.php:1258 classes/PDb_List_Admin.php:1249
+#: classes/PDb_List.php:1262 classes/PDb_List_Admin.php:1249
 msgid "File Name"
 msgstr ""
 
-#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1632
+#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1632
 msgctxt "submit button label"
 msgid "Delete Checked"
 msgstr ""
 
-#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1633
+#: classes/PDb_List.php:1362 classes/PDb_List_Admin.php:1633
 msgctxt "submit button label"
 msgid "Change"
 msgstr ""
 
-#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1634
+#: classes/PDb_List.php:1363 classes/PDb_List_Admin.php:1634
 msgctxt "submit button label"
 msgid "Sort"
 msgstr ""
 
-#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1635
+#: classes/PDb_List.php:1364 classes/PDb_List_Admin.php:1635
 msgctxt "submit button label"
 msgid "Filter"
 msgstr ""
 
-#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1636
+#: classes/PDb_List.php:1365 classes/PDb_List_Admin.php:1636
 msgctxt "submit button label"
 msgid "Clear"
 msgstr ""
 
-#: classes/PDb_List.php:1362 classes/PDb_List_Admin.php:1637
+#: classes/PDb_List.php:1366 classes/PDb_List_Admin.php:1637
 msgctxt "search button label"
 msgid "Search"
 msgstr ""
@@ -500,7 +500,7 @@ msgstr ""
 msgid "send signup email"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1638 participants-database.php:3478
+#: classes/PDb_List_Admin.php:1638 participants-database.php:3482
 msgid "Apply"
 msgstr ""
 
@@ -510,7 +510,7 @@ msgctxt ""
 msgid "With selected"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:74 participants-database.php:3674
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3678
 msgid "Manage Database Fields"
 msgstr ""
 
@@ -523,6 +523,12 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
+#: classes/PDb_Manage_Fields.php:116
+#, php-format
+msgctxt "Title announcing the field list of the group %s"
+msgid "%s Fields"
+msgstr ""
+
 #: classes/PDb_Manage_Fields.php:138
 msgid "No fields in this group"
 msgstr ""
@@ -531,7 +537,7 @@ msgstr ""
 msgid "Edit / Add / Remove Field Groups"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:612
+#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:614
 msgid "group"
 msgstr ""
 
@@ -576,174 +582,174 @@ msgctxt "short form of \"administrator\""
 msgid "Admin"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:608
+#: classes/PDb_Manage_Fields.php:610
 msgid "Update Fields"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:609
+#: classes/PDb_Manage_Fields.php:611
 msgid "Update Groups"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:610
+#: classes/PDb_Manage_Fields.php:612
 msgid "Add Field"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:611
+#: classes/PDb_Manage_Fields.php:613
 msgid "Add Group"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:613
+#: classes/PDb_Manage_Fields.php:615
 msgid "field"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:614
+#: classes/PDb_Manage_Fields.php:616
 msgid "new field title"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:615
+#: classes/PDb_Manage_Fields.php:617
 msgid "new field form element"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:616
-msgid "new group title"
-msgstr ""
-
-#: classes/PDb_Manage_Fields.php:617
-msgctxt "column name"
-msgid "Fields"
-msgstr ""
-
 #: classes/PDb_Manage_Fields.php:618
-msgctxt "column name"
-msgid "Group"
+msgid "new group title"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:619
 msgctxt "column name"
-msgid "Order"
+msgid "Fields"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:620
 msgctxt "column name"
-msgid "Name"
+msgid "Group"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:621
 msgctxt "column name"
-msgid "Title"
+msgid "Order"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:622
 msgctxt "column name"
-msgid "Default Value"
+msgid "Name"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:623
 msgctxt "column name"
-msgid "Help Text"
+msgid "Title"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:624
 msgctxt "column name"
-msgid "Form Element"
+msgid "Default Value"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:625
 msgctxt "column name"
-msgid "Values"
+msgid "Help Text"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:626
 msgctxt "column name"
-msgid "Validation"
+msgid "Form Element"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:627
 msgctxt "column name"
-msgid "Display Column"
+msgid "Values"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:628
 msgctxt "column name"
-msgid "Admin Column"
+msgid "Validation"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:629
 msgctxt "column name"
-msgid "Sortable"
+msgid "Display Column"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:630
-msgctxt "column name, acronym for \"comma separated values\""
-msgid "CSV"
+msgctxt "column name"
+msgid "Admin Column"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:631
 msgctxt "column name"
-msgid "Persistent"
+msgid "Sortable"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:632
-msgctxt "column name"
-msgid "Signup"
+msgctxt "column name, acronym for \"comma separated values\""
+msgid "CSV"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:633
 msgctxt "column name"
-msgid "Read Only"
+msgid "Persistent"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:634
 msgctxt "column name"
-msgid "Admin"
+msgid "Signup"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:635
 msgctxt "column name"
-msgid "Delete"
+msgid "Read Only"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:636
 msgctxt "column name"
-msgid "Display"
+msgid "Admin"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:637
 msgctxt "column name"
-msgid "Description"
+msgid "Delete"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:638
 msgctxt "column name"
-msgid "Attributes"
+msgid "Display"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:639
 msgctxt "column name"
-msgid "Options"
+msgid "Description"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:640
 msgctxt "column name"
-msgid "Validation Message"
+msgid "Attributes"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:641
+msgctxt "column name"
+msgid "Options"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:642
+msgctxt "column name"
+msgid "Validation Message"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:643
 msgctxt "button label"
 msgid "With Selected"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:642
+#: classes/PDb_Manage_Fields.php:644
 msgctxt "button label"
 msgid "Apply"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:643
+#: classes/PDb_Manage_Fields.php:645
 msgctxt "select all button label"
 msgid "All"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:644
+#: classes/PDb_Manage_Fields.php:646
 msgctxt "label for the view mode selector"
 msgid "View Mode"
 msgstr ""
@@ -855,11 +861,11 @@ msgstr ""
 msgid "First"
 msgstr ""
 
-#: classes/PDb_Pagination.php:377 participants-database.php:3480
+#: classes/PDb_Pagination.php:377 participants-database.php:3484
 msgid "Previous"
 msgstr ""
 
-#: classes/PDb_Pagination.php:396 participants-database.php:3479
+#: classes/PDb_Pagination.php:396 participants-database.php:3483
 msgid "Next"
 msgstr ""
 
@@ -867,7 +873,7 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-#: classes/PDb_Path.php:159 participants-database.php:3280
+#: classes/PDb_Path.php:159 participants-database.php:3284
 #, php-format
 msgid "The uploads directory (%s) could not be created."
 msgstr ""
@@ -2084,8 +2090,8 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: classes/PDb_Settings.php:1794 participants-database.php:3676
-#: participants-database.php:3738
+#: classes/PDb_Settings.php:1794 participants-database.php:3680
+#: participants-database.php:3742
 msgid "Settings"
 msgstr ""
 
@@ -2362,27 +2368,27 @@ msgctxt "indicates the text to be clicked to go to another web page"
 msgid "Link Text"
 msgstr ""
 
-#: edit_participant.php:79 edit_participant.php:272
+#: edit_participant.php:79 edit_participant.php:279
 msgid "Save the Record"
 msgstr ""
 
-#: edit_participant.php:137
+#: edit_participant.php:141
 msgctxt "label for a hidden field"
 msgid "hidden"
 msgstr ""
 
-#: edit_participant.php:164
+#: edit_participant.php:168
 msgid "read only"
 msgstr ""
 
-#: edit_participant.php:286
+#: edit_participant.php:293
 msgid ""
 "<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
 "strong> save record and continue with same record<br><strong>Next:</strong> "
 "save record and then start a new one"
 msgstr ""
 
-#: edit_participant.php:290
+#: edit_participant.php:297
 msgid "<strong>Previous:</strong> save and move to previous record"
 msgstr ""
 
@@ -2431,91 +2437,90 @@ msgid ""
 "information on using this plugin."
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-#: participants-database.php:538
+#: participants-database.php:539
 msgid "Participants Database"
 msgstr ""
 
-#: participants-database.php:705
+#: participants-database.php:706
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr ""
 
-#: participants-database.php:707
+#: participants-database.php:708
 msgid "Delete the {name} {thing}?"
 msgstr ""
 
-#: participants-database.php:708
+#: participants-database.php:709
 msgid "Delete the selected field?"
 msgstr ""
 
-#: participants-database.php:709
+#: participants-database.php:710
 msgid "Delete the selected fields?"
 msgstr ""
 
-#: participants-database.php:710
+#: participants-database.php:711
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: participants-database.php:711
+#: participants-database.php:712
 msgid ""
 "Changing the form element on a field that has stored data can result in data "
 "loss."
 msgstr ""
 
-#: participants-database.php:711
+#: participants-database.php:712
 msgid "More information here…"
 msgstr ""
 
-#: participants-database.php:712
+#: participants-database.php:713
 msgid "Yes, change the form element"
 msgstr ""
 
-#: participants-database.php:713
+#: participants-database.php:714
 msgid "No, don't change the form element"
 msgstr ""
 
-#: participants-database.php:3477 templates/pdb-retrieve-bootstrap.php:70
+#: participants-database.php:3481 templates/pdb-retrieve-bootstrap.php:70
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr ""
 
-#: participants-database.php:3481
+#: participants-database.php:3485
 msgid "The record has been updated."
 msgstr ""
 
-#: participants-database.php:3482
+#: participants-database.php:3486
 msgid "The new record has been added."
 msgstr ""
 
-#: participants-database.php:3483
+#: participants-database.php:3487
 #, php-format
 msgid "No record was added on query: %s"
 msgstr ""
 
-#: participants-database.php:3484
+#: participants-database.php:3488
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr ""
 
-#: participants-database.php:3642
-msgid "WordPress Plugin"
-msgstr ""
-
-#: participants-database.php:3643
-msgid ""
-"Helping organizations manage their volunteers, members and participants."
-msgstr ""
-
 #: participants-database.php:3646
-msgid "Developed by"
+msgid "WordPress Plugin"
 msgstr ""
 
 #: participants-database.php:3647
 msgid ""
-"Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
+"Helping organizations manage their volunteers, members and participants."
 msgstr ""
 
 #: participants-database.php:3650
+msgid "Developed by"
+msgstr ""
+
+#: participants-database.php:3651
+msgid ""
+"Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
+msgstr ""
+
+#: participants-database.php:3654
 #, php-format
 msgid ""
 "Please consider contributing to the continued support and development of "
@@ -2524,39 +2529,39 @@ msgid ""
 "Thanks!"
 msgstr ""
 
-#: participants-database.php:3672
+#: participants-database.php:3676
 msgid "Add Participant"
 msgstr ""
 
-#: participants-database.php:3673 participants-database.php:3680
+#: participants-database.php:3677 participants-database.php:3684
 msgid "List Participants"
 msgstr ""
 
-#: participants-database.php:3675 upload_csv.php:41
+#: participants-database.php:3679 upload_csv.php:41
 msgid "Import CSV File"
 msgstr ""
 
-#: participants-database.php:3677
+#: participants-database.php:3681
 msgid "Setup Guide"
 msgstr ""
 
-#: participants-database.php:3678
+#: participants-database.php:3682
 msgid "Add New Participant Record"
 msgstr ""
 
-#: participants-database.php:3679
+#: participants-database.php:3683
 msgid "Edit Existing Participant Record"
 msgstr ""
 
-#: participants-database.php:3681
+#: participants-database.php:3685
 msgid "Export CSV"
 msgstr ""
 
-#: participants-database.php:3682
+#: participants-database.php:3686
 msgid "Manage List Columns"
 msgstr ""
 
-#: participants-database.php:3818
+#: participants-database.php:3822
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
