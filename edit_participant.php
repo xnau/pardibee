@@ -120,9 +120,6 @@ if ( $participant_values ) :
       <div  class="field-group field-group-<?php echo $groups[$section]['name'] ?>" >
         <h3 class="field-group-title"><?php echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
         <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ?>
-        <h3 class="field-group-title"><?php 
-        echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
-        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description']) . '</p>' ?>
         <table class="form-table">
           <tbody>
             <?php
