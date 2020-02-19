@@ -1,0 +1,90 @@
+<div>
+<style>
+.setupguide {  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%; }
+.setupguide td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.setupguide th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: black;
+  color: white;
+}
+.setupguide tr:nth-child(even){background-color: #f2f2f2;}
+.setupguide tr:hover {background-color: #ddd;}
+</style>
+<div class="setupguide">
+<h1>Mitglieder-Datenbank</h1>
+<h2>Kurzanleitung zum Einrichten des Plugins</h2>
+<h3>Erstmaliges Einrichten</h3>
+<p>Mehrere Einstellungen müssen konfiguriert werden, um die verschiedenen Funktionen dieses Plugins nutzen zu können. Diese Seite ist ein Tutorial zur Installation und Ausführung des Plugins auf deiner Website. Zuerst musst du eine allgemeine Vorstellung davon haben, wie du das Plugin verwenden willst, welche Informationen du sammeln und speichern willst und wie die Benutzer mit der Datenbank interagieren können.</p>
+<h3>Wie das Plugin eingerichtet werden kann</h3>
+<p>Angenommen, du möchtest ein Registrierungsformular haben, das die Namen und E-Mail-Adressen der Benutzer sammelt. Wenn Benutzer das Formular ausfüllen und absenden, werden sie auf eine andere Seite weitergeleitet, die ihnen dankt. Sie erhalten auch eine E-Mail, die die Registrierung bestätigt und ihnen mitteilt, wie sie die Informationen online ausfüllen können. Zu diesem Zweck wird ihnen in der E-Mail ein so genannter "Private Link" angegeben.</p>
+<p>Darüber hinaus erhält der Administrator eine E-Mail-Benachrichtigung über die Registrierung mit einem direkten Link zum neuen Datensatz in der Datenbank.</p>
+
+<h3>Einrichten der Website</h3>
+
+<ol>
+    <li>Füge den Shortcode "[pdb_signup]" an der Stelle der <strong>Registrierungsseite</strong> ein, auf der du möchtest, dass das Registrierungsformular angezeigt wird.</li>
+    <li>In den Einstellungen des Plugins wähle die Registerkarte "Registrierungsformular".</li>
+    <li>Wähle die <strong>Bestätigungsseite</strong> aus, auf die der Benutzer weitergeleitet werden soll und füge den Shortcode "[pdb_signup_thanks]" auf dieser Seite ein.</li>
+    <li>Wenn der eingeschriebene Benutzer auf den Link klickt, den er in der Bestätigungs-E-Mail bekommen hat (seinen "Private Link"), greift er auf die <strong>Datensatz-Formularseite</strong> zu, wo er durch das Datensatz-Formular seine Daten aktualisieren oder zusätzliche Informationen eingeben kann.</li>
+    <li>In der Registerkarte "Datensatz-Formular" wähle die Seite aus, die dieses Formular anzeigen soll und füge auf dieser Seite den Shortcode "[pdb_record]" ein. Dieser Shortcode wird das Formular nur anzeigen, wenn es auf die Seite durch den "Private Link" zugegriffen wird.</li>
+</ol>
+
+   <h3>Einrichten der Listenanzeigen und der Detailansicht</h3>
+
+<p>Du kannst auf deiner Website eine Liste aller eingeschriebenen Leute anzeigen. Jedes Element in dieser Liste kann einen Link enthalten, um detaillierte öffentliche Informationen über den entsprechenden Datensatz anzuzeigen. So richtest du das ein:</p>
+
+<ol>
+    <li>Füge den Shortcode "[pdb_list]" auf der Seite ein, die die Mitgliederliste anzeigen soll.</li>
+    <li>Auf der Seite "Verwalten von Listenspalten" im Admin-Menü des Plugins wähle die verschiedenen Felder aus, die du in der öffentlichen Liste zeigen möchtest, indem du sie aus dem Bereich "Verfügbare Felder" ziehst und in den Bereich "Listenspalten" ablegst.</li>
+    <li>Auf der <strong>Detailansichtsseite</strong>, d.h. der Seite, wo die Detailansicht eines Datensatzes angezeigt werden soll, füge den Shortcode "[pdb_single]" ein. Dieser Shortcode wird alle Felder des Datensatzes anzeigen, deren Ansichtsmodus öffentlich ist, vorausgesetzt, dass der Zugriff auf die Detailansichtsseite mit der ID des betreffenden Datensatzes erfolgt, wie z.B. im: /participants/detail?pid=27</li>
+    <li>In der Registerkarte "Listenansicht" der Plugin-Einstellungen wähle das mit der Detailansichtsseite zu verlinkende Feld aus.</li>
+    <li>Zuletzt in der Detailansicht-Dropdown-Liste wähle die Detailansichtsseite aus, worin du den Shortcode "[pdb_single]" eingefügt hast.</li>
+</ol>
+
+<p>Du kannst jetzt den Menüeintrag "Mitglied hinzufügen" wählen, dadurch ein erstes Mitglied hinzufügen, und dann ein zweites, und so weiter. Schließlich kannst du die gesamte Palette der angebotenen Funktionen überprüfen.</p>
+
+   <h2>Deutsch-Englisches Glossar</h2>
+   
+<p>Um die vorhandene Dokumentation in englischer Sprache bestmöglich zu nutzen, gibt die folgende Tabelle für einige in der deutschen Benutzeroberfläche verwendete Begriffe ihre Entsprechung in englischer Sprache:</p>
+
+<table>
+<tr>
+<th><strong>Deutsche Bezeichnung</strong></th>
+<th><strong>Entsprechende englische Bezeichnung</strong></th>
+<th><strong>Anmerkungen</strong></th>
+</tr>
+<tr>
+<td>Registrierungsseite</td><td>Sign up page</td><td>Seite, die [pdb_signup] enthält</td>
+</tr>
+<tr>
+<td>Datensatz-Formularseite</td><td>Record page</td><td>Seite, die [pdb_record] enthält</td>
+</tr>
+<tr>
+<td>Bestätigungsseite</td><td>Thanks page</td><td>Seite, die [pdb_signup_thanks] enthält</td>
+</tr>
+<tr>
+<td>Detailansichtsseite</td><td>Single record page</td><td>Seite, die [pdb_single] enthält</td>
+</tr>
+<tr>
+<td>Link-Versand-Seite</td><td>Lost Private Link Page</td><td>Seite, die [pdb_request_link] enthält</td>
+</tr>
+<tr>
+<td>Datensatz</td><td>Record</td><td></td>
+</tr>
+<tr>
+<td>Feld</td><td>Field</td><td></td>
+</tr>
+<tr>
+<td>Ansichtsmodus</td><td>View mode</td><td></td>
+</tr>
+</table>
+</div>

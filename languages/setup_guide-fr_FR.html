@@ -24,11 +24,11 @@
 <h2>Guide de configuration rapide</h2>
 <h3>Configuration initiale</h3>
 <p>Il y a plusieurs éléments à configurer pour utiliser les différentes fonctionnalités de cette extension. Cette page est un tutoriel pour installer et faire tourner l'extension sur votre site. La première chose est d'avoir une idée générale de la façon dont vous voulez utiliser l'extension, quelle information vous souhaitez collecter et stocker, et comment les utilisateurs pourront interagir avec la base.</p>
-   <h3>Voici un exemple de configuration de l'extension</h3>
+<h3>Exemple de configuration de l'extension</h3>
 <p>Supposons que vous voulez avoir un formulaire d'inscription qui recueille le nom et l'adresse mail des utilisateurs. Quand ceux-ci remplissent et soumettent le formulaire, ils sont redirigés vers une autre page qui les remercie. Un email leur est également envoyé pour confirmer leur inscription, et leur indiquer comment compléter les informations en ligne. Pour cela un lien privé leur est fourni dans l'email.</p>
 <p>Par ailleurs, l'administrateur du site reçoit un email de notification de l'inscription, avec un lien direct vers la nouvelle entrée dans la base.</p>
 
-<h3>Voici comment configurer:</h3>
+<h3>Configuration du site</h3>
 
 <ol>
     <li>Placer le shortcode "[pdb_signup]" dans la <strong>page d'inscription</strong>, c'est-à-dire celle où vous voulez que le formulaire d'inscription apparaisse.</li>
@@ -38,16 +38,16 @@
     <li>Sélectionner l'onglet "Réglages du formulaire détaillé", et précisez la page sur laquelle ce formulaire figurera. Placez le shortcode "[pdb_record]" sur cette page. Ce shortcode ne produira aucun résultat si l'accès à la page se fait sans le lien personnel contenu dans l'email de confirmation d'inscription.</li>
 </ol>
 
-   <h3>Configuration de l'affichage des listes d'enregistrements et de l'affichage détaillé d'un enregistrement</h3>
+   <h3>Configuration de l'affichage des listes et de l'affichage détaillé d'enregistrements</h3>
 
 <p>Vous pouvez afficher sur votre site une liste des gens qui se sont inscrits. Chaque élément de la liste peut comporter un lien permettant d'afficher de façon détaillée l'information à vocation publique de l’enregistrement correspondant. Voici comment configurer cela:</p>
 
 <ol>
     <li>Placer le shortcode "[pdb_list]" dans la page où vous voulez générer la liste de participants.</li>
-    <li>Dans "Gérer les champs de la base de données" (menu de l'extension) choisir les champs qui doivent apparaître dans la liste dite publique, en les faisant glisser depuis la zone "Champs disponibles" et en les déposant à l'endroit souhaité dans la zone "Colonnes dans la liste".</li>
+    <li>Dans "Gérer l'affichage des listes" (menu de l'extension) choisir les champs qui doivent apparaître dans la liste dite publique, en les faisant glisser depuis la zone "Champs disponibles" et en les déposant à l'endroit souhaité dans la zone "Colonnes dans la liste".</li>
     <li>Dans la page où vous voulez faire apparaître l'affichage détaillé d'un enregistrement, placer le shortcode "[pdb_single]". Celui-ci affichera tous les champs de cet enregistrement pour peu que leur visibilité soit définie comme totale et à condition que l'accès à la page se fasse avec l'ID de l'enregistrement concerné, comme par exemple dans: /participants/detail?pid=27</li>
-    <li>Dans l'onglet "Réglages d'affichage de liste" de la configuration de l'extension, préciser (menu déroulant) le champ qui portera le lien vers les affichages détaillés.</li>
-    <li>Ensuite, indiquer la <strong>page affichage détaillé</strong>, c'est à dire celle contenant le shortcode "[pdb_single]".</li>
+    <li>Dans l'onglet "Réglages d'affichage de liste" de la configuration de l'extension, préciser (menu déroulant) le champ qui portera le lien vers l'affichage détaillé.</li>
+    <li>Ensuite, indiquer la <strong>page d'affichage détaillé</strong>, c'est à dire celle contenant le shortcode "[pdb_single]".</li>
 </ol>
 
 <p>Vous pouvez maintenant choisir "Ajouter un participant" dans le menu de l'extension, ajouter une entrée pour tester, et vous en servir pour passer en revue l'ensemble des fonctionnalités.</p>
