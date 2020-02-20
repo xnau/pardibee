@@ -2,15 +2,15 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"Project-Id-Version: Participants Database 1.9.5.7\n"
-"POT-Creation-Date: 2020-02-13 18:29+0100\n"
+"Project-Id-Version: Participants Database\n"
+"POT-Creation-Date: 2020-02-20 11:29-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: participants-database.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -95,15 +95,15 @@ msgctxt "label for an \"open\" control"
 msgid "Open for editing"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:283
+#: classes/PDb_Field_Editor.php:287
 msgid "You must define options for this field"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:682
+#: classes/PDb_Field_Editor.php:686
 msgid "Select this field"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:700
+#: classes/PDb_Field_Editor.php:704
 msgid "Delete this field"
 msgstr ""
 
@@ -2437,6 +2437,7 @@ msgid ""
 "information on using this plugin."
 msgstr ""
 
+#. Plugin Name of the plugin/theme
 #: participants-database.php:539
 msgid "Participants Database"
 msgstr ""

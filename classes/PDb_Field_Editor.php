@@ -155,6 +155,10 @@ class PDb_Field_Editor {
         );
         $this->first_checkbox = false;
         break;
+      
+      case ( $attribute === 'groupable' ):
+        // this is so the element ids match
+        $attribute = 'group';
 
       default:
         $lines = array(

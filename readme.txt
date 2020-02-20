@@ -288,6 +288,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.5.8 =
+* restored missing help text in admin record edit
+* fixed random list ordering
+
 = 1.9.5.7 =
 * new French translations
 * admin list searches for blank values working
@@ -1298,7 +1302,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.5.7 =
+= 1.9.5.8 =
 is a minor bugfix release
 
 
