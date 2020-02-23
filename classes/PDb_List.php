@@ -509,7 +509,7 @@ class PDb_List extends PDb_Shortcode {
     /* Modification for polylang support : Issue Nr03
     	Apply the filter lang_page_id to the parameter of get_permalink */
 
-    $action = $target !== false ? $target : get_permalink( Participants_Db::apply_filters('lang_page_id', $post->ID ) ) . '#' . $this->list_anchor;
+    $action = $target !== false ? $target : get_permalink( $post->ID ) . '#' . $this->list_anchor;
 
     $class_att = $class ? 'class="' . $class . '"' : '';
 
@@ -1192,7 +1192,7 @@ class PDb_List extends PDb_Shortcode {
     /* Modification for polylang support : Issue Nr03
     	Apply the filter lang_page_id to the parameter of get_permalink */
 
-    $this->single_record_page = get_permalink( Participants_Db::apply_filters('lang_page_id', $page_id ) );
+    $this->single_record_page = Participants_Db::get_permalink( $page_id );
     
     // supply our page to the main script
     add_filter( 'pdb-single_record_page', array($this, 'single_record_page') );
