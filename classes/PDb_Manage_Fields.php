@@ -113,7 +113,7 @@ class PDb_Manage_Fields {
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
         ?>
         <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $data_group_id ?>" >
-          <h3><?php echo $this->group_title( $group ) . ' ' . $this->i18n['fields'] ?></h3>
+          <h3><?php printf(_x('%s Fields','Title of the field group','participants-database'),$this->group_title( $group )) ?></h3>
           <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
             <div class="pdb-horiz-scroll-scroller">

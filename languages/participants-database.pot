@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2020-02-15 09:50-1000\n"
+"POT-Creation-Date: 2020-02-23 09:55-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: classes/PDb_Base.php:1578
+#: classes/PDb_Base.php:1599
 #, php-format
 msgid ""
 "Participants Database will require PHP version %1$s in future releases, you "
@@ -521,6 +521,12 @@ msgstr ""
 
 #: classes/PDb_Manage_Fields.php:85
 msgid "Help"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:116
+#, php-format
+msgctxt "Title of the field group"
+msgid "%s Fields"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:138
