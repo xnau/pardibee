@@ -322,7 +322,7 @@ class PDb_Signup extends PDb_Shortcode {
       if ( Participants_Db::plugin_setting( 'signup_thanks_page', 'none' ) != 'none' ) {
         /* Modification for polylang support : Issue Nr03
         	Apply the filter lang_page_id before calling get_permalink */
-        $this->submission_page = get_permalink( Participants_Db::apply_filters('lang_page_id', Participants_Db::plugin_setting( 'signup_thanks_page' ) ) );
+        $this->submission_page = Participants_Db::get_permalink( Participants_Db::plugin_setting( 'signup_thanks_page' ) );
       }
     }
     /*
@@ -380,7 +380,7 @@ class PDb_Signup extends PDb_Shortcode {
       $linktext = empty( $linktext ) ? Participants_Db::plugin_setting( 'retrieve_link_text' ) : $linktext;
       /* Modification for polylang support : Issue Nr03
       		Apply the filter lang_page_id before calling get_permalink */
-      $retrieve_link = Participants_Db::plugin_setting( 'link_retrieval_page' ) !== 'none' ? get_permalink( Participants_Db::apply_filters('lang_page_id', Participants_Db::plugin_setting( 'link_retrieval_page' ) ) ) : $_SERVER['REQUEST_URI'];
+      $retrieve_link = Participants_Db::plugin_setting( 'link_retrieval_page' ) !== 'none' ? Participants_Db::get_permalink( Participants_Db::plugin_setting( 'link_retrieval_page' ) ) : $_SERVER['REQUEST_URI'];
       echo $open_tag . '<a href="' . Participants_Db::add_uri_conjunction( $retrieve_link ) . 'm=r">' . $linktext . '</a>' . $close_tag;
     }
   }
