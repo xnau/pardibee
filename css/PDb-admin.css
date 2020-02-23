@@ -772,7 +772,7 @@ body[class*='participants-database'] .text-block li {
 }
 .participants_db .ui-tabs-nav li.ui-state-active a {
 }
-.participants_db .ui-tabs-panel {
+.participants_db .ui-tabs .ui-tabs-panel {
   clear: both;
   position: relative;
   left:0;
