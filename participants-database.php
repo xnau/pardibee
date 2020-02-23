@@ -833,8 +833,7 @@ class Participants_Db extends PDb_Base {
      */
      /* Modification for polylang support : Issue Nr03
      	Apply the filter lang_page_id before calling get_permalink */
-    return self::apply_filters( 'single_record_page', 
-    				get_permalink( self::apply_filters('lang_page_id',self::plugin_setting_value('single_record_page') ) ) );
+    return self::apply_filters( 'single_record_page', self::get_permalink( self::plugin_setting_value('single_record_page') ) );
   }
 
   /**
