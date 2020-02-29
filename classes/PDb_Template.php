@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -259,19 +259,38 @@ class PDb_Template {
   public function get_field_prop( $name, $prop )
   {
     $field = $this->get_field( $name );
-    return $this->is_defined_field($name) && isset( $field->{$prop} ) ? maybe_unserialize( $field->{$prop} ) : '';
+    /** @var PDb_Field_Item $field */
+    
+    $value = '';
+    
+    if ( is_a( $field, 'PDb_Field_Item' ) ) {
+      
+      switch ( $prop ) {
+        case 'title':
+          $value = $field->title();
+          break;
+        case 'help_text':
+          $value = $field->help_text();
+          break;
+        default:
+          $value = maybe_unserialize( $field->{$prop} );
+      }
+      
+    }
+    
+    return $value;
   }
 
   /**
    * gets a group property
    * 
-   * @param string $name
-   * @param string $prop
+   * @param string $name of the group
+   * @param string $prop property name
    * @return string
    */
   public function get_group_prop( $name, $prop )
   {
-    return isset( $this->groups[$name]->{$prop} ) ? $this->groups[$name]->{$prop} : '';
+    return $this->groups[$name]->{$prop};
   }
 
   /**
@@ -561,6 +580,13 @@ class PDb_Template {
           $this->fields->{$name} = clone $field_object;
           $this->fields->{$name}->set_record_id( $this->id );
         }
+        
+        foreach( $this->shortcode_object->display_groups as $groupname ) {
+          
+          $this->groups[$groupname] = new PDb_Template_Field_Group( Participants_Db::get_group($groupname) );
+          
+        }
+        
         reset( $this->shortcode_object->record->fields );
         $this->_setup_list_record_object();
         
@@ -584,16 +610,14 @@ class PDb_Template {
           }
         }
         foreach ( $this->record as $name => $group ) {
+          
           if ( count( (array) $group->fields ) === 0 ) continue 1; // skip empty groups
-          $this->groups[$name] = $this_group = new stdClass();
-          $this_group->name = $name;
-          $this_group->title = $group->title;
-          $this_group->description = $group->description;
-          $this_group->fields = array();
+          $this->groups[$name] = new PDb_Template_Field_Group( $group );
           foreach ( $group->fields as $group_field ) {
-            $this_group->fields[] = $group_field->name;
+            $this->groups[$name]->add_field( $group_field->name );
             $this->fields->{$group_field->name}->set_value( $group_field->value );
           }
+          
           reset( $group->fields );
         }
         reset( $this->record );
@@ -613,9 +637,8 @@ class PDb_Template {
     $this->_setup_record_groups();
     foreach ( $this->fields as $name => $field ) {
       /* @var $field PDb_Field_Item */
-      $this->groups[$field->group()]->fields[$field->order] = $name;
       if ( isset( $this->record->{$field->group} ) ) {
-        $this->record->{$field->group}->fields->{$name} = $field; // formerly cloned
+        $this->record->{$field->group}->add_field( $field );
       }
     }
   }
@@ -633,37 +656,54 @@ class PDb_Template {
  * class that forms a container for field groups
  */
 class PDb_Template_Field_Group {
-
-  var $id;
-  var $title;
-  var $order;
-  var $display;
-  var $name;
-  var $admin;
-  var $description;
+  
+  /**
+   * @var object the group properties from the db
+   */
+  private $group_props;
 
   /**
    *
-   * @var object
+   * @var array of field names or objects
    */
-  var $fields;
+  private $fields = array();
 
   /**
-   * instantates the object
+   * instantiates the object
+   * 
+   * @param object $group the group object from the db
    */
   public function __construct( $group )
   {
-    $this->fields = new stdClass;
-    $this->_import( $group );
+    $this->group_props = $group;
   }
-
+  
   /**
-   * imports the incoming object's properties
+   * adds a field to the fields array
+   * 
+   * @param string|object $field name or object
    */
-  private function _import( $object )
+  public function add_field( $field )
   {
-    foreach ( get_object_vars( $object ) as $key => $value ) {
-      $this->$key = $value;
+    $this->fields[] = $field;
+  }
+  
+  /**
+   * provides the property values
+   * 
+   * @param string $prop of the property
+   * @retrun string
+   */
+  public function __get( $prop )
+  {
+    switch ( $prop ) {
+      case 'title':
+      case 'description':
+        return Participants_Db::apply_filters('translate_string', $this->group_props->{$prop} );
+      case 'fields':
+        return $this->fields;
+      default:
+        return $this->group_props->{$prop};
     }
   }
 
