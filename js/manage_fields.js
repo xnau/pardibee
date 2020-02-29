@@ -230,10 +230,10 @@ PDbManageFields = (function ($) {
       return {
         hide : tabEffect,
         show : tabEffect,
-        active : $.cookie(lastTab),
+        active : Cookies.get(lastTab),
         activate : function (event, ui) {
-          $.cookie(lastTab, ui.newTab.index(), {
-            expires : 365
+          Cookies.set(lastTab, ui.newTab.index(), {
+            expires : 365, path : ''
           });
         }
       };

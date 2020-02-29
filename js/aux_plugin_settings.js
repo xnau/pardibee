@@ -28,10 +28,10 @@ PDbAuxSettings = (function ($) {
     tabsetup = {
       hide : effect,
       show : effect,
-      active : $.cookie(lastTab),
+      active : Cookies.get(lastTab),
       activate : function (event, ui) {
-        $.cookie(lastTab, ui.newTab.index(), {
-          expires : 365
+        Cookies.set(lastTab, ui.newTab.index(), {
+          expires : 365, path : ''
         });
       }
     }
