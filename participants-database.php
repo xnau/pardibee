@@ -646,8 +646,8 @@ class Participants_Db extends PDb_Base {
      * register admin scripts and stylesheets
      */
     $presuffix = self::use_minified_assets() ? '.min' : '';
-    wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/jquery_cookie.js', __FILE__ ) );
-    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.3', true );
+    wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ) );
+    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.4', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
