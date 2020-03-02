@@ -3,7 +3,7 @@
  * 
  * sets up the tab functionality on the plugin settings page
  * 
- * @version 0.5
+ * @version 1.0
  * 
  */
 PDbAuxSettings = (function ($) {
