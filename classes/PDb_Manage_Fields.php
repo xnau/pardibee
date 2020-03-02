@@ -369,7 +369,8 @@ class PDb_Manage_Fields {
                   'name' => 'form_element',
                   'value' => '',
                   'attributes' => array(
-                      'class' => 'add_field'
+                      'class' => 'add_field',
+                      'id' => 'pdb-form_element_' . $group,
                   )
                       )
               );
@@ -401,6 +402,7 @@ class PDb_Manage_Fields {
                 'value' => $group,
                 'attributes' => array(
                     'class' => 'with-selected-group-select',
+                    'id' => 'pdb-with_selected_group_assign_' . $group,
                 ),
                     )
             );
