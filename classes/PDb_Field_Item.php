@@ -1,7 +1,7 @@
 <?php
 
 /*
- * class for handling the display of fields in a template
+ * class for modeling a field instance
  *
  *
  * @package    WordPress
@@ -1097,7 +1097,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
            * these elements are stored as serialized arrays of values, the data is displayed 
            * a comma-separated string of the values, using the value titles if defined
            */
-          $return = $this->display_array_value();
+          $return = $this->make_link( $this->display_array_value() );
+          
           break;
 
         case 'link' :
@@ -1118,11 +1119,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
               $value = '';
             }
           }
-
-          if ( $this->html_output )
-            $return = sprintf( ( empty( $url ) ? '%1$s%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), $url, $value, PDb_FormElement::html_attributes( $this->attributes ) );
-          else
-            $return = empty( $url ) ? $value : $url;
+          
+          $return = $this->make_link( $value, $url );
           break;
 
         case 'text-line' :
@@ -1239,10 +1237,26 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * provides a field value wrapped in an anchor tag
    * 
+   * if the $display argument is provided, it just wraps the display in an anchor tag
+   * 
+   * @param string $display the display string that will be clickable
+   * @param string $href the href value
    * @return string
    */
-  protected function make_link()
+  protected function make_link( $display = false, $href = false )
   {
+    if ( $display !== false ) {
+      
+      $href = $href ? : $this->link();
+      
+      if ( $this->html_output ) {
+        $return = sprintf( ( empty( $href ) ? '%2$s' : '<a href="%1$s" %3$s >%2$s</a>' ), esc_url($href), $display, PDb_FormElement::html_attributes( $this->attributes ) );
+      } else {
+        $return = empty( $href ) ? $display : $href;
+      }
+      return $return;
+    }
+    
     return PDb_FormElement::make_link( $this );
   }
 
