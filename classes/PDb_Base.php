@@ -500,9 +500,9 @@ class PDb_Base {
      * 
      * @filter pdb-lang_page_id
      * @param int the post ID
-     * @return string the page or post permalink
+     * @return int the language page ID
      */
-    return Participants_Db::apply_filters( 'lang_page_id', get_permalink( $id ) );
+    return get_permalink( Participants_Db::apply_filters( 'lang_page_id', $id ) );
   }
 
   /**
