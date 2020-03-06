@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2020-02-23 09:55-1000\n"
+"POT-Creation-Date: 2020-03-04 14:42-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
@@ -137,91 +137,91 @@ msgstr ""
 msgid "delete"
 msgstr ""
 
-#: classes/PDb_FormElement.php:701
+#: classes/PDb_FormElement.php:713
 msgid "Text-line"
 msgstr ""
 
-#: classes/PDb_FormElement.php:702
+#: classes/PDb_FormElement.php:714
 msgid "Text Area"
 msgstr ""
 
-#: classes/PDb_FormElement.php:703
+#: classes/PDb_FormElement.php:715
 msgid "Rich Text"
 msgstr ""
 
-#: classes/PDb_FormElement.php:704
+#: classes/PDb_FormElement.php:716
 msgid "Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:705
+#: classes/PDb_FormElement.php:717
 msgid "Radio Buttons"
 msgstr ""
 
-#: classes/PDb_FormElement.php:706
+#: classes/PDb_FormElement.php:718
 msgid "Dropdown List"
 msgstr ""
 
-#: classes/PDb_FormElement.php:707
+#: classes/PDb_FormElement.php:719
 msgid "Date Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:708
+#: classes/PDb_FormElement.php:720
 msgid "Numeric"
 msgstr ""
 
-#: classes/PDb_FormElement.php:709
+#: classes/PDb_FormElement.php:721
 msgid "Decimal"
 msgstr ""
 
-#: classes/PDb_FormElement.php:710
+#: classes/PDb_FormElement.php:722
 msgid "Currency"
 msgstr ""
 
-#: classes/PDb_FormElement.php:711
+#: classes/PDb_FormElement.php:723
 msgid "Dropdown/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:712
+#: classes/PDb_FormElement.php:724
 msgid "Multiselect Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:713
+#: classes/PDb_FormElement.php:725
 msgid "Multiselect Dropdown"
 msgstr ""
 
-#: classes/PDb_FormElement.php:714
+#: classes/PDb_FormElement.php:726
 msgid "Radio Buttons/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:715
+#: classes/PDb_FormElement.php:727
 msgid "Multiselect/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:716
+#: classes/PDb_FormElement.php:728
 msgid "Link Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:717
+#: classes/PDb_FormElement.php:729
 msgid "Image Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:718
+#: classes/PDb_FormElement.php:730
 msgid "File Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:719
+#: classes/PDb_FormElement.php:731
 msgid "Hidden Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:720
+#: classes/PDb_FormElement.php:732
 msgid "Password Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:721
+#: classes/PDb_FormElement.php:733
 msgid "CAPTCHA"
 msgstr ""
 
-#: classes/PDb_FormElement.php:722
+#: classes/PDb_FormElement.php:734
 msgid "Placeholder"
 msgstr ""
 
@@ -537,7 +537,7 @@ msgstr ""
 msgid "Edit / Add / Remove Field Groups"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:612
+#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:614
 msgid "group"
 msgstr ""
 
@@ -545,211 +545,211 @@ msgstr ""
 msgid "field count"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:379
+#: classes/PDb_Manage_Fields.php:380
 msgid "Cancel"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:426 classes/PDb_Manage_Fields.php:439
+#: classes/PDb_Manage_Fields.php:428 classes/PDb_Manage_Fields.php:441
 msgid "Add to CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:427 classes/PDb_Manage_Fields.php:440
+#: classes/PDb_Manage_Fields.php:429 classes/PDb_Manage_Fields.php:442
 msgid "Remove from CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:438
+#: classes/PDb_Manage_Fields.php:440
 msgid "Assign Group"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:441
+#: classes/PDb_Manage_Fields.php:443
 msgid "Add to Signup"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:442
+#: classes/PDb_Manage_Fields.php:444
 msgid "Remove from Signup"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:535
+#: classes/PDb_Manage_Fields.php:537
 msgid "Public"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:536
+#: classes/PDb_Manage_Fields.php:538
 msgid "Private"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:537
+#: classes/PDb_Manage_Fields.php:539
 msgctxt "short form of \"administrator\""
 msgid "Admin"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:608
+#: classes/PDb_Manage_Fields.php:610
 msgid "Update Fields"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:609
+#: classes/PDb_Manage_Fields.php:611
 msgid "Update Groups"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:610
+#: classes/PDb_Manage_Fields.php:612
 msgid "Add Field"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:611
+#: classes/PDb_Manage_Fields.php:613
 msgid "Add Group"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:613
+#: classes/PDb_Manage_Fields.php:615
 msgid "field"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:614
+#: classes/PDb_Manage_Fields.php:616
 msgid "new field title"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:615
+#: classes/PDb_Manage_Fields.php:617
 msgid "new field form element"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:616
-msgid "new group title"
-msgstr ""
-
-#: classes/PDb_Manage_Fields.php:617
-msgctxt "column name"
-msgid "Fields"
-msgstr ""
-
 #: classes/PDb_Manage_Fields.php:618
-msgctxt "column name"
-msgid "Group"
+msgid "new group title"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:619
 msgctxt "column name"
-msgid "Order"
+msgid "Fields"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:620
 msgctxt "column name"
-msgid "Name"
+msgid "Group"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:621
 msgctxt "column name"
-msgid "Title"
+msgid "Order"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:622
 msgctxt "column name"
-msgid "Default Value"
+msgid "Name"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:623
 msgctxt "column name"
-msgid "Help Text"
+msgid "Title"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:624
 msgctxt "column name"
-msgid "Form Element"
+msgid "Default Value"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:625
 msgctxt "column name"
-msgid "Values"
+msgid "Help Text"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:626
 msgctxt "column name"
-msgid "Validation"
+msgid "Form Element"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:627
 msgctxt "column name"
-msgid "Display Column"
+msgid "Values"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:628
 msgctxt "column name"
-msgid "Admin Column"
+msgid "Validation"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:629
 msgctxt "column name"
-msgid "Sortable"
+msgid "Display Column"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:630
-msgctxt "column name, acronym for \"comma separated values\""
-msgid "CSV"
+msgctxt "column name"
+msgid "Admin Column"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:631
 msgctxt "column name"
-msgid "Persistent"
+msgid "Sortable"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:632
-msgctxt "column name"
-msgid "Signup"
+msgctxt "column name, acronym for \"comma separated values\""
+msgid "CSV"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:633
 msgctxt "column name"
-msgid "Read Only"
+msgid "Persistent"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:634
 msgctxt "column name"
-msgid "Admin"
+msgid "Signup"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:635
 msgctxt "column name"
-msgid "Delete"
+msgid "Read Only"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:636
 msgctxt "column name"
-msgid "Display"
+msgid "Admin"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:637
 msgctxt "column name"
-msgid "Description"
+msgid "Delete"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:638
 msgctxt "column name"
-msgid "Attributes"
+msgid "Display"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:639
 msgctxt "column name"
-msgid "Options"
+msgid "Description"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:640
 msgctxt "column name"
-msgid "Validation Message"
+msgid "Attributes"
 msgstr ""
 
 #: classes/PDb_Manage_Fields.php:641
+msgctxt "column name"
+msgid "Options"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:642
+msgctxt "column name"
+msgid "Validation Message"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:643
 msgctxt "button label"
 msgid "With Selected"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:642
+#: classes/PDb_Manage_Fields.php:644
 msgctxt "button label"
 msgid "Apply"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:643
+#: classes/PDb_Manage_Fields.php:645
 msgctxt "select all button label"
 msgid "All"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:644
+#: classes/PDb_Manage_Fields.php:646
 msgctxt "label for the view mode selector"
 msgid "View Mode"
 msgstr ""
