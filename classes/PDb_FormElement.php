@@ -454,12 +454,6 @@ class PDb_FormElement extends xnau_FormElement {
     }
     /* @var PDb_Field_Item $field */
 
-    /**
-     * links may only be placed on string values
-     */
-    if ( $field->is_multi() )
-      return $field->get_value();
-
     // clean up the provided string
     $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->get_value() ) ) );
     
@@ -470,6 +464,7 @@ class PDb_FormElement extends xnau_FormElement {
        */
       $URI = $field->link();
       $linktext = PDb_Manage_Fields_Updates::sanitize_text($field->get_value());
+      
     } elseif ( filter_var( $URI, FILTER_VALIDATE_URL ) !== false && Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
 
       // convert the get array to a get string and add it to the URI
@@ -579,7 +574,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_title_value( $title, $fieldname )
   {
-    $value = $title; // if no title is found, return the title argument
+    $value = $title; // if no match is found, return the title argument
     
     $field = Participants_Db::get_field_def( $fieldname );
     
@@ -605,35 +600,47 @@ class PDb_FormElement extends xnau_FormElement {
        */
       $options_array = self::striptags_keys($field->options());
       
-      // now check if there is a direct match with a tag-stripped title
-      if ( isset( $options_array[$title] ) ) {
-        return $options_array[$title];
+      // now check if there is a direct case-insensitive match with a tag-stripped title
+      if ( isset( $options_array[strtolower($title)] ) ) {
+        return $options_array[strtolower($title)];
       }
       
      /*
-      * if a direct match doesn't find it, use a regex to find a close exact match
-      * 
-      * if that doesn't find a match, get a set of possible close matches and choose 
+      * if a direct match doesn't find it, get a set of possible close matches and choose 
       * the closest one from that subset
       * 
       */
-      
-      // first try to find a full match
-      if ( $match = current( preg_grep( '/^' . preg_quote( $title, '/' ) . '$/i', array_keys( $options_array ) ) ) ) {
-        $value = $options_array[$match];
-      } else {
-        
-        // get a list of the substring matches from the options
-        $match_list = preg_grep( '/' . preg_quote( $title, '/' ) . '/i', array_keys( $options_array ) );
-        
-        // if we find a substring match, find the closest mathching title
-        if ( ! empty( $match_list ) ) {
-          // find the closest match
-          $ranked_matches = array();
-          foreach( $match_list as $match ) {
-            similar_text( strtolower($title), strtolower($match), $rank );
-            $ranked_matches[(string)$rank] = $match;
-          }
+          
+      /**
+       * sets a lower limit to the number of characters that must match for 
+       * the value to be considered found
+       * 
+       * @filter pdb-min_title_match_length
+       * @param int the default value
+       * @return int
+       */
+      $min_match_length = Participants_Db::apply_filters( 'min_title_match_length', 4 );
+
+      // strip out wildcards
+      $title = str_replace( array('*','?','_','%'), '', $title );
+
+      // don't try to match if the string is too short
+      if ( strlen( $title ) < $min_match_length ) {
+        return $value;
+      }
+
+      // get a list of the substring matches from the options
+      $match_list = preg_grep( '/' . preg_quote( $title, '/' ) . '/i', array_keys( $options_array ) );
+
+      // if we find a substring match, find the closest mathching title
+      if ( ! empty( $match_list ) ) {
+        // find the closest match
+        $ranked_matches = array();
+        foreach( $match_list as $match ) {
+          $match_len = similar_text( strtolower($title), strtolower($match), $rank );
+          $ranked_matches[(string)$rank] = $match;
+        }
+        if ( $match_len >= $min_match_length  ) {
           ksort( $ranked_matches, SORT_NUMERIC );
 
           $value = $options_array[ end($ranked_matches) ];
