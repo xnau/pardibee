@@ -638,11 +638,13 @@ class PDb_FormElement extends xnau_FormElement {
         $ranked_matches = array();
         foreach( $match_list as $match ) {
           $match_len = similar_text( strtolower($title), strtolower($match), $rank );
-          $ranked_matches[(string)$rank] = $match;
+          if ( $match_len >= $min_match_length  ) {
+            $ranked_matches[(string)$rank] = $match;
+          }
         }
-        if ( $match_len >= $min_match_length  ) {
+        
+        if ( count( $ranked_matches ) > 0 ) {
           ksort( $ranked_matches, SORT_NUMERIC );
-
           $value = $options_array[ end($ranked_matches) ];
         }
       }
