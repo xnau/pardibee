@@ -174,7 +174,6 @@ class PDb_List_Query {
      * @param bool default value
      * @return bool true to allow
      */  
-    
     if ( Participants_Db::apply_filters( 'allow_get_searches', true ) ) {
       $this->_add_filter_from_get();
     }
