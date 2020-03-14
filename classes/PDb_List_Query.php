@@ -968,11 +968,11 @@ class PDb_List_Query {
       return false;
     }
 
+    /*
+     * check if we have a valid column name
+     */
     $field_atts = Participants_Db::get_column( $column );
     if ( !is_object( $field_atts ) ) {
-      /*
-       * if the column is not valid skip this statement
-       */
       return false;
     }
 
