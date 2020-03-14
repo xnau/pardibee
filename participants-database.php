@@ -2962,7 +2962,12 @@ class Participants_Db extends PDb_Base {
    */
   private static function _process_retrieval()
   {
-
+    /**
+     * @filter pdb-retrieve_link_brute_force_protect
+     * @param bool default setting
+     * @return bool false to bypass brute force check
+     */
+    if ( self::apply_filters( 'retrieve_link_brute_force_protect', true ) ) :
     /*
      * we check a transient based on the user's IP; if the user tries more than 3 
      * times per day to get a private ID, they are blocked for 24 hours
@@ -2978,6 +2983,8 @@ class Participants_Db extends PDb_Base {
     }
     $count++;
     set_transient( $transient, $count, DAY_IN_SECONDS );
+    
+    endif; // brute force protect filter
 
     $column = self::plugin_setting( 'retrieve_link_identifier', 'email' );
 
