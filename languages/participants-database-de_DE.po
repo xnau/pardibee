@@ -1,5 +1,3 @@
-msgid ""
-msgstr ""
 "Project-Id-Version: Participants Database\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/participants-"
 "database\n"
