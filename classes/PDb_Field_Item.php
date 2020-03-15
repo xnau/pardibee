@@ -1237,7 +1237,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * provides a field value wrapped in an anchor tag
    * 
-   * if the $display argument is provided, it just wraps the display in an anchor tag
+   * if the $display argument is provided, it just wraps the display in an anchor 
+   * tag and uses either the link property or the provided href value for the anchor href
    * 
    * @param string $display the display string that will be clickable
    * @param string $href the href value
