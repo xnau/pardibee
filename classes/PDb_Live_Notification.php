@@ -126,6 +126,7 @@ class PDb_Live_Notification {
   private function get_response()
   {
     $cached = Participants_Db::apply_filters( 'live_notification_cache_enable', true ) ? get_transient( $this->transient_name() ) : false;
+    
     if ( $cached === false && $this->remote_content_is_available() ) {
       //error_log(__METHOD__.' getting remote content');
       $response = wp_remote_retrieve_body( wp_remote_get( $this->endpoint() ) );
@@ -151,7 +152,6 @@ class PDb_Live_Notification {
   {
     $response = wp_remote_head( $this->endpoint() );
     $final_endpoint = $this->named_endpoint();
-    
     
     if ( is_wp_error( $response ) || empty( $final_endpoint ) || ! ini_get( 'allow_url_fopen' ) ) {
       return false;
