@@ -11,6 +11,9 @@
 if ( !defined( 'ABSPATH' ) )
   die;
 
+// clear out this unneeded value #2331
+Participants_Db::$session->clear('form_status');
+
 $participant_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1), 'flags' => FILTER_NULL_ON_FAILURE) );
 
 if ( !Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id === false ? 'admin add ' : 'admin edit ' ) . 'record' ) ) {
