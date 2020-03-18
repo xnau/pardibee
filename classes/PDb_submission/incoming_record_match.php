@@ -305,7 +305,7 @@ class incoming_record_match {
   public function setup_matched_field_message()
   {
     if ( !is_object( \Participants_Db::$validation_errors ) ) {
-      \Participants_Db::$validation_errors = new PDb_FormValidation();
+      \Participants_Db::$validation_errors = new \PDb_FormValidation();
     }
     
     \Participants_Db::$validation_errors->add_error( $this->match_field, $this->message_key );
@@ -362,8 +362,8 @@ class incoming_record_match {
     }
 
     if ( !$this->is_csv_import() ) {
-
-      if ( \Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && is_admin() && \Participants_Db::current_user_has_plugin_role( 'admin', 'csv upload' ) ) {
+      
+      if ( \Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && is_admin() && \Participants_Db::current_user_has_plugin_role( 'admin', 'record edit/add skip validation' ) ) {
         /*
          * set the preference to 0 if current user is an admin in the admin and not 
          * importing a CSV
