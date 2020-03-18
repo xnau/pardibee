@@ -1853,6 +1853,7 @@ class PDb_Base {
   public static function is_multipage_form()
   {
     $form_status = Participants_Db::$session->get( 'form_status' );
+    
     return stripos( $form_status, 'multipage' ) !== false;
   }
 
