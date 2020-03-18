@@ -274,11 +274,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function plugin_option( $option_name, $default = false )
     {
-      return Participants_Db::apply_filters(
-                      'translate_string', apply_filters(
-                              $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default
-                      )
-      );
+      $option_value = apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default );
+      return is_string( $option_value ) ? Participants_Db::apply_filters( 'translate_string', $option_value ) : $option_value;
     }
 
     /**
