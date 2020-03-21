@@ -650,7 +650,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
-    wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie' ), self::$plugin_version );
+    wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
     wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
