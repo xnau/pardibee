@@ -328,7 +328,6 @@ class Participants_Db extends PDb_Base {
     add_action( 'wp', array(__CLASS__, 'check_for_shortcode'), 1 );
     add_action( 'wp', array(__CLASS__, 'remove_rel_link') );
 
-    add_filter( 'admin_body_class', array(__CLASS__, 'add_admin_body_class') );
     add_filter( 'body_class', array(__CLASS__, 'add_body_class') );
     add_action( 'admin_menu', array(__CLASS__, 'plugin_menu') );
     add_action( 'admin_init', array(__CLASS__, 'admin_init') );
@@ -651,7 +650,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
-    wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
     wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
@@ -661,10 +660,16 @@ class Participants_Db extends PDb_Base {
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
     wp_register_script( self::$prefix . 'debug', self::asset_url( "js/pdb_debug$presuffix.js" ), array('jquery'), self::$plugin_version );
     
-    
+    // admin custom CSS
     if ( self::_set_admin_custom_css() ) {
       wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$Settings->option_version() );
     }
+    
+    // jquery UI rheme
+    wp_register_style( self::$prefix . 'jquery-ui', self::asset_url( "css/jquery-ui-theme/jquery-ui.min.css" ) );
+    wp_register_style(self::$prefix . 'jquery-ui-structure', self::asset_url( "css/jquery-ui-theme/jquery-ui.structure.min.css" ) );
+    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.1' );
+    
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
@@ -673,9 +678,13 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
-//      wp_enqueue_script( self::$prefix . 'jq-placeholder' );
+      
+      add_filter( 'admin_body_class', array(__CLASS__, 'add_admin_body_class') );
+      
       wp_enqueue_script( self::$prefix . 'admin' );
       wp_enqueue_script( self::$prefix . 'otherselect' );
+      
+      wp_enqueue_style(self::$prefix . 'jquery-ui-theme');
     }
 
     if ( false !== stripos( $hook, 'participants-database-list_participants' ) ) {
@@ -3496,10 +3505,12 @@ class Participants_Db extends PDb_Base {
   /**
    * sets some custom body classes in the admin
    * 
-   * @param array $classes
+   * @param string $classes
+   * @return string
    */
   public static function add_admin_body_class( $class )
   {
+    $class .= ' pdb-jquery-ui ';
     if ( self::has_dashicons() ) {
       $class .= ' has-dashicons ';
     }
