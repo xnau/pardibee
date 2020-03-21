@@ -288,6 +288,11 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.5.10 =
+* fixed missing cookie script in plugin admin
+* more multilingual support
+* several minor bugs fixed
+
 = 1.9.5.9 =
 * new German and French translations
 * compatibility fixes for multilingual plugins
@@ -1306,7 +1311,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.5.9 =
+= 1.9.5.10 =
 is a minor bugfix and compatibility release
 
 
