@@ -248,6 +248,7 @@ class PDb_Field_Editor {
         $config = array(
             'type' => 'text-line',
             'class' => $attribute . '-field',
+            'attributes' => array('data-title' => $this->field_def->title() . ' (' . $this->field_def->name() . ')' ),
         );
         break;
       case 'default':
