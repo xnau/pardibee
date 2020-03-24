@@ -1129,14 +1129,14 @@ class PDb_List_Query {
         case 'WORD':
 
           $operator = 'REGEXP';
-          $delimiter = array('"[[:<:]]', '[[:>:]]"');
+          $delimiter = $this->word_boundaries();
           $filter->is_regex = true;
           break;
 
         case 'NOT WORD':
 
           $operator = 'NOT REGEXP';
-          $delimiter = array('"[[:<:]]', '[[:>:]]"');
+          $delimiter = $this->word_boundaries();
           $filter->is_regex = true;
           break;
 
@@ -1210,6 +1210,19 @@ class PDb_List_Query {
 
       $this->subclauses[$column][] = $filter;
     }
+  }
+  
+  /**
+   * provides the mysql word boundary codes
+   * 
+   * @global wpdb $wpdb
+   * @return array
+   */
+  private function word_boundaries()
+  {
+    global $wpdb;
+    
+    return version_compare( $wpdb->db_version(), '8.0.4', '<' ) ? array( '"[[:<:]]', '[[:>:]]"' ) : array( '"\\\b', '\\\b"' );
   }
 
   /**
