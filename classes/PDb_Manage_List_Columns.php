@@ -162,10 +162,11 @@ class PDb_Manage_List_Columns {
     foreach ( $this->{$type . '_field_list'}() as $field ) {
       if ( $field->{$column} == '0' ) {
         $field->title = $field->title === '' ? $field->name : Participants_Db::apply_filters( 'translate_string', $field->title );
-        $list[$field->id] = $field;
+        $list[$field->sortorder] = $field; // $field->id
       }
     }
     ksort( $list );
+    
     return $list;
   }
 
@@ -347,13 +348,13 @@ class PDb_Manage_List_Columns {
   {
     ?>
     <style>
-      .column-setup-pair {
+      .pdb-jquery-ui .column-setup-pair {
         padding: 10px;
         border: 1px solid #ccc;
         margin: 0 0 1em 0;
       }
 
-      .field-list {
+      .pdb-jquery-ui .field-list {
         display: flex;
         flex-wrap: wrap;
         padding: 5px;
@@ -362,13 +363,13 @@ class PDb_Manage_List_Columns {
         min-height: 1.7em;
       }
 
-      .field-list.fields-sortable .ui-state-highlight {
+      .pdb-jquery-ui .field-list.fields-sortable .ui-state-highlight {
         height: 1.1rem;
         background-color: transparent;
         border: 1px dashed grey;
       }
 
-      .field-list li {
+      .pdb-jquery-ui .field-list li {
         cursor: move;
         display: inline-block;
         padding: 5px 10px;
@@ -381,7 +382,7 @@ class PDb_Manage_List_Columns {
         border-style: solid;
         /*border: 1px solid #ccc;*/
       }
-      .field-list li.break {
+      .pdb-jquery-ui .field-list li.break {
         flex-basis: 100%;
         height: 0;
         padding: 0;
@@ -389,11 +390,11 @@ class PDb_Manage_List_Columns {
         margin: 0;
       }
 
-      .field-list.columnsetup li {
+      .pdb-jquery-ui .field-list.columnsetup li {
         /*        background-color: #f1f1f1;*/
       }
 
-      .columns-setup {
+      .pdb-jquery-ui .columns-setup {
         background: #e9e9e9;
         border-radius: 4px;
         -moz-border-radius: 4px;
@@ -401,7 +402,7 @@ class PDb_Manage_List_Columns {
         margin: 18px 0 0 0;
       }
 
-      .columns-setup h3 {
+      .pdb-jquery-ui .columns-setup h3 {
         font-size: 13px;
         margin: 0;
       }
