@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.4
+ * @version 2.45
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -207,6 +207,13 @@ PDbManageFields = (function ($) {
     });
     return query;
   };
+  var getUrlVars = function() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
   var cancelReturn = function (event) {
     // disable autocomplete
 //    if ($.browser.mozilla) {
@@ -491,10 +498,9 @@ PDbManageFields = (function ($) {
       $('.validation-attribute select').on('change', showhide_validation_message).each(showhide_validation_message);
       // set up the manage fields global action panels
       $('.button-showhide').slideUp();
-      $('button.showhide').click(function () {
+      $('button.showhide').on( 'click.show', function () {
         $('.button-showhide').not('#' + $(this).attr('for')).slideUp();
         $('#' + $(this).attr('for')).slideToggle('slow');
-        return false;
       });
       // cancel add field
       $('button[name=add-field-cancel]').click(function (e) {
@@ -551,6 +557,20 @@ PDbManageFields = (function ($) {
                 this.setCustomValidity($(this).data('message'));
                 $(this).closest('.editor-closed').find('.field-open-icon').trigger('click');
               });
+              
+      // set up the incoming new field
+      if ( getUrlVars().newfield ) {
+        $('button.showhide.add-field').each(function(){
+          var el = $(this);
+          if (el.closest('.manage-fields-wrap').is(':visible')) {
+            var div = $('#'+el.attr('for'));
+            div.find('[name=title]').val(decodeURIComponent(getUrlVars().newfield.replace(/\+/g, '%20')));
+            div.find('[name=form_element] option[value='+getUrlVars().formelement+']').attr('selected','selected');
+            el.trigger('click.show');
+            div.find('[type=submit]').removeClass('disabled').addClass('enabled').prop('disabled', false);
+          }
+        });
+      }
     }
   };
 }(jQuery));
