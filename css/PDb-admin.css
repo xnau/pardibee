@@ -504,115 +504,115 @@ body[class*='participants-database'] .text-block li {
 #message {
   font-size: 16px;
 }
-.color-text {
+.pdb-jquery-ui .color-text {
   background-color: hsl(190, 60%, 95%);
   border-color: hsl(205.7, 75%, 89%); /* #cae4e9 */
 }
-.color-text .field-header {
+.pdb-jquery-ui .color-text .field-header {
   background-color: hsl(205.7, 75%, 89%); /*  hsl(190.6, 47.2%, 85.9%) */
 }
-.color-text .form-element-label {
+.pdb-jquery-ui .color-text .form-element-label {
   color: hsl(205.7, 60%, 80%);
 }
 
-.color-selector {
+.pdb-jquery-ui .color-selector {
   background-color: hsl(150, 50%, 95%);
   border-color: hsl(152.1, 40%, 86.3%);
 }
-.color-selector .field-header {
+.pdb-jquery-ui .color-selector .field-header {
   background-color: hsl(152.1, 40%, 86.3%);
 }
-.color-selector .form-element-label {
+.pdb-jquery-ui .color-selector .form-element-label {
   color: hsl(149.4, 45%, 78.6%);
 }
 
-.color-numeric {
+.pdb-jquery-ui .color-numeric {
   background-color: hsl(55, 60%, 95%);
   border-color: hsl(54.7, 50.6%, 82.5%);
 }
-.color-numeric .field-header {
+.pdb-jquery-ui .color-numeric .field-header {
   background-color: hsl(54.7, 50.6%, 82.5%);
 }
-.color-numeric .form-element-label {
+.pdb-jquery-ui .color-numeric .form-element-label {
   color: hsl(54.8, 56.1%, 67.8%);
 }
 
 
-.color-upload {
+.pdb-jquery-ui .color-upload {
   background-color: hsl(30, 65%, 95%);
   border-color: hsl(31.8, 48.6%, 86.3%);
 }
-.color-upload .field-header {
+.pdb-jquery-ui .color-upload .field-header {
   background-color: hsl(31.8, 48.6%, 86.3%);
 }
-.color-upload .form-element-label {
+.pdb-jquery-ui .color-upload .form-element-label {
   color: hsl(30, 65%, 80%);
 }
 
-.color-captcha {
+.pdb-jquery-ui .color-captcha {
   background-color: hsl(0, 40%, 95%);
   border-color: hsl(0, 40%, 90%);
 }
-.color-captcha .field-header {
+.pdb-jquery-ui .color-captcha .field-header {
   background-color: hsl(0, 40%, 90%);
 }
-.color-captcha .form-element-label {
+.pdb-jquery-ui .color-captcha .form-element-label {
   color: hsl(0, 40%, 80%);
 }
 
-.color-utility {
+.pdb-jquery-ui .color-utility {
   background-color: hsl(0, 10%, 95%);
   border-color: hsl(0, 11.5%, 88%);
 }
-.color-utility .field-header {
+.pdb-jquery-ui .color-utility .field-header {
   background-color: hsl(0, 11.5%, 88%);
 }
-.color-utility .form-element-label {
+.pdb-jquery-ui .color-utility .form-element-label {
   color: hsl(0, 10%, 80%);
 }
 
-.color-group {
+.pdb-jquery-ui .color-group {
   background-color: hsl(192, 60%, 95.1%);
   border-color: hsl(192.9, 51.9%, 89.4%);
 }
-.color-group .field-header {
+.pdb-jquery-ui .color-group .field-header {
   background-color: hsl(192.9, 51.9%, 89.4%);
 }
-.color-group .form-element-label {
+.pdb-jquery-ui .color-group .form-element-label {
   color: hsl(192.9, 51.9%, 89.4%);
 }
 
-.color-group.view-mode-private {
+.pdb-jquery-ui .color-group.view-mode-private {
   background-color: hsl(0, 100%, 97.5%);
   border-color: hsl(0, 50%, 92.2%);
 }
-.color-group.view-mode-private .field-header {
+.pdb-jquery-ui .color-group.view-mode-private .field-header {
   background-color: hsl(0, 50%, 92.2%);
 }
-.color-group.view-mode-private .form-element-label {
+.pdb-jquery-ui .color-group.view-mode-private .form-element-label {
   color: hsl(0, 50%, 92.2%);
 }
 
-.color-group.view-mode-admin {
+.pdb-jquery-ui .color-group.view-mode-admin {
   background-color: hsl(92, 60%, 95.1%);
   border-color: hsl(92, 60%, 90%);
 }
-.color-group.view-mode-admin .field-header {
+.pdb-jquery-ui .color-group.view-mode-admin .field-header {
   background-color: hsl(92, 45.5%, 87.1%);
 }
-.color-group.view-mode-admin .form-element-label {
+.pdb-jquery-ui .color-group.view-mode-admin .form-element-label {
   color: hsl(92, 60%, 80%);
 }
 
 
-.color-custom {
+.pdb-jquery-ui .color-custom {
   background-color: hsl(220, 60%, 95%);
   border-color: hsl(220, 60%, 90%);
 }
-.color-custom .field-header {
+.pdb-jquery-ui .color-custom .field-header {
   background-color: hsl(220, 60%, 90%);
 }
-.color-custom .form-element-label {
+.pdb-jquery-ui .color-custom .form-element-label {
   color: hsl(220, 60%, 80%);
 }
 
