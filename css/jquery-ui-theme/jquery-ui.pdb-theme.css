@@ -42,9 +42,9 @@
 	color: inherit;
 }
 .pdb-jquery-ui .ui-widget-header {
-	border: 1px solid #bbbbbb;
-	background: #dddddd url("images/ui-bg_glass_35_dddddd_1x400.png") 50% 50% repeat-x;
-	color: #444444;
+	border: none;
+	background: transparent;
+	color: inherit;
 	font-weight: bold;
 }
 .pdb-jquery-ui .ui-widget-header a {
