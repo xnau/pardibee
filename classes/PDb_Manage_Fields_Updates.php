@@ -626,10 +626,24 @@ class PDb_Manage_Fields_Updates {
     $url = sanitize_text_field(
             wp_unslash( $_POST['_wp_http_referer'] )
     );
-
-    wp_safe_redirect( urldecode( $url ) );
+    
+    wp_safe_redirect( urldecode( $this->clean_url($url) ) );
 
     exit;
+  }
+  
+  /**
+   * clears out all url queries except page
+   * 
+   * @param string $url
+   * @return string url
+   */
+  private function clean_url( $url )
+  {
+    $baseurl = strtok($url,'?');
+    $url_components = parse_url($url);
+    parse_str( $url_components['query'], $query );
+    return $baseurl . '?' . http_build_query(array( 'page' => $query['page'] ));
   }
 
   /**
