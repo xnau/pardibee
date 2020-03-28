@@ -239,7 +239,13 @@ class PDb_Manage_List_Columns {
           <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="pubfields-source" class='field-list fields-sortable'>
             <?php
+            $group = '';
             foreach ( $this->source_fields( 'public' ) as $field ) {
+              if ( $field->group !== $group ) {
+                $group = $field->group;
+                $field->class = 'newgroup';
+                echo '<li class="break"></li>';
+              }
               echo $this->field_item( $field );
             }
             ?>
@@ -263,7 +269,13 @@ class PDb_Manage_List_Columns {
           <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="adminfields-source" class='field-list fields-sortable'>
             <?php
+            $group = '';
             foreach ( $this->source_fields( 'admin' ) as $field ) {
+              if ( $field->group !== $group ) {
+                $group = $field->group;
+                $field->class = 'newgroup';
+                echo '<li class="break"></li>';
+              }
               echo $this->field_item( $field );
             }
             ?>
@@ -387,7 +399,12 @@ class PDb_Manage_List_Columns {
         height: 0;
         padding: 0;
         border: none;
+        border-top: 2px dashed rgba(0,0,0,0.1);
+        margin: 5px 0;
+      }
+      .pdb-jquery-ui .field-list li.break:first-of-type {
         margin: 0;
+        border: none;
       }
 
       .pdb-jquery-ui .field-list.columnsetup li {
@@ -419,6 +436,7 @@ class PDb_Manage_List_Columns {
    */
   private function colorclass( $field )
   {
+    $baseclass = isset($field->class) ? $field->class : '';
     switch ( $field->form_element ) {
 
       case 'text-line':
@@ -483,7 +501,7 @@ class PDb_Manage_List_Columns {
         $colorclass = Participants_Db::apply_filters( $field->form_element . '_form_element_colorclass', 'custom' );
     }
 
-    return $colorclass;
+    return $colorclass . ' ' . $baseclass;
   }
 
 }
