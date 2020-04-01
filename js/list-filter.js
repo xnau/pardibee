@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.7
+ * version: 1.8
  * 
  * xnau webdesign xnau.com
  * 
@@ -61,7 +61,7 @@ PDbListFilter = (function ($) {
         break;
 
       case 'page':
-        submission.action = 'pdb_list_filter';
+        submission.action = $pageButton.closest('div').data('action');
         submission.listpage = $pageButton.data('page');
         break;
 
