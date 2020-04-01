@@ -204,7 +204,7 @@ class PDb_List_Query {
    */
   public function get_list_query()
   {
-    $query = 'SELECT ' . $this->_column_select() . ' FROM ' . Participants_Db::$participants_table . ' p';
+    $query = 'SELECT ' . $this->_column_select() . ' FROM ' . Participants_Db::participants_table() . ' p';
     $query .= $this->_where_clause();
     $query .= ' ORDER BY ' . $this->_order_clause();
 
@@ -218,7 +218,7 @@ class PDb_List_Query {
    */
   public function get_count_query()
   {
-    $query = 'SELECT COUNT(*) FROM ' . Participants_Db::$participants_table . ' p';
+    $query = 'SELECT COUNT(*) FROM ' . Participants_Db::participants_table() . ' p';
     return $query . ' ' . $this->_where_clause();
   }
 
@@ -483,9 +483,10 @@ class PDb_List_Query {
 //    if ( !Participants_Db::nonce_check( filter_input( INPUT_POST, 'filterNonce', FILTER_SANITIZE_STRING ), PDb_List::$list_filter_nonce_key ) ) {
 //      return null;
 //    }
-
+    
     // look for the identifier of the list search submission
-    if ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' ) {
+    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === Participants_Db::apply_filters( 'list_query_action', 'pdb_list_filter' ) ) {
+      
       if ( isset( $_POST['search_field'] ) && is_array( $_POST['search_field'] ) ) {
         // process a multi search
         $this->post_input = filter_input_array( INPUT_POST, self::multi_search_input_filter() );
