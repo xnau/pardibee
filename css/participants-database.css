@@ -457,7 +457,7 @@ svg.ajax-loading image {
   width: 100%;
   text-align: center;
 }
-.pdb-flexbox-list.pdb-list .pagination li, .pdb-pagination li {
+.pdb-flexbox-list.pdb-list .pagination li {
   width: 20%;
   max-width: 4em;
 }
