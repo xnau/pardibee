@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.14
+ * @version    1.15
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -94,8 +94,7 @@ class PDb_List extends PDb_Shortcode {
    * @var array wrapper HTML elements
    */
   public $pagination_wrap = array(
-      'open' => '<div class="pagination"><label>%s:</label> ',
-      'close' => '</div>',
+      'wrap_tag' => 'div data-action="pdb_list_filter"',
       'all_buttons' => 'ul',
       'button' => 'li',
   );
@@ -132,31 +131,11 @@ class PDb_List extends PDb_Shortcode {
    */
   public function __construct( $shortcode_atts )
   {
-
     $this->set_instance_index();
 
-    // define the default settings for the shortcode
-    $shortcode_defaults = array(
-        'sort' => 'false',
-        'search' => 'false',
-        'list_limit' => Participants_Db::plugin_setting( 'list_limit', '10' ),
-        'class' => 'participants-database',
-        'filter' => '',
-        'orderby' => Participants_Db::plugin_setting( 'list_default_sort' ),
-        'order' => Participants_Db::plugin_setting( 'list_default_sort_order' ),
-        'fields' => '',
-        'search_fields' => '',
-        'default_search_field' => '',
-        'single_record_link' => '',
-        'display_count' => Participants_Db::plugin_setting( 'show_count' ),
-        'template' => 'default',
-        'module' => 'list',
-        'action' => '',
-        'suppress' => 'false',
-    );
 
     // run the parent class initialization to set up the parent methods 
-    parent::__construct( $shortcode_atts, $shortcode_defaults );
+    parent::__construct( $shortcode_atts, $this->default_attributes() );
     
     /**
      * @filter pdb-list_anchor_name
@@ -248,7 +227,36 @@ class PDb_List extends PDb_Shortcode {
 
     return self::$instance->output;
   }
-
+  
+  
+  
+  /**
+   * provides the default shortcode attributes
+   *
+   * @return array
+   */
+  protected function default_attributes()
+  {
+    return array(
+        'sort' => 'false',
+        'search' => 'false',
+        'list_limit' => Participants_Db::plugin_setting( 'list_limit', '10' ),
+        'class' => 'participants-database',
+        'filter' => '',
+        'orderby' => Participants_Db::plugin_setting( 'list_default_sort' ),
+        'order' => Participants_Db::plugin_setting( 'list_default_sort_order' ),
+        'fields' => '',
+        'search_fields' => '',
+        'default_search_field' => '',
+        'single_record_link' => '',
+        'display_count' => Participants_Db::plugin_setting( 'show_count' ),
+        'template' => 'default',
+        'module' => 'list',
+        'action' => '',
+        'suppress' => 'false',
+    );
+  }
+  
   /**
    * includes the shortcode template
    */
@@ -342,7 +350,7 @@ class PDb_List extends PDb_Shortcode {
 
     foreach ( $this->records as $record_id => $record_fields ) {
 
-      $this->participant_values = Participants_Db::get_participant($record_id);
+      //$this->participant_values = Participants_Db::get_participant($record_id);
 
       foreach ( $record_fields as $field => $value ) {
 
@@ -351,7 +359,7 @@ class PDb_List extends PDb_Shortcode {
             'name' => $field, 
             'record_id' => $record_id, 
             'module' => $this->module, 
-            'value' => isset($this->participant_values[$field]) ? $this->participant_values[$field] : '',
+            'value' => $value,
                 ) );
       }
     }
@@ -512,15 +520,6 @@ class PDb_List extends PDb_Shortcode {
     $class_att = $class ? 'class="' . $class . '"' : '';
 
     $output[] = '<form method="post" class="sort_filter_form" action="' . $action . '"' . $class_att . ' data-ref="' . $ref . '" >';
-    $hidden_fields = array(
-        'action' => 'pdb_list_filter',
-        'target_instance' => $this->shortcode_atts['target_instance'],
-        'instance_index' => $this->instance_index,
-        'pagelink' => $this->prepare_page_link( $_SERVER['REQUEST_URI'] ),
-        'sortstring' => $this->filter['sortstring'],
-        'orderstring' => $this->filter['orderstring'],
-//        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
-    );
     
     if ( Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
       $hidden_fields[PDb_Session::id_var] = session_id();
@@ -529,12 +528,30 @@ class PDb_List extends PDb_Shortcode {
     if ( $ref === 'remote' ) {
       $hidden_fields['submit_button'] = 'search';
     }
-    $output[] = PDb_FormElement::print_hidden_fields( $hidden_fields, false );
+    $output[] = PDb_FormElement::print_hidden_fields( $this->search_sort_form_hidden_fields(), false );
 
     if ( $print )
       echo $this->output_HTML( $output );
     else
       return $this->output_HTML( $output );
+  }
+  
+  /**
+   * provides the search sort form hidden fields
+   * 
+   * @return array
+   */
+  protected function search_sort_form_hidden_fields()
+  {
+    return array(
+        'action' => 'pdb_list_filter',
+        'target_instance' => $this->shortcode_atts['target_instance'],
+        'instance_index' => $this->instance_index,
+        'pagelink' => $this->prepare_page_link( $_SERVER['REQUEST_URI'] ),
+        'sortstring' => $this->filter['sortstring'],
+        'orderstring' => $this->filter['orderstring'],
+//        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
+    );
   }
 
   /**
@@ -782,13 +799,14 @@ class PDb_List extends PDb_Shortcode {
       }
       $per_page = $this->shortcode_atts['list_limit'] == '-1' ? $this->num_records : $this->shortcode_atts['list_limit'];
       $output = sprintf( $wrap_tag, $css_class ) . sprintf(
-                      Participants_Db::plugin_setting( 'count_template' ), $this->num_records, // total number of records found
-                      $per_page, // number of records to show each page
-                      (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) + ($this->num_records > 1 ? 1 : 0), // starting record number
-                      ($this->num_records - (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) > $this->shortcode_atts['list_limit'] ?
-                              $this->pagination->page * $this->shortcode_atts['list_limit'] :
-                              (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) + ($this->num_records - (($this->pagination->page - 1) * $this->shortcode_atts['list_limit'])) ), // ending record number
-                      $this->pagination->page // current page
+              $this->list_count_template(), 
+              $this->num_records, // total number of records found
+              $per_page, // number of records to show each page
+              (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) + ($this->num_records > 1 ? 1 : 0), // starting record number
+              ($this->num_records - (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) > $this->shortcode_atts['list_limit'] ?
+                  $this->pagination->page * $this->shortcode_atts['list_limit'] :
+                  (($this->pagination->page - 1) * $this->shortcode_atts['list_limit']) + ($this->num_records - (($this->pagination->page - 1) * $this->shortcode_atts['list_limit'])) ), // ending record number
+              $this->pagination->page // current page
               ) . $wrap_tag_close;
 
       if ( $print )
@@ -796,6 +814,30 @@ class PDb_List extends PDb_Shortcode {
       else
         return $output;
     }
+  }
+  
+  /**
+   * provides the list result count template
+   * 
+   * @return string
+   */
+  protected function list_count_template()
+  {
+    $template = Participants_Db::plugin_setting( 'count_template', 'Total Records Found: %1$s, showing %2$s per page' );
+    /**
+     * @filter pdb-list_count_template
+     * @param string template
+     * @param int result count
+     * @return string
+     * 
+     * %1$s - total number of records found
+     * %2$s - number of records shown per page
+     * %3$s - starting record number
+     * %4$s - ending record number
+     * %5$s - the current page number
+     * 
+     */
+    return Participants_Db::apply_filters( 'list_count_template', $template, $this->num_records );
   }
 
   /**
@@ -821,9 +863,8 @@ class PDb_List extends PDb_Shortcode {
    * sets the default list of sortable columns
    * 
    */
-  private function _set_default_sortables()
+  protected function _set_default_sortables()
   {
-
     $columns = array();
     foreach ( $this->display_columns as $column ) {
       if ( $this->fields[$column]->sortable > 0 ) {
@@ -883,7 +924,6 @@ class PDb_List extends PDb_Shortcode {
    */
   public function get_field_type( $column )
   {
-
     $column_atts = $this->fields[$column];
 
     return $column_atts->form_element;
@@ -1334,8 +1374,6 @@ class PDb_List extends PDb_Shortcode {
 
     $this->list_query = new PDb_List_Query( $this );
     $search_term = $this->list_query->current_filter( 'search_term' );
-
-//    error_log(__METHOD__.' list query: '.print_r($this->list_query->current_filter(),1));
 
     /*
      * if the current list instance doesn't have a search term, see if there is an 
