@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 5.3.2
+Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: 1.9.5.10
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -289,7 +289,8 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 1.9.5.11 =
-* fixed issue with layout on the Manage List Columns page
+* fixed remote searches not showing results
+* restored the CSS on the Manage List Columns page
 * fixed issue with field group delete confirmations
 
 = 1.9.5.10 =
