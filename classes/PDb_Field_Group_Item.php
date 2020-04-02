@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -16,29 +16,36 @@ if ( ! defined( 'ABSPATH' ) ) die;
 
 class PDb_Field_Group_Item extends PDb_Template_Item {
   
-  // properties
+  /**
+   *
+   * @var string the group description 
+   */
+  public $description;
   
-  // the group description string
-  var $description;
+  /**
+   * @var int number of fields in the group
+   */
+  private $field_count;
   
-  // count of fields in the group
-  var $_field_count;
-  
-  // methods
+  /**
+   * @var array of group fields
+   */
+  public $fields = array();
   
   /**
    * instantiates a field group object
    *
-   * @param object a object with all the field group's properties
+   * @param object $group a object with all the field group's properties
    * @param string $module name of the current module
    */
-  public function __construct( $group, $module ) {
+  public function __construct( $group, $module )
+  {
     
     // load the object properties
     $this->assign_props( $group );
     
     // set the field count for the group
-    $this->_field_count = count( (array) $group->fields );
+    $this->field_count = isset( $group->fields ) ? count( (array) $group->fields ) : 0;
     
     // set up some classes
     $this->add_class( $this->has_fields() ? '' : 'pdb-group-empty' );
@@ -46,6 +53,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     
     $this->module = $module;
     
+    error_log(__METHOD__.' '.print_r($this,1));
   }
   
   /**
@@ -143,7 +151,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
    */
   public function has_fields()
   {
-    return $this->_field_count > 0;
+    return $this->field_count > 0;
   }
   
   /**
@@ -175,27 +183,31 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   /**
    * assigns the object properties that match properties in the supplied object
    * 
-   * @param object $item the supplied object or config array
+   * @param object $group the supplied object or config array
    */
-  protected function assign_props( $item ) {
+  protected function assign_props( $group ) {
     
-    $item = (object) $item;
+    if ( is_string( $group ) ) {
+      $group = array( 'name' => $group );
+    }
+    
+    $group = (object) $group;
     
     $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
       
     $item_def = new stdClass;
     
     $groups = Participants_Db::get_groups();
-    if ( in_array( $item->name, $groups ) ) {
-      $item_def = (object) $groups[$item->name];
+    if ( in_array( $group->name, $groups ) ) {
+      $item_def = (object) $groups[$group->name];
     }
     
     // grab and assign the class properties from the provided object
     foreach( $class_properties as $property ) {
       
-      if ( isset( $item->$property ) ) {
+      if ( isset( $group->$property ) ) {
         
-        $this->$property = $item->$property;
+        $this->$property = $group->$property;
       
       } elseif ( isset( $item_def->$property ) ) {
         
