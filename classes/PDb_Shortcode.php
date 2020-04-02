@@ -591,7 +591,7 @@ abstract class PDb_Shortcode {
    */
   public function have_fields()
   {
-    $field_count = is_object( $this->group ) ? $this->group->_field_count : count( $this->display_columns );
+    $field_count = is_object( $this->group ) ? $this->group->field_count : count( $this->display_columns );
 
     return $this->current_field_pointer <= $field_count;
   }
