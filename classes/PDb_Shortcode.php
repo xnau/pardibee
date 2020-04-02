@@ -202,7 +202,6 @@ abstract class PDb_Shortcode {
    */
   public function __construct( $shortcode_atts, $subclass_shortcode_defaults = array() )
   {
-
     // increment the index each time this class is instantiated
     Participants_Db::$instance_index++;
 
@@ -572,7 +571,6 @@ abstract class PDb_Shortcode {
    */
   public function the_group()
   {
-
     // the first time through, use current()
     if ( $this->current_group_pointer == 1 )
       $this->group = new PDb_Field_Group_Item( current( $this->record ), $this->module );
@@ -663,9 +661,9 @@ abstract class PDb_Shortcode {
   }
 
   /**
-   * gets the next group
+   * gets the next record
    *
-   * increments the group pointer
+   * increments the record pointer
    *
    */
   public function the_record()
