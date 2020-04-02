@@ -218,8 +218,8 @@ class PDb_Manage_Fields {
             <div class="manage-fields manage-field-groups" >
               <?php
               foreach ( $this->group_defs as $group => $group_def ) {
-                //  if ($group == 'internal')
-                //    continue;
+                
+                $group_item = new PDb_Field_Group_Item( $group_def, 'admin-edit' );
 
                 $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                 ?>
@@ -257,6 +257,7 @@ class PDb_Manage_Fields {
 
                       case 'title':
                         $type = 'text';
+                        $attributes = array( 'data-title' => $group_item->title() );
                         break;
 
                       default:
