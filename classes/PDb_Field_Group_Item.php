@@ -25,7 +25,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   /**
    * @var int number of fields in the group
    */
-  private $field_count;
+  public $field_count;
   
   /**
    * @var array of group fields
@@ -52,8 +52,6 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     $this->add_class( $this->group_fields_have_values() ? '' : 'pdb-group-novalues' );
     
     $this->module = $module;
-    
-    error_log(__METHOD__.' '.print_r($this,1));
   }
   
   /**
