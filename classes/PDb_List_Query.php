@@ -229,7 +229,6 @@ class PDb_List_Query {
    */
   public function get_search_error()
   {
-
     if ( /* $this->is_search_result() && */ $this->post_input['submit'] === 'search' ) {
       if ( empty( $this->post_input['search_field'] ) ) {
         $this->is_search_result( false );
