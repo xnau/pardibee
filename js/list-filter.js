@@ -72,8 +72,10 @@ PDbListFilter = (function ($) {
         return;
     }
     if (remote) {
-      if (submission.submit !== 'clear') {
-        $submitButton.closest('form').append($('<input>',{type:'hidden',name:'submit',value:$submitButton.val()}));
+      if (submission.submit !== 'clear' ) {
+        if ($submitButton.closest('form').find('[name=submit_button]').length===0) {
+          $submitButton.closest('form').append($('<input>',{type:'hidden',name:'submit_button',value:$submitButton.val()}));
+        }
         $submitButton.closest('form').submit();
       }
       return;
