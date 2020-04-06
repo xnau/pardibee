@@ -618,7 +618,7 @@ abstract class PDb_Shortcode {
         $record_id = $this->record->record_id;
       }
     }
-
+    
     $this->field->set_record_id( $record_id );
     $this->field->set_module( $this->module );
 
