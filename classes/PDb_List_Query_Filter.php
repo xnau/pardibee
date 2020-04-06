@@ -201,7 +201,7 @@ class PDb_List_Query_Filter {
     if ( $term === 'null' || $term === '' || is_null( $term ) ) {
       $this->term = '';
     } else {
-      $wrap =  preg_match( '#"[^"]+"#', $term ) === 1 ? '"%s"' : '%s';
+      $wrap =  preg_match( '#^"[^"]+"$#', $term ) === 1 ? '"%s"' : '%s';
       $term = PDb_FormElement::get_title_value( trim($term, '"'), $this->fieldname );
       $this->term = sprintf( $wrap, $term );
     }
