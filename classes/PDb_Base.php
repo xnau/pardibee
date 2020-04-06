@@ -1021,6 +1021,7 @@ class PDb_Base {
     $locale = apply_filters( 'plugin_locale', get_locale(), $textdomain );
 
     load_textdomain( $textdomain, WP_LANG_DIR . '/' . Participants_Db::PLUGIN_NAME . '/' . $textdomain . '-' . $locale . '.mo' );
+    
     load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages/' );
   }
 
