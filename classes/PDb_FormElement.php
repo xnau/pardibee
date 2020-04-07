@@ -560,6 +560,51 @@ class PDb_FormElement extends xnau_FormElement {
     /* @var $field PDb_Form_field_Def */
     return $field ? $field->value_title($value) : $value;
   }
+  
+  /**
+   * provides a matching option value if available
+   * 
+   * returns the value if no match found or if the field is not a value set (selector) field
+   * 
+   * @param string $title the title of the value
+   * @param string $fieldname the name of the field
+   * @return string the value
+   */
+  public static function maybe_option_value ( $title, $fieldname )
+  {
+    $value = $title; // if no match is found, return the title argument
+    
+    $field = Participants_Db::get_field_def( $fieldname );
+    
+    if ( $field && $field->is_value_set() ) {
+      
+      $options_array = $field->options();
+      
+      // first check if there is a direct match
+      if ( isset( $options_array[$title] ) ) {
+        return $options_array[$title];
+      }
+      
+      // if the "title" is actually a value, return the value
+      if ( array_search( $title, $options_array ) ) {
+        return $title;
+      }
+      
+      /*
+       * if we haven't found the option yet, we perform a search on the options 
+       * array for a close match
+       * 
+       * first, strip out any tags in the keys
+       */
+      $options_array = self::striptags_keys($field->options());
+      
+      // now check if there is a direct case-insensitive match with a tag-stripped title
+      if ( isset( $options_array[strtolower($title)] ) ) {
+        return $options_array[strtolower($title)];
+      }
+    }
+    return $value;
+  }
 
   /**
    * gets the option value that corresponds to an option title from a set of field options
