@@ -202,7 +202,7 @@ class PDb_List_Query_Filter {
       $this->term = '';
     } else {
       $wrap =  preg_match( '#^"[^"]+"$#', $term ) === 1 ? '"%s"' : '%s';
-      $term = PDb_FormElement::get_title_value( trim($term, '"'), $this->fieldname );
+      $term = PDb_FormElement::maybe_option_value( trim($term, '"'), $this->fieldname );
       $this->term = sprintf( $wrap, $term );
     }
   }
