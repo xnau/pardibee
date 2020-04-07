@@ -736,7 +736,7 @@ query: '. $last_query : '' ));
 
     $search_field_form_element = Participants_Db::$fields[ $filter_set['search_field'] ]->form_element();
 
-    $value = PDb_FormElement::get_title_value( $filter_set['value'], $filter_set['search_field'] );
+    $value = PDb_FormElement::maybe_option_value( $filter_set['value'], $filter_set['search_field'] );
 
     if ( $search_field_form_element == 'timestamp' ) {
 
