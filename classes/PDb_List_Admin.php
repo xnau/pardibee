@@ -218,11 +218,6 @@ class PDb_List_Admin {
     self::_process_general();
 
     self::_process_search();
-
-    if ( PDB_DEBUG ) {
-      Participants_Db::debug_log( __METHOD__ . '
-  list query: ' . self::list_query() );
-    }
     /*
      * save the query in a session value so it can be used by the export CSV functionality
      */
@@ -267,6 +262,11 @@ class PDb_List_Admin {
 
     // get the records for this page, adding the pagination limit clause
     self::$participants = $wpdb->get_results( self::$list_query . ' ' . self::$pagination->getLimitSql(), ARRAY_A );
+
+    if ( PDB_DEBUG ) {
+      Participants_Db::debug_log( __METHOD__ . '
+  list query: ' . $wpdb->last_query );
+    }
 
     // ok, setup finished, start outputting the form
     // add the top part of the page for the admin
