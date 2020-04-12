@@ -1596,7 +1596,7 @@ abstract class xnau_FormElement {
       
       if ( $this->options[self::null_select_key()] !== 'false' ) {
         $null_select = $this->options[self::null_select_key()];
-        $null_select_label = strlen( $null_select ) > 0 ? $null_select : '&nbsp;';
+        $null_select_label = strlen( $null_select ) > 0 ? Participants_Db::apply_filters('translate_string', $null_select ) : '&nbsp;';
       } else {
         $null_select = false;
       }
