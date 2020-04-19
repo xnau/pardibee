@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -358,9 +358,26 @@ class PDb_List_Query {
   }
 
   /**
+   * removes all foreground (user search) clauses for the query object
+   * 
+   * @return null
+   */
+  public function clear_foreground_clauses()
+  {
+    foreach ( $this->subclauses as $field => $clauses ) {
+      foreach ( $clauses as $index => $filter ) {
+        /** @var PDb_List_Query_Filter $filter */
+        if ( $filter->is_search() ) {
+          unset( $this->subclauses[$field][$index] );
+        }
+      }
+    }
+  }
+
+  /**
    * removes background clauses from the where clauses for fields that have incoming searches
    * 
-   * @var string $field the field name
+   * @param string $field the field name
    * @return null
    */
   public function clear_background_clauses( $field )
