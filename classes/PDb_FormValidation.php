@@ -107,7 +107,6 @@ class PDb_FormValidation extends xnau_FormValidation {
    */
   protected function _validate_field( $value, $name, $validation = NULL, $form_element = false, $record_id = false )
   {
-    //$field = (object) compact( 'value', 'name', 'validation', 'form_element', 'error_type' );
     $validating_field = new PDb_Validating_Field( $value, $name, $validation, $form_element, false, $record_id );
 
     /**
