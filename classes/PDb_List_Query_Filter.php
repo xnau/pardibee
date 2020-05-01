@@ -144,7 +144,7 @@ class PDb_List_Query_Filter {
    */
   public function is_shortcode()
   {
-    return $this->background;
+    return (bool) $this->background;
   }
 
   /**
