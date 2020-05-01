@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -321,12 +321,23 @@ class PDb_Tag_Template {
     $field = false;
     
     if ( array_key_exists( $fieldname, Participants_Db::$fields ) ) {
-      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => 'tag-template', 'record_id' => $record_id ) );  
-      
+      $field = new PDb_Field_Item( (object) array('name' => $fieldname, 'module' => self::template_module(), 'record_id' => $record_id ) );  
       wp_cache_set( $fieldname.$record_id, $field, $cachegroup, Participants_Db::cache_expire() ); 
     }
     
     return $field;
+  }
+  
+  /**
+   * provides the template module string
+   * 
+   * this is so we can differentiate when the template is for an email
+   * 
+   * @return string module name
+   */
+  public static function template_module()
+  {
+    return Participants_Db::apply_filters( 'tag_template_module', 'tag-template' );
   }
 
 }
