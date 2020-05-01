@@ -81,13 +81,26 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   protected function send_email()
   {
-    $body = $this->html_format() ? PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) : PDb_Tag_Template::replaced_text_raw( $this->email_template, $this->data );
+    add_filter( 'pdb-tag_template_module', array( __CLASS__, 'module_name' ) );
     
+    $body = $this->html_format() ? PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) : PDb_Tag_Template::replaced_text_raw( $this->email_template, $this->data );
+      
     $success = $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text_raw( $this->email_subject, $this->data ), $body );
     
     remove_filter('pdb-tag_template_field_display_value', array( $this, 'clean_display_values' ) );
     
     return $success;
+  }
+  
+  /**
+   * provides the module name
+   * 
+   * @param string $module
+   * @return string
+   */
+  public static function module_name()
+  {
+    return 'email-template';
   }
   
   /**
