@@ -130,6 +130,12 @@ div.mce-panel {
   font-weight: bold;
 }
 
+fieldset.no-border {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
 /* Select Other */
 .selectother label,
 .multicheckbox label,
