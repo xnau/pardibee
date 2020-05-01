@@ -135,8 +135,6 @@ class PDb_Form_Field_Def {
 
     if ( $def ) {
       $this->assign_def_props( $def );
-    } elseif (PDB_DEBUG > 1) {
-      Participants_Db::debug_log(__METHOD__.' invalid field name: '.$field);
     }
   }
 
@@ -427,7 +425,7 @@ class PDb_Form_Field_Def {
     
     return $this->group;
   }
-
+  
   /**
    * provides the field options
    * 
@@ -438,6 +436,18 @@ class PDb_Form_Field_Def {
   public function options()
   {
     return $this->options;
+  }
+
+  /**
+   * provides the field options
+   * 
+   * alias of options method for backward compatibility
+   * 
+   * @retrun array of options as $title => $value
+   */
+  public function values()
+  {
+    return $this->options();
   }
 
   /**
