@@ -995,7 +995,7 @@ abstract class PDb_Shortcode {
 
     $this->display_columns = array();
 
-    if ( isset( $this->shortcode_atts['fields'] ) ) {
+    if ( ! empty( $this->shortcode_atts['fields'] ) ) {
       $this->display_columns = self::field_list( $this->shortcode_atts['fields'] );
     }
 
