@@ -209,6 +209,8 @@ class PDb_FormElement extends xnau_FormElement {
 
     // checkboxes are grouped, radios are not
     $this->group = $type === 'checkbox';
+      
+    $field_def = Participants_Db::get_field_def($this->name);
 
     // checkboxes are given a null select so an "unchecked" state is possible
     $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
@@ -227,13 +229,14 @@ class PDb_FormElement extends xnau_FormElement {
     unset( $this->options[self::null_select_key()] );
 
     $this->_addline( '<div class="' . $type . '-group" >' );
+    
+    $this->_addline( '<fieldset class="no-border">' );
+    
+    if ( is_a( $field_def, 'PDb_Form_Field_Def' ) ) {
+      $this->_addline('<legend class="screen-reader-text">' . esc_attr( strip_tags( $field_def->title() ) ) . '</legend>' );
+    }
 
     $optgroup = false;
-    
-    // use the default value (if defined) if there is no value
-//    if ( $this->value === '' && Participants_Db::$fields[$this->name]->default_value() !== '' ) {
-//      $this->value = Participants_Db::$fields[$this->name]->default_value();
-//    }
 
     foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
@@ -274,7 +277,7 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline( '</div>', -1 );
     }
 
-    $this->_addline( '</div>' );
+    $this->_addline( '</fieldset></div>' );
   }
 
   /**
@@ -362,7 +365,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _upload( $type )
   {
-    $field_def = Participants_Db::$fields[$this->name];
+    $field_def = Participants_Db::get_field_def($this->name);
     /* @var $field_def PDb_Form_field_Def */
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
