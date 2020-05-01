@@ -57,7 +57,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @param int|string $id the id of the source record if available
    */
   public function __construct( $config, $id = false )
-  {
+  { 
     if ( is_string( $config ) ) {
       $config = array('name' => $config);
     }
@@ -1008,6 +1008,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
             case 'single':
             case 'list':
             case 'tag-template':
+            case 'email-template':
               $display_mode = 'image';
               break;
             case 'signup':
