@@ -361,6 +361,7 @@ class PDb_List extends PDb_Shortcode {
             'module' => $this->module, 
             'value' => $value,
                 ) );
+        
       }
     }
     
@@ -377,7 +378,7 @@ class PDb_List extends PDb_Shortcode {
   /**
    * provides the pagination scroll anchor
    * 
-   * the anchor is not added if AJAX is enabled becuase the scroll is enacted by the JS
+   * the anchor is not added if AJAX is enabled because the scroll is enacted by the JS
    * 
    * @return string the anchor; empty string if not configured to add it
    */
@@ -631,7 +632,7 @@ class PDb_List extends PDb_Shortcode {
    * @param array $columns array of column names
    * @return array $title => $name
    */
-  function searchable_columns( $columns = false )
+  public function searchable_columns( $columns = false )
   {
     $return = array();
     $search_columns = is_array( $columns ) && !empty( $columns ) ? $columns : $this->display_columns;
