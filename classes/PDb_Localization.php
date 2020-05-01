@@ -46,6 +46,15 @@ class PDb_Localization {
     $localization = new self;
     
     if ( $display === $number && self::intl_available() ) {
+      if ( isset($field->attributes['step']) && is_numeric($field->attributes['step']) ) {
+        // set the number of decimal places based on the step attribute
+        $parts = explode('.', $field->attributes['step'] );
+        if ( isset($parts[1]) ) {
+          $localization->formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, strlen($parts[1]) );
+        } else {
+          $localization->formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0 );
+        }
+      }
       $localization->formatter->setAttribute(NumberFormatter::GROUPING_USED, true );
       $display = $localization->formatter->format($number);
     }
