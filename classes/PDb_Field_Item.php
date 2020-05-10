@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.6
+ * @version    2.7
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -685,7 +685,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_id()
   {
-    echo PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name );
+    echo PDb_Template_Item::prep_css_class_string( $this->base_id() );
   }
 
   /**
@@ -694,8 +694,18 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_with_id()
   {
-    $this->attributes['id'] = PDb_Template_Item::prep_css_class_string( Participants_Db::$prefix . $this->name );
+    $this->attributes['id'] = PDb_Template_Item::prep_css_class_string( $this->base_id());
     $this->print_element();
+  }
+  
+  /**
+   * provides the base element id
+   * 
+   * @return string
+   */
+  protected function base_id()
+  {
+    return Participants_Db::$prefix . $this->name . '-' . Participants_Db::$instance_index;
   }
 
   /**
