@@ -210,7 +210,7 @@ class Participants_Db extends PDb_Base {
    * list of reserved field names
    * @var array
    */
-  public static $reserved_names = array('source', 'subsource', 'id', 'private_id', 'record_link', 'action', 'submit', 'submit-button', 'name', 'day', 'month', 'year', 'hour', 'date', 'minute', 'email-regex', 'combo_search');
+  public static $reserved_names = array('source', 'subsource', 'id', 'private_id', 'record_link', 'action', 'submit', 'submit-button', 'name', 'day', 'month', 'year', 'hour', 'date', 'minute', 'email-regex', 'combo_search', 'fields', 'groups');
 
   /**
    * true while sending an email
