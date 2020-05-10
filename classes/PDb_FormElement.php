@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -247,12 +247,12 @@ class PDb_FormElement extends xnau_FormElement {
         if ( $optgroup ) {
           $this->_addline( '</fieldset>' );
         }
-        $id = $this->legal_name( $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_key ) )) );
+        $id = $this->element_id( $this->legal_name( $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_key ) ) ) ) );
         $this->_addline( '<fieldset class="' . esc_attr( $type . '-subgroup ' . $this->name . '-subgroup' ) . '" id="' . esc_attr( $id ) . '"><legend>' . esc_html( $option_key ) . '</legend>' );
         $optgroup = true;
       } else {
         $id = $this->element_id();
-        $this->attributes['id'] = $this->legal_name( $this->prefix . $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_value ) )) );
+        $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
         $this->_addline( '<label ' . $this->_class() . ' for="' . esc_attr( $this->attributes['id'] ) . '">' );
         $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
         $this->_addline( $option_key . '</label>' );
