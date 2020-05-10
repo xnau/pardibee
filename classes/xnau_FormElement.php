@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.12
+ * @version    1.13
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -715,7 +715,7 @@ abstract class xnau_FormElement {
         $unchecked_value = '';
     }
 
-    $this->attributes['id'] = $id = $this->element_id();
+    $id = $this->element_id();
     $this->attributes['id'] = $id . '-default';
     $this->_addline( $this->_input_tag( 'hidden', $unchecked_value ) );
     $this->attributes['id'] = $id;
@@ -800,7 +800,7 @@ abstract class xnau_FormElement {
     } else {
       
       // readonly display
-      $this->attributes['id'] = ( empty($this->attributes['id']) ? $this->element_id() : $this->attributes['id'] ) . '_readonly';
+      $this->attributes['id'] = $this->element_id() . '_readonly';
       $options = $this->_make_assoc( $this->options );
       
       $this->_addline( '<input type="text" name="' . $this->name . '" value="' . array_search($this->value, $options) . '" ' . $this->_attributes('no validate') . $this->_class( 'pdb-readonly' ) . ' >' );
@@ -1171,12 +1171,12 @@ abstract class xnau_FormElement {
         if ( $optgroup ) {
           $this->_addline( '</fieldset>' );
         }
-        $id = $this->legal_name( $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_key ) )) );
+        $id = $this->element_id( $this->legal_name( $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_key ) )) ) );
         $this->_addline( '<fieldset class="' . $type . '-subgroup ' . $this->name . '-subgroup" id="' . $id . '"><legend>' . $option_key . '</legend>' );
         $optgroup = true;
       } else {
         $id = $this->element_id();
-        $this->attributes['id'] = $this->legal_name( $this->prefix . $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_value ) )) );
+        $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
         $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
         $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
         $this->_addline( $option_key . '</label>' );
@@ -1781,11 +1781,21 @@ abstract class xnau_FormElement {
    * 
    * this is taken from the attributes property
    * 
+   * @param string $baseid the base id
    * @return string the ID attribute or empty string
    */
-  public function element_id()
+  public function element_id( $baseid = false )
   {
-    return isset( $this->attributes['id'] ) ? $this->attributes['id'] : $this->prefix . str_replace( '[]', '', $this->name );
+    if ( ! $baseid ) {
+      $baseid = isset( $this->attributes['id'] ) ? $this->attributes['id'] : '';
+    }
+    $id = ( ! empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
+    
+    // attach the instance index if it is not present
+    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) == 0 ) {
+      $id = $id . '-' . Participants_Db::$instance_index;
+    }
+    return $id;
   }
 
   /**
