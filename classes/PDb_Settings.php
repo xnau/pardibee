@@ -1705,6 +1705,7 @@ ORDER BY g.order, v.order';
    * role. If there is no unique capability assigned to the custom role, it will 
    * not be offered as a choice in the setting
    * 
+   * @global WP_Roles $wp_roles
    * @return array all defined roles with a key capability
    */
   public static function get_role_select()
@@ -1717,22 +1718,28 @@ ORDER BY g.order, v.order';
         __( 'Admin', 'participants-database' ) => 'manage_options',
         PDb_FormElement::null_select_key() => false,
     );
+    
     global $wp_roles;
     if ( !is_object( $wp_roles ) ) {
       return $role_select;
     }
-    $roles = $wp_roles->roles;
-    //error_log(__METHOD__.' roles:'.print_r($roles,1));
+    
+    $defined_roles = $wp_roles->roles;
+//    error_log(__METHOD__.' roles:'.print_r($roles,1));
+    
     $caps = array();
+    
     // collect all standard capabilities and remove standard roles
     foreach ( array('administrator', 'editor', 'author', 'contributor', 'subscriber') as $role ) {
-      if ( $role !== 'administrator' && is_array( $roles[$role]['capabilities'] ) )
-        $caps += array_keys( $roles[$role]['capabilities'] );
-      unset( $roles[$role] );
+      if ( $role !== 'administrator' && is_array( $defined_roles[$role]['capabilities'] ) ) {
+        $caps += array_keys( $defined_roles[$role]['capabilities'] );
+      }
+      unset( $defined_roles[$role] );
     }
+    
     // add any custom roles
-    if ( count( $roles ) > 0 ) {
-      foreach ( $roles as $role ) {
+    if ( count( $defined_roles ) > 0 ) {
+      foreach ( $defined_roles as $role ) {
         $new_caps = '';
         if ( is_array( $role['capabilities'] ) ) {
           $new_caps = array_diff( array_keys( $role['capabilities'] ), $caps );
