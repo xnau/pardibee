@@ -610,7 +610,7 @@ class PDb_Base {
     );
     $text_numbered = preg_replace_callback('/[0-9]/', function ($d) use ($texnum) {
       return '_' . $texnum[intval(current($d))];
-    }, strtolower( Participants_Db::$prefix . $name ) );
+    }, strtolower( Participants_Db::$prefix . $name . Participants_Db::$instance_index ) );
     
     return preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), $text_numbered );
   }
