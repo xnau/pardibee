@@ -353,6 +353,12 @@ abstract class PDb_Shortcode {
     if ( PDB_DEBUG && stripos( $this->template, 'bare' ) === false ) {
       echo '<!-- end template: ' . $this->template_basename( $this->template ) . ' -->';
     }
+    
+    /**
+     * @filter pdb-after_include_shortcode_template
+     * @param Object the current shortcode object
+     */
+    Participants_Db::do_action( 'after_include_shortcode_template', $this );
 
     /**
      * @filter 'pdb-{$module}_shortcode_output'
@@ -484,7 +490,7 @@ abstract class PDb_Shortcode {
 
     $this->shortcode_atts = shortcode_atts( $defaults, $shortcode_atts, 'pdb_' . $defaults['module'] );
   }
-
+  
   /**
    * outputs a "record not found" message
    *
