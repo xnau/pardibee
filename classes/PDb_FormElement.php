@@ -146,9 +146,10 @@ class PDb_FormElement extends xnau_FormElement {
      * @version 1.7.0.9
      * @filter pdb-form_element_html
      * @param string html
+     * @param PDb_Form_Element the current instance
      * @return string
      */
-    return Participants_Db::apply_filters( 'form_element_html', parent::_output() );
+    return Participants_Db::apply_filters( 'form_element_html', parent::_output(), $this );
   }
 
   /**
