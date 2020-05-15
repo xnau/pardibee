@@ -258,25 +258,25 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
       case 'link':
 
-        $link = maybe_unserialize( $value );
+        $link_pair = maybe_unserialize( $value );
         
         // is $link a linktext/URL array?
-        if ( is_array( $link ) ) {
+        if ( is_array( $link_pair ) ) {
 
-          if ( empty( $link[0] ) )
-            $export_value = isset( $link[1] ) ? $link[1] : '';
+          if ( empty( $link_pair[0] ) )
+            $export_value = isset( $link_pair[1] ) ? $link_pair[1] : '';
           else {
-            $pattern = empty( $link[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
-            $export_value = vsprintf( $pattern, $link );
+            $pattern = empty( $link_pair[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
+            $export_value = vsprintf( $pattern, $link_pair );
           }
         } else {
           
           // instance has the linktext and link property set
           if ( $this->has_link() ) {
-            $pattern = strlen( $link ) > 0 ? '[%2$s](%1$s)' : '<%1$s>' ;
-            $export_value = sprintf( $pattern, $this->link, $link );
+            $pattern = strlen( $link_pair ) > 0 ? '[%2$s](%1$s)' : '<%1$s>' ;
+            $export_value = sprintf( $pattern, $this->link, $link_pair );
           } else {
-            $export_value = $link;
+            $export_value = $link_pair;
           }
         }
         
@@ -302,16 +302,69 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
          * the &#44; entity to represent them
          */
         if ( $this->is_multi() ) {
-          $export_value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), (array) $value );
+          $export_value = implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $this->apply_multilingual_filter_to_array( (array) $value ) );
         } elseif ( is_array( $value ) ) {
-          // if it is an array, serialize it
-          $export_value = html_entity_decode( serialize( $value ), ENT_QUOTES, "UTF-8" );
+          
+          /*
+           * this is a fallback, fields that store their values as arrays won't 
+           * normally go through here, but if the value is an array, it requires 
+           * special handling. This might happen if the field type was changed 
+           * from a multi-type field to a single value field.
+           */
+          switch ( count($value) ) {
+            case 0:
+              $export_value = '';
+              break;
+            case 1:
+              $export_value = $this->apply_multilingual_filter( html_entity_decode( current($value), ENT_QUOTES, "UTF-8" ) );
+              break;
+            default:
+              // export it as a serialized array
+              $export_value = html_entity_decode( serialize( $this->apply_multilingual_filter_to_array( $value ) ), ENT_QUOTES, "UTF-8" );
+          }
+          
+          
+          if ( PDB_DEBUG > 2 ) {
+            Participants_Db::debug_log(__METHOD__.' array value for field: '.$this->name() );
+          }
+          
         } else {
-          $export_value = html_entity_decode( $value, ENT_QUOTES, "UTF-8" );
+          $export_value = $this->apply_multilingual_filter( html_entity_decode( $value, ENT_QUOTES, "UTF-8" ) );
         }
     }
 
     return $export_value;
+  }
+  
+  /**
+   * optionally applies the multilingual filter to the export value
+   * 
+   * @param string $value
+   * @return string value
+   */
+  public function apply_multilingual_filter( $value )
+  {
+    /**
+     * @filter pdb-multilingual_string_export_enable
+     * @param bool the enable mode
+     * @return bool
+     */
+    if ( Participants_Db::apply_filters( 'multilingual_string_export_enable', false ) === false ) {
+      $value = Participants_Db::apply_filters( 'translate_string', $value );
+    }
+    return $value;
+  }
+  
+  /**
+   * applies the multilingual filter to an array
+   * 
+   * @param array $array
+   * @return array
+   */
+  protected function apply_multilingual_filter_to_array( $array )
+  {
+    array_walk($array, array( $this, 'apply_multilingual_filter' ) );
+    return $array;
   }
 
   /**
