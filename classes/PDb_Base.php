@@ -780,9 +780,13 @@ class PDb_Base {
 
       $object = ltrim( $object, '$' );
 
-      if ( is_object( $$object ) && isset( $$object->$property ) ) {
+      if ( is_object( $$object ) && property_exists( $$object, $property ) ) {
 
         $dynamic_value = $$object->$property;
+        
+      } elseif ( $object === 'current_user' && $property === 'locale' ) {
+        
+        $dynamic_value = get_locale();
       }
     } elseif ( strpos( $dynamic_key, ':' ) > 0 ) {
 
