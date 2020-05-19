@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) die;
    * initializes the record edit object
    */
   public function __construct( $shortcode_atts ) {
-    
 		
 		// define shortcode-specific attributes to use
 		$add_atts = array(
@@ -29,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) die;
      * the 'term' value, which defaults to 'id'
      *
      */
-    if ( $this->shortcode_atts['record_id'] !== false ) {
+    if ( $this->shortcode_atts['record_id'] !== false && PDb_Form_Field_Def::is_field( $this->shortcode_atts['term'] ) ) {
       $record_id = Participants_Db::get_record_id_by_term( $this->shortcode_atts['term'], $this->shortcode_atts['record_id'] );
     } else {
       $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );; // Participants_Db::$session->record_id();
