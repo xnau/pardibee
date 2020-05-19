@@ -754,6 +754,7 @@ class PDb_Base {
 
     // this value serves as a key for the dynamic value to get
     $dynamic_key = html_entity_decode( $value );
+    
     /**
      * @filter pdb-dynamic_value
      * 
@@ -780,7 +781,7 @@ class PDb_Base {
 
       $object = ltrim( $object, '$' );
 
-      if ( is_object( $$object ) && property_exists( $$object, $property ) ) {
+      if ( is_object( $$object ) && ! empty( $$object->$property ) ) {
 
         $dynamic_value = $$object->$property;
         
