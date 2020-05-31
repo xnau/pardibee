@@ -897,16 +897,17 @@ abstract class xnau_FormElement {
 
     $controltag = array_pop( $this->output ); // save the <span.othercontrol> close tag
     $closetag = array_pop( $this->output ); // save the <span.checkbox-group> close tag
+
     // add the text input element
     $value = $type == 'checkbox' ? $this->value['other'] : (!in_array( $this->value, $this->options ) ? $this->value : '' );
     $name = $type == 'checkbox' ? str_replace( '[]', '', $this->name ) . '[other]' : '';
     $id = $this->element_id();
     $this->attributes['id'] = $id . '_other';
-    $this->_addline( '<input type="text" name="' . $name . '" value="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8', false ) . '" ' . $this->_attributes('no validate') . $this->_class( 'otherfield' ) . ' >' );
+    $this->_addline( '<input type="text" name="' . $name . '" value="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8', false ) . '" ' . $this->_attributes('no validate') . $this->_class( 'otherfield' ) . ' />' );
     $this->attributes['id'] = $id;
-    array_push( $this->output, $controltag, $closetag ); // replace the span close tags, enclosing the input element in it
+    array_push( $this->output, $closetag, $controltag ); // replace the span close tags, enclosing the input element in it
     // close the container
-    $this->_addline( '</div>', -1 );
+    $this->_addline( '</div><!-- .' . $type . '-other-control-group -->', -1 ); //  control-group div
   }
 
   /**
