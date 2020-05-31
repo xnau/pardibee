@@ -728,11 +728,16 @@ abstract class PDb_Shortcode {
          */
         /**
          * @filter pdb-add_field_to_iterator
+         * 
+         * determines whether a field should be added to the iterator, filter 
+         * can be used to remove a field from the iterator at the last minute
+         * 
          * @param bool default setting
+         * @param PDb_Field_Item the current field
          * @param PDb_Shortcode current object
          * @return bool
          */
-        if ( Participants_Db::apply_filters( 'add_field_to_iterator', $this->field_should_be_added( $field ), $this ) ) {
+        if ( Participants_Db::apply_filters( 'add_field_to_iterator', $this->field_should_be_added( $field ), $field, $this ) ) {
           /*
            * add the field object to the record object
            */
