@@ -431,6 +431,7 @@ class PDb_FormValidation extends xnau_FormValidation {
             } elseif ( isset( $this->error_messages[$error->slug] ) ) {
               $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
             }
+        
             break;
             
           case 'duplicate':
