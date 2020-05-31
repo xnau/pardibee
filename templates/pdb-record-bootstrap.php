@@ -42,15 +42,15 @@
             <?php endif ?>
             <div class="input-group" >
               <?php $this->field->print_element_with_id(); ?>
-            </div>
+            </div><!-- .input-group -->
             <?php if ( $this->field->has_help_text() ) : ?>
               <p class="help-block helptext"><?php $this->field->print_help_text() ?></p>
             <?php endif ?>
-          </div>
+          </div><!-- .form-group -->
 
         <?php endwhile; // field loop   ?>
 
-      </fieldset>
+      </fieldset><!-- .field-group-<?php echo $this->group->name ?> -->
 
     <?php endwhile; // group loop   ?>
 
