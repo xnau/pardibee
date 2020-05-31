@@ -1437,8 +1437,10 @@ class PDb_Base {
   public static function is_form_validated()
   {
     if ( is_admin() && ! self::plugin_setting_is_true( 'admin_edits_validated', false) ) {
+      
       return self::current_user_has_plugin_role( 'admin', 'forms not validated' ) === false;
     } else {
+      
       return true;
     }
   }
