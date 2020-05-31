@@ -275,10 +275,10 @@ class PDb_FormElement extends xnau_FormElement {
       $this->attributes['id'] = $id;
       $this->_addline( esc_html( $otherlabel ) . ':' );
       $this->_addline( '</label>', -1 );
-      $this->_addline( '</div>', -1 );
+      $this->_addline( '</div><!-- .othercontrol -->', -1 );
     }
 
-    $this->_addline( '</fieldset></div>' );
+    $this->_addline( '</fieldset><!-- .no-border --></div><!-- .'.$type . '-group -->' );
   }
 
   /**
