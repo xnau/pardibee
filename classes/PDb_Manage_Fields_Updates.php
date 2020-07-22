@@ -156,9 +156,11 @@ class PDb_Manage_Fields_Updates {
          * @return array
          */
         $result = $wpdb->update( Participants_Db::$fields_table, Participants_Db::apply_filters( 'update_field_def', $row, $status ), array('id' => $id) );
+        
         if ( PDB_DEBUG > 1 ) {
           Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
         }
+        
         if ( $result ) {
           PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
           Participants_Db::set_admin_message(__( 'Fields Updated', 'participants-database' ), 'success' );
@@ -476,7 +478,7 @@ class PDb_Manage_Fields_Updates {
   private function sanitized_field_post()
   {
     $postrows = array_filter( $_POST, function ($k) {
-      return preg_match( '/^row_[0-9]{1,3}$/', $k ) === 1;
+      return preg_match( '/^row_[0-9]{1,4}$/', $k ) === 1;
     }, ARRAY_FILTER_USE_KEY );
 
     $post = array();
