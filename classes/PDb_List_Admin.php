@@ -558,7 +558,7 @@ class PDb_List_Admin {
 
             default:
               /**
-               * @action pdb-admin_list_with_selected_{$selected_action}
+               * @action pdb_admin_list_with_selected/{$selected_action}
                * 
                * this action is executed if none of the default actions were selected 
                * so that a custom action can be performed
@@ -1019,7 +1019,7 @@ query: '. $last_query : '' ));
             /**
              * filter to add additional actions to the with selected selector
              * 
-             * @filter pdb-admin_list_with selected actions
+             * @filter pdb-admin_list_with_selected_actions
              * @param array as $title => $action of actions to apply to selected records
              * @return array
              */
