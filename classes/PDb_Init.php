@@ -1125,6 +1125,38 @@ class PDb_Init {
       }
     }
   }
+  
+  /**
+   * finds and removes orphan columns in the main table
+   * 
+   * DANGER: this will delete data
+   * 
+   */
+  public static function delete_orphan_columns()
+  {
+    global $wpdb;
+    
+    $exceptions = array(
+        'record_slug',
+    );
+    
+    $field_list = $wpdb->get_col('SELECT f.name FROM ' . Participants_Db::$fields_table . ' f' );
+    
+    // this query does not include fields installed by plugins
+    $column_query = 'SHOW COLUMNS FROM ' . Participants_Db::$participants_table . ' WHERE field NOT IN ("' . implode( '","', $field_list ) . '") AND field NOT LIKE "pdb%" AND field NOT IN ("' . implode( '","', $exceptions ) . '")';
+    
+    $columns = $wpdb->get_results( $column_query );
+    
+    // build the list of orphans
+    $delete_list = array();
+    foreach( $columns as $column ) {
+      $delete_list[] = 'DROP COLUMN `' . $column->Field . '`';
+    }
+    
+    $drop_query = 'ALTER TABLE ' . Participants_Db::$participants_table . " \n " . implode( ", \n" , $delete_list ) . ';';
+    
+    $wpdb->query($drop_query);
+  }
 
   /**
    * defines arrays containing a starting set of fields, groups, etc.
