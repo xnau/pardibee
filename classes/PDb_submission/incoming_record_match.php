@@ -160,7 +160,7 @@ class incoming_record_match {
    * 
    * also works with numeric mode values
    * 
-   * @param string $mode one of 'skip','error','add','update'
+   * @param string $mode one of 'skip','add','update'
    */
   public function set_match_mode( $mode )
   {
