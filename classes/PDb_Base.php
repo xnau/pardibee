@@ -780,6 +780,8 @@ class PDb_Base {
       list( $object, $property ) = explode( '->', $dynamic_key );
 
       $object = ltrim( $object, '$' );
+      
+//      error_log(__METHOD__.' oject: '.$object.' prop: '.$property.' value: '. $$object->$property );
 
       if ( is_object( $$object ) && ! empty( $$object->$property ) ) {
 
@@ -837,7 +839,7 @@ class PDb_Base {
         case 'GET':
           $global = $_GET;
       }
-
+      
       /*
        * we attempt to evaluate the named value from the superglobal, which includes 
        * the possiblity that it will be referring to an array element. We take that 
@@ -845,11 +847,12 @@ class PDb_Base {
        * is to use eval, which I won't do
        */
       if ( isset( $global[$name] ) ) {
-        if ( is_string( $global[$name] ) ) {
-          $dynamic_value = $global[$name];
-        } elseif ( is_array( $global[$name] ) || is_object( $global[$name] ) ) {
+        
+        $dynamic_value = $global[$name];
+        
+        if ( is_array( $dynamic_value ) || is_object( $dynamic_value ) ) {
 
-          $array = is_object( $global[$name] ) ? get_object_vars( $global[$name] ) : $global[$name];
+          $array = is_object( $dynamic_value ) ? get_object_vars( $dynamic_value ) : $dynamic_value;
           switch ( count( $indexes ) ) {
             case 1:
               $dynamic_value = isset( $array[$indexes[0]] ) ? $array[$indexes[0]] : '';
