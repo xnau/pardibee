@@ -184,6 +184,11 @@ abstract class xnau_FormElement {
    * @var string  URL element link property
    */
   var $link;
+  
+  /**
+   * @var int holds the record ID
+   */
+  public $record_id;
 
   /**
    * instantiates a xnau_FormElement object
@@ -223,6 +228,7 @@ abstract class xnau_FormElement {
         'group' => false,
         'value' => '',
         'link' => '',
+        'record_id' => 0,
     );
     $params = wp_parse_args( $parameters, $defaults );
 
@@ -236,6 +242,7 @@ abstract class xnau_FormElement {
     $this->module = isset( $params['module'] ) ? $params['module'] : '';
     $this->attributes = $params['attributes'];
     $this->link = $params['link'];
+    $this->record_id = $params['record_id'];
 
     if ( NULL !== $params['options'] || !empty( $params['options'] ) ) {
 
@@ -437,7 +444,7 @@ abstract class xnau_FormElement {
    * returns an element value formatted for display or storage
    * 
    * @param object $field a Field_Item object
-   * @param bool   $html  if true, retuns the value wrapped in HTML, false returns 
+   * @param bool   $html  if true, returns the value wrapped in HTML, false returns 
    *                      the formatted value alone
    * @return string the object's current value, formatted
    */
@@ -664,7 +671,6 @@ abstract class xnau_FormElement {
    */
   protected function _rich_text_field()
   {
-
     $value = isset( $this->value ) ? $this->value : '';
 
     wp_editor(
