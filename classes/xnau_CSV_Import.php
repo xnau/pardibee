@@ -131,6 +131,8 @@ abstract class xnau_CSV_Import {
       }
       // we are done with the file, delete it
       Participants_Db::delete_file($target_path);
+      
+      do_action( 'pdb-after_import_csv', $this );
     }
   }
   
