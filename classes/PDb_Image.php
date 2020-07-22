@@ -31,7 +31,7 @@ class PDb_Image extends xnau_Image_Handler {
    *                      'module' => calling module
    *                      'attributes' => HTML element attributes 
    */
-  function __construct($config)
+  public function __construct($config)
   {
     parent::__construct($config);
 
