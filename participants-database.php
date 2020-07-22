@@ -556,6 +556,10 @@ class Participants_Db extends PDb_Base {
       if ( array_key_exists( 'pdb-update-fields', $_GET ) ) {
         PDb_Init::update_field_def_values();
       }
+      
+      if ( array_key_exists( 'pdb-remove-orphan-columns', $_GET ) ) {
+        PDb_Init::delete_orphan_columns();
+      }
     });
 
     if ( self::plugin_setting_is_true( 'html_email' ) ) {
@@ -1556,6 +1560,9 @@ class Participants_Db extends PDb_Base {
             ) {
       return false;
     }
+    
+    // if the column names are getting supplied, assume it is a function call, not a post submission
+    $func_call = is_array( $column_names );
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
     
@@ -1743,13 +1750,14 @@ class Participants_Db extends PDb_Base {
 
       /**
        * readonly field data is prevented from being saved by unauthorized users 
-       * when not using the signup form
+       * when not using the signup form or when this method is called by a function
        */
       if (  
               $field->is_readonly() && 
               ! $field->is_hidden_field() && 
               self::current_user_has_plugin_role( 'editor', 'readonly access' ) === false && 
-              self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) !== 'signup'
+              self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) !== 'signup' &&
+              $func_call === false
               ) {
         $post[$column->name] = '';
       }
