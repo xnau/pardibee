@@ -948,6 +948,7 @@ abstract class PDb_Shortcode {
     if ( !is_a( $field, 'PDb_Field_Item' ) ) {
       $field = new PDb_Field_Item( $field );
     }
+      
     /*
      * get the value from the record; if it is empty, use the default value if the 
      * "persistent" flag is set.
@@ -966,7 +967,9 @@ abstract class PDb_Shortcode {
     if ( $field->is_internal_field() ) {
       $this->display_as_readonly( $field );
     }
+    
     if ( $field->is_hidden_field() ) {
+      
       if ( in_array( $this->module, array('signup', 'record', 'retrieve') ) ) {
 
         /**
