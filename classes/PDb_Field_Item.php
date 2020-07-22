@@ -807,17 +807,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function _print()
   {
-    PDb_FormElement::print_element( array(
-        'type' => $this->form_element(),
-        'value' => $this->value(),
-        'name' => $this->name(),
-        'options' => $this->options(),
-        'class' => $this->field_class,
-        'attributes' => $this->attributes(),
-        'module' => $this->module(),
-        'link' => $this->link(),
-            )
-    );
+    PDb_FormElement::print_element( $this->element_parameters() );
   }
 
   /**
@@ -827,7 +817,18 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function _get_element()
   {
-    return PDb_FormElement::get_element( array(
+    return PDb_FormElement::get_element( $this->element_parameters() );
+  }
+  
+  /**
+   * provides an array of form element parameters
+   * 
+   * @return array
+   */
+  protected function element_parameters()
+  {
+    return array(
+                'record_id' => $this->record_id,
                 'type' => $this->form_element(),
                 'value' => $this->value(),
                 'name' => $this->name(),
@@ -836,8 +837,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
                 'attributes' => $this->attributes(),
                 'module' => $this->module(),
                 'link' => $this->link(),
-                    )
-    );
+                    );
   }
 
   /**
