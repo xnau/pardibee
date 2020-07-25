@@ -379,12 +379,15 @@ class PDb_Init {
   public static function delete_user_sessions()
   {
     global $wpdb;
-// clear session transients
+    // clear session entries
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE ( `option_name` LIKE "_wp_session_%" AND `option_name` NOT LIKE "_wp_session_expires_%" )';
-    $transients = $wpdb->get_col( $sql );
-    foreach ( $transients as $name ) {
+    $sessions = $wpdb->get_col( $sql );
+    foreach ( $sessions as $name ) {
       delete_option( $name );
     }
+    
+    // clears the session table for newer versions of WP Sessions
+    PDb_Session::truncate();
   }
 
   /**
