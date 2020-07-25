@@ -387,7 +387,7 @@ class PDb_Init {
     }
     
     // clears the session table for newer versions of WP Sessions
-    PDb_Session::truncate();
+    PDb_Session::reset_session_table();
   }
 
   /**

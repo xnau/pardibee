@@ -237,7 +237,7 @@ class PDb_Session {
   /**
    * truncate (clear and reset) the session table
    */
-  public static function truncate()
+  public static function reset_session_table()
   {
     global $wpdb;
 
