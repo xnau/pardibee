@@ -235,6 +235,17 @@ class PDb_Session {
   }
   
   /**
+   * truncate (clear and reset) the session table
+   */
+  public static function truncate()
+  {
+    global $wpdb;
+
+    // truncate the session table
+    $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}sm_sessions;" );
+  }
+  
+  /**
    * deletes the session table on uninstall
    */
   public static function uninstall()
