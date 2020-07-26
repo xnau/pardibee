@@ -43,7 +43,7 @@ class PDb_File_Uploads {
   public function handle_file_upload( $field_name, $file, $id )
   {
 
-    $field_atts = new PDb_Form_Field_Def( $field_name ); // Participants_Db::get_field_atts( $field_name );
+    $field_atts = new PDb_Form_Field_Def( $field_name );
     
     $is_image_field = $field_atts->form_element() === 'image-upload';
 //    $delete_checked = (bool) (isset( $_POST[$field_name . '-deletefile'] ) and $_POST[$field_name . '-deletefile'] == 'delete');
