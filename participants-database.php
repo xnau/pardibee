@@ -2476,6 +2476,19 @@ class Participants_Db extends PDb_Base {
 
       return false;
     }
+    
+    foreach( array( 'options', 'attributes' ) as $prop ) {
+      if ( isset( $field_parameters[$prop] ) ) {
+        
+        // skip if it's already a serialized array
+        if ( is_serialized ( $field_parameters[$prop] ) ) {
+          break;
+        }
+        
+        // convert the property value to a serialized array
+        $field_parameters[$prop] = serialize( (array) $field_parameters[$prop] );
+      }
+    }
 
     $wpdb->insert( self::$fields_table, $field_parameters );
 
