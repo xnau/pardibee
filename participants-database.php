@@ -337,6 +337,7 @@ class Participants_Db extends PDb_Base {
     add_action( 'wp_loaded', array(__CLASS__, 'process_page_request') ); // wp_loaded
     //
     add_action( 'admin_enqueue_scripts', array(__CLASS__, 'admin_includes') );
+    
     // this is only fired if there is a plugin shortcode on the page
     add_action( 'pdb-shortcode_present', array(__CLASS__, 'add_shortcode_includes') );
 
