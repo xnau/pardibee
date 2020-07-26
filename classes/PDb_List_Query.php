@@ -945,14 +945,14 @@ class PDb_List_Query {
   /**
    * adds a List_Query_Filter object to the where clauses
    * 
-   * @param string $column      the name of the field to target
-   * @param string $operator     the operator
+   * @param string $field_name  the name of the field to target
+   * @param string $operator    the operator
    * @param string $search_term the term to filter by
    * @param string $logic       the logic term to add to the array
    * @param bool   $shortcode   true if the current filter is from the shortcode
    * @return null
    */
-  private function _add_single_statement( $column, $operator, $search_term = '', $logic = 'AND', $shortcode = false )
+  private function _add_single_statement( $field_name, $operator, $search_term = '', $logic = 'AND', $shortcode = false )
   {
     /*
      * don't add an 'id = 0' clause if there is a user search. This gives us a 
@@ -962,7 +962,7 @@ class PDb_List_Query {
      * we flag it for suppression. Later, if there is no other clause for the ID 
      * column, the list display will be suppressed
      */
-    if ( $column == 'id' and $search_term == '0' ) {
+    if ( $field_name == 'id' and $search_term == '0' ) {
       $this->suppress = true;
       return false;
     }
@@ -988,10 +988,11 @@ class PDb_List_Query {
     /*
      * check if we have a valid column name
      */
-    $field_atts = Participants_Db::get_column( $column );
-    if ( !is_object( $field_atts ) ) {
+    if ( ! PDb_Form_Field_Def::is_field( $field_name ) ) {
       return false;
     }
+    
+    $field_def = new PDb_Form_Field_Def( $field_name );
 
     /**
      * if $parens_logic is true, "or" statements will be parenthesized
@@ -1001,7 +1002,7 @@ class PDb_List_Query {
      * @version 1.6.2.6
      */
     $filter = new PDb_List_Query_Filter( array(
-        'field' => $column,
+        'field' => $field_name,
         'logic' => $logic,
         'shortcode' => $shortcode,
         'term' => $search_term,
@@ -1019,27 +1020,27 @@ class PDb_List_Query {
      * added support for numeric datatypes
      * 
      */
-    $is_numeric = PDb_FormElement::is_numeric_datatype( $column );
+    $is_numeric = PDb_FormElement::is_numeric_datatype( $field_name );
     // is the field value stored as an array?
-    $is_multi = PDb_FormElement::is_multi( $field_atts->form_element );
+    $is_multi = PDb_FormElement::is_multi( $field_def->form_element() );
 
     /*
      * set up special-case field types
      */
-    if ( in_array( $field_atts->form_element, array('date', 'timestamp') ) and $filter->is_string_search() ) {
+    if ( in_array( $field_def->form_element(), array('date', 'timestamp') ) and $filter->is_string_search() ) {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
        * conditioned to get a correct comparison
        */
-      $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), array(), __METHOD__ . ' ' . $field_atts->form_element . ' field' );
+      $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), array(), __METHOD__ . ' ' . $field_def->form_element() . ' field' );
 
       $operator = in_array( $operator, array('>', '<', '>=', '<=') ) ? $operator : '=';
       
       if ( $search_term === false ) {
         // the search term doesn't parse as a date
         $statement = false;
-      } elseif ( $field_atts->form_element == 'timestamp' ) {
+      } elseif ( $field_def->form_element() == 'timestamp' ) {
         /**
          * @since 1.6.3
          * 
@@ -1047,9 +1048,9 @@ class PDb_List_Query {
          * in the search term to the active timezone in the database by adding the 
          * difference between PHP's time() and MYSQLs NOW() functions
          */
-        $statement = 'DATE(p.' . $column . ') ' . $operator . ' DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
+        $statement = 'DATE(p.' . $field_name . ') ' . $operator . ' DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
       } else {
-        $statement = 'p.' . $column . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
+        $statement = 'p.' . $field_name . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
       }
     } elseif ( $filter->is_empty_search() ) {
 
@@ -1058,7 +1059,7 @@ class PDb_List_Query {
       } else {
         $pattern = $is_numeric ? 'p.%1$s IS NULL' : '(p.%1$s IS NULL OR p.%1$s = "")';
       }
-      $statement = sprintf( $pattern, $column );
+      $statement = sprintf( $pattern, $field_name );
     } else {
 
       if ( $operator === NULL )
@@ -1220,12 +1221,12 @@ class PDb_List_Query {
           return false;
       }
 
-      $statement = sprintf( 'p.%s %s %s%s%s', $column, $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
+      $statement = sprintf( 'p.%s %s %s%s%s', $field_name, $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
     }
     if ( $statement ) {
       $filter->update_parameters( array('statement' => $statement) );
 
-      $this->subclauses[$column][] = $filter;
+      $this->subclauses[$field_name][] = $filter;
     }
   }
   
