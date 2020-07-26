@@ -1118,10 +1118,9 @@ class PDb_Base {
    */
   public static function plugin_setting( $name, $default = false )
   {
-    if ( $default === false ) {
-      $default = self::plugin_setting_default($name);
-    }
-    return self::apply_filters( 'translate_string', self::plugin_setting_value( $name, $default ) );
+    $setting_value = self::plugin_setting_value( $name, $default );
+    
+    return is_string( $setting_value ) ? self::apply_filters( 'translate_string', $setting_value ) : $setting_value;
   }
 
   /**
