@@ -1240,7 +1240,12 @@ class PDb_List_Query {
   {
     global $wpdb;
     
-    return version_compare( $wpdb->db_version(), '8.0.4', '<' ) ? array( '"[[:<:]]', '[[:>:]]"' ) : array( '"\\\b', '\\\b"' );
+    /**
+     * @filter pdb-database_query_word_boundary_tags
+     * @param array start tag and end tag
+     * @return array
+     */
+    return Participants_Db::apply_filters( 'database_query_word_boundary_tags', version_compare( $wpdb->db_version(), '8.0.4', '<' ) ? array( '"[[:<:]]', '[[:>:]]"' ) : array( '"\\\b', '\\\b"' ) );
   }
 
   /**
