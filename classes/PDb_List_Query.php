@@ -229,7 +229,7 @@ class PDb_List_Query {
    */
   public function get_search_error()
   {
-    if ( /* $this->is_search_result() && */ $this->post_input['submit'] === 'search' ) {
+    if ( $this->is_search_result() && $this->post_input['submit'] === 'search' ) {
       if ( empty( $this->post_input['search_field'] ) ) {
         $this->is_search_result( false );
         return 'search';
@@ -554,11 +554,9 @@ class PDb_List_Query {
 
     $this->_reset_filters();
     if ( $input['target_instance'] == $this->instance_index ) {
-      if ( empty( $input['sortstring'] ) ) {
-        $input['sortstring'] = $input['sortBy'];
-        $input['orderstring'] = $input['ascdesc'];
-      }
+      
       if ( is_array( $input['search_field'] ) ) {
+        
         foreach ( $input['search_field'] as $i => $search_field ) { // for ($i = 0; $i < count($input['search_field']); $i++) {
           if ( !$this->search_term_is_valid( $input['value'][$i] ) )
             continue;
@@ -566,15 +564,21 @@ class PDb_List_Query {
           $this->_add_search_field_filter( $input['search_field'][$i], $input['operator'][$i], $input['value'][$i], $logic );
         }
         $this->is_search_result = true;
+        
       } elseif ( !empty( $input['search_field'] ) && $this->search_term_is_valid( $input['value'] ) ) {
+        
         $logic = isset( $input['logic'] ) ? $input['logic'] : $set_logic;
         $this->_add_search_field_filter( $input['search_field'], $input['operator'], $input['value'], $logic );
+        
       } elseif ( $input['submit'] !== 'clear' && empty( $input['value'] ) ) {
+        
         // we set this to true even for empty searches
         $this->is_search_result = true;
       }
-      if ( !empty( $input['sortstring'] ) ) {
-        $this->set_sort( $input['sortstring'], $input['orderstring'] );
+      
+      if ( !empty( $input['sortBy'] ) ) {
+        
+        $this->set_sort( $input['sortBy'], $input['ascdesc'] );
       }
 
       $this->_save_query_session();
@@ -993,6 +997,15 @@ class PDb_List_Query {
     }
     
     $field_def = new PDb_Form_Field_Def( $field_name );
+    
+    /**
+     * provides a way to alter the field def before it is used to create the where clause
+     * 
+     * @action pdb-query_statement_field_def
+     * @param PDb_Form_Field_Def
+     * @param PDb_List_Query current query object
+     */
+    do_action( 'pdb-query_statement_field_def', $field_def, $this );
 
     /**
      * if $parens_logic is true, "or" statements will be parenthesized
@@ -1002,7 +1015,7 @@ class PDb_List_Query {
      * @version 1.6.2.6
      */
     $filter = new PDb_List_Query_Filter( array(
-        'field' => $field_name,
+        'field' => $field_def->name(),
         'logic' => $logic,
         'shortcode' => $shortcode,
         'term' => $search_term,
@@ -1015,14 +1028,10 @@ class PDb_List_Query {
 
     $statement = false;
 
-    /**
-     * @version 1.7.0.14
-     * added support for numeric datatypes
-     * 
-     */
-    $is_numeric = PDb_FormElement::is_numeric_datatype( $field_name );
+    $is_numeric = $field_def->is_numeric();
+    
     // is the field value stored as an array?
-    $is_multi = PDb_FormElement::is_multi( $field_def->form_element() );
+    $is_multi = $field_def->is_multi();
 
     /*
      * set up special-case field types
@@ -1040,7 +1049,7 @@ class PDb_List_Query {
       if ( $search_term === false ) {
         // the search term doesn't parse as a date
         $statement = false;
-      } elseif ( $field_def->form_element() == 'timestamp' ) {
+      } elseif ( $field_def->form_element() === 'timestamp' ) {
         /**
          * @since 1.6.3
          * 
@@ -1048,9 +1057,9 @@ class PDb_List_Query {
          * in the search term to the active timezone in the database by adding the 
          * difference between PHP's time() and MYSQLs NOW() functions
          */
-        $statement = 'DATE(p.' . $field_name . ') ' . $operator . ' DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
+        $statement = 'DATE(p.' . $field_def->name() . ') ' . $operator . ' DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
       } else {
-        $statement = 'p.' . $field_name . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
+        $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
       }
     } elseif ( $filter->is_empty_search() ) {
 
@@ -1059,7 +1068,7 @@ class PDb_List_Query {
       } else {
         $pattern = $is_numeric ? 'p.%1$s IS NULL' : '(p.%1$s IS NULL OR p.%1$s = "")';
       }
-      $statement = sprintf( $pattern, $field_name );
+      $statement = sprintf( $pattern, $field_def->name() );
     } else {
 
       if ( $operator === NULL )
@@ -1221,12 +1230,12 @@ class PDb_List_Query {
           return false;
       }
 
-      $statement = sprintf( 'p.%s %s %s%s%s', $field_name, $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
+      $statement = sprintf( 'p.%s %s %s%s%s', $field_def->name(), $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
     }
     if ( $statement ) {
       $filter->update_parameters( array('statement' => $statement) );
 
-      $this->subclauses[$field_name][] = $filter;
+      $this->subclauses[$field_def->name()][] = $filter;
     }
   }
   
@@ -1507,8 +1516,6 @@ class PDb_List_Query {
             'filter' => FILTER_CALLBACK,
             'options' => array(__CLASS__, 'sanitize_operator')
         ),
-        'sortstring' => FILTER_SANITIZE_STRING,
-        'orderstring' => FILTER_SANITIZE_STRING,
             ), self::_common_search_input_filter()
     );
   }
