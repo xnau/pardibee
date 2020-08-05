@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.15
+ * @version    1.16
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -72,12 +72,6 @@ class PDb_List extends PDb_Shortcode {
    * @var array holds the list of sortable columns
    */
   public $sortables;
-
-  /**
-   *
-   * @var array holds the settings for the list filtering and sorting
-   */
-  private $filter;
 
   /**
    *
@@ -549,9 +543,6 @@ class PDb_List extends PDb_Shortcode {
         'target_instance' => $this->shortcode_atts['target_instance'],
         'instance_index' => $this->instance_index,
         'pagelink' => $this->prepare_page_link( $_SERVER['REQUEST_URI'] ),
-        'sortstring' => $this->filter['sortstring'],
-        'orderstring' => $this->filter['orderstring'],
-//        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
     );
   }
 
@@ -1098,11 +1089,8 @@ class PDb_List extends PDb_Shortcode {
           'ascdesc',
           'submit',
           'pagelink',
-          'sortstring',
-          'orderstring',
           'postID',
           'action',
-//          'filterNonce',
           'instance',
       );
       foreach ( $filter_atts as $att )
@@ -1120,72 +1108,6 @@ class PDb_List extends PDb_Shortcode {
     $mode = $this->attribute_true( 'sort' ) ? 'sort' : 'none';
 
     return $this->attribute_true( 'search' ) ? ( $mode === 'sort' ? 'both' : 'filter' ) : $mode;
-  }
-
-  /**
-   * builds a URI query string from the filter parameters
-   *
-   * @param  array  $values the incoming finter values
-   * @return string URL-encoded filter parameters, empty string if filter is not active
-   */
-  private function _filter_query( $values )
-  {
-
-    if ( !empty( $values ) ) {
-
-      return http_build_query( array_merge( $values, $this->filter ) ) . '&';
-    } else
-      return '';
-  }
-
-  /**
-   * takes the $_POST array and constructs a filter statement to add to the list shortcode filter
-   */
-  private function _make_filter_statement( $post )
-  {
-
-    if ( !Participants_Db::is_column( $post['search_field'] ) )
-      return '';
-
-    $this->filter['search_field'] = $post['search_field'];
-
-
-    switch ( $post['operator'] ) {
-
-      case 'LIKE':
-
-        $operator = '~';
-        break;
-
-      case 'NOT LIKE':
-      case '!=':
-
-        $operator = '!';
-        break;
-
-      case 'gt':
-
-        $operator = '>';
-        break;
-
-      case 'lt':
-
-        $operator = '<';
-        break;
-
-      default:
-
-        $operator = '=';
-    }
-
-    $this->filter['operator'] = $operator;
-
-    if ( empty( $post['value'] ) )
-      return '';
-
-    $this->filter['value'] = $post['value'];
-
-    return $this->filter['search_field'] . $this->filter['operator'] . $this->filter['value'];
   }
 
   /**
