@@ -169,7 +169,7 @@ class PDb_Field_Editor {
         );
     }
 
-    return implode( $lines, PHP_EOL );
+    return implode( PHP_EOL, $lines );
   }
   
   /**
