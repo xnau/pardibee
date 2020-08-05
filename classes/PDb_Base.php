@@ -1776,8 +1776,6 @@ class PDb_Base {
         'instance_index' => FILTER_VALIDATE_INT,
         'target_instance' => FILTER_VALIDATE_INT,
         'pagelink' => FILTER_SANITIZE_STRING,
-        'sortstring' => FILTER_SANITIZE_STRING,
-        'orderstring' => FILTER_SANITIZE_STRING,
         'search_field' => $multi_validation,
         'operator' => $multi_validation,
         'value' => $multi_validation,
@@ -1948,7 +1946,7 @@ class PDb_Base {
     $output = '';
     for ( $i = 0; $i < strlen( $text ); ) {
       for ( $j = 0; ($j < strlen( $key ) && $i < strlen( $text ) ); $j++, $i++ ) {
-        $output .= $text{$i} ^ $key{$j};
+        $output .= $text[$i] ^ $key[$j];
       }
     }
     return $output;
