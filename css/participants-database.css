@@ -163,6 +163,7 @@ fieldset.no-border {
 .file-delete label input,
 .radio-group label input,
 .radio-subgroup label input {
+  width: auto;
   float: none;
   margin:0 2px 0 0;
   vertical-align: inherit;
