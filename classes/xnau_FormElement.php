@@ -1119,11 +1119,13 @@ abstract class xnau_FormElement {
    */
   protected function _input_tag( $type = 'text', $value = false, $select = false )
   {
-    if ( $value === false )
+    if ( $value === false ) {
       $value = $this->value;
+    }
+    
     $size = $this->size ? ' size="' . $this->size . '" ' : '';
 
-    if ( $type == 'text' && isset( $this->attributes['type'] ) ) {
+    if ( $type === 'text' && isset( $this->attributes['type'] ) ) {
       $this->attributes = array_merge( array('type' => $type), (array) $this->attributes );
     } else {
       $this->attributes['type'] = $type;
@@ -1135,6 +1137,7 @@ abstract class xnau_FormElement {
     }
 
     $value_att = in_array( $type, array('file', 'image') ) ? '' : 'value="' . esc_attr( $value ) . '"';
+    
     $html = '<input name="' . esc_attr( $this->name . ( $this->group ? '[]' : '' ) ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes($type) . $this->_class() . '  ' . $value_att . ' />';
     
     // unset the type attribute so it doesn't carry over to the next element
