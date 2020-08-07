@@ -306,6 +306,7 @@ class Participants_Db extends PDb_Base {
      * is installed sessions could be broken 
      */
     if ( ! self::wp_session_plugin_is_active() ) {
+    
       require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
     }
 
@@ -716,6 +717,7 @@ class Participants_Db extends PDb_Base {
           '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
           'action' => PDb_Manage_Fields_Updates::action_key,
           'loading_indicator' => Participants_Db::get_loading_spinner(),
+          'instance_index' => Participants_Db::$instance_index,
           /* translators: don't translate the words in brackets {} */
           'must_remove' => '<h4>' . __( 'You must remove all fields from the {name} group before deleting it.', 'participants-database' ) . '</h4>',
           /* translators: don't translate the words in brackets {} */
@@ -887,7 +889,7 @@ class Participants_Db extends PDb_Base {
       }
       $record_id = self::get_record_id_by_term( 'id', $atts['record_id'] );
     }
-
+    
     $atts['record_id'] = $record_id;
 
     return PDb_Record::print_form( $atts );
@@ -1751,7 +1753,8 @@ class Participants_Db extends PDb_Base {
 
       /**
        * readonly field data is prevented from being saved by unauthorized users 
-       * when not using the signup form or when this method is called by a function
+       * except when using the signup form or this method is directly called by 
+       * a function
        */
       if (  
               $field->is_readonly() && 
