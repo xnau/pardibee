@@ -207,13 +207,13 @@ PDbManageFields = (function ($) {
     });
     return query;
   };
-  var getUrlVars = function() {
+  var getUrlVars = function () {
     var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-        vars[key] = value;
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      vars[key] = value;
     });
     return vars;
-}
+  }
   var cancelReturn = function (event) {
     // disable autocomplete
 //    if ($.browser.mozilla) {
@@ -356,7 +356,7 @@ PDbManageFields = (function ($) {
   var set_flag = function (flag, set) {
     set_feedback(false);
     $.each(withSelected.list, function (index, value) {
-      $('#row_' + value + '_' + flag).prop('checked', set);
+      $('#row_' + value + '_' + flag + '-' + PDb_L10n.instance_index).prop('checked', set);
     });
     $.post(ajaxurl, {
       action : PDb_L10n.action,
@@ -375,7 +375,7 @@ PDbManageFields = (function ($) {
   }
   var assign_group = function (list, group) {
     $.each(list, function (index, id) {
-      $('#row_' + id + '_group').val(group).trigger('change');
+      $('#row_' + id + '_group' + '-' + PDb_L10n.instance_index).val(group).trigger('change');
     });
   }
   var get_selected_ids = function (container) {
@@ -498,7 +498,7 @@ PDbManageFields = (function ($) {
       $('.validation-attribute select').on('change', showhide_validation_message).each(showhide_validation_message);
       // set up the manage fields global action panels
       $('.button-showhide').slideUp();
-      $('button.showhide').on( 'click.show', function () {
+      $('button.showhide').on('click.show', function () {
         $('.button-showhide').not('#' + $(this).attr('for')).slideUp();
         $('#' + $(this).attr('for')).slideToggle('slow');
       });
@@ -557,15 +557,15 @@ PDbManageFields = (function ($) {
                 this.setCustomValidity($(this).data('message'));
                 $(this).closest('.editor-closed').find('.field-open-icon').trigger('click');
               });
-              
+
       // set up the incoming new field
-      if ( getUrlVars().newfield ) {
-        $('button.showhide.add-field').each(function(){
+      if (getUrlVars().newfield) {
+        $('button.showhide.add-field').each(function () {
           var el = $(this);
           if (el.closest('.manage-fields-wrap').is(':visible')) {
-            var div = $('#'+el.attr('for'));
+            var div = $('#' + el.attr('for'));
             div.find('[name=title]').val(decodeURIComponent(getUrlVars().newfield.replace(/\+/g, '%20')));
-            div.find('[name=form_element] option[value='+getUrlVars().formelement+']').attr('selected','selected');
+            div.find('[name=form_element] option[value=' + getUrlVars().formelement + ']').attr('selected', 'selected');
             el.trigger('click.show');
             div.find('[type=submit]').removeClass('disabled').addClass('enabled').prop('disabled', false);
           }
