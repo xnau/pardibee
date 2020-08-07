@@ -99,6 +99,11 @@ if ( $participant_values ) :
             'value' => $value ),
                 $participant_id
                 );
+        
+        // force readonly on ID column: editing this will break things
+        if ( in_array( $backend_column->name, array('id') ) ) {
+          $column->make_readonly();
+        }
 
         $id_line = '';
 
