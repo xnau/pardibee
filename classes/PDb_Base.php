@@ -1849,10 +1849,6 @@ class PDb_Base {
    */
   public static function wp_session_plugin_is_active()
   {
-    // first, check to see if the class has already been loaded
-    if ( class_exists('EAMann\Sessionz\Manager') ) {
-      return true;
-    }
     $plugins = get_option('active_plugins');
     return in_array('wp-session-manager/wp-session-manager.php', $plugins);
   }
