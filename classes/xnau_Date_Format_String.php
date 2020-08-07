@@ -60,7 +60,7 @@ class xnau_Date_Format_String {
    * 
    * Timezone conversion is done for unix. Windows users must exchange %z and %Z. 
    * 
-   * Unsupported date formats : S, n, t, L, B, G, u, e, I, P, Z, c, r 
+   * Unsupported date formats : S, t, L, B, G, u, e, I, P, Z, c, r 
    * Unsupported strftime formats : %U, %W, %C, %g, %r, %R, %T, %X, %c, %D, %F, %x 
    * 
    * Props: http://php.net/manual/en/function.strftime.php#96424
@@ -75,8 +75,8 @@ class xnau_Date_Format_String {
         'd' => '%d', 'D' => '%a', 'j' => ( $windows ? '%#d' : '%e' ), 'l' => '%A', 'N' => '%u', 'w' => '%w', 'z' => '%j',
         // Week - no date eq : %U, %W 
         'W' => '%V',
-        // Month - no strf eq : n, t 
-        'F' => '%B', 'm' => '%m', 'M' => '%b',
+        // Month - no strf eq : t 
+        'F' => '%B', 'm' => '%m', 'M' => '%b', 'n' => '%m',
         // Year - no strf eq : L; no date eq : %C, %g 
         'o' => '%G', 'Y' => '%Y', 'y' => '%y',
         // Time - no strf eq : B, G, u; no date eq : %r, %R, %T, %X 
