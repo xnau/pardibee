@@ -30,6 +30,14 @@ class PDb_Session {
    */
   public function __construct()
   {
+    $this->get_session_id();
+  }
+  
+  /**
+   * tells the class to find the session ID in the post or get array
+   */
+  public function get_session_id()
+  {
     $plugin_setting = get_option(Participants_Db::$participants_db_options);
     
     if ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] ) {
@@ -149,15 +157,19 @@ class PDb_Session {
    * 
    * @return session id or bool false if not found
    */
-  private function obtain_session_id()
+  public function obtain_session_id()
   {
     $sessid = false;
     $validator = array('options' => array(
         'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
         ) );
+    
     if ( array_key_exists( self::id_var, $_POST ) ) {
-      $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
+      
+      $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator ); 
+      
     } elseif ( array_key_exists( self::id_var, $_GET ) ) {
+      
       $sessid = filter_input( INPUT_GET, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
     }
     
@@ -178,11 +190,11 @@ class PDb_Session {
       $sessid = $value;
     }
     
-    if ( $sessid ) {
+    if ( $sessid && session_status() === PHP_SESSION_NONE ) {
       $this->set_session_from_id( $sessid );
     
       if ( PDB_DEBUG > 1 ) {
-        Participants_Db::debug_log(__METHOD__.' obtaining session id by alternate method: '.$sessid );
+        Participants_Db::debug_log(__METHOD__.' obtaining session id by alternate method: '.$sessid.' current session id: '. session_id() );
       }
     }
     
