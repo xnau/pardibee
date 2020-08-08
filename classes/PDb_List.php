@@ -1216,6 +1216,7 @@ class PDb_List extends PDb_Shortcode {
           <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
           <input type="hidden" name="action" value="output CSV" />
           <input type="hidden" name="CSV type" value="participant list" />
+          <input type="hidden" name="<?php echo PDb_Session::id_var ?>" value="<?php echo session_id() ?>" />
           <?php wp_nonce_field( PDb_Base::csv_export_nonce() ); ?>
           <fieldset class="inline-controls">
 <?php if ( $allow_user_filename ) echo __( 'File Name', 'participants-database' ) . ':' ?>
