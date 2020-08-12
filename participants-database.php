@@ -2832,7 +2832,14 @@ class Participants_Db extends PDb_Base {
             }
 
             if ( $query ) {
+              
+              $query = self::apply_filters('csv_export_query', $query );
+              
               $data += self::_prepare_CSV_rows( $wpdb->get_results( $query, ARRAY_A ) );
+              
+              if ( PDB_DEBUG ) {
+                Participants_Db::debug_log(' CSV export query: '.$query );
+              }
             }
 
             break;
