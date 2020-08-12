@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015  xnau webdesign
  * @license    GPL2
- * @version    0.8
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -83,7 +83,19 @@ class PDb_Template_Email extends xnau_Template_Email {
   {
     add_filter( 'pdb-tag_template_module', array( __CLASS__, 'module_name' ) );
     
-    $body = $this->html_format() ? PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ) : PDb_Tag_Template::replaced_text_raw( $this->email_template, $this->data );
+    if ( $this->html_format() ) {
+      /**
+       * filters the email body in html mode
+       * 
+       * @filter pdb-template_email_html_body
+       * @param string email body
+       * @param PDb_Template_Email the current class instance
+       * @return string email body
+       */
+      $body = Participants_Db::apply_filters('template_email_html_body', PDb_Tag_Template::replaced_rich_text( $this->email_template, $this->data ), $this );
+    } else {
+      $body = PDb_Tag_Template::replaced_text_raw( $this->email_template, $this->data );
+    }
       
     $success = $this->_mail( $this->email_to, PDb_Tag_Template::replaced_text_raw( $this->email_subject, $this->data ), $body );
     
