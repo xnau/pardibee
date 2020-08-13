@@ -288,6 +288,9 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.6.1 =
+* fixed issue with remote search with AJAX enabled
+
 = 1.9.6 =
 * translation filter applied to all translatable plugin settings
 * full compatibility with php 7.4
@@ -1344,8 +1347,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.6 =
-php 7.4 compatibility and bug fix release
+= 1.9.6.1 =
+minor bug fix release
 
 
 == Plugin Support ==
