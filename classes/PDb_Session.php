@@ -8,9 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    2.3
- * @link       https://github.com/ericmann/wp-session-manager
- * @depends    wp-session-manager
+ * @version    3.0
  * 
  * 
  */
@@ -18,11 +16,16 @@ if ( !defined( 'ABSPATH' ) )
   die;
 
 class PDb_Session {
-  
+
   /**
    * @var string name of the session id variable
    */
   const id_var = 'sess';
+
+  /**
+   * @var \PDb_submission\db_session the database session object
+   */
+  private $session_data;
 
   /**
    * construct the class
@@ -32,32 +35,29 @@ class PDb_Session {
   {
     $this->get_session_id();
   }
-  
-  /**
-   * tells the class to find the session ID in the post or get array
-   */
-  public function get_session_id()
-  {
-    $plugin_setting = get_option(Participants_Db::$participants_db_options);
-    
-    if ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] ) {
-      $this->obtain_session_id();
-    }
-  }
-
- 
 
   /**
    * get a session variable
    * 
    * @param string $key Session key
    * @param string|array|bool $default the value to return if none is found in the session
-   * @return string Session variable or $default value
+   * @return string|array session value or $default value
    */
   public function get( $key, $default = false )
   {
-    $key = sanitize_key( $key );
-    return isset( $_SESSION[$key] ) ? maybe_unserialize( $_SESSION[$key] ) : $default;
+    $value = $this->session_data->get( sanitize_key( $key ) );
+
+    return $value !== false ? $value : $default;
+  }
+  
+  /**
+   * provides the current session id
+   * 
+   * @return string
+   */
+  public function session_id()
+  {
+    return $this->session_data->session_id();
   }
 
   /**
@@ -70,14 +70,14 @@ class PDb_Session {
   public function record_id( $pid_only = false )
   {
     if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
-      $id = 0;
-      if ( ! $pid_only && array_key_exists( Participants_Db::$single_query, $_GET )  ) {
-        $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
-      } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )  ) {
-        $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
+      $record_id = 0;
+      if ( !$pid_only && array_key_exists( Participants_Db::$single_query, $_GET ) ) {
+        $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
+      } elseif ( array_key_exists( Participants_Db::$record_query, $_GET ) ) {
+        $record_id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
       }
-      if ( $id )
-        return $id;
+      if ( $record_id )
+        return $record_id;
     }
     return $this->get( 'pdbid' );
   }
@@ -93,12 +93,12 @@ class PDb_Session {
   {
     $array_object = $this->get( $key );
 
-    if (is_array( $array_object ) ) 
+    if ( is_array( $array_object ) )
       return $array_object;
-    
-    if ( is_object( $array_object ) ) 
+
+    if ( is_object( $array_object ) )
       return $array_object->toArray();
-    
+
     return $default;
   }
 
@@ -113,7 +113,7 @@ class PDb_Session {
   {
     $key = sanitize_key( $key );
 
-    $_SESSION[$key] = $value;
+    $this->session_data->save( $key, $value );
 
     return $this->get( $key );
   }
@@ -133,10 +133,11 @@ class PDb_Session {
     $key = sanitize_key( $key );
     $stored = $this->getArray( $key );
 
-    if ( is_array( $value ) && is_array( $stored ) )
-      $_SESSION[$key] = self::deep_merge( $stored, $value );
-    else
-      $_SESSION[$key] = $value;
+    if ( is_array( $value ) && is_array( $stored ) ) {
+      $value = self::deep_merge( $stored, $value );
+    }
+
+    $this->session_data->save( $key, $value );
 
     return $this->get( $key );
   }
@@ -144,35 +145,113 @@ class PDb_Session {
   /**
    * clears a session variable
    * 
-   * @param string $name the name of the variable to delete
+   * @param string $key the name of the variable to delete
    * @return null
    */
-  public function clear( $name )
+  public function clear( $key )
   {
-    unset( $_SESSION[sanitize_key( $name )] );
+    $this->session_data->clear( sanitize_key( $key ) );
+  }
+
+  /**
+   * get the user's session id
+   */
+  private function get_session_id()
+  {
+    $sessid = '';
+    
+    $sessid = $this->get_php_session_id();
+
+    if ( $sessid === '' ) {
+      $sessid = $this->use_alternate_method();
+    }
+
+    if ( PDB_DEBUG > 1 ) {
+      error_log( __METHOD__ . ' current session id: ' . $sessid );
+    }
+
+    $this->session_data = new \PDb_submission\db_session( $sessid );
+  }
+
+  /**
+   * provides the session ID from php sessions
+   * 
+   * @return string
+   */
+  private function get_php_session_id()
+  {
+    $started_here = false;
+    
+    if ( session_status() !== PHP_SESSION_ACTIVE ) {
+
+      if ( PDB_DEBUG && headers_sent() ) {
+        error_log( __METHOD__ . ' trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
+      }
+
+      error_log( __METHOD__.' starting session' );
+
+      session_start();
+      
+      $started_here = true;
+    }
+    
+    $sessid = session_id();
+    
+    if ( $started_here ) {
+      session_write_close();
+    }
+    
+    return $sessid;
   }
   
   /**
-   * sets the session ID from the post or get
+   * tries the alternate method for getting the session ID
+   * 
+   * @return string session id
+   */
+  private function use_alternate_method()
+  {
+    $this->set_alt_setting();
+    
+    return $this->obtain_session_id();
+  }
+  
+  /**
+   * sets the use alternate method setting automatically
+   */
+  private function set_alt_setting()
+  {
+    $plugin_setting = get_option( Participants_Db::$participants_db_options );
+    
+    $use_alternate_setting = ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] );
+    
+    if ( ! $use_alternate_setting ) {
+      // change the setting if php sessions are not providing an ID
+      $plugin_setting['use_session_alternate_method'] = 1;
+      update_option( Participants_Db::$participants_db_options, $plugin_setting );
+    }
+  }
+
+  /**
+   * sets the session ID from the post, get, or cookie
    * 
    * @return session id or bool false if not found
    */
-  public function obtain_session_id()
+  private function obtain_session_id()
   {
     $sessid = false;
     $validator = array('options' => array(
-        'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
-        ) );
-    
+            'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
+        ));
+
     if ( array_key_exists( self::id_var, $_POST ) ) {
-      
-      $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator ); 
-      
+
+      $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
     } elseif ( array_key_exists( self::id_var, $_GET ) ) {
-      
+
       $sessid = filter_input( INPUT_GET, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
     }
-    
+
     if ( !$sessid ) {
       $value = false;
       /**
@@ -180,47 +259,75 @@ class PDb_Session {
        * @param array of get var keys to check
        * @return string
        */
-      $get_var_keys = Participants_Db::apply_filters('session_get_var_keys', array('cm') );
+      $get_var_keys = Participants_Db::apply_filters( 'session_get_var_keys', array('cm') );
       foreach ( $get_var_keys as $key ) {
         $value = filter_input( INPUT_GET, 'cm', FILTER_VALIDATE_REGEXP, $validator );
         if ( $value ) {
           break;
         }
       }
+      
+      // if we are unable to get the ID, make one up: this one will be used from now on
       $sessid = $value;
     }
     
-    if ( $sessid && session_status() === PHP_SESSION_NONE ) {
-      $this->set_session_from_id( $sessid );
-    
-      if ( PDB_DEBUG > 1 ) {
-        Participants_Db::debug_log(__METHOD__.' obtaining session id by alternate method: '.$sessid.' current session id: '. session_id() );
+    // try the php cookie
+    if ( ! $sessid ) {
+      
+      $phpcookie = ini_get('session.name');
+      if ( empty( $phpcookie ) ) {
+        $phpcookie = 'PHPSESSID';
       }
+
+      $sessid = filter_input( INPUT_COOKIE, $phpcookie, FILTER_VALIDATE_REGEXP, $validator );
+      
     }
     
+    if ( ! $sessid ) {
+      // try our own cookie
+      $sessid = filter_input( INPUT_COOKIE, $this->cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
+      
+    }
+    
+    if ( ! $sessid ) {
+      // now we have to create an id and use that
+      $sessid = $this->create_id();
+      // save it in our cookie
+      setcookie( $this->cookie_name(), $sessid, 0, '/' );
+    }
+
+    if ( PDB_DEBUG > 1 ) {
+      Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $sessid );
+    }
+
     return $sessid;
   }
   
   /**
-   * sets up the php session with the found ID
+   * provides the cookie name
    * 
-   * @param sring $sessid
+   * @return string
    */
-  private function set_session_from_id( $sessid )
+  private function cookie_name()
   {
-    session_id($sessid);
+    return 'pdb-' . self::id_var;
   }
-  
+
 
   /**
-   * displays all session object values
+   * makes up a session ID
    * 
+   * if we can't get an ID from php sessions, make one up
+   * this will only work if the alternate session method is enabled
+   * 
+   * @return string
    */
-  public function value_dump()
+  private function create_id()
   {
-    return print_r( $_SESSION, 1 );
+    error_log(__METHOD__);
+    return session_create_id();
   }
-
+  
   /**
    * merges two arrays recursively
    * 
@@ -245,7 +352,7 @@ class PDb_Session {
     }
     return $merged;
   }
-  
+
   /**
    * truncate (clear and reset) the session table
    */
@@ -256,7 +363,7 @@ class PDb_Session {
     // truncate the session table
     $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}sm_sessions;" );
   }
-  
+
   /**
    * deletes the session table on uninstall
    */
@@ -266,7 +373,8 @@ class PDb_Session {
 
     // delete session table
     $wpdb->query( "DROP TABLE {$wpdb->prefix}sm_sessions;" );
-    
-    delete_option('sm_session_db_version');
+
+    delete_option( 'sm_session_db_version' );
   }
+
 }
