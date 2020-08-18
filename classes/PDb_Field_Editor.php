@@ -82,7 +82,8 @@ class PDb_Field_Editor {
    */
   public function open_close_class()
   {
-    return isset( $_SESSION[PDb_Manage_Fields_Updates::action_key]['editoropen'][$this->field_def->get_prop( 'id' )] ) ? 'editor-open' : 'editor-closed';
+    $session_value = Participants_Db::$session->getArray(PDb_Manage_Fields_Updates::action_key, array() );
+    return isset( $session_value['editoropen'][$this->field_def->get_prop( 'id' )] ) && $session_value['editoropen'][$this->field_def->get_prop( 'id' )] ? 'editor-open' : 'editor-closed';
   }
 
   /**
