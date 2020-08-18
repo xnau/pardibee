@@ -171,18 +171,6 @@ class Participants_Db extends PDb_Base {
   public static $validation_errors;
 
   /**
-   * an admin status or error message
-   * @var string
-   */
-  static $admin_message = '';
-
-  /**
-   * the type of admin message
-   * @var string
-   */
-  static $admin_message_type;
-
-  /**
    * name of the transient record used to hold the last recor
    * @var string
    */
@@ -305,10 +293,15 @@ class Participants_Db extends PDb_Base {
      * we do not check the version, so if a pre 2.0 version of WP Session Manager 
      * is installed sessions could be broken 
      */
-    if ( ! self::wp_session_plugin_is_active() ) {
-    
-      require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
-    }
+//    if ( ! self::wp_session_plugin_is_active() ) {
+//      if ( version_compare( PHP_VERSION, '7.1' ) < 0 ) {
+//        error_log('loding session manager 3.0.4');
+//        require_once self::$plugin_path . '/vendor/wp-session-manager-304/wp-session-manager.php';
+//      } else {
+//        error_log('loding session manager 4.2.0');
+//        require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
+//      }
+//    }
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
@@ -505,6 +498,8 @@ class Participants_Db extends PDb_Base {
     
     // check the php version for possible warning
     self::php_version_warning();
+    
+    self::_set_admin_message();
   }
 
   /**
@@ -712,10 +707,13 @@ class Participants_Db extends PDb_Base {
     }
     
     if ( false !== stripos( $hook, 'participants-database-manage_fields' ) || false !== stripos( $hook, 'pdb-participant_log_settings' ) ) {
+      
       wp_localize_script( self::$prefix . 'manage_fields', 'manageFields', array('uri' => $_SERVER['REQUEST_URI']) );
+      
       wp_localize_script( self::$prefix . 'manage_fields', 'PDb_L10n', array(
           '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
           'action' => PDb_Manage_Fields_Updates::action_key,
+          PDb_Session::id_var => self::$session->session_id(),
           'loading_indicator' => Participants_Db::get_loading_spinner(),
           'instance_index' => Participants_Db::$instance_index,
           /* translators: don't translate the words in brackets {} */
@@ -2596,9 +2594,6 @@ class Participants_Db extends PDb_Base {
     if ( self::apply_filters( 'check_submission', true ) === false )
       return;
     
-    // get the session id if needed
-    self::$session->get_session_id();
-    
     /*
      * the originating page for a multipage form is saved in a session value
      * 
@@ -2718,7 +2713,7 @@ class Participants_Db extends PDb_Base {
             self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
             
             $query_args = apply_filters( 'pdb-record_id_in_get_var', false ) ? array( 
-                PDb_Session::id_var => session_id(),
+                PDb_Session::id_var => Participants_Db::$session->session_id(),
                 //self::$record_query => $record['private_id'],
                 ) : array();
 
@@ -2821,7 +2816,7 @@ class Participants_Db extends PDb_Base {
             
             if ( is_admin() ) {
               global $current_user;
-              $query = Participants_Db::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
+              $query = self::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
               $query = str_replace( '*', ' ' . $export_columns . ' ', $query );
             } else {
               $query = self::$session->get('csv_export_query');
@@ -2924,7 +2919,7 @@ class Participants_Db extends PDb_Base {
           $redirect = $post_data['thanks_page'];
           if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
             $redirect = add_query_arg( array(
-                PDb_Session::id_var => session_id(),
+                PDb_Session::id_var => self::$session->session_id(),
                 //self::$record_query => $record['private_id'],
                     ), $post_data['thanks_page'] );
           }
