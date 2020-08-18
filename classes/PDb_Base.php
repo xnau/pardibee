@@ -23,6 +23,18 @@ class PDb_Base {
   public static $shortcode_present = false;
 
   /**
+   * an admin status or error message
+   * @var string
+   */
+  public static $admin_message = '';
+
+  /**
+   * the type of admin message
+   * @var string
+   */
+  public static $admin_message_type;
+
+  /**
    * finds the WP installation root
    * 
    * this uses constants, so it's not filterable, but the constants (if customized) 
@@ -1584,15 +1596,22 @@ class PDb_Base {
   /**
    * prints the admin message
    */
-  public static function admin_message()
+  public static function _set_admin_message()
   {
     if ( Participants_Db::$session->get( 'admin_message' ) ) {
       list(Participants_Db::$admin_message, Participants_Db::$admin_message_type) = Participants_Db::$session->get( 'admin_message' );
-      $class = Participants_Db::$admin_message_type === 'error' ? 'notice notice-error' : 'notice notice-success';
-      if ( !empty( Participants_Db::$admin_message ) ) {
-        printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, Participants_Db::$admin_message );
-        Participants_Db::$session->clear( 'admin_message' );
-      }
+    }
+  }
+
+  /**
+   * prints the admin message
+   */
+  public static function admin_message()
+  {
+    $class = Participants_Db::$admin_message_type === 'error' ? 'notice notice-error' : 'notice notice-success';
+    if ( !empty( Participants_Db::$admin_message ) ) {
+      printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, Participants_Db::$admin_message );
+      Participants_Db::$session->clear( 'admin_message' );
     }
   }
   
@@ -1850,7 +1869,7 @@ class PDb_Base {
   public static function wp_session_plugin_is_active()
   {
     $plugins = get_option('active_plugins');
-    return in_array('wp-session-manager/wp-session-manager.php', $plugins);
+    return class_exists('EAMann\Sessionz\Manager'); // in_array('wp-session-manager/wp-session-manager.php', $plugins);
   }
 
   /**
