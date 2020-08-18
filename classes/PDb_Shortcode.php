@@ -1419,8 +1419,8 @@ abstract class PDb_Shortcode {
    */
   public function clear_multipage_session()
   {
-    foreach ( array('pdbid', 'form_status', 'previous_multipage') as $value ) {
-      Participants_Db::$session->clear( $value );
+    foreach ( array('pdbid', 'form_status', 'previous_multipage') as $key ) {
+      Participants_Db::$session->clear( $key );
     }
   }
 
