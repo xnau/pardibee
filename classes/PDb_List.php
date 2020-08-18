@@ -516,14 +516,18 @@ class PDb_List extends PDb_Shortcode {
 
     $output[] = '<form method="post" class="sort_filter_form" action="' . $action . '"' . $class_att . ' data-ref="' . $ref . '" >';
     
+    $hidden_fields = array();
+    
     if ( Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
-      $hidden_fields[PDb_Session::id_var] = session_id();
+    
+      $hidden_fields[PDb_Session::id_var] = Participants_Db::$session->session_id();
     }
     
     if ( $ref === 'remote' ) {
       $hidden_fields['submit_button'] = 'search';
     }
-    $output[] = PDb_FormElement::print_hidden_fields( $this->search_sort_form_hidden_fields(), false );
+    
+    $output[] = PDb_FormElement::print_hidden_fields( array_merge( $this->search_sort_form_hidden_fields(), $hidden_fields ), false );
 
     if ( $print )
       echo $this->output_HTML( $output );
@@ -1216,7 +1220,7 @@ class PDb_List extends PDb_Shortcode {
           <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
           <input type="hidden" name="action" value="output CSV" />
           <input type="hidden" name="CSV type" value="participant list" />
-          <input type="hidden" name="<?php echo PDb_Session::id_var ?>" value="<?php echo session_id() ?>" />
+          <input type="hidden" name="<?php echo PDb_Session::id_var ?>" value="<?php echo Participants_Db::$session->session_id() ?>" />
           <?php wp_nonce_field( PDb_Base::csv_export_nonce() ); ?>
           <fieldset class="inline-controls">
 <?php if ( $allow_user_filename ) echo __( 'File Name', 'participants-database' ) . ':' ?>
