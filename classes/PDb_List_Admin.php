@@ -243,7 +243,7 @@ class PDb_List_Admin {
     $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array('options' => array('default' => 1, 'min_range' => 1)) );
     
     // include the session ID if using the alternate method
-    $sess = Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ? '&' . PDb_Session::id_var . '=' . session_id() : '';
+    $sess = Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ? '&' . PDb_Session::id_var . '=' . Participants_Db::$session->session_id() : '';
 
     /**
      * @filter pdb-admin_list_pagination_config
