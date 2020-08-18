@@ -1370,7 +1370,6 @@ class PDb_List_Query {
    */
   private function _restore_query_session()
   {
-
     $data = Participants_Db::$session->getArray( $this->query_session_name() );
 
     if ( !is_array( $data ) ) {
