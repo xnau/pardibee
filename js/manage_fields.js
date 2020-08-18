@@ -64,7 +64,8 @@ PDbManageFields = (function ($) {
                 list : [row_id],
                 action : PDb_L10n.action,
                 task : 'delete_' + thing,
-                _wpnonce : PDb_L10n._wpnonce
+                _wpnonce : PDb_L10n._wpnonce,
+                sess : PDb_L10n.sess
               },
               beforeSend : function () {
               },
@@ -277,6 +278,7 @@ PDbManageFields = (function ($) {
       id : el.closest('.field-header').find('[data-id]').data('id'),
       state : action,
       _wpnonce : PDb_L10n._wpnonce,
+      sess : PDb_L10n.sess
     });
   }
   var open_close_all_field_editors = function (container, action) {
@@ -298,6 +300,7 @@ PDbManageFields = (function ($) {
       list : list,
       state : action,
       _wpnonce : PDb_L10n._wpnonce,
+      sess : PDb_L10n.sess
     });
   }
   var showhide_validation_message = function () {
@@ -365,6 +368,7 @@ PDbManageFields = (function ($) {
       setting : set,
       selection : withSelected.ws_action,
       _wpnonce : PDb_L10n._wpnonce,
+      sess : PDb_L10n.sess,
       list : withSelected.list
     }, function (response) {
       withSelected.spinner.remove();
