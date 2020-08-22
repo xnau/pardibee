@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcipants_Db
  */
@@ -32,13 +32,6 @@ class PDb_Date_Parse {
    * PHP configurations, also localized strings
    */
   private $parse_mode = 'none';
-
-  /**
-   * @var string the input parse mode to use
-   * 
-   * values can be: string, strict, mysql
-   */
-  private $input_mode;
 
   /**
    * @var bool if true, use "european" day/month order
@@ -141,12 +134,13 @@ class PDb_Date_Parse {
   {
     $this->timestamp = Participants_Db::apply_filters( 'parse_date', $this->timestamp, $this->context );
     /*
-     * if we don't have a timestamp already (due to filtering or the input was a 
-     * timestamp) then attempt to parse the input string into a timestamp
+     * if we don't have a timestamp already (due to filtering or the input was 
+     * already a timestamp) then attempt to parse the input string into a timestamp
      */
-    if ( $this->timestamp === false ) {
+    if ( $this->timestamp_not_found() ) {
       $this->parse_input();
     }
+    
     return $this->timestamp;
   }
 
@@ -159,6 +153,7 @@ class PDb_Date_Parse {
     if ( $this->input === '0000-00-00 00:00:00' ) {
       return;
     }
+    
     /*
      * if it is a mysql timestamp, parse it 
      */
@@ -171,6 +166,7 @@ class PDb_Date_Parse {
       }
       return;
     }
+    
     /*
      * now go through a series of possible methods
      */
@@ -217,8 +213,9 @@ class PDb_Date_Parse {
     if ( !class_exists( 'IntlDateFormatter' ) || !class_exists( 'DateTime' ) ) {
       return;
     }
-    $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, NULL, NULL, $this->icu_format() );
+    $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, self::time_zone_object(), NULL, $this->icu_format() );
     $DateFormat->setLenient( false ); // we want it strict
+    
     try {
       $timestamp = $DateFormat->parse( $this->input );
     } catch (Exception $e) { }
@@ -244,6 +241,7 @@ class PDb_Date_Parse {
     $the_Date = DateTime::createFromFormat( $this->input_format, $this->input );
     
     if ( is_a( $the_Date, 'DateTime' ) ) {
+      
       $errors = $the_Date->getLastErrors();
       if ( $errors['warning_count'] === 0 && $errors['error_count'] === 0 ) {
         $errors = false;
@@ -255,9 +253,40 @@ class PDb_Date_Parse {
 
         return;
       }
+      
       $this->set_timestamp_from_datetime( $the_Date );
+      
       $this->parse_mode = 'datetime';
     }
+  }
+  
+  /**
+   * provides the WP timezone
+   * 
+   * @param bool $utc if true, use UTC timezone
+   * @return DateTimeZone object
+   */
+  public static function time_zone_object( $utc = false )
+  {
+    if ( $utc ) {
+      return new DateTimeZone( 'UTC' );
+    }
+    
+    // WP 5.3 and later
+    if ( function_exists( 'wp_timezone' ) ) {
+      return wp_timezone();
+    }
+        
+    $offset  = (float) get_option( 'gmt_offset' );
+    $hours   = (int) $offset;
+    $minutes = ( $offset - $hours );
+ 
+    $sign      = ( $offset < 0 ) ? '-' : '+';
+    $abs_hour  = abs( $hours );
+    $abs_mins  = abs( $minutes * 60 );
+    $tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+    
+    return new DateTimeZone( $tz_offset );
   }
 
   /**
@@ -267,10 +296,14 @@ class PDb_Date_Parse {
    */
   private function set_timestamp_from_datetime( DateTime $date )
   {
+    // make sure we're using the WP timezone
+    $date->setTimezone( self::time_zone_object() );
+    
     if ( $this->zero_time ) {
       $hour = Participants_Db::apply_filters( 'zero_time_hour', 0 );
       $date->setTime( $hour, 0 );
     }
+    
     $this->timestamp = $date->format( 'U' );
   }
 
