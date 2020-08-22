@@ -1588,18 +1588,25 @@ class PDb_Base {
           $type = 'success';
       }
       Participants_Db::$session->set( 'admin_message', array($message, $type) );
-      Participants_Db::$admin_message = $message;
-      Participants_Db::$admin_message_type = $type;
     }
+  }
+  
+  /**
+   * clears the admin message
+   */
+  public static function clear_admin_message()
+  {
+    Participants_Db::$session->clear( 'admin_message' );
+    Participants_Db::$admin_message = '';
   }
 
   /**
-   * prints the admin message
+   * gets the admin message from the session
    */
-  public static function _set_admin_message()
+  protected static function setup_admin_message()
   {
     if ( Participants_Db::$session->get( 'admin_message' ) ) {
-      list(Participants_Db::$admin_message, Participants_Db::$admin_message_type) = Participants_Db::$session->get( 'admin_message' );
+      list( Participants_Db::$admin_message, Participants_Db::$admin_message_type ) = Participants_Db::$session->get( 'admin_message' );
     }
   }
 
@@ -1611,7 +1618,7 @@ class PDb_Base {
     $class = Participants_Db::$admin_message_type === 'error' ? 'notice notice-error' : 'notice notice-success';
     if ( !empty( Participants_Db::$admin_message ) ) {
       printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, Participants_Db::$admin_message );
-      Participants_Db::$session->clear( 'admin_message' );
+      self::clear_admin_message();
     }
   }
   
@@ -1864,12 +1871,13 @@ class PDb_Base {
   /**
    * checks for the presence of the WP Session plugin
    * 
+   * we are no longer using this as of 1.9.6.2 #2388
+   * 
    * @return bool true if the plugin is present
    */
   public static function wp_session_plugin_is_active()
   {
-    $plugins = get_option('active_plugins');
-    return class_exists('EAMann\Sessionz\Manager'); // in_array('wp-session-manager/wp-session-manager.php', $plugins);
+    return class_exists('EAMann\Sessionz\Manager');
   }
 
   /**
