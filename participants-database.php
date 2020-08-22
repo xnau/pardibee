@@ -286,22 +286,6 @@ class Participants_Db extends PDb_Base {
     
     // set the debug global if not already
     self::set_debug_mode();
-    
-    /*
-     * initialize WP Session Manager if not already present
-     * 
-     * we do not check the version, so if a pre 2.0 version of WP Session Manager 
-     * is installed sessions could be broken 
-     */
-//    if ( ! self::wp_session_plugin_is_active() ) {
-//      if ( version_compare( PHP_VERSION, '7.1' ) < 0 ) {
-//        error_log('loding session manager 3.0.4');
-//        require_once self::$plugin_path . '/vendor/wp-session-manager-304/wp-session-manager.php';
-//      } else {
-//        error_log('loding session manager 4.2.0');
-//        require_once self::$plugin_path . '/vendor/wp-session-manager/wp-session-manager.php';
-//      }
-//    }
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
@@ -499,7 +483,12 @@ class Participants_Db extends PDb_Base {
     // check the php version for possible warning
     self::php_version_warning();
     
-    self::_set_admin_message();
+    self::setup_admin_message();
+    
+    
+    if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
+      PDb_submission\db_session::close_all();
+    }
   }
 
   /**
@@ -1763,6 +1752,7 @@ class Participants_Db extends PDb_Base {
               ) {
         $post[$column->name] = '';
       }
+      
       $new_value = false;
           
       // first process the internal fields
@@ -3430,9 +3420,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function print_list_search_result( $post, $instance )
   {
-    
-//    error_log(__METHOD__.' session: '.print_r($_SESSION,1));
-    
     /*
      * get the attributes array; these values were saved in the session array by 
      * the Shortcode class when it was instantiated
