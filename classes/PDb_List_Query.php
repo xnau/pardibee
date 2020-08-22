@@ -1036,7 +1036,7 @@ class PDb_List_Query {
     /*
      * set up special-case field types
      */
-    if ( in_array( $field_def->form_element(), array('date', 'timestamp') ) and $filter->is_string_search() ) {
+    if ( in_array( $field_def->form_element(), array('date', 'timestamp') ) && $filter->is_string_search() ) {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
@@ -1044,7 +1044,7 @@ class PDb_List_Query {
        */
       $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), array(), __METHOD__ . ' ' . $field_def->form_element() . ' field' );
 
-      $operator = in_array( $operator, array('>', '<', '>=', '<=') ) ? $operator : '=';
+      $operator = in_array( $operator, array('>', '<', '>=', '<=', '<>') ) ? $operator : '=';
       
       if ( $search_term === false ) {
         // the search term doesn't parse as a date
