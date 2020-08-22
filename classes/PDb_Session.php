@@ -34,6 +34,10 @@ class PDb_Session {
   public function __construct()
   {
     $this->get_session_id();
+    
+    if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
+      PDb_submission\db_session::close_all();
+    }
   }
 
   /**
@@ -76,8 +80,9 @@ class PDb_Session {
       } elseif ( array_key_exists( Participants_Db::$record_query, $_GET ) ) {
         $record_id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
       }
-      if ( $record_id )
+      if ( $record_id ) {
         return $record_id;
+      }
     }
     return $this->get( 'pdbid' );
   }
@@ -166,9 +171,9 @@ class PDb_Session {
       $sessid = $this->use_alternate_method();
     }
 
-    if ( PDB_DEBUG > 1 ) {
-      error_log( __METHOD__ . ' current session id: ' . $sessid );
-    }
+//    if ( PDB_DEBUG > 1 ) {
+//      error_log( __METHOD__ . ' current session id: ' . $sessid );
+//    }
 
     $this->session_data = new \PDb_submission\db_session( $sessid );
   }
@@ -187,8 +192,6 @@ class PDb_Session {
       if ( PDB_DEBUG && headers_sent() ) {
         error_log( __METHOD__ . ' trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
       }
-
-      error_log( __METHOD__.' starting session' );
 
       session_start();
       
