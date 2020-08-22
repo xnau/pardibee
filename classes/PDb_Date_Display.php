@@ -92,16 +92,21 @@ class PDb_Date_Display {
 
   /**
    * re-asserts the timezone to PHP according to the WordPress timezone setting
+   * 
    */
   public static function reassert_timezone()
   {
-    if ( Participants_Db::apply_filters( 'php_timezone_sync', true ) && Participants_Db::plugin_setting_is_true( 'sync_timezone', true ) ) {
+    // this defaults to false as of 1.9.6.2 #2413
+    if ( Participants_Db::apply_filters( 'php_timezone_sync', true ) && Participants_Db::plugin_setting_is_true( 'sync_timezone' ) ) {
+      // doing this will trigger a warning in Site Health
       date_default_timezone_set( self::timezone() );
     }
   }
   
   /**
-   * provides the default timezone to use in date calculations
+   * provides the timezone to use in date calculations
+   * 
+   * uses the WP timezone setting if available
    * 
    * @return string
    */
