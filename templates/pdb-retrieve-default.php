@@ -30,7 +30,7 @@ $mode = isset( $_POST['action'] ) && $_POST['action'] == 'success' ? 'success' :
         <?php while ( $this->have_fields() ) : $this->the_field(); ?>
         
         <?php if ($this->field->name == Participants_Db::$plugin_options['retrieve_link_identifier']) {
-          $this->field->help_text = sprintf(Participants_Db::plugin_setting('id_field_prompt'), $this->field->title);
+          $this->field->help_text = sprintf( Participants_Db::plugin_setting('id_field_prompt'), $this->field->title() );
         } ?>
 
         <tr class="<?php $this->field->print_element_class() ?>">
@@ -41,7 +41,7 @@ $mode = isset( $_POST['action'] ) && $_POST['action'] == 'success' ? 'success' :
 
             <?php $this->field->print_element(); ?>
 
-            <?php if ( $this->field->has_help_text() ) :?>
+            <?php if ( $this->field->has_help_text() ) : ?>
             <span class="helptext"><?php $this->field->print_help_text() ?></span>
             <?php endif ?>
             
