@@ -1297,7 +1297,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'checkbox',
             'help_text' => __( 'when checked, the php timezone will be set to the WordPress timezone.', 'participants-database' ) . $this->settings_help( 'sync-php-timezone'),
-            'value' => 1,
+            'value' => 0,
             'options' => array(1, 0),
         ),
     );
