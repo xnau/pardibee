@@ -157,7 +157,7 @@ class db_session {
     $transient_list = $wpdb->get_col('SELECT `option_name` FROM ' . $wpdb->options . ' WHERE `option_name` LIKE "_transient_' . self::option_base . '-%"');
     
     foreach ( $transient_list as $transient ) {
-      delete_transient($transient);
+      delete_transient( str_replace( '_transient_', '', $transient ) );
     }
   }
   
