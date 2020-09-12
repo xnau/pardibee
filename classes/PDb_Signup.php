@@ -169,6 +169,10 @@ class PDb_Signup extends PDb_Shortcode {
          */
         $this->submitted = true;
         $shortcode_atts['module'] = 'thanks';
+        
+        if ( ! Participants_Db::is_multipage_form() ) {
+          $this->set_form_status('signup-thanks');
+        }
       }
       $shortcode_atts['id'] = $this->participant_id;
     }
@@ -391,34 +395,27 @@ class PDb_Signup extends PDb_Shortcode {
   protected function get_thanks_message( $template = '' )
   {
     $data = $this->participant_values;
-
-    switch ( $this->get_form_status() ) {
-      case 'multipage-update':
-        $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', '' );
-        break;
-      default:
-        if ( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING ) === 'update' ) {
-          // this is a record form using a thanks page
-          $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', '' );
-        } else {
-          // this is a normal signup form
-          $thanks_message = Participants_Db::plugin_setting( 'signup_thanks' );
-        }
+    
+    $thanks_message = '';
+    
+    if ( strpos( $this->get_form_status(), 'update' ) !== false ) {
+      $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', $this->shortcode_atts['content'] );
+    } elseif ( strpos( $this->get_form_status(), 'signup' ) !== false ) {
+      $thanks_message = Participants_Db::plugin_setting( 'signup_thanks', $this->shortcode_atts['content'] );
     }
-
-    $template = empty( $template ) ? ( empty( $this->shortcode_atts['content'] ) ? $thanks_message : $this->shortcode_atts['content'] ) : $template;
-
 
     // add the "record_link" tag
     if ( isset( $data['private_id'] ) ) {
       $data['record_link'] = Participants_Db::get_record_link( $data['private_id'] );
     }
-
-    $this->output = '';
+    
     if ( !empty( $this->participant_values ) ) {
-      $this->output = PDb_Tag_Template::replaced_rich_text( $template, $data );
+      $this->output = PDb_Tag_Template::replaced_rich_text( $thanks_message, $data );
       unset( $_POST );
+    } else {
+      $this->output = $thanks_message;
     }
+    
     return $this->output;
   }
 
