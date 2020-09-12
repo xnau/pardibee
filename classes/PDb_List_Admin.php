@@ -467,6 +467,7 @@ class PDb_List_Admin {
           $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
           $selected_count = count( $selected_ids );
           self::set_admin_user_setting('with_selected', $selected_action );
+          
           switch ( $selected_action ) {
 
             case 'delete':
@@ -571,7 +572,7 @@ class PDb_List_Admin {
                * 
                * @param string feedback to show after the action has been performed
                */
-              Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', ''), 'updated' );
+              Participants_Db::set_admin_message( Participants_Db::apply_filters( 'admin_list_action_feedback', '' ), 'updated' );
           }
           
           if ( PDB_DEBUG ) {
