@@ -23,18 +23,6 @@ class PDb_Base {
   public static $shortcode_present = false;
 
   /**
-   * an admin status or error message
-   * @var string
-   */
-  public static $admin_message = '';
-
-  /**
-   * the type of admin message
-   * @var string
-   */
-  public static $admin_message_type;
-
-  /**
    * finds the WP installation root
    * 
    * this uses constants, so it's not filterable, but the constants (if customized) 
@@ -1597,29 +1585,50 @@ class PDb_Base {
   public static function clear_admin_message()
   {
     Participants_Db::$session->clear( 'admin_message' );
-    Participants_Db::$admin_message = '';
-  }
-
-  /**
-   * gets the admin message from the session
-   */
-  protected static function setup_admin_message()
-  {
-    if ( Participants_Db::$session->get( 'admin_message' ) ) {
-      list( Participants_Db::$admin_message, Participants_Db::$admin_message_type ) = Participants_Db::$session->get( 'admin_message' );
-    }
   }
 
   /**
    * prints the admin message
    */
   public static function admin_message()
-  {
-    $class = Participants_Db::$admin_message_type === 'error' ? 'notice notice-error' : 'notice notice-success';
-    if ( !empty( Participants_Db::$admin_message ) ) {
-      printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, Participants_Db::$admin_message );
+  {    
+    $class = self::admin_message_type() === 'error' ? 'notice notice-error' : 'notice notice-success';
+    if ( !empty( self::admin_message_content() ) ) {
+      printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, self::admin_message_content() );
       self::clear_admin_message();
     }
+  }
+  
+  /**
+   * provides the current admin message
+   * 
+   * @return string
+   */
+  public static function admin_message_content()
+  {
+    $message = Participants_Db::$session->get( 'admin_message' );
+    
+    if ( is_array( $message ) ) {
+      return $message[0];
+    }
+    
+    return '';
+  }
+  
+  /**
+   * provides the current admin message
+   * 
+   * @return string
+   */
+  public static function admin_message_type()
+  {
+    $message = Participants_Db::$session->get( 'admin_message' );
+    
+    if ( is_array( $message ) ) {
+      return $message[1];
+    }
+    
+    return '';
   }
   
   /**
