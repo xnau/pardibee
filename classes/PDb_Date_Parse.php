@@ -213,6 +213,7 @@ class PDb_Date_Parse {
     if ( !class_exists( 'IntlDateFormatter' ) || !class_exists( 'DateTime' ) ) {
       return;
     }
+    
     $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, self::time_zone_object(), NULL, $this->icu_format() );
     $DateFormat->setLenient( false ); // we want it strict
     
