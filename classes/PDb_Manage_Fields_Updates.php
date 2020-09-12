@@ -302,7 +302,7 @@ class PDb_Manage_Fields_Updates {
     if ( $result === false ) {
       if ( $wpdb->last_error ) {
         Participants_Db::set_admin_message( $this->parse_db_error( $wpdb->last_error, $action ), 'error' );
-      } elseif ( empty( Participants_Db::$admin_message ) ) {
+      } elseif ( empty( Participants_Db::admin_message_content() ) ) {
         Participants_Db::set_admin_message( __( 'There was an error; the settings were not saved.', 'participants-database' ), 'error' );
       }
     } elseif ( $result ) {
