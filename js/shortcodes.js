@@ -74,6 +74,12 @@ PDbShortcodes = (function ($) {
                 300 //speed
                 );
       }
+      // hide the "no file chosen" text if a file is loaded 
+      $('.pdb-record input[type=file]').each( function(){
+        if ($(this).prev('input[type=hidden]').val()) {
+          $(this).css({color:'transparent'});
+        }
+      });
     }
   }
 }(jQuery));
