@@ -321,6 +321,16 @@ abstract class PDb_Shortcode {
     }
     return $state;
   }
+  
+  /**
+   * sets the output property
+   * 
+   * @param string $content
+   */
+  public function set_output( $content )
+  {
+    $this->output = esc_html($content);
+  }
 
   /**
    * dumps the output of the template into the output property
