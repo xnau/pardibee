@@ -271,7 +271,7 @@ class PDb_List_Query {
   /**
    * provides current filter information
    * 
-   * this is primarily used to pouplate the search form with submitted values
+   * this is primarily used to populate the search form with submitted values
    * 
    * @param string $key the value to return, if not provided, returns the whole array
    * @return string|array value from the current filter
