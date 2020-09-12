@@ -1,4 +1,5 @@
 <?php
+
 /**
  * handles the presentation of the editable frontend record
  * 
@@ -12,17 +13,20 @@
  * @link       http://xnau.com/wordpress-plugins/
  * 
  */
-if ( ! defined( 'ABSPATH' ) ) die;
+if ( !defined( 'ABSPATH' ) )
+  die;
 /*
  * class for displaying an editable record on the frontend with the [pdb_record] shortcode
  *
  */
+
 class PDb_Record extends PDb_Shortcode {
 
   /**
    * @var string class for the wrapper
    */
   var $wrap_class = 'participant-record';
+
   /**
    * @var string the originating page in a multipage form
    */
@@ -33,46 +37,50 @@ class PDb_Record extends PDb_Shortcode {
   /**
    * initializes the record edit object
    */
-  public function __construct($shortcode_atts) {
+  public function __construct( $shortcode_atts )
+  {
 
     // define shortcode-specific attributes to use
     $add_atts = array(
         'module' => 'record',
         'class' => 'edit-participant ' . $this->wrap_class,
-        'submit_button' => Participants_Db::plugin_setting('save_changes_button'),
+        'submit_button' => Participants_Db::plugin_setting( 'save_changes_button' ),
     );
     // run the parent class initialization to set up the parent methods 
-    parent::__construct($shortcode_atts, $add_atts);
+    parent::__construct( $shortcode_atts, $add_atts );
 
-    add_action('pdb-before_field_added_to_iterator', array( $this, 'alter_field' ) );
+    add_action( 'pdb-before_field_added_to_iterator', array($this, 'alter_field') );
 
     $this->_setup_multipage();
 
     // set the action URI for the form
     $this->_set_submission_page();
 
-    if (false === $this->shortcode_atts['record_id']) {
+    if ( false === $this->shortcode_atts['record_id'] ) {
 
       $this->_not_found();
     } else {
 
       $this->participant_id = $this->shortcode_atts['record_id'];
 
-      $record_values = Participants_Db::get_participant($this->participant_id);
+      $record_values = Participants_Db::get_participant( $this->participant_id );
 
-      if ($record_values === false ) {
-
-        $this->_not_found();
-      } else {
+      if ( $record_values === false ) {
         
+        // the ID is not valid
+        $this->participant_id = 0;
+        $this->_not_found();
+        
+      } else {
+
         // drop in any default values 
-        $this->participant_values = array_merge( 
-                array_filter( Participants_Db::get_default_record(), 'Participants_Db::is_set_value' ), 
-                array_filter( $record_values, 'Participants_Db::is_set_value' )  
-                );
+        $this->participant_values = array_merge(
+                array_filter( Participants_Db::get_default_record(), 'Participants_Db::is_set_value' ),
+                array_filter( $record_values, 'Participants_Db::is_set_value' )
+        );
 
         // update the access timestamp
-        Participants_Db::set_record_access($this->participant_id);
+        Participants_Db::set_record_access( $this->participant_id );
 
         $this->_get_validation_errors();
 
@@ -92,9 +100,10 @@ class PDb_Record extends PDb_Shortcode {
    * @param array $params parameters passed by the shortcode
    * @return string form HTML
    */
-  public static function print_form($params) {
+  public static function print_form( $params )
+  {
 
-    $record = new PDB_Record($params);
+    $record = new PDB_Record( $params );
 
     return $record->output;
   }
@@ -102,7 +111,8 @@ class PDb_Record extends PDb_Shortcode {
   /**
    * includes the shortcode template
    */
-  protected function _include_template() {
+  protected function _include_template()
+  {
 
     include $this->template;
   }
@@ -110,7 +120,8 @@ class PDb_Record extends PDb_Shortcode {
   /**
    * prints the form header and hidden fields
    */
-  public function print_form_head() {
+  public function print_form_head()
+  {
 
     $hidden = array(
         'action' => 'update',
@@ -118,7 +129,7 @@ class PDb_Record extends PDb_Shortcode {
         Participants_Db::$record_query => $this->participant_values['private_id'],
     );
 
-    $this->_print_form_head($hidden);
+    $this->_print_form_head( $hidden );
   }
 
   /**
@@ -128,19 +139,19 @@ class PDb_Record extends PDb_Shortcode {
    * @param string $button_value submit button text
    * 
    */
-  public function print_submit_button($class = 'button-primary', $button_value = false) {
-    
-    if (!empty($this->participant_id)) {
-    
-			$button_value = $button_value ? $button_value : $this->shortcode_atts['submit_button'];
+  public function print_submit_button( $class = 'button-primary', $button_value = false )
+  {
 
-			$pattern = '<input class="%s pdb-submit" type="submit" value="%s" name="save" >';
+    if ( !empty( $this->participant_id ) ) {
 
-			printf($pattern, $class, $button_value);
-		}
+      $button_value = $button_value ? $button_value : $this->shortcode_atts['submit_button'];
+
+      $pattern = '<input class="%s pdb-submit" type="submit" value="%s" name="save" >';
+
+      printf( $pattern, $class, $button_value );
+    }
   }
 
-  
   /**
    * prints a "next" button for multi-page forms
    * 
@@ -148,16 +159,18 @@ class PDb_Record extends PDb_Shortcode {
    * 
    * @return string
    */
-  public function print_back_button() {
-    if (strlen($this->previous_multipage) > 0) {
-      printf('<a type="button" class="button button-secondary" href="%s" >%s</a>', $this->previous_multipage, __('back', 'participants-database'));
+  public function print_back_button()
+  {
+    if ( strlen( $this->previous_multipage ) > 0 ) {
+      printf( '<a type="button" class="button button-secondary" href="%s" >%s</a>', $this->previous_multipage, __( 'back', 'participants-database' ) );
     }
   }
 
   /**
    * alters a password field to prevent (hopefully!) autocomplete
    */
-  public function alter_field( $field ) {
+  public function alter_field( $field )
+  {
     switch ( $field->form_element ) {
       case 'password':
         $field->attributes['autocomplete'] = 'off';
@@ -168,29 +181,29 @@ class PDb_Record extends PDb_Shortcode {
   /**
    * prints a 'save changes' label according to the plugin setting
    */
-  private function print_save_changes_label() {
+  private function print_save_changes_label()
+  {
 
-    echo Participants_Db::plugin_setting('save_changes_label');
+    echo Participants_Db::plugin_setting( 'save_changes_label' );
   }
-
 
   /**
    * outputs a "record not found" message
    *
    * the message is defined in the plugin settings
    */
-  protected function _not_found() {
-    
-    if (Participants_Db::plugin_setting_is_true('no_record_use_template') || version_compare( $this->template_version, '0.2', '<' ) ) {
+  protected function _not_found()
+  {
 
-        $this->_print_from_template();
-      
+    if ( Participants_Db::plugin_setting_is_true( 'no_record_use_template' ) || version_compare( $this->template_version, '0.2', '<' ) ) {
+
+      $this->_print_from_template();
     } else {
-      $this->output = empty(Participants_Db::$plugin_options['no_record_error_message']) ? '' : '<p class="alert alert-error">' . Participants_Db::plugin_setting('no_record_error_message') . '</p>';
+
+      $error_message = Participants_Db::plugin_setting( 'no_record_error_message' );
+      $this->output = empty( $error_message ) ? '' : '<p class="alert alert-error">' . $error_message . '</p>';
     }
   }
-  
-  
 
   /**
    * sets the form submission page
@@ -198,34 +211,32 @@ class PDb_Record extends PDb_Shortcode {
   protected function _set_submission_page()
   {
     $form_status = $this->get_form_status();
-    
-    if (!empty($this->shortcode_atts['action'])) {
-      $this->submission_page = Participants_Db::find_permalink($this->shortcode_atts['action']);
-      if ($this->submission_page !== false && $form_status === 'normal') {
+
+    if ( !empty( $this->shortcode_atts['action'] ) ) {
+      $this->submission_page = Participants_Db::find_permalink( $this->shortcode_atts['action'] );
+      if ( $this->submission_page !== false && $form_status === 'normal' ) {
         $form_status = 'multipage-update';
       }
     }
-    
-    if (!$this->submission_page) {
+
+    if ( !$this->submission_page ) {
       $this->submission_page = $_SERVER['REQUEST_URI'];
     }
-    
-    $this->set_form_status($form_status);
+
+    $this->set_form_status( $form_status );
   }
-  
+
   /**
    * sets up the multipage referral
    * 
    * @retrun null
    */
-  protected function _setup_multipage() {
-    $this->previous_multipage = Participants_Db::$session->get('previous_multipage', '');
-    if (strlen($this->previous_multipage) === 0) {
+  protected function _setup_multipage()
+  {
+    $this->previous_multipage = Participants_Db::$session->get( 'previous_multipage', '' );
+    if ( strlen( $this->previous_multipage ) === 0 ) {
       $this->clear_multipage_session();
     }
   }
-  
-  
-  
-  
+
 }
