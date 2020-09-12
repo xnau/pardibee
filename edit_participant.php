@@ -240,6 +240,8 @@ if ( $participant_values ) :
                     $column->set_value( '' );
                   break;
               }
+              
+              do_action( 'pdb-before_display_form_input', $column );
 
               if ( 'rich-text' == $column->form_element ) {
 
