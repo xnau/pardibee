@@ -483,8 +483,6 @@ class Participants_Db extends PDb_Base {
     // check the php version for possible warning
     self::php_version_warning();
     
-    self::setup_admin_message();
-    
     
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
@@ -592,7 +590,7 @@ class Participants_Db extends PDb_Base {
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
-    wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.2' );
+    wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.5' );
     wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.4' );
 //    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery'), '0.5' );
@@ -1954,7 +1952,7 @@ class Participants_Db extends PDb_Base {
 //       error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
       return false;
-    } elseif ( !empty( self::$admin_message ) and 'error' == self::$admin_message_type ) {
+    } elseif ( !empty( self::admin_message_content() ) and 'error' == self::admin_message_type() ) {
       return false;
     }
 
