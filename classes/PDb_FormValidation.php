@@ -476,6 +476,7 @@ class PDb_FormValidation extends xnau_FormValidation {
      * @filter 'pdb-error_css'
      * @param string  $CSS    the error CSS
      * @param array   $errors the current errors array
+     * @return string
      */
     $error_css = Participants_Db::apply_filters( 'error_css', implode( ",\r", $this->error_selectors() ) . '{ ' . $this->error_style . ' }', $this->errors );
     if ( !empty( $error_css ) ) {
