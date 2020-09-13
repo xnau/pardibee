@@ -214,7 +214,15 @@ class PDb_Date_Parse {
       return;
     }
     
-    $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, self::time_zone_object(), NULL, $this->icu_format() );
+    // head off problems with old timezone string values #2422
+    try {
+      $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, self::time_zone_object(), NULL, $this->icu_format() );
+    }
+    catch ( Exception $e) {
+      Participants_Db::debug_log(__METHOD__.' '.$e->getMessage().' TZ string: "'. get_option('timezone_string') . '"' );
+      $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, 'UTC', NULL, $this->icu_format() );
+    }
+    
     $DateFormat->setLenient( false ); // we want it strict
     
     try {
