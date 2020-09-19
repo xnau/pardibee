@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -202,8 +202,10 @@ abstract class xnau_CSV_Import {
 
       return false;
     }
+    
+    include_once Participants_Db::$plugin_path . 'vendor/ParseCsv/parsecsv.lib.php';
 
-    $this->CSV = new parseCSV();
+    $this->CSV = new \ParseCsv\Csv();
 
     /* this method determines the delimiter automatically then parses the file; 
      * we don't use it because it seems easily confused
