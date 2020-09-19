@@ -288,6 +288,11 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 1.9.6.5 =
+* fixed issue with the use of the search_fields attribute in the list shortcode
+* fixed issue with forms submission error CSS not highlighting input elements
+* updated the parseCSV library
+
 = 1.9.6.4 =
 * fixed issue with critical error with legacy timezone setting
 * compatibility fixes for php 7.4
@@ -1357,7 +1362,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.6.4 =
+= 1.9.6.5 =
 minor bug fix release
 
 
