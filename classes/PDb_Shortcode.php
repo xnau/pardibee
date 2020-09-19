@@ -1052,6 +1052,7 @@ abstract class PDb_Shortcode {
         }
       }
     }
+    
     return array_values( $field_list );
   }
 
