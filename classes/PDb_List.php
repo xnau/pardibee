@@ -573,6 +573,11 @@ class PDb_List extends PDb_Shortcode {
       $values = $this->list_query->current_filter( 'search_fields' );
       $value = isset( $values[$multifield_count] ) ? $values[$multifield_count] : '';
     }
+    
+    // override the search columns with the shortcode attribute if present
+    if ( isset( $this->shortcode_atts['search_fields'] ) ) {
+      $columns = $this->shortcode_atts['search_fields'];
+    }
 
     /**
      * @filter pdb-searchable_columns
