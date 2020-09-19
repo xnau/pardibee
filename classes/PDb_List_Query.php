@@ -495,11 +495,6 @@ class PDb_List_Query {
    */
   private function _add_filter_from_post()
   {
-// no longer checking nonces here #1575
-//    if ( !Participants_Db::nonce_check( filter_input( INPUT_POST, 'filterNonce', FILTER_SANITIZE_STRING ), PDb_List::$list_filter_nonce_key ) ) {
-//      return null;
-//    }
-    
     // look for the identifier of the list search submission
     if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === Participants_Db::apply_filters( 'list_query_action', 'pdb_list_filter' ) ) {
       
