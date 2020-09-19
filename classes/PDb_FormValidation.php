@@ -387,19 +387,26 @@ class PDb_FormValidation extends xnau_FormValidation {
         $field = Participants_Db::$fields[$fieldname];
         /* @var $field PDb_Form_Field_Def */
 
-        switch ( $field->form_element() ) {
-          case 'captcha':
-          case 'link':
-            $field_selector = '[name="' . $field->name() . '[]"]';
+        switch ( true ) {
+          
+          case $field->form_element() === 'checkbox':
+            
+            $field_selector = '[for^="pdb-' . $field->name() . '"]';
             break;
-          case 'multi-checkbox':
-          case 'radio':
-          case 'checkbox':
-          case 'multi-select-other':
-            $field_selector = '[for="pdb-' . $field->name() . '"]';
+          
+          case $field->form_element() === 'captcha':
+          case $field->form_element() === 'link':
+          case $field->form_element() === 'text-line':
+          case $field->form_element() === 'text-area':
+            
+            $field_selector = '[name^="' . $field->name() . '"]';
             break;
+          
+          case $field->is_value_set():
+          case $field->is_upload_field():
           default:
-            $field_selector = '[name="' . $field->name() . '"]';
+            
+            $field_selector = '.' . $field->name() . '-input-group';
         }
 
         //$this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
@@ -449,6 +456,7 @@ class PDb_FormValidation extends xnau_FormValidation {
         $error_message = $error->slug;
         $this->error_class = Participants_Db::$prefix . 'message';
       }
+      
       $error->set_error_message( $error_message );
       $error->add_message_class( $this->error_class . '-' . $fieldname );
     }
