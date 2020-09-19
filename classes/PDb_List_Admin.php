@@ -1231,7 +1231,7 @@ query: '. $last_query : '' ));
          */
         private static function _print_export_form()
         {
-
+          Participants_Db::$session->clear('csv_export_fields'); // reset the stored export field list #2406
           $base_filename = self::get_admin_user_setting( 'csv_base_filename', Participants_Db::PLUGIN_NAME );
           ?>
 
