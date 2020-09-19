@@ -616,6 +616,7 @@ class Participants_Db extends PDb_Base {
      */
     if ( is_object( $post ) && self::apply_filters( 'shortcode_in_content', preg_match( '/(?<!\[)\[pdb_/', $post->post_content ) > 0, $post ) ) {
       do_action( Participants_Db::$prefix . 'shortcode_present' );
+      self::$shortcode_present = true;
     }
   }
 
