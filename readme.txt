@@ -129,7 +129,7 @@ If you are multi-lingual and feel like contributing a translation, please contac
 
 Please note that several of these translations are out of date. If your language is in this list and you'd like to help me provide the latest translation, please contact me.
 
-The latest POT file is always [available here.](http://plugins.svn.wordpress.org/participants-database/trunk/participants-database.pot)
+The latest POT file is always [available here.](https://plugins.trac.wordpress.org/browser/participants-database/trunk/languages/participants-database.pot)
 
 = Key Image Credit =
 
