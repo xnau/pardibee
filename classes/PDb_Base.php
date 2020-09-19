@@ -1700,7 +1700,6 @@ class PDb_Base {
    */
   public static function has_shortcode( $content = '', $tag = '[pdb_' )
   {
-
     // get all shortcodes
     preg_match_all( '/' . get_shortcode_regex() . '/s', $content, $matches, PREG_SET_ORDER );
     // none found
@@ -1714,6 +1713,29 @@ class PDb_Base {
       }
     }
     return false;
+  }
+  
+  /**
+   * flushes the page cache
+   * 
+   * Each caching plugin has its own flush mechanism, so there's really way to 
+   * guarantee that the cache will be flushed on a particular site. We will add 
+   * flush commands for most of the most popular caching plugins here, also a 
+   * hook so that a site administrator can set up a page cache flush for their 
+   * particular caching setup.
+   * 
+   * @global WP_Post $post
+   * 
+   */
+  public static function flush_page_cache()
+  {
+    global $post;
+    
+    if ( ! is_a( $post, 'WP_Post') ) {
+      return;
+    }
+    
+    do_action( 'w3tc_flush_post', $post->ID );
   }
 
   /**
