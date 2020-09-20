@@ -1725,17 +1725,27 @@ class PDb_Base {
    * particular caching setup.
    * 
    * @global WP_Post $post
-   * 
+   * @param string $path the current page path
    */
-  public static function flush_page_cache()
+  public static function flush_page_cache( $path )
   {
     global $post;
     
-    if ( ! is_a( $post, 'WP_Post') ) {
-      return;
+    if ( is_a( $post, 'WP_Post') ) {
+    
+      // W3 Total Cache
+      do_action( 'w3tc_flush_post', $post->ID );
+      
     }
     
-    do_action( 'w3tc_flush_post', $post->ID );
+    $url = site_url($path);
+    
+    // WP Cloudflare Super Page Cache
+    global $sw_cloudflare_pagecache;
+    if ( is_object( $sw_cloudflare_pagecache ) ) {
+      $objects["cache_controller"]->purge_urls( array( $url ) );
+    }
+    
   }
 
   /**
