@@ -70,12 +70,12 @@ class PDb_List_Query {
   var $i18n;
 
   /**
-   * @var the sanitized post array
+   * @var array the sanitized post array
    */
   private $post_input;
 
   /**
-   * @var the sanitized get array
+   * @var array the sanitized get array
    */
   private $get_input;
 
@@ -1031,7 +1031,7 @@ class PDb_List_Query {
     /*
      * set up special-case field types
      */
-    if ( in_array( $field_def->form_element(), array('date', 'timestamp') ) && $filter->is_string_search() ) {
+    if (  $filter->has_search_term() && in_array( $field_def->form_element(), array('date', 'timestamp') ) ) {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
@@ -1054,7 +1054,15 @@ class PDb_List_Query {
          */
         $statement = 'DATE(p.' . $field_def->name() . ') ' . $operator . ' DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
       } else {
-        $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
+        /*
+         * if the date query was submitted on a standard search form, convert 
+         * it to a 24-hour date range #2440
+         */
+        if ( ! empty( $this->post_input['search_field'] ) && empty( $this->subclauses ) && $operator === '=' ) {
+          $statement = 'p.' . $field_def->name() . ' >= CAST(' . $search_term . ' AS SIGNED) AND p.' . $field_def->name() . ' < CAST(' . strtotime( '+ 24 hours', $search_term ) . ' AS SIGNED)';
+        } else {
+          $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
+        }
       }
     } elseif ( $filter->is_empty_search() ) {
 
