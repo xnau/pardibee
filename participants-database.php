@@ -318,6 +318,9 @@ class Participants_Db extends PDb_Base {
     
     // this is only fired if there is a plugin shortcode on the page
     add_action( 'pdb-shortcode_present', array(__CLASS__, 'add_shortcode_includes') );
+    
+    // clear page caches on the pdb-clear_page_cache action
+    add_action( 'pdb-clear_page_cache', array( 'PDb_Base', 'flush_page_cache' ) );
 
     /**
      * MULTISITE
@@ -1549,6 +1552,8 @@ class Participants_Db extends PDb_Base {
             ) {
       return false;
     }
+    
+    do_action( 'pdb-clear_page_cache', $post['shortcode_page'] );
     
     // if the column names are getting supplied, assume it is a function call, not a post submission
     $func_call = is_array( $column_names );
