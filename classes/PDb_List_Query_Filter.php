@@ -270,9 +270,21 @@ class PDb_List_Query_Filter {
    * 
    * @return bool true if term is a non-empty string
    */
-  public function is_string_search()
+  public function has_search_term()
   {
     return is_string( $this->term ) && trim( $this->term ) !== '';
+  }
+
+  /**
+   * is the term defined?
+   * 
+   * alias of has_search_term()
+   * 
+   * @return bool true if term is a non-empty string
+   */
+  public function is_string_search()
+  {
+    return $this->has_search_term();
   }
 
   /**
