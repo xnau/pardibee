@@ -117,7 +117,7 @@ class xnau_Template_Email {
   }
 
   /**
-   * sends a mesage through the WP mail handler function
+   * sends a message through the WP mail handler function
    *
    * @param string $recipients comma-separated list of email addresses
    * @param string $subject    the subject of the email
