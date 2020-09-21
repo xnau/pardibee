@@ -340,7 +340,7 @@ class PDb_Init {
 // clear user options
     $delete_keys = array(
         Participants_Db::$prefix . PDb_List_Admin::$user_setting_name . '%',
-        Participants_Db::$prefix . PDb_List_Admin::$filter_option . '%',
+        Participants_Db::$prefix . PDb_submission\admin_list_filter::$filter_option . '%',
     );
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $delete_keys ) . '"';
     $options = $wpdb->get_col( $sql );
