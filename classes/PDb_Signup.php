@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -78,18 +78,6 @@ class PDb_Signup extends PDb_Shortcode {
    * @var string header added to receipts and notifications
    */
   private $email_header;
-
-  /**
-   *
-   * @var array holds the submission values
-   */
-  private $post = array();
-
-  /**
-   *
-   * @var array error messages
-   */
-  private $errors = array();
 
 	/**
    * instantiates the signup form object
@@ -285,7 +273,7 @@ class PDb_Signup extends PDb_Shortcode {
     $this->receipt_subject = Participants_Db::plugin_setting( 'signup_receipt_email_subject' );
     $this->receipt_body = Participants_Db::plugin_setting( 'signup_receipt_email_body' );
     $this->email_header = Participants_Db::$email_headers;
-    $this->recipient = @$this->participant_values[Participants_Db::plugin_setting( 'primary_email_address_field' )];
+    $this->recipient = $this->participant_values[Participants_Db::plugin_setting( 'primary_email_address_field' )];
   }
 
   /**
