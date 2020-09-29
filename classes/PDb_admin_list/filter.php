@@ -13,17 +13,22 @@
  * @depends    
  */
 
-namespace PDb_submission;
+namespace PDb_admin_list;
 
 use \Participants_Db;
 
-class admin_list_filter {
+class filter {
 
   /**
    * 
    * @var string name of the admin user filter option
    */
-  public static $filter_option = 'admin_list_filter';
+  public static $filter_option = 'pdb-admin_list_filter';
+  
+  /**
+   * @var string key for the filter cache
+   */
+  const cachekey = 'pdbadminlistfilter';
 
   /**
    * sets up the filter object
@@ -46,7 +51,14 @@ class admin_list_filter {
    */
   public function get_filter()
   {
-    return get_option( self::$filter_option, $this->default_filter() );
+    $filter = wp_cache_get(self::cachekey);
+    
+    if ( ! $filter ) {
+      $filter = get_option( self::$filter_option, $this->default_filter() );
+      wp_cache_add( self::cachekey, $filter );
+    }
+    
+    return $filter;
   }
 
   /**
@@ -79,13 +91,13 @@ class admin_list_filter {
    * 
    * @return array
    */
-  public function get_filter_set( $index )
+  public function get_set( $index )
   {
     $filter = $this->get_filter();
     if ( isset( $filter['search'][$index] ) && is_array( $filter['search'][$index] ) ) {
       return $filter['search'][$index];
     } else {
-      return $default_filter['search'][0];
+      return $this->default_filter()['search'][0];
     }
   }
 
@@ -97,6 +109,61 @@ class admin_list_filter {
   public function save_filter( $filter )
   {
     update_option( self::$filter_option, $this->validate_filter( $filter ) );
+    wp_cache_delete( self::cachekey );
+  }
+  
+  /**
+   * resets the stored filter to the default
+   */
+  public function reset()
+  {
+    $this->save_filter( $this->default_filter() );
+  }
+  
+  /**
+   * provides the number of search filters
+   * 
+   * @return int
+   */
+  public function count()
+  {
+    return is_array( $this->get_filter() ) ? count( $this->get_filter() ) : 0;
+  }
+  
+  /**
+   * tells if there is a search defined
+   * 
+   * @return bool
+   */
+  public function has_search()
+  {
+    return $this->count() > 0;
+  }
+  
+  /**
+   * provides global filter values
+   * 
+   * @param string $name of the value to get
+   */
+  public function __get( $name )
+  {
+    $filter = $this->get_filter();
+    if ( isset( $filter[$name] ) ) {
+      return $filter[$name];
+    }
+    error_log(__METHOD__.' undefined property: '.$name);
+  }
+  
+  /**
+   * tells if a filter set is a valid search
+   * 
+   * @param int $index the index of the set to check
+   * @return bool true if the search set is valid 
+   */
+  public function is_valid_set( $index )
+  {
+    $filter = $this->get_set($index);
+    return $filter['search_field'] !== '' && $filter['search_field'] !== 'none' && \Participants_Db::is_column( $filter['search_field'] );
   }
 
   /**

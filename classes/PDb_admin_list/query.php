@@ -13,15 +13,15 @@
  * @depends    
  */
 
-namespace PDb_submission;
+namespace PDb_admin_list;
 
 use \PDb_List_Admin;
 use \Participants_Db;
 
-class admin_list_query {
+class query {
   
   /**
-   * @var array the admin list filter
+   * @var \PDb_admin_list\filter the admin list filter
    */
   private $filter;
 
@@ -100,8 +100,7 @@ class admin_list_query {
     switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
 
       case PDb_List_Admin::$i18n['clear'] :
-        $this->filter = PDb_List_Admin::$list_filter->default_filter();
-        PDb_List_Admin::$list_filter->save_filter( $this->filter );
+        $this->filter->reset();
         
       case PDb_List_Admin::$i18n['sort']:
       case PDb_List_Admin::$i18n['filter']:
@@ -113,19 +112,19 @@ class admin_list_query {
 
         $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
 
-        if ( $this->is_search_submission() ) {
+        if ( $this->filter->has_search() ) {
           $this->list_query .= 'WHERE ';
-          for ( $i = 0; $i <= count( $this->filter['search'] ) - 1; $i++ ) {
-            if ( $this->filter['search'][$i]['search_field'] !== 'none' && $this->filter['search'][$i]['search_field'] !== '' && Participants_Db::is_column( $this->filter['search'][$i]['search_field'] ) ) {
-              $this->_add_where_clause( $this->filter['search'][$i] );
+          for ( $i = 0; $i <= $this->filter->count() - 1; $i++ ) {
+            if ( $this->filter->is_valid_set( $i ) ) {
+              $this->_add_where_clause( $this->filter->get_set( $i ) );
             }
-            if ( $i === count( $this->filter['search'] ) - 1 ) {
+            if ( $i === $this->filter->count() - 1 ) {
               if ( $this->inparens ) {
                 $this->list_query .= ') ';
                 $this->inparens = false;
               }
-            } elseif ( $this->filter['search'][$i + 1]['search_field'] !== 'none' && $this->filter['search'][$i + 1]['search_field'] !== '' ) {
-              $this->list_query .= $this->filter['search'][$i]['logic'] . ' ';
+            } elseif ( $this->filter->get_set( $i + 1 )['search_field'] !== 'none' && $this->filter->get_set( $i + 1 )['search_field'] !== '' ) {
+              $this->list_query .= $this->filter->get_set( $i )['logic'] . ' ';
             }
           }
           // if no where clauses were added, remove the WHERE operator
@@ -135,28 +134,8 @@ class admin_list_query {
         }
 
         // add the sorting
-        $this->list_query .= ' ORDER BY p.' . esc_sql( $this->filter['sortBy'] ) . ' ' . esc_sql( $this->filter['ascdesc'] );
+        $this->list_query .= ' ORDER BY p.' . esc_sql( $this->filter->sortBy ) . ' ' . esc_sql( $this->filter->ascdesc );
     }
-  }
-  
-  /**
-   * checks the search filter for a valid search
-   * 
-   * @return bool true if a search has been submitted
-   */
-  private function is_search_submission()
-  {
-    if ( ! isset( $this->filter['search'] ) || ! is_array( $this->filter['search'] ) ) {
-      return false;
-    }
-    
-    foreach( $this->filter['search'] as $fieldsearch ) {
-      if ( $fieldsearch['search_field'] !== '' ) {
-        return true;
-      }
-    }
-    
-    return false;
   }
 
   /**
@@ -236,8 +215,9 @@ class admin_list_query {
       }
 
       $value = \PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $search_field->form_element() );
-      if ( $value2 )
+      if ( $value2 ) {
         $value2 = \PDb_Date_Parse::timestamp( $value2, array(), __METHOD__ . ' ' . $search_field->form_element() );
+      }
 
       if ( $value !== false ) {
 

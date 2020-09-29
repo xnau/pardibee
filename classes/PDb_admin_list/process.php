@@ -12,12 +12,12 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
-namespace PDb_submission;
+namespace PDb_admin_list;
 
 use \PDb_List_Admin;
 use \Participants_Db;
 
-class admin_list {
+class process {
 
   /**
    * stets up the input processing
