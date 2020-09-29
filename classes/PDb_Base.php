@@ -1745,7 +1745,6 @@ class PDb_Base {
     if ( is_object( $sw_cloudflare_pagecache ) ) {
       $objects["cache_controller"]->purge_urls( array( $url ) );
     }
-    
   }
 
   /**
