@@ -100,6 +100,16 @@ class db_session {
   }
   
   /**
+   * provides the full session data array
+   * 
+   * @return array
+   */
+  public function to_array()
+  {
+    return $this->session_data;
+  }
+  
+  /**
    * updates an item in a data array
    * 
    * @param string $key
