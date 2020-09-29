@@ -1538,7 +1538,7 @@ abstract class PDb_Shortcode {
   {
     if ( !Participants_Db::$shortcode_present ) {
       Participants_Db::$shortcode_present = true;
-      do_action( Participants_Db::$prefix . 'shortcode_active' );
+      do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
   }
 
