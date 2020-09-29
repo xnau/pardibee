@@ -157,6 +157,16 @@ class PDb_Session {
   {
     $this->session_data->clear( sanitize_key( $key ) );
   }
+  
+  /**
+   * utility function to show all the stored data values
+   * 
+   * @return array
+   */
+  public function to_array()
+  {
+    return $this->session_data->to_array();
+  }
 
   /**
    * get the user's session id
@@ -327,7 +337,6 @@ class PDb_Session {
    */
   private function create_id()
   {
-    error_log(__METHOD__);
     return session_create_id();
   }
   
