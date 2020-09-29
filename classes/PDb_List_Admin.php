@@ -168,12 +168,12 @@ class PDb_List_Admin {
 
     self::setup_display_columns();
     
-    self::$list_filter = new \PDb_submission\admin_list_filter();
+    self::$list_filter = new \PDb_admin_list\filter();
     
-    self::$query = new \PDb_submission\admin_list_query( self::$list_filter->get_filter() );
+    self::$query = new \PDb_admin_list\query( self::$list_filter );
     
     // process list form submissions
-    new \PDb_submission\admin_list();
+    new \PDb_admin_list\process();
     
     /*
      * save the query in a session value so it can be used by the export CSV functionality
@@ -863,7 +863,7 @@ class PDb_List_Admin {
    */
   public static function get_filter_set( $index )
   {
-    return self::$list_filter->get_filter_set( $index );
+    return self::$list_filter->get_set( $index );
   }
 
   /**
