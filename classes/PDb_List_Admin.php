@@ -2,7 +2,6 @@
 /**
  * class for handling the listing of participant records in the admin
  *
- * Requires PHP Version 5.3 or greater
  * 
  * @category   
  * @package    WordPress
