@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -42,6 +42,8 @@ class PDb_Manage_Fields_Updates {
   {
     global $wpdb;
     $current_user = wp_get_current_user();
+    
+    self::clear_field_def_cache();
 
     foreach ( $this->sanitized_field_post() as $name => $row ) {
 
@@ -226,6 +228,8 @@ class PDb_Manage_Fields_Updates {
     }
 
     $result = Participants_Db::add_blank_field( $params );
+    
+    self::clear_field_def_cache();
 
     if ( $result ) {
       Participants_Db::set_admin_message( __( 'The new field was added.', 'participants-database' ), 'update' );
@@ -268,6 +272,8 @@ class PDb_Manage_Fields_Updates {
     if ( $result ) {
       Participants_Db::set_admin_message( __( 'The new group was added.', 'participants-database' ), 'update' );
     }
+    
+    self::clear_field_def_cache();
 
     $this->return_to_the_manage_database_fields_page();
   }
@@ -282,6 +288,8 @@ class PDb_Manage_Fields_Updates {
     if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
       return;
     }
+    
+    self::clear_field_def_cache();
 
     global $wpdb;
 
@@ -328,6 +336,8 @@ class PDb_Manage_Fields_Updates {
     if ( !array_key_exists( '_wpnonce', $_POST ) || !wp_verify_nonce( $_POST['_wpnonce'], self::action_key ) ) {
       wp_send_json( 'failed' );
     }
+    
+    self::clear_field_def_cache();
 
     global $wpdb;
     $current_user = wp_get_current_user();
@@ -468,6 +478,15 @@ class PDb_Manage_Fields_Updates {
     }
   }
   
+  /**
+   * clears the field def cache
+   */
+  public static function clear_field_def_cache()
+  {
+    wp_cache_delete( PDb_Form_Field_Def::def_cache );
+  }
+
+
   /**
    * provides a sanitized post array
    * 
