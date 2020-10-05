@@ -273,7 +273,7 @@ class PDb_Signup extends PDb_Shortcode {
     $this->receipt_subject = Participants_Db::plugin_setting( 'signup_receipt_email_subject' );
     $this->receipt_body = Participants_Db::plugin_setting( 'signup_receipt_email_body' );
     $this->email_header = Participants_Db::$email_headers;
-    $this->recipient = $this->participant_values[Participants_Db::plugin_setting( 'primary_email_address_field' )];
+    $this->recipient = $this->recipient_email();
   }
 
   /**
@@ -405,6 +405,16 @@ class PDb_Signup extends PDb_Shortcode {
     }
     
     return $this->output;
+  }
+  
+  /**
+   * provides the recipient email address
+   * 
+   * @return string
+   */
+  private function recipient_email()
+  {
+    return isset( $this->participant_values[Participants_Db::plugin_setting( 'primary_email_address_field' )] ) ? $this->participant_values[Participants_Db::plugin_setting( 'primary_email_address_field' )] : '';
   }
 
   /**
