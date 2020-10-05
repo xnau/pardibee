@@ -8,11 +8,16 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.9
+ * @version    0.10
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 class PDb_Form_Field_Def {
+  
+  /**
+   * @var string holds the name of the field definition qurey result cache
+   */
+  const def_cache = 'pdb-field_def';
 
   /**
    * @var int id of the field definition
@@ -186,10 +191,9 @@ class PDb_Form_Field_Def {
    */
   private static function get_field_def( $fieldname )
   {
-    $cachekey = 'pdb-field_def';
-    $def = wp_cache_get( $fieldname, $cachekey );
+    $field_defs = wp_cache_get(self::def_cache);
     
-    if ( ! $def ) {
+    if ( ! $field_defs ) {
       global $wpdb;
       $sql = 'SELECT v.*, g.title AS grouptitle 
               FROM ' . Participants_Db::$fields_table . ' v 
@@ -197,9 +201,8 @@ class PDb_Form_Field_Def {
                   ON v.group = g.name 
               WHERE v.name = %s';
       $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
-      
-      wp_cache_set( $fieldname, $def, $cachekey, Participants_Db::cache_expire() );
-      
+    } else {
+      $def = isset( $field_defs[$fieldname] ) ? $field_defs[$fieldname] : new stdClass();
     }
     
     return $def;
