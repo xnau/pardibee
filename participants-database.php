@@ -286,6 +286,11 @@ class Participants_Db extends PDb_Base {
     
     // set the debug global if not already
     self::set_debug_mode();
+    
+    // add the composer autoload
+    if ( is_readable( self::$plugin_path . '/vendor/autoload.php' ) ) {
+      require self::$plugin_path . '/vendor/autoload.php';
+    }
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
@@ -464,12 +469,7 @@ class Participants_Db extends PDb_Base {
    * runs any admin-only initializations
    */
   public static function admin_init()
-  {
-    /**
-     * sets up the update notification and update detail screens
-     */
-//    new PDb_Update_Notices( __FILE__ );
-    
+  { 
     // set up the fields update processor
     new PDb_Manage_Fields_Updates();
     
@@ -1086,28 +1086,42 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * sets up the $fields array
+   * sets up the field definition array
    * 
    * @global wpdb $wpdb
    */
   private static function _setup_fields()
   {
-    $cachekey = 'pdb_fields_array';
-    self::$fields = wp_cache_get($cachekey);
+    $field_defs = wp_cache_get( PDb_Form_Field_Def::def_cache );
     
-    if ( ! self::$fields ) {
+    if ( ! $field_defs ) {
+      
       global $wpdb;
-      self::$fields = array();
-      $sql = 'SELECT v.name 
-              FROM ' . self::$fields_table . ' v 
+      
+      $sql = 'SELECT v.name, v.*, g.title AS grouptitle 
+              FROM ' . Participants_Db::$fields_table . ' v 
+                JOIN ' . Participants_Db::$groups_table . ' g
+                  ON v.group = g.name 
               ORDER BY v.order';
-      $result = $wpdb->get_results( $sql );
+      $field_defs = $wpdb->get_results( $sql, OBJECT_K );
       
-      foreach ( $result as $column ) {
-        self::$fields[$column->name] = new PDb_Form_Field_Def( $column->name );
-      }
+      wp_cache_set( PDb_Form_Field_Def::def_cache, $field_defs );
+    }
+    
+    self::_setup_fields_prop( $field_defs );
+  }
+  
+  /**
+   * sets up the fields property
+   * 
+   * @param array $field_defs array of fields definition objects
+   */
+  private static function _setup_fields_prop( $field_defs )
+  {
+    self::$fields = array();
       
-      wp_cache_set($cachekey, self::$fields, '', self::cache_expire() );
+    foreach ( $field_defs as $field ) {
+      self::$fields[$field->name] = new PDb_Form_Field_Def( $field->name );
     }
   }
 
@@ -3727,10 +3741,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _get_plugin_data( $key = 'Name' )
   {
-
-    if ( !defined( 'ABSPATH' ) )
-      return '';
-
     if ( ! function_exists( 'get_plugin_data' ) ) {
       include_once ABSPATH . '/wp-admin/includes/plugin.php';
     }
@@ -3831,7 +3841,7 @@ function PDb_class_loader( $class )
 /**
  * PHP version checks and notices before initializing the plugin
  */
-if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) { // 
+if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
   
   if ( is_null( Participants_Db::$plugin_version ) ) { // check for the uninitialized class
     Participants_Db::initialize();
