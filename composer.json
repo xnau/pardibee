@@ -1,0 +1,35 @@
+{
+  "name": "xnau/participants-database",
+  "description": "database plugin for WordPress",
+  "type": "wordpress-plugin",
+  "require": {
+    "parsecsv/php-parsecsv": "^1.2",
+    "yahnis-elsts/plugin-update-checker": "^4.10",
+    "deliciousbrains/wp-background-processing": "^1.0"
+  },
+  "license": "GPL3",
+  "authors": [
+    {
+      "name": "Roland Barker",
+      "email": "webdesign@xnau.com",
+      "homepage": "https://xnau.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require-dev": {
+  },
+  "extra": {
+    "mozart": {
+      "dep_namespace": "xnau\\PDb\\",
+      "dep_directory": "/vendor/",
+      "classmap_directory": "/classes/dependencies/",
+      "classmap_prefix": "PDb_lib_",
+      "packages": [
+        "parsecsv/php-parsecsv",
+        "yahnis-elsts/plugin-update-checker",
+        "deliciousbrains/wp-background-processing"
+      ],
+      "delete_vendor_directories": false
+    }
+  }
+}
