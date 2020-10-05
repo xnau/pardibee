@@ -87,6 +87,8 @@ class PDb_Participant_Cache {
 
   /**
    * supplies the participant data
+   * 
+   * @return array
    */
   public function get()
   {
@@ -202,16 +204,25 @@ class PDb_Participant_Cache {
 
     $series_start = $this->cache_key * $this->cache_size;
     $series_end = $series_start + $this->cache_size;
-
-    $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p WHERE p.id >= ' . $series_start . ' AND p.id < ' . $series_end . ' ORDER BY p.id ASC';
-
-    $result = $wpdb->get_results( $sql, OBJECT_K );
     
-//    error_log(__METHOD__.' query: '.$wpdb->last_query);
-
-    $this->data = (array) $result;
+    $series_cache = 'pdb-participant_cache';
     
-//    error_log(__METHOD__.' data: '.print_r($this->data,1));
+    $result = wp_cache_get($series_cache);
+    
+    if ( ! $result ) {
+
+      $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ORDER BY p.id ASC';
+
+      $result = $wpdb->get_results( $sql, OBJECT_K );
+      
+      wp_cache_set($series_cache, $result);
+    }
+    
+    foreach( $result as $key => $data ) {
+      if ( $key >= $series_start && $key <= $series_end ) {
+        $this->data[$key] = $data;
+      }
+    }
 
     wp_cache_set( $this->cache_key, $this->data, self::group, Participants_Db::apply_filters( 'participant_cache_time', 0) );
     
