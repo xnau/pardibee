@@ -17,6 +17,7 @@
  */
 if ( !defined( 'ABSPATH' ) )
   die;
+
 if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
   class PDb_Aux_Plugin {
