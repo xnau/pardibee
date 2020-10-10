@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.0
+ * @version    3.1
  * 
  * 
  */
@@ -187,7 +187,7 @@ class PDb_Session {
   {
     $started_here = false;
     
-    if ( session_status() !== PHP_SESSION_ACTIVE ) {
+    if ( session_status() !== PHP_SESSION_ACTIVE && session_status() !== PHP_SESSION_NONE ) {
 
       if ( PDB_DEBUG && headers_sent() ) {
         error_log( __METHOD__ . ' trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
@@ -200,6 +200,7 @@ class PDb_Session {
     
     $sessid = session_id();
     
+    // if we opened the session, close it now that we are done with it
     if ( $started_here ) {
       session_write_close();
     }
