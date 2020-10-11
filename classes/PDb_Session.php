@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.1
+ * @version    3.2
  * 
  * 
  */
@@ -33,8 +33,8 @@ class PDb_Session {
    */
   public function __construct()
   {
-    $this->get_session_id();
-    
+    $this->setup_session();
+
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
     }
@@ -53,7 +53,7 @@ class PDb_Session {
 
     return $value !== false ? $value : $default;
   }
-  
+
   /**
    * provides the current session id
    * 
@@ -159,21 +159,18 @@ class PDb_Session {
   }
 
   /**
-   * get the user's session id
+   * use the user's session id to set up the session
    */
-  private function get_session_id()
+  private function setup_session()
   {
-    $sessid = '';
-    
     $sessid = $this->get_php_session_id();
 
     if ( $sessid === '' ) {
-      $sessid = $this->use_alternate_method();
+      $sessid = $this->get_alternate_method_session_id();
+    } else {
+      // if we did get the php session id, prefer that in future
+      $this->set_alt_setting(false);
     }
-
-//    if ( PDB_DEBUG > 1 ) {
-//      error_log( __METHOD__ . ' current session id: ' . $sessid );
-//    }
 
     $this->session_data = new \PDb_submission\db_session( $sessid );
   }
@@ -186,58 +183,78 @@ class PDb_Session {
   private function get_php_session_id()
   {
     $started_here = false;
-    
-    if ( session_status() !== PHP_SESSION_ACTIVE && session_status() !== PHP_SESSION_NONE ) {
+    $sessid = '';
+
+    // if sessions are configured but inactive, start it
+    if ( session_status() === PHP_SESSION_NONE ) {
 
       if ( PDB_DEBUG && headers_sent() ) {
         error_log( __METHOD__ . ' trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
       }
 
       session_start();
-      
+
       $started_here = true;
     }
-    
-    $sessid = session_id();
-    
-    // if we opened the session, close it now that we are done with it
-    if ( $started_here ) {
-      session_write_close();
+
+    if ( session_status() === PHP_SESSION_ACTIVE ) {
+      $sessid = session_id();
+
+      // if we opened the session, close it now that we are done with it
+      if ( $started_here ) {
+        session_write_close();
+      }
     }
-    
+
     return $sessid;
   }
-  
+
+  /**
+   * tells if the alternate session method is in use
+   * 
+   * @return bool
+   */
+  private function use_alternanate_method()
+  {
+    $plugin_setting = get_option( Participants_Db::$participants_db_options );
+
+    return isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'];
+  }
+
   /**
    * tries the alternate method for getting the session ID
    * 
    * @return string session id
    */
-  private function use_alternate_method()
+  private function get_alternate_method_session_id()
   {
     $this->set_alt_setting();
-    
+
     return $this->obtain_session_id();
   }
-  
+
   /**
    * sets the use alternate method setting automatically
+   * 
+   * @param bool $setting true to set, false to unset
    */
-  private function set_alt_setting()
+  private function set_alt_setting( $setting = true )
   {
-    $plugin_setting = get_option( Participants_Db::$participants_db_options );
-    
-    $use_alternate_setting = ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] );
-    
-    if ( ! $use_alternate_setting ) {
-      // change the setting if php sessions are not providing an ID
-      $plugin_setting['use_session_alternate_method'] = 1;
+    // check if we need to change it first
+    if ( $this->use_alternanate_method() != $setting ) {
+      
+      $plugin_setting = get_option( Participants_Db::$participants_db_options );
+
+      $plugin_setting['use_session_alternate_method'] = $setting ? 1 : 0;
+
       update_option( Participants_Db::$participants_db_options, $plugin_setting );
     }
   }
 
   /**
    * sets the session ID from the post, get, or cookie
+   * 
+   * this method has several fallback methods for getting the user's session ID
    * 
    * @return session id or bool false if not found
    */
@@ -246,7 +263,7 @@ class PDb_Session {
     $sessid = false;
     $validator = array('options' => array(
             'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
-        ));
+    ));
 
     if ( array_key_exists( self::id_var, $_POST ) ) {
 
@@ -270,30 +287,27 @@ class PDb_Session {
           break;
         }
       }
-      
-      // if we are unable to get the ID, make one up: this one will be used from now on
+
       $sessid = $value;
     }
-    
+
     // try the php cookie
-    if ( ! $sessid ) {
-      
-      $phpcookie = ini_get('session.name');
+    if ( !$sessid ) {
+
+      $phpcookie = ini_get( 'session.name' );
       if ( empty( $phpcookie ) ) {
         $phpcookie = 'PHPSESSID';
       }
 
       $sessid = filter_input( INPUT_COOKIE, $phpcookie, FILTER_VALIDATE_REGEXP, $validator );
-      
     }
-    
-    if ( ! $sessid ) {
+
+    if ( !$sessid ) {
       // try our own cookie
       $sessid = filter_input( INPUT_COOKIE, $this->cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
-      
     }
-    
-    if ( ! $sessid ) {
+
+    if ( !$sessid ) {
       // now we have to create an id and use that
       $sessid = $this->create_id();
       // save it in our cookie
@@ -306,7 +320,7 @@ class PDb_Session {
 
     return $sessid;
   }
-  
+
   /**
    * provides the cookie name
    * 
@@ -316,7 +330,6 @@ class PDb_Session {
   {
     return 'pdb-' . self::id_var;
   }
-
 
   /**
    * makes up a session ID
@@ -328,10 +341,13 @@ class PDb_Session {
    */
   private function create_id()
   {
-    error_log(__METHOD__);
+    if ( PDB_DEBUG ) {
+      error_log( __METHOD__ );
+    }
+
     return session_create_id();
   }
-  
+
   /**
    * merges two arrays recursively
    * 
