@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.45
+ * @version 2.46
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -210,16 +210,13 @@ PDbManageFields = (function ($) {
   };
   var getUrlVars = function () {
     var vars = {};
-    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
       vars[key] = value;
     });
     return vars;
   }
   var cancelReturn = function (event) {
-    // disable autocomplete
-//    if ($.browser.mozilla) {
     $(this).attr("autocomplete", "off");
-//    }
     if (event.keyCode === 13)
       return false;
   };
