@@ -5,19 +5,13 @@
  *
  * static class for managing a set of modules which together out put a listing of 
  * records in various configurations
- *
- * the general plan is that this class's initialization method is called by the
- * shortcode [pdb_list] which will initialize the class and pass in the parameters
- * (if any) to print the list to the website.
- *
- * Requires PHP Version 5.3 or greater
  * 
  * @category   
  * @package    WordPress
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.16
+ * @version    1.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -221,8 +215,19 @@ class PDb_List extends PDb_Shortcode {
 
     return self::$instance->output;
   }
-  
-  
+
+  /**
+   * finds the number of records that would be selected by the provided filter
+   *
+   * @param string $filter a list shortcode filter string
+   * @return int
+   */
+  public static function get_record_count( String $filter = '' )
+  {
+    self::$instance = new PDb_List( array( 'filter' => $filter ) );
+
+    return self::$instance->num_records;
+  }
   
   /**
    * provides the default shortcode attributes
