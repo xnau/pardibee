@@ -36,7 +36,7 @@ class filter {
   public function __construct()
   {
     $current_user = wp_get_current_user();
-    self::$filter_option = Participants_Db::$prefix . self::$filter_option . '-' . $current_user->ID;
+    self::$filter_option = self::$filter_option . '-' . $current_user->ID;
     $this->_update_filter();
   }
 
