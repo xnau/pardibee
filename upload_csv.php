@@ -33,6 +33,11 @@ foreach (array_keys( $csv_paramdefaults ) as $param) {
 }
 extract( $csv_params );
 update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
+
+// ensure the match field is valid
+if ( !PDb_Form_Field_Def::is_field( $match_field ) ) {
+  $match_field = 'id';
+}
 ?>
 <div class="wrap <?php echo Participants_Db::$prefix ?>csv-upload">
   <?php Participants_Db::admin_page_heading() ?>
