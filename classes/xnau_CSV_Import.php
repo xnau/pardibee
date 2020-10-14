@@ -202,8 +202,6 @@ abstract class xnau_CSV_Import {
 
       return false;
     }
-    
-    include_once Participants_Db::$plugin_path . 'vendor/ParseCsv/parsecsv.lib.php';
 
     $this->CSV = new \ParseCsv\Csv();
 
