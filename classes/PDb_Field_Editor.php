@@ -631,6 +631,11 @@ class PDb_Field_Editor {
      * @return string table to use for this field
      */
     $table = Participants_Db::apply_filters('field_data_table', Participants_Db::$participants_table, $fieldname );
+    
+    if ( $wpdb->get_var('SHOW COLUMNS FROM ' . $table . ' LIKE "' . $fieldname . '"' ) !== $fieldname ) {
+      return false;
+    }
+    
     $result = $wpdb->get_col( 'SELECT `' . $fieldname . '` FROM ' . $table );
     return count( array_filter( $result ) ) > 0;
   }
