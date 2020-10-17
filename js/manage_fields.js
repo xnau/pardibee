@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.46
+ * @version 2.47
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -477,6 +477,10 @@ PDbManageFields = (function ($) {
       tabcontrols.find('.attribute-control input, .attribute-control textarea').on('input', setChangedFlag);
       // flag the row as changed for dropdowns, checkboxes
       tabcontrols.find('.attribute-control select, .attribute-control input[type=checkbox]').on('change', setChangedFlag);
+      
+      // flag the row as changed for rich text editors
+      tabcontrols.find('.pdb_heading-form-element').on('pdb-tinymce-change', '.mce-container', setChangedFlag);
+      
       // defeat return key submit behavior
       tabcontrols.on("keypress", 'form', cancelReturn);
       // set the form element change warning
