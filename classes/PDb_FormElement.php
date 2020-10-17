@@ -309,11 +309,32 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _rich_text_field()
   {
-
-    if ( !is_admin() and ! Participants_Db::plugin_setting_is_true('rich_text_editor') )
+    if ( !is_admin() and ! Participants_Db::plugin_setting_is_true('rich_text_editor') ) {
       $this->_text_field();
-    else
+    } else {
+      add_filter( 'tiny_mce_before_init', array( $this, 'tinymce_config' ) );
       parent::_rich_text_field();
+    }
+  }
+  
+  /**
+   * provides the visual editor configuration array
+   * 
+   * @param array $config
+   * @return array
+   */
+  public function tinymce_config( $config )
+  {
+    $config['setup'] = <<<JS
+[function(ed) {
+    ed.on( 'input', function(ed, e) {
+        jQuery(this.container).trigger('pdb-tinymce-change');
+    });
+
+}][0]
+JS;
+        
+    return $config;
   }
 
   /**
