@@ -222,6 +222,9 @@ class PDb_Tag_Template {
         $this->prepare_display_values();
         wp_cache_set( $this->data_cache_key(), $this->data, '', Participants_Db::cache_expire() );
       }
+    } else {
+      // if there is no "id" element, we can just use the data values
+      $this->prepare_display_values();
     }
   }
 
