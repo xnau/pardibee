@@ -175,16 +175,20 @@ class PDb_Session {
   {
     $sessid = '';
     
-    $sessid = $this->get_php_session_id();
+    if ( $this->alt_session_setting() ) {
+      $session = $this->get_alt_session_id();
+    }
 
+    
+    if ( $sessid === '' ) {
+      $sessid = $this->get_php_session_id();
+    }
+    
+    // if we still don't have the session ID, switch to the altenate method
     if ( $sessid === '' ) {
       $sessid = $this->use_alternate_method();
     }
-
-//    if ( PDB_DEBUG > 1 ) {
-//      error_log( __METHOD__ . ' current session id: ' . $sessid );
-//    }
-
+    
     $this->session_data = new \PDb_submission\db_session( $sessid );
   }
 
@@ -226,7 +230,7 @@ class PDb_Session {
   {
     $this->set_alt_setting();
     
-    return $this->obtain_session_id();
+    return $this->get_alt_session_id();
   }
   
   /**
@@ -234,23 +238,31 @@ class PDb_Session {
    */
   private function set_alt_setting()
   {
-    $plugin_setting = get_option( Participants_Db::$participants_db_options );
-    
-    $use_alternate_setting = ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] );
-    
-    if ( ! $use_alternate_setting ) {
+    if ( ! $this->alt_session_setting() ) {
       // change the setting if php sessions are not providing an ID
       $plugin_setting['use_session_alternate_method'] = 1;
       update_option( Participants_Db::$participants_db_options, $plugin_setting );
     }
   }
+  
+  /**
+   * tells if the alt session method is enabled in the settings
+   * 
+   * @return bool
+   */
+  public function alt_session_setting()
+  {
+    $plugin_setting = get_option( Participants_Db::$participants_db_options );
+    
+    return ( isset( $plugin_setting['use_session_alternate_method'] ) && $plugin_setting['use_session_alternate_method'] );
+  }
 
   /**
-   * sets the session ID from the post, get, or cookie
+   * gets the session ID from the post, get, or cookie
    * 
    * @return session id or bool false if not found
    */
-  private function obtain_session_id()
+  private function get_alt_session_id()
   {
     $sessid = false;
     $validator = array('options' => array(
