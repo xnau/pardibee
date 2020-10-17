@@ -104,11 +104,18 @@ class PDb_Manage_Fields_Updates {
          * 
          * the 'datatype_warning' needs to be accepted for this to take place
          */
-        if ( isset( $row[ 'group' ] ) && $row[ 'group' ] != 'internal' && $new_type = $this->new_datatype( $row[ 'name' ], $row[ 'form_element' ] ) ) {
-          if ( !isset( $row[ 'datatype_warning' ] ) || ( isset( $row[ 'datatype_warning' ] ) && $row[ 'datatype_warning' ] === 'accepted' ) ) {
-            $wpdb->query( "ALTER TABLE " . Participants_Db::participants_table() . " MODIFY COLUMN `" . esc_sql( $row[ 'name' ] ) . "` " . $new_type );
-          } else {
-            unset( $row[ 'form_element' ] ); // prevent this from getting changed
+        if ( isset( $row[ 'group' ] ) && $row[ 'group' ] != 'internal' ) {
+          
+          $new_type = $this->new_datatype( $row[ 'name' ], $row[ 'form_element' ] );
+          
+          if ( $new_type ) {
+                  
+            if ( !isset( $row[ 'datatype_warning' ] ) || ( isset( $row[ 'datatype_warning' ] ) && $row[ 'datatype_warning' ] === 'accepted' ) ) {
+
+              $wpdb->query( "ALTER TABLE " . Participants_Db::participants_table() . " MODIFY COLUMN `" . esc_sql( $row[ 'name' ] ) . "` " . $new_type );
+            } else {
+              unset( $row[ 'form_element' ] ); // prevent this from getting changed
+            }
           }
         }
         unset( $row[ 'datatype_warning' ] );
@@ -117,6 +124,7 @@ class PDb_Manage_Fields_Updates {
          * add some form-element-specific processing
          */
         if ( isset( $row[ 'form_element' ] ) ) {
+          
           switch ( $row[ 'form_element' ] ) {
             case 'captcha':
               foreach ( array( 'title', 'help_text', 'default' ) as $field ) {
@@ -521,7 +529,7 @@ class PDb_Manage_Fields_Updates {
         'title' => self::text_sanitize(),
         'group' => self::string_sanitize(),
         'form_element' => self::string_sanitize(),
-        'help_text' => self::text_sanitize(),
+        'help_text' => self::text_sanitize( true ),
         'options' => self::text_sanitize(),
         'validation' => self::string_sanitize(),
         'validation_message' => self::text_sanitize(),
@@ -606,10 +614,17 @@ class PDb_Manage_Fields_Updates {
   /**
    * provides a text sanitizing filter config
    * 
+   * @param bool $expanded if true allows an expanded set of tags in the value
    * @return array
    */
-  protected static function text_sanitize()
+  protected static function text_sanitize( $expanded = false )
   {
+    if ( $expanded ) {
+      return array(
+          'filter' => FILTER_CALLBACK,
+          'options' => 'PDb_Manage_Fields_Updates::sanitize_html'
+      );
+    }
     return array(
         'filter' => FILTER_CALLBACK,
         'options' => 'PDb_Manage_Fields_Updates::sanitize_text'
@@ -853,10 +868,38 @@ class PDb_Manage_Fields_Updates {
    */
   public static function sanitize_text( $string )
   {
-    $def_atts = array(
-        'class' => true,
-        'style' => true,
-    );
+    return wp_kses( $string, self::allowed_text_html() );
+  }
+
+  /**
+   * sanitizes a string that allows an expanded range of HTML tags
+   * 
+   * this is generally for the help text only, but could be used for other attributes
+   * 
+   * @param string $string
+   * @return string
+   */
+  public static function sanitize_html( $string )
+  {
+    $allowed = self::allowed_text_html();
+    
+    // add the additional tags
+    foreach ( array( 'h1', 'h2', 'h3', 'h4', 'hr' ) as $tag ) {
+      $allowed[$tag] = self::default_tag_attributes();
+    }
+    
+    return wp_kses( $string, $allowed );
+  }
+  
+  /**
+   * provdes the set of basic allowed HTML tags
+   * 
+   * @return array
+   */
+  private static function allowed_text_html()
+  {
+    $def_atts = self::default_tag_attributes();
+    
     $allowed_html = array(
         'span' => $def_atts,
         'em' => $def_atts,
@@ -880,7 +923,21 @@ class PDb_Manage_Fields_Updates {
         'li' => $def_atts,
         'abbr' => $def_atts,
     );
-    return wp_kses( $string, Participants_Db::apply_filters( 'field_def_allowed_tags', $allowed_html ) );
+    
+    return Participants_Db::apply_filters( 'field_def_allowed_tags', $allowed_html );
+  }
+  
+  /**
+   * provides the default set of allowed attributes
+   * 
+   * @return array
+   */
+  private static function default_tag_attributes()
+  {
+    return array(
+        'class' => true,
+        'style' => true,
+    );
   }
 
   /**
@@ -909,7 +966,17 @@ class PDb_Manage_Fields_Updates {
     $field_info = $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) );
     $new_type = PDb_FormElement::get_datatype( array( 'name' => $fieldname, 'form_element' => $form_element ) );
     $current_type = is_object( current( $field_info ) ) ? current( $field_info )->Type : false;
-    $new_type = Participants_Db::apply_filters( 'new_field_form_element', $new_type, $current_type );
+    
+    /**
+     * provides a way to control which datatype if used for a changed field form element 
+     * 
+     * @filter pdb-new_field_form_element_datatype
+     * @param string the proposed datatype
+     * @param string the new form element
+     * @param string name of the field
+     * @return the datatype to use
+     */
+    $new_type = Participants_Db::apply_filters( 'new_field_form_element_datatype', $new_type, $form_element, $fieldname );
     return $this->datatype_has_changed( $current_type, $new_type ) ? $new_type : false;
   }
 
