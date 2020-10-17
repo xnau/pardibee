@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -170,7 +170,15 @@ class PDb_Field_Editor {
         );
     }
 
-    return implode( PHP_EOL, $lines );
+    /**
+     * allows modification of the attribute editor control html
+     * 
+     * @filter pdb-field_editor_control_html
+     * @param array the html lines
+     * @param PDb_Field_Def_Parameter the field attribute object
+     * @return array
+     */
+    return implode( PHP_EOL, Participants_Db::apply_filters('field_editor_control_html', $lines, $field_def_att ) );
   }
   
   /**
@@ -181,11 +189,21 @@ class PDb_Field_Editor {
    */
   protected function def_att_object( $attribute )
   {
-    return new PDb_Field_Def_Parameter( $attribute, Participants_Db::array_merge2( array(
+    $config = Participants_Db::array_merge2( array(
                 'name' => 'row_' . $this->field_def->id . '[' . $attribute . ']',
                 'value' => $this->attribute_value( $attribute ),
                 'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
-            ), $this->attribute_config($attribute) ) );
+            ), $this->attribute_config($attribute) );
+    
+    /**
+     * provides a way to alter the field attribute editor
+     * 
+     * @filter pdb-field_{$attribute}_attribute_edit_config
+     * @param array configuration
+     * @param PDb_Form_field_Def field
+     * @return array
+     */
+    return new PDb_Field_Def_Parameter( $attribute, Participants_Db::apply_filters( 'field_' . $attribute . '_attribute_edit_config', $config, $this->field_def ) );
   }
   
   
@@ -719,6 +737,16 @@ class PDb_Field_Def_Parameter {
   public function label()
   {
     return $this->label;
+  }
+
+  /**
+   *  provides the attribute name
+   * 
+   * @return string
+   */
+  public function name()
+  {
+    return $this->name;
   }
 
   /**
