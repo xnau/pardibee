@@ -1107,6 +1107,9 @@ class Participants_Db extends PDb_Base {
     }
     
     self::_setup_fields_prop( $field_defs );
+    
+    // add our modular fields
+    new PDb_fields\heading();
   }
   
   /**
@@ -2541,6 +2544,12 @@ class Participants_Db extends PDb_Base {
     global $wpdb;
 
     $datatype = PDb_FormElement::get_datatype( $atts );
+    
+    // an empty or false datatype skips adding the field's column to the main table
+    if ( ! $datatype ) {
+      
+      return true;
+    }
 
     $sql = 'ALTER TABLE `' . self::participants_table() . '` ADD `' . $atts['name'] . '` ' . $datatype . ' NULL';
 
