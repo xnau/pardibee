@@ -111,7 +111,8 @@
 .def-fieldset.editor-closed {
   min-height: 2.5em;
 }
-.editor-closed .attribute-control {
+.editor-closed .attribute-control,
+.editor-closed .wp-editor-wrap {
   display: none !important;
 }
 .editor-closed .attribute-control.field-header {
