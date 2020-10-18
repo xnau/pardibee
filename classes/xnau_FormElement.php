@@ -1857,6 +1857,11 @@ abstract class xnau_FormElement {
       case 'text-line':
         $datatype = 'tinytext';
         break;
+      
+      case 'placeholder':
+      case 'captcha':
+        $datatype = '';
+        break;
 
       case 'checkbox':
       case 'radio':
