@@ -15,7 +15,7 @@
 
 namespace PDb_fields;
 
-class heading extends pdb_custom_field {
+class heading extends custom_field {
 
   /**
    * @var string name of the form element
@@ -31,7 +31,7 @@ class heading extends pdb_custom_field {
 
     add_filter( 'pdb-add_field_to_iterator', array( $this, 'yes_show_field' ), 10, 2 );
     
-    add_filter( 'pdb-field_help_text_attribute_edit_config', array( $this, 'setup_field_body_text_editor' ), 10, 2 );
+    add_filter( 'pdb-field_default_attribute_edit_config', array( $this, 'setup_field_body_text_editor' ), 10, 2 );
   }
 
   /**
@@ -45,6 +45,17 @@ class heading extends pdb_custom_field {
   }
 
   /**
+   * provides the HTML for the form element in a write context
+   * 
+   * @param \PDb_FormElement $field the field definition
+   * @return null
+   */
+  public function form_element_build( $field )
+  {  
+    parent::form_element_build($field);
+  }
+
+  /**
    * displays the log in a write context
    * 
    * @param object $field
@@ -52,7 +63,7 @@ class heading extends pdb_custom_field {
    */
   public function form_element_html()
   {
-    return $this->field->help_text();
+    return $this->field->default_value();
   }
 
   /**
@@ -65,7 +76,7 @@ class heading extends pdb_custom_field {
   {
     return array(
         'readonly' => false,
-        'default' => false,
+        'help_text' => false,
         'persistent' => false,
         'signup' => false,
         'validation' => false,
