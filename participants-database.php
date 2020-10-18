@@ -665,7 +665,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
-    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
+    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       
@@ -1110,6 +1110,7 @@ class Participants_Db extends PDb_Base {
     
     // add our modular fields
     new PDb_fields\heading();
+    new \PDb_fields\video();
   }
   
   /**
