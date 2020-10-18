@@ -533,7 +533,7 @@ class PDb_Manage_Fields_Updates {
         'options' => self::text_sanitize(),
         'validation' => self::string_sanitize(),
         'validation_message' => self::text_sanitize(),
-        'default' => self::text_sanitize(),
+        'default' => self::text_sanitize( true ),
         'attributes' => self::string_sanitize(),
         'signup' => self::bool_sanitize(),
         'csv' => self::bool_sanitize(),
