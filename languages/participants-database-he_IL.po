@@ -1,162 +1,1092 @@
 msgid ""
 msgstr ""
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2017-01-23 09:04-1000\n"
-"PO-Revision-Date: 2017-02-17 18:06-1000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-03-04 14:42-1000\n"
+"PO-Revision-Date: 2020-10-17 20:45-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Hebrew\n"
+"Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
+"2 : 3);\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-WPHeader: participants-database.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Report-Msgid-Bugs-To: \n"
-"Language: he_IL\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: classes/PDb_FormElement.class.php:827
+#: classes/PDb_Aux_Plugin.php:390
+msgid "Support"
+msgstr "תמיכה"
+
+#: classes/PDb_Aux_Plugin.php:401
+#, php-format
+msgctxt "displays the name and version of the plugin"
+msgid "%s version %s"
+msgstr "%s גירסה %s"
+
+#: classes/PDb_Aux_Plugin.php:402
+#, php-format
+msgctxt "displays the plugin author name"
+msgid "Authored by %s"
+msgstr "נכתב ע\"י %s"
+
+#: classes/PDb_Aux_Plugin.php:421 classes/PDb_Settings.php:32
+msgid "General Settings"
+msgstr "הגדרות כלליות"
+
+#: classes/PDb_Base.php:1599
+#, fuzzy, php-format
+#| msgid ""
+#| "Participants Database requires PHP version %s to function properly, you "
+#| "have PHP version %s. Please upgrade PHP. The Plugin has been auto-"
+#| "deactivated."
+msgid ""
+"Participants Database will require PHP version %1$s in future releases, you "
+"have PHP version %2$s. Please update your php version, future versions of "
+"Participants Database may not run without minimum php version %1$s"
+msgstr ""
+"תוסף זה דורש גירסת PHP %s על מנת לפעול בצורה תקינה. גירסת הPHP המותקנת אצלך "
+"כעת היא %s. אנא שדרג את התקנת הPHP שלך. התוסף כובה באופן אוטומטי."
+
+#: classes/PDb_CSV_Import.php:75
+msgid "New columns imported from the CSV file."
+msgstr "עמודות חדשות מקובץ CSV"
+
+#: classes/PDb_Debug.php:52
+msgid "Debugging Log"
+msgstr ""
+
+#: classes/PDb_Debug.php:203
+#, fuzzy
+#| msgctxt "submit button label"
+#| msgid "Clear"
+msgid "Clear"
+msgstr "נקה"
+
+#: classes/PDb_Debug.php:204
+msgid "Refresh"
+msgstr ""
+
+#: classes/PDb_Debug.php:208
+#, php-format
+msgid "Log file: %s"
+msgstr ""
+
+#: classes/PDb_Debug.php:246
+#, php-format
+msgid ""
+"Unable to open the debugging log file: %s Check the \"File Upload Location\" "
+"setting."
+msgstr ""
+
+#: classes/PDb_Debug.php:248
+msgid "Debugging"
+msgstr ""
+
+#: classes/PDb_Debug.php:421
+#, php-format
+msgid "Log file initiated at: %s"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:125
+msgctxt "label for a \"close\" control"
+msgid "Close"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:126
+msgctxt "label for an \"open\" control"
+msgid "Open for editing"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:287
+msgid "You must define options for this field"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:686
+msgid "Select this field"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:704
+#, fuzzy
+#| msgctxt "submit button label"
+#| msgid "Delete Checked"
+msgid "Delete this field"
+msgstr "מחק פריטים שנבחרו"
+
+#: classes/PDb_File_Uploads.php:65
+msgid ""
+"There is something wrong with the file you tried to upload. Try another."
+msgstr "יש משהו לא תקין בקובץ שניסית לטעון. אנא נסה לטעון קובץ אחר."
+
+#: classes/PDb_File_Uploads.php:80 classes/PDb_File_Uploads.php:117
+#, php-format
+msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
+msgstr "עבור \"%s\" באפשרותך לטעון קבצי תמונה בלבד, מסוג JPEG, GIF או PNG."
+
+#: classes/PDb_File_Uploads.php:82
+#, php-format
+msgid "The file selected for \"%s\" must be one of these types: %s. "
+msgstr "הקובץ הנטען עבור \"%s\" חייב להיות מאחד הסוגים הבאים: %s. "
+
+#: classes/PDb_File_Uploads.php:129
+#, php-format
+msgid ""
+"The file you tried to upload is too large. The file must be smaller than %sK."
+msgstr "הקובץ שניסית לטעון גדול מידי. הקובץ חייב להיות בגודל מקסימלי של %s KB."
+
+#: classes/PDb_File_Uploads.php:140
+msgid "The file could not be saved."
+msgstr "שמירת הקובץ נכשלה."
+
+#: classes/PDb_FormElement.php:390 classes/PDb_List_Admin.php:1015
+#: classes/PDb_List_Admin.php:1535 classes/xnau_FormElement.php:1080
+msgid "delete"
+msgstr "מחק"
+
+#: classes/PDb_FormElement.php:713
 msgid "Text-line"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:828
+#: classes/PDb_FormElement.php:714
 msgid "Text Area"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:829
+#: classes/PDb_FormElement.php:715
 msgid "Rich Text"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:830
+#: classes/PDb_FormElement.php:716
 msgid "Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:831
+#: classes/PDb_FormElement.php:717
 msgid "Radio Buttons"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:832
+#: classes/PDb_FormElement.php:718
 msgid "Dropdown List"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:833
+#: classes/PDb_FormElement.php:719
 msgid "Date Field"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:834
+#: classes/PDb_FormElement.php:720
 msgid "Numeric"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:835
+#: classes/PDb_FormElement.php:721
+msgid "Decimal"
+msgstr ""
+
+#: classes/PDb_FormElement.php:722
+msgid "Currency"
+msgstr ""
+
+#: classes/PDb_FormElement.php:723
 msgid "Dropdown/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:836
+#: classes/PDb_FormElement.php:724
 msgid "Multiselect Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:837
+#: classes/PDb_FormElement.php:725
 msgid "Multiselect Dropdown"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:838
+#: classes/PDb_FormElement.php:726
 msgid "Radio Buttons/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:839
+#: classes/PDb_FormElement.php:727
 msgid "Multiselect/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:840
+#: classes/PDb_FormElement.php:728
 msgid "Link Field"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:841
+#: classes/PDb_FormElement.php:729
 msgid "Image Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:842
+#: classes/PDb_FormElement.php:730
 msgid "File Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:843
+#: classes/PDb_FormElement.php:731
 msgid "Hidden Field"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:844
+#: classes/PDb_FormElement.php:732
 msgid "Password Field"
 msgstr ""
 
-#: classes/PDb_FormElement.class.php:845
+#: classes/PDb_FormElement.php:733
 msgid "CAPTCHA"
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1367
+#: classes/PDb_FormElement.php:734
+msgid "Placeholder"
+msgstr "תגית"
+
+#: classes/PDb_FormValidation.php:53
+msgid "Not Required"
+msgstr ""
+
+#: classes/PDb_FormValidation.php:54
+msgid "Required"
+msgstr ""
+
+#: classes/PDb_FormValidation.php:55
+msgid "Email"
+msgstr ""
+
+#: classes/PDb_FormValidation.php:56
+msgid "regex/match"
+msgstr ""
+
+#: classes/PDb_Init.php:1139
+msgid "Participant Info"
+msgstr "פרטי משתמש"
+
+#: classes/PDb_Init.php:1140
+msgid "Personal Info"
+msgstr "פרטים אישיים"
+
+#: classes/PDb_Init.php:1141
+msgid "Administrative Info"
+msgstr "מנהלה"
+
+#: classes/PDb_Init.php:1142
+msgid "Record Info"
+msgstr "פרטי רשומה"
+
+#: classes/PDb_List.php:440 templates/pdb-list-bootstrap.php:35
+#: templates/pdb-list-detailed.php:32 templates/pdb-list-flexbox.php:15
+#: templates/pdb-list-responsive.php:18 templates/pdb-search-default.php:22
+msgid "Please select a column to search in."
+msgstr "אנא בחר עמודה לחיפוש."
+
+#: classes/PDb_List.php:441 templates/pdb-list-bootstrap.php:36
+#: templates/pdb-list-detailed.php:33 templates/pdb-list-flexbox.php:16
+#: templates/pdb-list-responsive.php:19 templates/pdb-search-default.php:23
+msgid "Please type in something to search for."
+msgstr "אנא הקלד טקסט חיפוש."
+
+#: classes/PDb_List.php:449 templates/pdb-list-bootstrap.php:46
+#: templates/pdb-list-detailed.php:49 templates/pdb-list-flexbox.php:24
+#: templates/pdb-list-responsive.php:27 templates/pdb-search-default.php:35
+msgid "Search"
+msgstr "חיפוש"
+
+#: classes/PDb_List.php:463 classes/PDb_List_Admin.php:948
+#: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:98
+#: templates/pdb-list-flexbox.php:44 templates/pdb-list-responsive.php:47
+#: templates/pdb-search-default.php:63
+msgid "Sort by"
+msgstr "מיין לפי"
+
+#: classes/PDb_List.php:572
+msgid "select"
+msgstr "בחר"
+
+#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:963
+#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
+msgid "Ascending"
+msgstr "סדר עולה"
+
+#: classes/PDb_List.php:746 classes/PDb_List_Admin.php:964
+#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
+msgid "Descending"
+msgstr "סדר יורד"
+
+#: classes/PDb_List.php:1234
+msgid ""
+"This will download the whole list of participants that match your search "
+"terms."
+msgstr ""
+
+#: classes/PDb_List.php:1235 classes/PDb_List_Admin.php:1251
+msgid "Download CSV for this list"
+msgstr "הורד CSV לרשימה זו"
+
+#: classes/PDb_List.php:1240 classes/PDb_List_Admin.php:1252
+msgid "Include field titles"
+msgstr "כלול שמות שדות"
+
+#: classes/PDb_List.php:1258 classes/PDb_List_Admin.php:1249
+msgid "File Name"
+msgstr "שם הקובץ"
+
+#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1632
+msgctxt "submit button label"
+msgid "Delete Checked"
+msgstr "מחק פריטים שנבחרו"
+
+#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1633
+msgctxt "submit button label"
+msgid "Change"
+msgstr "שינוי"
+
+#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1634
+msgctxt "submit button label"
+msgid "Sort"
+msgstr "מיון"
+
+#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1635
+msgctxt "submit button label"
+msgid "Filter"
+msgstr "מסנן"
+
+#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1636
+msgctxt "submit button label"
+msgid "Clear"
+msgstr "נקה"
+
+#: classes/PDb_List.php:1362 classes/PDb_List_Admin.php:1637
+msgctxt "search button label"
+msgid "Search"
+msgstr "בצע חיפוש"
+
+#: classes/PDb_List_Admin.php:135
+msgid "Do you really want to delete the selected record?"
+msgstr "האם הנך בטוח ברצונך למחוק את הרשומה שנבחרה?"
+
+#: classes/PDb_List_Admin.php:136
+msgid "Do you really want to delete the selected records?"
+msgstr "האם הנך בטוח שברצונך למחוק את הרשומות הנבחרות?"
+
+#: classes/PDb_List_Admin.php:139
+msgid "Approve the selected record?"
+msgstr "האם לאשר את הרשומה שנבחרה?"
+
+#: classes/PDb_List_Admin.php:140
+msgid "Approve the selected records?"
+msgstr "האם לאשר את הרשומות שנבחרו?"
+
+#: classes/PDb_List_Admin.php:143
+msgid "Unapprove the selected record?"
+msgstr "האם להסיר את האישור מהרשומה שנבחרה?"
+
+#: classes/PDb_List_Admin.php:144
+msgid "Unapprove the selected records?"
+msgstr "האם להסיר את האישור מהרשומות שנבחרו?"
+
+#: classes/PDb_List_Admin.php:147
+msgid "Send the signup email to the selected record?"
+msgstr "האם לשלוח אימייל הרשמה למשתמש הנבחר?"
+
+#: classes/PDb_List_Admin.php:148
+msgid "Send the signup email to the selected records?"
+msgstr "האם לשלוח מייל הרשמה למשתמשים שנבחרו?"
+
+#: classes/PDb_List_Admin.php:151
+msgid "Send the \"resend link\" email to the selected record?"
+msgstr "האם לשלוח מייל שחזור סיסמא למשתמש הנבחר?"
+
+#: classes/PDb_List_Admin.php:152
+msgid "Send the \"resend link\" email to the selected records?"
+msgstr "האם לשלוח מייל שחזור סיסמא למשתמשים שנבחרו?"
+
+#: classes/PDb_List_Admin.php:154
+#, php-format
+msgid ""
+"The number of selected records exceeds the %s email send limit.%s Only the "
+"first %s will be sent."
+msgstr ""
+"מספר הרשומות שנבחר עולה על הכמות המותרת ב %s.%s רק %s  המיילים הראשונים "
+"ישלחו."
+
+#: classes/PDb_List_Admin.php:487
+msgid "Record delete successful."
+msgstr "הרשומה נמחקה בהצלחה"
+
+#: classes/PDb_List_Admin.php:508
+#, php-format
+msgctxt "number of records with approval statuses set"
+msgid "Approval status for %d records has been updated."
+msgstr "סטטוס אישור עבור %d רשומות עודכן בהצלחה."
+
+#: classes/PDb_List_Admin.php:533 classes/PDb_List_Admin.php:555
+#, fuzzy, php-format
+#| msgctxt "number of emails sent"
+#| msgid "%d emails were sent."
+msgctxt "number of emails sent"
+msgid "%d email was sent."
+msgid_plural "%d emails were sent."
+msgstr[0] "%d מיילים נשלחו."
+msgstr[1] "%d מיילים נשלחו."
+msgstr[2] ""
+msgstr[3] ""
+
+#: classes/PDb_List_Admin.php:886
+msgid "Show only records with"
+msgstr "הצג רק רשומות עם"
+
+#: classes/PDb_List_Admin.php:897
+msgctxt ""
+"joins two search terms, such as in \"Show only records with last name that "
+"is Smith\""
+msgid "that"
+msgstr "אשר"
+
+#: classes/PDb_List_Admin.php:904
+msgid "is"
+msgstr "הוא"
+
+#: classes/PDb_List_Admin.php:905
+msgid "is not"
+msgstr "הוא לא"
+
+#: classes/PDb_List_Admin.php:906
+msgid "contains"
+msgstr "מכיל"
+
+#: classes/PDb_List_Admin.php:907
+msgid "doesn&#39;t contain"
+msgstr "לא מכיל"
+
+#: classes/PDb_List_Admin.php:908
+msgid "is greater than"
+msgstr "גדול מ-"
+
+#: classes/PDb_List_Admin.php:909
+msgid "is less than"
+msgstr "קטן מ-"
+
+#: classes/PDb_List_Admin.php:923
+msgid "and"
+msgstr "וגם"
+
+#: classes/PDb_List_Admin.php:924
+msgid "or"
+msgstr "או"
+
+#: classes/PDb_List_Admin.php:943
+msgid "Number of filters to use: "
+msgstr "מספר מסננים לשימוש:"
+
+#: classes/PDb_List_Admin.php:975
+#, php-format
+msgid "%s record found, sorted by: %s."
+msgid_plural "%s records found, sorted by: %s."
+msgstr[0] " נמצאה %s רשומה, מיון לפי: %s."
+msgstr[1] "רשומות %s נמצאו , מיון לפי: %s."
+msgstr[2] ""
+msgstr[3] ""
+
+#: classes/PDb_List_Admin.php:1007 classes/PDb_List_Admin.php:1536
+msgid "approve"
+msgstr "מאשר"
+
+#: classes/PDb_List_Admin.php:1008 classes/PDb_List_Admin.php:1537
+msgid "unapprove"
+msgstr "לא מאשר"
+
+#: classes/PDb_List_Admin.php:1060
+#, php-format
+msgid "Show %s items per page."
+msgstr "הצג %s תוצאות בדף."
+
+#: classes/PDb_List_Admin.php:1119
+msgid "Edit"
+msgstr "עריכה"
+
+#: classes/PDb_List_Admin.php:1213
+msgid "No records found"
+msgstr "לא נמצאו רשומות"
+
+#: classes/PDb_List_Admin.php:1255
+msgid ""
+"This will download the whole list of participants that match your search "
+"terms, and in the order specified by the sort. The export will include "
+"records on all list pages. The fields included in the export are defined in "
+"the \"CSV\" column on the Manage Database Fields page."
+msgstr ""
+"פעולה זו תבצע שמירה והורדה של כל רשימת המשתתפים העונה לקריטריון החיפוש "
+"שביצעת, ממוינת על פי סדר המיון. היצוא יכלול את הרשומות בכל הדפים. השדות "
+"הכלולים ביצוא מוגדרים בעמודה CSV בדף 'עריכת שדות המאגר'."
+
+#: classes/PDb_List_Admin.php:1533
 msgid "PDb Admin List With Selected: "
 msgstr ""
 
-#: classes/PDb_List_Admin.class.php:1392
+#: classes/PDb_List_Admin.php:1538
+msgid "send signup email"
+msgstr "שלח מייל הרשמה"
+
+#: classes/PDb_List_Admin.php:1638 participants-database.php:3479
+msgid "Apply"
+msgstr "החל"
+
+#: classes/PDb_List_Admin.php:1639
 msgctxt ""
 "phrase used just before naming the action to perform on the selected items"
 msgid "With selected"
 msgstr "פעולה על נבחרים"
 
-#: classes/PDb_Manage_Fields.class.php:878
-msgid "Not Required"
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3675
+msgid "Manage Database Fields"
+msgstr "ערוך שדות מאגר"
+
+#: classes/PDb_Manage_Fields.php:76 classes/PDb_Manage_Fields.php:84
+#: classes/PDb_Manage_Fields.php:194
+msgid "Field Groups"
+msgstr "קבוצות שדות"
+
+#: classes/PDb_Manage_Fields.php:85
+msgid "Help"
+msgstr "עזרה"
+
+#: classes/PDb_Manage_Fields.php:116
+#, fuzzy, php-format
+#| msgctxt "column name"
+#| msgid "Fields"
+msgctxt "Title of the field group"
+msgid "%s Fields"
+msgstr "שדות"
+
+#: classes/PDb_Manage_Fields.php:138
+msgid "No fields in this group"
+msgstr "אין שדות בקבוצה זו"
+
+#: classes/PDb_Manage_Fields.php:200
+msgid "Edit / Add / Remove Field Groups"
+msgstr "עריכה / הוספה / מחיקה של קבוצת שדות"
+
+#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:614
+msgid "group"
+msgstr "קבוצה"
+
+#: classes/PDb_Manage_Fields.php:233
+#, fuzzy
+#| msgid "field"
+msgid "field count"
+msgstr "שדה"
+
+#: classes/PDb_Manage_Fields.php:380
+msgid "Cancel"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.class.php:879
-msgid "Required"
+#: classes/PDb_Manage_Fields.php:428 classes/PDb_Manage_Fields.php:441
+msgid "Add to CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.class.php:880
-msgid "Email"
+#: classes/PDb_Manage_Fields.php:429 classes/PDb_Manage_Fields.php:442
+msgid "Remove from CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.class.php:930
+#: classes/PDb_Manage_Fields.php:440
+#, fuzzy
+#| msgid "Add Group"
+msgid "Assign Group"
+msgstr "הוסף קבוצה"
+
+#: classes/PDb_Manage_Fields.php:443
+#, fuzzy
+#| msgid "Add Group"
+msgid "Add to Signup"
+msgstr "הוסף קבוצה"
+
+#: classes/PDb_Manage_Fields.php:444
+msgid "Remove from Signup"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:537
+msgid "Public"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:538
+msgid "Private"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:539
+#, fuzzy
+#| msgid "Admin"
+msgctxt "short form of \"administrator\""
+msgid "Admin"
+msgstr "מנהל"
+
+#: classes/PDb_Manage_Fields.php:610
+msgid "Update Fields"
+msgstr "עדכן שדות"
+
+#: classes/PDb_Manage_Fields.php:611
+msgid "Update Groups"
+msgstr "עדכן קבוצות"
+
+#: classes/PDb_Manage_Fields.php:612
+msgid "Add Field"
+msgstr "הוסף שדה"
+
+#: classes/PDb_Manage_Fields.php:613
+msgid "Add Group"
+msgstr "הוסף קבוצה"
+
+#: classes/PDb_Manage_Fields.php:615
+msgid "field"
+msgstr "שדה"
+
+#: classes/PDb_Manage_Fields.php:616
+msgid "new field title"
+msgstr "כותרת שדה חדש"
+
+#: classes/PDb_Manage_Fields.php:617
+#, fuzzy
+#| msgid "new field title"
+msgid "new field form element"
+msgstr "כותרת שדה חדש"
+
+#: classes/PDb_Manage_Fields.php:618
+msgid "new group title"
+msgstr "כותרת קבוצה חדשה"
+
+#: classes/PDb_Manage_Fields.php:619
+msgctxt "column name"
+msgid "Fields"
+msgstr "שדות"
+
+#: classes/PDb_Manage_Fields.php:620
+msgctxt "column name"
+msgid "Group"
+msgstr "קבוצה"
+
+#: classes/PDb_Manage_Fields.php:621
+msgctxt "column name"
+msgid "Order"
+msgstr "סדר"
+
+#: classes/PDb_Manage_Fields.php:622
+msgctxt "column name"
+msgid "Name"
+msgstr "שם"
+
+#: classes/PDb_Manage_Fields.php:623
+msgctxt "column name"
+msgid "Title"
+msgstr "כותרת"
+
+#: classes/PDb_Manage_Fields.php:624
+#, fuzzy
+#| msgid "Default Image"
+msgctxt "column name"
+msgid "Default Value"
+msgstr "תמונת ברירת מחדל"
+
+#: classes/PDb_Manage_Fields.php:625
+msgctxt "column name"
+msgid "Help Text"
+msgstr "טקסט עזר"
+
+#: classes/PDb_Manage_Fields.php:626
+msgctxt "column name"
+msgid "Form Element"
+msgstr "תצוגה בטופס"
+
+#: classes/PDb_Manage_Fields.php:627
+msgctxt "column name"
+msgid "Values"
+msgstr "ערכים"
+
+#: classes/PDb_Manage_Fields.php:628
+msgctxt "column name"
+msgid "Validation"
+msgstr "ולידציה"
+
+#: classes/PDb_Manage_Fields.php:629
+msgctxt "column name"
+msgid "Display Column"
+msgstr "הצגה בטופס"
+
+#: classes/PDb_Manage_Fields.php:630
+msgctxt "column name"
+msgid "Admin Column"
+msgstr "הצגה בניהול"
+
+#: classes/PDb_Manage_Fields.php:631
+msgctxt "column name"
+msgid "Sortable"
+msgstr "אפשרות מיון"
+
+#: classes/PDb_Manage_Fields.php:632
 msgctxt "column name, acronym for \"comma separated values\""
 msgid "CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.class.php:931
+#: classes/PDb_Manage_Fields.php:633
 msgctxt "column name"
 msgid "Persistent"
 msgstr "דביק"
 
-#: classes/PDb_Settings.class.php:39
+#: classes/PDb_Manage_Fields.php:634
+msgctxt "column name"
+msgid "Signup"
+msgstr "רישום"
+
+#: classes/PDb_Manage_Fields.php:635
+msgctxt "column name"
+msgid "Read Only"
+msgstr "קריאה בלבד"
+
+#: classes/PDb_Manage_Fields.php:636
+msgctxt "column name"
+msgid "Admin"
+msgstr "ממשק ניהול"
+
+#: classes/PDb_Manage_Fields.php:637
+msgctxt "column name"
+msgid "Delete"
+msgstr "מחק"
+
+#: classes/PDb_Manage_Fields.php:638
+msgctxt "column name"
+msgid "Display"
+msgstr "הצג"
+
+#: classes/PDb_Manage_Fields.php:639
+msgctxt "column name"
+msgid "Description"
+msgstr "תיאור"
+
+#: classes/PDb_Manage_Fields.php:640
+#, fuzzy
+#| msgid "contribute"
+msgctxt "column name"
+msgid "Attributes"
+msgstr "תרום"
+
+#: classes/PDb_Manage_Fields.php:641
+msgctxt "column name"
+msgid "Options"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:642
+#, fuzzy
+#| msgid "Validation"
+msgctxt "column name"
+msgid "Validation Message"
+msgstr "ולידציה"
+
+#: classes/PDb_Manage_Fields.php:643
+#, fuzzy
+#| msgctxt ""
+#| "phrase used just before naming the action to perform on the selected items"
+#| msgid "With selected"
+msgctxt "button label"
+msgid "With Selected"
+msgstr "פעולה על נבחרים"
+
+#: classes/PDb_Manage_Fields.php:644
+#, fuzzy
+#| msgid "Apply"
+msgctxt "button label"
+msgid "Apply"
+msgstr "החל"
+
+#: classes/PDb_Manage_Fields.php:645
+msgctxt "select all button label"
+msgid "All"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:646
+msgctxt "label for the view mode selector"
+msgid "View Mode"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:164
+#, fuzzy
+#| msgid "Last Updated:"
+msgid "Fields Updated"
+msgstr "עדכון אחרון:"
+
+#: classes/PDb_Manage_Fields_Updates.php:203
+#: classes/PDb_Manage_Fields_Updates.php:212
+msgid "Cannot add a field with that name"
+msgstr "אין אפשרות להוסיף שדה בשם זה"
+
+#: classes/PDb_Manage_Fields_Updates.php:203
+msgid "This name is reserved; please choose another. Reserved names are"
+msgstr "שם זה הנו שם שמור. אנא בחר שם אחר. שמות שמורים הם "
+
+#: classes/PDb_Manage_Fields_Updates.php:212
+msgid ""
+"The name must be unique: a field with that name has been previously defined."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:221
+msgid "The name cannot begin with a number"
+msgstr "השם אינו יכול להתחיל בסיפרה"
+
+#: classes/PDb_Manage_Fields_Updates.php:221
+msgid "Please choose another."
+msgstr "אנא בחר באחר"
+
+#: classes/PDb_Manage_Fields_Updates.php:229
+#, fuzzy
+#| msgid "The new record has been added."
+msgid "The new field was added."
+msgstr "רשומה חדשה נוצרה בהצלחה."
+
+#: classes/PDb_Manage_Fields_Updates.php:231
+msgid "Remember to define the \"options\" for your new field."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:234
+#, fuzzy
+#| msgid "The file could not be saved."
+msgid "The field could not be added."
+msgstr "שמירת הקובץ נכשלה."
+
+#: classes/PDb_Manage_Fields_Updates.php:267
+#, fuzzy
+#| msgid "The new record has been added."
+msgid "The new group was added."
+msgstr "רשומה חדשה נוצרה בהצלחה."
+
+#: classes/PDb_Manage_Fields_Updates.php:304
+msgid "There was an error; the settings were not saved."
+msgstr "אירעה שגיאה, ההגדרות לא נשמרו"
+
+#: classes/PDb_Manage_Fields_Updates.php:313
+#, fuzzy
+#| msgid "Your information has been updated"
+msgid "Your groups have been updated"
+msgstr "המידע עודכן"
+
+#: classes/PDb_Manage_Fields_Updates.php:361
+msgid "Selected fields deleted"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:381
+msgid "Selected group deleted"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:408
+msgid "Field settings updated."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:932
+#, php-format
+msgid ""
+"The %1$s was not added. There is already a %1$s with that name, please "
+"choose another."
+msgstr "הפריט %1$s לא הוסף. קיים כבר %1$s בשם זה, אנא בחר שם חדש."
+
+#: classes/PDb_Manage_List_Columns.php:232
+msgid ""
+"Drag the fields you want shown from the \"Available Fields\" area to the "
+"\"List Columns\" area below. The fields can be re-ordered or removed from "
+"the List Columns area."
+msgstr ""
+
+#: classes/PDb_Manage_List_Columns.php:235
+msgid "Public List Column Setup"
+msgstr ""
+
+#: classes/PDb_Manage_List_Columns.php:236
+#, fuzzy
+#| msgid ""
+#| "Show the list count on list displays. Can also be set in the shortcode."
+msgid "Set up the columns for list displays using the [pdb_list] shortcode."
+msgstr "מציג את כמות הדפים בדפדוף. ניתן לעריכה גם דרך השורטקוד"
+
+#: classes/PDb_Manage_List_Columns.php:238
+#: classes/PDb_Manage_List_Columns.php:262
+#, fuzzy
+#| msgid "Update Fields"
+msgid "Available Fields:"
+msgstr "עדכן שדות"
+
+#: classes/PDb_Manage_List_Columns.php:248
+#: classes/PDb_Manage_List_Columns.php:272
+#, fuzzy
+#| msgid "Display Column"
+msgid "List Columns"
+msgstr "סדר בטופס"
+
+#: classes/PDb_Manage_List_Columns.php:259
+#, fuzzy
+#| msgid "Admin Column"
+msgid "Admin List Column Setup"
+msgstr "סדר בטבלה"
+
+#: classes/PDb_Manage_List_Columns.php:260
+msgid ""
+"Set up the columns for list displays on the List Participants admin page."
+msgstr ""
+
+#: classes/PDb_Pagination.php:366
+msgid "First"
+msgstr "ראשון"
+
+#: classes/PDb_Pagination.php:377 participants-database.php:3481
+msgid "Previous"
+msgstr "קודם"
+
+#: classes/PDb_Pagination.php:396 participants-database.php:3480
+msgid "Next"
+msgstr "הבא"
+
+#: classes/PDb_Pagination.php:409
+msgid "Last"
+msgstr "אחרון"
+
+#: classes/PDb_Path.php:159 participants-database.php:3281
+#, php-format
+msgid "The uploads directory (%s) could not be created."
+msgstr "לא היתה אפשרות ליצור את תיקיית העלאות הקבצים (%s)."
+
+#: classes/PDb_Record.php:153
+msgid "back"
+msgstr "חזור"
+
+#: classes/PDb_Settings.php:33
+msgid "Signup Form Settings"
+msgstr "הגדרות טופס ההרשמה"
+
+#: classes/PDb_Settings.php:34
+msgid "Record Form Settings"
+msgstr "הגדרות טופס המנהל"
+
+#: classes/PDb_Settings.php:35
+msgid "List Display Settings"
+msgstr "הגדרות תצוגת רשימה"
+
+#: classes/PDb_Settings.php:36
+msgid "Resend Link Settings"
+msgstr "הגדרות שחזור הסיסמא"
+
+#: classes/PDb_Settings.php:37
+msgid "Admin Settings"
+msgstr "הגדרות מנהל"
+
+#: classes/PDb_Settings.php:38
+msgid "Advanced Settings"
+msgstr "הגדרות מתקדמות"
+
+#: classes/PDb_Settings.php:39
 msgid "Custom CSS"
 msgstr ""
 
-#: classes/PDb_Settings.class.php:49
+#: classes/PDb_Settings.php:43
+msgid ""
+"Settings for the [pdb_record] shortcode, which is used to show a user-"
+"editable form on the website."
+msgstr ""
+"הגדרות עבור השורטקוד [pdb_record], אשר נועד להציג את פרטי המשתמש המלאים "
+"לעריכה באזור האישי באתר."
+
+#: classes/PDb_Settings.php:44
+msgid ""
+"Settings for the [pdb_list] shortcode, which is used to show a list of "
+"records from the database."
+msgstr ""
+"הגדרות עבור השורטקוד [pdb_list], אשר נועד להציג טבלה של רשומות ממאגר המידע "
+"(דאטהבייס)."
+
+#: classes/PDb_Settings.php:45
+msgid ""
+"Settings for the [pdb_signup] shortcode, which is used to show a signup or "
+"registration form on the website."
+msgstr "הגדרות עבור השורטקוד [pdb_signup], אשר נועד להציג טופס הרשמה באתר."
+
+#: classes/PDb_Settings.php:46
+msgid "Settings for the lost private link resend function."
+msgstr "הגדרות עבור שחזור הסיסמא (הקישור האישי) במייל."
+
+#: classes/PDb_Settings.php:47
+msgid "Settings for special configurations."
+msgstr "הגדרות לתצורות מיוחדות."
+
+#: classes/PDb_Settings.php:48
+msgid "Settings for the plugin backend."
+msgstr "הגדרות לניהול התוסף"
+
+#: classes/PDb_Settings.php:49
+#, php-format
 msgid ""
 "User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try "
-"this tutorial to help you get started: <a target=\"_blank\" href=\"http://"
-"shrsl.com/?dnf8\">Use Firebug for Editing WordPress Themes.</a></p>"
+"this tutorial to help you get started: %s</p>"
 msgstr ""
 
-#: classes/PDb_Settings.class.php:129
+#: classes/PDb_Settings.php:58
+msgid "Save Plugin Settings"
+msgstr "שמור הגדרות תוסף"
+
+#: classes/PDb_Settings.php:167
+msgid "File Upload Location"
+msgstr "מיקום להעלאת קבצים"
+
+#: classes/PDb_Settings.php:171
+#, php-format
 msgid ""
-"This defines where the uploaded files will go, relative to the WordPress "
-"root. The default location is '/wp-content/uploads/participants-"
-"database'<br />Don't put it in the plugin folder, the images and files could "
-"get deleted when the plugin is updated."
+"This defines where the uploaded files will go, relative to the %s. The "
+"default location is '%s'<br />Don't put it in the plugin folder, the images "
+"and files could get deleted when the plugin is updated."
 msgstr ""
 
-#: classes/PDb_Settings.class.php:162
+#: classes/PDb_Settings.php:178
+msgid "File Upload Limit"
+msgstr "הגבלות על העלאת קבצים"
+
+#: classes/PDb_Settings.php:182
+msgid "the maximum allowed file size (in kilobytes) for an uploaded file"
+msgstr "גודל קובץ מקסימלי להעלאה (בKB)"
+
+#: classes/PDb_Settings.php:190
+msgid "Allowed File Types"
+msgstr "סוגי קבצים מורשים"
+
+#: classes/PDb_Settings.php:194
 msgid ""
-"Path (relative to WP root) of an image file to show if no image has been "
+"list of allowed file types by file extension. Please be aware that there are "
+"security risks in allowing file uploads."
+msgstr ""
+"רשימת סוגי קבצים מורשים, לפי סיומת. יש לקחת בחשבון כי קיימים סיכוני אבטחה "
+"במתן אפשרות להעלאת קבצים."
+
+#: classes/PDb_Settings.php:201
+msgid "Default Image"
+msgstr "תמונת ברירת מחדל"
+
+#: classes/PDb_Settings.php:205
+#, fuzzy, php-format
+#| msgid ""
+#| "Path (relative to WP root) of an image file to show if no image has been "
+#| "defined for an image field. Leave blank for no default image."
+msgid ""
+"Path (relative to the %s) of an image file to show if no image has been "
 "defined for an image field. Leave blank for no default image."
 msgstr ""
 "נתיב (יחסי לשורש ההתקנה של וורדפרס) לתמונת ברירת המחדל, שתוצג במקרה ולא "
 "הועלתה תמונה. השאר שדה זה ריק אם ברצונך שלא להשתמש בתמונת ברירת מחדל."
 
-#: classes/PDb_Settings.class.php:174
+#: classes/PDb_Settings.php:213 classes/PDb_Settings.php:873
+msgid "Image Size"
+msgstr ""
+
+#: classes/PDb_Settings.php:217
+msgid ""
+"Sets the default height of images displayed in single record and record edit "
+"displays. Defaults to pixels, but any valid CSS size value can be used. "
+"Default size for the list display is under the list display tab."
+msgstr ""
+
+#: classes/PDb_Settings.php:225
+msgid "Link Image to Fullsize"
+msgstr "קשר תמונה מוקטנת לתמונה גדולה"
+
+#: classes/PDb_Settings.php:230
 msgid ""
 "place a link to the full-size image on images. This link will work with most "
 "\"lightbox\" plugins."
@@ -164,197 +1094,29 @@ msgstr ""
 "יוצר קישור לתמונה בגודל מלא מתוך התמונה הממוזערת. קישור זה יעבוד ברוב תוספי ה"
 "\"לייטבוקס\"."
 
-#: manage_fields_help.php:23
-msgid ""
-"Under the multiple-choice dropdown are the form elements you can choose "
-"from. It is really best to avoid changing this once you have begun adding "
-"records to the database using this field&hellip;unpredictable things can "
-"happen, and although you won&#39;t lose any data, it can make a mess! That "
-"said, it <em>is</em> possible to change between similar elements, like text/"
-"text-field or select/dropdown or select-other/dropdown-other. Be warned, "
-"it&#39;s safest to set this up before you start getting data for the field."
-msgstr ""
+#: classes/PDb_Settings.php:238
+msgid "Allow File Delete"
+msgstr "אפשר מחיקת קובץ"
 
-#: manage_fields_help.php:26
-msgid ""
-"Don&#39;t try to have a comma in one of your options, though! It&#39;s "
-"posiible to break things by trying to include other (mostly non-text and "
-"punctuation) characters, so test things, and if you get erratic behavior in "
-"the form, you may have characters here that are messing things up. Most "
-"international language characters should be fine, just type them in. Don&#39;"
-"t try to use HTML entities or codes, it just won&#39;t work."
-msgstr ""
-
-#: manage_fields_help.php:28
-msgid ""
-"If you wish certain fields to be required or have a specific kind of "
-"content, you can set that here. \"Not Required\" means you don&#39;t care if "
-"the field is filled in or not. \"Required\" simply means the field must have "
-"something in it. \"match/regex\" gives you some advanced options for "
-"validating a field. To match the field to the value of another field, put "
-"the name of that field in the box. You can also use a regex to validate the "
-"field, but it is for advanced users, so if you don&#39;t know what a regex "
-"is, get some help before trying to use this feature."
-msgstr ""
-
-#: manage_fields_help.php:30
-msgid ""
-"This only affects the \"List Participants\" page of the plugin. On that "
-"page, the database records are listed. Since it would be impractical to "
-"include every field as a column in this list, you can select which fields "
-"are shown here. \"0\" means don&#39;t display it, a number sets the order in "
-"which the column will appear. You have to make sure the numbers make sense, "
-"if you have multiple items with the same number (other than 0), only the "
-"last one with the number will appear."
-msgstr ""
-
-#: manage_fields_help.php:32
-msgid ""
-"When using the [pdb_list] shortcode to display the list of records, this "
-"column determines whether the column will be shown and in what order."
-msgstr ""
-
-#: manage_fields_help.php:34
-msgid ""
-"<strong>Sortable</strong> means the list presented on the \"List Participants"
-"\" page can be sorted by this field. Of course, it must have a non-zero "
-"value in \"Column\" to be seen at all."
-msgstr ""
-
-#: manage_fields_help.php:35
-msgid ""
-"<strong>CSV</strong> means the field is one that can be imported or exported "
-"with a CSV file. If you are using CSV files to bring in records, you should "
-"set these switches based on which fields you are planning to import. When "
-"exporting a CSV, this switch determines whether the field will be exported."
-"<p>"
-msgstr ""
-
-#: manage_fields_help.php:38
-msgid ""
-"<strong>Signup</strong> selects this field for use in the brief signup form "
-"that is presented with the [pdb_signup] shortcode."
-msgstr ""
-
-#: manage_fields_help.php:39
-msgid ""
-"<strong>Readonly</strong> means that plugin users can see the value of the "
-"field, but cannot edit it. The field will be editable in the admin."
-msgstr ""
-
-#: participants-database.php:3423
-#, php-format
-msgid ""
-"Please consider contributing to the continued support and development of "
-"this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin "
-"a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s "
-"Thanks!"
-msgstr ""
-
-#: upload_csv.php:168
-msgid ""
-"<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" "
-"setting, imported records are checked against existing records by the field "
-"set in the \"Duplicate Record Check Field\" setting. If a record matching an "
-"existing record is imported, one of three things can happen, based on the "
-"\"Duplicate Record Preference\" setting:"
-msgstr ""
-
-#: upload_csv.php:169
-msgid "Current Setting"
-msgstr "הגדרה נוכחית"
-
-#: upload_csv.php:172
-#, php-format
-msgid ""
-"%sCreate New%s adds all imported records as new records without checking for "
-"a match."
-msgstr ""
-
-#: upload_csv.php:173
-#, php-format
-msgid ""
-"%sOverwrite%s an existing record with a matching %s will be updated with the "
-"data from the imported record. Blank or missing fields will not overwrite "
-"existing data."
-msgstr ""
-
-#: upload_csv.php:174
-#, php-format
-msgid ""
-"%sDon&#39;t Import%s does not import the new record if it matches the %s of "
-"an existing one."
-msgstr ""
-
-#: upload_csv.php:183
-msgid "Choose .csv file to import:"
-msgstr "בחר קובץ .csv ליבוא:"
-
-#: upload_csv.php:184
-msgid "Upload File"
-msgstr "טען קובץ"
-
-#. Plugin URI of the plugin/theme
-msgid "https://xnau.com/wordpress-plugins/participants-database"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid "Plugin for managing a database of participants, members or volunteers"
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "Roland Barker, xnau webdesign"
-msgstr ""
-
-#. Author URI of the plugin/theme
-msgid "https://xnau.com"
-msgstr ""
-
-#: classes/PDb_Aux_Plugin.class.php:321 participants-database.php:3478
-msgid "Submit a rating or review"
-msgstr "הוסף דירוג או סקירה"
-
-#: classes/PDb_FormElement.class.php:846
-msgid "Placeholder"
-msgstr "תגית"
-
-#: classes/PDb_Manage_Fields.class.php:932
-msgctxt "column name"
-msgid "Signup"
-msgstr "רישום"
-
-#: classes/PDb_Manage_Fields.class.php:933
-msgctxt "column name"
-msgid "Read Only"
-msgstr "קריאה בלבד"
-
-#: classes/PDb_Manage_Fields.class.php:934
-msgctxt "column name"
-msgid "Admin"
-msgstr "ממשק ניהול"
-
-#: classes/PDb_Manage_Fields.class.php:935
-msgctxt "column name"
-msgid "Delete"
-msgstr "מחק"
-
-#: classes/PDb_Manage_Fields.class.php:936
-msgctxt "column name"
-msgid "Display"
-msgstr "הצג"
-
-#: classes/PDb_Manage_Fields.class.php:937
-msgctxt "column name"
-msgid "Description"
-msgstr "תיאור"
-
-#: classes/PDb_Settings.class.php:187
+#: classes/PDb_Settings.php:243
 msgid ""
 "if checked, allows uploaded files and images to be deleted from storage when "
 "deleted from a record by a user"
 msgstr "מאפשר מחיקת קבצים ותמונות מהתיקיה כאשר מוחקים משתמש מהמאגר"
 
-#: classes/PDb_Settings.class.php:200
+#: classes/PDb_Settings.php:252
+msgid "Allow HTML Tags in Text Fields"
+msgstr ""
+
+#: classes/PDb_Settings.php:257
+msgid "if checked, limited HTML tags are allowed in \"text-line\" fields."
+msgstr ""
+
+#: classes/PDb_Settings.php:265
+msgid "Make Links Clickable"
+msgstr "הפוך קישורים ללחיצים"
+
+#: classes/PDb_Settings.php:270
 msgid ""
 "if a \"text-line\" field looks like a link (begins with \"http\" or is an "
 "email address) make it clickable"
@@ -362,18 +1124,283 @@ msgstr ""
 "אם ערך בשדה מסוים נראה כמו קישור (מתחיל ב\"http\" או נראה כמו כתובת מייל) "
 "הופך קישור זה ללחיץ"
 
-#: classes/PDb_Settings.class.php:213
+#: classes/PDb_Settings.php:278
+msgid "Protect Email Addresses"
+msgstr "הגן על כתובות אימייל"
+
+#: classes/PDb_Settings.php:283
 msgid "protect email addresses in text-line fields with Javascript"
 msgstr "הגן על כתובות אימייל בשדות טקסט באמצעות ג'אוהסקריפט"
 
-#: classes/PDb_Settings.class.php:225
+#: classes/PDb_Settings.php:291
+msgid "Missing Field Error Message"
+msgstr "הודעת שגיאה על שדה ריק"
+
+#: classes/PDb_Settings.php:295
 #, php-format
 msgid ""
 "the message shown when a field is required, but left empty (the %s is "
 "replaced by the name of the field)"
 msgstr "ההודעה המוצגת עבור שדה חובה שהושאר ריק (הסימן %s מוחלף בשם השדה)"
 
-#: classes/PDb_Settings.class.php:459
+#: classes/PDb_Settings.php:296
+#, php-format
+msgid "The %s field is required."
+msgstr "השדה %s הנו שדה חובה."
+
+#: classes/PDb_Settings.php:302
+msgid "Invalid Field Error Message"
+msgstr "הודעת שגיאה על שדה שגוי"
+
+#: classes/PDb_Settings.php:306
+msgid ""
+"the message shown when a field's value does not pass the validation test"
+msgstr "הודעה זו תוצג כאשר שדה מולא באופן לא תקין"
+
+#: classes/PDb_Settings.php:307
+#, php-format
+msgid "The %s field appears to be incorrect."
+msgstr "הערך בשדה %s אינו תקין."
+
+#: classes/PDb_Settings.php:313
+msgid "Non-Matching Field Error Message"
+msgstr "הודעה על שדות שאינם תואמים"
+
+#: classes/PDb_Settings.php:317
+#, php-format
+msgid ""
+"the message shown when a field's value does match the value of another "
+"field. The first %s will show the name of the field, the second will show "
+"the name of the field it must match."
+msgstr ""
+"הודעה זו תוצג כאשר ערך של שדה אחד אינו תואם לערך של שדה אחר (למשל באישור "
+"כתובות מייל או סיסמאות). הסימן %s הראשון יציג את שם השדה הראשון, הסימן השני "
+"יציג את שם השדה שעליו להתאים לאותו ערך."
+
+#: classes/PDb_Settings.php:318
+#, php-format
+msgid "The %s field must match the %s field."
+msgstr "הערך בשדה %s חייב להיות תואם לערך בשדה %s"
+
+#: classes/PDb_Settings.php:325
+msgid "Failed CAPTCHA Message"
+msgstr "זיהוי CAPTCHA נכשל"
+
+#: classes/PDb_Settings.php:329
+msgid "the message shown when the CAPTCHA (verify human) test failed"
+msgstr "הודעת שגיאה כאשר מבחן הCAPTCHA נכשל"
+
+#: classes/PDb_Settings.php:330
+#, php-format
+msgid "Pleast try the %s question again."
+msgstr "אנא נסה לענות על השאלה %s שוב."
+
+#: classes/PDb_Settings.php:336
+msgid "Field Error Style"
+msgstr "עיצוב שדה שגוי"
+
+#: classes/PDb_Settings.php:340
+msgid ""
+"the CSS style applied to an input or text field that is missing or has not "
+"passed validation. This must be a valid CSS rule"
+msgstr ""
+"עיצוב ה CSS המוחל על שדה שהושאר ריק או מולא באופן שגוי. יש לכתוב CSS תיקני"
+
+#: classes/PDb_Settings.php:347
+msgid "Mark Required Fields"
+msgstr "סמן שדות חובה"
+
+#: classes/PDb_Settings.php:352
+msgid "mark the title of required fields?"
+msgstr "האם לסמן את כותרות השדות שהנם חובה?"
+
+#: classes/PDb_Settings.php:360
+msgid "Required Field Marker"
+msgstr "סימון שדה חובה"
+
+#: classes/PDb_Settings.php:364
+#, php-format
+msgid ""
+"html added to field title for required fields if selected above (the %s is "
+"replaced by the title of the field)"
+msgstr ""
+"קוד HTML המתווסף לכותרת השדה עבור שדות שהנם חובה (הסימן %s מוחלף בכותרת השדה)"
+
+#: classes/PDb_Settings.php:389
+msgid "Signup Button Text"
+msgstr "טקסט כפתור ההרשמה"
+
+#: classes/PDb_Settings.php:393
+msgid "text shown on the button to sign up"
+msgstr "הטקסט המוצג על כפתור ביצוע ההרשמה"
+
+#: classes/PDb_Settings.php:394
+msgctxt "the text on a button to submit a signup form"
+msgid "Sign Up"
+msgstr "הרשמה"
+
+#: classes/PDb_Settings.php:400
+msgid "Signup Thanks Page"
+msgstr "דף תודה על ההרשמה"
+
+#: classes/PDb_Settings.php:404
+msgid ""
+"after they register, send them to this page for a thank you message. This "
+"page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
+"have to do that if you have them go back to the same page. You can also use "
+"a Post ID for posts and custom post types."
+msgstr ""
+"לאחר ביצוע הרישום, המשתמשים יועברו לדף זה באתר. בדף זה יותקן השורטקוד "
+"[pdb_signup_thanks]. אין צורך להעביר לדף נפרד, ניתן להציג הודעת תודה בדף "
+"הרישום עצמו. ניתן להשתמש גם בדף פוסט מהבלוג (באמצעות שימוש ב Post ID)"
+
+#: classes/PDb_Settings.php:413
+msgid "Show Field Groups"
+msgstr "הצג קבוצות שדות"
+
+#: classes/PDb_Settings.php:418
+msgid "Show groups and group descriptions in the signup form."
+msgstr "הצג קבוצות ותיאורי קבוצות בטופס ההרשמה."
+
+#: classes/PDb_Settings.php:426 upload_csv.php:158
+msgid "Duplicate Record Check Field"
+msgstr "שדה מפתח לבדיקת רשומות כפולות"
+
+#: classes/PDb_Settings.php:431
+msgid ""
+"when a signup is submitted or CSV record is imported, this field is checked "
+"for a duplicate"
+msgstr "בעת רישום משתמש חדש או יבוא קובץ CSV, שדה זה יבדק למניעת רשומות כפולות"
+
+#: classes/PDb_Settings.php:438 upload_csv.php:139
+msgid "Duplicate Record Preference"
+msgstr "פעולה לביצוע בזמן רישום כפול"
+
+#: classes/PDb_Settings.php:443
+msgid ""
+"when the submission matches the Duplicate Record Check Field of an existing "
+"record. This also applies to importing records from a CSV file."
+msgstr ""
+"מה עושים כשמתבצע רישום משתמש אשר עונה לתנאי שהוגדר בשדה המפתח (רישום כפול). "
+"אותה פעולה תתבצע גם בזמן יבוא רשומות כפולות מקובץ CSV"
+
+#: classes/PDb_Settings.php:446 upload_csv.php:145
+msgid "Create a new record with the submission"
+msgstr "צור רשומה חדשה "
+
+#: classes/PDb_Settings.php:447
+msgid "Overwrite matching record with new data"
+msgstr "עדכן רשומה קיימת עם המידע החדש"
+
+#: classes/PDb_Settings.php:448
+msgid "Show a validation error message"
+msgstr "הצג הודעת שגיאה"
+
+#: classes/PDb_Settings.php:456
+msgid "Duplicate Record Error Message"
+msgstr "הודעת שגיאה על רישום כפול"
+
+#: classes/PDb_Settings.php:460
+msgid ""
+"If \"Show a validation error message\" is selected above, this message will "
+"be shown if a signup is made with a \"check field\" that matches an existing "
+"record."
+msgstr ""
+"אם בחרת ב\"הצג הודעת שגיאה\" למעלה, זו ההודעה שתוצג למשתמש אשר ממלא בשדה "
+"המפתח ערך שקיים כבר במאגר"
+
+#: classes/PDb_Settings.php:461
+#, php-format
+msgid "A record with that %s already exists. Please choose another."
+msgstr "משתמש בעל %s כבר קיים. אנא רשום ערך חדש לשדה זה."
+
+#: classes/PDb_Settings.php:467
+msgid "Send Signup Response Email"
+msgstr "שלח מייל הרשמה"
+
+#: classes/PDb_Settings.php:471
+msgid "Send a receipt email to people who sign up"
+msgstr "שלח מייל הודעה למשתמש המבצע התחברות"
+
+#: classes/PDb_Settings.php:479
+msgid "Signup Email From Address"
+msgstr "כתובת מייל ממנה נשלח מייל ההרשמה"
+
+#: classes/PDb_Settings.php:483
+msgid ""
+"the \"From\" address on signup receipt emails. If the recipient hits \"reply"
+"\", their reply will go to this address. It is a good idea to use an email "
+"address from the same domain as this website."
+msgstr ""
+"הכתובת \"מאת\" שתופיע במייל ההרשמה. מומלץ להשתמש בכתובת מייל מאותו דומיין "
+"כמו של האתר."
+
+#: classes/PDb_Settings.php:490
+msgid "Signup Email From Name"
+msgstr "שם שולח במייל ההרשמה"
+
+#: classes/PDb_Settings.php:494
+msgid "the \"From\" name on signup receipt emails."
+msgstr "השם \"מאת\" שיופיע במייל ההרשמה."
+
+#: classes/PDb_Settings.php:501
+msgid "Signup Response Email Subject"
+msgstr "שורת הנושא במייל ההרשמה"
+
+#: classes/PDb_Settings.php:505
+msgid ""
+"subject line for the signup response email; placeholder tags can be used "
+"(see below)"
+msgstr "ניתן להשתמש בתגיות להתאמה אישית של המייל (ראה למטה)"
+
+#: classes/PDb_Settings.php:506
+#, php-format
+msgid "You've just signed up on %s"
+msgstr "ביצעת הרשמה ל %s"
+
+#: classes/PDb_Settings.php:512
+msgid "Signup Response Email"
+msgstr "גוף מייל ההרשמה"
+
+#: classes/PDb_Settings.php:516
+msgid ""
+"Body of the email a visitor gets when they sign up. It includes a link "
+"([record_link]) back to their record so they can fill it out. Can include "
+"HTML, placeholders:[first_name],[last_name],[email],[record_link]. You can "
+"only use placeholders for fields that are present in the signup form, "
+"including hidden fields."
+msgstr ""
+"רשום כאן את הטקסט של האימייל הנשלח למשתמשים חדשים שביצעו הרשמה ראשונית לאתר. "
+"על המייל לכלול קישור לאזור אישי ([record_link]) בו המשתמשים יכולים לערוך "
+"פרטים. ניתן לכלול HTML, ותגיות התאמה אישית :[first_name],[last_name],[email],"
+"[record_link]. ניתן להשתמש בכל שם שדה כתגית, בתנאי שהוגדר בטופס 'עריכת שדות "
+"מאגר' (כולל שדות נסתרים)."
+
+#: classes/PDb_Settings.php:518
+#, php-format
+msgid ""
+"<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete "
+"your registration with additional information or update your information by "
+"visiting this private link at any time: <a href="
+"\"[record_link]\">[record_link]</a>.</p>"
+msgstr ""
+"<p>שלום, [first_name], ותודה שנרשמת ל- %s.</p><p>באפשרותך להשלים פרטים "
+"אישיים או לערוך אותם בכל שעה באמצעות כניסה לאזור האישי שלך כאן: <a href="
+"\"[record_link]\">[record_link]</a>.</p>"
+
+#: classes/PDb_Settings.php:524
+msgid "Signup Thanks Message"
+msgstr "הודעת תודה על ההרשמה"
+
+#: classes/PDb_Settings.php:528
+msgid ""
+"Note to display on the web page after someone has submitted a signup form. "
+"Can include HTML and placeholders (see above)"
+msgstr ""
+"הודעה שתוצג לאחר מילוי טופס ההרשמה. ניתן לכלול HTML ותגיות התאמה אישית (ראה "
+"לעיל)"
+
+#: classes/PDb_Settings.php:529
 msgid ""
 "<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
 "acknowledgement shortly. You may complete your registration with additional "
@@ -384,41 +1411,41 @@ msgstr ""
 "מייל עם אישור ההרשמה. במייל זה ינתן לך גם קישור לאזור האישי שלך באתר שלנו "
 "באפשרותך לעדכן ולהשלים פרטים בכל עת באמצעות הקישור הנ\"ל.</p>"
 
-#: classes/PDb_Settings.class.php:465
+#: classes/PDb_Settings.php:535
 msgid "Send Signup Notification Email"
 msgstr "שלח מייל הודעה על ביצוע רישום"
 
-#: classes/PDb_Settings.class.php:470
+#: classes/PDb_Settings.php:540
 msgid "Send an email notification that a signup has occurred."
 msgstr "שליחת מייל המודיע על רישום משתמש חדש למאגר"
 
-#: classes/PDb_Settings.class.php:479
+#: classes/PDb_Settings.php:549
 msgid "Signup Notification Recipients"
 msgstr "נמענים למייל ההודעה על רישום"
 
-#: classes/PDb_Settings.class.php:483
+#: classes/PDb_Settings.php:553
 msgid "comma-separated list of email addresses to send signup notifications to"
 msgstr "רשימה המופרדת בפסיקים של כתובות, שאליהן ישלח מייל הודעה על רישום"
 
-#: classes/PDb_Settings.class.php:490
+#: classes/PDb_Settings.php:560
 msgid "Signup Notification Email Subject"
 msgstr "שורת נושא עבור מייל ההודעה על רישום"
 
-#: classes/PDb_Settings.class.php:494 classes/PDb_Settings.class.php:880
+#: classes/PDb_Settings.php:564 classes/PDb_Settings.php:1015
 msgid ""
 "subject of the notification email; placeholder tags can be used (see above)"
 msgstr "ניתן להשתמש בתגיות התאמה אישית (ראה לעיל)"
 
-#: classes/PDb_Settings.class.php:496
+#: classes/PDb_Settings.php:566
 #, php-format
 msgid "New signup on %s"
 msgstr "משתמש חדש נרשם ל-%s"
 
-#: classes/PDb_Settings.class.php:502
+#: classes/PDb_Settings.php:572
 msgid "Signup Notification Email"
 msgstr "גוף ההודעה במייל אודות ביצוע הרישום"
 
-#: classes/PDb_Settings.class.php:506
+#: classes/PDb_Settings.php:576
 msgid ""
 "notification email body. The [admin_record_link] tag will supply the URL for "
 "editing the record in the admin."
@@ -426,7 +1453,7 @@ msgstr ""
 "טקסט המייל הנשלח לאחר רישום משתמש חדש. התגית [admin_record_link] מכילה את "
 "הקישור לעריכת פרטי המשתמש בממשק הניהול."
 
-#: classes/PDb_Settings.class.php:507
+#: classes/PDb_Settings.php:577
 msgid ""
 "<p>A new signup has been submitted</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a "
@@ -436,11 +1463,11 @@ msgstr ""
 "li><li>אימייל: [email]</li></ul><p>באפשרותך לערוך את הרשומה כאן: <a href="
 "\"[admin_record_link]\">[admin_record_link]</a></p>"
 
-#: classes/PDb_Settings.class.php:532
+#: classes/PDb_Settings.php:602
 msgid "Participant Record Page"
 msgstr "דף אזור אישי (לעריכת המשתמש)"
 
-#: classes/PDb_Settings.class.php:537
+#: classes/PDb_Settings.php:607
 msgid ""
 "The page where your participant record ([pdb_record] shortcode) is "
 "displayed. You can use a Post ID for posts and custom post types."
@@ -448,52 +1475,63 @@ msgstr ""
 "הדף שבו מוצגים פרטי המשתמש לעריכה באתר (באמצעות השורטקוד [pdb_record]). ניתן "
 "להשתמש ב Post ID עבור פוסטים של הבלוג."
 
-#: classes/PDb_Settings.class.php:545
-msgid "Show Group Descriptions"
-msgstr "הצג תיאורי קבוצות"
+#: classes/PDb_Settings.php:615
+#, fuzzy
+#| msgid "Show Field Groups"
+msgid "Show Groups"
+msgstr "הצג קבוצות שדות"
 
-#: classes/PDb_Settings.class.php:550
-msgid "Show the group description under each group title in the record form."
+#: classes/PDb_Settings.php:620
+#, fuzzy
+#| msgid ""
+#| "Show the group description under each group title in the record form."
+msgid ""
+"Show the group and description (if defined) under each group title in the "
+"record form."
 msgstr "הצג תיאור מתחת לכותרת עבור כל קבוצת שדות בטופס העריכה"
 
-#: classes/PDb_Settings.class.php:558
+#: classes/PDb_Settings.php:628
 msgid "Save Changes Label"
 msgstr "תוית שמירת שינוים"
 
-#: classes/PDb_Settings.class.php:563
+#: classes/PDb_Settings.php:633
 msgid "label for the save changes button on the record form"
 msgstr "טקסט על כפתור השמירה בטופס העריכה"
 
-#: classes/PDb_Settings.class.php:564
+#: classes/PDb_Settings.php:634
 msgid "Save Your Changes"
 msgstr "שמירת שינויים"
 
-#: classes/PDb_Settings.class.php:570
+#: classes/PDb_Settings.php:640
 msgid "Save Button Text"
 msgstr "טקסט כפתור שמירה"
 
-#: classes/PDb_Settings.class.php:575
+#: classes/PDb_Settings.php:645
 msgid "text on the \"save\" button"
 msgstr "טקסט על כפתור ה\"שמירה\""
 
-#: classes/PDb_Settings.class.php:576
+#: classes/PDb_Settings.php:646
 msgctxt "a label for a button to save a form"
 msgid "Save"
 msgstr "שמירה"
 
-#: classes/PDb_Settings.class.php:582
+#: classes/PDb_Settings.php:652
 msgid "Record Updated Message"
 msgstr "הודעה על עדכון פרטים"
 
-#: classes/PDb_Settings.class.php:586
+#: classes/PDb_Settings.php:656
 msgid "the message shown when a record form has been successfully submitted"
 msgstr "הודעה שמוצגת לאחר ביצוע עדכון פרטים "
 
-#: classes/PDb_Settings.class.php:593
+#: classes/PDb_Settings.php:657
+msgid "Your information has been updated"
+msgstr "המידע עודכן"
+
+#: classes/PDb_Settings.php:663
 msgid "Record Not Found Error Message"
 msgstr "הודעה על רשומה לא קיימת"
 
-#: classes/PDb_Settings.class.php:597
+#: classes/PDb_Settings.php:667
 msgid ""
 "message to show if the record page was accessed without a valid identifier. "
 "Leave this empty if you want nothing at all to show."
@@ -501,15 +1539,15 @@ msgstr ""
 "הודעה המוצגת כאשר ניגשים לדף עריכה ללא מזהה תקני. אם ברצונך לא להציג דבר, "
 "השאר שדה זה ריק."
 
-#: classes/PDb_Settings.class.php:598
+#: classes/PDb_Settings.php:668
 msgid "No record was found."
 msgstr "לא נמצאו רשומות"
 
-#: classes/PDb_Settings.class.php:604
+#: classes/PDb_Settings.php:674
 msgid "Use Template for No Record Message"
 msgstr "השתמש בתבנית עבור הודעת רשומה לא קיימת"
 
-#: classes/PDb_Settings.class.php:609
+#: classes/PDb_Settings.php:679
 msgid ""
 "If checked, use the record template to show the \"Record Not Found\" "
 "message. If unchecked, the message is shown without using the template."
@@ -517,11 +1555,11 @@ msgstr ""
 "יש לסמן תיבה זו על מנת להשתמש בתבנית מעוצבת להצגת הודעת שגיאה בדבר רשומה לא "
 "קיימת. אם תיבה זו אינה מסומנת, ההודעה תוצג ללא תבנית."
 
-#: classes/PDb_Settings.class.php:617
+#: classes/PDb_Settings.php:687
 msgid "Send Record Form Update Notification Email"
 msgstr "שלח מייל הודעה בדבר עדכון פרטים"
 
-#: classes/PDb_Settings.class.php:622
+#: classes/PDb_Settings.php:692
 msgid ""
 "Send an email notification that a record has been updated. These will be "
 "sent to the email addresses listed in the \"Signup Notification Recipients\" "
@@ -530,26 +1568,26 @@ msgstr ""
 "שליחת מייל אודות ביצוע עדכון פרטים על ידי משתמש באתר. ההודעות תישלחנה לאותן "
 "כתובות שהוגדרו ב\"נמענים לשליחת מייל רישום\"."
 
-#: classes/PDb_Settings.class.php:630
+#: classes/PDb_Settings.php:700
 msgid "Record Update Email Subject"
 msgstr "שורת נושא עבור מייל עדכון פרטים"
 
-#: classes/PDb_Settings.class.php:634
+#: classes/PDb_Settings.php:704
 msgid ""
 "subject line for the record update notification email; placeholders can be "
 "used."
 msgstr "ניתן להשתמש בתגיות התאמה אישית (ראה לעיל)."
 
-#: classes/PDb_Settings.class.php:635
+#: classes/PDb_Settings.php:705
 #, php-format
 msgid "A record has just been updated on %s"
 msgstr "משתמש ביצע עדכון פרטים ב%s"
 
-#: classes/PDb_Settings.class.php:641
+#: classes/PDb_Settings.php:711
 msgid "Record Update Notification Email"
 msgstr "גוף ההודעה במייל עדכון פרטים"
 
-#: classes/PDb_Settings.class.php:646
+#: classes/PDb_Settings.php:716
 msgid ""
 "Body of the the email sent when a user updates their record. Any field from "
 "the form can be included by using a replacement code of the form: "
@@ -563,7 +1601,7 @@ msgstr ""
 "[email] וכו'. כמו כן ניתן להשתמש בתגית [date] לציון זמן העדכון (כולל שעה) "
 "ובתגית [admin_record_link] למעבר לעריכת הרשומה בממשק הניהול."
 
-#: classes/PDb_Settings.class.php:647
+#: classes/PDb_Settings.php:717
 msgid ""
 "<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
@@ -575,19 +1613,19 @@ msgstr ""
 "li><li>טלפון: [phone]</li><li>אימייל: [email]</li></ul><p>באפשרותך להמשיך "
 "בעריכת רשומה זו <a href=\"[admin_record_link]\">כאן.</a></p>‬"
 
-#: classes/PDb_Settings.class.php:660
+#: classes/PDb_Settings.php:743
 msgid "Records per Page"
 msgstr "מספר רשומות בדף"
 
-#: classes/PDb_Settings.class.php:664
+#: classes/PDb_Settings.php:747
 msgid "the number of records to show on each page"
 msgstr "מספר הרשומות להצגה בכל דף"
 
-#: classes/PDb_Settings.class.php:672
+#: classes/PDb_Settings.php:755
 msgid "Single Record Link Field"
 msgstr "שדה לקישור רשימה בודדת"
 
-#: classes/PDb_Settings.class.php:677
+#: classes/PDb_Settings.php:760
 msgid ""
 "select the field on which to put a link to the [pdb_single] shortcode. Leave "
 "blank or set to \"none\" for no link."
@@ -595,11 +1633,11 @@ msgstr ""
 "יש לבחור את השדה עבורו יש להציג את הקישור [pdb_single] (לעריכת רשימה בודדת). "
 "השאר שדה זה ריק במידה ואין צורך בהוספת קישור."
 
-#: classes/PDb_Settings.class.php:684
+#: classes/PDb_Settings.php:767
 msgid "Single Record Page"
 msgstr "דף עריכת רשימה בודדת"
 
-#: classes/PDb_Settings.class.php:690
+#: classes/PDb_Settings.php:773
 msgid ""
 "this is the page where the [pdb_single] shortcode is located. If you want to "
 "assign a post or custom post type, select \"Post ID\" and enter the post ID "
@@ -609,31 +1647,31 @@ msgstr ""
 "באפשרותך להשתמש באחד הפוסטים מהבלוג, באמצעות שימוש ב Post ID ורישום מזהה "
 "הפוסט בתיבה \"אחר\". "
 
-#: classes/PDb_Settings.class.php:697
+#: classes/PDb_Settings.php:780
 msgid "No Records Message"
 msgstr "הודעה ללא רשומות"
 
-#: classes/PDb_Settings.class.php:701
+#: classes/PDb_Settings.php:784
 msgid "Message shown when no records are found."
 msgstr "הודעה המוצגת כאשר לא נמצאו רשומות בחיפוש."
 
-#: classes/PDb_Settings.class.php:702
+#: classes/PDb_Settings.php:785
 msgid "No Records Found"
 msgstr "לא נמצאו רשומות"
 
-#: classes/PDb_Settings.class.php:707
+#: classes/PDb_Settings.php:790
 msgid "Show Count"
 msgstr "הצג כמות"
 
-#: classes/PDb_Settings.class.php:712
+#: classes/PDb_Settings.php:795
 msgid "Show the list count on list displays. Can also be set in the shortcode."
 msgstr "מציג את כמות הדפים בדפדוף. ניתן לעריכה גם דרך השורטקוד"
 
-#: classes/PDb_Settings.class.php:720
+#: classes/PDb_Settings.php:803
 msgid "List Count Template"
 msgstr "תבנית להצגת דפדוף"
 
-#: classes/PDb_Settings.class.php:724
+#: classes/PDb_Settings.php:807
 #, php-format
 msgid ""
 "template for displaying the list count. %1$s - total number of records "
@@ -643,16 +1681,16 @@ msgstr ""
 "תבנית להצגת כפתורי הדפדוף. %1$s - סך הרשומות שנמצאו, %2$s - כמות הרשומות "
 "בדף, %3$s - מספר רשומה ראשונה, %4$s - מספר רשומה אחרונה, %5$s - עמוד נוכחי "
 
-#: classes/PDb_Settings.class.php:725
+#: classes/PDb_Settings.php:808
 #, php-format
 msgid "Total Records Found: %1$s, showing %2$s per page"
 msgstr "סך הכל נמצאו %1$s רשומות, מציג %2$s בדף"
 
-#: classes/PDb_Settings.class.php:735
+#: classes/PDb_Settings.php:818
 msgid "List Default Sort"
 msgstr "מיון ברירת מחדל"
 
-#: classes/PDb_Settings.class.php:741
+#: classes/PDb_Settings.php:824
 msgid ""
 "The record list shown by the list shortcode will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -660,58 +1698,78 @@ msgstr ""
 "טבלת הרשומות המוצגות תהיה ממוינת על פי שדה זה, כברירת מחדל (השדה חייב להיות "
 "מסומן כ\"מיון\")"
 
-#: classes/PDb_Settings.class.php:748
+#: classes/PDb_Settings.php:831
 msgid "List Default Sort Order"
 msgstr "סדר מיון ברירת מחדל"
 
-#: classes/PDb_Settings.class.php:752
+#: classes/PDb_Settings.php:835
 msgid "Sets the default order of the records shown by the list shortcode."
 msgstr "טבלת הרשומות המוצגות תהיה ממוינת בסדר מיון זה, כברירת מחדל."
 
-#: classes/PDb_Settings.class.php:761
+#: classes/PDb_Settings.php:844
 msgid "Allow Empty Search"
 msgstr "אפשר חיפוש ריק"
 
-#: classes/PDb_Settings.class.php:766
+#: classes/PDb_Settings.php:849
 msgid ""
 "This allows frontend searches to find records with missing or blank data."
 msgstr "מאפשר חיפוש רשומות עם ערכים חסרים או ריקים"
 
-#: classes/PDb_Settings.class.php:780
+#: classes/PDb_Settings.php:859
+msgid "Strict User Searching"
+msgstr "חיפוש משתמשים מדויק"
+
+#: classes/PDb_Settings.php:864
+msgid ""
+"When checked, the frontend list search must match the whole field exactly. "
+"If unchecked, the search will match if the search term is found in part of "
+"the field. Searches are not case-sensitive either way."
+msgstr ""
+"סמן תיבה זו אם ברצונך לאפשר באתר חיפוש מדויק בלבד, דהינו: הערך שמחפשים חייב "
+"להיות זהה באופן מלא לערך המופיע במסד הנתונים. הסר סימון מתיבה זו אם ברצונך "
+"לאפשר התאמה חלקית של ערך החיפוש לערך הרשום במסד הנתונים."
+
+#: classes/PDb_Settings.php:877
+msgid ""
+"Sets the default height of images displayed in the list. Defaults to pixels, "
+"but any valid CSS size value can be used."
+msgstr ""
+
+#: classes/PDb_Settings.php:891
 msgid "Enable Lost Private Link"
 msgstr "אפשר שיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:785
+#: classes/PDb_Settings.php:896
 msgid ""
 "Show a link on the signup form allowing users to have their private link "
 "emailed to them."
 msgstr "מציג קישור המאפשר שיחזור סיסמא אבודה במייל, בטופס ההרשמה."
 
-#: classes/PDb_Settings.class.php:793
+#: classes/PDb_Settings.php:904
 msgid "Lost Private Link Text"
 msgstr "טקסט קישור לשיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:797
+#: classes/PDb_Settings.php:908
 msgid "clickable text shown in the signup form"
 msgstr "טקסט המופיע בטופס ההרשמה"
 
-#: classes/PDb_Settings.class.php:798 templates/pdb-signup-bootstrap.php:56
+#: classes/PDb_Settings.php:909
 msgid "Forget your private link? Click here to have it emailed to you."
 msgstr "איבדת את הקישור האישי שלך? לחץ כאן ונשלח לך אותו במייל."
 
-#: classes/PDb_Settings.class.php:803
+#: classes/PDb_Settings.php:914
 msgid "Lost Private Link Page"
 msgstr "דף שיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:808
+#: classes/PDb_Settings.php:919
 msgid "send people to this page to request their private link."
 msgstr "דף בקשה לשיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:817
+#: classes/PDb_Settings.php:928
 msgid "Lost Private Link ID Field"
 msgstr "שם שדה לשיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:821
+#: classes/PDb_Settings.php:932
 msgid ""
 "The field used to identify the user&#39;s account. This must be a unique "
 "identifier for the record"
@@ -719,50 +1777,82 @@ msgstr ""
 "שם השדה באמצעותו ניתן לזהות משתמש קיים. שדה זה חייב להיות מזהה יחודי עבור כל "
 "רשומה במסד הנתונים."
 
-#: classes/PDb_Settings.class.php:829
+#: classes/PDb_Settings.php:941
+#, fuzzy
+#| msgid "Lost Private Link Email"
+msgid "Lost Private Link Form Title"
+msgstr "גוף המייל לשיחזור הסיסמא"
+
+#: classes/PDb_Settings.php:945
+msgid "the title shown above the link request form"
+msgstr ""
+
+#: classes/PDb_Settings.php:946 templates/pdb-retrieve-bootstrap.php:10
+#: templates/pdb-retrieve-default.php:10
+msgid "Request your Private Link"
+msgstr "שחזר סיסמא לאזור האישי"
+
+#: classes/PDb_Settings.php:953
+#, fuzzy
+#| msgid "Lost Private Link Page"
+msgid "Lost Private Link Success Message"
+msgstr "דף שיחזור סיסמא"
+
+#: classes/PDb_Settings.php:957
+#, fuzzy
+#| msgid "the message shown when a record form has been successfully submitted"
+msgid "the message shown when a private link is successfully sent"
+msgstr "הודעה שמוצגת לאחר ביצוע עדכון פרטים "
+
+#: classes/PDb_Settings.php:958 templates/pdb-retrieve-bootstrap.php:19
+#: templates/pdb-retrieve-default.php:17
+msgid "Success: your private link has been emailed to you."
+msgstr "הקישור לאזור האישי שלך נשלח אליך בהצלחה."
+
+#: classes/PDb_Settings.php:964
 msgid "ID Field Help Text"
 msgstr "טקסט עזרה לשדה מפתח (מזהה יחודי)"
 
-#: classes/PDb_Settings.class.php:833
+#: classes/PDb_Settings.php:968
 msgid "help text for the record identification field"
 msgstr "טקסט שיופיע למשתמש המבקש לשחזר סיסמא באמצעות שדה מזהה יחודי"
 
-#: classes/PDb_Settings.class.php:834
+#: classes/PDb_Settings.php:969
 #, php-format
 msgid "Type in your %s, your private link will be emailed to you."
 msgstr "הקלד את ה%s שלך, הקישור לאזור האישי ישלח אליך למייל."
 
-#: classes/PDb_Settings.class.php:840
+#: classes/PDb_Settings.php:975
 msgid "Lost Private Link Email Subject"
 msgstr "שורת נושא עבור מייל שיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:844
+#: classes/PDb_Settings.php:979
 msgid "subject line for the lost private link email"
 msgstr "כותרת למייל שישלח למשתמש שביקש לשחזר סיסמא"
 
-#: classes/PDb_Settings.class.php:845
+#: classes/PDb_Settings.php:980
 #, php-format
 msgid "Here is your private link on %s"
 msgstr "הקישור האישי שלך ב %s"
 
-#: classes/PDb_Settings.class.php:851
+#: classes/PDb_Settings.php:986
 msgid "Lost Private Link Email"
 msgstr "גוף המייל לשיחזור הסיסמא"
 
-#: classes/PDb_Settings.class.php:855
+#: classes/PDb_Settings.php:990
 msgid "Body of the email sent when a lost private link is requested."
 msgstr "טקסט ההודעה הנשלחת למשתמש שמבקש שיחזור סיסמא."
 
-#: classes/PDb_Settings.class.php:857
+#: classes/PDb_Settings.php:992
 #, php-format
 msgid "Here is the private link you requested from %s:"
 msgstr "להלן הקישור לאזור האישי שלך ב%s:"
 
-#: classes/PDb_Settings.class.php:863
+#: classes/PDb_Settings.php:998
 msgid "Send Lost Private Link Notification Email"
 msgstr "שלח הודעה על בקשה לשחזר סיסמא"
 
-#: classes/PDb_Settings.class.php:868
+#: classes/PDb_Settings.php:1003
 msgid ""
 "Send an email notification that a lost private link has been requested. This "
 "email will go to the \"Signup Notification Recipients.\""
@@ -770,24 +1860,24 @@ msgstr ""
 "שלח הודעה על בקשות לשיחזורי סיסמא. המייל ישלח לאותם נמענים שהוגדרו ב\"נמענים "
 "להודעות על רישום\"."
 
-#: classes/PDb_Settings.class.php:876
+#: classes/PDb_Settings.php:1011
 msgid "Lost Private Link Notification Email Subject"
 msgstr "נושא ההודעה על בקשה לשיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:882
+#: classes/PDb_Settings.php:1017
 #, php-format
 msgid "A Lost Private Link has been requested on %s"
 msgstr "בקשה לשיחזור סיסמא ב %s"
 
-#: classes/PDb_Settings.class.php:888
+#: classes/PDb_Settings.php:1023
 msgid "Lost Private Link Notification Email"
 msgstr "גוף ההודעה על בקשה לשיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:892
+#: classes/PDb_Settings.php:1027
 msgid "notification email body"
 msgstr "טקסט האימייל"
 
-#: classes/PDb_Settings.class.php:893
+#: classes/PDb_Settings.php:1028
 msgid ""
 "<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul>"
@@ -795,34 +1885,39 @@ msgstr ""
 "<p>בקשה לשחזור סיסמא התקבלה מאת:</p><ul><li>שם: [first_name] [last_name]</"
 "li><li>אימייל: [email]</li></ul>\n"
 
-#: classes/PDb_Settings.class.php:899
+#: classes/PDb_Settings.php:1034
 msgid "Retrieve Private Link Error Message"
 msgstr "הודעת שגיאה בעת שיחזור סיסמא"
 
-#: classes/PDb_Settings.class.php:903
+#: classes/PDb_Settings.php:1038
+#, fuzzy, php-format
+#| msgid ""
+#| "Message shown when a record matching the retrieve link idenifier cannot "
+#| "be found"
 msgid ""
-"Message shown when a record matching the retrieve link idenifier cannot be "
-"found"
+"Message shown when a record matching the retrieve link identifier cannot be "
+"found. The %s in the message will be replaced by the name of the identifier "
+"field."
 msgstr "הודעה זו תוצג כאשר נכשל זיהוי המשתמש המבקש לשחזר סיסמא"
 
-#: classes/PDb_Settings.class.php:904
+#: classes/PDb_Settings.php:1039
 #, php-format
 msgid "A record matching that %s cannot be found."
 msgstr "לא נמצא משתמש בערך %s זה."
 
-#: classes/PDb_Settings.class.php:918
+#: classes/PDb_Settings.php:1053
 msgid "Use the Plugin CSS"
 msgstr "השתמש בCSS תוסף"
 
-#: classes/PDb_Settings.class.php:923
+#: classes/PDb_Settings.php:1058
 msgid "use the plugin's CSS to style the output of shortcodes"
 msgstr "השתמש בCSS שמגיע עם התוסף לעיצוב מראה השורטקודס"
 
-#: classes/PDb_Settings.class.php:931
+#: classes/PDb_Settings.php:1066
 msgid "Use Rich Text Editor"
 msgstr "השתמש בעורך טקסט עשיר"
 
-#: classes/PDb_Settings.class.php:936
+#: classes/PDb_Settings.php:1071
 msgid ""
 "enable the rich text editor on \"rich-text\" fields for front-end users. If "
 "deselected, \"rich-text\" fields will appear as text-area fields. This does "
@@ -832,52 +1927,75 @@ msgstr ""
 "אינה מסומנת, שדות אלו יופיעו כאזור טקסט פשוט. בחירה זו אינה משפיעה על ממשק "
 "הניהול, בו תמיד יופיע עורך טקסט עשיר עבור שדות אלו."
 
-#: classes/PDb_Settings.class.php:944
+#: classes/PDb_Settings.php:1084
 msgid "Use WordPress Auto Formatting"
 msgstr "השתמש בפורמט אוטומטי של וורדפרס"
 
-#: classes/PDb_Settings.class.php:949
+#: classes/PDb_Settings.php:1089
 msgid ""
-"Use WordPress&#39; \"the_content\" filter on rich text fields. This applies "
-"\"auto paragraphs\" and allows the use of shortcodes in rich text fields and "
-"HTML emails."
+"Select the filter mode for all rich text outputs, including HTML emails."
 msgstr ""
-"השתמש במסנן the_content של וורדפרס עבור שדות טקסט עשיר. הדבר מאפשר בניה "
-"אוטומטית של פסקאות בגוף הטקסט ושימוש בשורטקודס בשדות טקסט עשיר ותוכן הודעות "
-"אימייל בפורמט HTML."
 
-#: classes/PDb_Settings.class.php:960
+#: classes/PDb_Settings.php:1093
+msgid "global content filter"
+msgstr ""
+
+#: classes/PDb_Settings.php:1094
+#, fuzzy
+#| msgid "Use WordPress Auto Formatting"
+msgid "WordPress auto paragraphs"
+msgstr "השתמש בפורמט אוטומטי של וורדפרס"
+
+#: classes/PDb_Settings.php:1095
+msgid "auto paragraphs + shortcodes"
+msgstr ""
+
+#: classes/PDb_Settings.php:1096
+msgid "none"
+msgstr ""
+
+#: classes/PDb_Settings.php:1103
+#, fuzzy
+#| msgid "Record Not Found Error Message"
+msgid "Scroll to Error Message"
+msgstr "הודעה על רשומה לא קיימת"
+
+#: classes/PDb_Settings.php:1108
+msgid "when a form validation error is shown, scroll to the error message"
+msgstr ""
+
+#: classes/PDb_Settings.php:1119
 msgid "Remove Line Breaks"
 msgstr "הסר מעברי שורה"
 
-#: classes/PDb_Settings.class.php:965
+#: classes/PDb_Settings.php:1124
 msgid "Remove line breaks from all plugin shortcode ouput."
 msgstr "הסר מעברי שורה מכל התוכן המיוצר על ידי שורטקודס של התוסף."
 
-#: classes/PDb_Settings.class.php:977
+#: classes/PDb_Settings.php:1136
 msgid "Use Pagination Scroll Anchors"
 msgstr "השתמש בסימניות גלילה בדיפדוף"
 
-#: classes/PDb_Settings.class.php:982
+#: classes/PDb_Settings.php:1141
 msgid ""
 "Uncheck this if your theme prevents pagination links with scroll anchors "
 "from working."
 msgstr ""
 "הסר סימון מתיבה זו אם העיצוב הנוכחי שלך אינו מאפשר קישורי גלילה בדיפדוף."
 
-#: classes/PDb_Settings.class.php:990
+#: classes/PDb_Settings.php:1149
 msgid "Primary Email Address Field"
 msgstr "כתובת אימייל ראשית"
 
-#: classes/PDb_Settings.class.php:995
+#: classes/PDb_Settings.php:1154
 msgid "this field is the primary email address for the record"
 msgstr "שדה זה הנו כתובת האימיל הראשית המקושרת למשתמש זה"
 
-#: classes/PDb_Settings.class.php:1003
+#: classes/PDb_Settings.php:1162
 msgid "Send HTML Email"
 msgstr "שלח אימיילים בפורמט HTML"
 
-#: classes/PDb_Settings.class.php:1008
+#: classes/PDb_Settings.php:1167
 msgid ""
 "use rich text in plugin emails? If you turn this off, be sure to remove all "
 "HTML tags from the email body settings for the plugin."
@@ -885,11 +2003,11 @@ msgstr ""
 "האם להשתמש בעורך טקסט עשיר עבור עריכת המיילים של התוסף? אם סימון תיבה זו "
 "כבוי, וודא שהינך מסיר את כל תגיות הHTML מגוף ההודעות שאתה שולח."
 
-#: classes/PDb_Settings.class.php:1017
+#: classes/PDb_Settings.php:1176
 msgid "Strict Date Format"
 msgstr "פורמט תאריך קשיח"
 
-#: classes/PDb_Settings.class.php:1023
+#: classes/PDb_Settings.php:1182
 #, php-format
 msgid ""
 "This forces date inputs to be interpreted strictly according to the \"Input "
@@ -904,15 +2022,15 @@ msgstr ""
 "הנוכחית נראה כך: \n"
 "<strong>%s</strong> %s"
 
-#: classes/PDb_Settings.class.php:1023
+#: classes/PDb_Settings.php:1182
 msgid "Your current PHP installation does not support this setting."
 msgstr "גירסת הPHP הנוכחית שלך אינה מאפשרת הגדרה זו."
 
-#: classes/PDb_Settings.class.php:1032
+#: classes/PDb_Settings.php:1191
 msgid "Input Date Format"
 msgstr "פורמט תאריך קלט"
 
-#: classes/PDb_Settings.class.php:1037
+#: classes/PDb_Settings.php:1196
 msgid ""
 "date formatting string for all plugin date inputs when \"Strict Date Format"
 "\" is enabled. You should use this for all localized (non-American English) "
@@ -921,33 +2039,11 @@ msgstr ""
 "זהו פורמט התאריך עבור כל שדה קלט מסוג תאריך בתוסף זה, כאשר \"פורמט תאריך קשיח"
 "\" מסומן. עליך להשתמש בזה עבור כל קלט של תאריך שאינו בפורמט אמריקאי."
 
-#: classes/PDb_Settings.class.php:1044
-msgid "Show Timestamp Time"
-msgstr "הצג שעה בחותמות זמן"
-
-#: classes/PDb_Settings.class.php:1049
-msgid "Show time with timestamp dates"
-msgstr "הצג זמנים (שעות ודקות) בתאריכים מסוג \"חותמות זמן\""
-
-#: classes/PDb_Settings.class.php:1057
-msgid "Strict User Searching"
-msgstr "חיפוש משתמשים מדויק"
-
-#: classes/PDb_Settings.class.php:1062
-msgid ""
-"When checked, the frontend list search must match the whole field exactly. "
-"If unchecked, the search will match if the search term is found in part of "
-"the field. Searches are not case-sensitive either way."
-msgstr ""
-"סמן תיבה זו אם ברצונך לאפשר באתר חיפוש מדויק בלבד, דהינו: הערך שמחפשים חייב "
-"להיות זהה באופן מלא לערך המופיע במסד הנתונים. הסר סימון מתיבה זו אם ברצונך "
-"לאפשר התאמה חלקית של ערך החיפוש לערך הרשום במסד הנתונים."
-
-#: classes/PDb_Settings.class.php:1069
+#: classes/PDb_Settings.php:1203
 msgid "Enable AJAX Search Functionality"
 msgstr "אפשר חיפוש באג'קס"
 
-#: classes/PDb_Settings.class.php:1074
+#: classes/PDb_Settings.php:1208
 msgid ""
 "This enables list search results that are updated without reloading the "
 "page. It requires Javascript, but search will still work if Javascript is "
@@ -956,36 +2052,80 @@ msgstr ""
 "מאפשר הצגת תוצאות חיפוש ללא ריענון של הדף. הדבר דורש שימוש בג'אוהסקריפט, אך "
 "החיפוש עדין יעבוד גם אם הגולש מבטל את הג'אוהסקריפט בדפדפן."
 
-#: classes/PDb_Settings.class.php:1082
-msgid "Use PHP Sessions"
-msgstr "השתמש בסשן PHP"
+#: classes/PDb_Settings.php:1216
+msgid "Use Alternate Session Method"
+msgstr ""
 
-#: classes/PDb_Settings.class.php:1087
-msgid "uncheck this if PHP sessions are not working."
-msgstr "הסר סימון זה אם השרת שלך אינו מאפשר סשן PHP."
+#: classes/PDb_Settings.php:1221
+msgid "use this if you are having problems with sessions."
+msgstr ""
 
-#: classes/PDb_Settings.class.php:1095
-msgid "Cookie Name"
-msgstr "שם עוגיית הסשן"
-
-#: classes/PDb_Settings.class.php:1100
-msgid ""
-"Change the name of the cookie for compatibility with some web hosting setups."
-msgstr "שנה את שם העוגיה אם הדבר נדרש  לצרכי תאימות מול האיחסון שלך"
-
-#: classes/PDb_Settings.class.php:1107
+#: classes/PDb_Settings.php:1254
 msgid "Disable Backend Developer Ads"
 msgstr "בטל הודעות מפתחים"
 
-#: classes/PDb_Settings.class.php:1112
+#: classes/PDb_Settings.php:1259
 msgid "select this to disable developer ads in the admin."
 msgstr "סמן תיבה זו לביטול הודעות מפתחים מאת התוסף בממשק הניהול."
 
-#: classes/PDb_Settings.class.php:1127
+#: classes/PDb_Settings.php:1267
+msgid "File and Image Uploads Use WP Content Path"
+msgstr ""
+
+#: classes/PDb_Settings.php:1272
+msgid ""
+"when selected, the base path for file and image uploads will be the site's "
+"content directory."
+msgstr ""
+
+#: classes/PDb_Settings.php:1280
+msgid "Allow Record Timestamps to be Edited"
+msgstr ""
+
+#: classes/PDb_Settings.php:1285
+msgid ""
+"normally, record timestamps (date_recorded, date_updated, last_accessed) are "
+"not editable, checking this allows them to be edited."
+msgstr ""
+
+#: classes/PDb_Settings.php:1294
+msgid "Sync php Timezone"
+msgstr ""
+
+#: classes/PDb_Settings.php:1299
+msgid "when checked, the php timezone will be set to the WordPress timezone."
+msgstr ""
+
+#: classes/PDb_Settings.php:1307
+msgid "Enable Debugging"
+msgstr ""
+
+#: classes/PDb_Settings.php:1312
+#, php-format
+msgid "this will enable writing to the %s debugging log."
+msgstr ""
+
+#: classes/PDb_Settings.php:1316
+msgid "off"
+msgstr ""
+
+#: classes/PDb_Settings.php:1317
+msgid "plugin debug"
+msgstr ""
+
+#: classes/PDb_Settings.php:1318
+msgid "all errors"
+msgstr ""
+
+#: classes/PDb_Settings.php:1319
+msgid "verbose"
+msgstr ""
+
+#: classes/PDb_Settings.php:1333
 msgid "Admin List Default Sort"
 msgstr "מיון ברירת מחדל בממשק הניהול"
 
-#: classes/PDb_Settings.class.php:1133
+#: classes/PDb_Settings.php:1339
 msgid ""
 "The record list shown in the admin section will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -993,39 +2133,39 @@ msgstr ""
 "טבלת הרשומות המוצגת בממשק הניהול תהיה ממוינת על פי שדה זה, כברירת מחדל (על "
 "השדה להיות מסומן כ\"מיון\")."
 
-#: classes/PDb_Settings.class.php:1140
+#: classes/PDb_Settings.php:1346
 msgid "Admin List Default Sort Order"
 msgstr "סדר מיון ברירת מחדל בממשק הניהול "
 
-#: classes/PDb_Settings.class.php:1144
+#: classes/PDb_Settings.php:1350
 msgid "Sets the default order of the record list in the admin."
 msgstr "קובע את סדר המיון של טבלת הרשומות בממשק הניהול."
 
-#: classes/PDb_Settings.class.php:1152
+#: classes/PDb_Settings.php:1358
 msgid "Show Image Thumbnails in Admin List"
 msgstr "הצג תמונות ממוזערות בממשק הניהול"
 
-#: classes/PDb_Settings.class.php:1167
+#: classes/PDb_Settings.php:1373
 msgid "Plugin Admin Horizontal Scrolling"
 msgstr "אפשר גלילה אופקית בממשק הניהול"
 
-#: classes/PDb_Settings.class.php:1172
+#: classes/PDb_Settings.php:1378
 msgid "use horizontal scrolling on list and fields management screens"
 msgstr "אפשר גלילה אופקית של החלון בתצוגת הטבלה וניהול השדות בממשק הניהול"
 
-#: classes/PDb_Settings.class.php:1180
+#: classes/PDb_Settings.php:1386
 msgid "Record Edit Access Level"
 msgstr "רמת הרשאות עורך"
 
-#: classes/PDb_Settings.class.php:1184
+#: classes/PDb_Settings.php:1390
 msgid "sets the user access level for adding, editing and listing records."
 msgstr "קובע את רמת ההרשאות עבור הצגה, הוספה ועריכה של רשומות ממסד הנתונים."
 
-#: classes/PDb_Settings.class.php:1192
+#: classes/PDb_Settings.php:1398
 msgid "Plugin Admin Access Level"
 msgstr "רמת הרשאות ניהול התוסף"
 
-#: classes/PDb_Settings.class.php:1196
+#: classes/PDb_Settings.php:1402
 msgid ""
 "sets the user access level for fields management, plugin settings, deleting "
 "records and CSV operations."
@@ -1033,20 +2173,65 @@ msgstr ""
 "קובע את רמת ההרשאות עבור עריכת שדות, הגדרות תוסף, פעולות על קבצי CSV ומחיקת "
 "רשומות ממסד הנתונים."
 
-#: classes/PDb_Settings.class.php:1204
+#: classes/PDb_Settings.php:1410
+msgid "Top Settings Submit"
+msgstr ""
+
+#: classes/PDb_Settings.php:1414
+msgid ""
+"show a submit button at the top of admin settings and configuration pages"
+msgstr ""
+
+#: classes/PDb_Settings.php:1422
+msgid "Admin Record Edits are Validated"
+msgstr ""
+
+#: classes/PDb_Settings.php:1427
+msgid "When checked, admin record edits and new records must pass validation."
+msgstr ""
+
+#: classes/PDb_Settings.php:1435
 msgid "Editor can Export CSV Files"
 msgstr "עורך יכול לייצא קבצי CSV"
 
-#: classes/PDb_Settings.class.php:1208
+#: classes/PDb_Settings.php:1439
 msgid "If checked, users with the plugin editor role can export a CSV."
 msgstr ""
 "סמן תיבה זו אם ברצונך לאפשר למשתמשים בעלי רמת הרשאה של 'עורך' ליצא קבצי CSV."
 
-#: classes/PDb_Settings.class.php:1222
+#: classes/PDb_Settings.php:1447
+msgid "Delete Uploaded Files with Record"
+msgstr ""
+
+#: classes/PDb_Settings.php:1452
+msgid ""
+"when a record is deleted, delete all images and files uploaded with the "
+"record"
+msgstr ""
+
+#: classes/PDb_Settings.php:1461
+msgid "Show Timestamp Time"
+msgstr "הצג שעה בחותמות זמן"
+
+#: classes/PDb_Settings.php:1466
+msgid "Show time with timestamp dates"
+msgstr "הצג זמנים (שעות ודקות) בתאריכים מסוג \"חותמות זמן\""
+
+#: classes/PDb_Settings.php:1475
+#, fuzzy
+#| msgid "Plugin Admin Access Level"
+msgid "Clear Plugin Admin Notices"
+msgstr "רמת הרשאות ניהול התוסף"
+
+#: classes/PDb_Settings.php:1479
+msgid "If checked, all plugin-generated admin notices will be cleared."
+msgstr ""
+
+#: classes/PDb_Settings.php:1493
 msgid "Custom Plugin Stylesheet"
 msgstr "CSS מותאם אישית"
 
-#: classes/PDb_Settings.class.php:1227
+#: classes/PDb_Settings.php:1498
 msgid ""
 "use this to add your own styles or override styles applied to the output of "
 "all plugin shortcodes"
@@ -1054,49 +2239,71 @@ msgstr ""
 "ניתן לכתוב הגדרות CSS חדשות או לבצע override להגדרות CSS קיימות. השינויים "
 "יחולו על הפלט של כל השורטקודס בתוסף."
 
-#: classes/PDb_Settings.class.php:1237
+#: classes/PDb_Settings.php:1508
 msgid "Plugin Print Stylesheet"
 msgstr "קובץ CSS להדפסה"
 
-#: classes/PDb_Settings.class.php:1242
+#: classes/PDb_Settings.php:1513
 msgid "use this to format the printed output of all plugin shortcodes"
 msgstr "ניתן לכתוב הגדרות CSS לעיצוב פלט מודפס בלבד"
 
-#: classes/PDb_Settings.class.php:1265
+#: classes/PDb_Settings.php:1523
+#, fuzzy
+#| msgid "Custom Plugin Stylesheet"
+msgid "Custom Admin Stylesheet"
+msgstr "CSS מותאם אישית"
+
+#: classes/PDb_Settings.php:1528
+msgid ""
+"use this to add or modify CSS rules that are applied on all plugin pages in "
+"the WordPress backend."
+msgstr ""
+
+#: classes/PDb_Settings.php:1549
 msgid "Same Page"
 msgstr "דף נוכחי"
 
-#: classes/PDb_Settings.class.php:1300
+#: classes/PDb_Settings.php:1592
 msgid "None"
 msgstr "ללא"
 
-#: classes/PDb_Settings.class.php:1394
+#: classes/PDb_Settings.php:1714
 msgid "Contributor"
 msgstr "תורם"
 
-#: classes/PDb_Settings.class.php:1395
+#: classes/PDb_Settings.php:1715
 msgid "Author"
 msgstr "יוצר"
 
-#: classes/PDb_Settings.class.php:1396
+#: classes/PDb_Settings.php:1716
 msgid "Editor"
 msgstr "עורך"
 
-#: classes/PDb_Settings.class.php:1397
+#: classes/PDb_Settings.php:1717
 msgid "Admin"
 msgstr "מנהל"
 
-#: classes/PDb_Settings.class.php:1474 participants-database.php:3386
-#: participants-database.php:3457
+#: classes/PDb_Settings.php:1794 participants-database.php:3677
+#: participants-database.php:3739
 msgid "Settings"
 msgstr "הגדרות"
 
-#: classes/PDb_Settings.class.php:1561 classes/PDb_Settings.class.php:1567
+#: classes/PDb_Settings.php:1886 classes/PDb_Settings.php:1892
 #, php-format
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr "השדה \"%s\" מקבל רק ערכים מספריים."
 
-#: classes/PDb_Shortcode.class.php:288
+#: classes/PDb_Settings.php:1941
+msgid "Content Directory"
+msgstr ""
+
+#: classes/PDb_Settings.php:1941
+#, fuzzy
+#| msgid "WordPress Plugin"
+msgid "WordPress root"
+msgstr "תוסף וורדפרס"
+
+#: classes/PDb_Shortcode.php:334
 #, php-format
 msgctxt "message to show if the plugin cannot find the template"
 msgid ""
@@ -1106,143 +2313,148 @@ msgstr ""
 "<%1$s>לא ניתן למצוא את קובץ התבנית %2$s.</%1$s> אנא ודא כי השם תקין וכי "
 "הקובץ נמצא בנתיב הנכון."
 
-#: classes/PDb_Shortcode.class.php:1282
+#: classes/PDb_Shortcode.php:1351
 msgid "next"
 msgstr "הבא"
 
-#: classes/PDb_Update_Notices.class.php:218
+#: classes/PDb_Update_Notices.php:218
 msgctxt "Plugin installer section title"
 msgid "Description"
 msgstr "תיאור"
 
-#: classes/PDb_Update_Notices.class.php:219
+#: classes/PDb_Update_Notices.php:219
 msgctxt "Plugin installer section title"
 msgid "Installation"
 msgstr "התקנה"
 
-#: classes/PDb_Update_Notices.class.php:220
+#: classes/PDb_Update_Notices.php:220
 msgctxt "Plugin installer section title"
 msgid "FAQ"
 msgstr "שאלות נפוצות"
 
-#: classes/PDb_Update_Notices.class.php:221
+#: classes/PDb_Update_Notices.php:221
 msgctxt "Plugin installer section title"
 msgid "Screenshots"
 msgstr "צילומי מסך"
 
-#: classes/PDb_Update_Notices.class.php:222
+#: classes/PDb_Update_Notices.php:222
 msgctxt "Plugin installer section title"
 msgid "Changelog"
 msgstr "יומן שינויים"
 
-#: classes/PDb_Update_Notices.class.php:223
+#: classes/PDb_Update_Notices.php:223
 msgctxt "Plugin installer section title"
 msgid "Reviews"
 msgstr "סקירות"
 
-#: classes/PDb_Update_Notices.class.php:224
+#: classes/PDb_Update_Notices.php:224
 msgctxt "Plugin installer section title"
 msgid "Support"
 msgstr "תמיכה"
 
-#: classes/PDb_Update_Notices.class.php:246
+#: classes/PDb_Update_Notices.php:246
 msgid "Plugin Install"
 msgstr "התקנת התוסף"
 
-#: classes/PDb_Update_Notices.class.php:296
+#: classes/PDb_Update_Notices.php:296
 msgid "Version:"
 msgstr "גירסה:"
 
-#: classes/PDb_Update_Notices.class.php:298
+#: classes/PDb_Update_Notices.php:298
 msgid "Author:"
 msgstr "יוצר:"
 
-#: classes/PDb_Update_Notices.class.php:300
+#: classes/PDb_Update_Notices.php:300
 msgid "Last Updated:"
 msgstr "עדכון אחרון:"
 
-#: classes/PDb_Update_Notices.class.php:303
+#: classes/PDb_Update_Notices.php:303
 #, php-format
 msgid "%s ago"
 msgstr "לפני %s"
 
-#: classes/PDb_Update_Notices.class.php:308
+#: classes/PDb_Update_Notices.php:308
 msgid "Requires WordPress Version:"
 msgstr "תואם גרסת וורדפרס:"
 
-#: classes/PDb_Update_Notices.class.php:311
+#: classes/PDb_Update_Notices.php:311
 #, php-format
 msgid "%s or higher"
 msgstr "%s ומעלה"
 
-#: classes/PDb_Update_Notices.class.php:315
+#: classes/PDb_Update_Notices.php:315
 msgid "Compatible up to:"
 msgstr "תואם עד:"
 
-#: classes/PDb_Update_Notices.class.php:317
+#: classes/PDb_Update_Notices.php:317
 msgid "Active Installs:"
 msgstr "התקנות פעילות:"
 
-#: classes/PDb_Update_Notices.class.php:319
+#: classes/PDb_Update_Notices.php:319
 msgctxt "Active plugin installs"
 msgid "1+ Million"
 msgstr "1+ מיליון"
 
-#: classes/PDb_Update_Notices.class.php:325
+#: classes/PDb_Update_Notices.php:325
 msgid "WordPress.org Plugin Page &#187;"
 msgstr "דף התוספים של WordPress.org &#187;"
 
-#: classes/PDb_Update_Notices.class.php:327
+#: classes/PDb_Update_Notices.php:327
 msgid "Plugin Homepage &#187;"
 msgstr "דף הבית של התוסף &#187;"
 
-#: classes/PDb_Update_Notices.class.php:329
+#: classes/PDb_Update_Notices.php:329
 msgid "Add-Ons &amp; Extras &#187;"
 msgstr "תוספים ועוד &#187;"
 
-#: classes/PDb_Update_Notices.class.php:331
-#: classes/PDb_Update_Notices.class.php:386
+#: classes/PDb_Update_Notices.php:331 classes/PDb_Update_Notices.php:386
 msgid "Donate to this plugin &#187;"
 msgstr "תרום לפיתוח תוסף זה &#187;"
 
-#: classes/PDb_Update_Notices.class.php:335
+#: classes/PDb_Update_Notices.php:335
 msgid "Average Rating"
 msgstr "דירוג ממוצע"
 
-#: classes/PDb_Update_Notices.class.php:337
+#: classes/PDb_Update_Notices.php:337
 #, php-format
 msgid "(based on %s rating)"
 msgid_plural "(based on %s ratings)"
 msgstr[0] "(מבוסס על דירוג %s)"
 msgstr[1] "(מבוסס על %s דירוגים)"
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/PDb_Update_Notices.class.php:343
+#: classes/PDb_Update_Notices.php:343
 msgid "Reviews"
 msgstr "סקירות"
 
-#: classes/PDb_Update_Notices.class.php:344
+#: classes/PDb_Update_Notices.php:344
 msgid "Read all reviews on WordPress.org or write your own!"
 msgstr "קרא את כל הסקירות בWordPress.org או כתוב סיקור משלך!"
 
-#: classes/PDb_Update_Notices.class.php:350
+#: classes/PDb_Update_Notices.php:350
 #, php-format
 msgid "Reviews with %1$d star: %2$s. Opens in a new window."
 msgid_plural "Reviews with %1$d stars: %2$s. Opens in a new window."
 msgstr[0] ".%2$s :%1$d סקירות עם כוכב נפתח בחלון חדש"
 msgstr[1] "סקירות עם %1$d כוכבים: %2$s. נפתח בחלון חדש."
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/PDb_Update_Notices.class.php:355
+#: classes/PDb_Update_Notices.php:355
 #, php-format
 msgid "%d star"
 msgid_plural "%d stars"
 msgstr[0] "כוכב %d"
 msgstr[1] "%d כוכבים"
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/PDb_Update_Notices.class.php:366
+#: classes/PDb_Update_Notices.php:366
 msgid "Contributors"
 msgstr "תורמים"
 
-#: classes/PDb_Update_Notices.class.php:393
+#: classes/PDb_Update_Notices.php:393
 msgid ""
 "<strong>Warning:</strong> This plugin has <strong>not been tested</strong> "
 "with your current version of WordPress."
@@ -1250,7 +2462,7 @@ msgstr ""
 "<strong>אזהרה:</strong> תוסף זה <strong>לא נבדק</strong> עם גרסת הוורדפרס "
 "הנוכחית שלך."
 
-#: classes/PDb_Update_Notices.class.php:395
+#: classes/PDb_Update_Notices.php:395
 msgid ""
 "<strong>Warning:</strong> This plugin has <strong>not been marked as "
 "compatible</strong> with your version of WordPress."
@@ -1258,159 +2470,135 @@ msgstr ""
 "<strong>אזהרה:</strong> תוסף זה<strong>לא סומן כתואם</strong> לגרסת הוורדפרס "
 "הנוכחית שלך."
 
-#: classes/PDb_Update_Notices.class.php:424
+#: classes/PDb_Update_Notices.php:424
 msgid "Install Now"
 msgstr "התקן עכשיו"
 
-#: classes/PDb_Update_Notices.class.php:429
+#: classes/PDb_Update_Notices.php:429
 msgid "Install Update Now"
 msgstr "התקן עדכון עכשיו"
 
-#: classes/PDb_Update_Notices.class.php:434
+#: classes/PDb_Update_Notices.php:434
 #, php-format
 msgid "Newer Version (%s) Installed"
 msgstr "גירסה חדשה (%s) הותקנה בהצלחה"
 
-#: classes/PDb_Update_Notices.class.php:437
+#: classes/PDb_Update_Notices.php:437
 msgid "Latest Version Installed"
 msgstr "גירסה אחרונה מותקנת"
 
-#: classes/aux-plugin-update/github-checker.php:119
-msgid "There is no changelog available."
-msgstr "אין יומן שינויים זמין."
-
-#: classes/aux-plugin-update/plugin-update-checker.php:763
-msgid "Check for updates"
-msgstr "בדוק עדכונים"
-
-#: classes/aux-plugin-update/plugin-update-checker.php:807
-msgid "This plugin is up to date."
-msgstr "תוסף זה מעודכן."
-
-#: classes/aux-plugin-update/plugin-update-checker.php:809
-msgid "A new version of this plugin is available."
-msgstr "גירסה חדשה זמינה עבור תוסף זה."
-
-#: classes/aux-plugin-update/plugin-update-checker.php:811
-#, php-format
-msgid "Unknown update checker status \"%s\""
-msgstr "סטטוס עדכון לא ידוע  \"%s\""
-
-#: classes/xnau_CSV_Import.class.php:95
+#: classes/xnau_CSV_Import.php:94
 #, php-format
 msgid "The file %s has been uploaded."
 msgstr "הקובץ %s נטען בהצלחה."
 
-#: classes/xnau_CSV_Import.class.php:101
+#: classes/xnau_CSV_Import.php:100
 #, php-format
 msgid "%s record added"
 msgid_plural "%s records added"
 msgstr[0] "רשומה %s נוספה"
 msgstr[1] "%s רשומות נוספו"
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/xnau_CSV_Import.class.php:105
+#: classes/xnau_CSV_Import.php:104
 #, php-format
 msgid "%s matching record updated"
 msgid_plural "%s matching records updated"
 msgstr[0] "רשומה תואמת %s עודכנה"
 msgstr[1] "%s רשומות תואמות עודכנו"
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/xnau_CSV_Import.class.php:110
+#: classes/xnau_CSV_Import.php:109
 #, php-format
 msgid "%s duplicate record skipped"
 msgid_plural "%s duplicate records skipped"
 msgstr[0] "רשומה כפולה %s נמחקה"
 msgstr[1] "%s רשומות כפולות נמחקו"
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/xnau_CSV_Import.class.php:115
+#: classes/xnau_CSV_Import.php:114
 #, php-format
 msgid "%s record skipped due to errors"
 msgid_plural "%s records skipped due to errors"
 msgstr[0] "רשומה %s דולגה עקב שגיאות"
 msgstr[1] "%s רשומות דולגו עקב שגיאות"
+msgstr[2] ""
+msgstr[3] ""
 
-#: classes/xnau_CSV_Import.class.php:119
+#: classes/xnau_CSV_Import.php:118
 msgid "Zero records imported"
 msgstr "לא יובאו רשומות"
 
-#: classes/xnau_CSV_Import.class.php:124
+#: classes/xnau_CSV_Import.php:123
 msgid ""
 "There was an error uploading the file. This could be a problem with "
 "permissions on the uploads directory."
 msgstr "אירעה שגיאה בטעינת הקובץ. יתכן וקיימת בעיית הרשאות בתיקיית היעד."
 
-#: classes/xnau_CSV_Import.class.php:124 classes/xnau_CSV_Import.class.php:130
+#: classes/xnau_CSV_Import.php:123 classes/xnau_CSV_Import.php:129
 msgid "Destination"
 msgstr "יעד"
 
-#: classes/xnau_CSV_Import.class.php:130
+#: classes/xnau_CSV_Import.php:129
 msgid ""
 "Target directory does not exist and could not be created. Try creating it "
 "manually."
 msgstr "תיקיית היעד אינה קיימת ואין אפשרות לייצרה. נסה ליצור אותה באופן ידני."
 
-#: classes/xnau_CSV_Import.class.php:184
+#: classes/xnau_CSV_Import.php:155
+msgid "Invalid file for import."
+msgstr ""
+
+#: classes/xnau_CSV_Import.php:198
 msgid "Error occured while trying to add the data to the database"
 msgstr "אירעה שגיאה בכתיבה למסד הנתונים"
 
-#: classes/xnau_CSV_Import.class.php:184
+#: classes/xnau_CSV_Import.php:198
 #, php-format
 msgid ""
 "Input file does not exist or path is incorrect.<br />Attempted to load: %s"
 msgstr "קובץ הקלט אינו קיים או שהנתיב אליו שגוי .<br />ניסיון לטעון את %s"
 
-#: classes/xnau_CSV_Import.class.php:234
+#: classes/xnau_CSV_Import.php:248
 #, php-format
 msgid ""
 "The number of items in line %s is incorrect.<br />There are %s and there "
 "should be %s."
 msgstr "מספר הפריטים בשורה %s שגוי. קיימים %s פריטים וצריכים להיות %s פריטים."
 
-#: classes/xnau_CSV_Import.class.php:243
+#: classes/xnau_CSV_Import.php:257
 msgid "Number of values does not match number of columns"
 msgstr "מספר הערכים אינו תואם את מספר העמודות"
 
-#: classes/xnau_FormElement.class.php:240
+#: classes/xnau_FormElement.php:247
 msgctxt "indicates a write-in choice"
 msgid "other"
 msgstr "אחר"
 
-#: classes/xnau_FormElement.class.php:241
+#: classes/xnau_FormElement.php:248
 msgctxt "indicates the text to be clicked to go to another web page"
 msgid "Link Text"
 msgstr "טקסט קישור"
 
-#: edit_participant.php:21
-msgid "Add New Participant Record"
-msgstr "הוסף רשומה חדשה"
-
-#: edit_participant.php:26
-msgid "Edit Existing Participant Record"
-msgstr "ערוך רשומה קיימת"
-
-#: edit_participant.php:86
-msgctxt "abbreviation for \"identification\""
-msgid "ID"
-msgstr "מזהה"
-
-#: edit_participant.php:86
-msgctxt "indicates a new record is being entered"
-msgid "(new record)"
-msgstr "(רשומה חדשה)"
-
-#: edit_participant.php:111
-msgid "hidden"
-msgstr "ניסתר"
-
-#: edit_participant.php:128
-msgid "read only"
-msgstr "קריאה בלבד"
-
-#: edit_participant.php:234
+#: edit_participant.php:79 edit_participant.php:272
 msgid "Save the Record"
 msgstr "שמור את הרשומה "
 
-#: edit_participant.php:248
+#: edit_participant.php:137
+#, fuzzy
+#| msgid "hidden"
+msgctxt "label for a hidden field"
+msgid "hidden"
+msgstr "ניסתר"
+
+#: edit_participant.php:164
+msgid "read only"
+msgstr "קריאה בלבד"
+
+#: edit_participant.php:286
 msgid ""
 "<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
 "strong> save record and continue with same record<br><strong>Next:</strong> "
@@ -1420,7 +2608,7 @@ msgstr ""
 "שמור את הרשומה והמשך בעריכה<br><strong>הבא:</strong> שמור את הרשומה הנוכחית "
 "והתחל רשומה חדשה"
 
-#: edit_participant.php:252
+#: edit_participant.php:290
 msgid "<strong>Previous:</strong> save and move to previous record"
 msgstr "<strong>קודם:</strong> שמור רשומה נוכחית ופתח רשומה קודמת"
 
@@ -1431,10 +2619,9 @@ msgstr "עזרה לניהול השדות"
 #: manage_fields_help.php:5
 #, php-format
 msgid ""
-"Please visit the %sParticipants Database help pages%s for up-to-date "
-"information on using this plugin."
+"Please visit the %sManage Database Fields Help Page%s at xnau.com for "
+"detailed help with configuring the database fields."
 msgstr ""
-"אנא בקר ב%sParticipants Database help pages%s למידע עדכני על השימוש בתוסף זה."
 
 #: manage_fields_help.php:6
 msgid "Defining Database Fields"
@@ -1468,242 +2655,153 @@ msgstr ""
 "ידי עריכת רשומות אלו."
 
 #: manage_fields_help.php:9
-msgid "Delete"
-msgstr "מחיקה"
+#, fuzzy
+#| msgid "Participants Database"
+msgid "General Participants Database Help"
+msgstr "מסד נתונים"
 
 #: manage_fields_help.php:10
+#, php-format
 msgid ""
-"Click on the red \"X\" to delete a field. If there are existing records with "
-"this data field, that information will not be deleted from the database, but "
-"you will no longer be able to display or edit it."
+"Please visit the %sParticipants Database help pages%s for up-to-date "
+"information on using this plugin."
 msgstr ""
-"הקלק על ה\"X\" האדום על מנת למחוק שדה. אם קיימות רשומות במסד הנתונים עם ערך "
-"עבור שדה זה, מידע זה לא ימחק, אך לא תוכל עוד להציג או לערוך אותו."
-
-#: manage_fields_help.php:11
-msgid "Order"
-msgstr "סידור"
-
-#: manage_fields_help.php:12
-msgid ""
-"Click and drag to reorder the fields. You do not need to click on \"Update\" "
-"for the change to take effect."
-msgstr ""
-"לחץ וגרור על מנת לשנות את סדר השדות. אינך צריך ללחוץ \"עידכון\" כדי לשמור "
-"שינויי סדר אלו."
-
-#: manage_fields_help.php:13
-msgid "Title"
-msgstr "כותרת"
-
-#: manage_fields_help.php:14
-msgid ""
-"This is the display title for your field. You can change it at any time, it "
-"won&#39;t affect the field in any way other than to change how it is labeled "
-"in forms.<p>"
-msgstr ""
-"זוהי הכותרת שתוצג עבור השדה. תוכל לשנותה בכל עת. הדבר לא ישפיע על השדה בשום "
-"צורה מלבד תצוגה בטפסים."
-
-#: manage_fields_help.php:15
-msgid "Default"
-msgstr "ברירת מחדל"
-
-#: manage_fields_help.php:16
-msgid "If you wish to pre-load a field with a value, you can put it here."
-msgstr "אם ברצונך לקבוע ערך ברירת מחדל עבור שדה זה, הקלד אותו כאן."
-
-#: manage_fields_help.php:17
-msgid "Group"
-msgstr "קבוצה"
-
-#: manage_fields_help.php:18
-msgid ""
-"The database fields are organized into groups, and you can select which "
-"group the database field belongs to here. You can edit the groups under the "
-"\"Field Groups\" tab."
-msgstr ""
-"שדות מסד הנתונים מאורגנים בקבוצות, ובאפשרותך לקבוע לאיזו קבוצה שייך השדה "
-"הנוכחי. באפשרותך לערוך את הקבוצות תחת הלשונית \"קבוצות שדות\"."
-
-#: manage_fields_help.php:19
-msgid "Help Text"
-msgstr "טקסט עזרה"
-
-#: manage_fields_help.php:20
-msgid ""
-"When a form is displayed, sometimes it is a good idea to explain something "
-"about the information you want in a field. Any text you put in here will be "
-"displayed next to the field. HTML is allowed, but be careful with that, you "
-"can break things!"
-msgstr ""
-"טקסט אופציונלי, שיוצג ליד השדה בזמן מילוי הטופס. ניתן לרשום הסבר קצר למשתמש "
-"כיצד עליו למלא את השדה. ניתן להשתמש בHTML."
-
-#: manage_fields_help.php:21
-msgid "Form Element"
-msgstr "תצוגה בטופס"
-
-#: manage_fields_help.php:22
-msgid ""
-"If your piece of information is a simple line of text (like a name), it "
-"should be presented in the form as a text field. If a longer piece of text "
-"is called for, a text-field would be a better choice, and so forth. This is "
-"where you can determine what kind of form element this particular piece of "
-"information will be preseted with."
-msgstr "כאן תוכל לקבוע תצורה להצגת שדה זה בטפסים (סוג אלמנט הHTML)."
-
-#: manage_fields_help.php:24
-msgid "Values"
-msgstr "ערכים"
-
-#: manage_fields_help.php:25
-msgid ""
-"For form elements that have multiple choices, you need to define those "
-"choices here. Type in a comma-separated list of the options you want to "
-"present."
-msgstr ""
-"עבור שדות בעלי אפשרות בחירה מרשימה, עליך להגדיר את רשימת הערכים האפשריים "
-"כאן. אנא הקלד רשימה מופרדת בפסיקים של הערכים שברצונך לאפשר."
-
-#: manage_fields_help.php:27
-msgid "Validation"
-msgstr "ולידציה"
-
-#: manage_fields_help.php:29
-msgid "Admin Column"
-msgstr "סדר בטבלה"
-
-#: manage_fields_help.php:31
-msgid "Display Column"
-msgstr "סדר בטופס"
-
-#: manage_fields_help.php:33
-msgid "Switches"
-msgstr "סוויצ'ים"
-
-#: manage_fields_help.php:36
-msgid ""
-"<strong>Persistent</strong> is a convenience feature helpful when you are "
-"manually entering a series of records in the admin. If set, it means the "
-"field will carry over to the next blank entry. For instance, if a group of "
-"records from the same city are being entered, set the \"city\" field to be "
-"persistent, then once a city value has been entered in the first record of "
-"the series, the next blank record will have this city pre-filled."
-msgstr "דביק"
-
-#: manage_fields_help.php:37
-msgid ""
-"Persistent fields will also use their set default value in record edit forms "
-"where no value has been set in the record being edited"
-msgstr ""
-"שדות דביקים יקבלו את ערך ברירת המחדל המוגדר עבורם, גם כאשר לא מספקים עבורם "
-"ערך בעריכת הרשומה"
+"אנא בקר ב%sParticipants Database help pages%s למידע עדכני על השימוש בתוסף זה."
 
 #. Plugin Name of the plugin/theme
-#: participants-database.php:435
+#: participants-database.php:539
 msgid "Participants Database"
 msgstr "מסד נתונים"
 
-#: participants-database.php:574
+#: participants-database.php:706
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr "יש להסיר את כל השדות מהקבוצה {name} לפני שניתן יהיה למחוק אותה."
 
-#: participants-database.php:576
-msgid "Delete the \"{name}\" {thing}?"
+#: participants-database.php:708
+#, fuzzy
+#| msgid "Delete the \"{name}\" {thing}?"
+msgid "Delete the {name} {thing}?"
 msgstr "האם למחוק את ה{thing} בשם \"{name}\"?"
 
-#: participants-database.php:577
+#: participants-database.php:709
+#, fuzzy
+#| msgid "Approve the selected record?"
+msgid "Delete the selected field?"
+msgstr "האם לאשר את הרשומה שנבחרה?"
+
+#: participants-database.php:710
+#, fuzzy
+#| msgid "Approve the selected records?"
+msgid "Delete the selected fields?"
+msgstr "האם לאשר את הרשומות שנבחרו?"
+
+#: participants-database.php:711
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr "השינויים שביצעת לא ישמרו אם תנווט מדף זה."
 
-#: participants-database.php:2989
+#: participants-database.php:712
 msgid ""
-"There is something wrong with the file you tried to upload. Try another."
-msgstr "יש משהו לא תקין בקובץ שניסית לטעון. אנא נסה לטעון קובץ אחר."
+"Changing the form element on a field that has stored data can result in data "
+"loss."
+msgstr ""
 
-#: participants-database.php:3005 participants-database.php:3033
-#, php-format
-msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
-msgstr "עבור \"%s\" באפשרותך לטעון קבצי תמונה בלבד, מסוג JPEG, GIF או PNG."
+#: participants-database.php:712
+#, fuzzy
+#| msgid "Your information has been updated"
+msgid "More information here…"
+msgstr "המידע עודכן"
 
-#: participants-database.php:3007
-#, php-format
-msgid "The file selected for \"%s\" must be one of these types: %s. "
-msgstr "הקובץ הנטען עבור \"%s\" חייב להיות מאחד הסוגים הבאים: %s. "
+#: participants-database.php:713
+msgid "Yes, change the form element"
+msgstr ""
 
-#: participants-database.php:3040
-#, php-format
-msgid ""
-"The file you tried to upload is too large. The file must be smaller than %sK."
-msgstr "הקובץ שניסית לטעון גדול מידי. הקובץ חייב להיות בגודל מקסימלי של %s KB."
+#: participants-database.php:714
+msgid "No, don't change the form element"
+msgstr ""
 
-#: participants-database.php:3047
-msgid "The file could not be saved."
-msgstr "שמירת הקובץ נכשלה."
-
-#: participants-database.php:3267 templates/pdb-retrieve-bootstrap.php:69
+#: participants-database.php:3478 templates/pdb-retrieve-bootstrap.php:70
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr "שמור"
 
-#: participants-database.php:3271
+#: participants-database.php:3482
 msgid "The record has been updated."
 msgstr "הרשומה עודכנה בהצלחה."
 
-#: participants-database.php:3272
+#: participants-database.php:3483
 msgid "The new record has been added."
 msgstr "רשומה חדשה נוצרה בהצלחה."
 
-#: participants-database.php:3273
+#: participants-database.php:3484
 #, php-format
 msgid "No record was added on query: %s"
 msgstr "לא נוצרו רשומות עבור השאילתא: %s"
 
-#: participants-database.php:3274
+#: participants-database.php:3485
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr "שגיאת מסד נתונים: %2$s עבור השאילתא: %1$s"
 
-#: participants-database.php:3374
-msgid "Add Participant"
-msgstr "הוסף משתמש"
-
-#: participants-database.php:3382 upload_csv.php:40
-msgid "Import CSV File"
-msgstr "יבא קובץ CSV"
-
-#: participants-database.php:3390
-msgid "Setup Guide"
-msgstr "מדריך התקנה"
-
-#: participants-database.php:3415
+#: participants-database.php:3643
 msgid "WordPress Plugin"
 msgstr "תוסף וורדפרס"
 
-#: participants-database.php:3416
+#: participants-database.php:3644
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr "עוזר לעמותות לנהל מתנדבים, חברי עמותה ומשתתפים."
 
-#: participants-database.php:3419
+#: participants-database.php:3647
 msgid "Developed by"
 msgstr "פותח על ידי"
 
-#: participants-database.php:3420
+#: participants-database.php:3648
 msgid ""
 "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr "הצעות, בקשות או ביקורות לתוסף זה? נשמח לשמוע על כך: אימייל"
 
-#: participants-database.php:3479
-msgid "Free tech support and continued development relies on your support:"
-msgstr "תמיכה טכנית חינם והמשכיות פיתוח התוסף תלויים בתמיכתך:"
+#: participants-database.php:3651
+#, php-format
+msgid ""
+"Please consider contributing to the continued support and development of "
+"this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin "
+"a %2$srating%3$s or review, or dropping something in the %1$stip jar.%3$s "
+"Thanks!"
+msgstr ""
 
-#: participants-database.php:3479
-msgid "contribute"
-msgstr "תרום"
+#: participants-database.php:3673
+msgid "Add Participant"
+msgstr "הוסף משתמש"
 
-#: participants-database.php:3527
+#: participants-database.php:3674 participants-database.php:3681
+msgid "List Participants"
+msgstr "רשימת משתתפים"
+
+#: participants-database.php:3676 upload_csv.php:41
+msgid "Import CSV File"
+msgstr "יבא קובץ CSV"
+
+#: participants-database.php:3678
+msgid "Setup Guide"
+msgstr "מדריך התקנה"
+
+#: participants-database.php:3679
+msgid "Add New Participant Record"
+msgstr "הוסף רשומה חדשה"
+
+#: participants-database.php:3680
+msgid "Edit Existing Participant Record"
+msgstr "ערוך רשומה קיימת"
+
+#: participants-database.php:3682
+msgid "Export CSV"
+msgstr "יצוא CSV"
+
+#: participants-database.php:3683
+msgid "Manage List Columns"
+msgstr ""
+
+#: participants-database.php:3819
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
@@ -1712,21 +2810,11 @@ msgstr ""
 "תוסף זה דורש גירסת PHP %s על מנת לפעול בצורה תקינה. גירסת הPHP המותקנת אצלך "
 "כעת היא %s. אנא שדרג את התקנת הPHP שלך. התוסף כובה באופן אוטומטי."
 
-#: templates/pdb-retrieve-bootstrap.php:10
-#: templates/pdb-retrieve-default.php:10
-msgid "Request your Private Link"
-msgstr "שחזר סיסמא לאזור האישי"
-
-#: templates/pdb-retrieve-bootstrap.php:19
-#: templates/pdb-retrieve-default.php:17
-msgid "Success: your private link has been emailed to you."
-msgstr "הקישור לאזור האישי שלך נשלח אליך בהצלחה."
-
-#: upload_csv.php:61
+#: upload_csv.php:62
 msgid "Prepare a spreadsheet file with the correct format:"
 msgstr "אנא הכן קובץ בפורמט התיקני:"
 
-#: upload_csv.php:62
+#: upload_csv.php:63
 msgid ""
 "To properly import your membership data, the columns in your spreadsheet "
 "must match exactly the columns in the database. Currently, the CSV export "
@@ -1735,7 +2823,7 @@ msgstr ""
 "על מנת לבצע יבוא רשומות בצורה תקינה, העמודות בקובץ הCSV חייבות להיות תואמות "
 "במדויק לעמודות במסד הנתונים. שמות העמודות צריכים להיות:"
 
-#: upload_csv.php:77
+#: upload_csv.php:78
 #, php-format
 msgid ""
 "This means your spreadsheet needs to have %s columns, and the heading in "
@@ -1747,7 +2835,7 @@ msgstr ""
 "המופיעים למעלה. אם אין נתונים עבור עמודה מסוימת, אפשר להשאירה ריקה. סדר "
 "העמודות אינו חשוב."
 
-#: upload_csv.php:78
+#: upload_csv.php:79
 msgid ""
 "If the imported CSV file has a different column set, that column set will be "
 "imported and used. If a column name does not match a defined column in the "
@@ -1756,22 +2844,22 @@ msgstr ""
 "אם קובץ היבוא מכיל אוסף עמודות שונה, יבוצע יבוא לאוסף זה. אם שם עמודה מסוימת "
 "אינו תואם לאחד השמות המופיעים במסד הנתונים, מידע המופיע בעמודה זו ידולג."
 
-#: upload_csv.php:79
+#: upload_csv.php:80
 msgid "Get Blank CSV File"
 msgstr "יצא קובץ CSV ריק"
 
-#: upload_csv.php:79
+#: upload_csv.php:80
 msgid ""
 "You can download this file, then open it in Open Office, Excel or Google "
 "Docs."
 msgstr ""
 "באפשרותך להוריד קובץ זה ולפתוח אותו ב-Open Office, Excel או Google Docs."
 
-#: upload_csv.php:85
+#: upload_csv.php:86
 msgid "Export the .csv file"
 msgstr "יצא את קובץ הCSV."
 
-#: upload_csv.php:86
+#: upload_csv.php:87
 msgid ""
 "When you have your spreadsheet properly set up and filled with data, export "
 "it as any of the following: \"comma-delimited csv\", or just \"csv\". Save "
@@ -1780,7 +2868,7 @@ msgstr ""
 "לאחר שתיצור קובץ בפורמט תקין ותמלא אותו בנתונים, שמור אותו כקובץ מסוג CSV "
 "(\"comma-delimited csv\") ולאחר מכן העלה אותו כאן."
 
-#: upload_csv.php:87
+#: upload_csv.php:88
 msgid ""
 "Exported CSV files should be comma-delimited and enclosed with double-quotes "
 "(\"). Encoding should be \"UTF-8.\""
@@ -1788,871 +2876,271 @@ msgstr ""
 "ערכים בתוך קבצי CSV מיוצאים צריכים להיות מופרדים בפסיקים ומוקפים במרכאות "
 "(\"). הקידוד צריך להיות \"UTF-8\"."
 
-#: upload_csv.php:92
+#: upload_csv.php:93
 msgid "Upload the .csv file"
 msgstr "טען קובץ CSV"
 
-#: upload_csv.php:99
+#: upload_csv.php:101
 msgid "Enclosure character"
 msgstr "תו מקיף"
 
-#: upload_csv.php:105 upload_csv.php:121
+#: upload_csv.php:107 upload_csv.php:123
 msgid "Auto"
 msgstr "אוטומטי"
 
-#: upload_csv.php:115
+#: upload_csv.php:117
 msgid "Delimiter character"
 msgstr "תו מפריד"
 
-#: upload_csv.php:124
+#: upload_csv.php:126
 msgid "tab"
 msgstr "טאב"
 
-#: upload_csv.php:144
+#: upload_csv.php:146
 msgid "Update matching record with new data"
 msgstr "עדכן רשומה תואמת במידע החדש"
 
-#: upload_csv.php:145
+#: upload_csv.php:147
 msgid "Don't import the record"
 msgstr "אל תייבא את הרשומה"
 
-#: classes/PDb_Aux_Plugin.class.php:323
-msgid "Support"
-msgstr "תמיכה"
-
-#: classes/PDb_Aux_Plugin.class.php:334
-#, php-format
-msgctxt "displays the name and version of the plugin"
-msgid "%s version %s"
-msgstr "%s גירסה %s"
-
-#: classes/PDb_Aux_Plugin.class.php:335
-#, php-format
-msgctxt "displays the plugin author name"
-msgid "Authored by %s"
-msgstr "נכתב ע\"י %s"
-
-#: classes/PDb_Aux_Plugin.class.php:353 classes/PDb_Settings.class.php:32
-msgid "General Settings"
-msgstr "הגדרות כלליות"
-
-#: classes/PDb_CSV_Import.class.php:72
-msgid "New columns imported from the CSV file."
-msgstr "עמודות חדשות מקובץ CSV"
-
-#: classes/PDb_FormElement.class.php:551 classes/PDb_List_Admin.class.php:863
-#: classes/PDb_List_Admin.class.php:1369
-#: classes/PDb_Manage_Fields.class.php:334
-#: classes/xnau_FormElement.class.php:1048
-msgid "delete"
-msgstr "מחק"
-
-#: classes/PDb_Init.class.php:786
-msgid "Participant Info"
-msgstr "פרטי משתמש"
-
-#: classes/PDb_Init.class.php:787
-msgid "Personal Info"
-msgstr "פרטים אישיים"
-
-#: classes/PDb_Init.class.php:788
-msgid "Administrative Info"
-msgstr "מנהלה"
-
-#: classes/PDb_Init.class.php:789
-msgid "Record Info"
-msgstr "פרטי רשומה"
-
-#: classes/PDb_List.class.php:492 templates/pdb-list-bootstrap.php:35
-#: templates/pdb-list-detailed.php:31 templates/pdb-list-responsive.php:17
-#: templates/pdb-search-default.php:22
-msgid "Please select a column to search in."
-msgstr "אנא בחר עמודה לחיפוש."
-
-#: classes/PDb_List.class.php:493 templates/pdb-list-bootstrap.php:36
-#: templates/pdb-list-detailed.php:32 templates/pdb-list-responsive.php:18
-#: templates/pdb-search-default.php:23
-msgid "Please type in something to search for."
-msgstr "אנא הקלד טקסט חיפוש."
-
-#: classes/PDb_List.class.php:501 templates/pdb-list-bootstrap.php:46
-#: templates/pdb-list-detailed.php:47 templates/pdb-list-responsive.php:26
-#: templates/pdb-search-default.php:35
-msgid "Search"
-msgstr "חיפוש"
-
-#: classes/PDb_List.class.php:515 classes/PDb_List_Admin.class.php:806
-#: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:95
-#: templates/pdb-list-responsive.php:46 templates/pdb-search-default.php:63
-msgid "Sort by"
-msgstr "מיין לפי"
-
-#: classes/PDb_List.class.php:605
-msgid "select"
-msgstr "בחר"
-
-#: classes/PDb_List.class.php:750 classes/PDb_List_Admin.class.php:821
-#: classes/PDb_Settings.class.php:754 classes/PDb_Settings.class.php:1146
-msgid "Ascending"
-msgstr "סדר עולה"
-
-#: classes/PDb_List.class.php:751 classes/PDb_List_Admin.class.php:822
-#: classes/PDb_Settings.class.php:754 classes/PDb_Settings.class.php:1146
-msgid "Descending"
-msgstr "סדר יורד"
-
-#: classes/PDb_List.class.php:1291 classes/PDb_List_Admin.class.php:1385
-msgctxt "submit button label"
-msgid "Delete Checked"
-msgstr "מחק פריטים שנבחרו"
-
-#: classes/PDb_List.class.php:1292 classes/PDb_List_Admin.class.php:1386
-msgctxt "submit button label"
-msgid "Change"
-msgstr "שינוי"
-
-#: classes/PDb_List.class.php:1293 classes/PDb_List_Admin.class.php:1387
-msgctxt "submit button label"
-msgid "Sort"
-msgstr "מיון"
-
-#: classes/PDb_List.class.php:1294 classes/PDb_List_Admin.class.php:1388
-msgctxt "submit button label"
-msgid "Filter"
-msgstr "מסנן"
-
-#: classes/PDb_List.class.php:1295 classes/PDb_List_Admin.class.php:1389
-msgctxt "submit button label"
-msgid "Clear"
-msgstr "נקה"
-
-#: classes/PDb_List.class.php:1296 classes/PDb_List_Admin.class.php:1390
-msgctxt "search button label"
-msgid "Search"
-msgstr "בצע חיפוש"
-
-#: classes/PDb_List_Admin.class.php:119
-msgid "Do you really want to delete the selected record?"
-msgstr "האם הנך בטוח ברצונך למחוק את הרשומה שנבחרה?"
-
-#: classes/PDb_List_Admin.class.php:120
-msgid "Do you really want to delete the selected records?"
-msgstr "האם הנך בטוח שברצונך למחוק את הרשומות הנבחרות?"
-
-#: classes/PDb_List_Admin.class.php:123
-msgid "Approve the selected record?"
-msgstr "האם לאשר את הרשומה שנבחרה?"
-
-#: classes/PDb_List_Admin.class.php:124
-msgid "Approve the selected records?"
-msgstr "האם לאשר את הרשומות שנבחרו?"
-
-#: classes/PDb_List_Admin.class.php:127
-msgid "Unapprove the selected record?"
-msgstr "האם להסיר את האישור מהרשומה שנבחרה?"
-
-#: classes/PDb_List_Admin.class.php:128
-msgid "Unapprove the selected records?"
-msgstr "האם להסיר את האישור מהרשומות שנבחרו?"
-
-#: classes/PDb_List_Admin.class.php:131
-msgid "Send the signup email to the selected record?"
-msgstr "האם לשלוח אימייל הרשמה למשתמש הנבחר?"
-
-#: classes/PDb_List_Admin.class.php:132
-msgid "Send the signup email to the selected records?"
-msgstr "האם לשלוח מייל הרשמה למשתמשים שנבחרו?"
-
-#: classes/PDb_List_Admin.class.php:135
-msgid "Send the \"resend link\" email to the selected record?"
-msgstr "האם לשלוח מייל שחזור סיסמא למשתמש הנבחר?"
-
-#: classes/PDb_List_Admin.class.php:136
-msgid "Send the \"resend link\" email to the selected records?"
-msgstr "האם לשלוח מייל שחזור סיסמא למשתמשים שנבחרו?"
-
-#: classes/PDb_List_Admin.class.php:138
-#, php-format
+#: upload_csv.php:170
 msgid ""
-"The number of selected records exceeds the %s email send limit.%s Only the "
-"first %s will be sent."
+"<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" "
+"setting, imported records are checked against existing records by the field "
+"set in the \"Duplicate Record Check Field\" setting. If a record matching an "
+"existing record is imported, one of three things can happen, based on the "
+"\"Duplicate Record Preference\" setting:"
 msgstr ""
-"מספר הרשומות שנבחר עולה על הכמות המותרת ב %s.%s רק %s  המיילים הראשונים "
-"ישלחו."
 
-#: classes/PDb_List_Admin.class.php:384
-msgid "Record delete successful."
-msgstr "הרשומה נמחקה בהצלחה"
+#: upload_csv.php:171
+msgid "Current Setting"
+msgstr "הגדרה נוכחית"
 
-#: classes/PDb_List_Admin.class.php:403
+#: upload_csv.php:174
 #, php-format
-msgctxt "number of records with approval statuses set"
-msgid "Approval status for %d records has been updated."
-msgstr "סטטוס אישור עבור %d רשומות עודכן בהצלחה."
-
-#: classes/PDb_List_Admin.class.php:426 classes/PDb_List_Admin.class.php:447
-#, php-format
-msgctxt "number of emails sent"
-msgid "%d emails were sent."
-msgstr "%d מיילים נשלחו."
-
-#: classes/PDb_List_Admin.class.php:706 participants-database.php:3363
-msgid "List Participants"
-msgstr "רשימת משתתפים"
-
-#: classes/PDb_List_Admin.class.php:744
-msgid "Show only records with"
-msgstr "הצג רק רשומות עם"
-
-#: classes/PDb_List_Admin.class.php:755
-msgctxt ""
-"joins two search terms, such as in \"Show only records with last name that "
-"is Smith\""
-msgid "that"
-msgstr "אשר"
-
-#: classes/PDb_List_Admin.class.php:762
-msgid "is"
-msgstr "הוא"
-
-#: classes/PDb_List_Admin.class.php:763
-msgid "is not"
-msgstr "הוא לא"
-
-#: classes/PDb_List_Admin.class.php:764
-msgid "contains"
-msgstr "מכיל"
-
-#: classes/PDb_List_Admin.class.php:765
-msgid "doesn&#39;t contain"
-msgstr "לא מכיל"
-
-#: classes/PDb_List_Admin.class.php:766
-msgid "is greater than"
-msgstr "גדול מ-"
-
-#: classes/PDb_List_Admin.class.php:767
-msgid "is less than"
-msgstr "קטן מ-"
-
-#: classes/PDb_List_Admin.class.php:781
-msgid "and"
-msgstr "וגם"
-
-#: classes/PDb_List_Admin.class.php:782
-msgid "or"
-msgstr "או"
-
-#: classes/PDb_List_Admin.class.php:801
-msgid "Number of filters to use: "
-msgstr "מספר מסננים לשימוש:"
-
-#: classes/PDb_List_Admin.class.php:833
-#, php-format
-msgid "%s record found, sorted by: %s."
-msgid_plural "%s records found, sorted by: %s."
-msgstr[0] " נמצאה %s רשומה, מיון לפי: %s."
-msgstr[1] "רשומות %s נמצאו , מיון לפי: %s."
-
-#: classes/PDb_List_Admin.class.php:864 classes/PDb_List_Admin.class.php:1370
-msgid "approve"
-msgstr "מאשר"
-
-#: classes/PDb_List_Admin.class.php:865 classes/PDb_List_Admin.class.php:1371
-msgid "unapprove"
-msgstr "לא מאשר"
-
-#: classes/PDb_List_Admin.class.php:902
-#, php-format
-msgid "Show %s items per page."
-msgstr "הצג %s תוצאות בדף."
-
-#: classes/PDb_List_Admin.class.php:961
-msgid "Edit"
-msgstr "עריכה"
-
-#: classes/PDb_List_Admin.class.php:1067
-msgid "No records found"
-msgstr "לא נמצאו רשומות"
-
-#: classes/PDb_List_Admin.class.php:1093
-msgid "Export CSV"
-msgstr "יצוא CSV"
-
-#: classes/PDb_List_Admin.class.php:1103
-msgid "File Name"
-msgstr "שם הקובץ"
-
-#: classes/PDb_List_Admin.class.php:1105
-msgid "Download CSV for this list"
-msgstr "הורד CSV לרשימה זו"
-
-#: classes/PDb_List_Admin.class.php:1106
-msgid "Include field titles"
-msgstr "כלול שמות שדות"
-
-#: classes/PDb_List_Admin.class.php:1109
 msgid ""
-"This will download the whole list of participants that match your search "
-"terms, and in the order specified by the sort. The export will include "
-"records on all list pages. The fields included in the export are defined in "
-"the \"CSV\" column on the Manage Database Fields page."
+"%sCreate New%s adds all imported records as new records without checking for "
+"a match."
 msgstr ""
-"פעולה זו תבצע שמירה והורדה של כל רשימת המשתתפים העונה לקריטריון החיפוש "
-"שביצעת, ממוינת על פי סדר המיון. היצוא יכלול את הרשומות בכל הדפים. השדות "
-"הכלולים ביצוא מוגדרים בעמודה CSV בדף 'עריכת שדות המאגר'."
 
-#: classes/PDb_List_Admin.class.php:1372
-msgid "send signup email"
-msgstr "שלח מייל הרשמה"
-
-#: classes/PDb_List_Admin.class.php:1391 participants-database.php:3268
-msgid "Apply"
-msgstr "החל"
-
-#: classes/PDb_Manage_Fields.class.php:86 participants-database.php:3378
-msgid "Manage Database Fields"
-msgstr "ערוך שדות מאגר"
-
-#: classes/PDb_Manage_Fields.class.php:88
-#: classes/PDb_Manage_Fields.class.php:96
-msgid "Field Groups"
-msgstr "קבוצות שדות"
-
-#: classes/PDb_Manage_Fields.class.php:97
-msgid "Help"
-msgstr "עזרה"
-
-#: classes/PDb_Manage_Fields.class.php:192
-msgid "No fields in this group"
-msgstr "אין שדות בקבוצה זו"
-
-#: classes/PDb_Manage_Fields.class.php:222
-#: classes/PDb_Manage_Fields.class.php:914
-msgid "field"
-msgstr "שדה"
-
-#: classes/PDb_Manage_Fields.class.php:302
-msgid "Edit / Add / Remove Field Groups"
-msgstr "עריכה / הוספה / מחיקה של קבוצת שדות"
-
-#: classes/PDb_Manage_Fields.class.php:333
-msgid "fields"
-msgstr "שדות"
-
-#: classes/PDb_Manage_Fields.class.php:356
-#: classes/PDb_Manage_Fields.class.php:913
-msgid "group"
-msgstr "קבוצה"
-
-#: classes/PDb_Manage_Fields.class.php:626
-msgid "Cannot add a field with that name"
-msgstr "אין אפשרות להוסיף שדה בשם זה"
-
-#: classes/PDb_Manage_Fields.class.php:626
-msgid "This name is reserved; please choose another. Reserved names are"
-msgstr "שם זה הנו שם שמור. אנא בחר שם אחר. שמות שמורים הם "
-
-#: classes/PDb_Manage_Fields.class.php:633
-msgid "The name cannot begin with a number"
-msgstr "השם אינו יכול להתחיל בסיפרה"
-
-#: classes/PDb_Manage_Fields.class.php:633
-msgid "Please choose another."
-msgstr "אנא בחר באחר"
-
-#: classes/PDb_Manage_Fields.class.php:686
-msgid "There was an error; the settings were not saved."
-msgstr "אירעה שגיאה, ההגדרות לא נשמרו"
-
-#: classes/PDb_Manage_Fields.class.php:689 classes/PDb_Settings.class.php:587
-msgid "Your information has been updated"
-msgstr "המידע עודכן"
-
-#: classes/PDb_Manage_Fields.class.php:824
+#: upload_csv.php:175
 #, php-format
 msgid ""
-"The %1$s was not added. There is already a %1$s with that name, please "
-"choose another."
-msgstr "הפריט %1$s לא הוסף. קיים כבר %1$s בשם זה, אנא בחר שם חדש."
-
-#: classes/PDb_Manage_Fields.class.php:909
-msgid "Update Fields"
-msgstr "עדכן שדות"
-
-#: classes/PDb_Manage_Fields.class.php:910
-msgid "Update Groups"
-msgstr "עדכן קבוצות"
-
-#: classes/PDb_Manage_Fields.class.php:911
-msgid "Add Field"
-msgstr "הוסף שדה"
-
-#: classes/PDb_Manage_Fields.class.php:912
-msgid "Add Group"
-msgstr "הוסף קבוצה"
-
-#: classes/PDb_Manage_Fields.class.php:915
-msgid "new field title"
-msgstr "כותרת שדה חדש"
-
-#: classes/PDb_Manage_Fields.class.php:916
-msgid "new group title"
-msgstr "כותרת קבוצה חדשה"
-
-#: classes/PDb_Manage_Fields.class.php:917
-msgctxt "column name"
-msgid "Fields"
-msgstr "שדות"
-
-#: classes/PDb_Manage_Fields.class.php:918
-msgctxt "column name"
-msgid "Group"
-msgstr "קבוצה"
-
-#: classes/PDb_Manage_Fields.class.php:919
-msgctxt "column name"
-msgid "Order"
-msgstr "סדר"
-
-#: classes/PDb_Manage_Fields.class.php:920
-msgctxt "column name"
-msgid "Name"
-msgstr "שם"
-
-#: classes/PDb_Manage_Fields.class.php:921
-msgctxt "column name"
-msgid "Title"
-msgstr "כותרת"
-
-#: classes/PDb_Manage_Fields.class.php:922
-msgctxt "column name"
-msgid "Default"
-msgstr "ברירת מחדל"
-
-#: classes/PDb_Manage_Fields.class.php:923
-msgctxt "column name"
-msgid "Help Text"
-msgstr "טקסט עזר"
-
-#: classes/PDb_Manage_Fields.class.php:924
-msgctxt "column name"
-msgid "Form Element"
-msgstr "תצוגה בטופס"
-
-#: classes/PDb_Manage_Fields.class.php:925
-msgctxt "column name"
-msgid "Values"
-msgstr "ערכים"
-
-#: classes/PDb_Manage_Fields.class.php:926
-msgctxt "column name"
-msgid "Validation"
-msgstr "ולידציה"
-
-#: classes/PDb_Manage_Fields.class.php:927
-msgctxt "column name"
-msgid "Display Column"
-msgstr "הצגה בטופס"
-
-#: classes/PDb_Manage_Fields.class.php:928
-msgctxt "column name"
-msgid "Admin Column"
-msgstr "הצגה בניהול"
-
-#: classes/PDb_Manage_Fields.class.php:929
-msgctxt "column name"
-msgid "Sortable"
-msgstr "אפשרות מיון"
-
-#: classes/PDb_Pagination.class.php:366
-msgid "First"
-msgstr "ראשון"
-
-#: classes/PDb_Pagination.class.php:377 participants-database.php:3270
-msgid "Previous"
-msgstr "קודם"
-
-#: classes/PDb_Pagination.class.php:396 participants-database.php:3269
-msgid "Next"
-msgstr "הבא"
-
-#: classes/PDb_Pagination.class.php:409
-msgid "Last"
-msgstr "אחרון"
-
-#: classes/PDb_Path.class.php:167 participants-database.php:3093
-#, php-format
-msgid "The uploads directory (%s) could not be created."
-msgstr "לא היתה אפשרות ליצור את תיקיית העלאות הקבצים (%s)."
-
-#: classes/PDb_Record.class.php:147
-msgid "back"
-msgstr "חזור"
-
-#: classes/PDb_Settings.class.php:33
-msgid "Signup Form Settings"
-msgstr "הגדרות טופס ההרשמה"
-
-#: classes/PDb_Settings.class.php:34
-msgid "Record Form Settings"
-msgstr "הגדרות טופס המנהל"
-
-#: classes/PDb_Settings.class.php:35
-msgid "List Display Settings"
-msgstr "הגדרות תצוגת רשימה"
-
-#: classes/PDb_Settings.class.php:36
-msgid "Resend Link Settings"
-msgstr "הגדרות שחזור הסיסמא"
-
-#: classes/PDb_Settings.class.php:37
-msgid "Admin Settings"
-msgstr "הגדרות מנהל"
-
-#: classes/PDb_Settings.class.php:38
-msgid "Advanced Settings"
-msgstr "הגדרות מתקדמות"
-
-#: classes/PDb_Settings.class.php:43
-msgid ""
-"Settings for the [pdb_record] shortcode, which is used to show a user-"
-"editable form on the website."
+"%sOverwrite%s an existing record with a matching %s will be updated with the "
+"data from the imported record. Blank or missing fields will not overwrite "
+"existing data."
 msgstr ""
-"הגדרות עבור השורטקוד [pdb_record], אשר נועד להציג את פרטי המשתמש המלאים "
-"לעריכה באזור האישי באתר."
 
-#: classes/PDb_Settings.class.php:44
-msgid ""
-"Settings for the [pdb_list] shortcode, which is used to show a list of "
-"records from the database."
-msgstr ""
-"הגדרות עבור השורטקוד [pdb_list], אשר נועד להציג טבלה של רשומות ממאגר המידע "
-"(דאטהבייס)."
-
-#: classes/PDb_Settings.class.php:45
-msgid ""
-"Settings for the [pdb_signup] shortcode, which is used to show a signup or "
-"registration form on the website."
-msgstr "הגדרות עבור השורטקוד [pdb_signup], אשר נועד להציג טופס הרשמה באתר."
-
-#: classes/PDb_Settings.class.php:46
-msgid "Settings for the lost private link resend function."
-msgstr "הגדרות עבור שחזור הסיסמא (הקישור האישי) במייל."
-
-#: classes/PDb_Settings.class.php:47
-msgid "Settings for special configurations."
-msgstr "הגדרות לתצורות מיוחדות."
-
-#: classes/PDb_Settings.class.php:48
-msgid "Settings for the plugin backend."
-msgstr "הגדרות לניהול התוסף"
-
-#: classes/PDb_Settings.class.php:58
-msgid "Save Plugin Settings"
-msgstr "שמור הגדרות תוסף"
-
-#: classes/PDb_Settings.class.php:125
-msgid "File Upload Location"
-msgstr "מיקום להעלאת קבצים"
-
-#: classes/PDb_Settings.class.php:136
-msgid "File Upload Limit"
-msgstr "הגבלות על העלאת קבצים"
-
-#: classes/PDb_Settings.class.php:140
-msgid "the maximum allowed file size (in kilobytes) for an uploaded file"
-msgstr "גודל קובץ מקסימלי להעלאה (בKB)"
-
-#: classes/PDb_Settings.class.php:147
-msgid "Allowed File Types"
-msgstr "סוגי קבצים מורשים"
-
-#: classes/PDb_Settings.class.php:151
-msgid ""
-"list of allowed file types by file extension. Please be aware that there are "
-"security risks in allowing file uploads."
-msgstr ""
-"רשימת סוגי קבצים מורשים, לפי סיומת. יש לקחת בחשבון כי קיימים סיכוני אבטחה "
-"במתן אפשרות להעלאת קבצים."
-
-#: classes/PDb_Settings.class.php:158
-msgid "Default Image"
-msgstr "תמונת ברירת מחדל"
-
-#: classes/PDb_Settings.class.php:169
-msgid "Link Image to Fullsize"
-msgstr "קשר תמונה מוקטנת לתמונה גדולה"
-
-#: classes/PDb_Settings.class.php:182
-msgid "Allow File Delete"
-msgstr "אפשר מחיקת קובץ"
-
-#: classes/PDb_Settings.class.php:195
-msgid "Make Links Clickable"
-msgstr "הפוך קישורים ללחיצים"
-
-#: classes/PDb_Settings.class.php:208
-msgid "Protect Email Addresses"
-msgstr "הגן על כתובות אימייל"
-
-#: classes/PDb_Settings.class.php:221
-msgid "Missing Field Error Message"
-msgstr "הודעת שגיאה על שדה ריק"
-
-#: classes/PDb_Settings.class.php:226
-#, php-format
-msgid "The %s field is required."
-msgstr "השדה %s הנו שדה חובה."
-
-#: classes/PDb_Settings.class.php:232
-msgid "Invalid Field Error Message"
-msgstr "הודעת שגיאה על שדה שגוי"
-
-#: classes/PDb_Settings.class.php:236
-msgid ""
-"the message shown when a field's value does not pass the validation test"
-msgstr "הודעה זו תוצג כאשר שדה מולא באופן לא תקין"
-
-#: classes/PDb_Settings.class.php:237
-#, php-format
-msgid "The %s field appears to be incorrect."
-msgstr "הערך בשדה %s אינו תקין."
-
-#: classes/PDb_Settings.class.php:243
-msgid "Non-Matching Field Error Message"
-msgstr "הודעה על שדות שאינם תואמים"
-
-#: classes/PDb_Settings.class.php:247
+#: upload_csv.php:176
 #, php-format
 msgid ""
-"the message shown when a field's value does match the value of another "
-"field. The first %s will show the name of the field, the second will show "
-"the name of the field it must match."
+"%sDon&#39;t Import%s does not import the new record if it matches the %s of "
+"an existing one."
 msgstr ""
-"הודעה זו תוצג כאשר ערך של שדה אחד אינו תואם לערך של שדה אחר (למשל באישור "
-"כתובות מייל או סיסמאות). הסימן %s הראשון יציג את שם השדה הראשון, הסימן השני "
-"יציג את שם השדה שעליו להתאים לאותו ערך."
 
-#: classes/PDb_Settings.class.php:248
+#: upload_csv.php:185
+msgid "Choose .csv file to import:"
+msgstr "בחר קובץ .csv ליבוא:"
+
+#: upload_csv.php:186
+msgid "Upload File"
+msgstr "טען קובץ"
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:358
+msgid "Check for updates"
+msgstr "בדוק עדכונים"
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:405
+#, fuzzy, php-format
+#| msgid "This plugin is up to date."
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "תוסף זה מעודכן."
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:407
+#, fuzzy, php-format
+#| msgid "A new version of this plugin is available."
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "גירסה חדשה זמינה עבור תוסף זה."
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:409
 #, php-format
-msgid "The %s field must match the %s field."
-msgstr "הערך בשדה %s חייב להיות תואם לערך בשדה %s"
+msgid "Unknown update checker status \"%s\""
+msgstr "סטטוס עדכון לא ידוע  \"%s\""
 
-#: classes/PDb_Settings.class.php:255
-msgid "Failed CAPTCHA Message"
-msgstr "זיהוי CAPTCHA נכשל"
+#: vendor/aux-plugin-update/Puc/v4p1/Vcs/PluginUpdateChecker.php:83
+msgid "There is no changelog available."
+msgstr "אין יומן שינויים זמין."
 
-#: classes/PDb_Settings.class.php:259
-msgid "the message shown when the CAPTCHA (verify human) test failed"
-msgstr "הודעת שגיאה כאשר מבחן הCAPTCHA נכשל"
-
-#: classes/PDb_Settings.class.php:260
+#: vendor/wp-background-process/wp-background-process.php:427
 #, php-format
-msgid "Pleast try the %s question again."
-msgstr "אנא נסה לענות על השאלה %s שוב."
-
-#: classes/PDb_Settings.class.php:266
-msgid "Field Error Style"
-msgstr "עיצוב שדה שגוי"
-
-#: classes/PDb_Settings.class.php:270
-msgid ""
-"the CSS style applied to an input or text field that is missing or has not "
-"passed validation. This must be a valid CSS rule"
+msgid "Every %d Minutes"
 msgstr ""
-"עיצוב ה CSS המוחל על שדה שהושאר ריק או מולא באופן שגוי. יש לכתוב CSS תיקני"
 
-#: classes/PDb_Settings.class.php:277
-msgid "Mark Required Fields"
-msgstr "סמן שדות חובה"
-
-#: classes/PDb_Settings.class.php:282
-msgid "mark the title of required fields?"
-msgstr "האם לסמן את כותרות השדות שהנם חובה?"
-
-#: classes/PDb_Settings.class.php:290
-msgid "Required Field Marker"
-msgstr "סימון שדה חובה"
-
-#: classes/PDb_Settings.class.php:294
-#, php-format
-msgid ""
-"html added to field title for required fields if selected above (the %s is "
-"replaced by the title of the field)"
+#. Plugin URI of the plugin/theme
+msgid "https://xnau.com/wordpress-plugins/participants-database"
 msgstr ""
-"קוד HTML המתווסף לכותרת השדה עבור שדות שהנם חובה (הסימן %s מוחלף בכותרת השדה)"
 
-#: classes/PDb_Settings.class.php:319
-msgid "Signup Button Text"
-msgstr "טקסט כפתור ההרשמה"
-
-#: classes/PDb_Settings.class.php:323
-msgid "text shown on the button to sign up"
-msgstr "הטקסט המוצג על כפתור ביצוע ההרשמה"
-
-#: classes/PDb_Settings.class.php:324
-msgctxt "the text on a button to submit a signup form"
-msgid "Sign Up"
-msgstr "הרשמה"
-
-#: classes/PDb_Settings.class.php:330
-msgid "Signup Thanks Page"
-msgstr "דף תודה על ההרשמה"
-
-#: classes/PDb_Settings.class.php:334
-msgid ""
-"after they register, send them to this page for a thank you message. This "
-"page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
-"have to do that if you have them go back to the same page. You can also use "
-"a Post ID for posts and custom post types."
+#. Description of the plugin/theme
+msgid "Plugin for managing a database of participants, members or volunteers"
 msgstr ""
-"לאחר ביצוע הרישום, המשתמשים יועברו לדף זה באתר. בדף זה יותקן השורטקוד "
-"[pdb_signup_thanks]. אין צורך להעביר לדף נפרד, ניתן להציג הודעת תודה בדף "
-"הרישום עצמו. ניתן להשתמש גם בדף פוסט מהבלוג (באמצעות שימוש ב Post ID)"
 
-#: classes/PDb_Settings.class.php:343
-msgid "Show Field Groups"
-msgstr "הצג קבוצות שדות"
-
-#: classes/PDb_Settings.class.php:348
-msgid "Show groups and group descriptions in the signup form."
-msgstr "הצג קבוצות ותיאורי קבוצות בטופס ההרשמה."
-
-#: classes/PDb_Settings.class.php:356 upload_csv.php:156
-msgid "Duplicate Record Check Field"
-msgstr "שדה מפתח לבדיקת רשומות כפולות"
-
-#: classes/PDb_Settings.class.php:361
-msgid ""
-"when a signup is submitted or CSV record is imported, this field is checked "
-"for a duplicate"
-msgstr "בעת רישום משתמש חדש או יבוא קובץ CSV, שדה זה יבדק למניעת רשומות כפולות"
-
-#: classes/PDb_Settings.class.php:368 upload_csv.php:137
-msgid "Duplicate Record Preference"
-msgstr "פעולה לביצוע בזמן רישום כפול"
-
-#: classes/PDb_Settings.class.php:373
-msgid ""
-"when the submission matches the Duplicate Record Check Field of an existing "
-"record. This also applies to importing records from a CSV file."
+#. Author of the plugin/theme
+msgid "Roland Barker, xnau webdesign"
 msgstr ""
-"מה עושים כשמתבצע רישום משתמש אשר עונה לתנאי שהוגדר בשדה המפתח (רישום כפול). "
-"אותה פעולה תתבצע גם בזמן יבוא רשומות כפולות מקובץ CSV"
 
-#: classes/PDb_Settings.class.php:376 upload_csv.php:143
-msgid "Create a new record with the submission"
-msgstr "צור רשומה חדשה "
-
-#: classes/PDb_Settings.class.php:377
-msgid "Overwrite matching record with new data"
-msgstr "עדכן רשומה קיימת עם המידע החדש"
-
-#: classes/PDb_Settings.class.php:378
-msgid "Show a validation error message"
-msgstr "הצג הודעת שגיאה"
-
-#: classes/PDb_Settings.class.php:386
-msgid "Duplicate Record Error Message"
-msgstr "הודעת שגיאה על רישום כפול"
-
-#: classes/PDb_Settings.class.php:390
-msgid ""
-"If \"Show a validation error message\" is selected above, this message will "
-"be shown if a signup is made with a \"check field\" that matches an existing "
-"record."
+#. Author URI of the plugin/theme
+msgid "https://xnau.com"
 msgstr ""
-"אם בחרת ב\"הצג הודעת שגיאה\" למעלה, זו ההודעה שתוצג למשתמש אשר ממלא בשדה "
-"המפתח ערך שקיים כבר במאגר"
 
-#: classes/PDb_Settings.class.php:391
-#, php-format
-msgid "A record with that %s already exists. Please choose another."
-msgstr "משתמש בעל %s כבר קיים. אנא רשום ערך חדש לשדה זה."
+#~ msgid "Submit a rating or review"
+#~ msgstr "הוסף דירוג או סקירה"
 
-#: classes/PDb_Settings.class.php:397
-msgid "Send Signup Response Email"
-msgstr "שלח מייל הרשמה"
+#~ msgid "Show Group Descriptions"
+#~ msgstr "הצג תיאורי קבוצות"
 
-#: classes/PDb_Settings.class.php:401
-msgid "Send a receipt email to people who sign up"
-msgstr "שלח מייל הודעה למשתמש המבצע התחברות"
+#~ msgid ""
+#~ "Use WordPress&#39; \"the_content\" filter on rich text fields. This "
+#~ "applies \"auto paragraphs\" and allows the use of shortcodes in rich text "
+#~ "fields and HTML emails."
+#~ msgstr ""
+#~ "השתמש במסנן the_content של וורדפרס עבור שדות טקסט עשיר. הדבר מאפשר בניה "
+#~ "אוטומטית של פסקאות בגוף הטקסט ושימוש בשורטקודס בשדות טקסט עשיר ותוכן "
+#~ "הודעות אימייל בפורמט HTML."
 
-#: classes/PDb_Settings.class.php:409
-msgid "Signup Email From Address"
-msgstr "כתובת מייל ממנה נשלח מייל ההרשמה"
+#~ msgid "Use PHP Sessions"
+#~ msgstr "השתמש בסשן PHP"
 
-#: classes/PDb_Settings.class.php:413
-msgid ""
-"the \"From\" address on signup receipt emails. If the recipient hits \"reply"
-"\", their reply will go to this address. It is a good idea to use an email "
-"address from the same domain as this website."
-msgstr ""
-"הכתובת \"מאת\" שתופיע במייל ההרשמה. מומלץ להשתמש בכתובת מייל מאותו דומיין "
-"כמו של האתר."
+#~ msgid "uncheck this if PHP sessions are not working."
+#~ msgstr "הסר סימון זה אם השרת שלך אינו מאפשר סשן PHP."
 
-#: classes/PDb_Settings.class.php:420
-msgid "Signup Email From Name"
-msgstr "שם שולח במייל ההרשמה"
+#~ msgid "Cookie Name"
+#~ msgstr "שם עוגיית הסשן"
 
-#: classes/PDb_Settings.class.php:424
-msgid "the \"From\" name on signup receipt emails."
-msgstr "השם \"מאת\" שיופיע במייל ההרשמה."
+#~ msgid ""
+#~ "Change the name of the cookie for compatibility with some web hosting "
+#~ "setups."
+#~ msgstr "שנה את שם העוגיה אם הדבר נדרש  לצרכי תאימות מול האיחסון שלך"
 
-#: classes/PDb_Settings.class.php:431
-msgid "Signup Response Email Subject"
-msgstr "שורת הנושא במייל ההרשמה"
+#~ msgctxt "abbreviation for \"identification\""
+#~ msgid "ID"
+#~ msgstr "מזהה"
 
-#: classes/PDb_Settings.class.php:435
-msgid ""
-"subject line for the signup response email; placeholder tags can be used "
-"(see below)"
-msgstr "ניתן להשתמש בתגיות להתאמה אישית של המייל (ראה למטה)"
+#~ msgctxt "indicates a new record is being entered"
+#~ msgid "(new record)"
+#~ msgstr "(רשומה חדשה)"
 
-#: classes/PDb_Settings.class.php:436
-#, php-format
-msgid "You've just signed up on %s"
-msgstr "ביצעת הרשמה ל %s"
+#~ msgid "Delete"
+#~ msgstr "מחיקה"
 
-#: classes/PDb_Settings.class.php:442
-msgid "Signup Response Email"
-msgstr "גוף מייל ההרשמה"
+#~ msgid ""
+#~ "Click on the red \"X\" to delete a field. If there are existing records "
+#~ "with this data field, that information will not be deleted from the "
+#~ "database, but you will no longer be able to display or edit it."
+#~ msgstr ""
+#~ "הקלק על ה\"X\" האדום על מנת למחוק שדה. אם קיימות רשומות במסד הנתונים עם "
+#~ "ערך עבור שדה זה, מידע זה לא ימחק, אך לא תוכל עוד להציג או לערוך אותו."
 
-#: classes/PDb_Settings.class.php:446
-msgid ""
-"Body of the email a visitor gets when they sign up. It includes a link "
-"([record_link]) back to their record so they can fill it out. Can include "
-"HTML, placeholders:[first_name],[last_name],[email],[record_link]. You can "
-"only use placeholders for fields that are present in the signup form, "
-"including hidden fields."
-msgstr ""
-"רשום כאן את הטקסט של האימייל הנשלח למשתמשים חדשים שביצעו הרשמה ראשונית לאתר. "
-"על המייל לכלול קישור לאזור אישי ([record_link]) בו המשתמשים יכולים לערוך "
-"פרטים. ניתן לכלול HTML, ותגיות התאמה אישית :[first_name],[last_name],[email],"
-"[record_link]. ניתן להשתמש בכל שם שדה כתגית, בתנאי שהוגדר בטופס 'עריכת שדות "
-"מאגר' (כולל שדות נסתרים)."
+#~ msgid "Order"
+#~ msgstr "סידור"
 
-#: classes/PDb_Settings.class.php:448
-#, php-format
-msgid ""
-"<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete "
-"your registration with additional information or update your information by "
-"visiting this private link at any time: <a href="
-"\"[record_link]\">[record_link]</a>.</p>"
-msgstr ""
-"<p>שלום, [first_name], ותודה שנרשמת ל- %s.</p><p>באפשרותך להשלים פרטים "
-"אישיים או לערוך אותם בכל שעה באמצעות כניסה לאזור האישי שלך כאן: <a href="
-"\"[record_link]\">[record_link]</a>.</p>"
+#~ msgid ""
+#~ "Click and drag to reorder the fields. You do not need to click on \"Update"
+#~ "\" for the change to take effect."
+#~ msgstr ""
+#~ "לחץ וגרור על מנת לשנות את סדר השדות. אינך צריך ללחוץ \"עידכון\" כדי לשמור "
+#~ "שינויי סדר אלו."
 
-#: classes/PDb_Settings.class.php:454
-msgid "Signup Thanks Message"
-msgstr "הודעת תודה על ההרשמה"
+#~ msgid "Title"
+#~ msgstr "כותרת"
 
-#: classes/PDb_Settings.class.php:458
-msgid ""
-"Note to display on the web page after someone has submitted a signup form. "
-"Can include HTML and placeholders (see above)"
-msgstr ""
-"הודעה שתוצג לאחר מילוי טופס ההרשמה. ניתן לכלול HTML ותגיות התאמה אישית (ראה "
-"לעיל)"
+#~ msgid ""
+#~ "This is the display title for your field. You can change it at any time, "
+#~ "it won&#39;t affect the field in any way other than to change how it is "
+#~ "labeled in forms.<p>"
+#~ msgstr ""
+#~ "זוהי הכותרת שתוצג עבור השדה. תוכל לשנותה בכל עת. הדבר לא ישפיע על השדה "
+#~ "בשום צורה מלבד תצוגה בטפסים."
+
+#~ msgid "Default"
+#~ msgstr "ברירת מחדל"
+
+#~ msgid "If you wish to pre-load a field with a value, you can put it here."
+#~ msgstr "אם ברצונך לקבוע ערך ברירת מחדל עבור שדה זה, הקלד אותו כאן."
+
+#~ msgid "Group"
+#~ msgstr "קבוצה"
+
+#~ msgid ""
+#~ "The database fields are organized into groups, and you can select which "
+#~ "group the database field belongs to here. You can edit the groups under "
+#~ "the \"Field Groups\" tab."
+#~ msgstr ""
+#~ "שדות מסד הנתונים מאורגנים בקבוצות, ובאפשרותך לקבוע לאיזו קבוצה שייך השדה "
+#~ "הנוכחי. באפשרותך לערוך את הקבוצות תחת הלשונית \"קבוצות שדות\"."
+
+#~ msgid "Help Text"
+#~ msgstr "טקסט עזרה"
+
+#~ msgid ""
+#~ "When a form is displayed, sometimes it is a good idea to explain "
+#~ "something about the information you want in a field. Any text you put in "
+#~ "here will be displayed next to the field. HTML is allowed, but be careful "
+#~ "with that, you can break things!"
+#~ msgstr ""
+#~ "טקסט אופציונלי, שיוצג ליד השדה בזמן מילוי הטופס. ניתן לרשום הסבר קצר "
+#~ "למשתמש כיצד עליו למלא את השדה. ניתן להשתמש בHTML."
+
+#~ msgid "Form Element"
+#~ msgstr "תצוגה בטופס"
+
+#~ msgid ""
+#~ "If your piece of information is a simple line of text (like a name), it "
+#~ "should be presented in the form as a text field. If a longer piece of "
+#~ "text is called for, a text-field would be a better choice, and so forth. "
+#~ "This is where you can determine what kind of form element this particular "
+#~ "piece of information will be preseted with."
+#~ msgstr "כאן תוכל לקבוע תצורה להצגת שדה זה בטפסים (סוג אלמנט הHTML)."
+
+#~ msgid "Values"
+#~ msgstr "ערכים"
+
+#~ msgid ""
+#~ "For form elements that have multiple choices, you need to define those "
+#~ "choices here. Type in a comma-separated list of the options you want to "
+#~ "present."
+#~ msgstr ""
+#~ "עבור שדות בעלי אפשרות בחירה מרשימה, עליך להגדיר את רשימת הערכים האפשריים "
+#~ "כאן. אנא הקלד רשימה מופרדת בפסיקים של הערכים שברצונך לאפשר."
+
+#~ msgid "Switches"
+#~ msgstr "סוויצ'ים"
+
+#~ msgid ""
+#~ "<strong>Persistent</strong> is a convenience feature helpful when you are "
+#~ "manually entering a series of records in the admin. If set, it means the "
+#~ "field will carry over to the next blank entry. For instance, if a group "
+#~ "of records from the same city are being entered, set the \"city\" field "
+#~ "to be persistent, then once a city value has been entered in the first "
+#~ "record of the series, the next blank record will have this city pre-"
+#~ "filled."
+#~ msgstr "דביק"
+
+#~ msgid ""
+#~ "Persistent fields will also use their set default value in record edit "
+#~ "forms where no value has been set in the record being edited"
+#~ msgstr ""
+#~ "שדות דביקים יקבלו את ערך ברירת המחדל המוגדר עבורם, גם כאשר לא מספקים "
+#~ "עבורם ערך בעריכת הרשומה"
+
+#~ msgid "Free tech support and continued development relies on your support:"
+#~ msgstr "תמיכה טכנית חינם והמשכיות פיתוח התוסף תלויים בתמיכתך:"
+
+#~ msgid "fields"
+#~ msgstr "שדות"
+
+#~ msgctxt "column name"
+#~ msgid "Default"
+#~ msgstr "ברירת מחדל"

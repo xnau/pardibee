@@ -1412,7 +1412,7 @@ class Participants_Db extends PDb_Base {
   public static function get_column_atts( $filter = 'new' )
   {
     global $wpdb;
-
+    
     if ( is_array( $filter ) ) {
       $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
     } else {
@@ -1481,6 +1481,31 @@ class Participants_Db extends PDb_Base {
 //    error_log(__METHOD__.' result: '.print_r($result,1));
 
     return $result;
+  }
+  
+  /**
+   * provides a list of main db columns
+   * 
+   * @global wpdb $wpdb
+   * @return array of column names
+   */
+  public static function table_columns()
+  {
+    $cachekey = 'pdb-table-columns';
+    
+    $columns = wp_cache_get($cachekey);
+    
+    if ( ! $columns ) {
+      global $wpdb;
+      $shown_columns = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::participants_table() );
+      $columns = array();
+      foreach( $shown_columns as $column ) {
+        $columns[] = $column->Field;
+      }
+      wp_cache_add( $cachekey, $columns );
+    }
+    
+    return $columns;
   }
 
   /**
@@ -2135,59 +2160,68 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_default_record( $add_persistent = true )
   {
-    $sql = 'SELECT f.name,f.default,f.form_element 
-            FROM ' . self::$fields_table . ' f
-              JOIN ' . self::$groups_table . ' g 
-                ON f.group = g.name
-                
-            WHERE f.group != "internal" 
-            AND f.form_element NOT IN ("placeholder","link")  
-            AND g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")';
+    $cachekey = 'pdb-default-record';
+    
+    $default_record = wp_cache_get($cachekey);
+    
+    if ( ! $default_record ) {
+      $sql = 'SELECT f.name,f.default,f.form_element 
+              FROM ' . self::$fields_table . ' f
+                JOIN ' . self::$groups_table . ' g 
+                  ON f.group = g.name
 
-    global $wpdb;
+              WHERE f.group != "internal" 
+              AND f.form_element NOT IN ("placeholder","link") 
+              AND f.name IN ("' . implode('","', self::table_columns() ) . '") 
+              AND g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")';
 
-    $result = $wpdb->get_results( $sql );
+      global $wpdb;
 
-    $default_record = array();
+      $result = $wpdb->get_results( $sql );
 
-    foreach ( $result as $column ) {
+      $default_record = array();
 
-      $default_record[$column->name] = ( $column->form_element === 'hidden' && self::is_dynamic_value($column->default) ) ? '' : $column->default;
-    }
+      foreach ( $result as $column ) {
 
-    // get the id of the last record stored
-    $prev_record_id = get_transient( self::$last_record );
+        $default_record[$column->name] = ( $column->form_element === 'hidden' && self::is_dynamic_value($column->default) ) ? '' : $column->default;
+      }
 
-    if ( $add_persistent && is_admin() && $prev_record_id ) {
+      // get the id of the last record stored
+      $prev_record_id = get_transient( self::$last_record );
 
-      $previous_record = self::get_participant( $prev_record_id );
+      if ( $add_persistent && is_admin() && $prev_record_id ) {
 
-      if ( $previous_record ) {
+        $previous_record = self::get_participant( $prev_record_id );
 
-        $persistent_fields = self::get_persistent();
+        if ( $previous_record ) {
 
-        foreach ( $persistent_fields as $persistent_field ) {
+          $persistent_fields = self::get_persistent();
 
-          if ( !empty( $previous_record[$persistent_field] ) ) {
+          foreach ( $persistent_fields as $persistent_field ) {
 
-            $default_record[$persistent_field] = $previous_record[$persistent_field];
+            if ( !empty( $previous_record[$persistent_field] ) ) {
+
+              $default_record[$persistent_field] = $previous_record[$persistent_field];
+            }
           }
         }
       }
+
+      // fill in some convenience values
+      //global $current_user;
+
+  //    if ( is_object( $current_user ) ) $default_record['by'] = $current_user->display_name;
+  //    $default_record['when'] = date_i18n(self::$date_format);
+      $default_record['private_id'] = self::generate_pid();
+      PDb_Date_Display::reassert_timezone();
+      $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
+      /*
+       * @version 1.6 stop setting date_updated on new record
+       */
+      // $default_record['date_updated'] = date('Y-m-d H:i:s');
+      
+      wp_cache_add( $cachekey, $default_record );
     }
-
-    // fill in some convenience values
-    //global $current_user;
-
-//    if ( is_object( $current_user ) ) $default_record['by'] = $current_user->display_name;
-//    $default_record['when'] = date_i18n(self::$date_format);
-    $default_record['private_id'] = self::generate_pid();
-    PDb_Date_Display::reassert_timezone();
-    $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
-    /*
-     * @version 1.6 stop setting date_updated on new record
-     */
-    // $default_record['date_updated'] = date('Y-m-d H:i:s');
 
     return $default_record;
   }

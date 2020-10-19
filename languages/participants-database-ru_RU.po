@@ -4,257 +4,519 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database 1.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/participants-database\n"
-"POT-Creation-Date: 2013-12-27 17:36:25+00:00\n"
-"PO-Revision-Date: 2014-06-01 16:05-1000\n"
+"POT-Creation-Date: 2020-03-04 14:42-1000\n"
+"PO-Revision-Date: 2020-10-17 20:37-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: \n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: classes/PDb_FormElement.class.php:324
-#: classes/xnau_FormElement.class.php:986 manage_fields.php:461
+#: classes/PDb_Aux_Plugin.php:390
+msgid "Support"
+msgstr ""
+
+#: classes/PDb_Aux_Plugin.php:401
+#, php-format
+msgctxt "displays the name and version of the plugin"
+msgid "%s version %s"
+msgstr ""
+
+#: classes/PDb_Aux_Plugin.php:402
+#, php-format
+msgctxt "displays the plugin author name"
+msgid "Authored by %s"
+msgstr "Автор: %s"
+
+#: classes/PDb_Aux_Plugin.php:421 classes/PDb_Settings.php:32
+msgid "General Settings"
+msgstr "Общие настройки"
+
+#: classes/PDb_Base.php:1599
+#, php-format
+msgid ""
+"Participants Database will require PHP version %1$s in future releases, you "
+"have PHP version %2$s. Please update your php version, future versions of "
+"Participants Database may not run without minimum php version %1$s"
+msgstr ""
+
+#: classes/PDb_CSV_Import.php:75
+msgid "New columns imported from the CSV file."
+msgstr "Новые колонки импортированы из CSV-файла."
+
+#: classes/PDb_Debug.php:52
+msgid "Debugging Log"
+msgstr ""
+
+#: classes/PDb_Debug.php:203
+#, fuzzy
+#| msgctxt "submit button label"
+#| msgid "Clear"
+msgid "Clear"
+msgstr "Очистить"
+
+#: classes/PDb_Debug.php:204
+msgid "Refresh"
+msgstr ""
+
+#: classes/PDb_Debug.php:208
+#, php-format
+msgid "Log file: %s"
+msgstr ""
+
+#: classes/PDb_Debug.php:246
+#, php-format
+msgid ""
+"Unable to open the debugging log file: %s Check the \"File Upload Location\" "
+"setting."
+msgstr ""
+
+#: classes/PDb_Debug.php:248
+msgid "Debugging"
+msgstr ""
+
+#: classes/PDb_Debug.php:421
+#, php-format
+msgid "Log file initiated at: %s"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:125
+msgctxt "label for a \"close\" control"
+msgid "Close"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:126
+msgctxt "label for an \"open\" control"
+msgid "Open for editing"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:287
+msgid "You must define options for this field"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:686
+msgid "Select this field"
+msgstr ""
+
+#: classes/PDb_Field_Editor.php:704
+#, fuzzy
+#| msgctxt "submit button label"
+#| msgid "Delete Checked"
+msgid "Delete this field"
+msgstr "Удалить выбранное"
+
+#: classes/PDb_File_Uploads.php:65
+msgid ""
+"There is something wrong with the file you tried to upload. Try another."
+msgstr "При загрузке файла произошли проблемы. Попробуйте загрузить другой"
+
+#: classes/PDb_File_Uploads.php:80 classes/PDb_File_Uploads.php:117
+#, php-format
+msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
+msgstr ""
+"Для \"%s\", вы можете загрузить только такие файлы изображений, как JPEG, "
+"GIF или PNG."
+
+#: classes/PDb_File_Uploads.php:82
+#, php-format
+msgid "The file selected for \"%s\" must be one of these types: %s. "
+msgstr "Файл, выбранный для \"%s\" должен быть одним из этих типов: %s."
+
+#: classes/PDb_File_Uploads.php:129
+#, fuzzy, php-format
+#| msgid ""
+#| "The file you tried to upload is too large. The file must be smaller than "
+#| "%sK."
+msgid ""
+"The file you tried to upload is too large. The file must be smaller than %sK."
+msgstr "Файл, который вы попытались загрузить не является разрешенного типа."
+
+#: classes/PDb_File_Uploads.php:140
+msgid "The file could not be saved."
+msgstr "Файл не может быть сохранен."
+
+#: classes/PDb_FormElement.php:390 classes/PDb_List_Admin.php:1015
+#: classes/PDb_List_Admin.php:1535 classes/xnau_FormElement.php:1080
 msgid "delete"
 msgstr "удалить"
 
-#: classes/PDb_FormElement.class.php:433
+#: classes/PDb_FormElement.php:713
 msgid "Text-line"
 msgstr "Строка текста"
 
-#: classes/PDb_FormElement.class.php:434
+#: classes/PDb_FormElement.php:714
 msgid "Text Area"
 msgstr "Область текста"
 
-#: classes/PDb_FormElement.class.php:435
+#: classes/PDb_FormElement.php:715
 msgid "Rich Text"
 msgstr "Текст формата Rich text"
 
-#: classes/PDb_FormElement.class.php:436
+#: classes/PDb_FormElement.php:716
 msgid "Checkbox"
 msgstr "Чекбокс"
 
-#: classes/PDb_FormElement.class.php:437
+#: classes/PDb_FormElement.php:717
 msgid "Radio Buttons"
 msgstr "Радио-кнопка"
 
-#: classes/PDb_FormElement.class.php:438
+#: classes/PDb_FormElement.php:718
 msgid "Dropdown List"
 msgstr "Выпадающий список"
 
-#: classes/PDb_FormElement.class.php:439
+#: classes/PDb_FormElement.php:719
 msgid "Date Field"
 msgstr "Поле даты"
 
-#: classes/PDb_FormElement.class.php:440
+#: classes/PDb_FormElement.php:720
+msgid "Numeric"
+msgstr ""
+
+#: classes/PDb_FormElement.php:721
+msgid "Decimal"
+msgstr ""
+
+#: classes/PDb_FormElement.php:722
+msgid "Currency"
+msgstr ""
+
+#: classes/PDb_FormElement.php:723
 msgid "Dropdown/Other"
 msgstr "Выпадающий списко/Другое"
 
-#: classes/PDb_FormElement.class.php:441
+#: classes/PDb_FormElement.php:724
 msgid "Multiselect Checkbox"
 msgstr "Множественный выбор"
 
-#: classes/PDb_FormElement.class.php:442
+#: classes/PDb_FormElement.php:725
+#, fuzzy
+#| msgid "Multiselect Checkbox"
+msgid "Multiselect Dropdown"
+msgstr "Множественный выбор"
+
+#: classes/PDb_FormElement.php:726
 msgid "Radio Buttons/Other"
 msgstr "Радио кнопка/Другое"
 
-#: classes/PDb_FormElement.class.php:443
+#: classes/PDb_FormElement.php:727
 msgid "Multiselect/Other"
 msgstr "Множественный выбор/другое"
 
-#: classes/PDb_FormElement.class.php:444
+#: classes/PDb_FormElement.php:728
 msgid "Link Field"
 msgstr "Поле ссылки"
 
-#: classes/PDb_FormElement.class.php:445
+#: classes/PDb_FormElement.php:729
 msgid "Image Upload Field"
 msgstr "Поле загрузки изображения"
 
-#: classes/PDb_FormElement.class.php:446
+#: classes/PDb_FormElement.php:730
 msgid "File Upload Field"
 msgstr "Поле загрузки файла"
 
-#: classes/PDb_FormElement.class.php:447
+#: classes/PDb_FormElement.php:731
 msgid "Hidden Field"
 msgstr "Скрытое поле"
 
-#: classes/PDb_FormElement.class.php:448
+#: classes/PDb_FormElement.php:732
 msgid "Password Field"
 msgstr "Поле пароля"
 
-#: classes/PDb_FormElement.class.php:449
+#: classes/PDb_FormElement.php:733
 msgid "CAPTCHA"
 msgstr "КАПЧА"
 
-#: classes/PDb_Init.class.php:700
+#: classes/PDb_FormElement.php:734
+msgid "Placeholder"
+msgstr ""
+
+#: classes/PDb_FormValidation.php:53
+msgid "Not Required"
+msgstr "Не обязательно"
+
+#: classes/PDb_FormValidation.php:54
+msgid "Required"
+msgstr "Обязательно"
+
+#: classes/PDb_FormValidation.php:55
+msgid "Email"
+msgstr "Электронная почта"
+
+#: classes/PDb_FormValidation.php:56
+msgid "regex/match"
+msgstr ""
+
+#: classes/PDb_Init.php:1139
 #, fuzzy
 msgid "Participant Info"
 msgstr "Добавить участника"
 
-#: classes/PDb_Init.class.php:701
+#: classes/PDb_Init.php:1140
 msgid "Personal Info"
 msgstr ""
 
-#: classes/PDb_Init.class.php:702
+#: classes/PDb_Init.php:1141
 msgid "Administrative Info"
 msgstr ""
 
-#: classes/PDb_Init.class.php:703
+#: classes/PDb_Init.php:1142
 msgid "Record Info"
 msgstr ""
 
-#: classes/PDb_List.class.php:786 templates/pdb-list-bootstrap.php:34
-#: templates/pdb-list-detailed.php:31 templates/pdb-search-default.php:22
+#: classes/PDb_List.php:440 templates/pdb-list-bootstrap.php:35
+#: templates/pdb-list-detailed.php:32 templates/pdb-list-flexbox.php:15
+#: templates/pdb-list-responsive.php:18 templates/pdb-search-default.php:22
 msgid "Please select a column to search in."
 msgstr "Пожалуйста укажите столбец поиска"
 
-#: classes/PDb_List.class.php:787 templates/pdb-list-bootstrap.php:35
-#: templates/pdb-list-detailed.php:32 templates/pdb-search-default.php:23
+#: classes/PDb_List.php:441 templates/pdb-list-bootstrap.php:36
+#: templates/pdb-list-detailed.php:33 templates/pdb-list-flexbox.php:16
+#: templates/pdb-list-responsive.php:19 templates/pdb-search-default.php:23
 msgid "Please type in something to search for."
 msgstr "Пожалуйста наберите искомый текст"
 
-#: classes/PDb_List.class.php:795 templates/pdb-list-bootstrap.php:45
-#: templates/pdb-list-detailed.php:47 templates/pdb-search-default.php:35
+#: classes/PDb_List.php:449 templates/pdb-list-bootstrap.php:46
+#: templates/pdb-list-detailed.php:49 templates/pdb-list-flexbox.php:24
+#: templates/pdb-list-responsive.php:27 templates/pdb-search-default.php:35
 msgid "Search"
 msgstr "Поиск"
 
-#: classes/PDb_List.class.php:810 classes/PDb_List_Admin.class.php:491
-#: templates/pdb-list-bootstrap.php:62 templates/pdb-list-detailed.php:75
+#: classes/PDb_List.php:463 classes/PDb_List_Admin.php:948
+#: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:98
+#: templates/pdb-list-flexbox.php:44 templates/pdb-list-responsive.php:47
 #: templates/pdb-search-default.php:63
 msgid "Sort by"
 msgstr "Сортировка по"
 
-#: classes/PDb_List.class.php:881
+#: classes/PDb_List.php:572
 msgid "select"
 msgstr "выбрать"
 
-#: classes/PDb_List.class.php:952 classes/PDb_List_Admin.class.php:506
-#: classes/PDb_Settings.class.php:810 classes/PDb_Settings.class.php:836
+#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:963
+#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
 msgid "Ascending"
 msgstr "По возрастанию"
 
-#: classes/PDb_List.class.php:953 classes/PDb_List_Admin.class.php:507
-#: classes/PDb_Settings.class.php:810 classes/PDb_Settings.class.php:836
+#: classes/PDb_List.php:746 classes/PDb_List_Admin.php:964
+#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
 msgid "Descending"
 msgstr "По убыванию"
 
-#. translators: the following 5 strings are used in logic matching, please test
-#. after translating in case special characters cause problems
-#: classes/PDb_List.class.php:1385 classes/PDb_List_Admin.class.php:857
+#: classes/PDb_List.php:1234
+msgid ""
+"This will download the whole list of participants that match your search "
+"terms."
+msgstr ""
+
+#: classes/PDb_List.php:1235 classes/PDb_List_Admin.php:1251
+msgid "Download CSV for this list"
+msgstr "Скачать CSV для этого листа"
+
+#: classes/PDb_List.php:1240 classes/PDb_List_Admin.php:1252
+msgid "Include field titles"
+msgstr "Включить поля заголовков"
+
+#: classes/PDb_List.php:1258 classes/PDb_List_Admin.php:1249
+msgid "File Name"
+msgstr "Имя файла"
+
+#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1632
 msgctxt "submit button label"
 msgid "Delete Checked"
 msgstr "Удалить выбранное"
 
-#: classes/PDb_List.class.php:1386 classes/PDb_List_Admin.class.php:858
+#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1633
 msgctxt "submit button label"
 msgid "Change"
 msgstr "Изменить"
 
-#: classes/PDb_List.class.php:1387 classes/PDb_List_Admin.class.php:859
+#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1634
 msgctxt "submit button label"
 msgid "Sort"
 msgstr "Сортировать"
 
-#: classes/PDb_List.class.php:1388 classes/PDb_List_Admin.class.php:860
+#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1635
 msgctxt "submit button label"
 msgid "Filter"
 msgstr "Фильтр"
 
-#: classes/PDb_List.class.php:1389 classes/PDb_List_Admin.class.php:861
+#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1636
 msgctxt "submit button label"
 msgid "Clear"
 msgstr "Очистить"
 
-#: classes/PDb_List.class.php:1390 classes/PDb_List_Admin.class.php:862
+#: classes/PDb_List.php:1362 classes/PDb_List_Admin.php:1637
 msgctxt "search button label"
 msgid "Search"
 msgstr "Поиск"
 
-#: classes/PDb_List_Admin.class.php:199
-msgid "Record delete successful."
-msgstr "Удаление прошло успешно"
-
-#: classes/PDb_List_Admin.class.php:360 participants-database.php:508
+#: classes/PDb_List_Admin.php:135
 msgid "Do you really want to delete the selected record?"
 msgstr "Вы действительно хотите удалить выбранную запись?"
 
-#: classes/PDb_List_Admin.class.php:361 participants-database.php:509
+#: classes/PDb_List_Admin.php:136
 msgid "Do you really want to delete the selected records?"
 msgstr "Вы действительно хотите удалить выбранные записи?"
 
-#: classes/PDb_List_Admin.class.php:426 participants-database.php:416
-#: participants-database.php:417
-msgid "List Participants"
-msgstr "Список участников"
-
-#: classes/PDb_List_Admin.class.php:427
+#: classes/PDb_List_Admin.php:139
 #, fuzzy
-msgid "%s record found, sorted by: %s"
-msgid_plural "%s records found, sorted by: %s"
+#| msgid "Do you really want to delete the selected record?"
+msgid "Approve the selected record?"
+msgstr "Вы действительно хотите удалить выбранную запись?"
+
+#: classes/PDb_List_Admin.php:140
+#, fuzzy
+#| msgid "Do you really want to delete the selected records?"
+msgid "Approve the selected records?"
+msgstr "Вы действительно хотите удалить выбранные записи?"
+
+#: classes/PDb_List_Admin.php:143
+#, fuzzy
+#| msgid "Do you really want to delete the selected record?"
+msgid "Unapprove the selected record?"
+msgstr "Вы действительно хотите удалить выбранную запись?"
+
+#: classes/PDb_List_Admin.php:144
+#, fuzzy
+#| msgid "Do you really want to delete the selected records?"
+msgid "Unapprove the selected records?"
+msgstr "Вы действительно хотите удалить выбранные записи?"
+
+#: classes/PDb_List_Admin.php:147
+#, fuzzy
+#| msgid "Do you really want to delete the selected record?"
+msgid "Send the signup email to the selected record?"
+msgstr "Вы действительно хотите удалить выбранную запись?"
+
+#: classes/PDb_List_Admin.php:148
+#, fuzzy
+#| msgid "Do you really want to delete the selected records?"
+msgid "Send the signup email to the selected records?"
+msgstr "Вы действительно хотите удалить выбранные записи?"
+
+#: classes/PDb_List_Admin.php:151
+#, fuzzy
+#| msgid "Do you really want to delete the selected record?"
+msgid "Send the \"resend link\" email to the selected record?"
+msgstr "Вы действительно хотите удалить выбранную запись?"
+
+#: classes/PDb_List_Admin.php:152
+#, fuzzy
+#| msgid "Do you really want to delete the selected records?"
+msgid "Send the \"resend link\" email to the selected records?"
+msgstr "Вы действительно хотите удалить выбранные записи?"
+
+#: classes/PDb_List_Admin.php:154
+#, php-format
+msgid ""
+"The number of selected records exceeds the %s email send limit.%s Only the "
+"first %s will be sent."
+msgstr ""
+
+#: classes/PDb_List_Admin.php:487
+msgid "Record delete successful."
+msgstr "Удаление прошло успешно"
+
+#: classes/PDb_List_Admin.php:508
+#, fuzzy, php-format
+#| msgid "The record has been updated."
+msgctxt "number of records with approval statuses set"
+msgid "Approval status for %d records has been updated."
+msgstr "Запись обновлена"
+
+#: classes/PDb_List_Admin.php:533 classes/PDb_List_Admin.php:555
+#, php-format
+msgctxt "number of emails sent"
+msgid "%d email was sent."
+msgid_plural "%d emails were sent."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: classes/PDb_List_Admin.php:886
+msgid "Show only records with"
+msgstr "Показать только записи с"
+
+#: classes/PDb_List_Admin.php:897
+msgctxt ""
+"joins two search terms, such as in \"Show only records with last name that "
+"is Smith\""
+msgid "that"
+msgstr ""
+
+#: classes/PDb_List_Admin.php:904
+msgid "is"
+msgstr "равен"
+
+#: classes/PDb_List_Admin.php:905
+msgid "is not"
+msgstr "не равен"
+
+#: classes/PDb_List_Admin.php:906
+msgid "contains"
+msgstr "содержит"
+
+#: classes/PDb_List_Admin.php:907
+msgid "doesn&#39;t contain"
+msgstr "не содержит"
+
+#: classes/PDb_List_Admin.php:908
+msgid "is greater than"
+msgstr "больше, чем"
+
+#: classes/PDb_List_Admin.php:909
+msgid "is less than"
+msgstr "меньше, чем"
+
+#: classes/PDb_List_Admin.php:923
+msgid "and"
+msgstr ""
+
+#: classes/PDb_List_Admin.php:924
+#, fuzzy
+#| msgctxt "submit button label"
+#| msgid "Sort"
+msgid "or"
+msgstr "Сортировать"
+
+#: classes/PDb_List_Admin.php:943
+msgid "Number of filters to use: "
+msgstr ""
+
+#: classes/PDb_List_Admin.php:975
+#, fuzzy, php-format
+msgid "%s record found, sorted by: %s."
+msgid_plural "%s records found, sorted by: %s."
 msgstr[0] "Записи %s найдены, упорядочены по:"
 msgstr[1] "%s записей найдено, сортировка по:"
 msgstr[2] "Записи %s найдены, упорядочены по:"
 
-#: classes/PDb_List_Admin.class.php:447
-msgid "Show only records with"
-msgstr "Показать только записи с"
+#: classes/PDb_List_Admin.php:1007 classes/PDb_List_Admin.php:1536
+msgid "approve"
+msgstr ""
 
-#: classes/PDb_List_Admin.class.php:450
-msgid "show all"
-msgstr "показать все"
+#: classes/PDb_List_Admin.php:1008 classes/PDb_List_Admin.php:1537
+msgid "unapprove"
+msgstr ""
 
-#: classes/PDb_List_Admin.class.php:475
-msgid "is"
-msgstr "равен"
-
-#: classes/PDb_List_Admin.class.php:476
-msgid "is not"
-msgstr "не равен"
-
-#: classes/PDb_List_Admin.class.php:477
-msgid "contains"
-msgstr "содержит"
-
-#: classes/PDb_List_Admin.class.php:478
-msgid "doesn&#39;t contain"
-msgstr "не содержит"
-
-#: classes/PDb_List_Admin.class.php:479
-msgid "is greater than"
-msgstr "больше, чем"
-
-#: classes/PDb_List_Admin.class.php:480
-msgid "is less than"
-msgstr "меньше, чем"
-
-#: classes/PDb_List_Admin.class.php:546
+#: classes/PDb_List_Admin.php:1060
+#, php-format
 msgid "Show %s items per page."
 msgstr "Показать %s элементов на странице"
 
-#: classes/PDb_List_Admin.class.php:760
+#: classes/PDb_List_Admin.php:1119
+msgid "Edit"
+msgstr "Редактировать"
+
+#: classes/PDb_List_Admin.php:1213
 msgid "No records found"
 msgstr "Записи не найдены"
 
-#: classes/PDb_List_Admin.class.php:778
-msgid "Export CSV"
-msgstr "Экспорт CSV"
-
-#: classes/PDb_List_Admin.class.php:791
-msgid "File Name"
-msgstr "Имя файла"
-
-#: classes/PDb_List_Admin.class.php:793
-msgid "Download CSV for this list"
-msgstr "Скачать CSV для этого листа"
-
-#: classes/PDb_List_Admin.class.php:794
-msgid "Include field titles"
-msgstr "Включить поля заголовков"
-
-#: classes/PDb_List_Admin.class.php:797
+#: classes/PDb_List_Admin.php:1255
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms, and in the order specified by the sort. The export will include "
@@ -267,51 +529,474 @@ msgstr ""
 "экспорт, определены в колонке\"CSV\" на странице управления полями базы "
 "данных."
 
-#: classes/PDb_Pagination.class.php:355
+#: classes/PDb_List_Admin.php:1533
+msgid "PDb Admin List With Selected: "
+msgstr ""
+
+#: classes/PDb_List_Admin.php:1538
+#, fuzzy
+#| msgid "Send Signup Response Email"
+msgid "send signup email"
+msgstr "Отправить ответ по электронной почте с заявлением о регистрации"
+
+#: classes/PDb_List_Admin.php:1638 participants-database.php:3479
+msgid "Apply"
+msgstr "Применить"
+
+#: classes/PDb_List_Admin.php:1639
+#, fuzzy
+#| msgid "select"
+msgctxt ""
+"phrase used just before naming the action to perform on the selected items"
+msgid "With selected"
+msgstr "выбрать"
+
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3675
+msgid "Manage Database Fields"
+msgstr "Поля управления базой данных"
+
+#: classes/PDb_Manage_Fields.php:76 classes/PDb_Manage_Fields.php:84
+#: classes/PDb_Manage_Fields.php:194
+msgid "Field Groups"
+msgstr "Группы полей"
+
+#: classes/PDb_Manage_Fields.php:85
+msgid "Help"
+msgstr "Помощь"
+
+#: classes/PDb_Manage_Fields.php:116
+#, fuzzy, php-format
+#| msgid "Fields"
+msgctxt "Title of the field group"
+msgid "%s Fields"
+msgstr "Поля"
+
+#: classes/PDb_Manage_Fields.php:138
+msgid "No fields in this group"
+msgstr "Нет полей в этой группе"
+
+#: classes/PDb_Manage_Fields.php:200
+msgid "Edit / Add / Remove Field Groups"
+msgstr "Редактировать / Добавить / Удалить группы полей"
+
+#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:614
+msgid "group"
+msgstr "группа"
+
+#: classes/PDb_Manage_Fields.php:233
+#, fuzzy
+#| msgid "field"
+msgid "field count"
+msgstr "Поле"
+
+#: classes/PDb_Manage_Fields.php:380
+msgid "Cancel"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:428 classes/PDb_Manage_Fields.php:441
+msgid "Add to CSV"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:429 classes/PDb_Manage_Fields.php:442
+msgid "Remove from CSV"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:440
+#, fuzzy
+#| msgid "Add Group"
+msgid "Assign Group"
+msgstr "Добавить группу"
+
+#: classes/PDb_Manage_Fields.php:443
+#, fuzzy
+#| msgid "Add Group"
+msgid "Add to Signup"
+msgstr "Добавить группу"
+
+#: classes/PDb_Manage_Fields.php:444
+msgid "Remove from Signup"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:537
+msgid "Public"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:538
+msgid "Private"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:539
+#, fuzzy
+#| msgid "Admin"
+msgctxt "short form of \"administrator\""
+msgid "Admin"
+msgstr "Администратор"
+
+#: classes/PDb_Manage_Fields.php:610
+msgid "Update Fields"
+msgstr "Обновить поля"
+
+#: classes/PDb_Manage_Fields.php:611
+msgid "Update Groups"
+msgstr "Обновить группы"
+
+#: classes/PDb_Manage_Fields.php:612
+msgid "Add Field"
+msgstr "Добавить поле"
+
+#: classes/PDb_Manage_Fields.php:613
+msgid "Add Group"
+msgstr "Добавить группу"
+
+#: classes/PDb_Manage_Fields.php:615
+msgid "field"
+msgstr "Поле"
+
+#: classes/PDb_Manage_Fields.php:616
+msgid "new field title"
+msgstr "заголовок нового поля"
+
+#: classes/PDb_Manage_Fields.php:617
+#, fuzzy
+#| msgid "new field title"
+msgid "new field form element"
+msgstr "заголовок нового поля"
+
+#: classes/PDb_Manage_Fields.php:618
+msgid "new group title"
+msgstr "заголовок новой группы"
+
+#: classes/PDb_Manage_Fields.php:619
+msgctxt "column name"
+msgid "Fields"
+msgstr "Поля"
+
+#: classes/PDb_Manage_Fields.php:620
+msgctxt "column name"
+msgid "Group"
+msgstr "Группа"
+
+#: classes/PDb_Manage_Fields.php:621
+msgctxt "column name"
+msgid "Order"
+msgstr "Порядок"
+
+#: classes/PDb_Manage_Fields.php:622
+msgctxt "column name"
+msgid "Name"
+msgstr "Имя"
+
+#: classes/PDb_Manage_Fields.php:623
+msgctxt "column name"
+msgid "Title"
+msgstr "Название"
+
+#: classes/PDb_Manage_Fields.php:624
+#, fuzzy
+#| msgid "Default Image"
+msgctxt "column name"
+msgid "Default Value"
+msgstr "Изображение по умолчанию"
+
+#: classes/PDb_Manage_Fields.php:625
+msgctxt "column name"
+msgid "Help Text"
+msgstr "Помощь"
+
+#: classes/PDb_Manage_Fields.php:626
+msgctxt "column name"
+msgid "Form Element"
+msgstr "Элемент формы"
+
+#: classes/PDb_Manage_Fields.php:627
+msgctxt "column name"
+msgid "Values"
+msgstr "Значения"
+
+#: classes/PDb_Manage_Fields.php:628
+msgctxt "column name"
+msgid "Validation"
+msgstr "Проверка"
+
+#: classes/PDb_Manage_Fields.php:629
+msgctxt "column name"
+msgid "Display Column"
+msgstr "Отобразить столбец"
+
+#: classes/PDb_Manage_Fields.php:630
+msgctxt "column name"
+msgid "Admin Column"
+msgstr "Администратор"
+
+#: classes/PDb_Manage_Fields.php:631
+msgctxt "column name"
+msgid "Sortable"
+msgstr "Сортируемый"
+
+#: classes/PDb_Manage_Fields.php:632
+msgctxt "column name, acronym for \"comma separated values\""
+msgid "CSV"
+msgstr "CSV"
+
+#: classes/PDb_Manage_Fields.php:633
+msgctxt "column name"
+msgid "Persistent"
+msgstr "Постоянный"
+
+#: classes/PDb_Manage_Fields.php:634
+msgctxt "column name"
+msgid "Signup"
+msgstr "Зарегистрироваться"
+
+#: classes/PDb_Manage_Fields.php:635
+msgctxt "column name"
+msgid "Read Only"
+msgstr "Только для чтения"
+
+#: classes/PDb_Manage_Fields.php:636
+msgctxt "column name"
+msgid "Admin"
+msgstr "Администратор"
+
+#: classes/PDb_Manage_Fields.php:637
+msgctxt "column name"
+msgid "Delete"
+msgstr "Удалить"
+
+#: classes/PDb_Manage_Fields.php:638
+msgctxt "column name"
+msgid "Display"
+msgstr "Показать"
+
+#: classes/PDb_Manage_Fields.php:639
+msgctxt "column name"
+msgid "Description"
+msgstr "Описание"
+
+#: classes/PDb_Manage_Fields.php:640
+msgctxt "column name"
+msgid "Attributes"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:641
+msgctxt "column name"
+msgid "Options"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:642
+#, fuzzy
+#| msgctxt "column name"
+#| msgid "Validation"
+msgctxt "column name"
+msgid "Validation Message"
+msgstr "Проверка"
+
+#: classes/PDb_Manage_Fields.php:643
+msgctxt "button label"
+msgid "With Selected"
+msgstr ""
+
+#: classes/PDb_Manage_Fields.php:644
+#, fuzzy
+#| msgid "Apply"
+msgctxt "button label"
+msgid "Apply"
+msgstr "Применить"
+
+#: classes/PDb_Manage_Fields.php:645
+#, fuzzy
+#| msgid "all"
+msgctxt "select all button label"
+msgid "All"
+msgstr "все"
+
+#: classes/PDb_Manage_Fields.php:646
+msgctxt "label for the view mode selector"
+msgid "View Mode"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:164
+#, fuzzy
+#| msgid "Fields"
+msgid "Fields Updated"
+msgstr "Поля"
+
+#: classes/PDb_Manage_Fields_Updates.php:203
+#: classes/PDb_Manage_Fields_Updates.php:212
+msgid "Cannot add a field with that name"
+msgstr "Не удалось добавить поле с таким именем"
+
+#: classes/PDb_Manage_Fields_Updates.php:203
+msgid "This name is reserved; please choose another. Reserved names are"
+msgstr ""
+"Это имя зарезервировано, пожалуйста, выберите другое. Зарезервированные "
+"имена:"
+
+#: classes/PDb_Manage_Fields_Updates.php:212
+msgid ""
+"The name must be unique: a field with that name has been previously defined."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:221
+msgid "The name cannot begin with a number"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:221
+msgid "Please choose another."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:229
+#, fuzzy
+msgid "The new field was added."
+msgstr "Запись обновлена"
+
+#: classes/PDb_Manage_Fields_Updates.php:231
+msgid "Remember to define the \"options\" for your new field."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:234
+#, fuzzy
+#| msgid "The file could not be saved."
+msgid "The field could not be added."
+msgstr "Файл не может быть сохранен."
+
+#: classes/PDb_Manage_Fields_Updates.php:267
+#, fuzzy
+msgid "The new group was added."
+msgstr "Запись обновлена"
+
+#: classes/PDb_Manage_Fields_Updates.php:304
+msgid "There was an error; the settings were not saved."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:313
+#, fuzzy
+#| msgid "Your information has been updated"
+msgid "Your groups have been updated"
+msgstr "Ваша информация обновлена"
+
+#: classes/PDb_Manage_Fields_Updates.php:361
+msgid "Selected fields deleted"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:381
+msgid "Selected group deleted"
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:408
+msgid "Field settings updated."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:932
+#, php-format
+msgid ""
+"The %1$s was not added. There is already a %1$s with that name, please "
+"choose another."
+msgstr ""
+"Шаблон %1$s не был добавлен. Уже существует шаблон %1$s с таким именем, "
+"пожалуйста, выберите другое."
+
+#: classes/PDb_Manage_List_Columns.php:232
+msgid ""
+"Drag the fields you want shown from the \"Available Fields\" area to the "
+"\"List Columns\" area below. The fields can be re-ordered or removed from "
+"the List Columns area."
+msgstr ""
+
+#: classes/PDb_Manage_List_Columns.php:235
+msgid "Public List Column Setup"
+msgstr ""
+
+#: classes/PDb_Manage_List_Columns.php:236
+#, fuzzy
+#| msgid ""
+#| "Show the list count on list displays. Can also be set in the shortcode."
+msgid "Set up the columns for list displays using the [pdb_list] shortcode."
+msgstr ""
+"Отобразить список подсчёта на странице со списком. Можно также установить в "
+"коротком коде."
+
+#: classes/PDb_Manage_List_Columns.php:238
+#: classes/PDb_Manage_List_Columns.php:262
+#, fuzzy
+#| msgid "Update Fields"
+msgid "Available Fields:"
+msgstr "Обновить поля"
+
+#: classes/PDb_Manage_List_Columns.php:248
+#: classes/PDb_Manage_List_Columns.php:272
+#, fuzzy
+#| msgid "Display Column"
+msgid "List Columns"
+msgstr "Столбец для отображения"
+
+#: classes/PDb_Manage_List_Columns.php:259
+#, fuzzy
+#| msgid "Admin Column"
+msgid "Admin List Column Setup"
+msgstr "Администратор"
+
+#: classes/PDb_Manage_List_Columns.php:260
+msgid ""
+"Set up the columns for list displays on the List Participants admin page."
+msgstr ""
+
+#: classes/PDb_Pagination.php:366
 msgid "First"
 msgstr "Первый"
 
-#: classes/PDb_Pagination.class.php:365 participants-database.php:2820
+#: classes/PDb_Pagination.php:377 participants-database.php:3481
 msgid "Previous"
 msgstr "Предыдущий"
 
-#: classes/PDb_Pagination.class.php:382 participants-database.php:2819
+#: classes/PDb_Pagination.php:396 participants-database.php:3480
 msgid "Next"
 msgstr "Следующий"
 
-#: classes/PDb_Pagination.class.php:394
+#: classes/PDb_Pagination.php:409
 msgid "Last"
 msgstr "Последний"
 
-#: classes/PDb_Settings.class.php:18
-msgid "General Settings"
-msgstr "Общие настройки"
+#: classes/PDb_Path.php:159 participants-database.php:3281
+#, php-format
+msgid "The uploads directory (%s) could not be created."
+msgstr "Директория для загрузки файлов (%s) не может быть создана."
 
-#: classes/PDb_Settings.class.php:19
+#: classes/PDb_Record.php:153
+msgid "back"
+msgstr ""
+
+#: classes/PDb_Settings.php:33
 msgid "Signup Form Settings"
 msgstr "Настройки регистрационной формы"
 
-#: classes/PDb_Settings.class.php:20
+#: classes/PDb_Settings.php:34
 msgid "Record Form Settings"
 msgstr "Настройки формы регистрации"
 
-#: classes/PDb_Settings.class.php:21
+#: classes/PDb_Settings.php:35
 msgid "List Display Settings"
 msgstr "Настройки отображения списка"
 
-#: classes/PDb_Settings.class.php:22
+#: classes/PDb_Settings.php:36
 msgid "Resend Link Settings"
 msgstr "Повторная отправка настроек ссылки"
 
-#: classes/PDb_Settings.class.php:23
+#: classes/PDb_Settings.php:37
+#, fuzzy
+#| msgid "Advanced Settings"
+msgid "Admin Settings"
+msgstr "Расширенные настройки"
+
+#: classes/PDb_Settings.php:38
 msgid "Advanced Settings"
 msgstr "Расширенные настройки"
 
-#: classes/PDb_Settings.class.php:24
+#: classes/PDb_Settings.php:39
 msgid "Custom CSS"
 msgstr "Пользовательская CSS"
 
-#: classes/PDb_Settings.class.php:28
+#: classes/PDb_Settings.php:43
 msgid ""
 "Settings for the [pdb_record] shortcode, which is used to show a user-"
 "editable form on the website."
@@ -319,7 +1004,7 @@ msgstr ""
 "Настройки для короткого кода [pdb_record], который используется, чтобы "
 "показать форму на сайте, редактируемую пользователем."
 
-#: classes/PDb_Settings.class.php:29
+#: classes/PDb_Settings.php:44
 msgid ""
 "Settings for the [pdb_list] shortcode, which is used to show a list of "
 "records from the database."
@@ -327,7 +1012,7 @@ msgstr ""
 "Настройки для короткого кода [pdb_list], который используется для "
 "отображения списка записей из базы данных."
 
-#: classes/PDb_Settings.class.php:30
+#: classes/PDb_Settings.php:45
 msgid ""
 "Settings for the [pdb_signup] shortcode, which is used to show a signup or "
 "registration form on the website."
@@ -335,20 +1020,30 @@ msgstr ""
 "Настройки для короткого кода [pdb_signup], который используется, чтобы "
 "показать подписную или регистрационную форму на сайте."
 
-#: classes/PDb_Settings.class.php:31
+#: classes/PDb_Settings.php:46
 msgid "Settings for the lost private link resend function."
 msgstr "Настройки для функции повторной отправки потерянной личной ссылки"
 
-#: classes/PDb_Settings.class.php:32
+#: classes/PDb_Settings.php:47
 msgid "Settings for special configurations."
 msgstr "Настройки для специальных конфигураций."
 
-#: classes/PDb_Settings.class.php:33
+#: classes/PDb_Settings.php:48
+#, fuzzy
+#| msgid "Settings for the lost private link resend function."
+msgid "Settings for the plugin backend."
+msgstr "Настройки для функции повторной отправки потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:49
+#, fuzzy, php-format
+#| msgid ""
+#| "User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, "
+#| "try this tutorial to help you get started: <a href=\"http://www."
+#| "ostraining.com/blog/wordpress/firebug-wordpress-css/\">Use Firebug for "
+#| "Editing WordPress Themes.</a></p>"
 msgid ""
 "User CSS rules for styling plugin displays.</h4><p>If you're new to CSS, try "
-"this tutorial to help you get started: <a href=\"http://www.ostraining.com/"
-"blog/wordpress/firebug-wordpress-css/\">Use Firebug for Editing WordPress "
-"Themes.</a></p>"
+"this tutorial to help you get started: %s</p>"
 msgstr ""
 "Правила пользовательских каскадных таблиц стилей CSS для отображений стиля "
 "плагина .</h4><p>. Если Вы плохо знакомы с каскадными таблицами стилей, "
@@ -357,40 +1052,45 @@ msgstr ""
 "wordpress-css/\">. Используйте дополнение Firebug для редактирования "
 "WordPress.</a></p>"
 
-#: classes/PDb_Settings.class.php:42
+#: classes/PDb_Settings.php:58
 msgid "Save Plugin Settings"
 msgstr "Сохранить настройки плагина"
 
-#: classes/PDb_Settings.class.php:82
+#: classes/PDb_Settings.php:167
 msgid "File Upload Location"
 msgstr "Расположение загруженного файла"
 
-#: classes/PDb_Settings.class.php:86
+#: classes/PDb_Settings.php:171
+#, fuzzy, php-format
+#| msgid ""
+#| "This defines where the uploaded files will go, relative to the WordPress "
+#| "root. The default location is '/wp-content/uploads/participants-"
+#| "database'<br />Don't put it in the plugin folder, the images and files "
+#| "could get deleted when the plugin is updated."
 msgid ""
-"This defines where the uploaded files will go, relative to the WordPress "
-"root. The default location is '/wp-content/uploads/participants-"
-"database'<br />Don't put it in the plugin folder, the images and files could "
-"get deleted when the plugin is updated."
+"This defines where the uploaded files will go, relative to the %s. The "
+"default location is '%s'<br />Don't put it in the plugin folder, the images "
+"and files could get deleted when the plugin is updated."
 msgstr ""
 "Это определяет место, куда попадут загружаемые файлы, относительно корневого "
 "каталога WordPress. Расположение по умолчанию - / wp-content/uploads/"
 "participants-database '<br />. Не помещайте их в папку плагинов, так как "
 "изображения и файлы могут быть удалены при обновлении плагина."
 
-#: classes/PDb_Settings.class.php:93
+#: classes/PDb_Settings.php:178
 msgid "File Upload Limit"
 msgstr "Предел загрузки файлов"
 
-#: classes/PDb_Settings.class.php:97
+#: classes/PDb_Settings.php:182
 msgid "the maximum allowed file size (in kilobytes) for an uploaded file"
 msgstr ""
 "максимально допустимый размер файла (в килобайтах) для загруженных файлов"
 
-#: classes/PDb_Settings.class.php:104
+#: classes/PDb_Settings.php:190
 msgid "Allowed File Types"
 msgstr "Разрешенные типы файлов"
 
-#: classes/PDb_Settings.class.php:108
+#: classes/PDb_Settings.php:194
 msgid ""
 "list of allowed file types by file extension. Please be aware that there are "
 "security risks in allowing file uploads."
@@ -399,24 +1099,39 @@ msgstr ""
 "существуют риски для информационной безопасности при разрешении загрузки "
 "файлов."
 
-#: classes/PDb_Settings.class.php:115
+#: classes/PDb_Settings.php:201
 msgid "Default Image"
 msgstr "Изображение по умолчанию"
 
-#: classes/PDb_Settings.class.php:119
+#: classes/PDb_Settings.php:205
+#, fuzzy, php-format
+#| msgid ""
+#| "Path (relative to WP root) of an image file to show if no image has been "
+#| "defined for an image field. Leave blank for no default image."
 msgid ""
-"Path (relative to WP root) of an image file to show if no image has been "
+"Path (relative to the %s) of an image file to show if no image has been "
 "defined for an image field. Leave blank for no default image."
 msgstr ""
 "Путь (относительно корневого каталога WP) файла изображения для отображения, "
 "что ни одно изображение не было определено для поля изображения. Оставьте "
 "пустым, если нет изображения по умолчанию."
 
-#: classes/PDb_Settings.class.php:126
+#: classes/PDb_Settings.php:213 classes/PDb_Settings.php:873
+msgid "Image Size"
+msgstr ""
+
+#: classes/PDb_Settings.php:217
+msgid ""
+"Sets the default height of images displayed in single record and record edit "
+"displays. Defaults to pixels, but any valid CSS size value can be used. "
+"Default size for the list display is under the list display tab."
+msgstr ""
+
+#: classes/PDb_Settings.php:225
 msgid "Link Image to Fullsize"
 msgstr "Ссылка на полноразмерное изображение"
 
-#: classes/PDb_Settings.class.php:131
+#: classes/PDb_Settings.php:230
 msgid ""
 "place a link to the full-size image on images. This link will work with most "
 "\"lightbox\" plugins."
@@ -424,11 +1139,11 @@ msgstr ""
 "разместите ссылку на полноразмерное изображение картинки. Эта ссылка будет "
 "работать с большинством плагинов \"лайтбокс\""
 
-#: classes/PDb_Settings.class.php:139
+#: classes/PDb_Settings.php:238
 msgid "Allow File Delete"
 msgstr "Разрешить удаление файла"
 
-#: classes/PDb_Settings.class.php:144
+#: classes/PDb_Settings.php:243
 msgid ""
 "if checked, allows uploaded files and images to be deleted from storage when "
 "deleted from a record by a user"
@@ -436,11 +1151,19 @@ msgstr ""
 "Если отмечено, это позволяет пользователю удалять из хранилища загруженные "
 "файлы и изображения, при удалении из записей"
 
-#: classes/PDb_Settings.class.php:152
+#: classes/PDb_Settings.php:252
+msgid "Allow HTML Tags in Text Fields"
+msgstr ""
+
+#: classes/PDb_Settings.php:257
+msgid "if checked, limited HTML tags are allowed in \"text-line\" fields."
+msgstr ""
+
+#: classes/PDb_Settings.php:265
 msgid "Make Links Clickable"
 msgstr "Создание ссылок, активируемых щелчком мышки"
 
-#: classes/PDb_Settings.class.php:157
+#: classes/PDb_Settings.php:270
 msgid ""
 "if a \"text-line\" field looks like a link (begins with \"http\" or is an "
 "email address) make it clickable"
@@ -448,20 +1171,21 @@ msgstr ""
 "\"Если поле \"текстовой строки\" выглядит как ссылка (начинается с  \"http\" "
 "или адреса электронной почты) сделайте его активируемым щелчком мышки\"."
 
-#: classes/PDb_Settings.class.php:165
+#: classes/PDb_Settings.php:278
 msgid "Protect Email Addresses"
 msgstr "Защита адресов электронной почты"
 
-#: classes/PDb_Settings.class.php:170
+#: classes/PDb_Settings.php:283
 msgid "protect email addresses in text-line fields with Javascript"
 msgstr ""
 "Защитите адрес электронной почты в поле текстовой строки с помощью Javascript"
 
-#: classes/PDb_Settings.class.php:178
+#: classes/PDb_Settings.php:291
 msgid "Missing Field Error Message"
 msgstr "Сообщение об ошибке: Отсутствует поле"
 
-#: classes/PDb_Settings.class.php:182
+#: classes/PDb_Settings.php:295
+#, php-format
 msgid ""
 "the message shown when a field is required, but left empty (the %s is "
 "replaced by the name of the field)"
@@ -469,61 +1193,69 @@ msgstr ""
 "Сообщение отображается, когда требуется поле, но остается пустым (%s "
 "заменяется именем поля)"
 
-#: classes/PDb_Settings.class.php:183
+#: classes/PDb_Settings.php:296
+#, php-format
 msgid "The %s field is required."
 msgstr "Требуется поле %s."
 
-#: classes/PDb_Settings.class.php:189
+#: classes/PDb_Settings.php:302
 msgid "Invalid Field Error Message"
 msgstr "Сообщение об ошибке: Неверное поле"
 
-#: classes/PDb_Settings.class.php:193
+#: classes/PDb_Settings.php:306
 msgid ""
 "the message shown when a field's value does not pass the validation test"
 msgstr "сообщение отображается, когда значение поля не проходит проверку"
 
-#: classes/PDb_Settings.class.php:194
+#: classes/PDb_Settings.php:307
+#, php-format
 msgid "The %s field appears to be incorrect."
 msgstr "Поле %s оказывается неверным."
 
-#: classes/PDb_Settings.class.php:200
+#: classes/PDb_Settings.php:313
 msgid "Non-Matching Field Error Message"
 msgstr "Сообщение об ошибке: Несовпадающее поле"
 
-#: classes/PDb_Settings.class.php:204
+#: classes/PDb_Settings.php:317
+#, fuzzy, php-format
+#| msgid ""
+#| "the message shown when a field's value does match the value of another "
+#| "field. The first %s will show the name of the field, the second will show "
+#| "the name of the filed it must match."
 msgid ""
 "the message shown when a field's value does match the value of another "
 "field. The first %s will show the name of the field, the second will show "
-"the name of the filed it must match."
+"the name of the field it must match."
 msgstr ""
 "сообщение отображается, когда значение поля действительно соответствует "
 "значению другого поля. Первое  %s будет показывать имя поля, второе будет "
 "показывать имя поля, которому оно должно соответствовать."
 
-#: classes/PDb_Settings.class.php:205
+#: classes/PDb_Settings.php:318
+#, php-format
 msgid "The %s field must match the %s field."
 msgstr "Поле %s должно соответствовать полю %s."
 
-#: classes/PDb_Settings.class.php:212
+#: classes/PDb_Settings.php:325
 msgid "Failed CAPTCHA Message"
 msgstr "Сообщение: Ошибка защитного кода"
 
-#: classes/PDb_Settings.class.php:216
+#: classes/PDb_Settings.php:329
 msgid "the message shown when the CAPTCHA (verify human) test failed"
 msgstr ""
 "сообщение отображается, когда полностью автоматизированный публичный тест "
 "Тьюринга для различения компьютеров и людей не пройден"
 
-#: classes/PDb_Settings.class.php:217
-#, fuzzy
+#: classes/PDb_Settings.php:330
+#, fuzzy, php-format
 msgid "Pleast try the %s question again."
 msgstr "Пожалуйста, попробуйте вопрос %s снова."
 
-#: classes/PDb_Settings.class.php:223
+#: classes/PDb_Settings.php:336
 msgid "Field Error Style"
 msgstr "Ошибка: Стиля поля"
 
-#: classes/PDb_Settings.class.php:227
+#: classes/PDb_Settings.php:340
 msgid ""
 "the CSS style applied to an input or text field that is missing or has not "
 "passed validation. This must be a valid CSS rule"
@@ -532,19 +1264,20 @@ msgstr ""
 "которое отсутствует или не прошло проверку. Это должно быть действительным "
 "правилом каскадных таблиц стилей."
 
-#: classes/PDb_Settings.class.php:234
+#: classes/PDb_Settings.php:347
 msgid "Mark Required Fields"
 msgstr "Отметить обязательные поля"
 
-#: classes/PDb_Settings.class.php:239
+#: classes/PDb_Settings.php:352
 msgid "mark the title of required fields?"
 msgstr "отметить название полей обязательных для заполнения?"
 
-#: classes/PDb_Settings.class.php:247
+#: classes/PDb_Settings.php:360
 msgid "Required Field Marker"
 msgstr "Маркер обязательного поля"
 
-#: classes/PDb_Settings.class.php:251
+#: classes/PDb_Settings.php:364
+#, php-format
 msgid ""
 "html added to field title for required fields if selected above (the %s is "
 "replaced by the title of the field)"
@@ -552,24 +1285,24 @@ msgstr ""
 "HTML добавляется в название поля для требуемых полей, если выбрано выше (%s "
 "заменяется названием поля)"
 
-#: classes/PDb_Settings.class.php:276
+#: classes/PDb_Settings.php:389
 msgid "Signup Button Text"
 msgstr "Текстовая кнопка регистрация"
 
-#: classes/PDb_Settings.class.php:280
+#: classes/PDb_Settings.php:393
 msgid "text shown on the button to sign up"
 msgstr "Текст, отображаемый на кнопке, чтобы зарегистрироваться"
 
-#: classes/PDb_Settings.class.php:281
+#: classes/PDb_Settings.php:394
 msgctxt "the text on a button to submit a signup form"
 msgid "Sign Up"
 msgstr "Зареристрироваться"
 
-#: classes/PDb_Settings.class.php:287
+#: classes/PDb_Settings.php:400
 msgid "Signup Thanks Page"
 msgstr "Страница «Спасибо» при регистрации"
 
-#: classes/PDb_Settings.class.php:291
+#: classes/PDb_Settings.php:404
 msgid ""
 "after they register, send them to this page for a thank you message. This "
 "page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
@@ -582,19 +1315,19 @@ msgstr ""
 "также можете использовать идентификатор сообщения для сообщений и "
 "пользовательских типов сообщения."
 
-#: classes/PDb_Settings.class.php:300
+#: classes/PDb_Settings.php:413
 msgid "Show Field Groups"
 msgstr "Показать группы полей"
 
-#: classes/PDb_Settings.class.php:305
+#: classes/PDb_Settings.php:418
 msgid "Show groups and group descriptions in the signup form."
 msgstr "Отображение групп и описаний групп в форме регистрации."
 
-#: classes/PDb_Settings.class.php:313
+#: classes/PDb_Settings.php:426 upload_csv.php:158
 msgid "Duplicate Record Check Field"
 msgstr "Поле проверки дублирующей записи"
 
-#: classes/PDb_Settings.class.php:318
+#: classes/PDb_Settings.php:431
 msgid ""
 "when a signup is submitted or CSV record is imported, this field is checked "
 "for a duplicate"
@@ -602,11 +1335,11 @@ msgstr ""
 "При оформлении подписки или импорте CSV-записей, в этом поле проверяются "
 "дублирующие записи"
 
-#: classes/PDb_Settings.class.php:325
+#: classes/PDb_Settings.php:438 upload_csv.php:139
 msgid "Duplicate Record Preference"
 msgstr "Предпочтение дублирующей записи"
 
-#: classes/PDb_Settings.class.php:330
+#: classes/PDb_Settings.php:443
 msgid ""
 "when the submission matches the Duplicate Record Check Field of an existing "
 "record. This also applies to importing records from a CSV file."
@@ -614,23 +1347,23 @@ msgstr ""
 "когда заявление соответствует дублирующей записи, проверьте поле "
 "существующей записи.  Это также относится к импорту записей из CSV-файла."
 
-#: classes/PDb_Settings.class.php:333
+#: classes/PDb_Settings.php:446 upload_csv.php:145
 msgid "Create a new record with the submission"
 msgstr "Создайте новую запись с заявлением"
 
-#: classes/PDb_Settings.class.php:334
+#: classes/PDb_Settings.php:447
 msgid "Overwrite matching record with new data"
 msgstr "Перезапишите совпадающую запись новыми данными"
 
-#: classes/PDb_Settings.class.php:335
+#: classes/PDb_Settings.php:448
 msgid "Show a validation error message"
 msgstr "Показать сообщение об ошибке проверки"
 
-#: classes/PDb_Settings.class.php:343
+#: classes/PDb_Settings.php:456
 msgid "Duplicate Record Error Message"
 msgstr "Сообщения об ошибке: дублирующая запись"
 
-#: classes/PDb_Settings.class.php:347
+#: classes/PDb_Settings.php:460
 msgid ""
 "If \"Show a validation error message\" is selected above, this message will "
 "be shown if a signup is made with a \"check field\" that matches an existing "
@@ -640,24 +1373,25 @@ msgstr ""
 "сообщение будет отображаться при регистрации, выполненной с \"контрольным "
 "полем\", которое соответствует существующей записи."
 
-#: classes/PDb_Settings.class.php:348
+#: classes/PDb_Settings.php:461
+#, php-format
 msgid "A record with that %s already exists. Please choose another."
 msgstr "Запись с %s, которое уже существует. Пожалуйста, выберите другое."
 
-#: classes/PDb_Settings.class.php:354
+#: classes/PDb_Settings.php:467
 msgid "Send Signup Response Email"
 msgstr "Отправить ответ по электронной почте с заявлением о регистрации"
 
-#: classes/PDb_Settings.class.php:358
+#: classes/PDb_Settings.php:471
 msgid "Send a receipt email to people who sign up"
 msgstr ""
 "Отправьте подтверждение по электронной почте людям, которые регистрируются"
 
-#: classes/PDb_Settings.class.php:366
+#: classes/PDb_Settings.php:479
 msgid "Signup Email From Address"
 msgstr "Ответ по электронной почте о регистрации"
 
-#: classes/PDb_Settings.class.php:370
+#: classes/PDb_Settings.php:483
 msgid ""
 "the \"From\" address on signup receipt emails. If the recipient hits \"reply"
 "\", their reply will go to this address. It is a good idea to use an email "
@@ -668,19 +1402,19 @@ msgstr ""
 "использовать адрес электронной почты с таким же доменом, что и данный веб-"
 "сайт.\""
 
-#: classes/PDb_Settings.class.php:377
+#: classes/PDb_Settings.php:490
 msgid "Signup Email From Name"
 msgstr "Тема ответа по электронной почте о регистрации"
 
-#: classes/PDb_Settings.class.php:381
+#: classes/PDb_Settings.php:494
 msgid "the \"From\" name on signup receipt emails."
 msgstr "поле \"От кого\""
 
-#: classes/PDb_Settings.class.php:388
+#: classes/PDb_Settings.php:501
 msgid "Signup Response Email Subject"
 msgstr "Тема ответа по электронной почте о регистрации"
 
-#: classes/PDb_Settings.class.php:392
+#: classes/PDb_Settings.php:505
 msgid ""
 "subject line for the signup response email; placeholder tags can be used "
 "(see below)"
@@ -688,15 +1422,16 @@ msgstr ""
 "Строка темы для ответа по электронной почте о регистрации; могут быть "
 "использованы теги для заполнения (смотрите ниже)"
 
-#: classes/PDb_Settings.class.php:393
+#: classes/PDb_Settings.php:506
+#, php-format
 msgid "You've just signed up on %s"
 msgstr "Вы только что подписались на %s"
 
-#: classes/PDb_Settings.class.php:399
+#: classes/PDb_Settings.php:512
 msgid "Signup Response Email"
 msgstr "Ответ по электронной почте о регистрации"
 
-#: classes/PDb_Settings.class.php:403
+#: classes/PDb_Settings.php:516
 msgid ""
 "Body of the email a visitor gets when they sign up. It includes a link "
 "([record_link]) back to their record so they can fill it out. Can include "
@@ -711,8 +1446,8 @@ msgstr ""
 "только для тех полей, которые присутствуют в форме регистрации, в том числе "
 "скрытые поля."
 
-#. translators: the %s will be the name of the website
-#: classes/PDb_Settings.class.php:405
+#: classes/PDb_Settings.php:518
+#, php-format
 msgid ""
 "<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete "
 "your registration with additional information or update your information by "
@@ -724,11 +1459,11 @@ msgstr ""
 "посетив эту личную ссылку в любое время:<ahref="
 "\"[record_link]\">[record_link]</a>.</p>\""
 
-#: classes/PDb_Settings.class.php:411
+#: classes/PDb_Settings.php:524
 msgid "Signup Thanks Message"
 msgstr "Сообщение благодарности при регистрации"
 
-#: classes/PDb_Settings.class.php:415
+#: classes/PDb_Settings.php:528
 msgid ""
 "Note to display on the web page after someone has submitted a signup form. "
 "Can include HTML and placeholders (see above)"
@@ -736,7 +1471,7 @@ msgstr ""
 "Примечание на веб-странице после того как кто-то представил форму "
 "регистрации. Могут содержать HTML и заполнителей (смотрите выше)"
 
-#: classes/PDb_Settings.class.php:416
+#: classes/PDb_Settings.php:529
 msgid ""
 "<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
 "acknowledgement shortly. You may complete your registration with additional "
@@ -748,48 +1483,48 @@ msgstr ""
 "добавив дополнительную информацию или обновить информацию, по ссылке, "
 "указанной в письме.</p>\""
 
-#: classes/PDb_Settings.class.php:422
+#: classes/PDb_Settings.php:535
 msgid "Send Signup Notification Email"
 msgstr "Отправить уведомление о регистрации по электронной почте"
 
-#: classes/PDb_Settings.class.php:427
+#: classes/PDb_Settings.php:540
 msgid "Send an email notification that a signup has occurred."
 msgstr ""
 "Отправить по электронной почте уведомление, что регистрация прошла успешно."
 
-#: classes/PDb_Settings.class.php:436
+#: classes/PDb_Settings.php:549
 msgid "Signup Notification Recipients"
 msgstr "Уведомление получателей о регистрации"
 
-#: classes/PDb_Settings.class.php:440
+#: classes/PDb_Settings.php:553
 msgid "comma-separated list of email addresses to send signup notifications to"
 msgstr ""
 "Список адресов электронной почты, разделенный запятыми, для отправки "
 "уведомлений о регистрации"
 
-#: classes/PDb_Settings.class.php:447
+#: classes/PDb_Settings.php:560
 msgid "Signup Notification Email Subject"
 msgstr ""
 "Тема уведомления по электронной почте; могут быть использованы теги-"
 "заполнители (смотрите выше);"
 
-#: classes/PDb_Settings.class.php:451 classes/PDb_Settings.class.php:565
+#: classes/PDb_Settings.php:564 classes/PDb_Settings.php:1015
 msgid ""
 "subject of the notification email; placeholder tags can be used (see above)"
 msgstr ""
 "Тема уведомления по электронной почте; могут быть использованы теги-"
 "заполнители (смотрите выше);"
 
-#. translators: the %s will be the name of the website
-#: classes/PDb_Settings.class.php:453
+#: classes/PDb_Settings.php:566
+#, php-format
 msgid "New signup on %s"
 msgstr "Новая регистрация на %s"
 
-#: classes/PDb_Settings.class.php:459
+#: classes/PDb_Settings.php:572
 msgid "Signup Notification Email"
 msgstr "Уведомление о регистрации по электронной почте"
 
-#: classes/PDb_Settings.class.php:463
+#: classes/PDb_Settings.php:576
 msgid ""
 "notification email body. The [admin_record_link] tag will supply the URL for "
 "editing the record in the admin."
@@ -798,7 +1533,7 @@ msgstr ""
 "обеспечивать унифицированный указатель ресурса для редактирования учетной "
 "записи администратора."
 
-#: classes/PDb_Settings.class.php:464
+#: classes/PDb_Settings.php:577
 msgid ""
 "<p>A new signup has been submitted</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a "
@@ -809,136 +1544,11 @@ msgstr ""
 "данную новую запись здесь:<a href="
 "\"[admin_record_link]\">[admin_record_link]</a></p>"
 
-#: classes/PDb_Settings.class.php:476
-msgid "Enable Lost Private Link"
-msgstr "Включить потерянную личную ссылку"
-
-#: classes/PDb_Settings.class.php:481
-msgid ""
-"Show a link on the signup form allowing users to have their private link "
-"emailed to them."
-msgstr ""
-"Показать ссылку на регистрационную форму, позволяющую пользователям иметь "
-"свои личные ссылки, высланные им по электронной почте."
-
-#: classes/PDb_Settings.class.php:489
-msgid "Lost Private Link Text"
-msgstr "Страница потерянной личной ссылки"
-
-#: classes/PDb_Settings.class.php:493
-msgid "clickable text shown in the signup form"
-msgstr "Интерактивный текст, отображаемый в регистрационной форме"
-
-#: classes/PDb_Settings.class.php:494 templates/pdb-signup-bootstrap.php:56
-msgid "Forget your private link? Click here to have it emailed to you."
-msgstr ""
-"Забыли личную ссылку? Нажмите здесь, чтобы получить ее по электронной почте."
-
-#: classes/PDb_Settings.class.php:499
-msgid "Lost Private Link Page"
-msgstr "Текст потерянной личной ссылки"
-
-#: classes/PDb_Settings.class.php:504
-msgid "send people to this page to request their private link."
-msgstr "Отправляет людей на эту страницу, чтобы запросить их личную ссылку."
-
-#: classes/PDb_Settings.class.php:513
-msgid "Lost Private Link ID Field"
-msgstr "Идентификационное поле потерянной личной ссылки"
-
-#: classes/PDb_Settings.class.php:517
-msgid ""
-"The field used to identify the user&#39;s account. This must be a unique "
-"identifier for the record"
-msgstr ""
-"Поле используется для идентификации учетной записи пользователя. Это должен "
-"быть уникальный идентификатор для записи."
-
-#: classes/PDb_Settings.class.php:525
-msgid "Lost Private Link Email Subject"
-msgstr "Тема электронной почты о потерянной личной ссылке"
-
-#: classes/PDb_Settings.class.php:529
-msgid "subject line for the lost private link email"
-msgstr "Строка темы электронной почты для потерянной личной ссылки"
-
-#: classes/PDb_Settings.class.php:530
-msgid "Here is your private link on %s"
-msgstr "Ниже ваша личная ссылка на %s"
-
-#: classes/PDb_Settings.class.php:536
-msgid "Lost Private Link Email"
-msgstr "Электронная почта по потерянной личной ссылке"
-
-#: classes/PDb_Settings.class.php:540
-msgid "Body of the email sent when a lost private link is requested."
-msgstr "Тело письма, которое отправляется при запросе потерянной личной ссылки"
-
-#. translators: the %s will be the name of the website
-#: classes/PDb_Settings.class.php:542
-msgid "Here is the private link you requested from %s:"
-msgstr "Ниже личная ссылка, которую вы запрашивали у %s:"
-
-#: classes/PDb_Settings.class.php:548
-msgid "Send Lost Private Link Notification Email"
-msgstr "Отправка уведомления по электронной почте о потерянной личной ссылке"
-
-#: classes/PDb_Settings.class.php:553
-msgid ""
-"Send an email notification that a lost private link has been requested. This "
-"email will go to the \"Signup Notification Recipients.\""
-msgstr ""
-"Отправляет уведомление по электронной почте о том, что была запрошена "
-"потерянная личная ссылка. Это письмо будет отправлено \"Зарегистрированным "
-"получателям уведомлений\"."
-
-#: classes/PDb_Settings.class.php:561
-msgid "Lost Private Link Notification Email Subject"
-msgstr "Тема уведомления по электронной почте о потерянной личной ссылке"
-
-#. translators: the %s will be the name of the website
-#: classes/PDb_Settings.class.php:567
-msgid "A Lost Private Link has been requested on %s"
-msgstr "Запрошена потерянная личная ссылка от %s"
-
-#: classes/PDb_Settings.class.php:573
-msgid "Lost Private Link Notification Email"
-msgstr "Уведомления по электронной почте о потерянной личной ссылке"
-
-#: classes/PDb_Settings.class.php:577
-msgid "notification email body"
-msgstr "Тело уведомления по электронной почте"
-
-#: classes/PDb_Settings.class.php:578
-msgid ""
-"<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
-"[last_name]</li><li>Email: [email]</li></ul>"
-msgstr ""
-"\"<p>Потерянная личная ссылка была запрошена: </p><ul><li>Имя: [Имя] "
-"\"\"[фамилия]</li><li>Электронная почта: [электронная почта]</li></ul>\""
-
-#: classes/PDb_Settings.class.php:584
-msgid "Retrieve Private Link Error Message"
-msgstr "Получение сообщения об ошибке личной ссылки"
-
-#: classes/PDb_Settings.class.php:588
-#, fuzzy
-msgid ""
-"Message shown when a record matching the retrieve link idenifier cannot be "
-"found"
-msgstr ""
-"Сообщение отображается, когда запись, соответствующая идентификатору "
-"восстановленной ссылки не может быть найдена."
-
-#: classes/PDb_Settings.class.php:589
-msgid "A record matching that %s cannot be found."
-msgstr "Запись, соответствующая %s, которое не может быть найдено."
-
-#: classes/PDb_Settings.class.php:601
+#: classes/PDb_Settings.php:602
 msgid "Participant Record Page"
 msgstr "Страница записей участника"
 
-#: classes/PDb_Settings.class.php:606
+#: classes/PDb_Settings.php:607
 msgid ""
 "The page where your participant record ([pdb_record] shortcode) is "
 "displayed. You can use a Post ID for posts and custom post types."
@@ -947,58 +1557,65 @@ msgstr ""
 "можете использовать идентификационное сообщение и пользовательские типы "
 "сообщения."
 
-#: classes/PDb_Settings.class.php:614
-msgid "Show Group Descriptions"
-msgstr "Показать описания группы"
+#: classes/PDb_Settings.php:615
+#, fuzzy
+#| msgid "Show Field Groups"
+msgid "Show Groups"
+msgstr "Показать группы полей"
 
-#: classes/PDb_Settings.class.php:619
-msgid "Show the group description under each group title in the record form."
+#: classes/PDb_Settings.php:620
+#, fuzzy
+#| msgid ""
+#| "Show the group description under each group title in the record form."
+msgid ""
+"Show the group and description (if defined) under each group title in the "
+"record form."
 msgstr ""
 "Показать описание группы под названием каждой группы в регистрационной форме."
 
-#: classes/PDb_Settings.class.php:627
+#: classes/PDb_Settings.php:628
 msgid "Save Changes Label"
 msgstr "Ярлык «сохранить изменения»"
 
-#: classes/PDb_Settings.class.php:632
+#: classes/PDb_Settings.php:633
 msgid "label for the save changes button on the record form"
 msgstr "Ярлык для кнопки сохранить изменения в регистрационной форме."
 
-#: classes/PDb_Settings.class.php:633
+#: classes/PDb_Settings.php:634
 msgid "Save Your Changes"
 msgstr "Сохранить внесенные изменения"
 
-#: classes/PDb_Settings.class.php:639
+#: classes/PDb_Settings.php:640
 msgid "Save Button Text"
 msgstr "Текстовая кнопка «Сохранить»"
 
-#: classes/PDb_Settings.class.php:644
+#: classes/PDb_Settings.php:645
 msgid "text on the \"save\" button"
 msgstr "Ярлык для кнопки, чтобы сохранить форму \"Сохранить\""
 
-#: classes/PDb_Settings.class.php:645
+#: classes/PDb_Settings.php:646
 msgctxt "a label for a button to save a form"
 msgid "Save"
 msgstr "Сохранить"
 
-#: classes/PDb_Settings.class.php:651
+#: classes/PDb_Settings.php:652
 msgid "Record Updated Message"
 msgstr "Запись обновленного сообщения"
 
-#: classes/PDb_Settings.class.php:655
+#: classes/PDb_Settings.php:656
 msgid "the message shown when a record form has been successfully submitted"
 msgstr ""
 "Сообщение, отображается, когда регистрационная форма была успешно отправлена"
 
-#: classes/PDb_Settings.class.php:656
+#: classes/PDb_Settings.php:657
 msgid "Your information has been updated"
 msgstr "Ваша информация обновлена"
 
-#: classes/PDb_Settings.class.php:662
+#: classes/PDb_Settings.php:663
 msgid "Record Not Found Error Message"
 msgstr "Сообщение об ошибке: Запись не найдена"
 
-#: classes/PDb_Settings.class.php:666
+#: classes/PDb_Settings.php:667
 msgid ""
 "message to show if the record page was accessed without a valid identifier. "
 "Leave this empty if you want nothing at all to show."
@@ -1007,17 +1624,29 @@ msgstr ""
 "действительного идентификатора. Оставьте это поле пустым, если вы хотите, "
 "чтобы вообще ничего не отображалось."
 
-#: classes/PDb_Settings.class.php:667
+#: classes/PDb_Settings.php:668
 msgid "No record was found."
 msgstr "Не найдено ни одной записи."
 
-#: classes/PDb_Settings.class.php:673
+#: classes/PDb_Settings.php:674
+#, fuzzy
+#| msgid "No Records Message"
+msgid "Use Template for No Record Message"
+msgstr "Сообщение: Нет записей"
+
+#: classes/PDb_Settings.php:679
+msgid ""
+"If checked, use the record template to show the \"Record Not Found\" "
+"message. If unchecked, the message is shown without using the template."
+msgstr ""
+
+#: classes/PDb_Settings.php:687
 msgid "Send Record Form Update Notification Email"
 msgstr ""
 "Отправить уведомление по электронной почте об обновлении регистрационной "
 "формы"
 
-#: classes/PDb_Settings.class.php:678
+#: classes/PDb_Settings.php:692
 msgid ""
 "Send an email notification that a record has been updated. These will be "
 "sent to the email addresses listed in the \"Signup Notification Recipients\" "
@@ -1027,11 +1656,11 @@ msgstr ""
 "Они будут направлены по тем адресам электронной почты, которые перечислены в "
 "настройках \"Зарегистрированные получатели уведомлений\"."
 
-#: classes/PDb_Settings.class.php:686
+#: classes/PDb_Settings.php:700
 msgid "Record Update Email Subject"
 msgstr "Тема электронной почты об обновлении записи"
 
-#: classes/PDb_Settings.class.php:690
+#: classes/PDb_Settings.php:704
 msgid ""
 "subject line for the record update notification email; placeholders can be "
 "used."
@@ -1039,18 +1668,16 @@ msgstr ""
 "Строка темы для уведомления по электронной почте об обновлении записи; также "
 "могут быть использованы заполнители."
 
-#: classes/PDb_Settings.class.php:691
+#: classes/PDb_Settings.php:705
+#, php-format
 msgid "A record has just been updated on %s"
 msgstr "Запись была только что обновлена на %s"
 
-#: classes/PDb_Settings.class.php:697
+#: classes/PDb_Settings.php:711
 msgid "Record Update Notification Email"
 msgstr "Электронная почта с уведомлением об обновлении записи"
 
-#. translators: [date] and [admin_record_link] must not be translated, they
-#. must be used literally. The rest of the words enclosed in brackets can be
-#. defined by the user, they are used here only as examples.
-#: classes/PDb_Settings.class.php:702
+#: classes/PDb_Settings.php:716
 msgid ""
 "Body of the the email sent when a user updates their record. Any field from "
 "the form can be included by using a replacement code of the form: "
@@ -1067,7 +1694,7 @@ msgstr ""
 "время обновления и тег [admin_record_link] для ссылки на редактирование "
 "учетной записи администратора."
 
-#: classes/PDb_Settings.class.php:703
+#: classes/PDb_Settings.php:717
 msgid ""
 "<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
@@ -1080,19 +1707,19 @@ msgstr ""
 "почта]</li></ul><p>Изменить эту запись <ahref=\"[admin_record_link]\">здесь."
 "</a></p>"
 
-#: classes/PDb_Settings.class.php:716
+#: classes/PDb_Settings.php:743
 msgid "Records per Page"
 msgstr "Записей на страницу"
 
-#: classes/PDb_Settings.class.php:720
+#: classes/PDb_Settings.php:747
 msgid "the number of records to show on each page"
 msgstr "Количество записей, которое будет показываться на 1 страницу"
 
-#: classes/PDb_Settings.class.php:728
+#: classes/PDb_Settings.php:755
 msgid "Single Record Link Field"
 msgstr "Поле ссылки на одну запись"
 
-#: classes/PDb_Settings.class.php:733
+#: classes/PDb_Settings.php:760
 msgid ""
 "select the field on which to put a link to the [pdb_single] shortcode. Leave "
 "blank or set to \"none\" for no link."
@@ -1100,11 +1727,11 @@ msgstr ""
 "Выберите поле, на котором поставить ссылку на короткий код [pdb_single]. "
 "Оставьте пустым или установите на \"нет\" при отсутствии ссылки."
 
-#: classes/PDb_Settings.class.php:740
+#: classes/PDb_Settings.php:767
 msgid "Single Record Page"
 msgstr "Страница одной записи"
 
-#: classes/PDb_Settings.class.php:746
+#: classes/PDb_Settings.php:773
 msgid ""
 "this is the page where the [pdb_single] shortcode is located. If you want to "
 "assign a post or custom post type, select \"Post ID\" and enter the post ID "
@@ -1115,33 +1742,38 @@ msgstr ""
 "\"Идентификационное Сообщение\" и введите идентификационное сообщение в "
 "\"другое\" поле\""
 
-#: classes/PDb_Settings.class.php:753
+#: classes/PDb_Settings.php:780
 msgid "No Records Message"
 msgstr "Сообщение: Нет записей"
 
-#: classes/PDb_Settings.class.php:757
+#: classes/PDb_Settings.php:784
 msgid "Message shown when no records are found."
 msgstr "Сообщение отображается, если записи не найдены."
 
-#: classes/PDb_Settings.class.php:758
+#: classes/PDb_Settings.php:785
 msgid "No Records Found"
 msgstr "Записей не найдено"
 
-#: classes/PDb_Settings.class.php:763
+#: classes/PDb_Settings.php:790
 msgid "Show Count"
 msgstr "Показывать подсчёт"
 
-#: classes/PDb_Settings.class.php:768
+#: classes/PDb_Settings.php:795
 msgid "Show the list count on list displays. Can also be set in the shortcode."
 msgstr ""
 "Отобразить список подсчёта на странице со списком. Можно также установить в "
 "коротком коде."
 
-#: classes/PDb_Settings.class.php:776
+#: classes/PDb_Settings.php:803
 msgid "List Count Template"
 msgstr "Шаблон списка подсчёта"
 
-#: classes/PDb_Settings.class.php:780
+#: classes/PDb_Settings.php:807
+#, fuzzy, php-format
+#| msgid ""
+#| "template for displaying the list count. %1$s - total number of records "
+#| "found, %2$s - number of records shown per page, %3$s - starting record "
+#| "number, %4$s - ending record number, %5$s - the current page number"
 msgid ""
 "template for displaying the list count. %1$s - total number of records "
 "found, %2$s - number of records shown per page, %3$s - starting record "
@@ -1152,15 +1784,16 @@ msgstr ""
 "- начало номера записи, % 4$s- окончание номера записи, %5$s - номер текущей "
 "страницы"
 
-#: classes/PDb_Settings.class.php:781
+#: classes/PDb_Settings.php:808
+#, php-format
 msgid "Total Records Found: %1$s, showing %2$s per page"
 msgstr "Всего найдено записей: %1$s, показывать %2$s на одной странице"
 
-#: classes/PDb_Settings.class.php:791
+#: classes/PDb_Settings.php:818
 msgid "List Default Sort"
 msgstr "Сортировать список по умолчанию"
 
-#: classes/PDb_Settings.class.php:797
+#: classes/PDb_Settings.php:824
 msgid ""
 "The record list shown by the list shortcode will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -1169,56 +1802,237 @@ msgstr ""
 "отсортирован по этому полю по умолчанию. (Поле должно быть проверено "
 "\"сортируемое\")."
 
-#: classes/PDb_Settings.class.php:804
+#: classes/PDb_Settings.php:831
 msgid "List Default Sort Order"
 msgstr "Порядок сортировки списка по умолчанию"
 
-#: classes/PDb_Settings.class.php:808
+#: classes/PDb_Settings.php:835
 msgid "Sets the default order of the records shown by the list shortcode."
 msgstr ""
 "Устанавливает по умолчанию порядок записей, отображенных списком коротких "
 "кодов."
 
-#: classes/PDb_Settings.class.php:817
-msgid "Admin List Default Sort"
-msgstr "Сортировать список по умолчанию в учетной записи администратора"
+#: classes/PDb_Settings.php:844
+msgid "Allow Empty Search"
+msgstr ""
 
-#: classes/PDb_Settings.class.php:823
+#: classes/PDb_Settings.php:849
 msgid ""
-"The record list shown in the admin section will be sorted by this field by "
-"default. (Field must be checked \"sortable.\")"
+"This allows frontend searches to find records with missing or blank data."
 msgstr ""
-"Список записей, который отображается списком коротких кодов, будет "
-"отсортирован по этому полю по умолчанию. (Поле должно быть проверено "
-"\"сортируемое\")."
 
-#: classes/PDb_Settings.class.php:830
-msgid "Admin List Default Sort Order"
-msgstr "Порядок сортировки списка по умолчанию в учетной записи администратора"
+#: classes/PDb_Settings.php:859
+msgid "Strict User Searching"
+msgstr "Строгий пользовательский поиск"
 
-#: classes/PDb_Settings.class.php:834
-msgid "Sets the default order of the record list in the admin."
+#: classes/PDb_Settings.php:864
+msgid ""
+"When checked, the frontend list search must match the whole field exactly. "
+"If unchecked, the search will match if the search term is found in part of "
+"the field. Searches are not case-sensitive either way."
 msgstr ""
-"Устанавливает по умолчанию порядок списка записей в учетной записи "
-"администратора."
+"При проверке, поиск списка внешнего интерфейса должен в точности "
+"соответствовать всему полю. Если не выбрано, то поиск будет соответствовать, "
+"если искомый термин будет находиться в части поля. В любом случае поиск "
+"выполняется без учета регистра."
 
-#: classes/PDb_Settings.class.php:842
-msgid "Show Image Thumbnails in Admin List"
-msgstr "Показать картинки в списке администратора"
+#: classes/PDb_Settings.php:877
+msgid ""
+"Sets the default height of images displayed in the list. Defaults to pixels, "
+"but any valid CSS size value can be used."
+msgstr ""
 
-#: classes/PDb_Settings.class.php:861
+#: classes/PDb_Settings.php:891
+msgid "Enable Lost Private Link"
+msgstr "Включить потерянную личную ссылку"
+
+#: classes/PDb_Settings.php:896
+msgid ""
+"Show a link on the signup form allowing users to have their private link "
+"emailed to them."
+msgstr ""
+"Показать ссылку на регистрационную форму, позволяющую пользователям иметь "
+"свои личные ссылки, высланные им по электронной почте."
+
+#: classes/PDb_Settings.php:904
+msgid "Lost Private Link Text"
+msgstr "Страница потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:908
+msgid "clickable text shown in the signup form"
+msgstr "Интерактивный текст, отображаемый в регистрационной форме"
+
+#: classes/PDb_Settings.php:909
+msgid "Forget your private link? Click here to have it emailed to you."
+msgstr ""
+"Забыли личную ссылку? Нажмите здесь, чтобы получить ее по электронной почте."
+
+#: classes/PDb_Settings.php:914
+msgid "Lost Private Link Page"
+msgstr "Текст потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:919
+msgid "send people to this page to request their private link."
+msgstr "Отправляет людей на эту страницу, чтобы запросить их личную ссылку."
+
+#: classes/PDb_Settings.php:928
+msgid "Lost Private Link ID Field"
+msgstr "Идентификационное поле потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:932
+msgid ""
+"The field used to identify the user&#39;s account. This must be a unique "
+"identifier for the record"
+msgstr ""
+"Поле используется для идентификации учетной записи пользователя. Это должен "
+"быть уникальный идентификатор для записи."
+
+#: classes/PDb_Settings.php:941
+#, fuzzy
+#| msgid "Lost Private Link Email"
+msgid "Lost Private Link Form Title"
+msgstr "Электронная почта по потерянной личной ссылке"
+
+#: classes/PDb_Settings.php:945
+msgid "the title shown above the link request form"
+msgstr ""
+
+#: classes/PDb_Settings.php:946 templates/pdb-retrieve-bootstrap.php:10
+#: templates/pdb-retrieve-default.php:10
+msgid "Request your Private Link"
+msgstr "Запрос вашей личной ссылки"
+
+#: classes/PDb_Settings.php:953
+#, fuzzy
+#| msgid "Lost Private Link Page"
+msgid "Lost Private Link Success Message"
+msgstr "Текст потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:957
+#, fuzzy
+#| msgid "the message shown when a record form has been successfully submitted"
+msgid "the message shown when a private link is successfully sent"
+msgstr ""
+"Сообщение, отображается, когда регистрационная форма была успешно отправлена"
+
+#: classes/PDb_Settings.php:958 templates/pdb-retrieve-bootstrap.php:19
+#: templates/pdb-retrieve-default.php:17
+msgid "Success: your private link has been emailed to you."
+msgstr "Успех: личная ссылка была отправлена вам по электронной почте."
+
+#: classes/PDb_Settings.php:964
+#, fuzzy
+#| msgid "Help Text"
+msgid "ID Field Help Text"
+msgstr "Текст помощи"
+
+#: classes/PDb_Settings.php:968
+msgid "help text for the record identification field"
+msgstr ""
+
+#: classes/PDb_Settings.php:969
+#, php-format
+msgid "Type in your %s, your private link will be emailed to you."
+msgstr ""
+"Введите в ваш %s, что личная ссылка будет отправлена к вам по электронной "
+"почте."
+
+#: classes/PDb_Settings.php:975
+msgid "Lost Private Link Email Subject"
+msgstr "Тема электронной почты о потерянной личной ссылке"
+
+#: classes/PDb_Settings.php:979
+msgid "subject line for the lost private link email"
+msgstr "Строка темы электронной почты для потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:980
+#, php-format
+msgid "Here is your private link on %s"
+msgstr "Ниже ваша личная ссылка на %s"
+
+#: classes/PDb_Settings.php:986
+msgid "Lost Private Link Email"
+msgstr "Электронная почта по потерянной личной ссылке"
+
+#: classes/PDb_Settings.php:990
+msgid "Body of the email sent when a lost private link is requested."
+msgstr "Тело письма, которое отправляется при запросе потерянной личной ссылки"
+
+#: classes/PDb_Settings.php:992
+#, php-format
+msgid "Here is the private link you requested from %s:"
+msgstr "Ниже личная ссылка, которую вы запрашивали у %s:"
+
+#: classes/PDb_Settings.php:998
+msgid "Send Lost Private Link Notification Email"
+msgstr "Отправка уведомления по электронной почте о потерянной личной ссылке"
+
+#: classes/PDb_Settings.php:1003
+msgid ""
+"Send an email notification that a lost private link has been requested. This "
+"email will go to the \"Signup Notification Recipients.\""
+msgstr ""
+"Отправляет уведомление по электронной почте о том, что была запрошена "
+"потерянная личная ссылка. Это письмо будет отправлено \"Зарегистрированным "
+"получателям уведомлений\"."
+
+#: classes/PDb_Settings.php:1011
+msgid "Lost Private Link Notification Email Subject"
+msgstr "Тема уведомления по электронной почте о потерянной личной ссылке"
+
+#: classes/PDb_Settings.php:1017
+#, php-format
+msgid "A Lost Private Link has been requested on %s"
+msgstr "Запрошена потерянная личная ссылка от %s"
+
+#: classes/PDb_Settings.php:1023
+msgid "Lost Private Link Notification Email"
+msgstr "Уведомления по электронной почте о потерянной личной ссылке"
+
+#: classes/PDb_Settings.php:1027
+msgid "notification email body"
+msgstr "Тело уведомления по электронной почте"
+
+#: classes/PDb_Settings.php:1028
+msgid ""
+"<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
+"[last_name]</li><li>Email: [email]</li></ul>"
+msgstr ""
+"\"<p>Потерянная личная ссылка была запрошена: </p><ul><li>Имя: [Имя] "
+"\"\"[фамилия]</li><li>Электронная почта: [электронная почта]</li></ul>\""
+
+#: classes/PDb_Settings.php:1034
+msgid "Retrieve Private Link Error Message"
+msgstr "Получение сообщения об ошибке личной ссылки"
+
+#: classes/PDb_Settings.php:1038
+#, fuzzy, php-format
+msgid ""
+"Message shown when a record matching the retrieve link identifier cannot be "
+"found. The %s in the message will be replaced by the name of the identifier "
+"field."
+msgstr ""
+"Сообщение отображается, когда запись, соответствующая идентификатору "
+"восстановленной ссылки не может быть найдена."
+
+#: classes/PDb_Settings.php:1039
+#, php-format
+msgid "A record matching that %s cannot be found."
+msgstr "Запись, соответствующая %s, которое не может быть найдено."
+
+#: classes/PDb_Settings.php:1053
 msgid "Use the Plugin CSS"
 msgstr "Использовать плагин CSS"
 
-#: classes/PDb_Settings.class.php:866
+#: classes/PDb_Settings.php:1058
 msgid "use the plugin's CSS to style the output of shortcodes"
 msgstr "использовать CSS плагина для выводимых шорткодов"
 
-#: classes/PDb_Settings.class.php:874
+#: classes/PDb_Settings.php:1066
 msgid "Use Rich Text Editor"
 msgstr "Использовать редактор формата Rich Text"
 
-#: classes/PDb_Settings.class.php:879
+#: classes/PDb_Settings.php:1071
 msgid ""
 "enable the rich text editor on \"rich-text\" fields for front-end users. If "
 "deselected, \"rich-text\" fields will appear as text-area fields. This does "
@@ -1230,27 +2044,74 @@ msgstr ""
 "пользователей, которые всегда используют полнофункциональный текстовый "
 "редактор."
 
-#: classes/PDb_Settings.class.php:887
+#: classes/PDb_Settings.php:1084
 msgid "Use WordPress Auto Formatting"
 msgstr "Использовать автоматическое форматирование WordPress"
 
-#: classes/PDb_Settings.class.php:892
-msgid "Use WordPress&#39; auto formatting on rich text fields."
+#: classes/PDb_Settings.php:1089
+msgid ""
+"Select the filter mode for all rich text outputs, including HTML emails."
+msgstr ""
+
+#: classes/PDb_Settings.php:1093
+msgid "global content filter"
+msgstr ""
+
+#: classes/PDb_Settings.php:1094
+#, fuzzy
+#| msgid "Use WordPress Auto Formatting"
+msgid "WordPress auto paragraphs"
 msgstr "Использовать автоматическое форматирование WordPress"
 
-#: classes/PDb_Settings.class.php:900
+#: classes/PDb_Settings.php:1095
+msgid "auto paragraphs + shortcodes"
+msgstr ""
+
+#: classes/PDb_Settings.php:1096
+msgid "none"
+msgstr ""
+
+#: classes/PDb_Settings.php:1103
+#, fuzzy
+#| msgid "Record Not Found Error Message"
+msgid "Scroll to Error Message"
+msgstr "Сообщение об ошибке: Запись не найдена"
+
+#: classes/PDb_Settings.php:1108
+msgid "when a form validation error is shown, scroll to the error message"
+msgstr ""
+
+#: classes/PDb_Settings.php:1119
+msgid "Remove Line Breaks"
+msgstr ""
+
+#: classes/PDb_Settings.php:1124
+msgid "Remove line breaks from all plugin shortcode ouput."
+msgstr ""
+
+#: classes/PDb_Settings.php:1136
+msgid "Use Pagination Scroll Anchors"
+msgstr ""
+
+#: classes/PDb_Settings.php:1141
+msgid ""
+"Uncheck this if your theme prevents pagination links with scroll anchors "
+"from working."
+msgstr ""
+
+#: classes/PDb_Settings.php:1149
 msgid "Primary Email Address Field"
 msgstr "Первичное поле адреса электронной почты"
 
-#: classes/PDb_Settings.class.php:905
+#: classes/PDb_Settings.php:1154
 msgid "this field is the primary email address for the record"
 msgstr "это поле является основным адресом электронной почты для записи"
 
-#: classes/PDb_Settings.class.php:913
+#: classes/PDb_Settings.php:1162
 msgid "Send HTML Email"
 msgstr "Отправить HTML электронной почты"
 
-#: classes/PDb_Settings.class.php:918
+#: classes/PDb_Settings.php:1167
 msgid ""
 "use rich text in plugin emails? If you turn this off, be sure to remove all "
 "HTML tags from the email body settings for the plugin."
@@ -1259,11 +2120,12 @@ msgstr ""
 "Если отключить этот режим, не забудьте удалить все HTML теги из параметров "
 "тела электронной почты для плагина."
 
-#: classes/PDb_Settings.class.php:926
+#: classes/PDb_Settings.php:1176
 msgid "Strict Date Format"
 msgstr "Строгий формат даты"
 
-#: classes/PDb_Settings.class.php:931
+#: classes/PDb_Settings.php:1182
+#, php-format
 msgid ""
 "This forces date inputs to be interpreted strictly according to the \"Input "
 "Date Format\" setting. You should tell your users what format you are "
@@ -1278,15 +2140,15 @@ msgstr ""
 "вашими текущими настройками выглядит следующим образом:  <strong>%s</strong> "
 "%s"
 
-#: classes/PDb_Settings.class.php:931
+#: classes/PDb_Settings.php:1182
 msgid "Your current PHP installation does not support this setting."
 msgstr "Ваши текущие установки PHP не поддерживают эту настройку."
 
-#: classes/PDb_Settings.class.php:939
+#: classes/PDb_Settings.php:1191
 msgid "Input Date Format"
 msgstr "Формат ввода даты"
 
-#: classes/PDb_Settings.class.php:944
+#: classes/PDb_Settings.php:1196
 msgid ""
 "date formatting string for all plugin date inputs when \"Strict Date Format"
 "\" is enabled. You should use this for all localized (non-American English) "
@@ -1296,56 +2158,11 @@ msgstr ""
 "\"Строгий формат даты\". Вы должны использовать это для всех локализованных "
 "(не американский вариант английского языка) форматов даты."
 
-#: classes/PDb_Settings.class.php:951
-msgid "Show Timestamp Time"
-msgstr "Показывать метку времени"
-
-#: classes/PDb_Settings.class.php:956
-msgid "Show time with timestamp dates"
-msgstr "Показывать время с меткой времени даты"
-
-#: classes/PDb_Settings.class.php:964
-msgid "Record Edit Access Level"
-msgstr "Уровень доступа редактирования записи"
-
-#: classes/PDb_Settings.class.php:968
-msgid "sets the user access level for adding, editing and listing records."
-msgstr ""
-"Устанавливает уровень доступа пользователей для добавления, редактирования и "
-"перечня записей."
-
-#: classes/PDb_Settings.class.php:976
-msgid "Plugin Admin Access Level"
-msgstr "Уровень доступа плагина администратора"
-
-#: classes/PDb_Settings.class.php:980
-msgid ""
-"sets the user access level for fields management, plugin settings, deleting "
-"records and CSV operations."
-msgstr ""
-"Устанавливает уровень доступа пользователей для полей управления, настройки "
-"плагина, удаления записей и CSV-операций."
-
-#: classes/PDb_Settings.class.php:988
-msgid "Strict User Searching"
-msgstr "Строгий пользовательский поиск"
-
-#: classes/PDb_Settings.class.php:993
-msgid ""
-"When checked, the frontend list search must match the whole field exactly. "
-"If unchecked, the search will match if the search term is found in part of "
-"the field. Searches are not case-sensitive either way."
-msgstr ""
-"При проверке, поиск списка внешнего интерфейса должен в точности "
-"соответствовать всему полю. Если не выбрано, то поиск будет соответствовать, "
-"если искомый термин будет находиться в части поля. В любом случае поиск "
-"выполняется без учета регистра."
-
-#: classes/PDb_Settings.class.php:1000
+#: classes/PDb_Settings.php:1203
 msgid "Enable AJAX Search Functionality"
 msgstr "Включить функцию поиска AJAX"
 
-#: classes/PDb_Settings.class.php:1005
+#: classes/PDb_Settings.php:1208
 msgid ""
 "This enables list search results that are updated without reloading the "
 "page. It requires Javascript, but search will still work if Javascript is "
@@ -1355,11 +2172,192 @@ msgstr ""
 "перезагрузки страницы. Это требует Javascript, но поиск будет по-прежнему "
 "работать, если Javascript отключен в браузере пользователя."
 
-#: classes/PDb_Settings.class.php:1018
+#: classes/PDb_Settings.php:1216
+msgid "Use Alternate Session Method"
+msgstr ""
+
+#: classes/PDb_Settings.php:1221
+msgid "use this if you are having problems with sessions."
+msgstr ""
+
+#: classes/PDb_Settings.php:1254
+msgid "Disable Backend Developer Ads"
+msgstr ""
+
+#: classes/PDb_Settings.php:1259
+msgid "select this to disable developer ads in the admin."
+msgstr ""
+
+#: classes/PDb_Settings.php:1267
+msgid "File and Image Uploads Use WP Content Path"
+msgstr ""
+
+#: classes/PDb_Settings.php:1272
+msgid ""
+"when selected, the base path for file and image uploads will be the site's "
+"content directory."
+msgstr ""
+
+#: classes/PDb_Settings.php:1280
+msgid "Allow Record Timestamps to be Edited"
+msgstr ""
+
+#: classes/PDb_Settings.php:1285
+msgid ""
+"normally, record timestamps (date_recorded, date_updated, last_accessed) are "
+"not editable, checking this allows them to be edited."
+msgstr ""
+
+#: classes/PDb_Settings.php:1294
+msgid "Sync php Timezone"
+msgstr ""
+
+#: classes/PDb_Settings.php:1299
+msgid "when checked, the php timezone will be set to the WordPress timezone."
+msgstr ""
+
+#: classes/PDb_Settings.php:1307
+msgid "Enable Debugging"
+msgstr ""
+
+#: classes/PDb_Settings.php:1312
+#, php-format
+msgid "this will enable writing to the %s debugging log."
+msgstr ""
+
+#: classes/PDb_Settings.php:1316
+msgid "off"
+msgstr ""
+
+#: classes/PDb_Settings.php:1317
+msgid "plugin debug"
+msgstr ""
+
+#: classes/PDb_Settings.php:1318
+msgid "all errors"
+msgstr ""
+
+#: classes/PDb_Settings.php:1319
+msgid "verbose"
+msgstr ""
+
+#: classes/PDb_Settings.php:1333
+msgid "Admin List Default Sort"
+msgstr "Сортировать список по умолчанию в учетной записи администратора"
+
+#: classes/PDb_Settings.php:1339
+msgid ""
+"The record list shown in the admin section will be sorted by this field by "
+"default. (Field must be checked \"sortable.\")"
+msgstr ""
+"Список записей, который отображается списком коротких кодов, будет "
+"отсортирован по этому полю по умолчанию. (Поле должно быть проверено "
+"\"сортируемое\")."
+
+#: classes/PDb_Settings.php:1346
+msgid "Admin List Default Sort Order"
+msgstr "Порядок сортировки списка по умолчанию в учетной записи администратора"
+
+#: classes/PDb_Settings.php:1350
+msgid "Sets the default order of the record list in the admin."
+msgstr ""
+"Устанавливает по умолчанию порядок списка записей в учетной записи "
+"администратора."
+
+#: classes/PDb_Settings.php:1358
+msgid "Show Image Thumbnails in Admin List"
+msgstr "Показать картинки в списке администратора"
+
+#: classes/PDb_Settings.php:1373
+msgid "Plugin Admin Horizontal Scrolling"
+msgstr ""
+
+#: classes/PDb_Settings.php:1378
+msgid "use horizontal scrolling on list and fields management screens"
+msgstr ""
+
+#: classes/PDb_Settings.php:1386
+msgid "Record Edit Access Level"
+msgstr "Уровень доступа редактирования записи"
+
+#: classes/PDb_Settings.php:1390
+msgid "sets the user access level for adding, editing and listing records."
+msgstr ""
+"Устанавливает уровень доступа пользователей для добавления, редактирования и "
+"перечня записей."
+
+#: classes/PDb_Settings.php:1398
+msgid "Plugin Admin Access Level"
+msgstr "Уровень доступа плагина администратора"
+
+#: classes/PDb_Settings.php:1402
+msgid ""
+"sets the user access level for fields management, plugin settings, deleting "
+"records and CSV operations."
+msgstr ""
+"Устанавливает уровень доступа пользователей для полей управления, настройки "
+"плагина, удаления записей и CSV-операций."
+
+#: classes/PDb_Settings.php:1410
+msgid "Top Settings Submit"
+msgstr ""
+
+#: classes/PDb_Settings.php:1414
+msgid ""
+"show a submit button at the top of admin settings and configuration pages"
+msgstr ""
+
+#: classes/PDb_Settings.php:1422
+msgid "Admin Record Edits are Validated"
+msgstr ""
+
+#: classes/PDb_Settings.php:1427
+msgid "When checked, admin record edits and new records must pass validation."
+msgstr ""
+
+#: classes/PDb_Settings.php:1435
+#, fuzzy
+#| msgid "Import CSV File"
+msgid "Editor can Export CSV Files"
+msgstr "Импортировать CSV файл"
+
+#: classes/PDb_Settings.php:1439
+msgid "If checked, users with the plugin editor role can export a CSV."
+msgstr ""
+
+#: classes/PDb_Settings.php:1447
+msgid "Delete Uploaded Files with Record"
+msgstr ""
+
+#: classes/PDb_Settings.php:1452
+msgid ""
+"when a record is deleted, delete all images and files uploaded with the "
+"record"
+msgstr ""
+
+#: classes/PDb_Settings.php:1461
+msgid "Show Timestamp Time"
+msgstr "Показывать метку времени"
+
+#: classes/PDb_Settings.php:1466
+msgid "Show time with timestamp dates"
+msgstr "Показывать время с меткой времени даты"
+
+#: classes/PDb_Settings.php:1475
+#, fuzzy
+#| msgid "Plugin Admin Access Level"
+msgid "Clear Plugin Admin Notices"
+msgstr "Уровень доступа плагина администратора"
+
+#: classes/PDb_Settings.php:1479
+msgid "If checked, all plugin-generated admin notices will be cleared."
+msgstr ""
+
+#: classes/PDb_Settings.php:1493
 msgid "Custom Plugin Stylesheet"
 msgstr "Таблица стилей пользовательских плагинов"
 
-#: classes/PDb_Settings.class.php:1023
+#: classes/PDb_Settings.php:1498
 msgid ""
 "use this to add your own styles or override styles applied to the output of "
 "all plugin shortcodes"
@@ -1367,50 +2365,74 @@ msgstr ""
 "Используйте это, чтобы добавить свои собственные стили или переопределить "
 "стили, примененные к выводу всех коротких кодов плагинов"
 
-#: classes/PDb_Settings.class.php:1033
+#: classes/PDb_Settings.php:1508
 msgid "Plugin Print Stylesheet"
 msgstr "Таблица стилей плагина для печати"
 
-#: classes/PDb_Settings.class.php:1038
+#: classes/PDb_Settings.php:1513
 msgid "use this to format the printed output of all plugin shortcodes"
 msgstr ""
 "используйте это для форматирования вывода на печать всех коротких кодов "
 "плагинов."
 
-#: classes/PDb_Settings.class.php:1055
+#: classes/PDb_Settings.php:1523
+#, fuzzy
+#| msgid "Custom Plugin Stylesheet"
+msgid "Custom Admin Stylesheet"
+msgstr "Таблица стилей пользовательских плагинов"
+
+#: classes/PDb_Settings.php:1528
+msgid ""
+"use this to add or modify CSS rules that are applied on all plugin pages in "
+"the WordPress backend."
+msgstr ""
+
+#: classes/PDb_Settings.php:1549
 msgid "Same Page"
 msgstr "Та же страница"
 
-#: classes/PDb_Settings.class.php:1083
+#: classes/PDb_Settings.php:1592
 msgid "None"
 msgstr "нет"
 
-#: classes/PDb_Settings.class.php:1147
+#: classes/PDb_Settings.php:1714
 msgid "Contributor"
 msgstr "Спонсор"
 
-#: classes/PDb_Settings.class.php:1148
+#: classes/PDb_Settings.php:1715
 msgid "Author"
 msgstr "Автор"
 
-#: classes/PDb_Settings.class.php:1149
+#: classes/PDb_Settings.php:1716
 msgid "Editor"
 msgstr "Редактор"
 
-#: classes/PDb_Settings.class.php:1150
+#: classes/PDb_Settings.php:1717
 msgid "Admin"
 msgstr "Администратор"
 
-#: classes/PDb_Settings.class.php:1216 participants-database.php:452
-#: participants-database.php:453 participants-database.php:2979
+#: classes/PDb_Settings.php:1794 participants-database.php:3677
+#: participants-database.php:3739
 msgid "Settings"
 msgstr "Настройки"
 
-#: classes/PDb_Settings.class.php:1306
+#: classes/PDb_Settings.php:1886 classes/PDb_Settings.php:1892
+#, php-format
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr ""
 
-#: classes/PDb_Shortcode.class.php:235
+#: classes/PDb_Settings.php:1941
+msgid "Content Directory"
+msgstr ""
+
+#: classes/PDb_Settings.php:1941
+#, fuzzy
+#| msgid "WordPress Plugin"
+msgid "WordPress root"
+msgstr "Плагин Вордпресс"
+
+#: classes/PDb_Shortcode.php:334
+#, php-format
 msgctxt "message to show if the plugin cannot find the template"
 msgid ""
 "<%1$s>The template %2$s was not found.</%1$s> Please make sure the name is "
@@ -1419,36 +2441,230 @@ msgstr ""
 "<%1$s>Шаблон %2$s не был найден. </%1$s> Пожалуйста, убедитесь, что имя "
 "является правильным, а файл шаблона находится в правильном месте."
 
-#: classes/xnau_CSV_Import.class.php:58
+#: classes/PDb_Shortcode.php:1351
+msgid "next"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:218
+#, fuzzy
+#| msgctxt "column name"
+#| msgid "Description"
+msgctxt "Plugin installer section title"
+msgid "Description"
+msgstr "Описание"
+
+#: classes/PDb_Update_Notices.php:219
+#, fuzzy
+#| msgid "Validation"
+msgctxt "Plugin installer section title"
+msgid "Installation"
+msgstr "Проверка"
+
+#: classes/PDb_Update_Notices.php:220
+msgctxt "Plugin installer section title"
+msgid "FAQ"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:221
+msgctxt "Plugin installer section title"
+msgid "Screenshots"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:222
+#, fuzzy
+#| msgctxt "submit button label"
+#| msgid "Change"
+msgctxt "Plugin installer section title"
+msgid "Changelog"
+msgstr "Изменить"
+
+#: classes/PDb_Update_Notices.php:223
+msgctxt "Plugin installer section title"
+msgid "Reviews"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:224
+msgctxt "Plugin installer section title"
+msgid "Support"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:246
+msgid "Plugin Install"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:296
+msgid "Version:"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:298
+#, fuzzy
+#| msgid "Author"
+msgid "Author:"
+msgstr "Автор"
+
+#: classes/PDb_Update_Notices.php:300
+msgid "Last Updated:"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:303
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:308
+msgid "Requires WordPress Version:"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:311
+#, php-format
+msgid "%s or higher"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:315
+msgid "Compatible up to:"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:317
+msgid "Active Installs:"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:319
+msgctxt "Active plugin installs"
+msgid "1+ Million"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:325
+#, fuzzy
+#| msgid "WordPress Plugin"
+msgid "WordPress.org Plugin Page &#187;"
+msgstr "Плагин Вордпресс"
+
+#: classes/PDb_Update_Notices.php:327
+msgid "Plugin Homepage &#187;"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:329
+msgid "Add-Ons &amp; Extras &#187;"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:331 classes/PDb_Update_Notices.php:386
+msgid "Donate to this plugin &#187;"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:335
+msgid "Average Rating"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:337
+#, php-format
+msgid "(based on %s rating)"
+msgid_plural "(based on %s ratings)"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: classes/PDb_Update_Notices.php:343
+msgid "Reviews"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:344
+msgid "Read all reviews on WordPress.org or write your own!"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:350
+#, php-format
+msgid "Reviews with %1$d star: %2$s. Opens in a new window."
+msgid_plural "Reviews with %1$d stars: %2$s. Opens in a new window."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: classes/PDb_Update_Notices.php:355
+#, php-format
+msgid "%d star"
+msgid_plural "%d stars"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: classes/PDb_Update_Notices.php:366
+#, fuzzy
+#| msgid "Contributor"
+msgid "Contributors"
+msgstr "Спонсор"
+
+#: classes/PDb_Update_Notices.php:393
+msgid ""
+"<strong>Warning:</strong> This plugin has <strong>not been tested</strong> "
+"with your current version of WordPress."
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:395
+msgid ""
+"<strong>Warning:</strong> This plugin has <strong>not been marked as "
+"compatible</strong> with your version of WordPress."
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:424
+msgid "Install Now"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:429
+msgid "Install Update Now"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:434
+#, php-format
+msgid "Newer Version (%s) Installed"
+msgstr ""
+
+#: classes/PDb_Update_Notices.php:437
+msgid "Latest Version Installed"
+msgstr ""
+
+#: classes/xnau_CSV_Import.php:94
+#, fuzzy, php-format
+#| msgid "The file %s has been uploaded."
 msgid "The file %s has been uploaded."
 msgstr "Был загружен файл s%."
 
-#: classes/xnau_CSV_Import.class.php:64
+#: classes/xnau_CSV_Import.php:100
+#, php-format
 msgid "%s record added"
 msgid_plural "%s records added"
 msgstr[0] "Добавлена запись %s"
 msgstr[1] "%s записей загружено"
 msgstr[2] "Добавлена запись %s"
 
-#: classes/xnau_CSV_Import.class.php:68
+#: classes/xnau_CSV_Import.php:104
+#, php-format
 msgid "%s matching record updated"
 msgid_plural "%s matching records updated"
 msgstr[0] "Обновлены совпадающие записи %s"
 msgstr[1] "%s записей обновлено"
 msgstr[2] "Обновлены совпадающие записи %s"
 
-#: classes/xnau_CSV_Import.class.php:73
+#: classes/xnau_CSV_Import.php:109
+#, php-format
 msgid "%s duplicate record skipped"
 msgid_plural "%s duplicate records skipped"
 msgstr[0] "Пропущены повторяющиеся записи %s"
 msgstr[1] "%s повторяющихся записей пропущено"
 msgstr[2] "Пропущены повторяющиеся записи %s"
 
-#: classes/xnau_CSV_Import.class.php:77
+#: classes/xnau_CSV_Import.php:114
+#, php-format
+msgid "%s record skipped due to errors"
+msgid_plural "%s records skipped due to errors"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: classes/xnau_CSV_Import.php:118
 msgid "Zero records imported"
 msgstr "Импортированы нулевые записи"
 
-#: classes/xnau_CSV_Import.class.php:82
+#: classes/xnau_CSV_Import.php:123
 msgid ""
 "There was an error uploading the file. This could be a problem with "
 "permissions on the uploads directory."
@@ -1456,11 +2672,11 @@ msgstr ""
 "При загрузке файла возникла ошибка. Возможно это связано с проблемами "
 "доступа к папке загрузки"
 
-#: classes/xnau_CSV_Import.class.php:82 classes/xnau_CSV_Import.class.php:88
+#: classes/xnau_CSV_Import.php:123 classes/xnau_CSV_Import.php:129
 msgid "Destination"
 msgstr "Обозначение"
 
-#: classes/xnau_CSV_Import.class.php:88
+#: classes/xnau_CSV_Import.php:129
 msgid ""
 "Target directory does not exist and could not be created. Try creating it "
 "manually."
@@ -1468,19 +2684,24 @@ msgstr ""
 "Целевая папка не существует или не может быть создана. Пожалуйста попробуйте "
 "создать ее вручную"
 
-#. translators: the %s will be the name of the file
-#: classes/xnau_CSV_Import.class.php:142
+#: classes/xnau_CSV_Import.php:155
+msgid "Invalid file for import."
+msgstr ""
+
+#: classes/xnau_CSV_Import.php:198
 msgid "Error occured while trying to add the data to the database"
 msgstr "Произошла ошибка во время попытки добавить данные в базу данных"
 
-#: classes/xnau_CSV_Import.class.php:142
+#: classes/xnau_CSV_Import.php:198
+#, php-format
 msgid ""
 "Input file does not exist or path is incorrect.<br />Attempted to load: %s"
 msgstr ""
 "Вводный файл не существует или путь к нему указан неверно. <br /> Попытка "
 "загрузить: %s"
 
-#: classes/xnau_CSV_Import.class.php:188
+#: classes/xnau_CSV_Import.php:248
+#, php-format
 msgid ""
 "The number of items in line %s is incorrect.<br />There are %s and there "
 "should be %s."
@@ -1488,57 +2709,38 @@ msgstr ""
 "Числа элементов в строке %s некорректно. <br /> В ней %s строк, а должно "
 "быть %s."
 
-#: classes/xnau_CSV_Import.class.php:197
+#: classes/xnau_CSV_Import.php:257
 msgid "Number of values does not match number of columns"
 msgstr "Количество значений не совпадает с количеством столбцов"
 
-#: classes/xnau_CSV_Import.class.php:298
-msgid "New columns imported from the CSV file."
-msgstr "Новые колонки импортированы из CSV-файла."
-
-#: classes/xnau_FormElement.class.php:239
+#: classes/xnau_FormElement.php:247
 msgctxt "indicates a write-in choice"
 msgid "other"
 msgstr "прочий"
 
-#: classes/xnau_FormElement.class.php:240
+#: classes/xnau_FormElement.php:248
 msgctxt "indicates the text to be clicked to go to another web page"
 msgid "Link Text"
 msgstr ""
 "Текст ссылки [указывает на текст, который необходимо нажать, чтобы перейти к "
 "другой веб-странице]"
 
-#: edit_participant.php:19
-msgid "Add New Participant Record"
-msgstr "Добавить новую запись участника"
-
-#: edit_participant.php:24
-msgid "Edit Existing Participant Record"
-msgstr "Редактировать существующую запись участника"
-
-#: edit_participant.php:83
-msgctxt "abbreviation for \"identification\""
-msgid "ID"
-msgstr "ID"
-
-#: edit_participant.php:83
-msgctxt "indicates a new record is being entered"
-msgid "(new record)"
-msgstr "(новая запись)"
-
-#: edit_participant.php:105
-msgid "hidden"
-msgstr "скрыто"
-
-#: edit_participant.php:108
-msgid "read only"
-msgstr "только чтение"
-
-#: edit_participant.php:223
+#: edit_participant.php:79 edit_participant.php:272
 msgid "Save the Record"
 msgstr "Сохранить запись"
 
-#: edit_participant.php:236
+#: edit_participant.php:137
+#, fuzzy
+#| msgid "hidden"
+msgctxt "label for a hidden field"
+msgid "hidden"
+msgstr "скрыто"
+
+#: edit_participant.php:164
+msgid "read only"
+msgstr "только чтение"
+
+#: edit_participant.php:286
 msgid ""
 "<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
 "strong> save record and continue with same record<br><strong>Next:</strong> "
@@ -1549,216 +2751,19 @@ msgstr ""
 "записью<br><strong>Следующая:</strong> сохранить запись, а затем начать с "
 "новой записью"
 
-#: edit_participant.php:238
+#: edit_participant.php:290
 msgid "<strong>Previous:</strong> save and move to previous record"
 msgstr "<strong>Предыдущая:</strong> сохранить и перейти к предыдущей записи"
-
-#. translators: these strings are used in logic matching, please test after
-#. translating in case special characters cause problems
-#: manage_fields.php:10
-msgid "Update Fields"
-msgstr "Обновить поля"
-
-#: manage_fields.php:11
-msgid "Update Groups"
-msgstr "Обновить группы"
-
-#: manage_fields.php:12
-msgid "Add Field"
-msgstr "Добавить поле"
-
-#: manage_fields.php:13
-msgid "Add Group"
-msgstr "Добавить группу"
-
-#: manage_fields.php:14
-msgid "new field title"
-msgstr "заголовок нового поля"
-
-#: manage_fields.php:15
-msgid "new group title"
-msgstr "заголовок новой группы"
-
-#: manage_fields.php:16
-msgctxt "column name"
-msgid "Order"
-msgstr "Порядок"
-
-#: manage_fields.php:17
-msgctxt "column name"
-msgid "Name"
-msgstr "Имя"
-
-#: manage_fields.php:18
-msgctxt "column name"
-msgid "Title"
-msgstr "Название"
-
-#: manage_fields.php:19
-msgctxt "column name"
-msgid "Default"
-msgstr "По умолчанию"
-
-#: manage_fields.php:20
-msgctxt "column name"
-msgid "Group"
-msgstr "Группа"
-
-#: manage_fields.php:21
-msgctxt "column name"
-msgid "Help Text"
-msgstr "Помощь"
-
-#: manage_fields.php:22
-msgctxt "column name"
-msgid "Form Element"
-msgstr "Элемент формы"
-
-#: manage_fields.php:23
-msgctxt "column name"
-msgid "Values"
-msgstr "Значения"
-
-#: manage_fields.php:24
-msgctxt "column name"
-msgid "Validation"
-msgstr "Проверка"
-
-#: manage_fields.php:25
-msgctxt "column name"
-msgid "Display Column"
-msgstr "Отобразить столбец"
-
-#: manage_fields.php:26
-msgctxt "column name"
-msgid "Admin Column"
-msgstr "Администратор"
-
-#: manage_fields.php:27
-msgctxt "column name"
-msgid "Sortable"
-msgstr "Сортируемый"
-
-#: manage_fields.php:28
-msgctxt "column name, acronym for \"comma separated values\""
-msgid "CSV"
-msgstr "CSV"
-
-#: manage_fields.php:29
-msgctxt "column name"
-msgid "Persistent"
-msgstr "Постоянный"
-
-#: manage_fields.php:30
-msgctxt "column name"
-msgid "Signup"
-msgstr "Зарегистрироваться"
-
-#: manage_fields.php:31
-msgctxt "column name"
-msgid "Read Only"
-msgstr "Только для чтения"
-
-#: manage_fields.php:32
-msgctxt "column name"
-msgid "Admin"
-msgstr "Администратор"
-
-#: manage_fields.php:33
-msgctxt "column name"
-msgid "Delete"
-msgstr "Удалить"
-
-#: manage_fields.php:34
-msgctxt "column name"
-msgid "Display"
-msgstr "Показать"
-
-#: manage_fields.php:35
-msgctxt "column name"
-msgid "Fields"
-msgstr "Поля"
-
-#: manage_fields.php:36
-msgctxt "column name"
-msgid "Description"
-msgstr "Описание"
-
-#: manage_fields.php:154
-msgid "Cannot add a field with that name"
-msgstr "Не удалось добавить поле с таким именем"
-
-#: manage_fields.php:154
-msgid "This name is reserved; please choose another. Reserved names are"
-msgstr ""
-"Это имя зарезервировано, пожалуйста, выберите другое. Зарезервированные "
-"имена:"
-
-#: manage_fields.php:236 participants-database.php:434
-#: participants-database.php:435
-msgid "Manage Database Fields"
-msgstr "Поля управления базой данных"
-
-#: manage_fields.php:246 manage_fields.php:254
-msgid "Field Groups"
-msgstr "Группы полей"
-
-#: manage_fields.php:255
-msgid "Help"
-msgstr "Помощь"
-
-#: manage_fields.php:263
-msgid "Fields"
-msgstr "Поля"
-
-#: manage_fields.php:325
-msgid "No fields in this group"
-msgstr "Нет полей в этой группе"
-
-#: manage_fields.php:355 manage_fields.php:712
-msgid "field"
-msgstr "Поле"
-
-#: manage_fields.php:429
-msgid "Edit / Add / Remove Field Groups"
-msgstr "Редактировать / Добавить / Удалить группы полей"
-
-#: manage_fields.php:460
-msgid "fields"
-msgstr "поля"
-
-#: manage_fields.php:483 manage_fields.php:707
-msgid "group"
-msgstr "группа"
-
-#: manage_fields.php:718
-msgid ""
-"The %1$s was not added. There is already a %1$s with that name, please "
-"choose another."
-msgstr ""
-"Шаблон %1$s не был добавлен. Уже существует шаблон %1$s с таким именем, "
-"пожалуйста, выберите другое."
-
-#: manage_fields.php:782
-msgid "Not Required"
-msgstr "Не обязательно"
-
-#: manage_fields.php:783
-msgid "Required"
-msgstr "Обязательно"
-
-#: manage_fields.php:784
-msgid "Email"
-msgstr "Электронная почта"
 
 #: manage_fields_help.php:4
 msgid "Manage Fields Help"
 msgstr "Помощь полей управления"
 
 #: manage_fields_help.php:5
+#, php-format
 msgid ""
-"Please visit the %sParticipants Database help pages%s for up-to-date "
-"information on using this plugin."
+"Please visit the %sManage Database Fields Help Page%s at xnau.com for "
+"detailed help with configuring the database fields."
 msgstr ""
 
 #: manage_fields_help.php:6
@@ -1796,389 +2801,122 @@ msgstr ""
 "может быть заполнено потом, путем редактирования записи."
 
 #: manage_fields_help.php:9
-msgid "Delete"
-msgstr "Удалить"
+#, fuzzy
+#| msgid "Participants Database"
+msgid "General Participants Database Help"
+msgstr "База участников"
 
 #: manage_fields_help.php:10
+#, php-format
 msgid ""
-"Click on the red \"X\" to delete a field. If there are existing records with "
-"this data field, that information will not be deleted from the database, but "
-"you will no longer be able to display or edit it."
+"Please visit the %sParticipants Database help pages%s for up-to-date "
+"information on using this plugin."
 msgstr ""
-"Нажмите на красный \"Х\", чтобы удалить поле. Если есть существующие записи, "
-"связанные с этим полем данных, то информация не будет удалена из базы "
-"данных, но вы больше не будете иметь возможность отображения или "
-"редактирования ее."
-
-#: manage_fields_help.php:11
-msgid "Order"
-msgstr "Порядок"
-
-#: manage_fields_help.php:12
-msgid ""
-"Click and drag to reorder the fields. You do not need to click on \"Update\" "
-"for the change to take effect."
-msgstr ""
-"Нажмите и перетащите, чтобы изменить порядок полей. Вам не нужно нажать "
-"\"Обновить\", чтобы изменения вступили в силу."
-
-#: manage_fields_help.php:13
-msgid "Title"
-msgstr "Заголовок"
-
-#: manage_fields_help.php:14
-msgid ""
-"This is the display title for your field. You can change it at any time, it "
-"won&#39;t affect the field in any way other than to change how it is labeled "
-"in forms.<p>"
-msgstr ""
-" Это отображаемое название для вашей области. Вы можете изменить его в любое "
-"время, и оно не будет влиять на поле в любом случае, кроме как измениться, "
-"так как оно обозначено в формах.<p>"
-
-#: manage_fields_help.php:15
-msgid "Default"
-msgstr "По умолчанию"
-
-#: manage_fields_help.php:16
-msgid "If you wish to pre-load a field with a value, you can put it here."
-msgstr ""
-"Если вы хотите по умолчанию заполнять поле заранее, укажите значение здесь"
-
-#: manage_fields_help.php:17
-msgid "Group"
-msgstr "Группа"
-
-#: manage_fields_help.php:18
-msgid ""
-"The database fields are organized into groups, and you can select which "
-"group the database field belongs to here. You can edit the groups under the "
-"\"Field Groups\" tab."
-msgstr ""
-"Поля базы данных организованы в группы, и вы можете выбрать, какие группы "
-"полей базы данных входят сюда. Вы можете редактировать группы на вкладке "
-"\"Группы поля\"."
-
-#: manage_fields_help.php:19
-msgid "Help Text"
-msgstr "Текст помощи"
-
-#: manage_fields_help.php:20
-msgid ""
-"When a form is displayed, sometimes it is a good idea to explain something "
-"about the information you want in a field. Any text you put in here will be "
-"displayed next to the field. HTML is allowed, but be careful with that, you "
-"can break things!"
-msgstr ""
-"При отображении формы, иногда необходимо объяснить что-то об информации, "
-"которую вы хотите видеть в поле. Любой текст, который вы введете здесь, "
-"затем будет отображаться рядом с полем. HTML разрешен, но будьте осторожны с "
-"этим, вы можете внести непоправимые изменения!"
-
-#: manage_fields_help.php:21
-msgid "Form Element"
-msgstr "Элемент формы"
-
-#: manage_fields_help.php:22
-#, fuzzy
-msgid ""
-"If your piece of information is a simple line of text (like a name), it "
-"should be presented in the form as a text field. If a longer piece of text "
-"is called for, a text-field would be a better choice, and so forth. This is "
-"where you can determine what kind of form element this particular piece of "
-"information will be preseted with."
-msgstr ""
-"Если ваша часть информации является простой строкой текста (например, имя), "
-"она должна быть представлена в форме, в качестве текстового поля. Если "
-"запрашивается более длинный фрагмент текста, то текстовое поле является "
-"лучшим выбором, и так далее. Это место, где вы можете определить, какой "
-"элемент формы будет представлен с конкретной частью информации."
-
-#: manage_fields_help.php:23
-msgid ""
-"Under the multiple-choice dropdown are the form elements you can choose "
-"from. It is really best to avoid changing this once you have begun adding "
-"records to the database using this field&hellip;unpredictable things can "
-"happen, and although you won&#39;t lose any data, it can make a mess! That "
-"said, it <em>is</em> possible to change between similar elements, like text/"
-"text-field or select/dropdown or select-other/dropdown-other. Be warned, "
-"it&#39;s safest to set this up before you start getting data for the field."
-msgstr ""
-"Множественный выбор выпадающих является формой элементов, которую вы можете "
-"выбрать. Действительно будет лучше избежать изменения этого, как только вы "
-"начали добавление записей в базу данных с помощью этого поля, так "
-"непредсказуемые вещи могут произойти, и, хотя вы не потеряете данные, это "
-"может привести к беспорядку! Тем не менее, возможно переключаться между "
-"подобными элементами, такими как текст/текстовое поле или выбор/выпадающий, "
-"или выбор другого/выпадающий другой. Будьте осторожны, безопаснее, чтобы "
-"установить это, прежде чем вы начнете получать данные для поля."
-
-#: manage_fields_help.php:24
-msgid "Values"
-msgstr "Значения"
-
-#: manage_fields_help.php:25
-msgid ""
-"For form elements that have multiple choices, you need to define those "
-"choices here. Type in a comma-separated list of the options you want to "
-"present."
-msgstr ""
-"Для элементов формы, которые имеют множественный выбор, необходимо "
-"определить эти выборы. Введите через запятую список параметров, который вы "
-"хотите представить."
-
-#: manage_fields_help.php:26
-#, fuzzy
-msgid ""
-"Don&#39;t try to have a comma in one of your options, though! It&#39;s "
-"posiible to break things by trying to include other (mostly non-text and "
-"punctuation) characters, so test things, and if you get erratic behavior in "
-"the form, you may have characters here that are messing things up. Most "
-"international language characters should be fine, just type them in. Don&#39;"
-"t try to use HTML entities or codes, it just won&#39;t work."
-msgstr ""
-"Однако, не пытайтесь внести запятую в одном из ваших вариантов!! Существует "
-"возможность нарушить правила, пытаясь включать другие символы (в основном не "
-"в текстовом формате и знаки препинания), так что проведите проверку, и если "
-"вы обнаружите странное поведение в форме, возможно вы внесли символы, "
-"которые приводят к беспорядку. Большинство международных языковых символов "
-"должно быть достаточно, просто введите их. Тем не менее, не пытайтесь "
-"использовать символы или коды HTML, они просто не будут работать."
-
-#: manage_fields_help.php:27
-msgid "Validation"
-msgstr "Проверка"
-
-#: manage_fields_help.php:28
-msgid ""
-"If you wish certain fields to be required or have a specific kind of "
-"content, you can set that here. \"Not Required\" means you don&#39;t care if "
-"the field is filled in or not. \"Required\" simply means the field must have "
-"something in it. \"match/regex\" gives you some advanced options for "
-"validating a field. To match the field to the value of another field, put "
-"the name of that field in the box. You can also use a regex to validate the "
-"field, but it is for advanced users, so if you don&#39;t know what a regex "
-"is, get some help before trying to use this feature."
-msgstr ""
-"Если вы хотите, чтобы были определенные поля или они имели определенный вид "
-"содержания, вы можете установить это здесь. \"Не обязательно\" означает, что "
-"вас не волнует, заполнено поле или нет. \"Обязательно\" означает, что поле "
-"должно быть заполнено. \"Совпадение/сокращение \" дает вам некоторые "
-"дополнительные опции для проверки поля. Для соответствия поля значению "
-"другого поля, поместите имя этого поля в окно. Вы также можете использовать "
-"сокращение для проверки поля, но эта возможность только для продвинутых "
-"пользователей, так что если вы не знаете, чем является определенное "
-"сокращение, сначала получите помощь, прежде чем пытаться использовать эту "
-"возможность."
-
-#: manage_fields_help.php:29
-msgid "Admin Column"
-msgstr "Администратор"
-
-#: manage_fields_help.php:30
-msgid ""
-"This only affects the \"List Participants\" page of the plugin. On that "
-"page, the database records are listed. Since it would be impractical to "
-"include every field as a column in this list, you can select which fields "
-"are shown here. \"0\" means don&#39;t display it, a number sets the order in "
-"which the column will appear. You have to make sure the numbers make sense, "
-"if you have multiple items with the same number (other than 0), only the "
-"last one with the number will appear."
-msgstr ""
-"Это влияет только на страницу плагина \"Список участников\". На этой "
-"странице перечислены записи базы данных. Поскольку было бы непрактично, "
-"включать все поля в виде колонки в этот список, вы можете выбрать, какие "
-"поля будут отображены здесь. \"0\" означает не отображать, а число "
-"устанавливает порядок, в котором появится название колонки. Вы должны "
-"убедиться, что номера имеют смысла, если у вас есть несколько элементов с "
-"одинаковым числом (кроме 0), появится только последний с числом."
-
-#: manage_fields_help.php:31
-msgid "Display Column"
-msgstr "Столбец для отображения"
-
-#: manage_fields_help.php:32
-msgid ""
-"When using the [pdb_list] shortcode to display the list of records, this "
-"column determines whether the column will be shown and in what order."
-msgstr ""
-"При использовании короткого кода [pdb_list] для отображения списка записей, "
-"эта колонка определяет, будет ли колонка показана и в каком порядке."
-
-#: manage_fields_help.php:33
-msgid "Switches"
-msgstr "Переключения"
-
-#: manage_fields_help.php:34
-msgid ""
-"<strong>Sortable</strong> means the list presented on the \"List Participants"
-"\" page can be sorted by this field. Of course, it must have a non-zero "
-"value in \"Column\" to be seen at all."
-msgstr ""
-"<strong>Сортируемый</strong> означает, что список, представленный на "
-"странице \"Список участников\" может быть отсортирован по этому полю. "
-"Конечно, он должен иметь ненулевое значение в поле \"Колонка\", чтобы его  "
-"было видно."
-
-#: manage_fields_help.php:35
-msgid ""
-"<strong>CSV</strong> means the field is one that can be imported or exported "
-"with a CSV file. If you are using CSV files to bring in records, you should "
-"set these switches based on which fields you are planning to import. When "
-"exporting a CSV, this switch determines whether the field will be exported."
-"<p>"
-msgstr ""
-"<strong>CSV</strong> означает, что файл является одним их тех, которые могут "
-"быть импортированы или экспортированы с CSV-файлом. Если вы используете CSV-"
-"файлы, чтобы перенести в записи, вы должны установить переключатели, на "
-"основе которых вы планируете импортировать поля. При экспорте CSV-файла, "
-"данный переключатель определяет, будет ли поле экспортированным.<p>"
-
-#: manage_fields_help.php:36
-msgid ""
-"<strong>Persistent</strong> is a convenience feature helpful when you are "
-"manually entering a series of records in the admin. If set, it means the "
-"field will carry over to the next blank entry. For instance, if a group of "
-"records from the same city are being entered, set the \"city\" field to be "
-"persistent, then once a city value has been entered in the first record of "
-"the series, the next blank record will have this city pre-filled."
-msgstr ""
-"<strong>Сохраняющийся</strong> представляет собой удобную функцию, которая "
-"полезна при ручном вводе серии записей в учетной записи администратора. Если "
-"установлен, это означает, что поле будет перенесено на следующую пустую "
-"запись. Например, если вводится группа записей с одним городом, установите "
-"поле \"город\" сохраняющимся и, как только значение города будет введено в "
-"первой записи серии, следующая пустая запись будет  заполнена этим же "
-"городом."
-
-#: manage_fields_help.php:37
-msgid ""
-"Persistent fields will also use their set default value in record edit forms "
-"where no value has been set in the record being edited"
-msgstr ""
-
-#: manage_fields_help.php:38
-msgid ""
-"<strong>Signup</strong> selects this field for use in the brief signup form "
-"that is presented with the [pdb_signup] shortcode."
-msgstr ""
-"<strong>Регистрация</strong> выбирает данное поле для использования в "
-"краткой форме регистрации, которая представлена с коротким кодом "
-"[pdb_signup]."
-
-#: manage_fields_help.php:39
-#, fuzzy
-msgid ""
-"<strong>Readonly</strong> means that plugin users can see the value of the "
-"field, but cannot edit it. The field will be editable in the admin."
-msgstr ""
-"<strong>Только для чтения</strong> означает, что пользователи плагина могут "
-"видеть значение поля, но не могут его редактировать. Поля будут доступны для "
-"редактирования в учетной записи администратора."
 
 #. Plugin Name of the plugin/theme
-#: participants-database.php:338
+#: participants-database.php:539
 msgid "Participants Database"
 msgstr "База участников"
 
-#: participants-database.php:425 participants-database.php:426
-msgid "Add Participant"
-msgstr "Добавить участника"
-
-#: participants-database.php:443 participants-database.php:444
-#: upload_csv.php:8
-msgid "Import CSV File"
-msgstr "Импортировать CSV файл"
-
-#: participants-database.php:461 participants-database.php:462
-msgid "Setup Guide"
-msgstr "Инструкция по установке"
-
-#: participants-database.php:470 participants-database.php:471
-msgid "Edit Record"
-msgstr "Редактировать запись"
-
-#. translators: don't translate the words in brackets {}
-#: participants-database.php:520
+#: participants-database.php:706
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr "Вы должны удалить все поля из группы {name} перед тем как удалить ее"
 
-#: participants-database.php:521
-msgid "Delete the \"{name}\" {thing}?"
+#: participants-database.php:708
+#, fuzzy
+#| msgid "Delete the \"{name}\" {thing}?"
+msgid "Delete the {name} {thing}?"
 msgstr "Удалить \"{name}\" {thing}?"
 
-#: participants-database.php:2383
-msgid ""
-"There is something wrong with the file you tried to upload. Try another."
-msgstr "При загрузке файла произошли проблемы. Попробуйте загрузить другой"
+#: participants-database.php:709
+#, fuzzy
+#| msgid "Do you really want to delete the selected record?"
+msgid "Delete the selected field?"
+msgstr "Вы действительно хотите удалить выбранную запись?"
 
-#: participants-database.php:2399 participants-database.php:2427
-msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
+#: participants-database.php:710
+#, fuzzy
+#| msgid "Do you really want to delete the selected records?"
+msgid "Delete the selected fields?"
+msgstr "Вы действительно хотите удалить выбранные записи?"
+
+#: participants-database.php:711
+msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
-"Для \"%s\", вы можете загрузить только такие файлы изображений, как JPEG, "
-"GIF или PNG."
 
-#: participants-database.php:2401
-msgid "The file selected for \"%s\" must be one of these types: %s. "
-msgstr "Файл, выбранный для \"%s\" должен быть одним из этих типов: %s."
-
-#: participants-database.php:2433
+#: participants-database.php:712
 msgid ""
-"The file you tried to upload is too large. The file must be smaller than %sK."
-msgstr "Файл, который вы попытались загрузить не является разрешенного типа."
-
-#: participants-database.php:2440
-msgid "The file could not be saved."
-msgstr "Файл не может быть сохранен."
-
-#: participants-database.php:2468
-msgid "The uploads directory (%s) could not be created."
-msgstr "Директория для загрузки файлов (%s) не может быть создана."
-
-#: participants-database.php:2727
-msgid ""
-"The date for \"%s\" was invalid. Please input the date with the exact format "
-"shown"
+"Changing the form element on a field that has stored data can result in data "
+"loss."
 msgstr ""
-"Дата для \"%s\" была недопустимой. Пожалуйста, введите дату в правильном "
-"формате."
 
-#: participants-database.php:2817 templates/pdb-retrieve-default.php:45
+#: participants-database.php:712
+#, fuzzy
+#| msgid "Your information has been updated"
+msgid "More information here…"
+msgstr "Ваша информация обновлена"
+
+#: participants-database.php:713
+msgid "Yes, change the form element"
+msgstr ""
+
+#: participants-database.php:714
+msgid "No, don't change the form element"
+msgstr ""
+
+#: participants-database.php:3478 templates/pdb-retrieve-bootstrap.php:70
+#: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr "Подтвердить"
 
-#: participants-database.php:2818
-msgid "Apply"
-msgstr "Применить"
-
-#: participants-database.php:2821
+#: participants-database.php:3482
 msgid "The record has been updated."
 msgstr "Запись обновлена"
 
-#: participants-database.php:2822
+#: participants-database.php:3483
 #, fuzzy
 msgid "The new record has been added."
 msgstr "Запись обновлена"
 
-#: participants-database.php:2940
+#: participants-database.php:3484
+#, fuzzy, php-format
+#| msgid "No record was found."
+msgid "No record was added on query: %s"
+msgstr "Не найдено ни одной записи."
+
+#: participants-database.php:3485
+#, php-format
+msgid "Database Error: %2$s on query: %1$s"
+msgstr ""
+
+#: participants-database.php:3643
 msgid "WordPress Plugin"
 msgstr "Плагин Вордпресс"
 
-#: participants-database.php:2941
+#: participants-database.php:3644
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr "Помогая организациям управлять волонтерами и участниками"
 
-#: participants-database.php:2944
+#: participants-database.php:3647
 msgid "Developed by"
 msgstr "Разработано"
 
-#: participants-database.php:2945
+#: participants-database.php:3648
+#, fuzzy
+#| msgid ""
+#| "Suggestions or crticisms of this plugin? I&#39;d love to hear them: email "
 msgid ""
-"Suggestions or crticisms of this plugin? I&#39;d love to hear them: email "
+"Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr "Имеете замечания и предложения? Буду рад услышать их: email"
 
-#: participants-database.php:2948
+#: participants-database.php:3651
+#, fuzzy, php-format
+#| msgid ""
+#| "Please consider contributing to the continued support and development of "
+#| "this software by visiting %1$sthis plugin&#39;s page,%3$s giving the "
+#| "plugin a %2$srating%3$s or review, or dropping something in the %1$stip "
+#| "jar.%3$s Thanks!"
 msgid ""
 "Please consider contributing to the continued support and development of "
 "this software by visiting %1$sthis plugin&#39;s page,%3$s giving the plugin "
@@ -2190,35 +2928,66 @@ msgstr ""
 "плагинов,%3 $s предоставив плагину %2$sоценку%3$s или отзыв, или оставив что-"
 "то в %1$sкоробке для чаевых. %3$s Спасибо!"
 
-#: templates/pdb-retrieve-default.php:10
-msgid "Request your Private Link"
-msgstr "Запрос вашей личной ссылки"
+#: participants-database.php:3673
+msgid "Add Participant"
+msgstr "Добавить участника"
 
-#: templates/pdb-retrieve-default.php:17
-msgid "Success: your private link has been emailed to you."
-msgstr "Успех: личная ссылка была отправлена вам по электронной почте."
+#: participants-database.php:3674 participants-database.php:3681
+msgid "List Participants"
+msgstr "Список участников"
 
-#: templates/pdb-retrieve-default.php:37
-msgid "Type in your %s, your private link will be emailed to you."
+#: participants-database.php:3676 upload_csv.php:41
+msgid "Import CSV File"
+msgstr "Импортировать CSV файл"
+
+#: participants-database.php:3678
+msgid "Setup Guide"
+msgstr "Инструкция по установке"
+
+#: participants-database.php:3679
+msgid "Add New Participant Record"
+msgstr "Добавить новую запись участника"
+
+#: participants-database.php:3680
+msgid "Edit Existing Participant Record"
+msgstr "Редактировать существующую запись участника"
+
+#: participants-database.php:3682
+msgid "Export CSV"
+msgstr "Экспорт CSV"
+
+#: participants-database.php:3683
+msgid "Manage List Columns"
 msgstr ""
-"Введите в ваш %s, что личная ссылка будет отправлена к вам по электронной "
-"почте."
 
-#: upload_csv.php:28
+#: participants-database.php:3819
+#, php-format
+msgid ""
+"Participants Database requires PHP version %s to function properly, you have "
+"PHP version %s. Please upgrade PHP. The Plugin has been auto-deactivated."
+msgstr ""
+
+#: upload_csv.php:62
 msgid "Prepare a spreadsheet file with the correct format:"
 msgstr "Подготовьте файл электронной таблицы в правильном формате:"
 
-#: upload_csv.php:30
+#: upload_csv.php:63
+#, fuzzy
+#| msgid ""
+#| "To properly import your membership data, the columns in your spreadsheet "
+#| "must match exactly the columns in the database. Currently, the CSV import "
+#| "columns are as follows:"
 msgid ""
 "To properly import your membership data, the columns in your spreadsheet "
-"must match exactly the columns in the database. Currently, the CSV import "
+"must match exactly the columns in the database. Currently, the CSV export "
 "columns are as follows:"
 msgstr ""
 "Чтобы правильно импортировать данные о членстве, колонки в вашей электронной "
 "таблице должны точно соответствовать колонкам в базе данных. В настоящее "
 "время, CSV импортирует колонки следующим образом: "
 
-#: upload_csv.php:45
+#: upload_csv.php:78
+#, php-format
 msgid ""
 "This means your spreadsheet needs to have %s columns, and the heading in "
 "each of those columns needs to match exactly the names above. If there is no "
@@ -2231,7 +3000,7 @@ msgstr ""
 "включить ее и оставить пустой, или просто пропустить ее. Порядок столбцов не "
 "имеет значения."
 
-#: upload_csv.php:46
+#: upload_csv.php:79
 msgid ""
 "If the imported CSV file has a different column set, that column set will be "
 "imported and used. If a column name does not match a defined column in the "
@@ -2242,11 +3011,11 @@ msgstr ""
 "соответствует определенной колонке в базе данных, данные из этого столбца "
 "будут отменены."
 
-#: upload_csv.php:47
+#: upload_csv.php:80
 msgid "Get Blank CSV File"
 msgstr "Получить чистый CSV файл"
 
-#: upload_csv.php:47
+#: upload_csv.php:80
 msgid ""
 "You can download this file, then open it in Open Office, Excel or Google "
 "Docs."
@@ -2254,11 +3023,11 @@ msgstr ""
 "Вы можете скачать этот файл и открыть его в Open Office, Excel или Google "
 "Docs."
 
-#: upload_csv.php:52
+#: upload_csv.php:86
 msgid "Export the .csv file"
 msgstr "Экспортировать .csv файл"
 
-#: upload_csv.php:54
+#: upload_csv.php:87
 msgid ""
 "When you have your spreadsheet properly set up and filled with data, export "
 "it as any of the following: \"comma-delimited csv\", or just \"csv\". Save "
@@ -2269,7 +3038,7 @@ msgstr ""
 "разделенный запятыми\", или просто \"CSV\". Сохраните его на рабочем "
 "компьютере, а затем загрузить его здесь."
 
-#: upload_csv.php:55
+#: upload_csv.php:88
 msgid ""
 "Exported CSV files should be comma-delimited and enclosed with double-quotes "
 "(\"). Encoding should be \"UTF-8.\""
@@ -2277,11 +3046,37 @@ msgstr ""
 "Экспортированные CSV-файлы должны быть разделенными запятыми и заключены в "
 "кавычки (\"). Кодирование должно быть \"UTF-8.\""
 
-#: upload_csv.php:59
+#: upload_csv.php:93
 msgid "Upload the .csv file"
 msgstr "Загрузить .csv файл"
 
-#: upload_csv.php:62
+#: upload_csv.php:101
+msgid "Enclosure character"
+msgstr ""
+
+#: upload_csv.php:107 upload_csv.php:123
+msgid "Auto"
+msgstr ""
+
+#: upload_csv.php:117
+msgid "Delimiter character"
+msgstr ""
+
+#: upload_csv.php:126
+msgid "tab"
+msgstr ""
+
+#: upload_csv.php:146
+#, fuzzy
+#| msgid "Overwrite matching record with new data"
+msgid "Update matching record with new data"
+msgstr "Перезапишите совпадающую запись новыми данными"
+
+#: upload_csv.php:147
+msgid "Don't import the record"
+msgstr ""
+
+#: upload_csv.php:170
 msgid ""
 "<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" "
 "setting, imported records are checked against existing records by the field "
@@ -2296,11 +3091,21 @@ msgstr ""
 "записи импортируется, то может произойти одно из трех действий, на основе "
 "настроек \"Предпочтения дублирующей записи\":"
 
-#: upload_csv.php:63
+#: upload_csv.php:171
 msgid "Current Setting"
 msgstr "Текущие настройки"
 
-#: upload_csv.php:67
+#: upload_csv.php:174
+#, php-format
+msgid ""
+"%sCreate New%s adds all imported records as new records without checking for "
+"a match."
+msgstr ""
+"%sСоздать новую%s добавляет все импортированные записи как новые без "
+"проверки соответствий"
+
+#: upload_csv.php:175
+#, php-format
 msgid ""
 "%sOverwrite%s an existing record with a matching %s will be updated with the "
 "data from the imported record. Blank or missing fields will not overwrite "
@@ -2310,15 +3115,8 @@ msgstr ""
 "будет обновляться с данными из импортируемой записи. Пустые или "
 "отсутствующие поля не будут перезаписывать существующие данные."
 
-#: upload_csv.php:70
-msgid ""
-"%sCreate New%s adds all imported records as new records without checking for "
-"a match."
-msgstr ""
-"%sСоздать новую%s добавляет все импортированные записи как новые без "
-"проверки соответствий"
-
-#: upload_csv.php:73
+#: upload_csv.php:176
+#, php-format
 msgid ""
 "%sDon&#39;t Import%s does not import the new record if it matches the %s of "
 "an existing one."
@@ -2326,16 +3124,48 @@ msgstr ""
 "%sНе импортировать%s значит не импортировать новую запись, если она "
 "соответствует %s существующей"
 
-#: upload_csv.php:83
+#: upload_csv.php:185
 msgid "Choose .csv file to import:"
 msgstr "Выберит файл .csv для импорта"
 
-#: upload_csv.php:84
+#: upload_csv.php:186
 msgid "Upload File"
 msgstr "Загрузить файл"
 
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:358
+msgid "Check for updates"
+msgstr ""
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:405
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr ""
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:407
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr ""
+
+#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:409
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: vendor/aux-plugin-update/Puc/v4p1/Vcs/PluginUpdateChecker.php:83
+msgid "There is no changelog available."
+msgstr ""
+
+#: vendor/wp-background-process/wp-background-process.php:427
+#, php-format
+msgid "Every %d Minutes"
+msgstr ""
+
 #. Plugin URI of the plugin/theme
-msgid "http://xnau.com/wordpress-plugins/participants-database"
+#, fuzzy
+#| msgid "http://xnau.com/wordpress-plugins/participants-database"
+msgid "https://xnau.com/wordpress-plugins/participants-database"
 msgstr "http://xnau.com/wordpress-plugins/participants-database"
 
 #. Description of the plugin/theme
@@ -2343,19 +3173,292 @@ msgid "Plugin for managing a database of participants, members or volunteers"
 msgstr "Плагин для управления базами данных участников"
 
 #. Author of the plugin/theme
-msgid "Roland Barker"
+#, fuzzy
+#| msgid "Roland Barker"
+msgid "Roland Barker, xnau webdesign"
 msgstr "Роланд Бейкер"
 
 #. Author URI of the plugin/theme
-msgid "http://xnau.com"
+#, fuzzy
+#| msgid "http://xnau.com"
+msgid "https://xnau.com"
 msgstr "http://xnau.com"
+
+#~ msgid "show all"
+#~ msgstr "показать все"
+
+#~ msgid "Show Group Descriptions"
+#~ msgstr "Показать описания группы"
+
+#~ msgid "Use WordPress&#39; auto formatting on rich text fields."
+#~ msgstr "Использовать автоматическое форматирование WordPress"
+
+#~ msgctxt "abbreviation for \"identification\""
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgctxt "indicates a new record is being entered"
+#~ msgid "(new record)"
+#~ msgstr "(новая запись)"
+
+#~ msgctxt "column name"
+#~ msgid "Default"
+#~ msgstr "По умолчанию"
+
+#~ msgid "fields"
+#~ msgstr "поля"
+
+#~ msgid "Delete"
+#~ msgstr "Удалить"
+
+#~ msgid ""
+#~ "Click on the red \"X\" to delete a field. If there are existing records "
+#~ "with this data field, that information will not be deleted from the "
+#~ "database, but you will no longer be able to display or edit it."
+#~ msgstr ""
+#~ "Нажмите на красный \"Х\", чтобы удалить поле. Если есть существующие "
+#~ "записи, связанные с этим полем данных, то информация не будет удалена из "
+#~ "базы данных, но вы больше не будете иметь возможность отображения или "
+#~ "редактирования ее."
+
+#~ msgid "Order"
+#~ msgstr "Порядок"
+
+#~ msgid ""
+#~ "Click and drag to reorder the fields. You do not need to click on \"Update"
+#~ "\" for the change to take effect."
+#~ msgstr ""
+#~ "Нажмите и перетащите, чтобы изменить порядок полей. Вам не нужно нажать "
+#~ "\"Обновить\", чтобы изменения вступили в силу."
+
+#~ msgid "Title"
+#~ msgstr "Заголовок"
+
+#~ msgid ""
+#~ "This is the display title for your field. You can change it at any time, "
+#~ "it won&#39;t affect the field in any way other than to change how it is "
+#~ "labeled in forms.<p>"
+#~ msgstr ""
+#~ " Это отображаемое название для вашей области. Вы можете изменить его в "
+#~ "любое время, и оно не будет влиять на поле в любом случае, кроме как "
+#~ "измениться, так как оно обозначено в формах.<p>"
+
+#~ msgid "Default"
+#~ msgstr "По умолчанию"
+
+#~ msgid "If you wish to pre-load a field with a value, you can put it here."
+#~ msgstr ""
+#~ "Если вы хотите по умолчанию заполнять поле заранее, укажите значение здесь"
+
+#~ msgid "Group"
+#~ msgstr "Группа"
+
+#~ msgid ""
+#~ "The database fields are organized into groups, and you can select which "
+#~ "group the database field belongs to here. You can edit the groups under "
+#~ "the \"Field Groups\" tab."
+#~ msgstr ""
+#~ "Поля базы данных организованы в группы, и вы можете выбрать, какие группы "
+#~ "полей базы данных входят сюда. Вы можете редактировать группы на вкладке "
+#~ "\"Группы поля\"."
+
+#~ msgid ""
+#~ "When a form is displayed, sometimes it is a good idea to explain "
+#~ "something about the information you want in a field. Any text you put in "
+#~ "here will be displayed next to the field. HTML is allowed, but be careful "
+#~ "with that, you can break things!"
+#~ msgstr ""
+#~ "При отображении формы, иногда необходимо объяснить что-то об информации, "
+#~ "которую вы хотите видеть в поле. Любой текст, который вы введете здесь, "
+#~ "затем будет отображаться рядом с полем. HTML разрешен, но будьте "
+#~ "осторожны с этим, вы можете внести непоправимые изменения!"
+
+#~ msgid "Form Element"
+#~ msgstr "Элемент формы"
+
+#, fuzzy
+#~ msgid ""
+#~ "If your piece of information is a simple line of text (like a name), it "
+#~ "should be presented in the form as a text field. If a longer piece of "
+#~ "text is called for, a text-field would be a better choice, and so forth. "
+#~ "This is where you can determine what kind of form element this particular "
+#~ "piece of information will be preseted with."
+#~ msgstr ""
+#~ "Если ваша часть информации является простой строкой текста (например, "
+#~ "имя), она должна быть представлена в форме, в качестве текстового поля. "
+#~ "Если запрашивается более длинный фрагмент текста, то текстовое поле "
+#~ "является лучшим выбором, и так далее. Это место, где вы можете "
+#~ "определить, какой элемент формы будет представлен с конкретной частью "
+#~ "информации."
+
+#~ msgid ""
+#~ "Under the multiple-choice dropdown are the form elements you can choose "
+#~ "from. It is really best to avoid changing this once you have begun adding "
+#~ "records to the database using this field&hellip;unpredictable things can "
+#~ "happen, and although you won&#39;t lose any data, it can make a mess! "
+#~ "That said, it <em>is</em> possible to change between similar elements, "
+#~ "like text/text-field or select/dropdown or select-other/dropdown-other. "
+#~ "Be warned, it&#39;s safest to set this up before you start getting data "
+#~ "for the field."
+#~ msgstr ""
+#~ "Множественный выбор выпадающих является формой элементов, которую вы "
+#~ "можете выбрать. Действительно будет лучше избежать изменения этого, как "
+#~ "только вы начали добавление записей в базу данных с помощью этого поля, "
+#~ "так непредсказуемые вещи могут произойти, и, хотя вы не потеряете данные, "
+#~ "это может привести к беспорядку! Тем не менее, возможно переключаться "
+#~ "между подобными элементами, такими как текст/текстовое поле или выбор/"
+#~ "выпадающий, или выбор другого/выпадающий другой. Будьте осторожны, "
+#~ "безопаснее, чтобы установить это, прежде чем вы начнете получать данные "
+#~ "для поля."
+
+#~ msgid "Values"
+#~ msgstr "Значения"
+
+#~ msgid ""
+#~ "For form elements that have multiple choices, you need to define those "
+#~ "choices here. Type in a comma-separated list of the options you want to "
+#~ "present."
+#~ msgstr ""
+#~ "Для элементов формы, которые имеют множественный выбор, необходимо "
+#~ "определить эти выборы. Введите через запятую список параметров, который "
+#~ "вы хотите представить."
+
+#, fuzzy
+#~ msgid ""
+#~ "Don&#39;t try to have a comma in one of your options, though! It&#39;s "
+#~ "posiible to break things by trying to include other (mostly non-text and "
+#~ "punctuation) characters, so test things, and if you get erratic behavior "
+#~ "in the form, you may have characters here that are messing things up. "
+#~ "Most international language characters should be fine, just type them in. "
+#~ "Don&#39;t try to use HTML entities or codes, it just won&#39;t work."
+#~ msgstr ""
+#~ "Однако, не пытайтесь внести запятую в одном из ваших вариантов!! "
+#~ "Существует возможность нарушить правила, пытаясь включать другие символы "
+#~ "(в основном не в текстовом формате и знаки препинания), так что проведите "
+#~ "проверку, и если вы обнаружите странное поведение в форме, возможно вы "
+#~ "внесли символы, которые приводят к беспорядку. Большинство международных "
+#~ "языковых символов должно быть достаточно, просто введите их. Тем не "
+#~ "менее, не пытайтесь использовать символы или коды HTML, они просто не "
+#~ "будут работать."
+
+#~ msgid ""
+#~ "If you wish certain fields to be required or have a specific kind of "
+#~ "content, you can set that here. \"Not Required\" means you don&#39;t care "
+#~ "if the field is filled in or not. \"Required\" simply means the field "
+#~ "must have something in it. \"match/regex\" gives you some advanced "
+#~ "options for validating a field. To match the field to the value of "
+#~ "another field, put the name of that field in the box. You can also use a "
+#~ "regex to validate the field, but it is for advanced users, so if you "
+#~ "don&#39;t know what a regex is, get some help before trying to use this "
+#~ "feature."
+#~ msgstr ""
+#~ "Если вы хотите, чтобы были определенные поля или они имели определенный "
+#~ "вид содержания, вы можете установить это здесь. \"Не обязательно\" "
+#~ "означает, что вас не волнует, заполнено поле или нет. \"Обязательно\" "
+#~ "означает, что поле должно быть заполнено. \"Совпадение/сокращение \" дает "
+#~ "вам некоторые дополнительные опции для проверки поля. Для соответствия "
+#~ "поля значению другого поля, поместите имя этого поля в окно. Вы также "
+#~ "можете использовать сокращение для проверки поля, но эта возможность "
+#~ "только для продвинутых пользователей, так что если вы не знаете, чем "
+#~ "является определенное сокращение, сначала получите помощь, прежде чем "
+#~ "пытаться использовать эту возможность."
+
+#~ msgid ""
+#~ "This only affects the \"List Participants\" page of the plugin. On that "
+#~ "page, the database records are listed. Since it would be impractical to "
+#~ "include every field as a column in this list, you can select which fields "
+#~ "are shown here. \"0\" means don&#39;t display it, a number sets the order "
+#~ "in which the column will appear. You have to make sure the numbers make "
+#~ "sense, if you have multiple items with the same number (other than 0), "
+#~ "only the last one with the number will appear."
+#~ msgstr ""
+#~ "Это влияет только на страницу плагина \"Список участников\". На этой "
+#~ "странице перечислены записи базы данных. Поскольку было бы непрактично, "
+#~ "включать все поля в виде колонки в этот список, вы можете выбрать, какие "
+#~ "поля будут отображены здесь. \"0\" означает не отображать, а число "
+#~ "устанавливает порядок, в котором появится название колонки. Вы должны "
+#~ "убедиться, что номера имеют смысла, если у вас есть несколько элементов с "
+#~ "одинаковым числом (кроме 0), появится только последний с числом."
+
+#~ msgid ""
+#~ "When using the [pdb_list] shortcode to display the list of records, this "
+#~ "column determines whether the column will be shown and in what order."
+#~ msgstr ""
+#~ "При использовании короткого кода [pdb_list] для отображения списка "
+#~ "записей, эта колонка определяет, будет ли колонка показана и в каком "
+#~ "порядке."
+
+#~ msgid "Switches"
+#~ msgstr "Переключения"
+
+#~ msgid ""
+#~ "<strong>Sortable</strong> means the list presented on the \"List "
+#~ "Participants\" page can be sorted by this field. Of course, it must have "
+#~ "a non-zero value in \"Column\" to be seen at all."
+#~ msgstr ""
+#~ "<strong>Сортируемый</strong> означает, что список, представленный на "
+#~ "странице \"Список участников\" может быть отсортирован по этому полю. "
+#~ "Конечно, он должен иметь ненулевое значение в поле \"Колонка\", чтобы "
+#~ "его  было видно."
+
+#~ msgid ""
+#~ "<strong>CSV</strong> means the field is one that can be imported or "
+#~ "exported with a CSV file. If you are using CSV files to bring in records, "
+#~ "you should set these switches based on which fields you are planning to "
+#~ "import. When exporting a CSV, this switch determines whether the field "
+#~ "will be exported.<p>"
+#~ msgstr ""
+#~ "<strong>CSV</strong> означает, что файл является одним их тех, которые "
+#~ "могут быть импортированы или экспортированы с CSV-файлом. Если вы "
+#~ "используете CSV-файлы, чтобы перенести в записи, вы должны установить "
+#~ "переключатели, на основе которых вы планируете импортировать поля. При "
+#~ "экспорте CSV-файла, данный переключатель определяет, будет ли поле "
+#~ "экспортированным.<p>"
+
+#~ msgid ""
+#~ "<strong>Persistent</strong> is a convenience feature helpful when you are "
+#~ "manually entering a series of records in the admin. If set, it means the "
+#~ "field will carry over to the next blank entry. For instance, if a group "
+#~ "of records from the same city are being entered, set the \"city\" field "
+#~ "to be persistent, then once a city value has been entered in the first "
+#~ "record of the series, the next blank record will have this city pre-"
+#~ "filled."
+#~ msgstr ""
+#~ "<strong>Сохраняющийся</strong> представляет собой удобную функцию, "
+#~ "которая полезна при ручном вводе серии записей в учетной записи "
+#~ "администратора. Если установлен, это означает, что поле будет перенесено "
+#~ "на следующую пустую запись. Например, если вводится группа записей с "
+#~ "одним городом, установите поле \"город\" сохраняющимся и, как только "
+#~ "значение города будет введено в первой записи серии, следующая пустая "
+#~ "запись будет  заполнена этим же городом."
+
+#~ msgid ""
+#~ "<strong>Signup</strong> selects this field for use in the brief signup "
+#~ "form that is presented with the [pdb_signup] shortcode."
+#~ msgstr ""
+#~ "<strong>Регистрация</strong> выбирает данное поле для использования в "
+#~ "краткой форме регистрации, которая представлена с коротким кодом "
+#~ "[pdb_signup]."
+
+#, fuzzy
+#~ msgid ""
+#~ "<strong>Readonly</strong> means that plugin users can see the value of "
+#~ "the field, but cannot edit it. The field will be editable in the admin."
+#~ msgstr ""
+#~ "<strong>Только для чтения</strong> означает, что пользователи плагина "
+#~ "могут видеть значение поля, но не могут его редактировать. Поля будут "
+#~ "доступны для редактирования в учетной записи администратора."
+
+#~ msgid "Edit Record"
+#~ msgstr "Редактировать запись"
+
+#~ msgid ""
+#~ "The date for \"%s\" was invalid. Please input the date with the exact "
+#~ "format shown"
+#~ msgstr ""
+#~ "Дата для \"%s\" была недопустимой. Пожалуйста, введите дату в правильном "
+#~ "формате."
 
 #~ msgctxt "noun; page number indicator"
 #~ msgid "Page"
 #~ msgstr "Страница"
-
-#~ msgid "Edit"
-#~ msgstr "Редактировать"
-
-#~ msgid "all"
-#~ msgstr "все"

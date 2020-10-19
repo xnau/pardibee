@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database 1.5.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/participants-database\n"
-"POT-Creation-Date: 2019-10-22 20:29-1000\n"
-"PO-Revision-Date: 2019-10-22 21:02-1000\n"
+"POT-Creation-Date: 2020-03-04 14:42-1000\n"
+"PO-Revision-Date: 2020-10-17 20:47-1000\n"
 "Last-Translator: Visa Jokela <visa.jokela@gmail.com>\n"
 "Language-Team: xnau <support@xnau.com>\n"
 "Language: fi_FI\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: classes/PDb_Aux_Plugin.php:390
@@ -37,7 +37,7 @@ msgstr "Omistaja"
 msgid "General Settings"
 msgstr "Yleiset asetukset"
 
-#: classes/PDb_Base.php:1442
+#: classes/PDb_Base.php:1599
 #, php-format
 msgid ""
 "Participants Database will require PHP version %1$s in future releases, you "
@@ -53,34 +53,34 @@ msgstr "Uusia sarakkeita sisäänladatusta CSV tiedostosta."
 msgid "Debugging Log"
 msgstr "Virheen korjauksen loki"
 
-#: classes/PDb_Debug.php:201
+#: classes/PDb_Debug.php:203
 #, fuzzy
 #| msgctxt "submit button label"
 #| msgid "Clear"
 msgid "Clear"
 msgstr "Tyhjennä"
 
-#: classes/PDb_Debug.php:202
+#: classes/PDb_Debug.php:204
 msgid "Refresh"
 msgstr ""
 
-#: classes/PDb_Debug.php:206
+#: classes/PDb_Debug.php:208
 #, php-format
 msgid "Log file: %s"
 msgstr ""
 
-#: classes/PDb_Debug.php:244
+#: classes/PDb_Debug.php:246
 #, php-format
 msgid ""
 "Unable to open the debugging log file: %s Check the \"File Upload Location\" "
 "setting."
 msgstr ""
 
-#: classes/PDb_Debug.php:246
+#: classes/PDb_Debug.php:248
 msgid "Debugging"
 msgstr "Virheenjäljitys"
 
-#: classes/PDb_Debug.php:419
+#: classes/PDb_Debug.php:421
 #, php-format
 msgid "Log file initiated at: %s"
 msgstr ""
@@ -95,15 +95,15 @@ msgctxt "label for an \"open\" control"
 msgid "Open for editing"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:270
+#: classes/PDb_Field_Editor.php:287
 msgid "You must define options for this field"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:644
+#: classes/PDb_Field_Editor.php:686
 msgid "Select this field"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:658
+#: classes/PDb_Field_Editor.php:704
 #, fuzzy
 #| msgctxt "submit button label"
 #| msgid "Delete Checked"
@@ -117,17 +117,17 @@ msgstr ""
 "Tiedostossa, jota yritit ladata sisään, on jokin virhe. Kokeile jotain "
 "toista tiedostoa."
 
-#: classes/PDb_File_Uploads.php:85 classes/PDb_File_Uploads.php:124
+#: classes/PDb_File_Uploads.php:80 classes/PDb_File_Uploads.php:117
 #, php-format
 msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
 msgstr "\"%s\", voit ladata vain JPEG, GIF tai PNG kuvia."
 
-#: classes/PDb_File_Uploads.php:87
+#: classes/PDb_File_Uploads.php:82
 #, php-format
 msgid "The file selected for \"%s\" must be one of these types: %s. "
 msgstr "Valitun tiedoston \"%s\" tulee olla tyypiltään joku näitä: %s. "
 
-#: classes/PDb_File_Uploads.php:136
+#: classes/PDb_File_Uploads.php:129
 #, php-format
 msgid ""
 "The file you tried to upload is too large. The file must be smaller than %sK."
@@ -135,102 +135,102 @@ msgstr ""
 "Tiedosto, jota yritit ladata sisään, on liian suuri. Sen pitää olla pienempi "
 "kuin %sK."
 
-#: classes/PDb_File_Uploads.php:147
+#: classes/PDb_File_Uploads.php:140
 msgid "The file could not be saved."
 msgstr "Tiedostoa ei voitu tallettaa."
 
-#: classes/PDb_FormElement.php:616 classes/PDb_List_Admin.php:971
-#: classes/PDb_List_Admin.php:1491 classes/xnau_FormElement.php:1082
+#: classes/PDb_FormElement.php:390 classes/PDb_List_Admin.php:1015
+#: classes/PDb_List_Admin.php:1535 classes/xnau_FormElement.php:1080
 msgid "delete"
 msgstr "poista"
 
-#: classes/PDb_FormElement.php:919
+#: classes/PDb_FormElement.php:713
 msgid "Text-line"
 msgstr "Tekstirivi"
 
-#: classes/PDb_FormElement.php:920
+#: classes/PDb_FormElement.php:714
 msgid "Text Area"
 msgstr "Tekstialue"
 
-#: classes/PDb_FormElement.php:921
+#: classes/PDb_FormElement.php:715
 msgid "Rich Text"
 msgstr "Rich Text"
 
-#: classes/PDb_FormElement.php:922
+#: classes/PDb_FormElement.php:716
 msgid "Checkbox"
 msgstr "Valintaruutu"
 
-#: classes/PDb_FormElement.php:923
+#: classes/PDb_FormElement.php:717
 msgid "Radio Buttons"
 msgstr "Valintapallukka"
 
-#: classes/PDb_FormElement.php:924
+#: classes/PDb_FormElement.php:718
 msgid "Dropdown List"
 msgstr "Pudotuslista"
 
-#: classes/PDb_FormElement.php:925
+#: classes/PDb_FormElement.php:719
 msgid "Date Field"
 msgstr "Päivämääräkenttä"
 
-#: classes/PDb_FormElement.php:926
+#: classes/PDb_FormElement.php:720
 msgid "Numeric"
 msgstr "Numeerinen"
 
-#: classes/PDb_FormElement.php:927
+#: classes/PDb_FormElement.php:721
 msgid "Decimal"
 msgstr "Desimaali"
 
-#: classes/PDb_FormElement.php:928
+#: classes/PDb_FormElement.php:722
 msgid "Currency"
 msgstr "Valuutta"
 
-#: classes/PDb_FormElement.php:929
+#: classes/PDb_FormElement.php:723
 msgid "Dropdown/Other"
 msgstr "Pudotuslista/Muu"
 
-#: classes/PDb_FormElement.php:930
+#: classes/PDb_FormElement.php:724
 msgid "Multiselect Checkbox"
 msgstr "Monivalintaruutu"
 
-#: classes/PDb_FormElement.php:931
+#: classes/PDb_FormElement.php:725
 #, fuzzy
 #| msgid "Multiselect Checkbox"
 msgid "Multiselect Dropdown"
 msgstr "Monivalintaruutu"
 
-#: classes/PDb_FormElement.php:932
+#: classes/PDb_FormElement.php:726
 msgid "Radio Buttons/Other"
 msgstr "Valintapallukka/Muu"
 
-#: classes/PDb_FormElement.php:933
+#: classes/PDb_FormElement.php:727
 msgid "Multiselect/Other"
 msgstr "Monivalinta/Muu"
 
-#: classes/PDb_FormElement.php:934
+#: classes/PDb_FormElement.php:728
 msgid "Link Field"
 msgstr "Linkkikenttä"
 
-#: classes/PDb_FormElement.php:935
+#: classes/PDb_FormElement.php:729
 msgid "Image Upload Field"
 msgstr "Kuvan sisäänlatauskenttä"
 
-#: classes/PDb_FormElement.php:936
+#: classes/PDb_FormElement.php:730
 msgid "File Upload Field"
 msgstr "Tiedoston sisäänlatauskenttä"
 
-#: classes/PDb_FormElement.php:937
+#: classes/PDb_FormElement.php:731
 msgid "Hidden Field"
 msgstr "Piilotettu kenttä"
 
-#: classes/PDb_FormElement.php:938
+#: classes/PDb_FormElement.php:732
 msgid "Password Field"
 msgstr "Salasanakenttä"
 
-#: classes/PDb_FormElement.php:939
+#: classes/PDb_FormElement.php:733
 msgid "CAPTCHA"
 msgstr "CAPTCTA"
 
-#: classes/PDb_FormElement.php:940
+#: classes/PDb_FormElement.php:734
 msgid "Placeholder"
 msgstr "Paikkamerkki"
 
@@ -250,105 +250,105 @@ msgstr "Sähköposti"
 msgid "regex/match"
 msgstr ""
 
-#: classes/PDb_Init.php:1138
+#: classes/PDb_Init.php:1139
 msgid "Participant Info"
 msgstr "Participant info"
 
-#: classes/PDb_Init.php:1139
+#: classes/PDb_Init.php:1140
 msgid "Personal Info"
 msgstr "Henkilökohtainen info"
 
-#: classes/PDb_Init.php:1140
+#: classes/PDb_Init.php:1141
 msgid "Administrative Info"
 msgstr "Hallinnollinen info"
 
-#: classes/PDb_Init.php:1141
+#: classes/PDb_Init.php:1142
 msgid "Record Info"
 msgstr "Tietuetieto"
 
-#: classes/PDb_List.php:439 templates/pdb-list-bootstrap.php:35
+#: classes/PDb_List.php:440 templates/pdb-list-bootstrap.php:35
 #: templates/pdb-list-detailed.php:32 templates/pdb-list-flexbox.php:15
 #: templates/pdb-list-responsive.php:18 templates/pdb-search-default.php:22
 msgid "Please select a column to search in."
 msgstr "Valitse hakusarake."
 
-#: classes/PDb_List.php:440 templates/pdb-list-bootstrap.php:36
+#: classes/PDb_List.php:441 templates/pdb-list-bootstrap.php:36
 #: templates/pdb-list-detailed.php:33 templates/pdb-list-flexbox.php:16
 #: templates/pdb-list-responsive.php:19 templates/pdb-search-default.php:23
 msgid "Please type in something to search for."
 msgstr "Kirjoita hakusana."
 
-#: classes/PDb_List.php:448 templates/pdb-list-bootstrap.php:46
+#: classes/PDb_List.php:449 templates/pdb-list-bootstrap.php:46
 #: templates/pdb-list-detailed.php:49 templates/pdb-list-flexbox.php:24
 #: templates/pdb-list-responsive.php:27 templates/pdb-search-default.php:35
 msgid "Search"
 msgstr "Hae"
 
-#: classes/PDb_List.php:462 classes/PDb_List_Admin.php:904
+#: classes/PDb_List.php:463 classes/PDb_List_Admin.php:948
 #: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:98
 #: templates/pdb-list-flexbox.php:44 templates/pdb-list-responsive.php:47
 #: templates/pdb-search-default.php:63
 msgid "Sort by"
 msgstr "Lajittele"
 
-#: classes/PDb_List.php:571
+#: classes/PDb_List.php:572
 msgid "select"
 msgstr "valitse"
 
-#: classes/PDb_List.php:744 classes/PDb_List_Admin.php:919
-#: classes/PDb_Settings.php:824 classes/PDb_Settings.php:1326
+#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:963
+#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
 msgid "Ascending"
 msgstr "Aakkosjärjestys"
 
-#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:920
-#: classes/PDb_Settings.php:824 classes/PDb_Settings.php:1326
+#: classes/PDb_List.php:746 classes/PDb_List_Admin.php:964
+#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
 msgid "Descending"
 msgstr "Käännetty aakkosjärjestys"
 
-#: classes/PDb_List.php:1233
+#: classes/PDb_List.php:1234
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms."
 msgstr ""
 
-#: classes/PDb_List.php:1234 classes/PDb_List_Admin.php:1207
+#: classes/PDb_List.php:1235 classes/PDb_List_Admin.php:1251
 msgid "Download CSV for this list"
 msgstr "Lataa CSV"
 
-#: classes/PDb_List.php:1239 classes/PDb_List_Admin.php:1208
+#: classes/PDb_List.php:1240 classes/PDb_List_Admin.php:1252
 msgid "Include field titles"
 msgstr "Sisällytä kenttien otsikot"
 
-#: classes/PDb_List.php:1257 classes/PDb_List_Admin.php:1205
+#: classes/PDb_List.php:1258 classes/PDb_List_Admin.php:1249
 msgid "File Name"
 msgstr "Tiedoston nimi"
 
-#: classes/PDb_List.php:1356 classes/PDb_List_Admin.php:1560
+#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1632
 msgctxt "submit button label"
 msgid "Delete Checked"
 msgstr "Poista valitut"
 
-#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1561
+#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1633
 msgctxt "submit button label"
 msgid "Change"
 msgstr "Muuta"
 
-#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1562
+#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1634
 msgctxt "submit button label"
 msgid "Sort"
 msgstr "Lajittele"
 
-#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1563
+#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1635
 msgctxt "submit button label"
 msgid "Filter"
 msgstr "Suodata"
 
-#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1564
+#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1636
 msgctxt "submit button label"
 msgid "Clear"
 msgstr "Tyhjennä"
 
-#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1565
+#: classes/PDb_List.php:1362 classes/PDb_List_Admin.php:1637
 msgctxt "search button label"
 msgid "Search"
 msgstr "Hae"
@@ -416,18 +416,18 @@ msgid ""
 "first %s will be sent."
 msgstr ""
 
-#: classes/PDb_List_Admin.php:465
+#: classes/PDb_List_Admin.php:487
 msgid "Record delete successful."
 msgstr "Tietueen poisto onnistui."
 
-#: classes/PDb_List_Admin.php:486
+#: classes/PDb_List_Admin.php:508
 #, fuzzy, php-format
 #| msgid "The record has been updated."
 msgctxt "number of records with approval statuses set"
 msgid "Approval status for %d records has been updated."
 msgstr "Tietue on päivitetty."
 
-#: classes/PDb_List_Admin.php:511 classes/PDb_List_Admin.php:533
+#: classes/PDb_List_Admin.php:533 classes/PDb_List_Admin.php:555
 #, php-format
 msgctxt "number of emails sent"
 msgid "%d email was sent."
@@ -435,83 +435,83 @@ msgid_plural "%d emails were sent."
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/PDb_List_Admin.php:842
+#: classes/PDb_List_Admin.php:886
 msgid "Show only records with"
 msgstr "Näytä vain tietueet"
 
-#: classes/PDb_List_Admin.php:853
+#: classes/PDb_List_Admin.php:897
 msgctxt ""
 "joins two search terms, such as in \"Show only records with last name that "
 "is Smith\""
 msgid "that"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:860
+#: classes/PDb_List_Admin.php:904
 msgid "is"
 msgstr "on"
 
-#: classes/PDb_List_Admin.php:861
+#: classes/PDb_List_Admin.php:905
 msgid "is not"
 msgstr "ei ole"
 
-#: classes/PDb_List_Admin.php:862
+#: classes/PDb_List_Admin.php:906
 msgid "contains"
 msgstr "sisältää"
 
-#: classes/PDb_List_Admin.php:863
+#: classes/PDb_List_Admin.php:907
 msgid "doesn&#39;t contain"
 msgstr "ei sisällä"
 
-#: classes/PDb_List_Admin.php:864
+#: classes/PDb_List_Admin.php:908
 msgid "is greater than"
 msgstr "suurempi kuin"
 
-#: classes/PDb_List_Admin.php:865
+#: classes/PDb_List_Admin.php:909
 msgid "is less than"
 msgstr "pienempi kuin"
 
-#: classes/PDb_List_Admin.php:879
+#: classes/PDb_List_Admin.php:923
 msgid "and"
 msgstr "ja"
 
-#: classes/PDb_List_Admin.php:880
+#: classes/PDb_List_Admin.php:924
 msgid "or"
 msgstr "tai"
 
-#: classes/PDb_List_Admin.php:899
+#: classes/PDb_List_Admin.php:943
 msgid "Number of filters to use: "
 msgstr "Käytettävä suodatin määrä"
 
-#: classes/PDb_List_Admin.php:931
+#: classes/PDb_List_Admin.php:975
 #, php-format
 msgid "%s record found, sorted by: %s."
 msgid_plural "%s records found, sorted by: %s."
 msgstr[0] "%s tietuetta löytyi, lajiteltu: %s."
 msgstr[1] "%s tietuetta löytyi, lajiteltu: %s."
 
-#: classes/PDb_List_Admin.php:963 classes/PDb_List_Admin.php:1492
+#: classes/PDb_List_Admin.php:1007 classes/PDb_List_Admin.php:1536
 msgid "approve"
 msgstr "hyväksy"
 
-#: classes/PDb_List_Admin.php:964 classes/PDb_List_Admin.php:1493
+#: classes/PDb_List_Admin.php:1008 classes/PDb_List_Admin.php:1537
 msgid "unapprove"
 msgstr "Älä hyväksy"
 
-#: classes/PDb_List_Admin.php:1016
+#: classes/PDb_List_Admin.php:1060
 #, fuzzy, php-format
 #| msgid "Show %s items per page."
 msgid "Show %s items per page."
 msgstr "Näytä % kpl sivulla."
 
-#: classes/PDb_List_Admin.php:1075
+#: classes/PDb_List_Admin.php:1119
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: classes/PDb_List_Admin.php:1169
+#: classes/PDb_List_Admin.php:1213
 msgid "No records found"
 msgstr "Tietueita ei löytynyt"
 
-#: classes/PDb_List_Admin.php:1211
+#: classes/PDb_List_Admin.php:1255
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms, and in the order specified by the sort. The export will include "
@@ -523,31 +523,30 @@ msgstr ""
 "sivuilta. Mukaan otettavat tiedot on merkitty \"CSV\" sarakkeessa, joka "
 "löytyy Hallinnoi tietokannan kenttiä -sivulta."
 
-#: classes/PDb_List_Admin.php:1489
+#: classes/PDb_List_Admin.php:1533
 msgid "PDb Admin List With Selected: "
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1494
+#: classes/PDb_List_Admin.php:1538
 msgid "send signup email"
 msgstr "lähetä ilmoittautumisesta vastausviesti"
 
-#: classes/PDb_List_Admin.php:1566 participants-database.php:3507
+#: classes/PDb_List_Admin.php:1638 participants-database.php:3479
 msgid "Apply"
 msgstr "Käytä"
 
-#: classes/PDb_List_Admin.php:1567
+#: classes/PDb_List_Admin.php:1639
 msgctxt ""
 "phrase used just before naming the action to perform on the selected items"
 msgid "With selected"
 msgstr "Valittujen"
 
-#: classes/PDb_Manage_Fields.php:74 classes/PDb_Manage_Fields_Updates.php:35
-#: participants-database.php:3703
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3675
 msgid "Manage Database Fields"
 msgstr "Hallinnoi tietokannan kenttiä"
 
 #: classes/PDb_Manage_Fields.php:76 classes/PDb_Manage_Fields.php:84
-#: classes/PDb_Manage_Fields.php:188
+#: classes/PDb_Manage_Fields.php:194
 msgid "Field Groups"
 msgstr "Kenttäryhmät"
 
@@ -555,221 +554,229 @@ msgstr "Kenttäryhmät"
 msgid "Help"
 msgstr "Apua"
 
+#: classes/PDb_Manage_Fields.php:116
+#, fuzzy, php-format
+#| msgctxt "column name"
+#| msgid "Fields"
+msgctxt "Title of the field group"
+msgid "%s Fields"
+msgstr "Kentät"
+
 #: classes/PDb_Manage_Fields.php:138
 msgid "No fields in this group"
 msgstr "Tässä ryhmässä ei ole kenttiä"
 
-#: classes/PDb_Manage_Fields.php:194
+#: classes/PDb_Manage_Fields.php:200
 msgid "Edit / Add / Remove Field Groups"
 msgstr "Muokkaa / Lisää / Poista kenttäryhmiä"
 
-#: classes/PDb_Manage_Fields.php:225 classes/PDb_Manage_Fields.php:593
+#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:614
 msgid "group"
 msgstr "ryhmä"
 
-#: classes/PDb_Manage_Fields.php:227
+#: classes/PDb_Manage_Fields.php:233
 #, fuzzy
 #| msgid "field"
 msgid "field count"
 msgstr "kenttä"
 
-#: classes/PDb_Manage_Fields.php:372
+#: classes/PDb_Manage_Fields.php:380
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: classes/PDb_Manage_Fields.php:419 classes/PDb_Manage_Fields.php:432
+#: classes/PDb_Manage_Fields.php:428 classes/PDb_Manage_Fields.php:441
 msgid "Add to CSV"
 msgstr "Lisää CSV-tiedostoon"
 
-#: classes/PDb_Manage_Fields.php:420 classes/PDb_Manage_Fields.php:433
+#: classes/PDb_Manage_Fields.php:429 classes/PDb_Manage_Fields.php:442
 msgid "Remove from CSV"
 msgstr "Poista CSV-tiedostosta"
 
-#: classes/PDb_Manage_Fields.php:431
+#: classes/PDb_Manage_Fields.php:440
 #, fuzzy
 #| msgid "Add Group"
 msgid "Assign Group"
 msgstr "Lisää ryhmä"
 
-#: classes/PDb_Manage_Fields.php:434
+#: classes/PDb_Manage_Fields.php:443
 #, fuzzy
 #| msgid "Add Group"
 msgid "Add to Signup"
 msgstr "Lisää ryhmä"
 
-#: classes/PDb_Manage_Fields.php:435
+#: classes/PDb_Manage_Fields.php:444
 msgid "Remove from Signup"
 msgstr "Poista rekisteröitymistä"
 
-#: classes/PDb_Manage_Fields.php:516
+#: classes/PDb_Manage_Fields.php:537
 msgid "Public"
 msgstr "Julkinen"
 
-#: classes/PDb_Manage_Fields.php:517
+#: classes/PDb_Manage_Fields.php:538
 msgid "Private"
 msgstr "Yksityinen"
 
-#: classes/PDb_Manage_Fields.php:518
+#: classes/PDb_Manage_Fields.php:539
 #, fuzzy
 #| msgid "Admin"
 msgctxt "short form of \"administrator\""
 msgid "Admin"
 msgstr "Pääkäyttäjä"
 
-#: classes/PDb_Manage_Fields.php:589
+#: classes/PDb_Manage_Fields.php:610
 msgid "Update Fields"
 msgstr "Päivitä kentät"
 
-#: classes/PDb_Manage_Fields.php:590
+#: classes/PDb_Manage_Fields.php:611
 msgid "Update Groups"
 msgstr "Päivitä ryhmät"
 
-#: classes/PDb_Manage_Fields.php:591
+#: classes/PDb_Manage_Fields.php:612
 msgid "Add Field"
 msgstr "Lisää kenttä"
 
-#: classes/PDb_Manage_Fields.php:592
+#: classes/PDb_Manage_Fields.php:613
 msgid "Add Group"
 msgstr "Lisää ryhmä"
 
-#: classes/PDb_Manage_Fields.php:594
+#: classes/PDb_Manage_Fields.php:615
 msgid "field"
 msgstr "kenttä"
 
-#: classes/PDb_Manage_Fields.php:595
+#: classes/PDb_Manage_Fields.php:616
 msgid "new field title"
 msgstr "uusi otsikko kentälle"
 
-#: classes/PDb_Manage_Fields.php:596
+#: classes/PDb_Manage_Fields.php:617
 #, fuzzy
 #| msgid "new field title"
 msgid "new field form element"
 msgstr "uusi otsikko kentälle"
 
-#: classes/PDb_Manage_Fields.php:597
+#: classes/PDb_Manage_Fields.php:618
 msgid "new group title"
 msgstr "uusi otsikko ryhmälle"
 
-#: classes/PDb_Manage_Fields.php:598
+#: classes/PDb_Manage_Fields.php:619
 msgctxt "column name"
 msgid "Fields"
 msgstr "Kentät"
 
-#: classes/PDb_Manage_Fields.php:599
+#: classes/PDb_Manage_Fields.php:620
 msgctxt "column name"
 msgid "Group"
 msgstr "Ryhmä"
 
-#: classes/PDb_Manage_Fields.php:600
+#: classes/PDb_Manage_Fields.php:621
 msgctxt "column name"
 msgid "Order"
 msgstr "Tilaa"
 
-#: classes/PDb_Manage_Fields.php:601
+#: classes/PDb_Manage_Fields.php:622
 msgctxt "column name"
 msgid "Name"
 msgstr "Nimi"
 
-#: classes/PDb_Manage_Fields.php:602
+#: classes/PDb_Manage_Fields.php:623
 msgctxt "column name"
 msgid "Title"
 msgstr "Otsikko"
 
-#: classes/PDb_Manage_Fields.php:603
+#: classes/PDb_Manage_Fields.php:624
 #, fuzzy
 #| msgid "Default Image"
 msgctxt "column name"
 msgid "Default Value"
 msgstr "Oletuskuva"
 
-#: classes/PDb_Manage_Fields.php:604
+#: classes/PDb_Manage_Fields.php:625
 msgctxt "column name"
 msgid "Help Text"
 msgstr "Aputeksti"
 
-#: classes/PDb_Manage_Fields.php:605
+#: classes/PDb_Manage_Fields.php:626
 msgctxt "column name"
 msgid "Form Element"
 msgstr "Lomakkeen elementti"
 
-#: classes/PDb_Manage_Fields.php:606
+#: classes/PDb_Manage_Fields.php:627
 msgctxt "column name"
 msgid "Values"
 msgstr "Arvot"
 
-#: classes/PDb_Manage_Fields.php:607
+#: classes/PDb_Manage_Fields.php:628
 msgctxt "column name"
 msgid "Validation"
 msgstr "Tarkistus"
 
-#: classes/PDb_Manage_Fields.php:608
+#: classes/PDb_Manage_Fields.php:629
 msgctxt "column name"
 msgid "Display Column"
 msgstr "Näyttö -sarake"
 
-#: classes/PDb_Manage_Fields.php:609
+#: classes/PDb_Manage_Fields.php:630
 msgctxt "column name"
 msgid "Admin Column"
 msgstr "Pääkäyttäjän sarake"
 
-#: classes/PDb_Manage_Fields.php:610
+#: classes/PDb_Manage_Fields.php:631
 msgctxt "column name"
 msgid "Sortable"
 msgstr "Lajiteltava"
 
-#: classes/PDb_Manage_Fields.php:611
+#: classes/PDb_Manage_Fields.php:632
 msgctxt "column name, acronym for \"comma separated values\""
 msgid "CSV"
 msgstr "CSV"
 
-#: classes/PDb_Manage_Fields.php:612
+#: classes/PDb_Manage_Fields.php:633
 msgctxt "column name"
 msgid "Persistent"
 msgstr "Olemassaoleva"
 
-#: classes/PDb_Manage_Fields.php:613
+#: classes/PDb_Manage_Fields.php:634
 msgctxt "column name"
 msgid "Signup"
 msgstr "Rekisteröityminen"
 
-#: classes/PDb_Manage_Fields.php:614
+#: classes/PDb_Manage_Fields.php:635
 msgctxt "column name"
 msgid "Read Only"
 msgstr "Lukutila"
 
-#: classes/PDb_Manage_Fields.php:615
+#: classes/PDb_Manage_Fields.php:636
 msgctxt "column name"
 msgid "Admin"
 msgstr "Pääkäyttäjä"
 
-#: classes/PDb_Manage_Fields.php:616
+#: classes/PDb_Manage_Fields.php:637
 msgctxt "column name"
 msgid "Delete"
 msgstr "Poista"
 
-#: classes/PDb_Manage_Fields.php:617
+#: classes/PDb_Manage_Fields.php:638
 msgctxt "column name"
 msgid "Display"
 msgstr "Näytä"
 
-#: classes/PDb_Manage_Fields.php:618
+#: classes/PDb_Manage_Fields.php:639
 msgctxt "column name"
 msgid "Description"
 msgstr "Kuvaus"
 
-#: classes/PDb_Manage_Fields.php:619
+#: classes/PDb_Manage_Fields.php:640
 #, fuzzy
 #| msgid "Contributor"
 msgctxt "column name"
 msgid "Attributes"
 msgstr "Tukija"
 
-#: classes/PDb_Manage_Fields.php:620
+#: classes/PDb_Manage_Fields.php:641
 msgctxt "column name"
 msgid "Options"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:621
+#: classes/PDb_Manage_Fields.php:642
 #, fuzzy
 #| msgctxt "column name"
 #| msgid "Validation"
@@ -777,24 +784,24 @@ msgctxt "column name"
 msgid "Validation Message"
 msgstr "Tarkistus"
 
-#: classes/PDb_Manage_Fields.php:622
+#: classes/PDb_Manage_Fields.php:643
 msgctxt "button label"
 msgid "With Selected"
 msgstr "Valittujen"
 
-#: classes/PDb_Manage_Fields.php:623
+#: classes/PDb_Manage_Fields.php:644
 #, fuzzy
 #| msgid "Apply"
 msgctxt "button label"
 msgid "Apply"
 msgstr "Käytä"
 
-#: classes/PDb_Manage_Fields.php:624
+#: classes/PDb_Manage_Fields.php:645
 msgctxt "select all button label"
 msgid "All"
 msgstr "Kaikki"
 
-#: classes/PDb_Manage_Fields.php:625
+#: classes/PDb_Manage_Fields.php:646
 msgctxt "label for the view mode selector"
 msgid "View Mode"
 msgstr ""
@@ -859,19 +866,19 @@ msgstr ""
 msgid "Your groups have been updated"
 msgstr "Tietosi on päivitetty"
 
-#: classes/PDb_Manage_Fields_Updates.php:360
+#: classes/PDb_Manage_Fields_Updates.php:361
 msgid "Selected fields deleted"
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:380
+#: classes/PDb_Manage_Fields_Updates.php:381
 msgid "Selected group deleted"
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:405
+#: classes/PDb_Manage_Fields_Updates.php:408
 msgid "Field settings updated."
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:929
+#: classes/PDb_Manage_Fields_Updates.php:932
 #, php-format
 msgid ""
 "The %1$s was not added. There is already a %1$s with that name, please "
@@ -926,11 +933,11 @@ msgstr ""
 msgid "First"
 msgstr "Ensimmäinen"
 
-#: classes/PDb_Pagination.php:377 participants-database.php:3509
+#: classes/PDb_Pagination.php:377 participants-database.php:3481
 msgid "Previous"
 msgstr "Edellinen"
 
-#: classes/PDb_Pagination.php:396 participants-database.php:3508
+#: classes/PDb_Pagination.php:396 participants-database.php:3480
 msgid "Next"
 msgstr "Seuraava"
 
@@ -938,7 +945,7 @@ msgstr "Seuraava"
 msgid "Last"
 msgstr "Viimeinen"
 
-#: classes/PDb_Path.php:159 participants-database.php:3329
+#: classes/PDb_Path.php:159 participants-database.php:3281
 #, php-format
 msgid "The uploads directory (%s) could not be created."
 msgstr "Lataushakemistoa (%s) ei voitu luoda."
@@ -1095,11 +1102,22 @@ msgstr ""
 "Polku (suhteessa WPn juureen) näytettävälle kuvatiedostolle, jos kuva ei ole "
 "määritelty kuvakenttää varten. Jätä tyhjäksi, jos oletuskuvaa ei ole."
 
-#: classes/PDb_Settings.php:212
+#: classes/PDb_Settings.php:213 classes/PDb_Settings.php:873
+msgid "Image Size"
+msgstr ""
+
+#: classes/PDb_Settings.php:217
+msgid ""
+"Sets the default height of images displayed in single record and record edit "
+"displays. Defaults to pixels, but any valid CSS size value can be used. "
+"Default size for the list display is under the list display tab."
+msgstr ""
+
+#: classes/PDb_Settings.php:225
 msgid "Link Image to Fullsize"
 msgstr "Linkki täyskokoiseen kuvaan"
 
-#: classes/PDb_Settings.php:217
+#: classes/PDb_Settings.php:230
 msgid ""
 "place a link to the full-size image on images. This link will work with most "
 "\"lightbox\" plugins."
@@ -1107,11 +1125,11 @@ msgstr ""
 "sijoita linkki täyskokoiseen kuvaan. Tämä linkki toimii useimmilla \"lightbox"
 "\" liitäntäsovelluksilla."
 
-#: classes/PDb_Settings.php:225
+#: classes/PDb_Settings.php:238
 msgid "Allow File Delete"
 msgstr "Salli tiedoston poisto"
 
-#: classes/PDb_Settings.php:230
+#: classes/PDb_Settings.php:243
 msgid ""
 "if checked, allows uploaded files and images to be deleted from storage when "
 "deleted from a record by a user"
@@ -1119,19 +1137,19 @@ msgstr ""
 "rastitettuna sallii sisäänladattujen tiedostojen ja kuvien poiston, kun "
 "käyttäjä poistaa tietueen"
 
-#: classes/PDb_Settings.php:239
+#: classes/PDb_Settings.php:252
 msgid "Allow HTML Tags in Text Fields"
 msgstr ""
 
-#: classes/PDb_Settings.php:244
+#: classes/PDb_Settings.php:257
 msgid "if checked, limited HTML tags are allowed in \"text-line\" fields."
 msgstr ""
 
-#: classes/PDb_Settings.php:252
+#: classes/PDb_Settings.php:265
 msgid "Make Links Clickable"
 msgstr "Linkkejä voi klikata"
 
-#: classes/PDb_Settings.php:257
+#: classes/PDb_Settings.php:270
 msgid ""
 "if a \"text-line\" field looks like a link (begins with \"http\" or is an "
 "email address) make it clickable"
@@ -1139,19 +1157,19 @@ msgstr ""
 "jos tekstirivi -kenttä näyttää linkiltä (alkaa \"http\" tai on "
 "sähköpostiosoite), tee siitä klikattava"
 
-#: classes/PDb_Settings.php:265
+#: classes/PDb_Settings.php:278
 msgid "Protect Email Addresses"
 msgstr "Suojaa sähköpostiosoitteet"
 
-#: classes/PDb_Settings.php:270
+#: classes/PDb_Settings.php:283
 msgid "protect email addresses in text-line fields with Javascript"
 msgstr "suojaa sähköpostiosoitteet tekstiriveillä Javascriptillä"
 
-#: classes/PDb_Settings.php:278
+#: classes/PDb_Settings.php:291
 msgid "Missing Field Error Message"
 msgstr "Virheilmoitus puuttuvasta kentästä"
 
-#: classes/PDb_Settings.php:282
+#: classes/PDb_Settings.php:295
 #, php-format
 msgid ""
 "the message shown when a field is required, but left empty (the %s is "
@@ -1160,30 +1178,30 @@ msgstr ""
 "viesti kertoo, kun kenttä on pakollinen, mutta jäänyt tyhjäksi (%s korvautuu "
 "kentän nimellä)"
 
-#: classes/PDb_Settings.php:283
+#: classes/PDb_Settings.php:296
 #, php-format
 msgid "The %s field is required."
 msgstr "%s-kenttä on pakollinen."
 
-#: classes/PDb_Settings.php:289
+#: classes/PDb_Settings.php:302
 msgid "Invalid Field Error Message"
 msgstr "Ilmoitus virheellisestä kentästä"
 
-#: classes/PDb_Settings.php:293
+#: classes/PDb_Settings.php:306
 msgid ""
 "the message shown when a field's value does not pass the validation test"
 msgstr "huomautus, kun tarkastustesti ei hyväksy kentän arvoa"
 
-#: classes/PDb_Settings.php:294
+#: classes/PDb_Settings.php:307
 #, php-format
 msgid "The %s field appears to be incorrect."
 msgstr "%s -kenttä on virheellinen."
 
-#: classes/PDb_Settings.php:300
+#: classes/PDb_Settings.php:313
 msgid "Non-Matching Field Error Message"
 msgstr "Ilmoitus epäsopivasta kentästä"
 
-#: classes/PDb_Settings.php:304
+#: classes/PDb_Settings.php:317
 #, fuzzy, php-format
 #| msgid ""
 #| "the message shown when a field's value does match the value of another "
@@ -1198,31 +1216,31 @@ msgstr ""
 "Ensimmäinen %s näyttää kentän nimen, toinen näyttää kentän, jonka tulisi "
 "vastata sitä."
 
-#: classes/PDb_Settings.php:305
+#: classes/PDb_Settings.php:318
 #, php-format
 msgid "The %s field must match the %s field."
 msgstr "%s -kentän tulee olla vastata %s -kenttää."
 
-#: classes/PDb_Settings.php:312
+#: classes/PDb_Settings.php:325
 msgid "Failed CAPTCHA Message"
 msgstr "Epäonnistunut CAPTCHA ilmoitus"
 
-#: classes/PDb_Settings.php:316
+#: classes/PDb_Settings.php:329
 msgid "the message shown when the CAPTCHA (verify human) test failed"
 msgstr ""
 "ilmoitus näytetään, kun CAPTCHA (tarkista, että käyttäjä ei ole robotti) "
 "testi epäonnistuu"
 
-#: classes/PDb_Settings.php:317
+#: classes/PDb_Settings.php:330
 #, php-format
 msgid "Pleast try the %s question again."
 msgstr "Ole hyvä ja yritä %s kysymystä uudelleen."
 
-#: classes/PDb_Settings.php:323
+#: classes/PDb_Settings.php:336
 msgid "Field Error Style"
 msgstr "Tyylivirhe kentässä"
 
-#: classes/PDb_Settings.php:327
+#: classes/PDb_Settings.php:340
 msgid ""
 "the CSS style applied to an input or text field that is missing or has not "
 "passed validation. This must be a valid CSS rule"
@@ -1230,19 +1248,19 @@ msgstr ""
 "css tyylitiedosto tekstin syötössä tai puuttuva tai hyväksymätön "
 "tekstikenttä. Tämän pitää olla käypä CSS sääntö"
 
-#: classes/PDb_Settings.php:334
+#: classes/PDb_Settings.php:347
 msgid "Mark Required Fields"
 msgstr "Merkitse pakolliset kentät"
 
-#: classes/PDb_Settings.php:339
+#: classes/PDb_Settings.php:352
 msgid "mark the title of required fields?"
 msgstr "merkitse otsikko pakollisille kentille?"
 
-#: classes/PDb_Settings.php:347
+#: classes/PDb_Settings.php:360
 msgid "Required Field Marker"
 msgstr "Pakollinen kenttämerkki"
 
-#: classes/PDb_Settings.php:351
+#: classes/PDb_Settings.php:364
 #, php-format
 msgid ""
 "html added to field title for required fields if selected above (the %s is "
@@ -1251,24 +1269,24 @@ msgstr ""
 "html lisätty kentän otsikkoon pakollisille kentille, jos se on valittu yllä "
 "(%s korvataan kentän otsikolla)"
 
-#: classes/PDb_Settings.php:376
+#: classes/PDb_Settings.php:389
 msgid "Signup Button Text"
 msgstr "Ilmoittautumislomakkeen teksti painonapille"
 
-#: classes/PDb_Settings.php:380
+#: classes/PDb_Settings.php:393
 msgid "text shown on the button to sign up"
 msgstr "teksti, joka näkyy ilmoittautumisen painonapilla"
 
-#: classes/PDb_Settings.php:381
+#: classes/PDb_Settings.php:394
 msgctxt "the text on a button to submit a signup form"
 msgid "Sign Up"
 msgstr "Kirjaudu"
 
-#: classes/PDb_Settings.php:387
+#: classes/PDb_Settings.php:400
 msgid "Signup Thanks Page"
 msgstr "Ilmoittautumisen kiitos -sivu"
 
-#: classes/PDb_Settings.php:391
+#: classes/PDb_Settings.php:404
 msgid ""
 "after they register, send them to this page for a thank you message. This "
 "page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
@@ -1280,19 +1298,19 @@ msgstr ""
 "haluat käyttäjän menevän takaisin samalle sivulle. Voit myös käyttää Post ID "
 "-koodia viesteihin ja muokattuihin viesteihin."
 
-#: classes/PDb_Settings.php:400
+#: classes/PDb_Settings.php:413
 msgid "Show Field Groups"
 msgstr "Näytä kenttäryhmät"
 
-#: classes/PDb_Settings.php:405
+#: classes/PDb_Settings.php:418
 msgid "Show groups and group descriptions in the signup form."
 msgstr "Näytä ryhmät ja ryhmien kuvaukset rekisteröintilomakkeella."
 
-#: classes/PDb_Settings.php:413 upload_csv.php:158
+#: classes/PDb_Settings.php:426 upload_csv.php:158
 msgid "Duplicate Record Check Field"
 msgstr "Tarkistuskenttä tietueiden duplikaateille"
 
-#: classes/PDb_Settings.php:418
+#: classes/PDb_Settings.php:431
 msgid ""
 "when a signup is submitted or CSV record is imported, this field is checked "
 "for a duplicate"
@@ -1300,11 +1318,11 @@ msgstr ""
 "kun ilmoittautumislomake on lähetetty tai CSV tietue on ladattu, tämä kenttä "
 "tarkistetaan tietueduplikaattien varalta"
 
-#: classes/PDb_Settings.php:425 upload_csv.php:139
+#: classes/PDb_Settings.php:438 upload_csv.php:139
 msgid "Duplicate Record Preference"
 msgstr "Duplikaattien ensisijaisuus"
 
-#: classes/PDb_Settings.php:430
+#: classes/PDb_Settings.php:443
 msgid ""
 "when the submission matches the Duplicate Record Check Field of an existing "
 "record. This also applies to importing records from a CSV file."
@@ -1312,23 +1330,23 @@ msgstr ""
 "kun lähetyksestä tarkistetaan tietueiden duplikaatit aiemmista tietueista. "
 "Tämä pätee myös CSV tiedostosta tuotuihin tietueihin."
 
-#: classes/PDb_Settings.php:433 upload_csv.php:145
+#: classes/PDb_Settings.php:446 upload_csv.php:145
 msgid "Create a new record with the submission"
 msgstr "Luo uusi tietue lähettämällä"
 
-#: classes/PDb_Settings.php:434
+#: classes/PDb_Settings.php:447
 msgid "Overwrite matching record with new data"
 msgstr "Korvaa vastaava tietue uudella tiedolla"
 
-#: classes/PDb_Settings.php:435
+#: classes/PDb_Settings.php:448
 msgid "Show a validation error message"
 msgstr "Näytä virheilmoitus tarkistamisesta"
 
-#: classes/PDb_Settings.php:443
+#: classes/PDb_Settings.php:456
 msgid "Duplicate Record Error Message"
 msgstr "Virheilmoitus tietueiden duplikaateista"
 
-#: classes/PDb_Settings.php:447
+#: classes/PDb_Settings.php:460
 msgid ""
 "If \"Show a validation error message\" is selected above, this message will "
 "be shown if a signup is made with a \"check field\" that matches an existing "
@@ -1338,24 +1356,24 @@ msgstr ""
 "näytetään, jos ilmoittautuminen on tehty \"tarkista kenttä\" - asetuksella, "
 "joka tarkistaa olemassaolevat tietueet."
 
-#: classes/PDb_Settings.php:448
+#: classes/PDb_Settings.php:461
 #, php-format
 msgid "A record with that %s already exists. Please choose another."
 msgstr "Tietue %s on jo olemassa, ole hyvä ja valitse toinen."
 
-#: classes/PDb_Settings.php:454
+#: classes/PDb_Settings.php:467
 msgid "Send Signup Response Email"
 msgstr "Lähetä ilmoittautumisesta vastausviesti"
 
-#: classes/PDb_Settings.php:458
+#: classes/PDb_Settings.php:471
 msgid "Send a receipt email to people who sign up"
 msgstr "Lähetä ilmoittautuneelle kuittaus sähköpostilla"
 
-#: classes/PDb_Settings.php:466
+#: classes/PDb_Settings.php:479
 msgid "Signup Email From Address"
 msgstr "Ilmoittautumisviestin Osoite"
 
-#: classes/PDb_Settings.php:470
+#: classes/PDb_Settings.php:483
 msgid ""
 "the \"From\" address on signup receipt emails. If the recipient hits \"reply"
 "\", their reply will go to this address. It is a good idea to use an email "
@@ -1365,19 +1383,19 @@ msgstr ""
 "painaa \"Vastaa\" -painiketta, viesti lähtee tähän osoitteeseen. Sivuston "
 "domainin käyttäminen tässä yhteyessä ei ole suositeltavaa."
 
-#: classes/PDb_Settings.php:477
+#: classes/PDb_Settings.php:490
 msgid "Signup Email From Name"
 msgstr "Ilmoittautumissähköpostissa lähettäjän Nimi"
 
-#: classes/PDb_Settings.php:481
+#: classes/PDb_Settings.php:494
 msgid "the \"From\" name on signup receipt emails."
 msgstr "\"Lähettäjä\" -nimi ilmoittautumisen kuittauksessa."
 
-#: classes/PDb_Settings.php:488
+#: classes/PDb_Settings.php:501
 msgid "Signup Response Email Subject"
 msgstr "Ilmoittautumisen vastauksessa sähköpostin Otsikko"
 
-#: classes/PDb_Settings.php:492
+#: classes/PDb_Settings.php:505
 msgid ""
 "subject line for the signup response email; placeholder tags can be used "
 "(see below)"
@@ -1385,17 +1403,17 @@ msgstr ""
 "otsikkorivi rilmoittautumisen vastaussähköpostissa; tageja voi käyttää (ks. "
 "yllä)"
 
-#: classes/PDb_Settings.php:493
+#: classes/PDb_Settings.php:506
 #, fuzzy, php-format
 #| msgid "You've just signed up on %s"
 msgid "You've just signed up on %s"
 msgstr "Olet juuri ilmoittautunut %: ssa"
 
-#: classes/PDb_Settings.php:499
+#: classes/PDb_Settings.php:512
 msgid "Signup Response Email"
 msgstr "Ilmoittautumisen vastausviesti"
 
-#: classes/PDb_Settings.php:503
+#: classes/PDb_Settings.php:516
 msgid ""
 "Body of the email a visitor gets when they sign up. It includes a link "
 "([record_link]) back to their record so they can fill it out. Can include "
@@ -1409,7 +1427,7 @@ msgstr ""
 "[record_link]. Voit käyttää kenttäkoodeja myös kentissä, jotka näkyvät "
 "ilmoittautumislomakkeella, mukaanlukien piilokentät."
 
-#: classes/PDb_Settings.php:505
+#: classes/PDb_Settings.php:518
 #, fuzzy, php-format
 #| msgid ""
 #| "<p>Thank you, [first_name], for signing up with %s.</p><p>You may "
@@ -1426,11 +1444,11 @@ msgstr ""
 "päivittää tietojasi käyttämällä yksityistä linkkiäsi milloin vain: <a href="
 "\"[record_link]\">[record_link]</a>.</p>"
 
-#: classes/PDb_Settings.php:511
+#: classes/PDb_Settings.php:524
 msgid "Signup Thanks Message"
 msgstr "Ilmoittautumisen kiitosviesti"
 
-#: classes/PDb_Settings.php:515
+#: classes/PDb_Settings.php:528
 msgid ""
 "Note to display on the web page after someone has submitted a signup form. "
 "Can include HTML and placeholders (see above)"
@@ -1438,7 +1456,7 @@ msgstr ""
 "Ilmoitus näytöllä, kun joku on lähettänyt ilmoittautumislomakkeensa. Voi "
 "sisältää HTML:ää ja kenttäkoodeja (ks. yllä)"
 
-#: classes/PDb_Settings.php:516
+#: classes/PDb_Settings.php:529
 msgid ""
 "<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
 "acknowledgement shortly. You may complete your registration with additional "
@@ -1449,44 +1467,44 @@ msgstr ""
 "sähköpostia. Voit täydentää tai päivittää ilmoittautumistasi käymällä "
 "sähköpostissasi kerrotulla sivulla"
 
-#: classes/PDb_Settings.php:522
+#: classes/PDb_Settings.php:535
 msgid "Send Signup Notification Email"
 msgstr "Lähetä ilmoittautumisesta viesti"
 
-#: classes/PDb_Settings.php:527
+#: classes/PDb_Settings.php:540
 msgid "Send an email notification that a signup has occurred."
 msgstr "Lähetä sähköpostiviesti, että ilmoittautuminen on tehty."
 
-#: classes/PDb_Settings.php:536
+#: classes/PDb_Settings.php:549
 msgid "Signup Notification Recipients"
 msgstr "Vastaanottajat ilmoittautumisviestille"
 
-#: classes/PDb_Settings.php:540
+#: classes/PDb_Settings.php:553
 msgid "comma-separated list of email addresses to send signup notifications to"
 msgstr ""
 "pilkulla erotettu lista sähköpostiosoitteista, joihin myös lähetetään "
 "ilmoittautumisilmoitus"
 
-#: classes/PDb_Settings.php:547
+#: classes/PDb_Settings.php:560
 msgid "Signup Notification Email Subject"
 msgstr "Ilmoittautumisviestin Otsikko"
 
-#: classes/PDb_Settings.php:551 classes/PDb_Settings.php:989
+#: classes/PDb_Settings.php:564 classes/PDb_Settings.php:1015
 msgid ""
 "subject of the notification email; placeholder tags can be used (see above)"
 msgstr "otsikko ilmoitusviestiin; kenttäkoodeja voi käyttää (ks yllä)"
 
-#: classes/PDb_Settings.php:553
+#: classes/PDb_Settings.php:566
 #, fuzzy, php-format
 #| msgid "New signup on %s"
 msgid "New signup on %s"
 msgstr "Uusi ilmoittautuminen %:ssa"
 
-#: classes/PDb_Settings.php:559
+#: classes/PDb_Settings.php:572
 msgid "Signup Notification Email"
 msgstr "Ilmoittautumisviestin sähköpostiosoite"
 
-#: classes/PDb_Settings.php:563
+#: classes/PDb_Settings.php:576
 msgid ""
 "notification email body. The [admin_record_link] tag will supply the URL for "
 "editing the record in the admin."
@@ -1494,7 +1512,7 @@ msgstr ""
 "viestin runko. [admin_record_link] -tagi tarjoaa URL:n tietueen "
 "editoimiseksi admin osiossa."
 
-#: classes/PDb_Settings.php:564
+#: classes/PDb_Settings.php:577
 msgid ""
 "<p>A new signup has been submitted</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a "
@@ -1504,11 +1522,11 @@ msgstr ""
 "[last_name]</li><li>Email: [email]</li></ul><p>Editoi uutta tietuetta: <a "
 "href=\"[admin_record_link]\">[admin_record_link]</a></p>"
 
-#: classes/PDb_Settings.php:589
+#: classes/PDb_Settings.php:602
 msgid "Participant Record Page"
 msgstr "Participant tietue sivu"
 
-#: classes/PDb_Settings.php:594
+#: classes/PDb_Settings.php:607
 msgid ""
 "The page where your participant record ([pdb_record] shortcode) is "
 "displayed. You can use a Post ID for posts and custom post types."
@@ -1516,13 +1534,13 @@ msgstr ""
 "Sivu, jolla tietue näytetään. Voit käyttää Post ID:tä lähetyksiin tai "
 "muokattuihin lähetyksiin."
 
-#: classes/PDb_Settings.php:602
+#: classes/PDb_Settings.php:615
 #, fuzzy
 #| msgid "Show Field Groups"
 msgid "Show Groups"
 msgstr "Näytä kenttäryhmät"
 
-#: classes/PDb_Settings.php:607
+#: classes/PDb_Settings.php:620
 #, fuzzy
 #| msgid ""
 #| "Show the group description under each group title in the record form."
@@ -1532,48 +1550,48 @@ msgid ""
 msgstr ""
 "Näytä ryhmien kuvaukset jokaisen ryhmän otsikon alla tietuelomakkeella."
 
-#: classes/PDb_Settings.php:615
+#: classes/PDb_Settings.php:628
 msgid "Save Changes Label"
 msgstr "Talleta muutokset -merkintä"
 
-#: classes/PDb_Settings.php:620
+#: classes/PDb_Settings.php:633
 msgid "label for the save changes button on the record form"
 msgstr "merkintä muutosten tallettamiselle lomakkeella näkyvässä painikkeessa"
 
-#: classes/PDb_Settings.php:621
+#: classes/PDb_Settings.php:634
 msgid "Save Your Changes"
 msgstr "Talleta muutokset"
 
-#: classes/PDb_Settings.php:627
+#: classes/PDb_Settings.php:640
 msgid "Save Button Text"
 msgstr "Talletus -painikkeen teksti"
 
-#: classes/PDb_Settings.php:632
+#: classes/PDb_Settings.php:645
 msgid "text on the \"save\" button"
 msgstr "teksti \"Talleta\" painikkeella"
 
-#: classes/PDb_Settings.php:633
+#: classes/PDb_Settings.php:646
 msgctxt "a label for a button to save a form"
 msgid "Save"
 msgstr "Talleta"
 
-#: classes/PDb_Settings.php:639
+#: classes/PDb_Settings.php:652
 msgid "Record Updated Message"
 msgstr "Tietueen päivitysviesti"
 
-#: classes/PDb_Settings.php:643
+#: classes/PDb_Settings.php:656
 msgid "the message shown when a record form has been successfully submitted"
 msgstr "viesti näytetään, kun lomake on lähetetty onnistuneesti"
 
-#: classes/PDb_Settings.php:644
+#: classes/PDb_Settings.php:657
 msgid "Your information has been updated"
 msgstr "Tietosi on päivitetty"
 
-#: classes/PDb_Settings.php:650
+#: classes/PDb_Settings.php:663
 msgid "Record Not Found Error Message"
 msgstr "Viesti, kun tietuetta ei löydy"
 
-#: classes/PDb_Settings.php:654
+#: classes/PDb_Settings.php:667
 msgid ""
 "message to show if the record page was accessed without a valid identifier. "
 "Leave this empty if you want nothing at all to show."
@@ -1581,27 +1599,27 @@ msgstr ""
 "viesti näytetään, jos sivulle tullaan ilman hyväksyttyä tunnistetta. Jätä "
 "tyhjäksi, jos et halua näyttää mitään."
 
-#: classes/PDb_Settings.php:655
+#: classes/PDb_Settings.php:668
 msgid "No record was found."
 msgstr "Tietuetta ei löydy."
 
-#: classes/PDb_Settings.php:661
+#: classes/PDb_Settings.php:674
 #, fuzzy
 #| msgid "No Records Message"
 msgid "Use Template for No Record Message"
 msgstr "Ei tietueita -viesti"
 
-#: classes/PDb_Settings.php:666
+#: classes/PDb_Settings.php:679
 msgid ""
 "If checked, use the record template to show the \"Record Not Found\" "
 "message. If unchecked, the message is shown without using the template."
 msgstr ""
 
-#: classes/PDb_Settings.php:674
+#: classes/PDb_Settings.php:687
 msgid "Send Record Form Update Notification Email"
 msgstr "Lähetä viesti lomakkeen päivittämisestä"
 
-#: classes/PDb_Settings.php:679
+#: classes/PDb_Settings.php:692
 msgid ""
 "Send an email notification that a record has been updated. These will be "
 "sent to the email addresses listed in the \"Signup Notification Recipients\" "
@@ -1611,26 +1629,26 @@ msgstr ""
 "sellaisiin sähköpostiosoitteisiin, jotka on listattu "
 "\"Ilmoittautumisilmoituksen saajat\" -asetuksessa."
 
-#: classes/PDb_Settings.php:687
+#: classes/PDb_Settings.php:700
 msgid "Record Update Email Subject"
 msgstr "Tietueen päivitysviestin Otsikko"
 
-#: classes/PDb_Settings.php:691
+#: classes/PDb_Settings.php:704
 msgid ""
 "subject line for the record update notification email; placeholders can be "
 "used."
 msgstr "otsikkorivi tietueen päivitysviestiin: kenttäkoodeja voi käyttää."
 
-#: classes/PDb_Settings.php:692
+#: classes/PDb_Settings.php:705
 #, php-format
 msgid "A record has just been updated on %s"
 msgstr "Tietue on päivitetty %s"
 
-#: classes/PDb_Settings.php:698
+#: classes/PDb_Settings.php:711
 msgid "Record Update Notification Email"
 msgstr "Tietueen päivitysilmoitus"
 
-#: classes/PDb_Settings.php:703
+#: classes/PDb_Settings.php:716
 msgid ""
 "Body of the the email sent when a user updates their record. Any field from "
 "the form can be included by using a replacement code of the form: "
@@ -1646,7 +1664,7 @@ msgstr ""
 "päivityksen päivämäärä ja kellonaika, sekä ylläpitäjän linkki "
 "[admin_record_link] tietojen muokkaamiseen."
 
-#: classes/PDb_Settings.php:704
+#: classes/PDb_Settings.php:717
 msgid ""
 "<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
@@ -1658,19 +1676,19 @@ msgstr ""
 "li><li>Puhelin: [phone]</li><li>Email: [email]</li></ul><p>Editoi tietuetta "
 "<a href=\"[admin_record_link]\">täällä.</a></p>"
 
-#: classes/PDb_Settings.php:730
+#: classes/PDb_Settings.php:743
 msgid "Records per Page"
 msgstr "Tietueita sivulla"
 
-#: classes/PDb_Settings.php:734
+#: classes/PDb_Settings.php:747
 msgid "the number of records to show on each page"
 msgstr "montako tietuetta näytetään sivulla"
 
-#: classes/PDb_Settings.php:742
+#: classes/PDb_Settings.php:755
 msgid "Single Record Link Field"
 msgstr "Yksittäisen tietueen linkkikenttä"
 
-#: classes/PDb_Settings.php:747
+#: classes/PDb_Settings.php:760
 msgid ""
 "select the field on which to put a link to the [pdb_single] shortcode. Leave "
 "blank or set to \"none\" for no link."
@@ -1678,11 +1696,11 @@ msgstr ""
 "valitse kenttä, johon laitat linkin lyhytkoodiin [pdb_single]. Jätä tyhjäksi "
 "tai kirjaa \"none\", jos linkkiä ei laiteta."
 
-#: classes/PDb_Settings.php:754
+#: classes/PDb_Settings.php:767
 msgid "Single Record Page"
 msgstr "Sivu yksittäiselle tietueelle"
 
-#: classes/PDb_Settings.php:760
+#: classes/PDb_Settings.php:773
 msgid ""
 "this is the page where the [pdb_single] shortcode is located. If you want to "
 "assign a post or custom post type, select \"Post ID\" and enter the post ID "
@@ -1692,32 +1710,32 @@ msgstr ""
 "artikkeliin tai muokattuun artikkeliin, valitse \"Post ID\" ja talleta ko. "
 "post ID toiseen kenttään."
 
-#: classes/PDb_Settings.php:767
+#: classes/PDb_Settings.php:780
 msgid "No Records Message"
 msgstr "Ei tietueita -viesti"
 
-#: classes/PDb_Settings.php:771
+#: classes/PDb_Settings.php:784
 msgid "Message shown when no records are found."
 msgstr "Viesti, joka näytetään, kun tietueita ei löydy."
 
-#: classes/PDb_Settings.php:772
+#: classes/PDb_Settings.php:785
 msgid "No Records Found"
 msgstr "Tietueita ei löydy"
 
-#: classes/PDb_Settings.php:777
+#: classes/PDb_Settings.php:790
 msgid "Show Count"
 msgstr "Laske määrä"
 
-#: classes/PDb_Settings.php:782
+#: classes/PDb_Settings.php:795
 msgid "Show the list count on list displays. Can also be set in the shortcode."
 msgstr ""
 "Näytä listan määrä listanäkymässä. Tämän voi myös määritellä lyhytkoodissa."
 
-#: classes/PDb_Settings.php:790
+#: classes/PDb_Settings.php:803
 msgid "List Count Template"
 msgstr "Malli listan määrälle"
 
-#: classes/PDb_Settings.php:794
+#: classes/PDb_Settings.php:807
 #, php-format
 msgid ""
 "template for displaying the list count. %1$s - total number of records "
@@ -1727,16 +1745,16 @@ msgstr ""
 "malli näyttämään listan määrän. %1$s - koko määrä, %2$s - sivulla näytettävä "
 "määrä, %3$s - ensimmäinen tietue, %4$s - viimeinen tietue, %5$s - sivunumero"
 
-#: classes/PDb_Settings.php:795
+#: classes/PDb_Settings.php:808
 #, php-format
 msgid "Total Records Found: %1$s, showing %2$s per page"
 msgstr "Yhteensä %1$s tietuetta, näytetään %2$s / sivu"
 
-#: classes/PDb_Settings.php:805
+#: classes/PDb_Settings.php:818
 msgid "List Default Sort"
 msgstr "Listan oletusjärjestys"
 
-#: classes/PDb_Settings.php:811
+#: classes/PDb_Settings.php:824
 msgid ""
 "The record list shown by the list shortcode will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -1744,30 +1762,30 @@ msgstr ""
 "Tietueet tietuelistauksessa järjestettynä oletuksena tämän kentän mukaan. "
 "(Kentän tiedoissa pitää olla \"Lajiteltavissa\" -tieto merkittynä)"
 
-#: classes/PDb_Settings.php:818
+#: classes/PDb_Settings.php:831
 msgid "List Default Sort Order"
 msgstr "Listan oletusjärjestys"
 
-#: classes/PDb_Settings.php:822
+#: classes/PDb_Settings.php:835
 msgid "Sets the default order of the records shown by the list shortcode."
 msgstr ""
 "Asettaa listalla olevat tietueet oletusjärjestykseen lyhytkoodilla merkityn "
 "mukaisesti."
 
-#: classes/PDb_Settings.php:831
+#: classes/PDb_Settings.php:844
 msgid "Allow Empty Search"
 msgstr ""
 
-#: classes/PDb_Settings.php:836
+#: classes/PDb_Settings.php:849
 msgid ""
 "This allows frontend searches to find records with missing or blank data."
 msgstr ""
 
-#: classes/PDb_Settings.php:846
+#: classes/PDb_Settings.php:859
 msgid "Strict User Searching"
 msgstr "Tiukka käyttäjäkohtainen hakutoiminto"
 
-#: classes/PDb_Settings.php:851
+#: classes/PDb_Settings.php:864
 msgid ""
 "When checked, the frontend list search must match the whole field exactly. "
 "If unchecked, the search will match if the search term is found in part of "
@@ -1777,11 +1795,17 @@ msgstr ""
 "täydellisesti. Jos jätetään rastittamatta, haku tapahtuu hakutermin osalla. "
 "Hakusanassa kirjasinkoko ei vaikuta kummassakaan tapauksessa."
 
-#: classes/PDb_Settings.php:865
+#: classes/PDb_Settings.php:877
+msgid ""
+"Sets the default height of images displayed in the list. Defaults to pixels, "
+"but any valid CSS size value can be used."
+msgstr ""
+
+#: classes/PDb_Settings.php:891
 msgid "Enable Lost Private Link"
 msgstr "Salli kadonnut linkki -toiminto"
 
-#: classes/PDb_Settings.php:870
+#: classes/PDb_Settings.php:896
 msgid ""
 "Show a link on the signup form allowing users to have their private link "
 "emailed to them."
@@ -1789,34 +1813,34 @@ msgstr ""
 "Näytä linkki ilmoittautumisen yhteydessä, jotta käyttäjä voi siirtyä "
 "sähköpostissaan saamaan henkilökohtaiseen linkkiin."
 
-#: classes/PDb_Settings.php:878
+#: classes/PDb_Settings.php:904
 msgid "Lost Private Link Text"
 msgstr "Kadonneen henkilökohtaisen linkin Teksti"
 
-#: classes/PDb_Settings.php:882
+#: classes/PDb_Settings.php:908
 msgid "clickable text shown in the signup form"
 msgstr "ilmoittautumislomakkeella näytettävä klikattava linkki"
 
-#: classes/PDb_Settings.php:883
+#: classes/PDb_Settings.php:909
 msgid "Forget your private link? Click here to have it emailed to you."
 msgstr ""
 "Unohditko henkilökohtaisen linkkisi? Klikkaa saadaksesi sen sähköpostiisi."
 
-#: classes/PDb_Settings.php:888
+#: classes/PDb_Settings.php:914
 msgid "Lost Private Link Page"
 msgstr "Sivu kadonneelle linkille"
 
-#: classes/PDb_Settings.php:893
+#: classes/PDb_Settings.php:919
 msgid "send people to this page to request their private link."
 msgstr ""
 "ohjaa henkilö tälle sivulle, jotta hän voi pyytää itselleen kadonnutta "
 "linkkiään."
 
-#: classes/PDb_Settings.php:902
+#: classes/PDb_Settings.php:928
 msgid "Lost Private Link ID Field"
 msgstr "Kenttä henkilökohtaiselle linkki IDlle"
 
-#: classes/PDb_Settings.php:906
+#: classes/PDb_Settings.php:932
 msgid ""
 "The field used to identify the user&#39;s account. This must be a unique "
 "identifier for the record"
@@ -1824,51 +1848,51 @@ msgstr ""
 "Kenttä, jota käytetään käyttäjätilin tunnistamiseen. Tämän pitää olla "
 "uniikki tunniste"
 
-#: classes/PDb_Settings.php:915
+#: classes/PDb_Settings.php:941
 #, fuzzy
 #| msgid "Lost Private Link Email"
 msgid "Lost Private Link Form Title"
 msgstr "Sähköposti kadonneelle henkilökohtaiselle linkille"
 
-#: classes/PDb_Settings.php:919
+#: classes/PDb_Settings.php:945
 msgid "the title shown above the link request form"
 msgstr ""
 
-#: classes/PDb_Settings.php:920 templates/pdb-retrieve-bootstrap.php:10
+#: classes/PDb_Settings.php:946 templates/pdb-retrieve-bootstrap.php:10
 #: templates/pdb-retrieve-default.php:10
 msgid "Request your Private Link"
 msgstr "Pyydän lähettämään minulle henkilökohtaisen linkkini"
 
-#: classes/PDb_Settings.php:927
+#: classes/PDb_Settings.php:953
 #, fuzzy
 #| msgid "Lost Private Link Page"
 msgid "Lost Private Link Success Message"
 msgstr "Sivu kadonneelle linkille"
 
-#: classes/PDb_Settings.php:931
+#: classes/PDb_Settings.php:957
 #, fuzzy
 #| msgid "the message shown when a record form has been successfully submitted"
 msgid "the message shown when a private link is successfully sent"
 msgstr "viesti näytetään, kun lomake on lähetetty onnistuneesti"
 
-#: classes/PDb_Settings.php:932 templates/pdb-retrieve-bootstrap.php:19
+#: classes/PDb_Settings.php:958 templates/pdb-retrieve-bootstrap.php:19
 #: templates/pdb-retrieve-default.php:17
 msgid "Success: your private link has been emailed to you."
 msgstr ""
 "Onnistui: henkilökohtainen linkkisi on lähetetty sähköpostiisi. Muista "
 "tarkistaa myös roskapostikansio, jos viestiä ei näy postilaatikossasi."
 
-#: classes/PDb_Settings.php:938
+#: classes/PDb_Settings.php:964
 #, fuzzy
 #| msgid "Help Text"
 msgid "ID Field Help Text"
 msgstr "Aputeksti"
 
-#: classes/PDb_Settings.php:942
+#: classes/PDb_Settings.php:968
 msgid "help text for the record identification field"
 msgstr ""
 
-#: classes/PDb_Settings.php:943
+#: classes/PDb_Settings.php:969
 #, fuzzy, php-format
 #| msgid "Type in your %s, your private link will be emailed to you."
 msgid "Type in your %s, your private link will be emailed to you."
@@ -1876,37 +1900,37 @@ msgstr ""
 "Kirjoita tähän henkilökohtaisen koodisi, saat sähköpostiisi linkin, jota "
 "klikkaamalla pääset muokkaamaan omia tietojasi."
 
-#: classes/PDb_Settings.php:949
+#: classes/PDb_Settings.php:975
 msgid "Lost Private Link Email Subject"
 msgstr "Kadonneen henkilökohtaisen linkki -sähköpostin Otsikko"
 
-#: classes/PDb_Settings.php:953
+#: classes/PDb_Settings.php:979
 msgid "subject line for the lost private link email"
 msgstr "otsikkorivi kadonneen henkilökohtaisen linkin sähköpostissa"
 
-#: classes/PDb_Settings.php:954
+#: classes/PDb_Settings.php:980
 #, php-format
 msgid "Here is your private link on %s"
 msgstr "Tässä on henkilökohtainen linkkisi %s"
 
-#: classes/PDb_Settings.php:960
+#: classes/PDb_Settings.php:986
 msgid "Lost Private Link Email"
 msgstr "Sähköposti kadonneelle henkilökohtaiselle linkille"
 
-#: classes/PDb_Settings.php:964
+#: classes/PDb_Settings.php:990
 msgid "Body of the email sent when a lost private link is requested."
 msgstr "Sähköpostin viestiosa, kun käyttäjä pyytää itselleen linkkiä."
 
-#: classes/PDb_Settings.php:966
+#: classes/PDb_Settings.php:992
 #, php-format
 msgid "Here is the private link you requested from %s:"
 msgstr "Tässä on pyytämäsi henkilökohtainen linkkisi %s:"
 
-#: classes/PDb_Settings.php:972
+#: classes/PDb_Settings.php:998
 msgid "Send Lost Private Link Notification Email"
 msgstr "Lähetä sähköposti-ilmoitus kadonneesta henkilökohtaisesta linkistä"
 
-#: classes/PDb_Settings.php:977
+#: classes/PDb_Settings.php:1003
 msgid ""
 "Send an email notification that a lost private link has been requested. This "
 "email will go to the \"Signup Notification Recipients.\""
@@ -1914,24 +1938,24 @@ msgstr ""
 "Lähet sähköpostia, että henkilöhtaista linkkiä on pyydetty. Tämä sähköposti "
 "menee \"ilmoittautumisilmoituksen vastaanottajalle\""
 
-#: classes/PDb_Settings.php:985
+#: classes/PDb_Settings.php:1011
 msgid "Lost Private Link Notification Email Subject"
 msgstr "Kadonneen henkilökohtaisen linkin sähköpostin Otsikko"
 
-#: classes/PDb_Settings.php:991
+#: classes/PDb_Settings.php:1017
 #, php-format
 msgid "A Lost Private Link has been requested on %s"
 msgstr "Kadonnutta sähköpostilinkkiä on pyydetty %s"
 
-#: classes/PDb_Settings.php:997
+#: classes/PDb_Settings.php:1023
 msgid "Lost Private Link Notification Email"
 msgstr "Sähköposti-ilmoitus kadonneesta henkilökohtaisesta linkista"
 
-#: classes/PDb_Settings.php:1001
+#: classes/PDb_Settings.php:1027
 msgid "notification email body"
 msgstr "sähköposti-ilmoituksen viestiosa"
 
-#: classes/PDb_Settings.php:1002
+#: classes/PDb_Settings.php:1028
 msgid ""
 "<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul>"
@@ -1939,11 +1963,11 @@ msgstr ""
 "<p><ul><li>Nimi: [first_name] [last_name]</li><li>Email: [email]</li></ul> "
 "on pyytänyt henkilökohtaista linkkiä"
 
-#: classes/PDb_Settings.php:1008
+#: classes/PDb_Settings.php:1034
 msgid "Retrieve Private Link Error Message"
 msgstr "Palauta henkilökohtaisen linkin virheilmoitus"
 
-#: classes/PDb_Settings.php:1012
+#: classes/PDb_Settings.php:1038
 #, php-format
 msgid ""
 "Message shown when a record matching the retrieve link identifier cannot be "
@@ -1953,25 +1977,25 @@ msgstr ""
 "Viesti, joka näytetään, kun Nouda linkin tunnusta vastaavaa tietuetta ei "
 "löydy. Viestin %s tilalle tulee tunnus-kentän nimi."
 
-#: classes/PDb_Settings.php:1013
+#: classes/PDb_Settings.php:1039
 #, php-format
 msgid "A record matching that %s cannot be found."
 msgstr "Tietuetta, joka vastaisi %s, ei löydy."
 
-#: classes/PDb_Settings.php:1027
+#: classes/PDb_Settings.php:1053
 msgid "Use the Plugin CSS"
 msgstr "Käytä liitännäisen CSS tiedostoa"
 
-#: classes/PDb_Settings.php:1032
+#: classes/PDb_Settings.php:1058
 msgid "use the plugin's CSS to style the output of shortcodes"
 msgstr ""
 "käytä liitännäisen CSS tyylitiedostoa lyhytkoodien avulla tuotetussa tiedossa"
 
-#: classes/PDb_Settings.php:1040
+#: classes/PDb_Settings.php:1066
 msgid "Use Rich Text Editor"
 msgstr "Käytä tekstieditorina Rich Text Editoria"
 
-#: classes/PDb_Settings.php:1045
+#: classes/PDb_Settings.php:1071
 msgid ""
 "enable the rich text editor on \"rich-text\" fields for front-end users. If "
 "deselected, \"rich-text\" fields will appear as text-area fields. This does "
@@ -1982,74 +2006,74 @@ msgstr ""
 "tekstialueina. Tämä ei vaikuta pääkäyttäjien kohdalla kenttien käyttöön, "
 "koska heille Rich Text Editor on aina käytössä."
 
-#: classes/PDb_Settings.php:1058
+#: classes/PDb_Settings.php:1084
 msgid "Use WordPress Auto Formatting"
 msgstr "Käytä WordPressin automaattista muotoilua"
 
-#: classes/PDb_Settings.php:1063
+#: classes/PDb_Settings.php:1089
 msgid ""
 "Select the filter mode for all rich text outputs, including HTML emails."
 msgstr ""
 
-#: classes/PDb_Settings.php:1067
+#: classes/PDb_Settings.php:1093
 msgid "global content filter"
 msgstr ""
 
-#: classes/PDb_Settings.php:1068
+#: classes/PDb_Settings.php:1094
 #, fuzzy
 #| msgid "Use WordPress Auto Formatting"
 msgid "WordPress auto paragraphs"
 msgstr "Käytä WordPressin automaattista muotoilua"
 
-#: classes/PDb_Settings.php:1069
+#: classes/PDb_Settings.php:1095
 msgid "auto paragraphs + shortcodes"
 msgstr ""
 
-#: classes/PDb_Settings.php:1070
+#: classes/PDb_Settings.php:1096
 msgid "none"
 msgstr ""
 
-#: classes/PDb_Settings.php:1077
+#: classes/PDb_Settings.php:1103
 #, fuzzy
 #| msgid "Record Not Found Error Message"
 msgid "Scroll to Error Message"
 msgstr "Viesti, kun tietuetta ei löydy"
 
-#: classes/PDb_Settings.php:1082
+#: classes/PDb_Settings.php:1108
 msgid "when a form validation error is shown, scroll to the error message"
 msgstr ""
 
-#: classes/PDb_Settings.php:1093
+#: classes/PDb_Settings.php:1119
 msgid "Remove Line Breaks"
 msgstr ""
 
-#: classes/PDb_Settings.php:1098
+#: classes/PDb_Settings.php:1124
 msgid "Remove line breaks from all plugin shortcode ouput."
 msgstr ""
 
-#: classes/PDb_Settings.php:1110
+#: classes/PDb_Settings.php:1136
 msgid "Use Pagination Scroll Anchors"
 msgstr ""
 
-#: classes/PDb_Settings.php:1115
+#: classes/PDb_Settings.php:1141
 msgid ""
 "Uncheck this if your theme prevents pagination links with scroll anchors "
 "from working."
 msgstr ""
 
-#: classes/PDb_Settings.php:1123
+#: classes/PDb_Settings.php:1149
 msgid "Primary Email Address Field"
 msgstr "Ensisijainen sähköpostiosoite -kenttä"
 
-#: classes/PDb_Settings.php:1128
+#: classes/PDb_Settings.php:1154
 msgid "this field is the primary email address for the record"
 msgstr "tämä kenttä on tietueessa ensisijainen sähköpostiosoite -kenttä"
 
-#: classes/PDb_Settings.php:1136
+#: classes/PDb_Settings.php:1162
 msgid "Send HTML Email"
 msgstr "Lähetä sähköpostia HTML muotoisena"
 
-#: classes/PDb_Settings.php:1141
+#: classes/PDb_Settings.php:1167
 msgid ""
 "use rich text in plugin emails? If you turn this off, be sure to remove all "
 "HTML tags from the email body settings for the plugin."
@@ -2058,11 +2082,11 @@ msgstr ""
 "tämän ominaisuuden pois käytöstä, poista kaikki HTML muotoilut liitännäisen "
 "sähköpostin viestiosasta."
 
-#: classes/PDb_Settings.php:1150
+#: classes/PDb_Settings.php:1176
 msgid "Strict Date Format"
 msgstr "Tiukka päiväyksen muotoilu"
 
-#: classes/PDb_Settings.php:1156
+#: classes/PDb_Settings.php:1182
 #, php-format
 msgid ""
 "This forces date inputs to be interpreted strictly according to the \"Input "
@@ -2076,15 +2100,15 @@ msgstr ""
 "kirjata. Tämä vaikuttaa myös päiväyksiin [pdb_list] lyhytkoodin käytön "
 "yhteydessä. Päiväys on tällä hetkellä muodossa: <strong>%s</strong> %s"
 
-#: classes/PDb_Settings.php:1156
+#: classes/PDb_Settings.php:1182
 msgid "Your current PHP installation does not support this setting."
 msgstr "Nykyinen PHP ei tue tätä asetusta."
 
-#: classes/PDb_Settings.php:1165
+#: classes/PDb_Settings.php:1191
 msgid "Input Date Format"
 msgstr "Päiväyksen muoto"
 
-#: classes/PDb_Settings.php:1170
+#: classes/PDb_Settings.php:1196
 msgid ""
 "date formatting string for all plugin date inputs when \"Strict Date Format"
 "\" is enabled. You should use this for all localized (non-American English) "
@@ -2094,11 +2118,11 @@ msgstr ""
 "päiväyksen muotoilu\" on valittuna. Tätä tulisi käyttää kaikissa "
 "lokalisoiduissa (ei-Amerikan englannin alueella) päiväyksissä."
 
-#: classes/PDb_Settings.php:1177
+#: classes/PDb_Settings.php:1203
 msgid "Enable AJAX Search Functionality"
 msgstr "Salli AJAX haun toiminnallisuus"
 
-#: classes/PDb_Settings.php:1182
+#: classes/PDb_Settings.php:1208
 msgid ""
 "This enables list search results that are updated without reloading the "
 "page. It requires Javascript, but search will still work if Javascript is "
@@ -2108,80 +2132,80 @@ msgstr ""
 "sivun uudelleen lataamista. Edellyttää Javascriptiä, mutta haku toimii, "
 "vaikka selaimen Javascript -toiminto olisi estetty."
 
-#: classes/PDb_Settings.php:1190
+#: classes/PDb_Settings.php:1216
 msgid "Use Alternate Session Method"
 msgstr ""
 
-#: classes/PDb_Settings.php:1195
+#: classes/PDb_Settings.php:1221
 msgid "use this if you are having problems with sessions."
 msgstr ""
 
-#: classes/PDb_Settings.php:1228
+#: classes/PDb_Settings.php:1254
 msgid "Disable Backend Developer Ads"
 msgstr ""
 
-#: classes/PDb_Settings.php:1233
+#: classes/PDb_Settings.php:1259
 msgid "select this to disable developer ads in the admin."
 msgstr ""
 
-#: classes/PDb_Settings.php:1241
+#: classes/PDb_Settings.php:1267
 msgid "File and Image Uploads Use WP Content Path"
 msgstr ""
 
-#: classes/PDb_Settings.php:1246
+#: classes/PDb_Settings.php:1272
 msgid ""
 "when selected, the base path for file and image uploads will be the site's "
 "content directory."
 msgstr ""
 
-#: classes/PDb_Settings.php:1254
+#: classes/PDb_Settings.php:1280
 msgid "Allow Record Timestamps to be Edited"
 msgstr ""
 
-#: classes/PDb_Settings.php:1259
+#: classes/PDb_Settings.php:1285
 msgid ""
 "normally, record timestamps (date_recorded, date_updated, last_accessed) are "
 "not editable, checking this allows them to be edited."
 msgstr ""
 
-#: classes/PDb_Settings.php:1268
+#: classes/PDb_Settings.php:1294
 msgid "Sync php Timezone"
 msgstr ""
 
-#: classes/PDb_Settings.php:1273
+#: classes/PDb_Settings.php:1299
 msgid "when checked, the php timezone will be set to the WordPress timezone."
 msgstr ""
 
-#: classes/PDb_Settings.php:1281
+#: classes/PDb_Settings.php:1307
 msgid "Enable Debugging"
 msgstr ""
 
-#: classes/PDb_Settings.php:1286
+#: classes/PDb_Settings.php:1312
 #, php-format
 msgid "this will enable writing to the %s debugging log."
 msgstr ""
 
-#: classes/PDb_Settings.php:1290
+#: classes/PDb_Settings.php:1316
 msgid "off"
 msgstr ""
 
-#: classes/PDb_Settings.php:1291
+#: classes/PDb_Settings.php:1317
 msgid "plugin debug"
 msgstr ""
 
-#: classes/PDb_Settings.php:1292
+#: classes/PDb_Settings.php:1318
 msgid "all errors"
 msgstr ""
 
-#: classes/PDb_Settings.php:1293
+#: classes/PDb_Settings.php:1319
 msgid "verbose"
 msgstr ""
 
-#: classes/PDb_Settings.php:1307
+#: classes/PDb_Settings.php:1333
 msgid "Admin List Default Sort"
 msgstr "Pääkäyttäjän listauksessa oletusjärjestys"
 
-#: classes/PDb_Settings.php:1313
+#: classes/PDb_Settings.php:1339
 msgid ""
 "The record list shown in the admin section will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -2190,96 +2214,110 @@ msgstr ""
 "järjestykseen. (Kentän kohdalla pitää olla \"Lajiteltavissa\" -vaihtoehto "
 "valittuna)"
 
-#: classes/PDb_Settings.php:1320
+#: classes/PDb_Settings.php:1346
 msgid "Admin List Default Sort Order"
 msgstr "Pääkäyttäjän listausnäytöllä oletusjärjestys"
 
-#: classes/PDb_Settings.php:1324
+#: classes/PDb_Settings.php:1350
 msgid "Sets the default order of the record list in the admin."
 msgstr "Asettaa tietueet oletusjärjestykseen pääkäyttäjän listalla."
 
-#: classes/PDb_Settings.php:1332
+#: classes/PDb_Settings.php:1358
 msgid "Show Image Thumbnails in Admin List"
 msgstr "Näytä kuvien pikkukuvat pääkäyttäjän listalla"
 
-#: classes/PDb_Settings.php:1347
+#: classes/PDb_Settings.php:1373
 msgid "Plugin Admin Horizontal Scrolling"
 msgstr ""
 
-#: classes/PDb_Settings.php:1352
+#: classes/PDb_Settings.php:1378
 msgid "use horizontal scrolling on list and fields management screens"
 msgstr ""
 
-#: classes/PDb_Settings.php:1360
+#: classes/PDb_Settings.php:1386
 msgid "Record Edit Access Level"
 msgstr "Oikeustaso tietueen muokkaamisessa"
 
-#: classes/PDb_Settings.php:1364
+#: classes/PDb_Settings.php:1390
 msgid "sets the user access level for adding, editing and listing records."
 msgstr ""
 "asettaa käyttäjän oikeustason tietojen lisäämiseen, muokkaamiseen ja niiden "
 "listaamiseen."
 
-#: classes/PDb_Settings.php:1372
+#: classes/PDb_Settings.php:1398
+#, fuzzy
+#| msgid "Record Edit Access Level"
+msgid "Plugin Admin Access Level"
+msgstr "Oikeustaso tietueen muokkaamisessa"
+
+#: classes/PDb_Settings.php:1402
+msgid ""
+"sets the user access level for fields management, plugin settings, deleting "
+"records and CSV operations."
+msgstr ""
+"asettaa käyttäjän oikeustason kenttien muokkaamiseen, liitännäisen "
+"asetuksiin, poistoihin ja CSV lataamiseen."
+
+#: classes/PDb_Settings.php:1410
 msgid "Top Settings Submit"
 msgstr ""
 
-#: classes/PDb_Settings.php:1376
+#: classes/PDb_Settings.php:1414
 msgid ""
 "show a submit button at the top of admin settings and configuration pages"
 msgstr ""
 
-#: classes/PDb_Settings.php:1384
+#: classes/PDb_Settings.php:1422
 msgid "Admin Record Edits are Validated"
 msgstr ""
 
-#: classes/PDb_Settings.php:1389
+#: classes/PDb_Settings.php:1427
 msgid "When checked, admin record edits and new records must pass validation."
 msgstr ""
 
-#: classes/PDb_Settings.php:1397
+#: classes/PDb_Settings.php:1435
 #, fuzzy
 #| msgid "Import CSV File"
 msgid "Editor can Export CSV Files"
 msgstr "Lataa sisään CSV tiedosto"
 
-#: classes/PDb_Settings.php:1401
+#: classes/PDb_Settings.php:1439
 msgid "If checked, users with the plugin editor role can export a CSV."
 msgstr ""
 
-#: classes/PDb_Settings.php:1409
+#: classes/PDb_Settings.php:1447
 msgid "Delete Uploaded Files with Record"
 msgstr ""
 
-#: classes/PDb_Settings.php:1414
+#: classes/PDb_Settings.php:1452
 msgid ""
 "when a record is deleted, delete all images and files uploaded with the "
 "record"
 msgstr ""
 
-#: classes/PDb_Settings.php:1423
+#: classes/PDb_Settings.php:1461
 msgid "Show Timestamp Time"
 msgstr "Näytä päiväysleima"
 
-#: classes/PDb_Settings.php:1428
+#: classes/PDb_Settings.php:1466
 msgid "Show time with timestamp dates"
 msgstr "Näytä kellonaika päiväysleiman yhteydessä"
 
-#: classes/PDb_Settings.php:1437
+#: classes/PDb_Settings.php:1475
 #, fuzzy
 #| msgid "Plugin Admin Access Level"
 msgid "Clear Plugin Admin Notices"
 msgstr "Liitännäisen pääkäyttäjän oikeustaso"
 
-#: classes/PDb_Settings.php:1441
+#: classes/PDb_Settings.php:1479
 msgid "If checked, all plugin-generated admin notices will be cleared."
 msgstr ""
 
-#: classes/PDb_Settings.php:1455
+#: classes/PDb_Settings.php:1493
 msgid "Custom Plugin Stylesheet"
 msgstr "Käyttäjäkohtainen liitännäisen tyylitiedosto"
 
-#: classes/PDb_Settings.php:1460
+#: classes/PDb_Settings.php:1498
 msgid ""
 "use this to add your own styles or override styles applied to the output of "
 "all plugin shortcodes"
@@ -2287,65 +2325,65 @@ msgstr ""
 "käytä tätä lisätäksesi omia tyylejä tai käyttää niitä kaikkien lyhytkoodien "
 "kohdalla liitännäisen tyylien sijaan"
 
-#: classes/PDb_Settings.php:1470
+#: classes/PDb_Settings.php:1508
 msgid "Plugin Print Stylesheet"
 msgstr "Liitännäisen tyylitiedoston tulostus"
 
-#: classes/PDb_Settings.php:1475
+#: classes/PDb_Settings.php:1513
 msgid "use this to format the printed output of all plugin shortcodes"
 msgstr "käytä tätä muokataksesi lyhytkoodien tulosteen ulkoasua"
 
-#: classes/PDb_Settings.php:1485
+#: classes/PDb_Settings.php:1523
 #, fuzzy
 #| msgid "Custom Plugin Stylesheet"
 msgid "Custom Admin Stylesheet"
 msgstr "Käyttäjäkohtainen liitännäisen tyylitiedosto"
 
-#: classes/PDb_Settings.php:1490
+#: classes/PDb_Settings.php:1528
 msgid ""
 "use this to add or modify CSS rules that are applied on all plugin pages in "
 "the WordPress backend."
 msgstr ""
 
-#: classes/PDb_Settings.php:1511
+#: classes/PDb_Settings.php:1549
 msgid "Same Page"
 msgstr "Sama sivu"
 
-#: classes/PDb_Settings.php:1554
+#: classes/PDb_Settings.php:1592
 msgid "None"
 msgstr "Ei yhtään"
 
-#: classes/PDb_Settings.php:1676
+#: classes/PDb_Settings.php:1714
 msgid "Contributor"
 msgstr "Tukija"
 
-#: classes/PDb_Settings.php:1677
+#: classes/PDb_Settings.php:1715
 msgid "Author"
 msgstr "Omistaja"
 
-#: classes/PDb_Settings.php:1678
+#: classes/PDb_Settings.php:1716
 msgid "Editor"
 msgstr "Muokkaja"
 
-#: classes/PDb_Settings.php:1679
+#: classes/PDb_Settings.php:1717
 msgid "Admin"
 msgstr "Pääkäyttäjä"
 
-#: classes/PDb_Settings.php:1756 participants-database.php:3705
-#: participants-database.php:3767
+#: classes/PDb_Settings.php:1794 participants-database.php:3677
+#: participants-database.php:3739
 msgid "Settings"
 msgstr "Asetukset"
 
-#: classes/PDb_Settings.php:1848 classes/PDb_Settings.php:1854
+#: classes/PDb_Settings.php:1886 classes/PDb_Settings.php:1892
 #, php-format
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr ""
 
-#: classes/PDb_Settings.php:1903
+#: classes/PDb_Settings.php:1941
 msgid "Content Directory"
 msgstr ""
 
-#: classes/PDb_Settings.php:1903
+#: classes/PDb_Settings.php:1941
 #, fuzzy
 #| msgid "WordPress Plugin"
 msgid "WordPress root"
@@ -2361,7 +2399,7 @@ msgstr ""
 "<%1$s> Mallia %2$s ei löydy. </%1$s> Ole hyvä ja tarkista, että nimi on "
 "oikein ja mallin tiedosto sijaitsee oikeassa paikassa."
 
-#: classes/PDb_Shortcode.php:1344
+#: classes/PDb_Shortcode.php:1351
 msgid "next"
 msgstr ""
 
@@ -2635,6 +2673,9 @@ msgid "Save the Record"
 msgstr "Talleta tietue"
 
 #: edit_participant.php:137
+#, fuzzy
+#| msgid "hidden"
+msgctxt "label for a hidden field"
 msgid "hidden"
 msgstr "piilotettu"
 
@@ -2716,93 +2757,93 @@ msgstr ""
 "ohjeet liitännäisen käytössä."
 
 #. Plugin Name of the plugin/theme
-#: participants-database.php:538
+#: participants-database.php:539
 msgid "Participants Database"
 msgstr "Participant tietokanta"
 
-#: participants-database.php:702
+#: participants-database.php:706
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr ""
 "Ryhmän kaikki kentät pitää poistaa ryhmästä {name} ennenkuin itse ryhmän voi "
 "poistaa."
 
-#: participants-database.php:704
+#: participants-database.php:708
 #, fuzzy
 #| msgid "Delete the \"{name}\" {thing}?"
 msgid "Delete the {name} {thing}?"
 msgstr "Poista \"{nimi}\"{asia}?"
 
-#: participants-database.php:705
+#: participants-database.php:709
 #, fuzzy
 #| msgid "Do you really want to delete the selected record?"
 msgid "Delete the selected field?"
 msgstr "Haluatko todella poistaa valitun tietueen?"
 
-#: participants-database.php:706
+#: participants-database.php:710
 #, fuzzy
 #| msgid "Do you really want to delete the selected records?"
 msgid "Delete the selected fields?"
 msgstr "Haluatko todella poistaa valitut tietueet?"
 
-#: participants-database.php:707
+#: participants-database.php:711
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: participants-database.php:708
+#: participants-database.php:712
 msgid ""
 "Changing the form element on a field that has stored data can result in data "
 "loss."
 msgstr ""
 
-#: participants-database.php:708
+#: participants-database.php:712
 msgid "More information here…"
 msgstr "Lisä tietoja täältä..."
 
-#: participants-database.php:709
+#: participants-database.php:713
 msgid "Yes, change the form element"
 msgstr ""
 
-#: participants-database.php:710
+#: participants-database.php:714
 msgid "No, don't change the form element"
 msgstr ""
 
-#: participants-database.php:3506 templates/pdb-retrieve-bootstrap.php:69
+#: participants-database.php:3478 templates/pdb-retrieve-bootstrap.php:70
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr "Lähetä"
 
-#: participants-database.php:3510
+#: participants-database.php:3482
 msgid "The record has been updated."
 msgstr "Tietue on päivitetty."
 
-#: participants-database.php:3511
+#: participants-database.php:3483
 msgid "The new record has been added."
 msgstr "Uusi tietue on lisätty."
 
-#: participants-database.php:3512
+#: participants-database.php:3484
 #, php-format
 msgid "No record was added on query: %s"
 msgstr "Tietuetta ei lisätty kyselyyn: %s"
 
-#: participants-database.php:3513
+#: participants-database.php:3485
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr ""
 
-#: participants-database.php:3671
+#: participants-database.php:3643
 msgid "WordPress Plugin"
 msgstr "WordPress liitännäinen"
 
-#: participants-database.php:3672
+#: participants-database.php:3644
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr "Autamme organisaatioita ylläpitämään jäsen- ja osallistujatietojaan."
 
-#: participants-database.php:3675
+#: participants-database.php:3647
 msgid "Developed by"
 msgstr "Kehittäjä"
 
-#: participants-database.php:3676
+#: participants-database.php:3648
 #, fuzzy
 #| msgid ""
 #| "Suggestions or crticisms of this plugin? I&#39;d love to hear them: email "
@@ -2812,7 +2853,7 @@ msgstr ""
 "Ehdotuksia tai kritiikkiä tästä liitännäisestä? Anna palautetta ja lähetä "
 "sähköpostia "
 
-#: participants-database.php:3679
+#: participants-database.php:3651
 #, fuzzy, php-format
 #| msgid ""
 #| "Please consider contributing to the continued support and development of "
@@ -2830,39 +2871,39 @@ msgstr ""
 "liitännäiselle arviosi tai palautteesi, tai jättämällä jotain %1$stip jar."
 "%3$s Kiitos!"
 
-#: participants-database.php:3701
+#: participants-database.php:3673
 msgid "Add Participant"
 msgstr "Lisää jäsen"
 
-#: participants-database.php:3702 participants-database.php:3709
+#: participants-database.php:3674 participants-database.php:3681
 msgid "List Participants"
 msgstr "Listaa jäsenet"
 
-#: participants-database.php:3704 upload_csv.php:41
+#: participants-database.php:3676 upload_csv.php:41
 msgid "Import CSV File"
 msgstr "Lataa sisään CSV tiedosto"
 
-#: participants-database.php:3706
+#: participants-database.php:3678
 msgid "Setup Guide"
 msgstr "Asennusohje"
 
-#: participants-database.php:3707
+#: participants-database.php:3679
 msgid "Add New Participant Record"
 msgstr "Lisää uusi Participant tietue"
 
-#: participants-database.php:3708
+#: participants-database.php:3680
 msgid "Edit Existing Participant Record"
 msgstr "Muokkaa olemassaolevaa Participant tietuetta"
 
-#: participants-database.php:3710
+#: participants-database.php:3682
 msgid "Export CSV"
 msgstr "Vie CSV"
 
-#: participants-database.php:3711
+#: participants-database.php:3683
 msgid "Manage List Columns"
 msgstr ""
 
-#: participants-database.php:3847
+#: participants-database.php:3819
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
@@ -3101,13 +3142,6 @@ msgstr "http://xnau.com"
 #~| msgid "File Name"
 #~ msgid "Cookie Name"
 #~ msgstr "Tiedoston nimi"
-
-#~ msgid ""
-#~ "sets the user access level for fields management, plugin settings, "
-#~ "deleting records and CSV operations."
-#~ msgstr ""
-#~ "asettaa käyttäjän oikeustason kenttien muokkaamiseen, liitännäisen "
-#~ "asetuksiin, poistoihin ja CSV lataamiseen."
 
 #~ msgctxt "abbreviation for \"identification\""
 #~ msgid "ID"
