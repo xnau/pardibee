@@ -1109,7 +1109,7 @@ class Participants_Db extends PDb_Base {
     self::_setup_fields_prop( $field_defs );
     
     // add our modular fields
-    new PDb_fields\heading();
+    new \PDb_fields\heading();
     new \PDb_fields\video();
   }
   
