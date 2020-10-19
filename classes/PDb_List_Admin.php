@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -57,12 +57,12 @@ class PDb_List_Admin {
    * @var array of field objects
    */
   public static $display_columns;
-  
+
   /**
    * @var \PDb_submission\admin_list_query holds the admin_list_query instance
    */
   public static $query;
-  
+
   /**
    * @var \PDb_submission\admin_list_filter the current filter object
    */
@@ -82,7 +82,7 @@ class PDb_List_Admin {
    * @param array $errors array of error messages
    */
   public static $error_messages = array();
-  
+
   /**
    * initializes and outputs the list for the backend
    * 
@@ -123,15 +123,15 @@ class PDb_List_Admin {
                     "singular" => __( 'Send the "resend link" email to the selected record?', 'participants-database' ),
                     "plural" => __( 'Send the "resend link" email to the selected records?', 'participants-database' ),
                 ),
-                'recipient_count_exceeds_limit' => sprintf( __( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database'), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}'),
+                'recipient_count_exceeds_limit' => sprintf( __( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database' ), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}' ),
                     )
     );
 
     wp_localize_script(
             Participants_Db::$prefix . 'list-admin', 'list_adminL10n', array(
-        'delete' => self::$i18n['delete_checked'],
-        'cancel' => self::$i18n['change'],
-        'apply' => self::$i18n['apply'],
+        'delete' => self::$i18n[ 'delete_checked' ],
+        'cancel' => self::$i18n[ 'change' ],
+        'apply' => self::$i18n[ 'apply' ],
         'apply_confirm' => $apply_confirm_messages,
         'send_limit' => (int) Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit ),
         /**
@@ -139,16 +139,16 @@ class PDb_List_Admin {
          * @param array of actions that are not quantity limited
          * @return array
          */
-        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array('delete','approve','unapprove') ),
+        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove' ) ),
             )
     );
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
-    
+
     // set up email error feedback
     add_action( 'wp_mail_failed', array( __CLASS__, 'get_email_error_feedback' ) );
     add_action( 'pdb-list_admin_head', array( __CLASS__, 'show_email_error_feedback' ) );
-    
+
     // delete images and files when record is deleted
     if ( Participants_Db::plugin_setting_is_true( 'delete_uploaded_files', false ) ) {
       add_action( 'pdb-list_admin_with_selected_delete', array( 'PDb_submission\delete_uploads', 'delete_record_uploaded_files' ) );
@@ -166,14 +166,14 @@ class PDb_List_Admin {
     self::$registration_page_url = get_bloginfo( 'url' ) . '/' . Participants_Db::plugin_setting( 'registration_page', '' );
 
     self::setup_display_columns();
-    
+
     self::$list_filter = new \PDb_admin_list\filter();
-    
+
     self::$query = new \PDb_admin_list\query( self::$list_filter );
-    
+
     // process list form submissions
     new \PDb_admin_list\process();
-    
+
     /*
      * save the query in a session value so it can be used by the export CSV functionality
      */
@@ -185,8 +185,8 @@ class PDb_List_Admin {
     global $wpdb;
 
     // set the pagination object
-    $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array('options' => array('default' => 1, 'min_range' => 1)) );
-    
+    $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'default' => 1, 'min_range' => 1 ) ) );
+
     // include the session ID if using the alternate method
     $sess = Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ? '&' . PDb_Session::id_var . '=' . Participants_Db::$session->session_id() : '';
 
@@ -195,14 +195,14 @@ class PDb_List_Admin {
      * @param array of configuration values
      * @return array
      */
-    self::$pagination = new PDb_Pagination( Participants_Db::apply_filters('admin_list_pagination_config', array(
-        'link' => self::prepare_page_link( $_SERVER['REQUEST_URI'] ) . $sess . '&' . self::$list_page . '=%1$s',
-        'page' => $current_page,
-        'size' => self::$page_list_limit,
-        'total_records' => self::$query->result_count(),
+    self::$pagination = new PDb_Pagination( Participants_Db::apply_filters( 'admin_list_pagination_config', array(
+                'link' => self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) . $sess . '&' . self::$list_page . '=%1$s',
+                'page' => $current_page,
+                'size' => self::$page_list_limit,
+                'total_records' => self::$query->result_count(),
 //        'wrap_tag' => '<div class="pdb-list"><div class="pagination"><label>' . _x('Page', 'noun; page number indicator', 'participants-database') . ':</label> ',
 //        'wrap_tag_close' => '</div></div>',
-        'add_variables' => '#pdb-list-admin',
+                'add_variables' => '#pdb-list-admin',
             ) ) );
 
     // get the records for this page, adding the pagination limit clause
@@ -246,20 +246,21 @@ class PDb_List_Admin {
   public static function user_can_export_csv()
   {
     $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'record_edit_capability' : 'plugin_admin_capability';
-    
+
     return current_user_can( Participants_Db::plugin_capability( $csv_role, 'export csv' ) );
   }
-  
+
   /**
    * provides a default admin list query
    * 
    * @return string
    */
-  public static function default_query() {
+  public static function default_query()
+  {
     global $wpdb;
     return 'SELECT * FROM ' . $wpdb->prefix . 'participants_database p ORDER BY p.date_recorded desc';
   }
-  
+
   /**
    * provides the last list query with the placeholders removed
    * 
@@ -267,10 +268,8 @@ class PDb_List_Admin {
    */
   public static function list_query()
   {
-   return self::$query->query();
+    return self::$query->query();
   }
-
- 
 
   /**
    * strips the page number out of the URI so it can be used as a link to other pages
@@ -284,15 +283,15 @@ class PDb_List_Admin {
 
     $URI_parts = explode( '?', $uri );
 
-    if ( empty( $URI_parts[1] ) ) {
+    if ( empty( $URI_parts[ 1 ] ) ) {
 
       $values = array();
     } else {
 
-      parse_str( $URI_parts[1], $values );
+      parse_str( $URI_parts[ 1 ], $values );
 
       // take out the list page number
-      unset( $values[self::$list_page] );
+      unset( $values[ self::$list_page ] );
 
       /* clear out our filter variables so that all that's left in the URI are 
        * variables from WP or any other source-- this is mainly so query string 
@@ -305,13 +304,11 @@ class PDb_List_Admin {
           'column_sort',
       );
       foreach ( $filter_atts as $att )
-        unset( $values[$att] );
+        unset( $values[ $att ] );
     }
 
-    return $URI_parts[0] . '?' . http_build_query( $values );
+    return $URI_parts[ 0 ] . '?' . http_build_query( $values );
   }
-
- 
 
   /**
    * top section for admin listing
@@ -321,7 +318,7 @@ class PDb_List_Admin {
     ?>
     <div id="pdb-list-admin"   class="wrap participants_db">
       <?php Participants_Db::admin_page_heading() ?>
-      <?php do_action('pdb-list_admin_head'); ?>
+      <?php do_action( 'pdb-list_admin_head' ); ?>
       <div id="poststuff">
         <div class="post-body">
           <h2><?php echo Participants_Db::plugin_label( 'list_participants_title' ) ?></h2>
@@ -339,32 +336,31 @@ class PDb_List_Admin {
 
           global $post;
           $filter_count = self::$list_filter->list_fiter_count();
-          
+
           //build the list of columns available for filtering
           $filter_columns = array();
           $group_title = '';
-          
+
           foreach ( self::filter_columns() as $column ) {
-            
-            if ( empty($column->grouptitle) ) {
+
+            if ( empty( $column->grouptitle ) ) {
               $column->grouptitle = $column->group;
             }
-            
+
             if ( $column->grouptitle !== $group_title ) {
               $group_title = $column->grouptitle;
-              $filter_columns[$group_title] = 'optgroup';
+              $filter_columns[ $group_title ] = 'optgroup';
             }
-            
+
             // add the field name if a field with the same title is already in the list
             $title = Participants_Db::apply_filters( 'translate_string', $column->title );
-            $select_title = ( isset( $filter_columns[$column->title] ) || strlen( $column->title ) === 0 ) ? $title . ' (' . $column->name . ')' : $title;
+            $select_title = ( isset( $filter_columns[ $column->title ] ) || strlen( $column->title ) === 0 ) ? $title . ' (' . $column->name . ')' : $title;
 
-            $filter_columns[$select_title] = $column->name;
+            $filter_columns[ $select_title ] = $column->name;
           }
-          
           ?>
           <div class="pdb-searchform">
-            <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER['REQUEST_URI'] ) ?>" >
+            <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ?>" >
               <input type="hidden" name="action" value="admin_list_filter">
               <table class="form-table">
                 <tbody><tr><td>
@@ -381,7 +377,7 @@ class PDb_List_Admin {
                           $element = array(
                               'type' => 'dropdown',
                               'name' => 'search_field[' . $i . ']',
-                              'value' => $filter_set['search_field'],
+                              'value' => $filter_set[ 'search_field' ],
                               'options' => $filter_columns,
                           );
                           PDb_FormElement::print_element( $element );
@@ -389,7 +385,7 @@ class PDb_List_Admin {
                           $element = array(
                               'type' => 'dropdown',
                               'name' => 'operator[' . $i . ']',
-                              'value' => $filter_set['operator'],
+                              'value' => $filter_set[ 'operator' ],
                               'options' => array(
                                   PDb_FormElement::null_select_key() => false,
                                   __( 'is', 'participants-database' ) => '=',
@@ -402,14 +398,14 @@ class PDb_List_Admin {
                           );
                           PDb_FormElement::print_element( $element );
                           ?>
-                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set['value'] ) ?>">
+                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
                           <?php
                           if ( $i < $filter_count - 1 ) {
                             echo '<br />';
                             $element = array(
                                 'type' => 'radio',
                                 'name' => 'logic[' . $i . ']',
-                                'value' => $filter_set['logic'],
+                                'value' => $filter_set[ 'logic' ],
                                 'options' => array(
                                     __( 'and', 'participants-database' ) => 'AND',
                                     __( 'or', 'participants-database' ) => 'OR',
@@ -419,7 +415,7 @@ class PDb_List_Admin {
                             $element = array(
                                 'type' => 'hidden',
                                 'name' => 'logic[' . $i . ']',
-                                'value' => $filter_set['logic'],
+                                'value' => $filter_set[ 'logic' ],
                             );
                           }
                           PDb_FormElement::print_element( $element );
@@ -428,8 +424,8 @@ class PDb_List_Admin {
                         </fieldset>
                       <?php endfor ?>
                       <fieldset class="widefat inline-controls">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n['filter'] ?>">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n['clear'] ?>">
+                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'filter' ] ?>">
+                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'clear' ] ?>">
                         <div class="widefat inline-controls filter-count">
                           <label for="list_filter_count"><?php _e( 'Number of filters to use: ', 'participants-database' ) ?><input id="list_filter_count" name="list_filter_count" class="number-entry single-digit" type="number" max="5" min="1" value="<?php echo $filter_count ?>"  /></label>
                         </div>
@@ -441,7 +437,7 @@ class PDb_List_Admin {
                         $element = array(
                             'type' => 'dropdown',
                             'name' => 'sortBy',
-                            'value' => self::$list_filter->value('sortBy'),
+                            'value' => self::$list_filter->value( 'sortBy' ),
                             'options' => $filter_columns,
                         );
                         PDb_FormElement::print_element( $element );
@@ -449,7 +445,7 @@ class PDb_List_Admin {
                         $element = array(
                             'type' => 'radio',
                             'name' => 'ascdesc',
-                            'value' => strtolower( self::$list_filter->value('ascdesc') ),
+                            'value' => strtolower( self::$list_filter->value( 'ascdesc' ) ),
                             'options' => array(
                                 __( 'Ascending', 'participants-database' ) => 'asc',
                                 __( 'Descending', 'participants-database' ) => 'desc'
@@ -457,13 +453,11 @@ class PDb_List_Admin {
                         );
                         PDb_FormElement::print_element( $element );
                         ?>
-                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo self::$i18n['sort'] ?>">
+                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo self::$i18n[ 'sort' ] ?>">
                       </fieldset>
                     </td></tr></tbody></table>
             </form>
           </div>
-
-          <h3><?php printf( _n( '%s record found, sorted by: %s.', '%s records found, sorted by: %s.', self::$query->result_count(), 'participants-database' ), self::$query->result_count(), Participants_Db::column_title( self::$list_filter->value('sortBy') ) ) ?></h3>
           <?php
         }
 
@@ -475,7 +469,7 @@ class PDb_List_Admin {
           ?>
 
           <form id="list_form"  method="post">
-            <?php PDb_FormElement::print_hidden_fields( array('action' => 'list_action') ) ?>
+            <?php PDb_FormElement::print_hidden_fields( array( 'action' => 'list_action' ) ) ?>
             <input type="hidden" id="select_count" value="0" />
             <?php
             /**
@@ -488,54 +482,12 @@ class PDb_List_Admin {
              */
 //            do_action(Participants_Db::$prefix . 'admin_list_form_top', $this);
             do_action( Participants_Db::$prefix . 'admin_list_form_top' );
-            
-            $with_selection_actions = array();
-            
-            // add the approval actions
-            $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
-            if ( isset( Participants_Db::$fields[$approval_field_name] ) ) {
-            $with_selection_actions = array(
-                        __( 'approve', 'participants-database' ) => 'approve',
-                        __( 'unapprove', 'participants-database' ) => 'unapprove',
-                    );
-            }
-            
-            // add the delete action
-            if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
-              $with_selection_actions = array(
-                        __( 'delete', 'participants-database' ) => 'delete'
-                    ) + $with_selection_actions;
-            }
-            
-            /**
-             * filter to add additional actions to the with selected selector
-             * 
-             * @filter pdb-admin_list_with_selected_actions
-             * @param array as $title => $action of actions to apply to selected records
-             * @return array
-             */
-            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
-            $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
             ?>
-            <table class="form-table"><tbody><tr><td>
-                    <fieldset class="widefat inline-controls">
-                      <?php
-                      if ( self::user_can_use_with_selected() ) :
-                        ?>
-                        <span style="padding-right:20px" >
-                          <?php echo self::$i18n['with_selected'] ?>: 
-                          <?php
-                          $element = array(
-                              'type' => 'dropdown',
-                              'name' => 'with_selected',
-                              'value' => $with_selected_value,
-                              'options' => $with_selected_selections,
-                          );
-                          PDb_FormElement::print_element( $element );
-                          ?>
-                          <input type="submit" name="submit-button" class="button button-default" value="<?php echo self::$i18n['apply'] ?>" id="apply_button"  >
-                        </span>
-                      <?php endif ?>
+            <table class="form-table">
+              <tbody>
+                <tr>
+                  <td>
+                    <fieldset class="list-controls">
                       <?php
                       $list_limit = PDb_FormElement::get_element( array(
                                   'type' => 'text-line',
@@ -549,10 +501,21 @@ class PDb_List_Admin {
                               )
                       ?>
                       <?php printf( __( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
-                      <?php PDb_FormElement::print_element( array('type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n['change']) ) ?>
-
+                      <?php PDb_FormElement::print_element( array( 'type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n[ 'change' ] ) ) ?>
                     </fieldset>
-                  </td></tr></tbody></table>
+                  </td>
+                </tr>
+                <?php if ( self::user_can_use_with_selected() ) : ?>
+                <tr>
+                  <td>
+                    <fieldset class="list-controls">
+                      <?php self::with_selected_control(); ?>
+                    </fieldset>
+                  </td>
+                </tr>
+                <?php endif ?>
+              </tbody>
+            </table>
             <?php
           }
 
@@ -563,6 +526,8 @@ class PDb_List_Admin {
            */
           private static function _main_table( $mode = '' )
           {
+            self::list_count_display();
+            
             $hscroll = Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
             ?>
             <?php if ( $hscroll ) : ?>
@@ -605,14 +570,14 @@ class PDb_List_Admin {
                           <?php // print delete check     ?>
                           <td>
                             <?php if ( self::user_can_use_with_selected() ) : ?>
-                              <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value['id'] ?>" />
+                              <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value[ 'id' ] ?>" />
                             <?php endif ?>
-                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
+                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value[ 'id' ] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
                           </td>
                           <?php
                           foreach ( self::$display_columns as $column ) {
-                            
-                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id'], 'module' =>'admin-list') ) );
+
+                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array( 'value' => $value[ $column->name ], 'record_id' => $value[ 'id' ], 'module' => 'admin-list' ) ) );
                             $display_value = '';
 
                             // this is where we place form-element-specific text transformations for display
@@ -625,7 +590,7 @@ class PDb_List_Admin {
                                     'link' => '',
                                     'mode' => Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename',
                                 );
-                                
+
                                 // this is to display the image as a linked thumbnail
                                 $image = new PDb_Image( $image_params );
 
@@ -665,7 +630,7 @@ class PDb_List_Admin {
                                 break;
 
                               case 'text-line':
-                                
+
                                 if ( Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
                                   if ( $field->has_content() ) {
                                     $display_value = PDb_FormElement::make_link( $field );
@@ -675,14 +640,14 @@ class PDb_List_Admin {
                                   $display_value = $field->get_value_display();
                                 }
                                 break;
-                                
+
                               case 'hidden':
-                                
+
                                 $display_value = $field->get_value_display();
                                 break;
 
                               default:
-                                
+
                                 $display_value = $field->get_value_display();
                             }
 
@@ -721,7 +686,7 @@ class PDb_List_Admin {
          */
         private static function _print_export_form()
         {
-          Participants_Db::$session->clear('csv_export_fields'); // reset the stored export field list #2406
+          Participants_Db::$session->clear( 'csv_export_fields' ); // reset the stored export field list #2406
           $base_filename = self::get_admin_user_setting( 'csv_base_filename', Participants_Db::PLUGIN_NAME );
           ?>
 
@@ -770,9 +735,9 @@ class PDb_List_Admin {
 </th>
 ';
 
-    $sorticon_class = strtolower( self::$list_filter->value('ascdesc') ) === 'asc' ? 'dashicons-arrow-up' : 'dashicons-arrow-down';
+    $sorticon_class = strtolower( self::$list_filter->value( 'ascdesc' ) ) === 'asc' ? 'dashicons-arrow-up' : 'dashicons-arrow-down';
     $sorticon = '<span class="dashicons ' . $sorticon_class . ' sort-icon"></span>';
-    
+
     // print the "select all" header 
     ?>
     <th scope="col" style="width:3em">
@@ -785,13 +750,23 @@ class PDb_List_Admin {
     // print the top header row
     foreach ( self::$display_columns as $column ) {
       $title = Participants_Db::apply_filters( 'translate_string', strip_tags( stripslashes( $column->title ) ) );
-      $field = Participants_Db::$fields[$column->name];
+      $field = Participants_Db::$fields[ $column->name ];
       printf(
-              $field->sortable ? $sortable_head_pattern : $head_pattern, str_replace( array('"', "'"), array('&quot;', '&#39;'), $title ), $column->name, $column->name === self::$list_filter->value('sortBy') ? $sorticon : ''
+              $field->sortable ? $sortable_head_pattern : $head_pattern, str_replace( array( '"', "'" ), array( '&quot;', '&#39;' ), $title ), $column->name, $column->name === self::$list_filter->value( 'sortBy' ) ? $sorticon : ''
       );
     }
   }
   
+  /**
+   * prints the list count display
+   */
+  private static function list_count_display()
+  {
+    ?>
+    <h3><?php printf( _n( '%s record found, sorted by: %s.', '%s records found, sorted by: %s.', self::$query->result_count(), 'participants-database' ), self::$query->result_count(), Participants_Db::column_title( self::$list_filter->value( 'sortBy' ) ) ) ?></h3>
+    <?php
+  }
+
   /**
    * tells if the current user can utilize the "with selected" functionality
    * 
@@ -803,6 +778,59 @@ class PDb_List_Admin {
   }
 
   /**
+   * provides the "with selected" control HTML
+   * 
+   * @return string HTML
+   */
+  private static function with_selected_control()
+  {
+    $with_selection_actions = array();
+
+    // add the approval actions
+    $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
+    if ( PDb_Form_Field_Def::is_field( $approval_field_name ) ) {
+      $with_selection_actions = array(
+          __( 'approve', 'participants-database' ) => 'approve',
+          __( 'unapprove', 'participants-database' ) => 'unapprove',
+      );
+    }
+
+    // add the delete action
+    if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
+      $with_selection_actions = array(
+          __( 'delete', 'participants-database' ) => 'delete'
+              ) + $with_selection_actions;
+    }
+
+    /**
+     * filter to add additional actions to the with selected selector
+     * 
+     * @filter pdb-admin_list_with_selected_actions
+     * @param array as $title => $action of actions to apply to selected records
+     * @return array
+     */
+    $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
+    $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
+
+    $selector = array(
+        'type' => 'dropdown',
+        'name' => 'with_selected',
+        'value' => $with_selected_value,
+        'options' => $with_selected_selections,
+    );
+
+    $html = array(
+        '<span style="padding-right:20px" >',
+        self::$i18n[ 'with_selected' ],
+        PDb_FormElement::get_element( $selector ),
+        '<input type="submit" name="submit-button" class="button button-default" value="' . self::$i18n[ 'apply' ] . '" id="apply_button"  >',
+        '</span>',
+    );
+
+    return implode( PHP_EOL, Participants_Db::apply_filters( 'admin_list_with_selected_control_html', $html ) );
+  }
+
+  /**
    * builds a column sort link
    * 
    * this just removes the 'column_sort' variable from the URI
@@ -811,10 +839,10 @@ class PDb_List_Admin {
    */
   private static function sort_link_base_URI()
   {
-    $uri = parse_url( $_SERVER['REQUEST_URI'] );
-    parse_str( $uri['query'], $query );
-    unset( $query['column_sort'] );
-    return $uri['path'] . '?' . http_build_query( $query );
+    $uri = parse_url( $_SERVER[ 'REQUEST_URI' ] );
+    parse_str( $uri[ 'query' ], $query );
+    unset( $query[ 'column_sort' ] );
+    return $uri[ 'path' ] . '?' . http_build_query( $query );
   }
 
   /**
@@ -840,9 +868,9 @@ class PDb_List_Admin {
   private static function set_list_limit()
   {
     $limit_value = self::get_admin_user_setting( 'list_limit', Participants_Db::plugin_setting( 'list_limit' ) );
-    $input_limit = filter_input( INPUT_GET, 'list_limit', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+    $input_limit = filter_input( INPUT_GET, 'list_limit', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     if ( empty( $input_limit ) ) {
-      $input_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+      $input_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     }
     if ( !empty( $input_limit ) ) {
       $limit_value = $input_limit;
@@ -918,7 +946,7 @@ class PDb_List_Admin {
     if ( is_array( $saved_settings ) ) {
       $settings = $saved_settings;
     }
-    $settings[$name] = $value;
+    $settings[ $name ] = $value;
     update_option( $setting_name, $settings );
   }
 
@@ -933,7 +961,7 @@ class PDb_List_Admin {
   public static function get_user_setting( $name, $setting, $setting_name )
   {
     if ( $settings = (array) get_option( $setting_name ) ) {
-      $setting = isset( $settings[$name] ) ? $settings[$name] : $setting;
+      $setting = isset( $settings[ $name ] ) ? $settings[ $name ] : $setting;
     }
     return $setting;
   }
@@ -947,9 +975,9 @@ class PDb_List_Admin {
    */
   public static function filename_datestamp()
   {
-    return '-' . str_replace( array('/', '#', '.', '\\', ', ', ',', ' '), '-', PDb_Date_Display::get_date() );
+    return '-' . str_replace( array( '/', '#', '.', '\\', ', ', ',', ' ' ), '-', PDb_Date_Display::get_date() );
   }
-  
+
   /**
    * registers admin list events
    * 
@@ -959,7 +987,7 @@ class PDb_List_Admin {
    */
   public static function register_admin_list_events( $list )
   {
-    $prefix = __('PDb Admin List With Selected: ', 'participants-database');
+    $prefix = __( 'PDb Admin List With Selected: ', 'participants-database' );
     $admin_list_events = array(
         'pdb-list_admin_with_selected_delete' => $prefix . __( 'delete', 'participants-database' ),
         'pdb-list_admin_with_selected_approve' => $prefix . __( 'approve', 'participants-database' ),
@@ -968,10 +996,7 @@ class PDb_List_Admin {
     );
     return $list + $admin_list_events;
   }
-  
-  
-  
-  
+
   /**
    * registers error messages
    * 
@@ -986,11 +1011,11 @@ class PDb_List_Admin {
     $pattern = '
 <p>%s</p>
 ';
-    foreach( $errors->get_error_messages() as $code => $message ) {
-      self::$error_messages[$code] = sprintf( $pattern, esc_html( $message ) );
+    foreach ( $errors->get_error_messages() as $code => $message ) {
+      self::$error_messages[ $code ] = sprintf( $pattern, esc_html( $message ) );
     }
   }
-  
+
   /**
    * provides a list columns to use in the list filter and sort
    * 
@@ -1003,7 +1028,7 @@ class PDb_List_Admin {
     remove_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ) );
     return $columns;
   }
-  
+
   /**
    * filters the available columns by user role
    * 
@@ -1018,8 +1043,7 @@ class PDb_List_Admin {
     }
     return $cap;
   }
-  
-  
+
   /**
    * registers error messages
    * 
@@ -1034,7 +1058,7 @@ class PDb_List_Admin {
 	%s
 </div>
 ';
-    if ( !empty(self::$error_messages)) {
+    if ( !empty( self::$error_messages ) ) {
       printf( $wrap, $error_class, implode( "\r", self::$error_messages ) );
     }
   }
