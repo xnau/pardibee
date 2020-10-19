@@ -78,7 +78,7 @@ class heading extends custom_field {
         'readonly' => false,
         'help_text' => false,
         'persistent' => false,
-        'signup' => false,
+        'signup' => true,
         'validation' => false,
         'validation_message' => false,
         'csv' => false,
