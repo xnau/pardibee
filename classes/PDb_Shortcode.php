@@ -417,7 +417,6 @@ abstract class PDb_Shortcode {
    */
   private function _find_template()
   {
-
     $custom_template_file = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
     
     /**
@@ -495,7 +494,6 @@ abstract class PDb_Shortcode {
    */
   private function _setup_shortcode_atts( $shortcode_atts, $add_atts )
   {
-
     $defaults = array_merge( $this->shortcode_defaults, $add_atts );
 
     $this->shortcode_atts = shortcode_atts( $defaults, $shortcode_atts, 'pdb_' . $defaults['module'] );
@@ -1538,7 +1536,7 @@ abstract class PDb_Shortcode {
   {
     if ( !Participants_Db::$shortcode_present ) {
       Participants_Db::$shortcode_present = true;
-      do_action( Participants_Db::$prefix . 'shortcode_active' );
+      do_action( Participants_Db::$prefix . 'shortcode_present' );
     }
   }
 
