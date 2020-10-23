@@ -1553,7 +1553,7 @@ class Participants_Db extends PDb_Base {
       return false;
     }
     
-    do_action( 'pdb-clear_page_cache', $post['shortcode_page'] );
+    do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
     
     // if the column names are getting supplied, assume it is a function call, not a post submission
     $func_call = is_array( $column_names );
