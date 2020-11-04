@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -905,7 +905,7 @@ class PDb_List_Query {
 
     if ( !empty( $filter_string ) ) {
 
-      $statements = preg_split( '#(?<!\\\\)(&|\\|)#', html_entity_decode( $filter_string ), -1, PREG_SPLIT_DELIM_CAPTURE );
+      $statements = preg_split( '#(?<!\\\\)(&|\\|)#', $this->prep_filter_string( $filter_string ), -1, PREG_SPLIT_DELIM_CAPTURE );
 
       for ( $i = 0; $i < count( $statements ); $i = $i + 2 ) {
 
@@ -914,6 +914,25 @@ class PDb_List_Query {
         $this->_add_statement_from_filter_string( stripslashes( $statements[$i] ), $logic );
       }// each $statement
     }// done processing shortcode filter statements
+  }
+  
+  /**
+   * prepares a filter string for processing
+   * 
+   * @param string $filter_string
+   * @return string
+   */
+  private function prep_filter_string( $filter_string )
+  {
+    /*
+     * convert curly quote entities to straight quotes and converts curly quotes to straight quotes #2454
+     */
+    $filter_string = str_replace( array('&#8221;','&#8220;','&#8217;','&#8216;',chr(145),chr(146),chr(147),chr(148),'‘','’'.'“','”'), array( '"','"'."'","'","'","'",'"','"',"'","'",'"','"' ), $filter_string );
+    
+    // unquote the string
+    preg_match( '/^[\'"]?(.+?)[\'"]?$/', html_entity_decode( $filter_string ), $matches );
+    
+    return $matches[1];
   }
 
   /**
