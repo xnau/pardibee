@@ -17,7 +17,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.16
+ * @version    1.17
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -152,18 +152,7 @@ class PDb_List extends PDb_Shortcode {
 
     $this->suppress= $this->attribute_true('suppress');
 
-    global $wp_query;
-
-    $ajax_params = array(
-        'ajaxurl' => admin_url( 'admin-ajax.php' ),
-//        'filterNonce' => Participants_Db::nonce( self::$list_filter_nonce_key ),
-        'postID' => ( isset( $wp_query->post ) ? $wp_query->post->ID : '' ),
-        'prefix' => Participants_Db::$prefix,
-        'loading_indicator' => Participants_Db::get_loading_spinner(),
-        'allow_empty_term' => Participants_Db::plugin_setting_is_true( 'empty_search', false ),
-    );
-
-    wp_localize_script( Participants_Db::$prefix . 'list-filter', 'PDb_ajax', $ajax_params );
+    wp_localize_script( Participants_Db::$prefix . 'list-filter', 'PDb_ajax', $this->ajax_params() );
 
     // enqueue the filter/sort AJAX script
     if ( Participants_Db::plugin_setting_is_true( 'ajax_search' ) ) {
@@ -1334,6 +1323,25 @@ class PDb_List extends PDb_Shortcode {
     if ( empty( $search_term ) && $this->list_query->is_search_result() ) {
       $this->list_query->set_query_session( $this->shortcode_atts['target_instance'] );
     }
+  }
+  
+  /**
+   * provides the variables for use by the AJAX code
+   * 
+   * @global WP_Query $wp_query
+   * @return array
+   */
+  protected function ajax_params()
+  {
+    global $wp_query;
+
+    return array(
+        'ajaxurl' => admin_url( 'admin-ajax.php' ),
+        'postID' => ( isset( $wp_query->post ) ? $wp_query->post->ID : '' ),
+        'prefix' => Participants_Db::$prefix,
+        'loading_indicator' => Participants_Db::get_loading_spinner(),
+        'allow_empty_term' => Participants_Db::plugin_setting_is_true( 'empty_search', false ),
+    );
   }
 
   /**
