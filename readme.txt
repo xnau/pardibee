@@ -1373,7 +1373,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.6.6 =
+= 1.9.6.8 =
 minor bug fix release
 
 
