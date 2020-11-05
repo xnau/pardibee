@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 5.5.3
 Requires PHP: 5.6
-Stable tag: 1.9.6.6
+Stable tag: 1.9.6.7
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -287,6 +287,9 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.6.8 =
+* fixed issue with settings loss on session failure
 
 = 1.9.6.7 =
 * fixed bug with quotes around filter sting in list shortcode
