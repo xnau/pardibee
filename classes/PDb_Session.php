@@ -204,7 +204,7 @@ class PDb_Session {
     if ( session_status() !== PHP_SESSION_ACTIVE ) {
 
       if ( PDB_DEBUG && headers_sent() ) {
-        error_log( __METHOD__ . ' trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
+        error_log( __METHOD__ . ' can\'t get session: headers already sent. trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
       }
 
       session_start();
@@ -287,13 +287,12 @@ class PDb_Session {
        */
       $get_var_keys = Participants_Db::apply_filters( 'session_get_var_keys', array('cm') );
       foreach ( $get_var_keys as $key ) {
-        $value = filter_input( INPUT_GET, 'cm', FILTER_VALIDATE_REGEXP, $validator );
+        $value = filter_input( INPUT_GET, $key, FILTER_VALIDATE_REGEXP, $validator );
         if ( $value ) {
           break;
         }
       }
       
-      // if we are unable to get the ID, make one up: this one will be used from now on
       $sessid = $value;
     }
     
