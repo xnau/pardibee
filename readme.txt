@@ -121,7 +121,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Slovak: Branco Radenovich [WebHostingGeeks.com](http://webhostinggeeks.com/blog/)
 
-* Spanish: Cristhofer Chávez
+* Spanish: Chema Bescos [IBIDEM GROUP](https://www.ibidemgroup.com)
 
 * Ukranian: Michael Yunat, [getvoip.com](http://getvoip.com/blog)
 
