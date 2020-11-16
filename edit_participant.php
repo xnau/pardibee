@@ -8,8 +8,9 @@
  * @version 1.2
  *
  */
-if ( !defined( 'ABSPATH' ) )
+if ( !defined( 'ABSPATH' ) ) {
   die;
+}
 
 // clear out this unneeded value #2331
 Participants_Db::$session->clear('form_status');
