@@ -537,6 +537,23 @@ class PDb_Base {
     }
     return $id;
   }
+  
+  /**
+   * tells if the private ID is in the URL
+   * 
+   * this is primarily to detect if a pretty permalink was used to access the record, 
+   * a lot easier to do it here, than in the pretty permalinks plugin
+   * 
+   * @param int $record_id
+   * @return bool true if the record was accessed with a URL containing the private ID
+   */
+  protected static function pid_in_url( $record_id )
+  {
+    $url = $_SERVER['REQUEST_URI'];
+    $record = Participants_Db::get_participant( $record_id );
+    
+    return is_array( $record ) && strpos( $url, $record['private_id'] ) !== false;
+  }
 
   /**
    * determines if the field is the designated single record field
