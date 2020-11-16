@@ -863,18 +863,31 @@ class Participants_Db extends PDb_Base {
     
     if ( !empty( $get_pid ) ) {
       $record_id = self::get_participant_id( $get_pid );
+      
+      if ( $record_id && array_key_exists( Participants_Db::$record_query, $_GET ) ) {
+        /**
+         * @action pdb-record_accessed_using_private_link
+         * @param int record ID
+         */
+        do_action( 'pdb-record_accessed_using_private_link', $record_id );
+      }
     }
 
     if ( $record_id === false ) {
       $record_id = self::$session->record_id( true );
     }
 
+    // checking 'id' atribute for backward compatibility
     if ( $record_id === false && (isset( $atts['id'] ) || isset( $atts['record_id'] )) ) {
       if ( isset( $atts['id'] ) & !isset( $atts['record_id'] ) ) {
         $atts['record_id'] = $atts['id'];
         unset( $atts['id'] );
       }
       $record_id = self::get_record_id_by_term( 'id', $atts['record_id'] );
+      
+      if ( $record_id && self::pid_in_url( $record_id ) ) {
+        do_action( 'pdb-record_accessed_using_private_link', $record_id );
+      }
     }
     
     $atts['record_id'] = $record_id;
@@ -892,7 +905,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _record_access( $id )
   {
-
     global $wpdb;
 
     $sql = 'UPDATE ' . self::$participants_table . ' SET `last_accessed` = NOW() WHERE `id` = %s';
@@ -2270,7 +2282,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _get_participant( $id = false )
   {
-
     global $wpdb;
 
     $columns = array_keys( self::field_defs() );
