@@ -1137,6 +1137,7 @@ class PDb_Base {
     if ( $default === false ) {
       $default = self::plugin_setting_default($name);
     }
+    
     /**
      * @filter pdb-{$setting_name}_setting_value
      * @param mixed the setting value
