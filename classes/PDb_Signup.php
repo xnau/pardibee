@@ -110,7 +110,7 @@ class PDb_Signup extends PDb_Shortcode {
      * status values: normal (signup form submission) or multipage
      */
     $form_status = $this->get_form_status();
-
+    
     /*
      * get the record ID from the last submission or current multiform
      */
@@ -399,9 +399,13 @@ class PDb_Signup extends PDb_Shortcode {
     $thanks_message = '';
     
     if ( strpos( $this->get_form_status(), 'update' ) !== false ) {
-      $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', $this->shortcode_atts['content'] );
+      $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', '' );
     } elseif ( strpos( $this->get_form_status(), 'signup' ) !== false ) {
-      $thanks_message = Participants_Db::plugin_setting( 'signup_thanks', $this->shortcode_atts['content'] );
+      $thanks_message = Participants_Db::plugin_setting( 'signup_thanks', '' );
+    }
+    
+    if ( ! empty( $this->shortcode_atts['content'] ) ) {
+      $thanks_message = $this->shortcode_atts['content'];
     }
 
     // add the "record_link" tag
