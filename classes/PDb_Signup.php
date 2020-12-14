@@ -404,7 +404,7 @@ class PDb_Signup extends PDb_Shortcode {
       $thanks_message = Participants_Db::plugin_setting( 'signup_thanks', '' );
     }
     
-    if ( ! empty( $this->shortcode_atts['content'] ) ) {
+    if ( ! empty( $this->shortcode_atts['content'] ) && ! empty( $this->participant_values ) ) {
       $thanks_message = $this->shortcode_atts['content'];
     }
 
