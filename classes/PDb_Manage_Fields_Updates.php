@@ -87,6 +87,19 @@ class PDb_Manage_Fields_Updates {
         if ( !empty( $row['validation'] ) && !in_array( $row['validation'], array('yes', 'no') ) ) {
 
           $row['validation'] = str_replace( '\\\\', '\\', $row['validation'] );
+          
+          // check for a valid regex
+          if ( ! PDb_Form_Field_Def::is_field( $row['validation'] ) ) {
+            // this could be an incorrect field name or a regex
+            if ( ! PDb_FormValidation::is_regex( $row['validation'] ) ) {
+                    Participants_Db::set_admin_message( sprintf(
+                      __( 'The validation setting for the "%s" field is not a valid regex or field name.', 'participants-database' ), Participants_Db::apply_filters('translate_string', $row['title'])
+              ), 'error' );
+                    
+              $this->return_to_the_manage_database_fields_page();
+              
+            }
+          }
         }
 
         // remove empty values
