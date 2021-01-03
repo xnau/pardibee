@@ -228,7 +228,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           $regex = Participants_Db::apply_filters( 'email_regex', '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$#i' ); // version 1.7.1 long tld's allowed
           break;
 
-        case ( 'captcha' == strtolower( $validating_field->validation ) ) :
+        case ( 'captcha' === strtolower( $validating_field->validation ) ) :
 
           $validating_field->value = isset( $validating_field->value[1] ) ? $validating_field->value[1] : '';
 
@@ -425,7 +425,8 @@ class PDb_FormValidation extends xnau_FormValidation {
             break;
             
           case 'nonmatching':
-            if ( $field->has_validation_message() && $field->validation() === 'other' ) {
+            
+            if ( $field->has_validation_message() ) {
               $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
             } elseif ( isset( $this->error_messages[$error->slug] ) ) {
               $error_message = sprintf( $this->error_messages[$error->slug], $field->title(), Participants_Db::column_title( $field->validation ) );
