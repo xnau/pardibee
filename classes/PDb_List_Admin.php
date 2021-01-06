@@ -509,7 +509,7 @@ class PDb_List_Admin {
                 <tr>
                   <td>
                     <fieldset class="list-controls">
-                      <?php self::with_selected_control(); ?>
+                      <?php echo self::with_selected_control(); ?>
                     </fieldset>
                   </td>
                 </tr>
