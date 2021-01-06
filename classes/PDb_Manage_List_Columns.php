@@ -162,7 +162,14 @@ class PDb_Manage_List_Columns {
     foreach ( $this->{$type . '_field_list'}() as $field ) {
       if ( $field->{$column} == '0' ) {
         $field->title = $field->title === '' ? $field->name : Participants_Db::apply_filters( 'translate_string', $field->title );
-        $list[$field->sortorder] = $field; // $field->id
+        
+        $sortorder = $field->sortorder;
+        while ( isset( $list[$sortorder] ) ) {
+          // make sure we don't lose fields that have the same sort order value
+          $sortorder++;
+        }
+        $list[$sortorder] = $field;
+        
       }
     }
     ksort( $list );
