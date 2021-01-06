@@ -964,6 +964,7 @@ class PDb_Base {
   {
 
     $capability = 'read'; // assume the lowest cap
+    
     if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
       /**
        * provides access to individual access privileges
