@@ -1123,6 +1123,7 @@ class Participants_Db extends PDb_Base {
     // add our modular fields
     new \PDb_fields\heading();
     new \PDb_fields\video();
+    new \PDb_fields\string_combine();
   }
   
   /**
