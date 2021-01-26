@@ -3,20 +3,20 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.47
+ * @version 2.5
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
   "use strict";
   var dialogOptions = {
-    dialogClass : 'participants-database-confirm',
-    autoOpen : false,
-    height : 'auto',
-    minHeight : '20'
+    dialogClass: 'participants-database-confirm',
+    autoOpen: false,
+    height: 'auto',
+    minHeight: '20'
   };
   var tabEffect = {
-    effect : 'fadeToggle',
-    duration : 100
+    effect: 'fadeToggle',
+    duration: 100
   };
   var lastTab = 'pdb-manage-fields-tab';
   var effect_speed = 300;
@@ -41,8 +41,8 @@ PDbManageFields = (function ($) {
 
       // initialize the dialog action
       confirmationBox.dialog(dialogOptions, {
-        buttons : {
-          "Ok" : function () {
+        buttons: {
+          "Ok": function () {
             $(this).dialog('close');
           }
         }
@@ -53,23 +53,23 @@ PDbManageFields = (function ($) {
       confirmationBox.html(PDb_L10n.delete_confirm.replace('{name}', name).replace('{thing}', thing));
 
       confirmationBox.dialog(dialogOptions, {
-        buttons : {
-          "Ok" : function () {
+        buttons: {
+          "Ok": function () {
             parent.css('opacity', '0.3');
             $(this).dialog('close');
             $.ajax({
-              type : 'post',
-              url : ajaxurl,
-              data : {
-                list : [row_id],
-                action : PDb_L10n.action,
-                task : 'delete_' + thing,
-                _wpnonce : PDb_L10n._wpnonce,
-                sess : PDb_L10n.sess
+              type: 'post',
+              url: ajaxurl,
+              data: {
+                list: [row_id],
+                action: PDb_L10n.action,
+                task: 'delete_' + thing,
+                _wpnonce: PDb_L10n._wpnonce,
+                sess: PDb_L10n.sess
               },
-              beforeSend : function () {
+              beforeSend: function () {
               },
-              success : function (response) {
+              success: function (response) {
                 if (response.status === 'success') {
                   parent.slideUp(600, function () {
                     parent.remove();
@@ -85,7 +85,7 @@ PDbManageFields = (function ($) {
               }
             });// ajax
           }, // ok
-          "Cancel" : function () {
+          "Cancel": function () {
             $(this).dialog('close');
           } // cancel
         } // buttons
@@ -98,27 +98,28 @@ PDbManageFields = (function ($) {
     var target = $(this);
     var warning_name = target.prop('name').replace(/\[(.+)\]/, '[datatype_warning]');
     var warning = $('[name="' + warning_name + '"]').length ? $('[name="' + warning_name + '"]') : $('<input>', {
-      name : warning_name,
-      type : 'hidden',
+      name: warning_name,
+      type: 'hidden',
       value : 'pending'
     }).insertAfter(target);
     var confirmationBox = $('#confirmation-dialog');
     confirmationBox.html(PDb_L10n.datatype_confirm);
     // initialize the dialog action
     confirmationBox.dialog(dialogOptions, {
-      buttons : [
+      buttons: [
         {
-          text : PDb_L10n.datatype_confirm_button,
-          class : 'confirm-button dashicons-before dashicons-yes',
-          click : function () {
+          text: PDb_L10n.datatype_confirm_button,
+          class: 'confirm-button dashicons-before dashicons-yes',
+          click: function () {
             warning.val('accepted');
             confirmationBox.dialog('close');
+            update_editor(target);
           }
         },
         {
-          text : PDb_L10n.datatype_cancel_button,
-          class : 'cancel-button dashicons-before dashicons-no',
-          click : function () {
+          text: PDb_L10n.datatype_cancel_button,
+          class: 'cancel-button dashicons-before dashicons-no',
+          click: function () {
             warning.val('rejected');
             target.val(target.data('initState'));
             confirmationBox.dialog('close'); // Close the Confirmation Box
@@ -128,6 +129,31 @@ PDbManageFields = (function ($) {
     });// dialog 
     confirmationBox.dialog('open');
     return false;
+  };
+  var update_editor = function (el) {
+    var editor = el.closest('.def-fieldset');
+    editor.css({opacity:0.3});
+    $.ajax({
+      type: 'post',
+      url: ajaxurl,
+      data: {
+        field: editor.find('[name$="[name]"]').val(),
+        type: el.val(),
+        action: PDb_L10n.action,
+        task: 'update_editor',
+        _wpnonce: PDb_L10n._wpnonce,
+        sess: PDb_L10n.sess
+      },
+      beforeSend: function () {
+      },
+      success: function (response) {
+        if (response.status === 'success') {
+          editor.replaceWith(response.body);
+        }
+        editor.css({opacity:1});
+        clearUnsavedChangesWarning();
+      }
+    });// ajax
   };
   var captchaPreset = function () {
     var el = $(this);
@@ -223,22 +249,22 @@ PDbManageFields = (function ($) {
   var getTabSettings = function () {
     if ($.versioncompare("1.9", $.ui.version) === 1) {
       return {
-        fx : {
-          opacity : "show",
-          duration : "fast"
+        fx: {
+          opacity: "show",
+          duration: "fast"
         },
-        cookie : {
-          expires : 1
+        cookie: {
+          expires: 1
         }
       };
     } else {
       return {
-        hide : tabEffect,
-        show : tabEffect,
-        active : Cookies.get(lastTab),
-        activate : function (event, ui) {
+        hide: tabEffect,
+        show: tabEffect,
+        active: Cookies.get(lastTab),
+        activate: function (event, ui) {
           Cookies.set(lastTab, ui.newTab.index(), {
-            expires : 365, path : ''
+            expires: 365, path: ''
           });
         }
       };
@@ -270,12 +296,12 @@ PDbManageFields = (function ($) {
         break;
     }
     $.post(ajaxurl, {
-      action : PDb_L10n.action,
-      task : 'open_close_editor',
-      id : el.closest('.field-header').find('[data-id]').data('id'),
-      state : action,
-      _wpnonce : PDb_L10n._wpnonce,
-      sess : PDb_L10n.sess
+      action: PDb_L10n.action,
+      task: 'open_close_editor',
+      id: el.closest('.field-header').find('[data-id]').data('id'),
+      state: action,
+      _wpnonce: PDb_L10n._wpnonce,
+      sess: PDb_L10n.sess
     });
   }
   var open_close_all_field_editors = function (container, action) {
@@ -292,12 +318,12 @@ PDbManageFields = (function ($) {
       list.push($(this).data('id'));
     });
     $.post(ajaxurl, {
-      action : PDb_L10n.action,
-      task : 'open_close_all',
-      list : list,
-      state : action,
-      _wpnonce : PDb_L10n._wpnonce,
-      sess : PDb_L10n.sess
+      action: PDb_L10n.action,
+      task: 'open_close_all',
+      list: list,
+      state: action,
+      _wpnonce: PDb_L10n._wpnonce,
+      sess: PDb_L10n.sess
     });
   }
   var showhide_validation_message = function () {
@@ -359,14 +385,14 @@ PDbManageFields = (function ($) {
       $('#row_' + value + '_' + flag + '-' + PDb_L10n.instance_index).prop('checked', set);
     });
     $.post(ajaxurl, {
-      action : PDb_L10n.action,
-      task : 'update_param',
-      param : flag,
-      setting : set,
-      selection : withSelected.ws_action,
-      _wpnonce : PDb_L10n._wpnonce,
-      sess : PDb_L10n.sess,
-      list : withSelected.list
+      action: PDb_L10n.action,
+      task: 'update_param',
+      param: flag,
+      setting: set,
+      selection: withSelected.ws_action,
+      _wpnonce: PDb_L10n._wpnonce,
+      sess: PDb_L10n.sess,
+      list: withSelected.list
     }, function (response) {
       withSelected.spinner.remove();
       if (response.feedback) {
@@ -392,23 +418,23 @@ PDbManageFields = (function ($) {
 
     // initialize the dialog action
     confirmationBox.dialog(dialogOptions, {
-      buttons : {
-        "Ok" : function () { //If the user choose to click on "OK" Button
+      buttons: {
+        "Ok": function () { //If the user choose to click on "OK" Button
 
           $.each(list, function (index, value) {
             $('#db_row_' + value).css('opacity', '0.3');
           });
           $(this).dialog('close');
           $.ajax({
-            type : 'post',
-            url : ajaxurl,
-            data : {
-              list : list,
-              action : PDb_L10n.action,
-              task : 'delete_field',
-              _wpnonce : PDb_L10n._wpnonce
+            type: 'post',
+            url: ajaxurl,
+            data: {
+              list: list,
+              action: PDb_L10n.action,
+              task: 'delete_field',
+              _wpnonce: PDb_L10n._wpnonce
             },
-            success : function (response) {
+            success: function (response) {
               $.each(list, function (index, value) {
                 $('#db_row_' + value).slideUp(600, function () {
                   $(this).remove();
@@ -421,7 +447,7 @@ PDbManageFields = (function ($) {
             }
           });
         }, // ok
-        "Cancel" : function () { //if the User Clicks the button "cancel"
+        "Cancel": function () { //if the User Clicks the button "cancel"
           $(this).dialog('close');
         } // cancel
       } // buttons
@@ -437,26 +463,26 @@ PDbManageFields = (function ($) {
     }
   };
   var sortFields = {
-    helper : fixHelper,
-    handle : '.dragger',
-    update : function (event, ui) {
+    helper: fixHelper,
+    handle: '.dragger',
+    update: function (event, ui) {
       $.post(ajaxurl, {
-        action : PDb_L10n.action,
-        task : 'reorder_fields',
-        _wpnonce : PDb_L10n._wpnonce,
-        list : serializeList($(this))
+        action: PDb_L10n.action,
+        task: 'reorder_fields',
+        _wpnonce: PDb_L10n._wpnonce,
+        list: serializeList($(this))
       });
     }
   };
   var sortGroups = {
-    helper : fixHelper,
-    handle : '.dragger',
-    update : function (event, ui) {
+    helper: fixHelper,
+    handle: '.dragger',
+    update: function (event, ui) {
       $.post(ajaxurl, {
-        action : PDb_L10n.action,
-        task : 'reorder_groups',
-        _wpnonce : PDb_L10n._wpnonce,
-        list : serializeList($(this))
+        action: PDb_L10n.action,
+        task: 'reorder_groups',
+        _wpnonce: PDb_L10n._wpnonce,
+        list: serializeList($(this))
       });
     }
   };
@@ -465,7 +491,7 @@ PDbManageFields = (function ($) {
     $('select.with-selected-action-select').val(withSelected.ws_action);
   }
   return {
-    init : function () {
+    init: function () {
       var tabcontrols = $("#fields-tabs");
 
       clearUnsavedChangesWarning();
@@ -477,10 +503,10 @@ PDbManageFields = (function ($) {
       tabcontrols.find('.attribute-control input, .attribute-control textarea').on('input', setChangedFlag);
       // flag the row as changed for dropdowns, checkboxes
       tabcontrols.find('.attribute-control select, .attribute-control input[type=checkbox]').on('change', setChangedFlag);
-      
+
       // flag the row as changed for rich text editors
       tabcontrols.find('.pdb_heading-form-element').on('pdb-tinymce-change', '.mce-container', setChangedFlag);
-      
+
       // defeat return key submit behavior
       tabcontrols.on("keypress", 'form', cancelReturn);
       // set the form element change warning
@@ -497,8 +523,8 @@ PDbManageFields = (function ($) {
       // clear the unsaved changes opo-up
       $('.manage-fields-update, .manage-groups-update').on('click', clearUnsavedChangesWarning);
       // set up the open/close field editor button
-      $('.def-fieldset').on('click', '.editor-opener.field-open-icon', open_field_editor);
-      $('.def-fieldset').on('click', '.editor-opener.field-close-icon', close_field_editor);
+      $('.manage-fields').on('click', '.def-fieldset .editor-opener.field-open-icon', open_field_editor);
+      $('.manage-fields').on('click', '.def-fieldset .editor-opener.field-close-icon', close_field_editor);
       // show/hide the validation message setting
       $('.validation-attribute select').on('change', showhide_validation_message).each(showhide_validation_message);
       // set up the manage fields global action panels
