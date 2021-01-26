@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.10
+ * @version    0.11
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -54,6 +54,11 @@ class PDb_Form_Field_Def {
    */
   protected $grouptitle;
 
+  /**
+   * @var int id of the field's group
+   */
+  protected $groupid;
+  
   /**
    * @var string field help text
    */
@@ -195,7 +200,7 @@ class PDb_Form_Field_Def {
     
     if ( ! $field_defs ) {
       global $wpdb;
-      $sql = 'SELECT v.*, g.title AS grouptitle 
+      $sql = 'SELECT v.*, g.title AS grouptitle, g.id AS groupid  
               FROM ' . Participants_Db::$fields_table . ' v 
                 JOIN ' . Participants_Db::$groups_table . ' g
                   ON v.group = g.name 
@@ -240,6 +245,8 @@ class PDb_Form_Field_Def {
       case 'id':
       case 'order':
       case 'title':
+      case 'grouptitle':
+      case 'groupid':
         return $this->{$prop};
       default:
         return null;
