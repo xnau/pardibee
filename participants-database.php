@@ -1108,7 +1108,7 @@ class Participants_Db extends PDb_Base {
       
       global $wpdb;
       
-      $sql = 'SELECT v.name, v.*, g.title AS grouptitle 
+      $sql = 'SELECT v.name, v.*, g.title AS grouptitle, g.id AS groupid  
               FROM ' . Participants_Db::$fields_table . ' v 
                 JOIN ' . Participants_Db::$groups_table . ' g
                   ON v.group = g.name 
