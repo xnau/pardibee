@@ -878,6 +878,7 @@ JS;
         'radio',
         'placeholder',
         'hidden',
+        'string_combine',
             )
     );
     return Participants_Db::apply_filters( 'field_is_linkable', $linkable, $field->form_element );
