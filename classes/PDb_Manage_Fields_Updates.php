@@ -474,6 +474,19 @@ class PDb_Manage_Fields_Updates {
           }
         }
         wp_send_json( 'set' );
+        
+      case 'update_editor':
+        
+        $fieldname = filter_input( INPUT_POST, 'field', FILTER_SANITIZE_STRING );
+        $new_type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+        
+        // update the field def with the new type
+        global $wpdb;
+        $wpdb->update( Participants_Db::$fields_table, array( 'form_element' => $new_type ), array('name' => $fieldname ) );
+        
+        $editor_html = PDb_Manage_Fields::field_editor_html( $fieldname );
+        
+        wp_send_json( array( 'body' => $editor_html, 'status' => empty( $editor_html ) ? 'no "' . $fieldname . '" field found' : 'success' ) );
 
       default:
         /**
