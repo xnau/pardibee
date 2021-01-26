@@ -319,7 +319,7 @@ class PDb_Field_Editor {
       case 'form_element':
         $config = array(
             'type' => 'dropdown',
-            'options' => array_flip( PDb_FormElement::get_types() ) + array(PDb_FormElement::null_select_key() => false),
+            'options' => array_flip( $this->form_element_options() ) + array(PDb_FormElement::null_select_key() => false),
             'attributes' => array('class' => $this->column_has_data( $this->field_def->name() ) ? 'column-has-values' : 'column-empty'),
         );
         break;
@@ -333,6 +333,16 @@ class PDb_Field_Editor {
         $config = false;
     }
     return $config;
+  }
+  
+  /**
+   * provides a list of form element to choose from
+   * 
+   * @return array as $name => $title
+   */
+  protected function form_element_options()
+  {
+    return Participants_Db::apply_filters( 'field_editor_form_element_options', PDb_FormElement::get_types() );
   }
 
   /**
@@ -479,7 +489,7 @@ class PDb_Field_Editor {
    * 
    * @return array
    */
-  protected function form_element_atts()
+  public function form_element_atts()
   {
     // set up the built-in form elements
     switch ( $this->field_def->form_element() ) {
