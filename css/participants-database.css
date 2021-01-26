@@ -472,7 +472,7 @@ svg.ajax-loading image {
   vertical-align: middle;
 }
 .pdb-flexbox-list .pdb-pagination span.ajax-loading {
-  postion: absolute;
+  position: absolute;
 }
 .pdb-flexbox-list .pdb-list .pagination li > span, 
 .pdb-flexbox-list .pdb-pagination li > span, 
