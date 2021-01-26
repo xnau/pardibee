@@ -204,19 +204,10 @@ class PDb_Participant_Cache {
 
     $series_start = $this->cache_key * $this->cache_size;
     $series_end = $series_start + $this->cache_size;
-    
-    $series_cache = 'pdb-participant_cache';
-    
-    $result = wp_cache_get($series_cache);
-    
-    if ( ! $result ) {
 
       $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ORDER BY p.id ASC';
 
       $result = $wpdb->get_results( $sql, OBJECT_K );
-      
-      wp_cache_set($series_cache, $result);
-    }
     
     foreach( $result as $key => $data ) {
       if ( $key >= $series_start && $key <= $series_end ) {
