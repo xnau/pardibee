@@ -679,7 +679,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * 
    * @return bool
    */
-  private function is_valid_single_record_link_field()
+  public function is_valid_single_record_link_field()
   {
     return (
             !in_array( $this->module, array('single', 'signup') ) &&
