@@ -48,11 +48,16 @@ class video extends custom_field {
   private function video_embed_html()
   {
     $html = array();
+    
     if ( $this->field->form_element === $this->name ) {
+      
       $oembed = new \WP_oEmbed();
+      $video_url = $this->extract_url( $this->field->value );
+      
       $html[] = '<div class="pdb-video-container ' . $this->field->name . '-video">';
-      $html[] = $oembed->get_html( $this->extract_url( $this->field->value ) );
+      $html[] = empty( $video_url ) ? '' : $oembed->get_html( $video_url );
       $html[] = '</div>';
+      
     }
    
     return $html;
