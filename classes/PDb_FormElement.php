@@ -755,6 +755,7 @@ JS;
      * @param string the name of the filter called
      */
     $attributes_array = Participants_Db::apply_filters( 'form_element_attributes_filter', $this->attributes, $filter );
+    
     switch ( $filter ) {
       case 'none':
         break;
