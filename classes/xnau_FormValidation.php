@@ -383,20 +383,21 @@ class xnau_FormValidation {
    * it's a string then test the function and look for a boolean false, which is 
    * a strong indicator the regex is invalid
    * 
-   * @param string $string the string to test
+   * @param string $regex the string to test
    * @return bool
    */
-  public static function is_regex($string)
+  public static function is_regex($regex)
   {
-
-    if (!is_string($string) || strlen($string) === 0)
+    // must be a string
+    if (!is_string($regex) || strlen($regex) === 0)
       return false;
     
-    if ( preg_match( '/^[a-zA-Z0-9\\\]/', $string ) === 1 ) {
+    // make sure the regex does not begin with an alphanumeric
+    if ( preg_match( '/^[a-zA-Z0-9\\\]/', $regex ) === 1 ) {
       return false;
     }
 
-    return is_int( @preg_match($string,'' ) );
+    return is_int( @preg_match($regex,'' ) );
   }
 
   /**
