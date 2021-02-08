@@ -107,7 +107,7 @@ class PDb_FormValidation extends xnau_FormValidation {
    */
   protected function _validate_field( $value, $name, $validation = NULL, $form_element = false, $record_id = false )
   {
-    $validating_field = new PDb_Validating_Field( $value, $name, $validation, $form_element, false, $record_id );
+    $validating_field = new \PDb_submission\validating_field( $value, $name, $validation, $form_element, false, $record_id );
 
     /**
      * this filter sends the $field object through a filter to allow a custom 
@@ -151,9 +151,9 @@ class PDb_FormValidation extends xnau_FormValidation {
            */
           $validating_field->validation = 'yes';
           if ( $this->is_empty( $validating_field->value ) ) {
-            $validating_field->validation_state_is( 'empty' );
+            $validating_field->set_validation_state( 'empty' );
           } else {
-            $validating_field->validation_state_is( 'valid' );
+            $validating_field->set_validation_state( 'valid' );
           }
           break;
 
@@ -161,11 +161,11 @@ class PDb_FormValidation extends xnau_FormValidation {
           
           // a "link" field only needs the first element to be filled in
           if ( $this->is_empty( $validating_field->value[0] ) ) {
-            $validating_field->validation_state_is( 'empty' );
+            $validating_field->set_validation_state( 'empty' );
           } elseif ( !filter_var( $validating_field->value[0], FILTER_VALIDATE_URL ) ) {
-            $validating_field->validation_state_is( 'invalid' );
+            $validating_field->set_validation_state( 'invalid' );
           } else {
-            $validating_field->validation_state_is( 'valid' );
+            $validating_field->set_validation_state( 'valid' );
           }
           break;
           
@@ -175,9 +175,9 @@ class PDb_FormValidation extends xnau_FormValidation {
           
           $checked_value = current( $values );
           if ( $validating_field->validation === 'yes' && $validating_field->value !== $checked_value ) {
-            $validating_field->validation_state_is( 'empty' );
+            $validating_field->set_validation_state( 'empty' );
           } elseif ( $validating_field->validation === 'yes' ) {
-            $validating_field->validation_state_is( 'valid' );
+            $validating_field->set_validation_state( 'valid' );
           }
           break;
           
@@ -185,15 +185,15 @@ class PDb_FormValidation extends xnau_FormValidation {
           
           // if the password exists and is not being changed, it will come in as the dummy string
           if ( $validating_field->value === PDb_FormElement::dummy ) {
-            $validating_field->validation_state_is( 'valid' );
+            $validating_field->set_validation_state( 'valid' );
           }
           
           
           if ( $validating_field->has_not_been_validated() ) {
             if ( $this->is_empty( $validating_field->value ) && ! $validating_field->is_regex() ) {
-              $validating_field->validation_state_is( 'empty' );
+              $validating_field->set_validation_state( 'empty' );
             } elseif ( $validating_field->validation === 'yes' ) {
-              $validating_field->validation_state_is( 'valid' );
+              $validating_field->set_validation_state( 'valid' );
             }
           }
           
@@ -205,9 +205,9 @@ class PDb_FormValidation extends xnau_FormValidation {
            */
           if ( $validating_field->validation === 'yes' ) {
             if ( $this->is_empty( $validating_field->value ) ) {
-              $validating_field->validation_state_is( 'empty' );
+              $validating_field->set_validation_state( 'empty' );
             } else {
-              $validating_field->validation_state_is( 'valid' );
+              $validating_field->set_validation_state( 'valid' );
             }
           }
       }
@@ -243,16 +243,17 @@ class PDb_FormValidation extends xnau_FormValidation {
           $regex = Participants_Db::apply_filters( 'captcha_validation', $this->xcrypt( $info->nonce, PDb_CAPTCHA::get_key() ), $this->post_array );
           
           if ( !self::is_regex( $regex ) ) {
-            $validating_field->validation_state_is( 'invalid' );
+            $validating_field->set_validation_state( 'invalid' );
           }
 
           //error_log(__METHOD__.' validate CAPTCHA $info:'.print_r($info,1).' $field->value:'.$field->value.' regex:'.$regex);
 
           break;
 
-        case ( self::is_regex( $validating_field->validation ) ) :
+        case ( $validating_field->is_regex_validation() ) :
 
           $regex = $validating_field->validation;
+          
           break;
 
         /*
@@ -268,12 +269,12 @@ class PDb_FormValidation extends xnau_FormValidation {
 
       if ( $test_value !== false ) {
         if ( ! $this->verify_field_is_valid( $test_value, $validating_field ) ) {
-          $validating_field->validation_state_is( 'nonmatching' );
+          $validating_field->set_validation_state( 'nonmatching' );
         } else {
           // set the state to valid because it matches
-          $validating_field->validation_state_is( 'valid' );
+          $validating_field->set_validation_state( 'valid' );
         }
-      } elseif ( $regex !== false && self::is_regex( $regex ) ) {
+      } elseif ( $regex !== false ) {
 
         $test_result = preg_match( $regex, $validating_field->value );
 
@@ -289,9 +290,9 @@ class PDb_FormValidation extends xnau_FormValidation {
           
         } elseif ( $test_result === false ) {
           error_log( __METHOD__ . ' captcha or regex error with regex: "' . $regex . '"' );
-          
+          $validating_field->error_type = 'invalid';
         } elseif ( $test_result === 1 ) {
-          $validating_field->validation_state_is( 'valid' );
+          $validating_field->set_validation_state( 'valid' );
           
         }
       }
@@ -380,7 +381,7 @@ class PDb_FormValidation extends xnau_FormValidation {
       return array();
 
     foreach ( $this->errors as $fieldname => $error ) {
-      /* @var $error PDb_Validation_Error_Message */
+      /* @var $error \PDb_submission\validation_error_message */
 
       if ( $fieldname !== '' ) {
 
@@ -408,8 +409,7 @@ class PDb_FormValidation extends xnau_FormValidation {
             
             $field_selector = '.' . $field->name() . '-input-group';
         }
-
-        //$this->error_CSS[] = '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector;
+        
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
         
         $error_message = $error->slug; // fallback message
@@ -472,7 +472,7 @@ class PDb_FormValidation extends xnau_FormValidation {
   protected function _add_error( $field, $error, $overwrite = false )
   {
     if ( $overwrite === true || !isset( $this->errors[$field] ) || empty( $this->errors[$field] ) ) {
-      $this->errors[$field] = new PDb_Validation_Error_Message( $field, array('slug' => $error) );
+      $this->errors[$field] = new \PDb_submission\validation_error_message( $field, array('slug' => $error) );
     }
   }
 
@@ -547,336 +547,6 @@ class PDb_FormValidation extends xnau_FormValidation {
     }
 
     return $string;
-  }
-
-}
-
-/**
- * assists in the validation of a single field
- * 
- * $field = (object) compact('value', 'name', 'validation', 'form_element', 'error_type');
- */
-class PDb_Validating_Field {
-
-  /**
-   * @var mixed the submitted values
-   */
-  private $value;
-
-  /**
-   *
-   * @var string name of the field 
-   */
-  private $name;
-
-  /**
-   *
-   * @var string name of the validation type to apply
-   */
-  private $validation;
-
-  /**
-   * @var string name of the form element
-   */
-  private $form_element;
-
-  /**
-   * @var string|bool current validated state
-   */
-  private $error_type;
-
-  /**
-   * @var int|bool  the record id or bool false if not known
-   */
-  private $record_id;
-
-  /**
-   * set it up
-   */
-  public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false, $record_id = false )
-  {
-    foreach ( get_object_vars( $this ) as $prop => $val ) {
-      $this->{$prop} = $$prop;
-    }
-  }
-  
-  /**
-   * supplies the record id
-   * 
-   * @return int
-   */
-  public function record_id()
-  {
-    return $this->record_id ? $this->record_id : 0;
-  }
-
-  /**
-   * determines of the field needs to be validated
-   * 
-   * @return bool
-   */
-  public function is_validated()
-  {
-    return !( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
-  }
-
-  /**
-   * determines of the field has been validated
-   * 
-   * @return bool
-   */
-  public function has_not_been_validated()
-  {
-    return $this->error_type === false;
-  }
-
-  /**
-   * determines if the field is email validated
-   * 
-   * @return bool
-   */
-  public function is_email()
-  {
-    /*
-     * the validation method key for an email address was formerly 'email' This 
-     * has been changed to 'email-regex' but will still come in as 'email' from 
-     * legacy databases. We test for that by looking for a field named 'email' 
-     * in the incoming values.
-     */
-    return $this->validation == 'email-regex' || ($this->validation == 'email' && $this->name == 'email');
-  }
-
-  /**
-   * determines if the field is a captcha
-   * 
-   * @return bool
-   */
-  public function is_captcha()
-  {
-    return strtolower( $this->validation ) == 'captcha';
-  }
-
-  /**
-   * determines if the field is regex-validated
-   * 
-   * @return bool
-   */
-  public function is_regex()
-  {
-    return PDb_FormValidation::is_regex( $this->validation );
-  }
-
-  /**
-   * sets the error state
-   * 
-   * @param string $state the error state string
-   */
-  public function validation_state_is( $state )
-  {
-    $this->error_type = $state;
-  }
-
-  /**
-   * tells of the field has not passed validation
-   * 
-   * @return bool true if the field has failed validation
-   */
-  public function is_not_valid()
-  {
-    return $this->error_type !== 'valid';
-  }
-
-  /**
-   * sets the property value
-   * 
-   * @param string $name property name
-   * @param mixed $value
-   */
-  public function __set( $name, $value )
-  {
-    $this->{$name} = $value;
-  }
-
-  /**
-   * provides a property value
-   * 
-   * @param string $name
-   * @return mixed
-   */
-  public function __get( $name )
-  {
-    return $this->{$name};
-  }
-
-}
-
-class PDb_Validation_Error_Message {
-
-  /**
-   * @var string field name
-   */
-  private $fieldname;
-
-  /**
-   * @var string the error message slug
-   */
-  private $slug;
-
-  /**
-   * @var string the error message
-   */
-  private $error_message = '';
-
-  /**
-   * @var string the field CSS selector
-   */
-  private $css_selector;
-
-  /**
-   * @var object the field definition
-   */
-  private $field_def;
-
-  /**
-   * @var string the message class
-   */
-  private $class = '';
-
-  /**
-   * 
-   * @param string $fieldname
-   * @param array $config
-   */
-  public function __construct( $fieldname, $config )
-  {
-    $this->fieldname = $fieldname;
-    $this->setup_config( $config );
-    $this->setup_field_def();
-  }
-
-  /**
-   * supplies the error message content
-   * 
-   * @return string
-   */
-  public function error_message()
-  {
-    return $this->error_message;
-  }
-
-  /**
-   * supplies the error message HMTL data
-   * 
-   * @return string HTML element attribute string
-   */
-  public function element_attributes()
-  {
-    return sprintf( ' data-field-group="%s" data-field-name="%s" class="%s" ', ( $this->field_def ? $this->field_def->group : '' ), $this->fieldname, $this->class );
-  }
-
-  /**
-   * sets up the field definition
-   */
-  private function setup_field_def()
-  {
-    if ( !empty( $this->fieldname ) ) {
-      $this->field_def = Participants_Db::$fields[$this->fieldname];
-    }
-  }
-
-  /**
-   * supplies object values
-   * 
-   * @param string  $name of the parameter to get
-   * @return mixed
-   */
-  public function __get( $name )
-  {
-    switch ( $name ) {
-      default:
-        if ( isset( $this->{$name} ) ) {
-          return $this->{$name};
-        }
-        if ( isset( $this->field_def->{$name} ) ) {
-          return $this->field_def->{$name};
-        }
-    }
-    return '';
-  }
-
-  /**
-   * sets the CSS selector property
-   * 
-   * @param string $selector the field selector
-   */
-  public function set_css_selector( $selector )
-  {
-    $this->css_selector = $selector;
-  }
-
-  /**
-   * sets the error message css class
-   * 
-   * @param string $class
-   */
-  public function set_message_class( $class )
-  {
-    $this->class = $class;
-  }
-
-  /**
-   * adds a class to the error message css class
-   * 
-   * @param string $class
-   */
-  public function add_message_class( $class )
-  {
-    $this->class .= ' ' . $class;
-  }
-
-  /**
-   * sets the error message content
-   * 
-   * @param string $message
-   */
-  public function set_error_message( $message )
-  {
-    $this->error_message = $message;
-  }
-  
-  /**
-   * provides the title of the field
-   * 
-   * @return string
-   */
-  public function field_title()
-  {
-    return $this->field_def->title();
-  }
-
-  /**
-   * sets up the config values
-   * 
-   * @param array $config
-   */
-  public function setup_config( $config )
-  {
-    foreach ( get_object_vars( $this ) as $name => $value ) {
-
-      switch ( $name ) {
-        case 'slug':
-          if ( isset( $config['slug'] ) ) {
-            $this->slug = $config['slug'];
-          } else {
-            $this->slug = $this->fieldname;
-          }
-          break;
-        default:
-          if ( isset( $config[$name] ) ) {
-            $this->{$name} = $config[$name];
-          }
-      }
-    }
   }
 
 }
