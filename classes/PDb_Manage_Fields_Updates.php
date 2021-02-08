@@ -89,6 +89,7 @@ class PDb_Manage_Fields_Updates {
         if ( !empty( $row[ 'validation' ] ) && !in_array( $row[ 'validation' ], array( 'yes', 'no' ) ) ) {
 
           $row[ 'validation' ] = str_replace( '\\\\', '\\', $row[ 'validation' ] );
+          
         }
 
         // remove empty values
