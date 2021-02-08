@@ -1957,7 +1957,7 @@ class Participants_Db extends PDb_Base {
 
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
                 
-                if ( $participant_id && ( self::plugin_setting_is_true('file_delete') || is_admin() ) ) {
+                if ( $participant_id ) {
                   
                   $filename = '';
                   if ( array_key_exists( $column->name, $_POST ) ) {
@@ -1967,7 +1967,9 @@ class Participants_Db extends PDb_Base {
                     $record_filename = $wpdb->get_var( $wpdb->prepare('SELECT `' . $column->name . '` FROM ' . self::participants_table() . ' WHERE id = %s', $participant_id ) );
                     
                     if ( $post_filename === $record_filename ) {
-                      self::delete_file( $record_filename );
+                      if ( self::plugin_setting_is_true('file_delete') || self::is_admin() ) {
+                        self::delete_file( $record_filename );
+                      }
                       unset( $_POST[$column->name] );
                       $post[$column->name] = '';
                     }
