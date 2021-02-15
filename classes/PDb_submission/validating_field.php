@@ -163,7 +163,8 @@ class validating_field {
       return false;
     }
     
-    $field_list = array_keys( \Participants_Db::$fields );
+    $field_list = \Participants_Db::$fields;
+    
     // check if the validation string matches a field name
     if ( isset( $field_list[ $this->validation ] ) ) {
       return false;
