@@ -237,19 +237,19 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline('<legend class="screen-reader-text">' . esc_attr( strip_tags( $field_def->title() ) ) . '</legend>' );
     }
 
-    $optgroup = false;
+    $in_optgroup = false;
 
     foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
       $option_key = Participants_Db::apply_filters( 'translate_string', stripslashes( $option_key ) );
 
       if ( ( $option_value === 'optgroup') and ! empty( $option_key ) ) {
-        if ( $optgroup ) {
+        if ( $in_optgroup ) {
           $this->_addline( '</fieldset>' );
         }
         $id = $this->element_id( $this->legal_name( $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_key ) ) ) ) );
         $this->_addline( '<fieldset class="' . esc_attr( $type . '-subgroup ' . $this->name . '-subgroup' ) . '" id="' . esc_attr( $id ) . '"><legend>' . esc_html( $option_key ) . '</legend>' );
-        $optgroup = true;
+        $in_optgroup = true;
       } else {
         $id = $this->element_id();
         $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
@@ -259,9 +259,9 @@ class PDb_FormElement extends xnau_FormElement {
         $this->attributes['id'] = $id;
       }
     }
-    if ( $optgroup ) {
+    if ( $in_optgroup ) {
       $this->_addline( '</fieldset>' );
-      $optgroup = false;
+      $in_optgroup = false;
     }
     if ( $otherlabel ) {
 
@@ -398,10 +398,11 @@ JS;
 
     // add the MAX_FILE_SIZE field
     // this is really just for guidance, not a valid safeguard; this must be checked on submission
-    if ( isset( $this->options['max_file_size'] ) )
+    if ( isset( $this->options['max_file_size'] ) ) {
       $max_size = $this->options['max_file_size'];
-    else
+    } else {
       $max_size = ( (int) ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
+    }
 
     $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value), false ) );
 
