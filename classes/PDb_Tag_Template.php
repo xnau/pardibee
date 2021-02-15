@@ -181,7 +181,7 @@ class PDb_Tag_Template {
   }
   
   /**
-   * replaces the tags in a template with data
+   * replaces the value tags in a template with data
    * 
    * @param string $template
    * @param array $data as $name=>$value
