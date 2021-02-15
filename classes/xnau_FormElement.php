@@ -1247,8 +1247,9 @@ abstract class xnau_FormElement {
    */
   protected function _add_option_series( $otherlabel = false )
   {
-    if ( empty( $this->options ) )
+    if ( empty( $this->options ) ) {
       return;
+    }
 
     foreach ( $this->_make_assoc( $this->options ) as $title => $value ) {
 
@@ -1265,8 +1266,9 @@ abstract class xnau_FormElement {
       }
     }
     // add the "other" option
-    if ( $otherlabel !== false )
+    if ( $otherlabel !== false ) {
       $this->_addline( '<option ' . ( $this->value !== '' ? $this->_set_selected( $this->options, $this->value, 'selected', false ) : '' ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
+    }
 
     if ( $this->inside ) {
       $this->_addline( '</optgroup>' );
@@ -1771,8 +1773,9 @@ abstract class xnau_FormElement {
   public static function is_empty( $test )
   {
     // collapse an array
-    if ( is_array( $test ) )
+    if ( is_array( $test ) ) {
       $test = implode( '', $test );
+    }
 
     switch ( true ) {
       case $test === '0000-00-00 00:00:00':
@@ -1802,7 +1805,7 @@ abstract class xnau_FormElement {
     $id = ( ! empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
     
     // attach the instance index if it is not present
-    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) == 0 ) {
+    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0 ) {
       $id = $id . '-' . Participants_Db::$instance_index;
     }
     return $id;
