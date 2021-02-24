@@ -39,13 +39,15 @@ class PDb_Record extends PDb_Shortcode {
    */
   public function __construct( $shortcode_atts )
   {
-
+    $this->rich_text_editor_includes();
+    
     // define shortcode-specific attributes to use
     $add_atts = array(
         'module' => 'record',
         'class' => 'edit-participant ' . $this->wrap_class,
         'submit_button' => Participants_Db::plugin_setting( 'save_changes_button' ),
     );
+    
     // run the parent class initialization to set up the parent methods 
     parent::__construct( $shortcode_atts, $add_atts );
 
@@ -236,6 +238,23 @@ class PDb_Record extends PDb_Shortcode {
     $this->previous_multipage = Participants_Db::$session->get( 'previous_multipage', '' );
     if ( strlen( $this->previous_multipage ) === 0 ) {
       $this->clear_multipage_session();
+    }
+  }
+  
+  /**
+   * includes the code support for the rich text editor
+   * 
+   * @global wpdb $wpdb
+   */
+  private function rich_text_editor_includes()
+  {
+    global $wpdb;
+    
+    $rich_text_field_exists = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' f WHERE f.form_element = "rich-text"' );
+    
+    if ( $rich_text_field_exists ) {
+      require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+      \_WP_Editors::enqueue_default_editor();
     }
   }
 
