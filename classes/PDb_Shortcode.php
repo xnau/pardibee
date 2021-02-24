@@ -2,7 +2,7 @@
 /**
  * Shortcode class
  *
- * provides basic functionality for rendering a shortcode's output
+ * provides core functionality for rendering a shortcode's output
  *
  * common functionality we will handle here:
  *  choosing a template
@@ -13,7 +13,7 @@
  *  maintaining loop pointers
  *  instantiating Field_Group and Field objects for the display loop
  *  converting dynamic value notation to the value it represents
- *  perfoming a field key replace on blocks of text for emails and user feedback
+ *  performing a field key replace on blocks of text for emails and user feedback
  * 
  * @package    WordPress
  * @subpackage Participants Database Plugin
@@ -205,6 +205,7 @@ abstract class PDb_Shortcode {
     // increment the index each time this class is instantiated
     Participants_Db::$instance_index++;
 
+    
     $this->set_instance_index();
 
     // set the global shortcode flag and trigger the action on the first instantiation of this class
