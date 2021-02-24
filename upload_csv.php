@@ -6,19 +6,9 @@ if ( !Participants_Db::current_user_has_plugin_role( 'admin', 'upload csv' ) )
 
 $CSV_import = new PDb_CSV_Import( 'csv_file_upload' );
 
-$csv_paramdefaults = array(
-      'delimiter_character' => 'auto',
-      'enclosure_character' => 'auto',
-    'match_field' => Participants_Db::plugin_setting( 'unique_field' ),
-    'match_preference' => Participants_Db::plugin_setting( 'unique_email' )
-      );
-$csv_options = get_option( Participants_Db::$prefix . 'csv_import_params' );
-if ( $csv_options === false ) {
-  $csv_params = $csv_paramdefaults;
-} else {
-  $csv_params = array_merge( $csv_paramdefaults, $csv_options );
-}
-foreach (array_keys( $csv_paramdefaults ) as $param) {
+$csv_params = PDb_admin_list\csv::csv_options();
+
+foreach (array_keys( $csv_params ) as $param) {
   $new_value = '';
   if ( isset( $_POST[$param] ) ) {
     switch ( $param ) {
@@ -31,13 +21,18 @@ foreach (array_keys( $csv_paramdefaults ) as $param) {
     $csv_params[$param] = $new_value;
 	}
 }
+
+// update the option
+PDb_admin_list\csv::update_option( $csv_params );
+
+// make the parameters available as plain variables
 extract( $csv_params );
-update_option( Participants_Db::$prefix . 'csv_import_params', $csv_params );
 
 // ensure the match field is valid
 if ( !PDb_Form_Field_Def::is_field( $match_field ) ) {
   $match_field = 'id';
 }
+
 ?>
 <div class="wrap <?php echo Participants_Db::$prefix ?>csv-upload">
   <?php Participants_Db::admin_page_heading() ?>
