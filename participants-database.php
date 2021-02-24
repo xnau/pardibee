@@ -43,7 +43,7 @@ spl_autoload_register( 'PDb_class_loader' );
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011 - 2020 7th Veil, LLC
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GPL2
- * @version    Release: 1.8.1
+ * @version    Release: 1.8.2
  * 
  */
 class Participants_Db extends PDb_Base {
@@ -187,12 +187,6 @@ class Participants_Db extends PDb_Base {
    * @var strings
    */
   public static $email_headers;
-
-  /**
-   * enclosure character to use
-   * @var string
-   */
-  public static $CSV_enclosure = '"';
 
   /**
    * list of reserved field names
@@ -2927,7 +2921,7 @@ class Participants_Db extends PDb_Base {
 
           // output the data lines
           foreach ( $data as $line ) {
-            fputcsv( $output, $line, ',', self::$CSV_enclosure );
+            fputcsv( $output, $line, PDb_admin_list\csv::delimiter(), PDb_admin_list\csv::enclosure() );
           }
 
           fclose( $output );
@@ -3189,7 +3183,7 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * applies the rict text filter
+   * applies the rich text filter
    * 
    * this can be overridden; the filter is set in self::init()
    * 
@@ -3244,7 +3238,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _prepare_CSV_rows( $raw_array )
   {
-
     $output = array();
 
     foreach ( $raw_array as $value ) {
