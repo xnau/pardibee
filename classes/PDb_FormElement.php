@@ -312,7 +312,7 @@ class PDb_FormElement extends xnau_FormElement {
     if ( !is_admin() and ! Participants_Db::plugin_setting_is_true('rich_text_editor') ) {
       $this->_text_field();
     } else {
-      add_filter( 'tiny_mce_before_init', array( $this, 'tinymce_config' ) );
+      add_filter( 'tiny_mce_before_init', array( $this, 'tinymce_config' ), 5 );
       parent::_rich_text_field();
     }
   }
@@ -320,20 +320,14 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * provides the visual editor configuration array
    * 
+   * 
    * @param array $config
    * @return array
    */
   public function tinymce_config( $config )
   {
-    $config['setup'] = <<<JS
-[function(ed) {
-    ed.on( 'input', function(ed, e) {
-        jQuery(this.container).trigger('pdb-tinymce-change');
-    });
-
-}][0]
-JS;
-        
+    // sets up a javascript event that is triggered when a rich text field is changed
+    $config['setup'] = "[function(ed){ed.on('input',function(e){jQuery(this.container).trigger('pdb-tinymce-change');});}][0]";
     return $config;
   }
 
