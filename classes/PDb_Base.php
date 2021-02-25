@@ -547,7 +547,7 @@ class PDb_Base {
    * @param int $record_id
    * @return bool true if the record was accessed with a URL containing the private ID
    */
-  protected static function pid_in_url( $record_id )
+  public static function pid_in_url( $record_id )
   {
     $url = $_SERVER['REQUEST_URI'];
     $record = Participants_Db::get_participant( $record_id );
