@@ -446,7 +446,11 @@ body[class*='participants-database'] .text-block li {
   /*  vertical-align: top;*/
 }
 [class*="participants-database"] .wp-editor-wrap {
+  width: 100%;
   max-width: 600px;
+}
+[class*="participants-database"] .wp-editor-container textarea {
+  width: 100%;
 }
 [class*="participants-database"] .wp-editor-area {
   background-color: #FFFFFF;
