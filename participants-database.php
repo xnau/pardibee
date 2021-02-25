@@ -649,7 +649,7 @@ class Participants_Db extends PDb_Base {
       wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$Settings->option_version() );
     }
     
-    // jquery UI rheme
+    // jquery UI theme
     wp_register_style( self::$prefix . 'jquery-ui', self::asset_url( "css/jquery-ui-theme/jquery-ui.min.css" ) );
     wp_register_style(self::$prefix . 'jquery-ui-structure', self::asset_url( "css/jquery-ui-theme/jquery-ui.structure.min.css" ) );
     wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.1' );
@@ -683,6 +683,11 @@ class Participants_Db extends PDb_Base {
 
     if ( false !== stripos( $hook, 'participants-database_settings_page' ) ) {
       wp_enqueue_script( self::$prefix . 'settings_script' );
+    
+      if ( !class_exists( '\_WP_Editors' ) ) {
+        require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+        \_WP_Editors::enqueue_default_editor();
+      }
     }
 
     if ( false !== stripos( $hook, 'participants-database-edit_participant' ) ) {
@@ -846,42 +851,34 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_record_edit_form( $atts )
   {
-    $record_id = false;
+    // check for the ID in the shortcode first
+    $record_id = PDb_Record::get_id_from_shortcode( $atts );
     
-    // get the pid from the get string if given
-    $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
-
-    if ( empty( $get_pid ) ) {
-      $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
-    }
+    if ( ! $record_id ) {
     
-    if ( !empty( $get_pid ) ) {
-      $record_id = self::get_participant_id( $get_pid );
-      
-      if ( $record_id && array_key_exists( Participants_Db::$record_query, $_GET ) ) {
-        /**
-         * @action pdb-record_accessed_using_private_link
-         * @param int record ID
-         */
-        do_action( 'pdb-record_accessed_using_private_link', $record_id );
-      }
-    }
+      // get the pid from the get string if given
+      $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
 
-    if ( $record_id === false ) {
-      $record_id = self::$session->record_id( true );
-    }
+      if ( empty( $get_pid ) ) {
+        $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
+      }
 
-    // checking 'id' atribute for backward compatibility
-    if ( $record_id === false && (isset( $atts['id'] ) || isset( $atts['record_id'] )) ) {
-      if ( isset( $atts['id'] ) & !isset( $atts['record_id'] ) ) {
-        $atts['record_id'] = $atts['id'];
-        unset( $atts['id'] );
+      if ( !empty( $get_pid ) ) {
+        $record_id = self::get_participant_id( $get_pid );
+
+        if ( $record_id && array_key_exists( Participants_Db::$record_query, $_GET ) ) {
+          /**
+           * @action pdb-record_accessed_using_private_link
+           * @param int record ID
+           */
+          do_action( 'pdb-record_accessed_using_private_link', $record_id );
+        }
       }
-      $record_id = self::get_record_id_by_term( 'id', $atts['record_id'] );
+
+      if ( $record_id === false ) {
+        $record_id = self::$session->record_id( true );
+      }
       
-      if ( $record_id && self::pid_in_url( $record_id ) ) {
-        do_action( 'pdb-record_accessed_using_private_link', $record_id );
-      }
     }
     
     $atts['record_id'] = $record_id;
