@@ -51,7 +51,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
     // determine the type of text-area elements to use for email body settings
     $this->textarea_type = Participants_Db::plugin_setting_is_true('html_email') ? 'rich-text' : 'text-area';
 
-
     // run the parent class initialization to finish setting up the class 
     parent::__construct( __CLASS__ );
 
