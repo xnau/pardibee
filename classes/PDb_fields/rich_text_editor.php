@@ -106,7 +106,7 @@ class rich_text_editor {
      * these replacements set the correct js syntax for 2nd dimensional arrays 
      * and remove unneeded escapes
      */
-    return str_replace( array('"{', '}"', '"[', ']"', '\\'), array('{', '}', '[', ']', ''), $settings );
+    return str_replace( array('"{', '}"', '"[', ']"', '\\'), array('{', '}', '[', ']', ''), $settings ); // 
   }
 
   /**
@@ -159,15 +159,19 @@ class rich_text_editor {
    */
   private function rows()
   {
-    $field = \Participants_Db::$fields[$this->fieldname];
-    /** @var \PDb_Form_Field_Def $field */
-    
     $rows = 20; // default
     
-    $rows_att = intval( $field->get_attribute( 'rows' ) );
+    if ( \PDb_Form_Field_Def::is_field( $this->fieldname ) ) {
     
-    if ( $rows_att > 0 ) {
-       $rows = $rows_att;
+      $field = \Participants_Db::$fields[$this->fieldname];
+      /** @var \PDb_Form_Field_Def $field */
+    
+      $rows_att = intval( $field->get_attribute( 'rows' ) );
+
+      if ( $rows_att > 0 ) {
+         $rows = $rows_att;
+      }
+      
     }
     
     return $rows;
