@@ -656,7 +656,8 @@ abstract class xnau_FormElement {
    */
   protected function _rich_text_field()
   {
-   $editor = new PDb_fields\rich_text_editor( $this->name, $this->value );
+    // we encode the brackets (if any) so that it will go into the editor JS without an error
+   $editor = new PDb_fields\rich_text_editor( str_replace( array('[',']'), array('&#91;','&#93;'), $this->name ), $this->value );
 
    $editor->print_editor();
   }
