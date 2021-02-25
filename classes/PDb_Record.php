@@ -109,6 +109,33 @@ class PDb_Record extends PDb_Shortcode {
 
     return $record->output;
   }
+  
+  /**
+   *  provides the record ID if present in the shortcode attribute
+   * 
+   * includes handling of the deprecated 'id' attribute
+   * 
+   * @param array $atts shortcode attributes
+   * @return int|bool the record ID; bool false if not found in the attributes
+   */
+  public static function get_id_from_shortcode( $atts )
+  {
+    $record_id = false;
+    
+    // checking 'id' atribute for backward compatibility
+    if ( (isset( $atts['id'] ) || isset( $atts['record_id'] ) ) ) {
+      if ( isset( $atts['id'] ) & !isset( $atts['record_id'] ) ) {
+        $atts['record_id'] = $atts['id'];
+      }
+      $record_id = Participants_Db::get_record_id_by_term( 'id', $atts['record_id'] );
+      
+      if ( $record_id && Participants_Db::pid_in_url( $record_id ) ) {
+        do_action( 'pdb-record_accessed_using_private_link', $record_id );
+      }
+    }
+    
+    return $record_id;
+  }
 
   /**
    * includes the shortcode template
