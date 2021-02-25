@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -76,7 +76,7 @@ class validating_field {
    */
   public function is_validated()
   {
-    return !( empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
+    return !( !\PDb_Form_Field_Def::is_field($this->name) || empty( $this->validation ) || $this->validation === NULL || $this->validation === 'no' || $this->validation === FALSE );
   }
 
   /**
