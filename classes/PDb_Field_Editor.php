@@ -435,7 +435,7 @@ class PDb_Field_Editor {
     foreach( $this->field_def->options() as $k => $v ) {
       $key = strip_tags($k);
       if ( strlen( $key ) === 0 ) {
-        $key = $v;
+        $key = strip_tags($v);
       }
       $options[$key] = $v;
     }
