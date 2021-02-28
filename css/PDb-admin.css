@@ -269,6 +269,9 @@ p.submit.top-bar-submit  {
   overflow: auto;
   padding: 5px;
 }
+.shortcode-field-preview {
+  margin-top: 1em;
+}
 input[readonly] {
   border:none;
   background:none transparent;
