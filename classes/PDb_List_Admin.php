@@ -82,6 +82,11 @@ class PDb_List_Admin {
    * @param array $errors array of error messages
    */
   public static $error_messages = array();
+  
+  /**
+   * @param string name of the multi-text field designation
+   */
+  const multi_text_field = 'pdb_any_text_field';
 
   /**
    * initializes and outputs the list for the backend
@@ -358,6 +363,10 @@ class PDb_List_Admin {
 
             $filter_columns[ $select_title ] = $column->name;
           }
+          
+          // add the multi-field selection
+          $filter_columns[ __( 'Multi-Field', 'participants-database' ) ] = 'optgroup';
+          $filter_columns[ __( 'Any Text Field', 'participants-database' ) ] =  self::multi_text_field;
           ?>
           <div class="pdb-searchform">
             <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ?>" >
