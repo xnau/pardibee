@@ -42,12 +42,9 @@ class PDb_File_Uploads {
    */
   public function handle_file_upload( $field_name, $file, $id )
   {
-
-    $field_atts = new PDb_Form_Field_Def( $field_name );
+    $field_def = new PDb_Form_Field_Def( $field_name );
     
-    $is_image_field = $field_atts->form_element() === 'image-upload';
-//    $delete_checked = (bool) (isset( $_POST[$field_name . '-deletefile'] ) and $_POST[$field_name . '-deletefile'] == 'delete');
-//    $_POST[$field_name . '-deletefile'] = '';
+    $is_image_field = $field_def->form_element() === 'image-upload';
 
     // attempt to create the target directory if it does not exist
     if ( !is_dir( Participants_Db::files_path() ) ) {
@@ -71,15 +68,15 @@ class PDb_File_Uploads {
       return false;
     }
     
-    $field_allowed_extensions = $field_atts->allowed_extensions();
+    $field_allowed_extensions = $field_def->allowed_extensions();
     $allowed_extensions = empty( $field_allowed_extensions ) ? Participants_Db::global_allowed_extensions() : $field_allowed_extensions;
     
     if ( ! Participants_Db::is_allowed_file_extension( $file['name'], $allowed_extensions ) ) {
 
       if ( $is_image_field && empty( $field_allowed_extensions ) ) {
-        Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title() ), $field_name );
+        Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_def->title() ), $field_name );
       } else {
-        Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_atts->title(), implode( ', ', $allowed_extensions ) ), $field_name );
+        Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_def->title(), implode( ', ', $allowed_extensions ) ), $field_name );
       }
       
       if ( PDB_DEBUG ) {
@@ -99,7 +96,7 @@ class PDb_File_Uploads {
        * @param int|bool the record id or bool false if the ID hasn't been determined yet (as in a signup form)
        * @return string filename without it's extension
        */
-      $new_filename = Participants_Db::apply_filters('file_upload_filename', preg_replace( array('#\.#', "/\s+/", "/[^-\.\w]+/"), array("-", "_", ""), $matches[1] ), $field_atts, $id ) . '.' . $matches[2];
+      $new_filename = Participants_Db::apply_filters('file_upload_filename', preg_replace( array('#\.#', "/\s+/", "/[^-\.\w]+/"), array("-", "_", ""), $matches[1] ), $field_def, $id ) . '.' . $matches[2];
       
       // now make sure the name is unique by adding an index if needed
       $index = 1;
@@ -114,7 +111,7 @@ class PDb_File_Uploads {
 
       if ( ! PDb_Image::is_image_file( $file['tmp_name'] ) ) {
 
-        Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_atts->title() ), $field_name );
+        Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_def->title() ), $field_name );
         
         if ( PDB_DEBUG ) {
           Participants_Db::debug_log( "Image upload does not validate as an image file: " . $file['name'] );
