@@ -56,9 +56,8 @@ class heading extends custom_field {
   }
 
   /**
-   * displays the log in a write context
+   * displays the field in a write context
    * 
-   * @param object $field
    * @return string
    */
   public function form_element_html()
