@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    2.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -65,12 +65,7 @@ class PDb_List_Query {
   public $filter;
 
   /**
-   * @var array List class translation strings
-   */
-  var $i18n;
-
-  /**
-   * @var array the sanitized post array
+   * @var PDb_search_submission the submitted post
    */
   private $post_input;
 
@@ -137,7 +132,6 @@ class PDb_List_Query {
     
     $this->instance_index = $List->instance_index;
     $this->module = $List->module;
-    $this->i18n = PDb_List::i18n();
     $this->_reset_filters();
     $this->set_sort( $List->shortcode_atts['orderby'], $List->shortcode_atts['order'] );
     $this->_set_columns( $List->display_columns );
@@ -229,11 +223,11 @@ class PDb_List_Query {
    */
   public function get_search_error()
   {
-    if ( $this->is_search_result() && $this->post_input['submit'] === 'search' ) {
-      if ( empty( $this->post_input['search_field'] ) ) {
+    if ( $this->is_search_result() && $this->post_input->is_search() ) {
+      if ( empty( $this->post_input->search_field() ) ) {
         $this->is_search_result( false );
         return 'search';
-      } elseif ( ! $this->search_term_is_valid( $this->post_input['value'] ) ) {
+      } elseif ( ! $this->search_term_is_valid( $this->post_input->value() ) ) {
         $this->is_search_result( false );
         return 'value';
       }
@@ -498,27 +492,9 @@ class PDb_List_Query {
     // look for the identifier of the list search submission
     if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === Participants_Db::apply_filters( 'list_query_action', 'pdb_list_filter' ) ) {
       
-      if ( isset( $_POST['search_field'] ) && is_array( $_POST['search_field'] ) ) {
-        // process a multi search
-        $this->post_input = filter_input_array( INPUT_POST, self::multi_search_input_filter() );
-        $search_fields = array();
-        foreach ( $_POST['search_field'] as $index => $value ) {
-          foreach ( array('search_field', 'operator', 'value', 'logic') as $fieldname ) {
-            if ( isset( $_POST[$fieldname][$index] ) ) {
-              $this->post_input[$fieldname][$index] = filter_var( $_POST[$fieldname][$index], FILTER_SANITIZE_STRING );
-            }
-          }
-        }
-      } else {
-        $this->post_input = filter_input_array( INPUT_POST, self::single_search_input_filter() );
-        if ( $this->post_input['search_field'] === 'none' ) {
-          $this->post_input['search_field'] = '';
-        }
-      }
-      // accomodate several different submit button names and un-translate to get key values
-      $this->post_input = $this->_prepare_submit_value( $this->post_input );
+      $this->post_input = new PDb_search_submission();
 
-      switch ( $this->post_input['submit'] ) {
+      switch ( $this->post_input->submit_type() ) {
         case 'clear':
           $_GET[Participants_Db::$list_page] = 1;
           $this->is_search_result = false;
@@ -526,13 +502,15 @@ class PDb_List_Query {
           break;
         case 'search':
         case 'sort':
-          $this->_add_filter_from_input( $this->post_input );
+          $this->_add_filter_from_input( $this->post_input->submission() );
           break;
         case 'page':
           break;
       }
     }
   }
+  
+ 
 
   /**
    * adds a filter statement from an input array
@@ -552,16 +530,30 @@ class PDb_List_Query {
       
       if ( is_array( $input['search_field'] ) ) {
         
-        foreach ( $input['search_field'] as $i => $search_field ) { // for ($i = 0; $i < count($input['search_field']); $i++) {
+        $current_field = '';
+        
+        foreach ( $input['search_field'] as $i => $search_field ) {
+          
+          if ( $current_field === '' || $search_field !== $current_field ) {
+        
+            $current_field = $search_field;
+            $this->_remove_field_filters( $search_field );
+            
+          }
+          
           if ( !$this->search_term_is_valid( $input['value'][$i] ) )
             continue;
+          
           $logic = isset( $input['logic'][$i] ) ? $input['logic'][$i] : $set_logic;
           $this->_add_search_field_filter( $input['search_field'][$i], $input['operator'][$i], $input['value'][$i], $logic );
         }
+        
         $this->is_search_result = true;
         
       } elseif ( !empty( $input['search_field'] ) && $this->search_term_is_valid( $input['value'] ) ) {
         
+        $this->_remove_field_filters( $input['search_field'] );
+      
         $logic = isset( $input['logic'] ) ? $input['logic'] : $set_logic;
         $this->_add_search_field_filter( $input['search_field'], $input['operator'], $input['value'], $logic );
         
@@ -581,14 +573,21 @@ class PDb_List_Query {
   }
 
   /**
-   * tests a search term for validity, ckecking against empty or wildcard-only terms
+   * tests a search term for validity, checking against empty or wildcard-only terms
    * 
-   * @param string $term the search term
+   * @param string|array $term the search term
    * @return bool true if the search term is valid
    */
   private function search_term_is_valid( $term )
   {
-    $valid = strlen( trim( $term, '*?_%.' ) ) > 0 || ( Participants_Db::plugin_setting_is_true('empty_search') && $term === '' );
+    foreach( (array) $term as $t ) {
+      $valid = strlen( trim( $t, '*?_%.' ) ) > 0 || ( Participants_Db::plugin_setting_is_true('empty_search') && $t === '' );
+      
+      if ( !$valid ) {
+        break;
+      }
+    }
+    
     return Participants_Db::apply_filters( 'search_term_tests_valid', $valid, $term );
   }
 
@@ -603,7 +602,6 @@ class PDb_List_Query {
   private function _add_search_field_filter( $search_field, $operator, $value, $logic )
   {
     $logic = $logic ? ( strtoupper( $logic ) === 'OR' ? 'OR' : 'AND' ) : 'AND';
-    $this->_remove_field_filters( $search_field );
     $this->_add_single_statement( $search_field, $operator, $value, $logic );
     $this->is_search_result = true;
   }
@@ -816,31 +814,6 @@ class PDb_List_Query {
         $clause->index( $index );
       }
     }
-  }
-
-  /**
-   * sets the is search value
-   * 
-   * @return null
-   */
-  private function _set_search_status()
-  {
-    if ( $this->post_input['submit'] == 'search' || !empty( $this->get_input['search_field'] ) ) {
-      $this->is_search_result = true;
-    } else {
-      $this->is_search_result = false;
-    }
-  }
-
-  /**
-   * processes and sanitizes a search term
-   * 
-   * @param string $term the search term
-   * @return string the prepared search term
-   */
-  private function prep_like_search_term( $term )
-  {
-    
   }
 
   /**
@@ -1058,7 +1031,7 @@ class PDb_List_Query {
          * if the date query was submitted on a standard search form, convert 
          * it to a 24-hour date range #2440
          */
-        if ( ! empty( $this->post_input['search_field'] ) && empty( $this->subclauses ) && $operator === '=' ) {
+        if ( ! empty( $this->post_input->search_field() ) && empty( $this->subclauses ) && $operator === '=' ) {
           $statement = 'p.' . $field_def->name() . ' >= CAST(' . $search_term . ' AS SIGNED) AND p.' . $field_def->name() . ' < CAST(' . strtotime( '+ 24 hours', $search_term ) . ' AS SIGNED)';
         } else {
           $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
@@ -1235,6 +1208,7 @@ class PDb_List_Query {
 
       $statement = sprintf( 'p.%s %s %s%s%s', $field_def->name(), $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
     }
+    
     if ( $statement ) {
       $filter->update_parameters( array('statement' => $statement) );
 
@@ -1408,43 +1382,6 @@ class PDb_List_Query {
   }
 
   /**
-   * prepares a submission input array for use as a filter configuration
-   * 
-   * allows for the use of several different submit button names
-   * converts translated submit button value to key string
-   * 
-   * @param array $input the input array
-   * @retun array
-   */
-  private function _prepare_submit_value( $input )
-  {
-    $submit = $input['submit'];
-    if ( !empty( $input['submit_button'] ) ) {
-      $submit = $input['submit_button'];
-    } elseif ( !empty( $input['submit-button'] ) ) {
-      $submit = $input['submit-button'];
-    }
-    unset( $input['submit-button'], $input['submit_button'] );
-    $input['submit'] = $this->untranslate_value( $submit );
-    return $input;
-  }
-
-  /**
-   * untranslates the submit value
-   * 
-   * @param string $value the submit value
-   * 
-   * @return string the key or untranslated value
-   */
-  private function untranslate_value( $value )
-  {
-    if ( $key = array_search( $value, $this->i18n ) ) {
-      $value = $key;
-    }
-    return $value;
-  }
-
-  /**
    * sanitizes the operator value from a POST input
    * 
    * @param string $operator
@@ -1614,4 +1551,192 @@ class PDb_List_Query {
    }
   }
 
+}
+
+/**
+ * models a list search POST submission
+ */
+class PDb_search_submission {
+  
+  /**
+   * @array holds the post input
+   */
+  private $post_input;
+  
+  /**
+   * @bool tells if the search is a multi-term search
+   */
+  private $is_multi = false;
+  
+  /**
+   * 
+   */
+  public function __construct()
+  {
+    if ( isset( $_POST['search_field'] ) && is_array( $_POST['search_field'] ) ) {
+      
+      $this->post_input = filter_input_array( INPUT_POST, PDb_List_Query::multi_search_input_filter() );
+      
+      $this->is_multi = true;
+    } else {
+      
+      $this->post_input = filter_input_array( INPUT_POST, PDb_List_Query::single_search_input_filter() );
+      
+      if ( ! isset( $this->post_input['search_field'] ) || $this->post_input['search_field'] === 'none' ) {
+        $this->post_input['search_field'] = '';
+      }
+      
+      if ( self::split_search_preference() ) {
+        $this->prepare_split_search();
+      }
+    }
+    
+    $this->_prepare_submit_value();
+  }
+  
+  /**
+   * tells if the search is a multi-term search
+   * 
+   * @return bool
+   */
+  public function is_multi()
+  {
+    return $this->is_multi;
+  }
+  
+  /**
+   * provides the search field name or array
+   * 
+   * @retrun string|array
+   */
+  public function search_field()
+  {
+    return $this->post_input['search_field'];
+  }
+  
+  /**
+   * provides the search term
+   * 
+   * @return string
+   */
+  public function value()
+  {
+    return $this->post_input['value'];
+  }
+  
+  /**
+   * tells if the current submission is a search
+   * 
+   * @return bool
+   */
+  public function is_search()
+  {
+    return $this->post_input['submit'] === 'search';
+  }
+  
+  /**
+   * provides the name of the submission type
+   * 
+   * @return string
+   */
+  public function submit_type()
+  {
+    return $this->post_input['submit'];
+  }
+  
+  /**
+   * provides the submission values
+   * 
+   * @return array
+   */
+  public function submission()
+  {
+    return $this->post_input;
+  }
+  
+  /**
+   * prepares the post input for a split search
+   */
+  private function prepare_split_search()
+  {
+    $search_terms = $this->split_search_terms( $this->post_input['value'] );
+    
+    if ( count( $search_terms ) > 1 ) {
+    
+      $search_field = $this->post_input['search_field'];
+      $operator = $this->post_input['operator'];
+      $this->post_input['search_field'] = array();
+      $this->post_input['operator'] = array();
+      $this->post_input['value'] = array();
+      $this->post_input['logic'] = array();
+
+      $i = 1;
+      foreach ( $search_terms as $term ) {
+        $this->post_input['value'][$i] = filter_var( $term, FILTER_SANITIZE_STRING );
+        $this->post_input['search_field'][$i] = $search_field;
+        $this->post_input['operator'][$i] = $operator;
+        $this->post_input['logic'][$i] = 'OR';
+        $i++;
+      }
+
+      $this->is_multi = true;
+    }
+  }
+  
+   /**
+   * splits the posted search string into an array
+   * 
+   * @param string $term the search input
+   * @return array of search terms
+   */
+  private function split_search_terms( $term )
+  {
+    $term_delimiter = Participants_Db::apply_filters( 'split_search_delimiter', ' ' );
+    
+    return array_map( 'trim', explode( $term_delimiter, urldecode( $term ) ) );
+  }
+    /**
+   * prepares a submission input array for use as a filter configuration
+   * 
+   * allows for the use of several different submit button names
+   * converts translated submit button value to key string
+   * 
+   * @retun array
+   */
+  private function _prepare_submit_value()
+  {
+    $submit = $this->post_input['submit'];
+    if ( !empty( $this->post_input['submit_button'] ) ) {
+      $submit = $this->post_input['submit_button'];
+    } elseif ( !empty( $this->post_input['submit-button'] ) ) {
+      $submit = $this->post_input['submit-button'];
+    }
+    unset( $this->post_input['submit-button'], $this->post_input['submit_button'] );
+    $this->post_input['submit'] = $this->untranslate_value( $submit );
+  }
+
+  /**
+   * untranslates the submit value
+   * 
+   * @param string $value the submit value
+   * 
+   * @return string the key or untranslated value
+   */
+  private function untranslate_value( $value )
+  {
+    if ( $key = array_search( $value, PDb_List::i18n() ) ) {
+      $value = $key;
+    }
+    return $value;
+  }
+  
+  /**
+   * tells if the split search preference is on
+   * 
+   * @return bool
+   */
+  public static function split_search_preference()
+  {
+    return Participants_Db::plugin_setting_is_true('split_search');
+  }
 }
