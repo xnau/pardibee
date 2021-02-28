@@ -41,7 +41,7 @@ spl_autoload_register( 'PDb_class_loader' );
  * @category   WordPress Plugins
  * @package    wordPress
  * @author     Roland Barker <webdesign@xnau.com>
- * @copyright  2011 - 2020 7th Veil, LLC
+ * @copyright  2011 - 2021 7th Veil, LLC
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GPL2
  * @version    Release: 1.8.2
  * 
@@ -1112,9 +1112,7 @@ class Participants_Db extends PDb_Base {
     self::_setup_fields_prop( $field_defs );
     
     // add our modular fields
-    new \PDb_fields\heading();
-    new \PDb_fields\video();
-    new \PDb_fields\string_combine();
+    new \PDb_fields\initialize();
   }
   
   /**
