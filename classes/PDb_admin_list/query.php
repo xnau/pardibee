@@ -110,7 +110,7 @@ class query {
         
       default:
 
-        $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
+        $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' ';
 
         if ( $this->filter->has_search() ) {
           $this->list_query .= 'WHERE ';
@@ -134,7 +134,7 @@ class query {
         }
 
         // add the sorting
-        $this->list_query .= ' ORDER BY p.' . esc_sql( $this->filter->sortBy ) . ' ' . esc_sql( $this->filter->ascdesc );
+        $this->list_query .= ' ORDER BY ' . esc_sql( $this->filter->sortBy ) . ' ' . esc_sql( $this->filter->ascdesc );
     }
   }
 
@@ -202,7 +202,11 @@ class query {
         }
     }
     
-    $search_field = new \PDb_Form_Field_Def( $filter_set['search_field'] );
+    if ( $filter_set['search_field'] === PDb_List_Admin::multi_text_field ) {
+      $search_field = new text_fields();
+    } else {
+      $search_field = new \PDb_Form_Field_Def( $filter_set['search_field'] );
+    }
 
     $value = $this->field_value( $filter_set['value'], $search_field );
 
@@ -221,7 +225,7 @@ class query {
 
       if ( $value !== false ) {
 
-        $date_column = "DATE(p." . esc_sql( $search_field->name() ) . ")";
+        $date_column = "DATE(" . esc_sql( $search_field->name() ) . ")";
 
         if ( $value2 !== false ) {
 
@@ -250,7 +254,7 @@ class query {
 
       if ( $date1 !== false ) {
 
-        $date_column = "p." . esc_sql( $search_field->name() );
+        $date_column = esc_sql( $search_field->name() );
 
         if ( $date2 !== false and ! empty( $date2 ) ) {
 
@@ -267,20 +271,23 @@ class query {
     } elseif ( $filter_set['value'] === 'null' ) {
 
       switch ( $filter_set['operator'] ) {
+        
         case '<>':
         case '!=':
         case 'NOT LIKE':
-          $this->list_query .= ' (p.' . esc_sql( $search_field->name() ) . ' IS NOT NULL' . ( $search_field->is_numeric() ? '' : ' AND p.' . esc_sql( $search_field->name() ) . ' <> ""' ) . ')';
+          $this->list_query .= ' (' . esc_sql( $search_field->name() ) . ' IS NOT NULL' . ( $search_field->is_numeric() ? '' : ' AND ' . esc_sql( $search_field->name() ) . ' <> ""' ) . ')';
           break;
+        
         case 'LIKE':
         case '=':
         default:
-          $this->list_query .= ' (p.' . esc_sql( $search_field->name() ) . ' IS NULL' . ( $search_field->is_numeric() ? '' : ' OR p.' . esc_sql( $search_field->name() ) . ' = ""' ) . ')';
+          $this->list_query .= ' (' . esc_sql( $search_field->name() ) . ' IS NULL' . ( $search_field->is_numeric() ? '' : ' OR ' . esc_sql( $search_field->name() ) . ' = ""' ) . ')';
           break;
+        
       }
     } else {
 
-      $this->list_query .= ' p.' . esc_sql( $search_field->name() ) . ' ' . $operator . " " . $delimiter[0] . esc_sql( $value ) . $delimiter[1];
+      $this->list_query .= ' ' . stripslashes( esc_sql( $search_field->name() ) ) . ' ' . $operator . " " . $delimiter[0] . esc_sql( $value ) . $delimiter[1];
     }
     
     if ( $filter_set['logic'] === 'AND' && $this->inparens ) {
