@@ -858,7 +858,7 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * determines if a field type is "linkable"
    * 
-   * meaning it is displayed as a string that can be wrapped in an anchor tag
+   * meaning it is displayed as an element that can be wrapped in an anchor tag
    * 
    * @param object $field the field object
    * @return bool true if the type is linkable
