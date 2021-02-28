@@ -866,6 +866,21 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
     
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'split_search',
+        'title' => __( 'Split Search Phrases', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'When checked, words separated by spaces will each be searched for separately.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+    
 
     $this->plugin_settings[] = array(
         'name' => 'list_default_image_size',
