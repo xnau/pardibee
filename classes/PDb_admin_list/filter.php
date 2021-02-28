@@ -163,7 +163,8 @@ class filter {
   public function is_valid_set( $index )
   {
     $filter = $this->get_set($index);
-    return $filter['search_field'] !== '' && $filter['search_field'] !== 'none' && \Participants_Db::is_column( $filter['search_field'] );
+    
+    return $filter['search_field'] !== '' && $filter['search_field'] !== 'none' && ( \Participants_Db::is_column( $filter['search_field'] ) || $filter['search_field'] === \PDb_List_Admin::multi_text_field );
   }
 
   /**
