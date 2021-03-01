@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -69,7 +69,7 @@ class shortcode extends custom_field {
 
     $parameters = array(
         'type' => 'text-line',
-        'value' => $this->field->value(),
+        'value' => $this->field_value(),
         'name' => $this->field->name(),
     );
 
@@ -95,9 +95,21 @@ class shortcode extends custom_field {
     $raw_shortcode = $this->field->default_value();
     $has_placeholder = stripos( $raw_shortcode, '%s' ) !== false;
 
-    $shortcode = $has_placeholder ? sprintf( $raw_shortcode, $this->field->value() ) : $raw_shortcode;
+    $shortcode = $has_placeholder ? sprintf( $raw_shortcode, $this->field_value() ) : $raw_shortcode;
 
     return do_shortcode( $shortcode );
+  }
+  
+  /**
+   * provides the field's value
+   * 
+   * @return string
+   */
+  private function field_value()
+  {
+    $record = \Participants_Db::get_participant( $this->field->record_id );
+    
+    return $record[ $this->field->name() ];
   }
 
   /**
