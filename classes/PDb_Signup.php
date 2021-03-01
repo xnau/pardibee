@@ -387,9 +387,9 @@ class PDb_Signup extends PDb_Shortcode {
     $thanks_message = '';
     
     if ( strpos( $this->get_form_status(), 'update' ) !== false ) {
-      $thanks_message = Participants_Db::apply_filters( 'update_thanks_message', $this->shortcode_atts['content'] );
+      $thanks_message = $this->shortcode_thanks_message( 'record_updated_message' );
     } elseif ( strpos( $this->get_form_status(), 'signup' ) !== false ) {
-      $thanks_message = Participants_Db::plugin_setting( 'signup_thanks', $this->shortcode_atts['content'] );
+      $thanks_message = $this->shortcode_thanks_message( 'signup_thanks' );
     }
 
     // add the "record_link" tag
@@ -405,6 +405,17 @@ class PDb_Signup extends PDb_Shortcode {
     }
     
     return $this->output;
+  }
+  
+  /**
+   * provides the shortcode thanks message text
+   * 
+   * @param string $setting name of the setting to check for a message
+   * @return string message
+   */
+  protected function shortcode_thanks_message( $setting )
+  {
+    return isset( $this->shortcode_atts['content'] ) && ! empty( $this->shortcode_atts['content'] ) ? $this->shortcode_atts['content'] : Participants_Db::plugin_setting( $setting, '' );
   }
   
   /**
