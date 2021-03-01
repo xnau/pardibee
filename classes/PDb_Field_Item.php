@@ -417,6 +417,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     if ( is_null( $this->value ) && $this->record_id > 0 ) {
       $data = Participants_Db::get_participant( $this->record_id );
+      
       if ( $data && isset( $data[$this->name] ) ) {
         $this->_set_value( $data[$this->name] );
       }
