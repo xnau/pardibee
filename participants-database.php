@@ -580,7 +580,7 @@ class Participants_Db extends PDb_Base {
     /*
      * register frontend scripts and stylesheets
      */
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), '1.6' );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), '1.7' );
     wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$Settings->option_version() );
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
