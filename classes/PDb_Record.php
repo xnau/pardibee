@@ -88,6 +88,12 @@ class PDb_Record extends PDb_Shortcode {
 
         $this->_setup_iteration();
 
+        /**
+         * @action pdb-open_record_edit
+         * @param array record data
+         */
+        do_action( 'pdb-open_record_edit', $this->participant_values );
+
         $this->_print_from_template();
       }
     }
@@ -104,7 +110,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   public static function print_form( $params )
   {
-
     $record = new PDB_Record( $params );
 
     return $record->output;
