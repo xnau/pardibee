@@ -303,9 +303,12 @@ class PDb_List extends PDb_Shortcode {
      * @return string list query
      */
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
+    
+    $this->do_search_result_action();
 
-    if ( PDB_DEBUG )
+    if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ .' list query: ' . $list_query );
+    }
 
     // get the $wpdb object
     global $wpdb;
@@ -372,6 +375,21 @@ class PDb_List extends PDb_Shortcode {
      * which is a PDb_Field_Item instance
      */
 //     error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+  }
+  
+  /**
+   * triggers a search result action
+   */
+  protected function do_search_result_action()
+  {
+    if ( $this->list_query->is_search_result() ) {
+      /**
+       * @action pdb-list_search_result
+       * @param array search parameters
+       * @param string search query
+       */
+      do_action( 'pdb-list_search_result', $this->list_query->current_filter(), $this->list_query->get_list_query() );
+    }
   }
   
   /**
