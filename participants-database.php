@@ -364,6 +364,15 @@ class Participants_Db extends PDb_Base {
     
     // action for handling the list columns UI
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
+    
+    // register some plugin events
+    add_filter( 'pdb-register_global_event', function ($events){
+      
+      $events['pdb-view_single_record'] = __( 'View Single Record', 'participants-database' );
+      $events['pdb-open_record_edit'] = __( 'Open Edit Record Form', 'participants-database' );
+      
+      return $events;
+    });
 
     /*
      * any plugins that require Participants Database should initialize on this action
