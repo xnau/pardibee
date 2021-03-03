@@ -1294,7 +1294,7 @@ abstract class PDb_Shortcode {
    */
   public function template_basename()
   {
-    if ( PDB_DEBUG > 2 ) {
+    if ( PDB_DEBUG > 0 && current_user_can( 'manage_options') ) {
       $path = $this->template;
     } else {
       $path = '';
