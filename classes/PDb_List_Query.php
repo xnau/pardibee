@@ -285,10 +285,11 @@ class PDb_List_Query {
         'search_values' => $this->filter['values'],
         'sort_fields' => $this->sort,
     );
-    if ( !$key )
+    if ( !$key ) {
       return $filter;
-    else
+    } else {
       return isset( $filter[$key] ) ? $filter[$key] : '';
+    }
   }
 
   /**
