@@ -1384,7 +1384,8 @@ class Participants_Db extends PDb_Base {
   /**
    * checks a string against active columns to validate input
    * 
-   * @var string $string the name to test
+   * @param string $string the name to test
+   * @return bool
    */
   public static function is_column( $string )
   {
@@ -1394,16 +1395,18 @@ class Participants_Db extends PDb_Base {
   /**
    * checks a string against defined groups to validate a group name
    * 
-   * @var string $string the name to test
+   * @global wpdb $wpdb
+   * @param string $string the name to test
+   * @return bool
    */
   public static function is_group( $string )
   {
-
     global $wpdb;
 
     $sql = 'SELECT COUNT(*)
 		        FROM ' . self::$groups_table . ' g
-            WHERE g.name = %s';
+            WHERE g.name = %s 
+            AND g.mode IN ("admin","private","public")';
 
     $count = $wpdb->get_var( $wpdb->prepare( $sql, trim( $string ) ) );
 
@@ -1577,7 +1580,7 @@ class Participants_Db extends PDb_Base {
   /**
    * processes a form submit
    *
-   * this processes all record form submissions front-end and back-
+   * this processes all record form submissions front- and back-end
    * 
    * @global wpdb $wpdb
    * 
@@ -2220,18 +2223,10 @@ class Participants_Db extends PDb_Base {
         }
       }
 
-      // fill in some convenience values
-      //global $current_user;
-
-  //    if ( is_object( $current_user ) ) $default_record['by'] = $current_user->display_name;
-  //    $default_record['when'] = date_i18n(self::$date_format);
       $default_record['private_id'] = self::generate_pid();
+      
       PDb_Date_Display::reassert_timezone();
       $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
-      /*
-       * @version 1.6 stop setting date_updated on new record
-       */
-      // $default_record['date_updated'] = date('Y-m-d H:i:s');
       
       wp_cache_add( $cachekey, $default_record );
     }
