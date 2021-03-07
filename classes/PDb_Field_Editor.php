@@ -342,6 +342,11 @@ class PDb_Field_Editor {
    */
   protected function form_element_options()
   {
+    /**
+     * @filter pdb-field_editor_form_element_options
+     * @param array of form element types
+     * @return array
+     */
     return Participants_Db::apply_filters( 'field_editor_form_element_options', PDb_FormElement::get_types() );
   }
 
