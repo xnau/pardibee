@@ -164,27 +164,47 @@ class PDb_Form_Field_Def {
    * 
    * @global wpdb $wpdb
    * @param string  $fieldname
+   * @param bool $main_only true if only field from main plugin
    * @return bool
    */
-  public static function is_field( $fieldname )
+  public static function is_field( $fieldname, $main_only = false )
   {
     if ( ! is_string($fieldname) ) {
       return false;
     }
     
-    $cachekey = 'pdb-field_list';
+    $cachekey = 'pdb-field_list' . strval($main_only);
     $field_list = wp_cache_get( $cachekey );
     
     if ( ! $field_list ) {
+      
       global $wpdb;
+      
       $sql = 'SELECT v.name 
-              FROM ' . Participants_Db::$fields_table . ' v';
+              FROM ' . Participants_Db::$fields_table . ' v
+              JOIN ' . Participants_Db::$groups_table . ' g ON g.name = v.group';
+      
+      if ( $main_only ) {
+        $sql .= ' WHERE g.mode IN ("admin","private","public")';
+      }
+      
       $field_list = $wpdb->get_col( $sql );
       
       wp_cache_set( $cachekey, $field_list, '', Participants_Db::cache_expire() );
     }
     
     return in_array( $fieldname, $field_list );
+  }
+  
+  /**
+   * tells if the field is in the main plugin fields
+   * 
+   * @param string $fieldname
+   * @return bool
+   */
+  public static function is_main_field( $fieldname )
+  {
+    return self::is_field($fieldname, true);
   }
 
   /**
