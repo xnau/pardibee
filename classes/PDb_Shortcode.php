@@ -1047,7 +1047,7 @@ abstract class PDb_Shortcode {
 
       foreach ( $raw_list as $column ) {
 
-        if ( Participants_Db::is_column( $column ) ) {
+        if ( PDb_Form_Field_Def::is_main_field( $column ) ) {
 
           $field_list[$column] = $column; // prevent accidental duplicates from getting added twice
         }
