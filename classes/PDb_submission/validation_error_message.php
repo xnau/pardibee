@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -38,9 +38,9 @@ class validation_error_message {
   private $css_selector;
 
   /**
-   * @var object the field definition
+   * @var \PDb_Form_Field_Def the field definition
    */
-  private $field_def;
+  public $field;
 
   /**
    * @var string the message class
@@ -76,7 +76,7 @@ class validation_error_message {
    */
   public function element_attributes()
   {
-    return sprintf( ' data-field-group="%s" data-field-name="%s" class="%s" ', ( $this->field_def ? $this->field_def->group : '' ), $this->fieldname, $this->class );
+    return sprintf( ' data-field-group="%s" data-field-name="%s" class="%s" ', ( $this->field ? $this->field->group : '' ), $this->fieldname, $this->class );
   }
 
   /**
@@ -85,7 +85,7 @@ class validation_error_message {
   private function setup_field_def()
   {
     if ( !empty( $this->fieldname ) ) {
-      $this->field_def = \Participants_Db::$fields[ $this->fieldname ];
+      $this->field = \Participants_Db::$fields[ $this->fieldname ];
     }
   }
 
@@ -97,15 +97,10 @@ class validation_error_message {
    */
   public function __get( $name )
   {
-    switch ( $name ) {
-      default:
-        if ( isset( $this->{$name} ) ) {
-          return $this->{$name};
-        }
-        if ( isset( $this->field_def->{$name} ) ) {
-          return $this->field_def->{$name};
-        }
+    if ( isset( $this->{$name} ) ) {
+      return $this->{$name};
     }
+    
     return '';
   }
 
@@ -156,7 +151,7 @@ class validation_error_message {
    */
   public function field_title()
   {
-    return $this->field_def->title();
+    return $this->field->title();
   }
 
   /**
