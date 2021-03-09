@@ -151,6 +151,7 @@ class heading extends custom_field {
   {
     if ( $field->form_element() === self::element_name ) {
       $config['type'] = 'rich-text';
+      $config['label'] = __( 'Heading', 'participants-database' );
     }
     return $config;
   }
