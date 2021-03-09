@@ -28,6 +28,8 @@ class shortcode extends custom_field {
   public function __construct()
   {
     parent::__construct( self::element_name, _x( 'Shortcode', 'name of a field type that shows a shortcode', 'participants-database' ) );
+    
+    add_filter( 'pdb-field_default_attribute_edit_config', array( $this, 'change_default_attribute_title' ), 10, 2 );
   }
 
   /**
@@ -140,5 +142,21 @@ class shortcode extends custom_field {
         'csv' => true,
         'sortable' => false,
     );
+  }
+  
+  /**
+   * changes the title of the default attribute in the field editor
+   * 
+   * @param array $config the editor attribute configuration
+   * @param \PDb_Form_Field_Def $field the field definition
+   * @return array the configuration array
+   */
+  public function change_default_attribute_title( $config, $field )
+  {
+    if ( $field->form_element() === $this->name ) {
+      $config['label'] = __( 'Shortcode', 'participants-database' );
+      $config['type'] = 'text-area';
+    }
+    return $config;
   }
 }
