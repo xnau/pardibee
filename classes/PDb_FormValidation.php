@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -385,29 +385,26 @@ class PDb_FormValidation extends xnau_FormValidation {
 
       if ( $fieldname !== '' ) {
 
-        $field = Participants_Db::$fields[$fieldname];
-        /* @var $field PDb_Form_Field_Def */
-
         switch ( true ) {
           
-          case $field->form_element() === 'checkbox':
+          case $error->field->form_element() === 'checkbox':
             
-            $field_selector = '[for^="pdb-' . $field->name() . '"]';
+            $field_selector = '[for^="pdb-' . $error->field->name() . '"]';
             break;
           
-          case $field->form_element() === 'captcha':
-          case $field->form_element() === 'link':
-          case $field->form_element() === 'text-line':
-          case $field->form_element() === 'text-area':
+          case $error->field->form_element() === 'captcha':
+          case $error->field->form_element() === 'link':
+          case $error->field->form_element() === 'text-line':
+          case $error->field->form_element() === 'text-area':
             
-            $field_selector = '[name^="' . $field->name() . '"]';
+            $field_selector = '[name^="' . $error->field->name() . '"]';
             break;
           
-          case $field->is_value_set():
-          case $field->is_upload_field():
+          case $error->field->is_value_set():
+          case $error->field->is_upload_field():
           default:
             
-            $field_selector = '.' . $field->name() . '-input-group';
+            $field_selector = '.' . $error->field->name() . '-input-group';
         }
         
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
@@ -417,26 +414,26 @@ class PDb_FormValidation extends xnau_FormValidation {
         switch ( $error->slug ) {
           
           case 'invalid':
-            if ( $field->has_validation_message() && $field->validation() !== 'yes' ) {
-              $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
+            if ( $error->field->has_validation_message() && $error->field->validation() !== 'yes' ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $error->field->validation_message() ), $error->field->title() );
             } elseif ( isset( $this->error_messages[$error->slug] ) ) {
-              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
+              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $error->field->title() );
             }
             break;
             
           case 'nonmatching':
-            if ( $field->has_validation_message() && $field->validation() === 'other' ) {
-              $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
+            if ( $error->field->has_validation_message() ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $error->field->validation_message() ), $error->field->title() );
             } elseif ( isset( $this->error_messages[$error->slug] ) ) {
-              $error_message = sprintf( $this->error_messages[$error->slug], $field->title(), Participants_Db::column_title( $field->validation ) );
+              $error_message = sprintf( $this->error_messages[$error->slug], $error->field->title(), Participants_Db::column_title( $error->field->validation ) );
             }
             break;
             
           case 'empty':
-            if ( $field->has_validation_message() && $field->validation() === 'yes' ) {
-              $error_message = sprintf( str_replace( '%s', '%1$s', $field->validation_message() ), $field->title() );
+            if ( $error->field->has_validation_message() && $error->field->validation() === 'yes' ) {
+              $error_message = sprintf( str_replace( '%s', '%1$s', $error->field->validation_message() ), $error->field->title() );
             } elseif ( isset( $this->error_messages[$error->slug] ) ) {
-              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
+              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $error->field->title() );
             }
         
             break;
@@ -445,7 +442,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           case 'identifier':
           default:
             if ( isset( $this->error_messages[$error->slug] ) ) {
-              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $field->title() );
+              $error_message = sprintf( str_replace( '%s', '%1$s', $this->error_messages[$error->slug] ), $error->field->title() );
             }
             break;
             
