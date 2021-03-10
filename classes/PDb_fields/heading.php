@@ -15,7 +15,7 @@
 
 namespace PDb_fields;
 
-class heading extends custom_field {
+class heading extends core {
 
   /**
    * @var string name of the form element
@@ -31,7 +31,11 @@ class heading extends custom_field {
 
     add_filter( 'pdb-add_field_to_iterator', array( $this, 'yes_show_field' ), 10, 2 );
     
-    add_filter( 'pdb-field_default_attribute_edit_config', array( $this, 'setup_field_body_text_editor' ), 10, 2 );
+    $this->customize_default_attribute( __( 'Heading', 'participants-database' ), 'rich-text' );
+    
+    $this->set_colorclass('utility');
+    
+    $this->suppressed_shortcodes(array('list'));
   }
 
   /**
@@ -139,21 +143,6 @@ class heading extends custom_field {
   private function show_in_display_context()
   {
     return ! isset( $this->field->attributes()[ 'form_only' ] );
-  }
-  
-  /**
-   * customizes the body text editor
-   * 
-   * @param array $config
-   * @param \PDb_Form_Field_Def $field
-   */
-  public function setup_field_body_text_editor( $config, $field )
-  {
-    if ( $field->form_element() === self::element_name ) {
-      $config['type'] = 'rich-text';
-      $config['label'] = __( 'Heading', 'participants-database' );
-    }
-    return $config;
   }
 
 }
