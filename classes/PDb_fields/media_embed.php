@@ -15,7 +15,7 @@
 
 namespace PDb_fields;
 
-class media_embed extends custom_field {
+class media_embed extends core {
 
   /**
    * @var string name of the form element
