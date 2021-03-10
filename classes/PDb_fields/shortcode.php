@@ -15,7 +15,7 @@
 
 namespace PDb_fields;
 
-class shortcode extends custom_field {
+class shortcode extends core {
 
   /**
    * @var string name of the form element
