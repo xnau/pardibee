@@ -8,19 +8,19 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 
 namespace PDb_fields;
 
-class string_combine extends custom_field {
+class string_combine extends core {
 
   /**
    * @var string name of the form element
    */
-  const element_name = 'string_combine';
+  const element_name = 'string-combine';
 
   /**
    * 
@@ -32,6 +32,10 @@ class string_combine extends custom_field {
     add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
     
     $this->field_list(); // cache the field list
+    
+    $this->customize_default_attribute( __( 'Template', 'participants-database' ), 'text-area' );
+    
+    $this->is_linkable();
   }
 
   /**
@@ -95,12 +99,32 @@ class string_combine extends custom_field {
   /**
    * provides the combined string
    * 
-   * @param array $data optionally provide the data
+   * this removes any unreplaced tags
+   * 
+   * @param array $data the data
    * @return string
    */
   private function combined_string( $data = false )
   {
-    return \PDb_Tag_Template::replace_text( $this->field->attributes['template'], $data ? : $this->record_data() );
+    $replaced_string = $this->replaced_string($data);
+    
+    if ( $replaced_string === $this->field->default_value() ) {
+      // if there is no replacement data
+      return $this->field->get_attribute( 'default' );
+    }
+    
+    return preg_replace( '/\[[a-z_]+\]/', '', $replaced_string );
+  }
+  
+  /**
+   * replaces the template with string from the data
+   * 
+   * @param array|bool $data associative array of data or bool false if no data
+   * @return string
+   */
+  private function replaced_string( $data )
+  {
+    return \PDb_Tag_Template::replace_text( $this->field->default_value(), $data ? : $this->record_data() );
   }
 
   /**
@@ -191,7 +215,7 @@ class string_combine extends custom_field {
   {
     return array(
         'readonly' => false,
-        'default' => false,
+        'default' => true,
         'persistent' => false,
         'csv' => true,
         'sortable' => true,
