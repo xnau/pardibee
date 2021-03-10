@@ -343,28 +343,24 @@ class PDb_List extends PDb_Shortcode {
     $this->records = array();
     foreach ( $records as $record ) {
 
-      $id = $record->id;
-      if ( !in_array( 'id', $this->display_columns ) )
-        unset( $record->id );
-
-      $this->records[$id] = $record;
+      $this->records[$record->id] = $record;
     }
 
-    foreach ( $this->records as $record_id => $record_fields ) {
+    foreach ( array_keys($this->records) as $record_id ) {
+      
+      $record = array();
 
-      //$this->participant_values = Participants_Db::get_participant($record_id);
-
-      foreach ( $record_fields as $field => $value ) {
-
-        // add the field to the records object
-        $this->records[$record_id]->{$field} = new PDb_Field_Item( (object) array( 
+      foreach ( $this->display_columns as $field ) {   //  foreach ( $record_fields as $field => $value )
+        
+        $record[$field] = new PDb_Field_Item( (object) array( 
             'name' => $field, 
             'record_id' => $record_id, 
-            'module' => $this->module, 
-            'value' => $value,
+            'module' => $this->module,
                 ) );
-        
       }
+      
+      $this->records[ $record_id ] = (object) $record;
+      
     }
     
     reset( $this->records );
@@ -518,8 +514,9 @@ class PDb_List extends PDb_Shortcode {
 
     $this->shortcode_atts['target_page'] = trim( $this->shortcode_atts['target_page'] );
 
-    if ( !empty( $this->shortcode_atts['action'] ) && empty( $this->shorcode_atts['target_page'] ) )
-      $this->shorcode_atts['target_page'] = $this->shortcode_atts['action'];
+    if ( !empty( $this->shortcode_atts['action'] ) && empty( $this->shortcode_atts['target_page'] ) ) {
+      $this->shortcode_atts['target_page'] = $this->shortcode_atts['action'];
+    }
 
     global $post;
 
