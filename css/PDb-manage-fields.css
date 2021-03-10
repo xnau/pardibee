@@ -131,6 +131,10 @@
   display: inline-block;
 }
 
+.participants_db .placeholder-form-element input.default-field {
+    width: 30em;
+}
+
 .wp-core-ui .general_fields_control_header .button-secondary {
   line-height: 24px;
   margin-left: 0.5em;
