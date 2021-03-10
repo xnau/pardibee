@@ -735,9 +735,15 @@ class PDb_List_Query {
    */
   private function _set_columns( $columns )
   {
+    $this->columns = array();
     if ( is_array( $columns ) ) {
       if ( ! in_array( 'id', $columns ) ) array_unshift( $columns, 'id' );
-      $this->columns = $columns;
+      
+      foreach( $columns as $fieldname ) {
+        if ( in_array( $fieldname, Participants_Db::table_columns() ) ) {
+          $this->columns[] = $fieldname;
+        }
+      }
     }
   }
 
@@ -966,6 +972,11 @@ class PDb_List_Query {
     }
     
     $field_def = new PDb_Form_Field_Def( $field_name );
+    
+    // check to make sure we can query the field's value
+    if ( ! $field_def->stores_data() ) {
+      return false;
+    }
     
     /**
      * provides a way to alter the field def before it is used to create the where clause
