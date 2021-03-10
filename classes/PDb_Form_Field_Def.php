@@ -234,6 +234,16 @@ class PDb_Form_Field_Def {
   }
   
   /**
+   * tells if the field stores a value in the db
+   * 
+   * @return bool
+   */
+  public function stores_data()
+  {
+    return in_array( $this->name(), Participants_Db::table_columns() );
+  }
+  
+  /**
    * provides the value of the named property
    * 
    * this is an an explicit version of the __get magic method
