@@ -520,9 +520,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function has_content()
   {
     switch ( $this->form_element ) {
-      case 'placeholder':
-        $value = $this->default_value();
-        break;
       case 'link':
         $value = $this->value . $this->link;
         break;
@@ -1234,14 +1231,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           } else {
             $return = $this->display_array_value();
           }
-
-          break;
-
-        case 'placeholder':
-
-          $this->set_value( $this->default_value() );
-
-          $return = $this->html_output ? $this->make_link() : $this->value();
 
           break;
 
