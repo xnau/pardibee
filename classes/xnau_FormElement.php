@@ -1837,7 +1837,6 @@ abstract class xnau_FormElement {
         $datatype = 'tinytext';
         break;
 
-      case 'placeholder':
       case 'captcha':
         $datatype = '';
         break;
