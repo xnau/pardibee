@@ -794,7 +794,7 @@ class PDb_FormElement extends xnau_FormElement {
         'hidden' => __( 'Hidden Field', 'participants-database' ),
         'password' => __( 'Password Field', 'participants-database' ),
         'captcha' => __( 'CAPTCHA', 'participants-database' ),
-        'placeholder' => __( 'Placeholder', 'participants-database' ),
+//        'placeholder' => __( 'Placeholder', 'participants-database' ),
 //         'timestamp'          => __('Timestamp', 'participants-database'),
     );
     /**
@@ -872,9 +872,7 @@ class PDb_FormElement extends xnau_FormElement {
         'dropdown',
         'checkbox',
         'radio',
-        'placeholder',
         'hidden',
-        'string_combine',
             )
     );
     return Participants_Db::apply_filters( 'field_is_linkable', $linkable, $field->form_element );
