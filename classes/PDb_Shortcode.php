@@ -1124,7 +1124,7 @@ abstract class PDb_Shortcode {
     /**
      * @filter pdb-display_column_suppressed_form_elements
      * @param array of form elements to exclude from the display
-     * @param PDb_Shortcode the shortcoe instance
+     * @param PDb_Shortcode the shortcode instance
      * @return array of form elements to exclude
      */
     return '"' . implode( '","', Participants_Db::apply_filters( 'display_column_suppressed_form_elements', $list, $this ) ) . '"';
