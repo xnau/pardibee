@@ -20,7 +20,7 @@ class heading extends core {
   /**
    * @var string name of the form element
    */
-  const element_name = 'pdb_heading';
+  const element_name = 'heading';
 
   /**
    * 
@@ -36,6 +36,8 @@ class heading extends core {
     $this->set_colorclass('utility');
     
     $this->suppressed_shortcodes(array('list'));
+    
+    $this->is_dynamic_field();
   }
 
   /**
