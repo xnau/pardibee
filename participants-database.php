@@ -668,7 +668,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
     
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
-    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
+    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.3' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       
@@ -692,11 +692,15 @@ class Participants_Db extends PDb_Base {
 
     if ( false !== stripos( $hook, 'participants-database_settings_page' ) ) {
       wp_enqueue_script( self::$prefix . 'settings_script' );
+    }
+    
+
+    if ( false !== stripos( $hook, 'participants-database_settings_page' ) || false !== stripos( $hook, 'participants-database-manage_fields' ) ) {
     
       if ( !class_exists( '\_WP_Editors' ) ) {
         require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
-        \_WP_Editors::enqueue_default_editor();
       }
+      \_WP_Editors::enqueue_default_editor();
     }
 
     if ( false !== stripos( $hook, 'participants-database-edit_participant' ) ) {
