@@ -20,9 +20,10 @@ class initialize {
   function __construct()
   {
     new heading();
-    new video();
+    new media_embed();
     new string_combine();
     new shortcode();
+    new placeholder();
   }
 
 }
