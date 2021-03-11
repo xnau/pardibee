@@ -30,6 +30,8 @@ class shortcode extends core {
     parent::__construct( self::element_name, _x( 'Shortcode', 'name of a field type that shows a shortcode', 'participants-database' ) );
     
     add_filter( 'pdb-field_default_attribute_edit_config', array( $this, 'change_default_attribute_title' ), 10, 2 );
+    
+    $this->is_dynamic_field();
   }
 
   /**
@@ -39,6 +41,12 @@ class shortcode extends core {
    */
   protected function display_value()
   {
+    if ( strpos( $this->field->module(), 'list' ) !== false ) {
+      return $this->field->value();
+    }
+    
+    $output = array();
+    
     $output[] = $this->shortcode_content();
     
     if ( $this->field->get_attribute( 'show_value' )  ) {
