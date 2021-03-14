@@ -34,6 +34,8 @@ class placeholder extends core {
     $this->is_linkable();
     
     $this->set_colorclass('utility');
+    
+    $this->is_dynamic_field();
   }
 
   /**
