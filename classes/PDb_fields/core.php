@@ -230,6 +230,22 @@ abstract class core {
       return $linkable;
     }, 10, 2 );
   }
+  
+  /**
+   * registers the field type as dynamic
+   * 
+   * this is a field that generates its value dynamically based on the field's defined default value
+   * 
+   */
+  protected function is_dynamic_field()
+  {
+    add_filter( 'pdb-dynamic_field_list', function ( $list ) {
+      if ( ! in_array( $this->name, $list ) ) {
+        $list[] = $this->name;
+      }
+      return $list;
+    });
+  }
 
   /**
    * customizes the default attribute in the field editor
@@ -275,7 +291,6 @@ abstract class core {
    */
   protected function suppressed_shortcodes( $suppressed ) {
     add_filter( 'pdb-display_column_suppressed_form_elements', function ( $list, $shortcode ) use ( $suppressed ) {
-      error_log(__METHOD__.' module: '.$shortcode->module);
       if ( in_array( $shortcode->module, $suppressed ) && ! in_array( $this->name, $list ) ) {
         $list[] = $this->name;
       }
