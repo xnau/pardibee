@@ -303,8 +303,6 @@ class PDb_List extends PDb_Shortcode {
      * @return string list query
      */
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
-    
-    $this->do_search_result_action();
 
     if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ .' list query: ' . $list_query );
@@ -315,6 +313,8 @@ class PDb_List extends PDb_Shortcode {
 
     // get the number of records returned
     $this->num_records = count( $wpdb->get_results( $list_query ) );
+    
+    $this->do_search_result_action();
 
     $this->_set_list_limit();
 
@@ -378,13 +378,18 @@ class PDb_List extends PDb_Shortcode {
    */
   protected function do_search_result_action()
   {
-    if ( $this->list_query->is_search_result() ) {
+    if ( has_action( 'pdb-list_search_result' ) && $this->list_query->is_search_result() ) {
+        
+      $filter = array_intersect_key( $this->list_query->current_filter() , array( 'search_fields' => true, 'search_values' => true, 'sort_fields' => true ) );
+      
+      $filter['result_count'] = intval( $this->num_records );
+      
+      $filter['query'] = $this->list_query->get_list_query();
       /**
        * @action pdb-list_search_result
        * @param array search parameters
-       * @param string search query
        */
-      do_action( 'pdb-list_search_result', $this->list_query->current_filter(), $this->list_query->get_list_query() );
+      do_action( 'pdb-list_search_result', $filter );
     }
   }
   
