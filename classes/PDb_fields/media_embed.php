@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -28,6 +28,8 @@ class media_embed extends core {
   public function __construct()
   {
     parent::__construct( self::element_name, _x( 'Media Embed', 'name of a field type that shows embedded media', 'participants-database' ) );
+    
+    $this->is_dynamic_field();
   }
 
   /**
@@ -37,6 +39,10 @@ class media_embed extends core {
    */
   protected function display_value()
   {
+    if ( strpos( $this->field->module(), 'list' ) !== false ) {
+      return $this->field->value();
+    }
+    
     return implode( PHP_EOL, $this->media_embed_html() );
   }
   
@@ -49,16 +55,17 @@ class media_embed extends core {
   {
     $html = array();
     
-    if ( $this->field->form_element === $this->name ) {
+    $media_url = $this->extract_url( $this->field->value );
+    
+    if ( ! empty( $media_url ) ) {
       
       $oembed = new \WP_oEmbed();
-      $media_url = $this->extract_url( $this->field->value );
-      
-      $html[] = '<div class="pdb-media-container ' . $this->field->name . '-media">';
-      $html[] = empty( $media_url ) ? '' : $oembed->get_html( $media_url );
-      $html[] = '</div>';
       
     }
+
+    $html[] = '<div class="pdb-media-container ' . $this->field->name . '-media">';
+    $html[] = empty( $media_url ) ? '' : $oembed->get_html( $media_url );
+    $html[] = '</div>';
    
     return $html;
   }
@@ -120,6 +127,16 @@ class media_embed extends core {
   protected function element_datatype()
   {
     return 'text';
+  }
+  
+  /**
+   * supplies the value for testing if the element has content
+   * 
+   * @param \PDb_Field_Item $field the current field
+   * @return mixed the value to test
+   */
+  protected function has_content_test( $field ) {
+    return $this->extract_url( $this->field->value );
   }
   
   /**
