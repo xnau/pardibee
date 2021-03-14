@@ -2180,60 +2180,50 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_default_record( $add_persistent = true )
   {
-    $cachekey = 'pdb-default-record';
-    
-    $default_record = wp_cache_get($cachekey);
-    
-    if ( ! $default_record ) {
-      $sql = 'SELECT f.name,f.default,f.form_element 
-              FROM ' . self::$fields_table . ' f
-                JOIN ' . self::$groups_table . ' g 
-                  ON f.group = g.name
+    $default_record = array();
 
-              WHERE f.group != "internal" 
-              AND f.form_element NOT IN ("placeholder","link") 
-              AND f.name IN ("' . implode('","', self::table_columns() ) . '") 
-              AND g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")';
-
-      global $wpdb;
-
-      $result = $wpdb->get_results( $sql );
-
-      $default_record = array();
-
-      foreach ( $result as $column ) {
-
-        $default_record[$column->name] = ( $column->form_element === 'hidden' && self::is_dynamic_value($column->default) ) ? '' : $column->default;
+    foreach ( self::$fields as $fieldname => $field ) {
+      /** @var PDb_Form_Field_Def $field */
+      
+      // skip fields that don't have a stored value
+      if ( ! in_array( $field->name(), Participants_Db::table_columns() ) ) {
+        continue;
       }
 
-      // get the id of the last record stored
-      $prev_record_id = get_transient( self::$last_record );
+      if ( $field->is_dynamic_field() ) {
+        // don't provide a value for dynamic fields
+        $default_record[$fieldname] = '';
+      } else {
+        $default_record[$fieldname] = $field->default_value();
+      }
 
-      if ( $add_persistent && is_admin() && $prev_record_id ) {
+    }
 
-        $previous_record = self::get_participant( $prev_record_id );
+    // get the id of the last record stored
+    $prev_record_id = get_transient( self::$last_record );
 
-        if ( $previous_record ) {
+    if ( $add_persistent && is_admin() && $prev_record_id ) {
 
-          $persistent_fields = self::get_persistent();
+      $previous_record = self::get_participant( $prev_record_id );
 
-          foreach ( $persistent_fields as $persistent_field ) {
+      if ( $previous_record ) {
 
-            if ( !empty( $previous_record[$persistent_field] ) ) {
+        $persistent_fields = self::get_persistent();
 
-              $default_record[$persistent_field] = $previous_record[$persistent_field];
-            }
+        foreach ( $persistent_fields as $persistent_field ) {
+
+          if ( !empty( $previous_record[$persistent_field] ) ) {
+
+            $default_record[$persistent_field] = $previous_record[$persistent_field];
           }
         }
       }
-
-      $default_record['private_id'] = self::generate_pid();
-      
-      PDb_Date_Display::reassert_timezone();
-      $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
-      
-      wp_cache_add( $cachekey, $default_record );
     }
+
+    $default_record['private_id'] = self::generate_pid();
+
+    PDb_Date_Display::reassert_timezone();
+    $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
 
     return $default_record;
   }
