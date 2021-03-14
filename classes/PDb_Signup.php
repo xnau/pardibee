@@ -194,14 +194,25 @@ class PDb_Signup extends PDb_Shortcode {
        * @param string form status
        * 
        */
-      if ( has_filter( Participants_Db::$prefix . 'before_signup_thanks' ) ) {
+      if ( has_action( Participants_Db::$prefix . 'before_signup_thanks' ) ) {
 
         $signup_feedback_props = array('recipient', 'receipt_subject', 'receipt_body', 'notify_recipients', 'notify_subject', 'notify_body', 'thanks_message', 'participant_values');
         $signup_feedback = new stdClass();
         foreach ( $signup_feedback_props as $prop ) {
           $signup_feedback->$prop = $this->$prop;
         }
+        
         do_action( Participants_Db::$prefix . 'before_signup_thanks', $signup_feedback, $this->get_form_status() );
+        
+        foreach ( $signup_feedback_props as $prop ) {
+          
+          if ( isset( $signup_feedback->$prop ) && ! empty( $signup_feedback->$prop ) && property_exists( $this, $prop ) ) {
+            
+            $this->$prop = $signup_feedback->$prop;
+          }
+          
+        }
+        
       }
 
       $this->_send_email();
