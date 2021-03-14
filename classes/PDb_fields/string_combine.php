@@ -15,7 +15,7 @@
 
 namespace PDb_fields;
 
-class string_combine extends core {
+class string_combine extends dynamic_db_field {
 
   /**
    * @var string name of the form element
@@ -28,10 +28,6 @@ class string_combine extends core {
   public function __construct()
   {
     parent::__construct( self::element_name, _x( 'String Combine', 'name of a field type that shows a combined string', 'participants-database' ) );
-    
-    add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
-    
-    $this->field_list(); // cache the field list
     
     $this->customize_default_attribute( __( 'Template', 'participants-database' ), 'text-area' );
     
@@ -47,11 +43,11 @@ class string_combine extends core {
   {
     if ( $this->field->is_valid_single_record_link_field() ) {
       
-      $this->field->set_value( $this->combined_string() );
+      $this->field->set_value( $this->dynamic_value() );
       
       return $this->field->output_single_record_link();
     }
-    return $this->combined_string();
+    return $this->dynamic_value();
   }
 
   /**
@@ -72,45 +68,20 @@ class string_combine extends core {
   }
   
   /**
-   * updates the database value for the field
-   * 
-   * @param array $post
-   * @retrn array
-   */
-  public function update_db_value( $post )
-  {
-    foreach( $this->field_list() as $string_combine_field ) {
-      
-      /** @var \PDb_Form_Field_Def $string_combine_field */
-      
-      if ( isset( $post[ $string_combine_field->name() ] ) ) {
-      
-        $field = new \PDb_Field_Item( $string_combine_field );
-        $field->set_record_id( $post['id'] );
-        $this->setup_field( $field );
-
-        $post[ $string_combine_field->name() ] = $this->combined_string( $post );
-      }
-      
-    }
-    return $post;
-  }
-  
-  /**
-   * provides the combined string
+   * provides the strings with tags replaced
    * 
    * this removes any unreplaced tags
    * 
    * @param array $data the data
    * @return string
    */
-  private function combined_string( $data = false )
+  protected function dynamic_value( $data = false )
   {
     $replaced_string = $this->replaced_string($data);
     
     if ( $replaced_string === $this->field->default_value() ) {
       // if there is no replacement data
-      return $this->field->get_attribute( 'default' );
+      return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
     }
     
     return preg_replace( '/\[[a-z_]+\]/', '', $replaced_string );
@@ -135,7 +106,7 @@ class string_combine extends core {
    */
   protected function form_element_html()
   {
-    return sprintf( $this->wrap_template(), $this->combined_string() );
+    return sprintf( $this->wrap_template(), $this->dynamic_value() );
   }
   
   /**
@@ -149,35 +120,6 @@ class string_combine extends core {
     $template[] = '<span class="pdb-string_combine_field">%1$s</span>';
     
     return \Participants_Db::apply_filters( 'string_combine_wrap_template', implode( PHP_EOL, $template ) );
-  }
-  
-  /**
-   * gets the string combine field list
-   * 
-   * caches a list of all the string combine fields
-   * 
-   * @return array of PDb_Form_Field_Def objects
-   */
-  private function field_list()
-  {
-    $cachekey = self::element_name . '_field_list';
-    $list = wp_cache_get( $cachekey );
-    
-    if ( ! is_array( $list ) ) {
-      
-      $list = array();
-      
-      foreach( \Participants_Db::$fields as $field ) {
-        if ( $field->form_element() === self::element_name ) {
-          
-          $list[] = $field;
-        }
-      }
-      
-      wp_cache_add( $cachekey, $list );
-    }
-    
-    return $list;
   }
 
 
