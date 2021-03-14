@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.11
+ * @version    0.12
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -42,7 +42,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string default value of the field
    */
-  public $default;
+  private $default;
 
   /**
    * @var string name of the field's group
@@ -399,6 +399,21 @@ class PDb_Form_Field_Def {
   public function default_value()
   {
     return Participants_Db::apply_filters( 'translate_string', $this->default );
+  }
+  
+  /**
+   * provides the default display string
+   * 
+   * @return string
+   */
+  public function default_display()
+  {
+    if ( $this->is_dynamic_field() ) {
+      // dynamic fields don't display the default value
+      return '';
+    }
+    
+    return $this->default_value();
   }
 
   /**
