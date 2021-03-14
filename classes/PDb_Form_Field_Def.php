@@ -655,6 +655,18 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * tells if the field is a dynamic field
+   * 
+   * @return bool true if the field uses the default value to generate its value dynamically
+   */
+  public function is_dynamic_field()
+  {
+    $registered_dynamic = in_array( $this->form_element, Participants_Db::apply_filters( 'dynamic_field_list', array() ) );
+    
+    return $registered_dynamic || $this->is_dynamic_hidden_field();
+  }
+
+  /**
    * tells if the field is the single record link field
    * 
    * @return bool
