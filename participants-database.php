@@ -2190,12 +2190,7 @@ class Participants_Db extends PDb_Base {
         continue;
       }
 
-      if ( $field->is_dynamic_field() ) {
-        // don't provide a value for dynamic fields
-        $default_record[$fieldname] = '';
-      } else {
-        $default_record[$fieldname] = $field->default_value();
-      }
+      $default_record[$fieldname] = $field->default_display();
 
     }
 
@@ -2946,7 +2941,7 @@ class Participants_Db extends PDb_Base {
          * filter: pdb-before_submit_signup
          */
         $post_data = self::apply_filters( 'before_submit_signup', $_POST );
-
+        
         /*
          * the signup form should update the current record if it is revisited during a multipage form session
          */
