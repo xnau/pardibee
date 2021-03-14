@@ -50,7 +50,7 @@ class placeholder extends core {
     } else {
       $template = '%1$s';
     }
-    return sprintf( $template, $this->field->default_value(), $this->field->link(), $this->field->name() );
+    return sprintf( $template, $this->field->default_value, $this->field->link(), $this->field->name() );
   }
 
   /**
@@ -100,7 +100,7 @@ class placeholder extends core {
    * @return mixed the value to test
    */
   protected function has_content_test( $field ) {
-    return $field->default_value();
+    return $field->default_value;
   }
   
 }

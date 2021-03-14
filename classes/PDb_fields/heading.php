@@ -68,7 +68,7 @@ class heading extends core {
    */
   public function form_element_html()
   {
-    return $this->field->default_value();
+    return \Participants_Db::apply_filters('translate_string', $this->field->default );
   }
 
   /**

@@ -102,7 +102,7 @@ class shortcode extends core {
    */
   private function shortcode_content()
   {
-    $raw_shortcode = $this->field->default_value();
+    $raw_shortcode = $this->field->default_value;
     $has_placeholder = stripos( $raw_shortcode, '%s' ) !== false;
 
     $shortcode = $has_placeholder ? sprintf( $raw_shortcode, $this->field_value() ) : $raw_shortcode;

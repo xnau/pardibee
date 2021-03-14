@@ -136,7 +136,7 @@ class media_embed extends core {
    * @return mixed the value to test
    */
   protected function has_content_test( $field ) {
-    return $this->extract_url( $this->field->value );
+    return $this->extract_url( $field->value );
   }
   
   /**

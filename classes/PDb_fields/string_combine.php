@@ -79,7 +79,7 @@ class string_combine extends dynamic_db_field {
   {
     $replaced_string = $this->replaced_string($data);
     
-    if ( $replaced_string === $this->field->default_value() ) {
+    if ( $replaced_string === $this->field->default_value ) {
       // if there is no replacement data
       return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
     }
@@ -95,7 +95,7 @@ class string_combine extends dynamic_db_field {
    */
   private function replaced_string( $data )
   {
-    return \PDb_Tag_Template::replace_text( $this->field->default_value(), $data ? : $this->record_data() );
+    return \PDb_Tag_Template::replace_text( $this->field->default_value, $data ? : $this->record_data() );
   }
 
   /**
