@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -65,12 +65,12 @@ class PDb_List_Query {
   public $filter;
 
   /**
-   * @var PDb_search_submission the submitted post
+   * @var \PDb_submission\list_search_post the submitted post
    */
   private $post_input;
 
   /**
-   * @var array the sanitized get array
+   * @var \PDb_submission\list_search_get the sanitized get array
    */
   private $get_input;
 
@@ -128,66 +128,66 @@ class PDb_List_Query {
      * 
      * search term keys are strings that stand for dynamic values
      */
-    add_filter('pdb-raw_search_term', array( $this, 'process_search_term_keys'));
-    
+    add_filter( 'pdb-raw_search_term', array( $this, 'process_search_term_keys' ) );
+
     $this->instance_index = $List->instance_index;
     $this->module = $List->module;
     $this->_reset_filters();
-    $this->set_sort( $List->shortcode_atts['orderby'], $List->shortcode_atts['order'] );
+    $this->set_sort( $List->shortcode_atts[ 'orderby' ], $List->shortcode_atts[ 'order' ] );
     $this->_set_columns( $List->display_columns );
-    $this->suppress = $List->attribute_true('suppress');  // filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
-    $this->_add_filter_from_shortcode_filter( $List->shortcode_atts['filter'] );
-    
+    $this->suppress = $List->attribute_true( 'suppress' );  // filter_var( $List->shortcode_atts['suppress'], FILTER_VALIDATE_BOOLEAN );
+    $this->_add_filter_from_shortcode_filter( $List->shortcode_atts[ 'filter' ] );
+
     /*
      * the following configurations only apply to list and search shortcode pages, not API calls
      */
     if ( $this->module !== 'API' ):
 
-    /*
-     * at this point, the object has been instantiated with the properties provided 
-     * in the shortcode
-     * 
-     * now, we process the GET and POST arrays to arrive at the final query structure 
-     * 
-     * a working GET request must contain these two values to return a search result:
-     *    search_field - the name of the field to search in
-     *    value - the search string, can be empty depending on settings
-     * an operator value is optional:
-     *    operator - one of the valid operators: ~,!,ne,eq,lt,gt
-     * you cannot perform a search and specify a page number in the same GET request, 
-     * the page number will get that page of the last query
-     * 
-     * a POST request will override any GET request on the same field, the two are 
-     * not really meant to be combined
-     */
-      
-    /**
-     * disables searches in the URL
-     * 
-     * @filter pdb-allow_get_searches
-     * @param bool default value
-     * @return bool true to allow
-     */  
-    if ( Participants_Db::apply_filters( 'allow_get_searches', true ) ) {
-      $this->_add_filter_from_get();
-    }
-    $this->_add_filter_from_post();
+      /*
+       * at this point, the object has been instantiated with the properties provided 
+       * in the shortcode
+       * 
+       * now, we process the GET and POST arrays to arrive at the final query structure 
+       * 
+       * a working GET request must contain these two values to return a search result:
+       *    search_field - the name of the field to search in
+       *    value - the search string, can be empty depending on settings
+       * an operator value is optional:
+       *    operator - one of the valid operators: ~,!,ne,eq,lt,gt
+       * you cannot perform a search and specify a page number in the same GET request, 
+       * the page number will get that page of the last query
+       * 
+       * a POST request will override any GET request on the same field, the two are 
+       * not really meant to be combined
+       */
 
-    /*
-     * if we're getting a paginated set of records, get the stored session, if not, 
-     * and we are searching, save the session
-     */
-    if ( $this->requested_page() ) {
-      // we're getting a list page
-      $this->_restore_query_session();
-    } elseif ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' && $this->is_search_result() ) {
-      // we're showing a search result
-      $this->_save_query_session();
-    } else {
-      // we're just showing the list with the shortcode parameters
-      $this->_clear_query_session();
-    }
-    
+      /**
+       * disables searches in the URL
+       * 
+       * @filter pdb-allow_get_searches
+       * @param bool default value
+       * @return bool true to allow
+       */
+      if ( Participants_Db::apply_filters( 'allow_get_searches', true ) ) {
+        $this->_add_filter_from_get();
+      }
+      $this->_add_filter_from_post();
+
+      /*
+       * if we're getting a paginated set of records, get the stored session, if not, 
+       * and we are searching, save the session
+       */
+      if ( $this->requested_page() ) {
+        // we're getting a list page
+        $this->_restore_query_session();
+      } elseif ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' && $this->is_search_result() ) {
+        // we're showing a search result
+        $this->_save_query_session();
+      } else {
+        // we're just showing the list with the shortcode parameters
+        $this->_clear_query_session();
+      }
+
     endif; // API check
   }
 
@@ -223,11 +223,11 @@ class PDb_List_Query {
    */
   public function get_search_error()
   {
-    if ( $this->is_search_result() && $this->post_input->is_search() ) {
+    if ( $this->is_search_result() && is_object( $this->post_input ) && $this->post_input->is_search() ) {
       if ( empty( $this->post_input->search_field() ) ) {
         $this->is_search_result( false );
         return 'search';
-      } elseif ( ! $this->search_term_is_valid( $this->post_input->value() ) ) {
+      } elseif ( !$this->search_term_is_valid( $this->post_input->value() ) ) {
         $this->is_search_result( false );
         return 'value';
       }
@@ -250,12 +250,12 @@ class PDb_List_Query {
     $this->sort = array();
     $fields = $this->_to_array( $fields );
     $ascdesc = $this->_to_array( $ascdesc );
-    $ascdesc_value = $esc_ascdesc('asc');
+    $ascdesc_value = $esc_ascdesc( 'asc' );
     for ( $i = 0; $i < count( $fields ); $i++ ) {
-      if ( !empty( $fields[$i] ) && PDb_Form_Field_Def::is_field( $fields[$i] ) || $fields[$i] === 'random' ) {
-        $ascdesc_value = isset( $ascdesc[$i] ) ? $esc_ascdesc($ascdesc[$i]) : $ascdesc_value;
-        $this->sort[$fields[$i]] = array(
-            'field' => $fields[$i],
+      if ( !empty( $fields[ $i ] ) && PDb_Form_Field_Def::is_field( $fields[ $i ] ) || $fields[ $i ] === 'random' ) {
+        $ascdesc_value = isset( $ascdesc[ $i ] ) ? $esc_ascdesc( $ascdesc[ $i ] ) : $ascdesc_value;
+        $this->sort[ $fields[ $i ] ] = array(
+            'field' => $fields[ $i ],
             'ascdesc' => $ascdesc_value,
         );
       }
@@ -277,18 +277,18 @@ class PDb_List_Query {
     reset( $this->filter );
     $sort = current( $this->sort );
     $filter = array(
-        'sort_field' => $sort['field'],
-        'sort_order' => $sort['ascdesc'],
-        'search_field' => current( $this->filter['fields'] ),
-        'search_term' => current( $this->filter['values'] ),
-        'search_fields' => $this->filter['fields'],
-        'search_values' => $this->filter['values'],
+        'sort_field' => $sort[ 'field' ],
+        'sort_order' => $sort[ 'ascdesc' ],
+        'search_field' => current( $this->filter[ 'fields' ] ),
+        'search_term' => current( $this->filter[ 'values' ] ),
+        'search_fields' => $this->filter[ 'fields' ],
+        'search_values' => $this->filter[ 'values' ],
         'sort_fields' => $this->sort,
     );
     if ( !$key ) {
       return $filter;
     } else {
-      return isset( $filter[$key] ) ? $filter[$key] : '';
+      return isset( $filter[ $key ] ) ? $filter[ $key ] : '';
     }
   }
 
@@ -328,7 +328,7 @@ class PDb_List_Query {
   public function get_field_filters( $field_name = false )
   {
     if ( $field_name ) {
-      return isset( $this->subclauses[$field_name] ) ? $this->subclauses[$field_name] : false;
+      return isset( $this->subclauses[ $field_name ] ) ? $this->subclauses[ $field_name ] : false;
     }
     return isset( $this->subclauses ) ? $this->subclauses : false;
   }
@@ -344,10 +344,10 @@ class PDb_List_Query {
   public function add_filter( $field, $operator, $term, $logic = 'AND' )
   {
     $this->_add_single_statement(
-            filter_var( $field, FILTER_SANITIZE_STRING ), 
-            $this->_sanitize_operator( $operator ), 
-            filter_var( $term, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES) ), 
-            ($logic === 'OR' ? 'OR' : 'AND' ), 
+            filter_var( $field, FILTER_SANITIZE_STRING ),
+            $this->_sanitize_operator( $operator ),
+            filter_var( $term, FILTER_SANITIZE_STRING, array( 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES ) ),
+            ($logic === 'OR' ? 'OR' : 'AND' ),
             false
     );
   }
@@ -363,7 +363,7 @@ class PDb_List_Query {
       foreach ( $clauses as $index => $filter ) {
         /** @var PDb_List_Query_Filter $filter */
         if ( $filter->is_search() ) {
-          unset( $this->subclauses[$field][$index] );
+          unset( $this->subclauses[ $field ][ $index ] );
         }
       }
     }
@@ -377,16 +377,16 @@ class PDb_List_Query {
    */
   public function clear_background_clauses( $field )
   {
-    if ( isset( $this->subclauses[$field] ) && is_array( $this->subclauses[$field] ) ) {
-      foreach ( $this->subclauses[$field] as $index => $clause ) {
+    if ( isset( $this->subclauses[ $field ] ) && is_array( $this->subclauses[ $field ] ) ) {
+      foreach ( $this->subclauses[ $field ] as $index => $clause ) {
         if ( $clause->is_shortcode() ) {
-          unset( $this->subclauses[$field][$index] );
+          unset( $this->subclauses[ $field ][ $index ] );
         }
       }
     }
   }
-  
-  /** 
+
+  /**
    * processes the search term keys for use in shortcode filters
    * 
    * @param string  $key the search term
@@ -395,13 +395,13 @@ class PDb_List_Query {
   public function process_search_term_keys( $key )
   {
     $value = $key;
-    
+
     // get the numeric part, if included
     if ( $numeric = $this->search_key_numeric_value( $key ) ) {
-      $key = preg_replace('/^[+-]\d+/', 'n', $key );
+      $key = preg_replace( '/^[+-]\d+/', 'n', $key );
     }
-    
-    switch ($key) {
+
+    switch ( $key ) {
       case 'current_date':
         $value = time();
         break;
@@ -409,7 +409,7 @@ class PDb_List_Query {
         $value = date( 'M j,Y 00:00' );
         break;
       case 'current_week':
-        $value = date( 'M j,Y 00:00', strtotime( 'this week' )  );
+        $value = date( 'M j,Y 00:00', strtotime( 'this week' ) );
         break;
       case 'current_month':
         $value = date( 'M 01,Y 00:00' );
@@ -418,16 +418,16 @@ class PDb_List_Query {
         $value = date( '\j\a\n 01,Y 00:00' );
         break;
       case 'n_days':
-        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' )  );
+        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' ) );
         break;
       case 'n_months':
-        $value = date( 'M 01,Y 00:00', strtotime( $numeric . ' months' )  );
+        $value = date( 'M 01,Y 00:00', strtotime( $numeric . ' months' ) );
         break;
     }
 //    error_log(__METHOD__.' key: '.$key.' value: '.$value);
     return $value;
   }
-  
+
   /**
    * provides the search term key numeric value
    * 
@@ -439,7 +439,7 @@ class PDb_List_Query {
     if ( preg_match( '/^([+-]\d+)_/', $key, $matches ) === 0 ) {
       return false;
     }
-    return $matches[1];
+    return $matches[ 1 ];
   }
 
   /**
@@ -450,9 +450,9 @@ class PDb_List_Query {
    */
   private function requested_page()
   {
-    $page_number = filter_input( INPUT_GET, Participants_Db::$list_page, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+    $page_number = filter_input( INPUT_GET, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     if ( !$page_number ) {
-      $page_number = filter_input( INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+      $page_number = filter_input( INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     }
     if ( !$page_number ) {
       return false;
@@ -467,19 +467,10 @@ class PDb_List_Query {
    */
   private function _add_filter_from_get()
   {
-    $this->get_input = filter_input_array( INPUT_GET, self::single_search_input_filter() );
-      
-    if ( isset( $this->get_input ) && (isset( $this->get_input['search_field'] ) || isset( $this->get_input['sortBy'] )) ) {
-      /*
-       * fill in some assumed defaults in case an abbreviated get string is used
-       */
-      if ( empty( $this->get_input['operator'] ) || $this->get_input['operator'] === 'like' ) {
-        $this->get_input['operator'] = 'LIKE';
-      }
-      if ( empty( $this->get_input['target_instance'] ) ) {
-        $this->get_input['target_instance'] = '1';
-      }
-      $this->_add_filter_from_input( $this->_prepare_submit_value( $this->get_input ) );
+    $this->get_input = new PDb_submission\list_search_get();
+
+    if ( $this->get_input->has_search() ) {
+      $this->_add_filter_from_input( $this->get_input->submission() );
     }
   }
 
@@ -492,12 +483,12 @@ class PDb_List_Query {
   {
     // look for the identifier of the list search submission
     if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === Participants_Db::apply_filters( 'list_query_action', 'pdb_list_filter' ) ) {
-      
-      $this->post_input = new PDb_search_submission();
+
+      $this->post_input = new \PDb_submission\list_search_post;
 
       switch ( $this->post_input->submit_type() ) {
         case 'clear':
-          $_GET[Participants_Db::$list_page] = 1;
+          $_GET[ Participants_Db::$list_page ] = 1;
           $this->is_search_result = false;
           $this->_clear_query_session();
           break;
@@ -510,8 +501,6 @@ class PDb_List_Query {
       }
     }
   }
-  
- 
 
   /**
    * adds a filter statement from an input array
@@ -527,46 +516,43 @@ class PDb_List_Query {
     $set_logic = Participants_Db::plugin_setting_is_true( 'strict_search' ) ? 'AND' : 'OR';
 
     $this->_reset_filters();
-    if ( $input['target_instance'] == $this->instance_index ) {
-      
-      if ( is_array( $input['search_field'] ) ) {
-        
+    if ( $input[ 'target_instance' ] == $this->instance_index ) {
+
+      if ( is_array( $input[ 'search_field' ] ) ) {
+
         $current_field = '';
-        
-        foreach ( $input['search_field'] as $i => $search_field ) {
-          
+
+        foreach ( $input[ 'search_field' ] as $i => $search_field ) {
+
           if ( $current_field === '' || $search_field !== $current_field ) {
-        
+
             $current_field = $search_field;
             $this->_remove_field_filters( $search_field );
-            
           }
-          
-          if ( !$this->search_term_is_valid( $input['value'][$i] ) )
+
+          if ( !$this->search_term_is_valid( $input[ 'value' ][ $i ] ) )
             continue;
-          
-          $logic = isset( $input['logic'][$i] ) ? $input['logic'][$i] : $set_logic;
-          $this->_add_search_field_filter( $input['search_field'][$i], $input['operator'][$i], $input['value'][$i], $logic );
+
+          $logic = isset( $input[ 'logic' ][ $i ] ) ? $input[ 'logic' ][ $i ] : $set_logic;
+          $this->_add_search_field_filter( $input[ 'search_field' ][ $i ], $input[ 'operator' ][ $i ], $input[ 'value' ][ $i ], $logic );
         }
-        
+
         $this->is_search_result = true;
-        
-      } elseif ( !empty( $input['search_field'] ) && $this->search_term_is_valid( $input['value'] ) ) {
-        
-        $this->_remove_field_filters( $input['search_field'] );
-      
-        $logic = isset( $input['logic'] ) ? $input['logic'] : $set_logic;
-        $this->_add_search_field_filter( $input['search_field'], $input['operator'], $input['value'], $logic );
-        
-      } elseif ( $input['submit'] !== 'clear' && empty( $input['value'] ) ) {
-        
+      } elseif ( !empty( $input[ 'search_field' ] ) && $this->search_term_is_valid( $input[ 'value' ] ) ) {
+
+        $this->_remove_field_filters( $input[ 'search_field' ] );
+
+        $logic = isset( $input[ 'logic' ] ) ? $input[ 'logic' ] : $set_logic;
+        $this->_add_search_field_filter( $input[ 'search_field' ], $input[ 'operator' ], $input[ 'value' ], $logic );
+      } elseif ( $input[ 'submit' ] !== 'clear' && empty( $input[ 'value' ] ) ) {
+
         // we set this to true even for empty searches
         $this->is_search_result = true;
       }
-      
-      if ( !empty( $input['sortBy'] ) ) {
-        
-        $this->set_sort( $input['sortBy'], $input['ascdesc'] );
+
+      if ( !empty( $input[ 'sortBy' ] ) ) {
+
+        $this->set_sort( $input[ 'sortBy' ], $input[ 'ascdesc' ] );
       }
 
       $this->_save_query_session();
@@ -581,14 +567,14 @@ class PDb_List_Query {
    */
   private function search_term_is_valid( $term )
   {
-    foreach( (array) $term as $t ) {
-      $valid = strlen( trim( $t, '*?_%.' ) ) > 0 || ( Participants_Db::plugin_setting_is_true('empty_search') && $t === '' );
-      
+    foreach ( (array) $term as $t ) {
+      $valid = strlen( trim( $t, '*?_%.' ) ) > 0 || ( Participants_Db::plugin_setting_is_true( 'empty_search' ) && $t === '' );
+
       if ( !$valid ) {
         break;
       }
     }
-    
+
     return Participants_Db::apply_filters( 'search_term_tests_valid', $valid, $term );
   }
 
@@ -639,20 +625,20 @@ class PDb_List_Query {
     $subquery = '';
     $inparens = false;
     $clause_sequence = $this->_build_clause_sequence();
-    
+
     /*
      * each element in the where_clauses property array is an array of statements 
      * acting on a single field; The key is the name of the field.
      */
     foreach ( $clause_sequence as $clause ) {
-      
+
       /* @var $clause PDb_List_Query_Filter */
 
       /**
        * @todo fix the _reindex_subclauses method so it gets it right when there is only one clause
        */
       $last_clause = count( $clause_sequence ) === 1 ? true : $clause->index() === count( $clause_sequence ) - 1;
-      
+
       if ( $clause->is_parenthesized() && !$inparens ) {
         $subquery .= '(';
         $inparens = true;
@@ -664,7 +650,7 @@ class PDb_List_Query {
         $subquery .= ')';
         $inparens = false;
       }
-      
+
       if ( !$last_clause ) {
         $subquery .= ' ' . ( $clause->is_or() ? 'OR' : 'AND' ) . ' ';
       }
@@ -673,7 +659,6 @@ class PDb_List_Query {
         $subquery .= ')';
         $inparens = false;
       }
-      
     }
     return $subquery;
   }
@@ -694,7 +679,7 @@ class PDb_List_Query {
     $sequence = array();
     foreach ( $this->subclauses as $field_clauses ) {
       foreach ( $field_clauses as $clause ) {
-        $sequence[$clause->index()] = $clause;
+        $sequence[ $clause->index() ] = $clause;
       }
     }
     ksort( $sequence );
@@ -737,9 +722,11 @@ class PDb_List_Query {
   {
     $this->columns = array();
     if ( is_array( $columns ) ) {
-      if ( ! in_array( 'id', $columns ) ) array_unshift( $columns, 'id' );
-      
-      foreach( $columns as $fieldname ) {
+      if ( !in_array( 'id', $columns ) ) {
+        array_unshift( $columns, 'id' );
+      }
+
+      foreach ( $columns as $fieldname ) {
         if ( in_array( $fieldname, Participants_Db::table_columns() ) ) {
           $this->columns[] = $fieldname;
         }
@@ -767,13 +754,13 @@ class PDb_List_Query {
    */
   private function _remove_field_filters( $column )
   {
-    if ( isset( $this->subclauses[$column] ) ) {
+    if ( isset( $this->subclauses[ $column ] ) ) {
       /*
        * @version 1.6.2.6
        * we don't remove indices so that new clauses will always be placed at the end of the queue
        */
       //$this->decrement_clause_index(count($this->subclauses[$column]));
-      unset( $this->subclauses[$column] );
+      unset( $this->subclauses[ $column ] );
     }
   }
 
@@ -794,7 +781,7 @@ class PDb_List_Query {
    */
   private function decrement_clause_index( $amount = 1 )
   {
-    $this->clause_index = max( array($this->clause_index - $amount, 0) );
+    $this->clause_index = max( array( $this->clause_index - $amount, 0 ) );
   }
 
   /**
@@ -830,8 +817,8 @@ class PDb_List_Query {
    */
   private function _reset_filters()
   {
-    $this->filter['fields'] = array();
-    $this->filter['values'] = array();
+    $this->filter[ 'fields' ] = array();
+    $this->filter[ 'values' ] = array();
   }
 
   /**
@@ -843,8 +830,8 @@ class PDb_List_Query {
    */
   private function _add_filter_value( $field, $value )
   {
-    $this->filter['fields'][] = $field;
-    $this->filter['values'][] = $value;
+    $this->filter[ 'fields' ][] = $field;
+    $this->filter[ 'values' ][] = $value;
   }
 
   /**
@@ -889,9 +876,9 @@ class PDb_List_Query {
 
       for ( $i = 0; $i < count( $statements ); $i = $i + 2 ) {
 
-        $logic = isset( $statements[$i + 1] ) && $statements[$i + 1] === '|' ? 'OR' : 'AND';
+        $logic = isset( $statements[ $i + 1 ] ) && $statements[ $i + 1 ] === '|' ? 'OR' : 'AND';
 
-        $this->_add_statement_from_filter_string( stripslashes( $statements[$i] ), $logic );
+        $this->_add_statement_from_filter_string( stripslashes( $statements[ $i ] ), $logic );
       }// each $statement
     }// done processing shortcode filter statements
   }
@@ -914,8 +901,9 @@ class PDb_List_Query {
 
     if ( $operator === 0 )
       return false; // no valid operator; skip to the next statement
+
       
-    // get the parts
+// get the parts
     list( $string, $column, $op_char, $search_term ) = $matches;
 
     $this->_add_single_statement( $column, $op_char, $search_term, $logic, true );
@@ -951,7 +939,7 @@ class PDb_List_Query {
      * 
      * string "current_date" is converted to timestamp
      */
-    
+
     $search_term = Participants_Db::apply_filters( 'raw_search_term', trim( rawurldecode( $search_term ) ) );
 
     /**
@@ -967,17 +955,17 @@ class PDb_List_Query {
     /*
      * check if we have a valid column name
      */
-    if ( ! PDb_Form_Field_Def::is_field( $field_name ) ) {
+    if ( !PDb_Form_Field_Def::is_field( $field_name ) ) {
       return false;
     }
-    
+
     $field_def = new PDb_Form_Field_Def( $field_name );
-    
+
     // check to make sure we can query the field's value
-    if ( ! $field_def->stores_data() ) {
+    if ( !$field_def->stores_data() ) {
       return false;
     }
-    
+
     /**
      * provides a way to alter the field def before it is used to create the where clause
      * 
@@ -1009,14 +997,14 @@ class PDb_List_Query {
     $statement = false;
 
     $is_numeric = $field_def->is_numeric();
-    
+
     // is the field value stored as an array?
     $is_multi = $field_def->is_multi();
 
     /*
      * set up special-case field types
      */
-    if (  $filter->has_search_term() && in_array( $field_def->form_element(), array('date', 'timestamp') ) ) {
+    if ( $filter->has_search_term() && in_array( $field_def->form_element(), array( 'date', 'timestamp' ) ) ) {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
@@ -1024,8 +1012,8 @@ class PDb_List_Query {
        */
       $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), array(), __METHOD__ . ' ' . $field_def->form_element() . ' field' );
 
-      $operator = in_array( $operator, array('>', '<', '>=', '<=', '<>') ) ? $operator : '=';
-      
+      $operator = in_array( $operator, array( '>', '<', '>=', '<=', '<>' ) ) ? $operator : '=';
+
       if ( $search_term === false ) {
         // the search term doesn't parse as a date
         $statement = false;
@@ -1043,7 +1031,7 @@ class PDb_List_Query {
          * if the date query was submitted on a standard search form, convert 
          * it to a 24-hour date range #2440
          */
-        if ( ! empty( $this->post_input->search_field() ) && empty( $this->subclauses ) && $operator === '=' ) {
+        if ( !empty( $this->post_input->search_field() ) && empty( $this->subclauses ) && $operator === '=' ) {
           $statement = 'p.' . $field_def->name() . ' >= CAST(' . $search_term . ' AS SIGNED) AND p.' . $field_def->name() . ' < CAST(' . strtotime( '+ 24 hours', $search_term ) . ' AS SIGNED)';
         } else {
           $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
@@ -1051,7 +1039,7 @@ class PDb_List_Query {
       }
     } elseif ( $filter->is_empty_search() ) {
 
-      if (  in_array( $operator, array('NOT LIKE','!','!=') ) ) {
+      if ( in_array( $operator, array( 'NOT LIKE', '!', '!=' ) ) ) {
         $pattern = $is_numeric ? 'p.%1$s IS NOT NULL' : '(p.%1$s IS NOT NULL AND p.%1$s <> "")';
       } else {
         $pattern = $is_numeric ? 'p.%1$s IS NULL' : '(p.%1$s IS NULL OR p.%1$s = "")';
@@ -1088,7 +1076,7 @@ class PDb_List_Query {
        * 
        * or if the field value is stored as an array and strict search is enabled
        */
-      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) || ( $is_multi && Participants_Db::plugin_setting_is_true('strict_search') ) ) {
+      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) || ( $is_multi && Participants_Db::plugin_setting_is_true( 'strict_search' ) ) ) {
 
         // fields with values stored as arrays use word search if strict 
         if ( $is_multi ) {
@@ -1120,7 +1108,7 @@ class PDb_List_Query {
         }
       }
 
-      $delimiter = array('"', '"');
+      $delimiter = array( '"', '"' );
 
       /*
        * set the operator and delimiters
@@ -1131,14 +1119,14 @@ class PDb_List_Query {
         case 'LIKE':
 
           $operator = 'LIKE';
-          $delimiter = $filter->wildcard_present() ? array('"', '"') : array('"%', '%"');
+          $delimiter = $filter->wildcard_present() ? array( '"', '"' ) : array( '"%', '%"' );
           break;
 
         case '!':
         case 'NOT LIKE':
 
           $operator = 'NOT LIKE';
-          $delimiter = $filter->wildcard_present() ? array('"', '"') : array('"%', '%"');
+          $delimiter = $filter->wildcard_present() ? array( '"', '"' ) : array( '"%', '%"' );
           break;
 
         case 'WORD':
@@ -1171,7 +1159,7 @@ class PDb_List_Query {
            * for the double quotes surrounding the value in the serialization
            */
           if ( $is_multi ) {
-            $delimiter = array('\'%"', '"%\'');
+            $delimiter = array( '\'%"', '"%\'' );
             $operator = 'LIKE';
             /*
              * this is so the search term will be treated as a comparison string 
@@ -1218,16 +1206,16 @@ class PDb_List_Query {
           return false;
       }
 
-      $statement = sprintf( 'p.%s %s %s%s%s', $field_def->name(), $operator, $delimiter[0], $filter->get_term(), $delimiter[1] );
+      $statement = sprintf( 'p.%s %s %s%s%s', $field_def->name(), $operator, $delimiter[ 0 ], $filter->get_term(), $delimiter[ 1 ] );
     }
-    
-    if ( $statement ) {
-      $filter->update_parameters( array('statement' => $statement) );
 
-      $this->subclauses[$field_def->name()][] = $filter;
+    if ( $statement ) {
+      $filter->update_parameters( array( 'statement' => $statement ) );
+
+      $this->subclauses[ $field_def->name() ][] = $filter;
     }
   }
-  
+
   /**
    * provides the mysql word boundary codes
    * 
@@ -1237,7 +1225,7 @@ class PDb_List_Query {
   private function word_boundaries()
   {
     global $wpdb;
-    
+
     /**
      * @filter pdb-database_query_word_boundary_tags
      * @param array start tag and end tag
@@ -1364,10 +1352,10 @@ class PDb_List_Query {
     if ( !is_array( $data ) ) {
       return false;
     }
-    $where_clauses = $data['where_clauses']; // do we need to unserialize here?
-    $sort = $data['sort'];
-    $this->clause_count = $data['clause_count'];
-    $this->is_search_result = $data['is_search'];
+    $where_clauses = $data[ 'where_clauses' ]; // do we need to unserialize here?
+    $sort = $data[ 'sort' ];
+    $this->clause_count = $data[ 'clause_count' ];
+    $this->is_search_result = $data[ 'is_search' ];
     if ( is_array( $where_clauses ) ) {
       $this->subclauses = $where_clauses;
     }
@@ -1461,11 +1449,11 @@ class PDb_List_Query {
         ),
         'search_field' => array(
             'filter' => FILTER_CALLBACK,
-            'options' => array(__CLASS__, 'prepare_search_field')
+            'options' => array( __CLASS__, 'prepare_search_field' )
         ),
         'operator' => array(
             'filter' => FILTER_CALLBACK,
-            'options' => array(__CLASS__, 'sanitize_operator')
+            'options' => array( __CLASS__, 'sanitize_operator' )
         ),
             ), self::_common_search_input_filter()
     );
@@ -1480,12 +1468,20 @@ class PDb_List_Query {
   {
     $array_filter = array(
         'filter' => FILTER_SANITIZE_STRING,
-        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
+        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY
     );
     return array_merge( array(
         'value' => $array_filter,
-        'search_field' => $array_filter,
-        'operator' => $array_filter,
+        'search_field' => array(
+            'filter' => FILTER_CALLBACK,
+            'flags' => FILTER_REQUIRE_ARRAY,
+            'options' => array( __CLASS__, 'prepare_search_field' )
+        ),
+        'operator' => array(
+            'filter' => FILTER_CALLBACK,
+            'flags' => FILTER_REQUIRE_ARRAY,
+            'options' => array( __CLASS__, 'sanitize_operator' )
+        ),
         'logic' => $array_filter,
             ), self::_common_search_input_filter()
     );
@@ -1535,220 +1531,32 @@ class PDb_List_Query {
     }
     return strtolower( urldecode( $field ) );
   }
-  
+
   /**
    * filters the allowed operators for a GET search
    * 
    * @param string $operator
    * @return bool true if allowed
    */
-  public static function sanitize_operator ($operator )
+  public static function sanitize_operator( $operator )
   {
-   switch ( urldecode($operator) ) {
-     case '<':
-       return 'lt';
-     case '>':
-       return 'gt';
-     case '=':
-       return 'eq';
-     case 'lt':
-     case 'gt':
-     case '~':
-     case 'LIKE':
-     case 'eq':
-     case 'ne':
-       return $operator;
-     default:
-       return '';
-   }
-  }
-
-}
-
-/**
- * models a list search POST submission
- */
-class PDb_search_submission {
-  
-  /**
-   * @array holds the post input
-   */
-  private $post_input;
-  
-  /**
-   * @bool tells if the search is a multi-term search
-   */
-  private $is_multi = false;
-  
-  /**
-   * 
-   */
-  public function __construct()
-  {
-    if ( isset( $_POST['search_field'] ) && is_array( $_POST['search_field'] ) ) {
-      
-      $this->post_input = filter_input_array( INPUT_POST, PDb_List_Query::multi_search_input_filter() );
-      
-      $this->is_multi = true;
-    } else {
-      
-      $this->post_input = filter_input_array( INPUT_POST, PDb_List_Query::single_search_input_filter() );
-      
-      if ( ! isset( $this->post_input['search_field'] ) || $this->post_input['search_field'] === 'none' ) {
-        $this->post_input['search_field'] = '';
-      }
-      
-      if ( self::split_search_preference() ) {
-        $this->prepare_split_search();
-      }
-    }
-    
-    $this->_prepare_submit_value();
-  }
-  
-  /**
-   * tells if the search is a multi-term search
-   * 
-   * @return bool
-   */
-  public function is_multi()
-  {
-    return $this->is_multi;
-  }
-  
-  /**
-   * provides the search field name or array
-   * 
-   * @retrun string|array
-   */
-  public function search_field()
-  {
-    return $this->post_input['search_field'];
-  }
-  
-  /**
-   * provides the search term
-   * 
-   * @return string
-   */
-  public function value()
-  {
-    return $this->post_input['value'];
-  }
-  
-  /**
-   * tells if the current submission is a search
-   * 
-   * @return bool
-   */
-  public function is_search()
-  {
-    return $this->post_input['submit'] === 'search';
-  }
-  
-  /**
-   * provides the name of the submission type
-   * 
-   * @return string
-   */
-  public function submit_type()
-  {
-    return $this->post_input['submit'];
-  }
-  
-  /**
-   * provides the submission values
-   * 
-   * @return array
-   */
-  public function submission()
-  {
-    return $this->post_input;
-  }
-  
-  /**
-   * prepares the post input for a split search
-   */
-  private function prepare_split_search()
-  {
-    $search_terms = $this->split_search_terms( $this->post_input['value'] );
-    
-    if ( count( $search_terms ) > 1 ) {
-    
-      $search_field = $this->post_input['search_field'];
-      $operator = $this->post_input['operator'];
-      $this->post_input['search_field'] = array();
-      $this->post_input['operator'] = array();
-      $this->post_input['value'] = array();
-      $this->post_input['logic'] = array();
-
-      $i = 1;
-      foreach ( $search_terms as $term ) {
-        $this->post_input['value'][$i] = filter_var( $term, FILTER_SANITIZE_STRING );
-        $this->post_input['search_field'][$i] = $search_field;
-        $this->post_input['operator'][$i] = $operator;
-        $this->post_input['logic'][$i] = 'OR';
-        $i++;
-      }
-
-      $this->is_multi = true;
+    switch ( urldecode( $operator ) ) {
+      case '<':
+        return 'lt';
+      case '>':
+        return 'gt';
+      case '=':
+        return 'eq';
+      case 'lt':
+      case 'gt':
+      case '~':
+      case 'LIKE':
+      case 'eq':
+      case 'ne':
+        return $operator;
+      default:
+        return '';
     }
   }
-  
-   /**
-   * splits the posted search string into an array
-   * 
-   * @param string $term the search input
-   * @return array of search terms
-   */
-  private function split_search_terms( $term )
-  {
-    $term_delimiter = Participants_Db::apply_filters( 'split_search_delimiter', ' ' );
-    
-    return array_map( 'trim', explode( $term_delimiter, urldecode( $term ) ) );
-  }
-    /**
-   * prepares a submission input array for use as a filter configuration
-   * 
-   * allows for the use of several different submit button names
-   * converts translated submit button value to key string
-   * 
-   * @retun array
-   */
-  private function _prepare_submit_value()
-  {
-    $submit = $this->post_input['submit'];
-    if ( !empty( $this->post_input['submit_button'] ) ) {
-      $submit = $this->post_input['submit_button'];
-    } elseif ( !empty( $this->post_input['submit-button'] ) ) {
-      $submit = $this->post_input['submit-button'];
-    }
-    unset( $this->post_input['submit-button'], $this->post_input['submit_button'] );
-    $this->post_input['submit'] = $this->untranslate_value( $submit );
-  }
 
-  /**
-   * untranslates the submit value
-   * 
-   * @param string $value the submit value
-   * 
-   * @return string the key or untranslated value
-   */
-  private function untranslate_value( $value )
-  {
-    if ( $key = array_search( $value, PDb_List::i18n() ) ) {
-      $value = $key;
-    }
-    return $value;
-  }
-  
-  /**
-   * tells if the split search preference is on
-   * 
-   * @return bool
-   */
-  public static function split_search_preference()
-  {
-    return Participants_Db::plugin_setting_is_true('split_search');
-  }
 }
