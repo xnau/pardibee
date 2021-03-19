@@ -224,6 +224,8 @@ class rich_text_editor {
    */
   public function get_tinymce_config( $tinymce_config )
   {
+    $tinymce_config['height'] =  strval( $this->rows() * 1.2 ) . 'em';
+    
     $this->tinymce_config = $tinymce_config;
     
     return $tinymce_config;
