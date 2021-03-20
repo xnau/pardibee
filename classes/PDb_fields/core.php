@@ -305,7 +305,7 @@ abstract class core {
    * @param \PDb_Field_Item $field the current field
    * @return mixed the value to test
    */
-  public function test_content( $value, $field ) {
+  public function test_content( $value, \PDb_Field_Item $field ) {
     if ( $field->form_element() === $this->name ) {
       $value = $this->has_content_test( $field );
     }
