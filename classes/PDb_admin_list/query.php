@@ -202,11 +202,7 @@ class query {
         }
     }
     
-    if ( $filter_set['search_field'] === PDb_List_Admin::multi_text_field ) {
-      $search_field = new text_fields();
-    } else {
-      $search_field = new \PDb_Form_Field_Def( $filter_set['search_field'] );
-    }
+    $search_field = $this->get_search_field_object( $filter_set['search_field'] );
 
     $value = $this->field_value( $filter_set['value'], $search_field );
 
@@ -296,6 +292,21 @@ class query {
     }
     
     $this->list_query .= ' ';
+  }
+  
+  /**
+   * provides the search field object
+   * 
+   * @param string $name of the search field
+   * @return object
+   */
+  private function get_search_field_object( $name )
+  {
+    if ( in_array( $name, search_field_group::group_list() ) ) {
+      return search_field_group::get_search_group_object($name);
+    } else {
+      return new \PDb_Form_Field_Def( $name );
+    }
   }
   
   /**

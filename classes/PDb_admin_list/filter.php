@@ -164,7 +164,7 @@ class filter {
   {
     $filter = $this->get_set($index);
     
-    return $filter['search_field'] !== '' && $filter['search_field'] !== 'none' && ( \Participants_Db::is_column( $filter['search_field'] ) || $filter['search_field'] === \PDb_List_Admin::multi_text_field );
+    return $filter['search_field'] !== '' && $filter['search_field'] !== 'none' && ( \Participants_Db::is_column( $filter['search_field'] ) || in_array( $filter['search_field'], search_field_group::group_list() ) );
   }
 
   /**
@@ -209,7 +209,7 @@ class filter {
       }
       $filter['sortBy'] = $column_sort;
     }
-
+    
     $this->save_filter( $filter );
   }
 
