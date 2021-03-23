@@ -2185,7 +2185,7 @@ class Participants_Db extends PDb_Base {
     foreach ( self::$fields as $fieldname => $field ) {
       /** @var PDb_Form_Field_Def $field */
       
-      // skip fields that don't have a stored value
+      // skip fields that don't have a stored value in the main database
       if ( ! in_array( $field->name(), Participants_Db::table_columns() ) ) {
         continue;
       }
