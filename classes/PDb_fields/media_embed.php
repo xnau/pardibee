@@ -57,14 +57,22 @@ class media_embed extends core {
     
     $media_url = $this->extract_url( $this->field->value );
     
+    $display = '';
+    
     if ( ! empty( $media_url ) ) {
       
       $oembed = new \WP_oEmbed();
+      $display = $oembed->get_html( $media_url );
+    }
+    
+    if ( $display === false ) {
       
+      // attempt to display the media as an image
+      $display = sprintf( '<img src="%s" />', $media_url );
     }
 
     $html[] = '<div class="pdb-media-container ' . $this->field->name . '-media">';
-    $html[] = empty( $media_url ) ? '' : $oembed->get_html( $media_url );
+    $html[] = $display;
     $html[] = '</div>';
    
     return $html;
