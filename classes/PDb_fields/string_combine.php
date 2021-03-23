@@ -95,7 +95,7 @@ class string_combine extends dynamic_db_field {
    */
   private function replaced_string( $data )
   {
-    return \PDb_Tag_Template::replace_text( $this->field->default_value, $data ? : $this->record_data() );
+    return \PDb_Tag_Template::replace_text( $this->field->default_value, $data ? : $this->replacement_data() );
   }
 
   /**
@@ -124,13 +124,23 @@ class string_combine extends dynamic_db_field {
 
 
   /**
-   * provides the record data
+   * provides the data set for the value tag replacement
+   * 
+   * defaults to the current record
    * 
    * @return array as $name => $value
    */
-  private function record_data()
+  private function replacement_data()
   {
-    return \Participants_Db::get_participant( $this->field->record_id );
+    /**
+     * provides a way to bring in other values for use by the field
+     * 
+     * @filter pdb-string_combine_replacement_data
+     * @param array as $name => $value
+     * @param \PDb_Field_Item
+     * @return array
+     */
+    return \Participants_Db::apply_filters( 'string_combine_replacement_data', \Participants_Db::get_participant( $this->field->record_id ), $this->field );
   }
 
   /**
