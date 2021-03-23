@@ -568,7 +568,7 @@ class PDb_List_Query {
   private function search_term_is_valid( $term )
   {
     foreach ( (array) $term as $t ) {
-      $valid = strlen( trim( $t, '*?_%.' ) ) > 0 || ( Participants_Db::plugin_setting_is_true( 'empty_search' ) && $t === '' );
+      $valid = strlen( trim( urldecode( $t ), '*?_%. ' ) ) > 0 || ( Participants_Db::plugin_setting_is_true( 'empty_search' ) && $t === '' );
 
       if ( !$valid ) {
         break;
