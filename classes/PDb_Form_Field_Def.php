@@ -236,11 +236,15 @@ class PDb_Form_Field_Def {
   /**
    * tells if the field stores a value in the db
    * 
+   * if the form_element definition has a non-empty datatype, then it stores 
+   * its value in the db
+   * 
    * @return bool
    */
   public function stores_data()
   {
-    return in_array( $this->name(), Participants_Db::table_columns() );
+    $datatype = Participants_Db::apply_filters('form_element_datatype', xnau_FormElement::get_datatype($this->form_element()), $this->form_element() );
+    return $datatype !== '';
   }
   
   /**
