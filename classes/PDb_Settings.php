@@ -1818,8 +1818,11 @@ ORDER BY g.order, v.order';
         <div class="ui-tabs">
           <ul class="ui-tabs-nav">
             <?php
-            foreach ( $this->sections as $id => $title )
-              printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $id ), $title );
+            $i = 0;
+            foreach ( $this->sections as $id => $title ) {
+              printf( '<li><a data-index="%s" href="#%s">%s</a></li>', $i, Participants_Db::make_anchor( $id ), $title );
+              $i++;
+            }
             ?>
           </ul>
           <?php
