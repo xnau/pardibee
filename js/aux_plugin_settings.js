@@ -21,11 +21,11 @@ PDbAuxSettings = (function ($) {
     if ( typeof URLSearchParams !== 'function' ) {
       return currentTab; // if the browser doesn't support this function, return now
     }
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get(tabvar) !== '') {
-      currentTab = parseInt(urlParams.get(tabvar));
+    var urlTab = new URLSearchParams(window.location.search).get(tabvar);
+    if (urlTab) {
+      currentTab = urlTab;
     }
-    return currentTab;
+    return parseInt(currentTab);
   }
   var setupTabConfig = function () {
     if ($.versioncompare("1.9", $.ui.version) == 1) {
