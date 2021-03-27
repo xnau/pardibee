@@ -413,7 +413,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * sets the value from the db if it has not been set
    */
-  private function set_value_from_db()
+  protected function set_value_from_db()
   {
     if ( is_null( $this->value ) && $this->record_id > 0 ) {
       $data = Participants_Db::get_participant( $this->record_id );
