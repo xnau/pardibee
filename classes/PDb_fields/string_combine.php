@@ -80,6 +80,7 @@ class string_combine extends dynamic_db_field {
     $replaced_string = $this->replaced_string($data);
     
     if ( $replaced_string === $this->field->default_value ) {
+      
       // if there is no replacement data
       return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
     }
@@ -140,7 +141,20 @@ class string_combine extends dynamic_db_field {
      * @param \PDb_Field_Item
      * @return array
      */
-    return \Participants_Db::apply_filters( 'string_combine_replacement_data', \Participants_Db::get_participant( $this->field->record_id ), $this->field );
+    return \Participants_Db::apply_filters( 'string_combine_replacement_data', $this->clear_empty_values( \Participants_Db::get_participant( $this->field->record_id ) ), $this->field );
+  }
+  
+  /**
+   * removes empty and null string values from an array
+   * 
+   * @param array $input
+   * @reteun array
+   */
+  private function clear_empty_values( $input )
+  {
+    return array_filter( $input, function($v) {
+      return $v !== '' && !is_null( $v );
+    } );
   }
 
   /**
