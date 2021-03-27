@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -23,7 +23,7 @@ class PDb_List extends PDb_Shortcode {
    *
    * @var PDb_List_Query
    */
-  private $list_query;
+  protected $list_query;
 
   /**
    *
@@ -104,7 +104,7 @@ class PDb_List extends PDb_Shortcode {
   /**
    * @var int the current page number
    */
-  private $current_page = 1;
+  protected $current_page = 1;
 
   /**
    * @var string nonce key string
@@ -330,6 +330,7 @@ class PDb_List extends PDb_Shortcode {
     
     // instantiate the pagination object
     $this->pagination = new PDb_Pagination( $pagination_defaults );
+    
     /*
      * get the records for this page, adding the pagination limit clause
      *
@@ -337,10 +338,28 @@ class PDb_List extends PDb_Shortcode {
      */
     $records = $wpdb->get_results( $list_query . ' ' . $this->pagination->getLimitSql(), OBJECT );
     
+    $this->assign_record_fields($records);
+    
+    /*
+     * at this point, $this->records has been defined as an array of records,
+     * each of which is an object that is a collection of objects: each one of
+     * which is a PDb_Field_Item instance
+     */
+//     error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+  }
+  
+  /**
+   * assigns the record fields to the main object
+   * 
+   * @param array $records array of record data
+   */
+  protected function assign_record_fields( $records )
+  {
     /*
      * build an array of record objects, indexed by ID
      */
     $this->records = array();
+    
     foreach ( $records as $record ) {
 
       $this->records[$record->id] = $record;
@@ -352,11 +371,7 @@ class PDb_List extends PDb_Shortcode {
 
       foreach ( $this->display_columns as $field ) {   //  foreach ( $record_fields as $field => $value )
         
-        $record[$field] = new PDb_Field_Item( (object) array( 
-            'name' => $field, 
-            'record_id' => $record_id, 
-            'module' => $this->module,
-                ) );
+        $record[$field] = $this->get_field_object($field, $record_id);
       }
       
       $this->records[ $record_id ] = (object) $record;
@@ -364,13 +379,21 @@ class PDb_List extends PDb_Shortcode {
     }
     
     reset( $this->records );
-    
-    /*
-     * at this point, $this->records has been defined as an array of records,
-     * each of which is an object that is a collection of objects: each one of
-     * which is a PDb_Field_Item instance
-     */
-//     error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+  }
+  
+  /**
+   * provides the record field object
+   * 
+   * @param string $fieldname
+   * @param int $record_id
+   * @return PDb_Field_Item
+   */
+  protected function get_field_object( $fieldname, $record_id )
+  {
+    return new PDb_Field_Item( (object) array( 
+            'name' => $fieldname,
+            'module' => $this->module,
+                ), $record_id );
   }
   
   /**
