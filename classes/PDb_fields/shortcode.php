@@ -101,13 +101,19 @@ class shortcode extends core {
    * @return string
    */
   private function shortcode_content()
-  {
-    $raw_shortcode = $this->field->default_value;
-    $has_placeholder = stripos( $raw_shortcode, '%s' ) !== false;
+  { 
+    $shortcode = new shortcode_string( $this->field->default_value );
+    
+    $replaced_shortcode = $shortcode->replaced_shortcode( $this->field_value() );
 
-    $shortcode = $has_placeholder ? sprintf( $raw_shortcode, $this->field_value() ) : $raw_shortcode;
-
-    return do_shortcode( $shortcode );
+    $done_shortcode = do_shortcode( $replaced_shortcode );
+    
+    // if the shortcode doesn't get processed, show nothing
+    if ( $done_shortcode === $replaced_shortcode ) {
+      return '';
+    }
+    
+    return $done_shortcode;
   }
   
   /**
@@ -166,5 +172,60 @@ class shortcode extends core {
       $config['type'] = 'text-area';
     }
     return $config;
+  }
+}
+
+class shortcode_string
+{
+  /**
+   * @pvar string the shortcode string
+   */
+  private $shortcode;
+  
+  /**
+   * @var string the placeholder
+   */
+  const placeholder = '%1$s';
+  
+  /**
+   * sets up the object
+   * 
+   * @param string $shortcode the raw shortcode
+   */
+  public function __construct( $shortcode )
+  {
+    $this->setup( $shortcode );
+  }
+  
+  /**
+   * tells if the shortcode has a placeholder
+   * 
+   * @return bool
+   */
+  public function has_placeholder()
+  {
+    return strpos( $this->shortcode, self::placeholder ) !== false;
+  }
+  
+  /**
+   * supplies the replaced shortcode
+   * 
+   * @param string $replacement the data to replace the placeholders with
+   * @return string
+   */
+  public function replaced_shortcode( $replacement )
+  {
+    return $this->has_placeholder() ? sprintf( $this->shortcode, $replacement ) : $this->shortcode;
+  }
+  
+  /**
+   * sets up the shortcode property
+   * 
+   * @param string $shortcode
+   */
+  private function setup ( $shortcode )
+  {
+    // convert the placeholders to enumerated placeholders in case there are several
+    $this->shortcode = str_replace('%s', self::placeholder, $shortcode );
   }
 }
