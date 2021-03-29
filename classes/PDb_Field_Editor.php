@@ -366,7 +366,6 @@ class PDb_Field_Editor {
       case 'name':
       case 'group':
       case 'options':
-      case 'attributes':
       case 'help_text':
       case 'validation':
       case 'validation_message':
@@ -375,20 +374,44 @@ class PDb_Field_Editor {
       case 'persistent':
       case 'signup':
       case 'readonly':
-        
         return $this->field_def->$attribute;
 //        return $this->field_def->get_prop( $attribute );
+        
+      case 'attributes':
+        return $this->field_attributes();
+        
       case 'groupable':
         return $this->field_def->group();
+        
       case 'orderable':
         return true;
+        
       case 'id':
       case 'selectable':
       case 'deletable':
         return false;
+        
       case 'status':
         return null;
     }
+  }
+  
+  /**
+   * provides the field's attribute values
+   * 
+   * this is primarily to update legacy attributes settings for upload fields
+   * 
+   * @return string
+   */
+  private function field_attributes()
+  {
+    $attributes = $this->field_def->attributes();
+    
+    if ( $this->field_def->is_upload_field() && ! isset( $attributes['allowed'] ) && ( array_values( $attributes ) === array_keys( $attributes ) ) ) {
+      $attributes = array( 'allowed' => implode( '|', $attributes ) );
+    }
+    
+    return $attributes;
   }
 
   /**
