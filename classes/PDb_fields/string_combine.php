@@ -133,6 +133,11 @@ class string_combine extends dynamic_db_field {
    */
   private function replacement_data()
   {
+    $record = \Participants_Db::get_participant( $this->field->record_id );
+    
+    if ( empty( $record ) ) { 
+      return array(); // should this be the default record?
+    }
     /**
      * provides a way to bring in other values for use by the field
      * 
