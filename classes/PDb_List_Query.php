@@ -128,7 +128,7 @@ class PDb_List_Query {
      * 
      * search term keys are strings that stand for dynamic values
      */
-    add_filter( 'pdb-raw_search_term', array( $this, 'process_search_term_keys' ) );
+    add_filter( 'pdb-raw_search_term', array( __CLASS__, 'process_search_term_keys' ) );
 
     $this->instance_index = $List->instance_index;
     $this->module = $List->module;
@@ -392,13 +392,13 @@ class PDb_List_Query {
    * @param string  $key the search term
    * @return string the search term to use
    */
-  public function process_search_term_keys( $key )
+  public static function process_search_term_keys( $key )
   {
     $value = $key;
 
     // get the numeric part, if included
-    if ( $numeric = $this->search_key_numeric_value( $key ) ) {
-      $key = preg_replace( '/^[+-]\d+/', 'n', $key );
+    if ( $numeric = self::search_key_numeric_value( $key ) ) {
+      $key = preg_replace( '/^[+-]?\d+/', 'n', $key );
     }
 
     switch ( $key ) {
@@ -421,7 +421,7 @@ class PDb_List_Query {
         $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' ) );
         break;
       case 'n_months':
-        $value = date( 'M 01,Y 00:00', strtotime( $numeric . ' months' ) );
+        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' months' ) );
         break;
     }
 //    error_log(__METHOD__.' key: '.$key.' value: '.$value);
@@ -434,9 +434,9 @@ class PDb_List_Query {
    * @param string $key
    * @return string|bool extracted numeric value or bool false if no number can be extracted
    */
-  private function search_key_numeric_value( $key )
+  private static function search_key_numeric_value( $key )
   {
-    if ( preg_match( '/^([+-]\d+)_/', $key, $matches ) === 0 ) {
+    if ( preg_match( '/^([+-]?\d+)_/', $key, $matches ) === 0 ) {
       return false;
     }
     return $matches[ 1 ];
@@ -1031,7 +1031,7 @@ class PDb_List_Query {
          * if the date query was submitted on a standard search form, convert 
          * it to a 24-hour date range #2440
          */
-        if ( !empty( $this->post_input->search_field() ) && empty( $this->subclauses ) && $operator === '=' ) {
+        if ( is_object( $this->post_input ) && empty( $this->subclauses ) && $operator === '=' ) {
           $statement = 'p.' . $field_def->name() . ' >= CAST(' . $search_term . ' AS SIGNED) AND p.' . $field_def->name() . ' < CAST(' . strtotime( '+ 24 hours', $search_term ) . ' AS SIGNED)';
         } else {
           $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
