@@ -125,7 +125,7 @@ class shortcode extends core {
   {
     $record = \Participants_Db::get_participant( $this->field->record_id );
     
-    return $record[ $this->field->name() ];
+    return $record ? $record[ $this->field->name() ] : '';
   }
 
   /**
