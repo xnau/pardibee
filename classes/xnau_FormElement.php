@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.13
+ * @version    1.14
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -103,6 +103,13 @@ abstract class xnau_FormElement {
    * @var array
    */
   var $textarea_dims = array( 'rows' => 2, 'cols' => 40 );
+  
+  /**
+   * holds the form element definition
+   * 
+   * @var PDb_Form_Field_Def
+   */
+  protected $field_def;
 
   /**
    * element group status
@@ -228,6 +235,8 @@ abstract class xnau_FormElement {
     $this->attributes = $params[ 'attributes' ];
     $this->link = $params[ 'link' ];
     $this->record_id = $params[ 'record_id' ];
+    
+    $this->field_def = Participants_Db::get_field_def( $this->name );
 
     if ( NULL !== $params[ 'options' ] || !empty( $params[ 'options' ] ) ) {
 
