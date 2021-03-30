@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -210,8 +210,6 @@ class PDb_FormElement extends xnau_FormElement {
 
     // checkboxes are grouped, radios are not
     $this->group = $type === 'checkbox';
-      
-    $field_def = Participants_Db::get_field_def($this->name);
 
     // checkboxes are given a null select so an "unchecked" state is possible
     $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
@@ -233,8 +231,8 @@ class PDb_FormElement extends xnau_FormElement {
     
     $this->_addline( '<fieldset class="no-border">' );
     
-    if ( is_a( $field_def, 'PDb_Form_Field_Def' ) ) {
-      $this->_addline('<legend class="screen-reader-text">' . esc_attr( strip_tags( $field_def->title() ) ) . '</legend>' );
+    if ( $this->field_def ) {
+      $this->_addline('<legend class="screen-reader-text">' . esc_attr( strip_tags( $this->field_def->title() ) ) . '</legend>' );
     }
 
     $in_optgroup = false;
@@ -367,7 +365,13 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $this->add_class( 'date_field' );
     
-    if ( $this->value !== '' ) {
+    if ( $this->field_def && empty( $this->value ) ) {
+      
+      // set the default value using a relative date key
+      $this->value = PDb_Date_Display::get_date( PDb_Date_Parse::timestamp( PDb_List_Query::process_search_term_keys( $this->field_def->default_value() ) ), 'date field dynamic default' );
+      
+    } else {
+      
       $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ );
     }
 
@@ -381,11 +385,11 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _upload( $type )
   {
-    $field_def = Participants_Db::get_field_def($this->name);
-    /* @var $field_def PDb_Form_field_Def */
+    $field_default = $this->field_def->default_value();
+    
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
-    if ( $this->value !== $field_def->default_value() ) {
+    if ( $this->value !== $field_default ) {
 
       $this->_addline( self::get_field_value_display( $this ) );
     }
@@ -405,7 +409,7 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline( $this->_input_tag( 'file' ) );
 
       // add the delete checkbox if there is a file defined
-      if ( $this->value !== $field_def->default_value() && $this->module !== 'signup' ) {
+      if ( $this->value !== $field_default && $this->module !== 'signup' ) {
         unset($this->attributes['id']);
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
       }
@@ -594,11 +598,11 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $value = $title; // if no match is found, return the title argument
     
-    $field = Participants_Db::get_field_def( $fieldname );
+    $field_def = Participants_Db::get_field_def($fieldname);
     
-    if ( $field && $field->is_value_set() ) {
+    if ( $field_def->is_value_set() ) {
       
-      $options_array = $field->options();
+      $options_array = $field_def->options();
       
       // first check if there is a direct match
       if ( isset( $options_array[$title] ) ) {
@@ -616,7 +620,7 @@ class PDb_FormElement extends xnau_FormElement {
        * 
        * first, strip out any tags in the keys
        */
-      $options_array = self::striptags_keys($field->options());
+      $options_array = self::striptags_keys( $field_def->options() );
       
       // now check if there is a direct case-insensitive match with a tag-stripped title
       if ( isset( $options_array[strtolower($title)] ) ) {
@@ -641,11 +645,9 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $value = $title; // if no match is found, return the title argument
     
-    $field = Participants_Db::get_field_def( $fieldname );
-    
-    if ( $field && $field->is_value_set() ) {
+    if ( $this->field_def && $this->field_def->is_value_set() ) {
       
-      $options_array = $field->options();
+      $options_array = $this->field_def->options();
       
       // first check if there is a direct match
       if ( isset( $options_array[$title] ) ) {
@@ -663,7 +665,7 @@ class PDb_FormElement extends xnau_FormElement {
        * 
        * first, strip out any tags in the keys
        */
-      $options_array = self::striptags_keys($field->options());
+      $options_array = self::striptags_keys($this->field_def->options());
       
       // now check if there is a direct case-insensitive match with a tag-stripped title
       if ( isset( $options_array[strtolower($title)] ) ) {
