@@ -680,7 +680,7 @@ class PDb_Form_Field_Def {
    */
   public function is_dynamic_field()
   {
-    $registered_dynamic = in_array( $this->form_element, Participants_Db::apply_filters( 'dynamic_field_list', array() ) );
+    $registered_dynamic = in_array( $this->form_element, Participants_Db::apply_filters( 'dynamic_field_list', array('date') ) );
     
     return $registered_dynamic || $this->is_dynamic_hidden_field();
   }
