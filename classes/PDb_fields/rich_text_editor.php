@@ -86,7 +86,11 @@ class rich_text_editor {
     ?>
     <script>
       jQuery(function ($) {
-        wp.editor.initialize("<?php echo $this->element_id() ?>", <?php echo $this->editor_config_object() ?> );
+        if (wp.editor) {
+          wp.editor.initialize("<?php echo $this->element_id() ?>", <?php echo $this->editor_config_object() ?> );
+        } else {
+          console.warn( 'WP Core text editor not loaded: rich text editors are disabled.');
+        }
       });
     </script>
     <?php
