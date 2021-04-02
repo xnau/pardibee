@@ -26,7 +26,7 @@ class PDb_Signup extends PDb_Shortcode {
   var $submitted = false;
 
   /**
-   * @var signup_feedback object
+   * @var \PDb_submission\feedback object
    */
   public $feedback;
 
@@ -126,7 +126,7 @@ class PDb_Signup extends PDb_Shortcode {
     } );
 
     // set up the signup form email preferences
-    $this->feedback = new signup_feedback( $this->_email_prefs() );
+    $this->feedback = new \PDb_submission\feedback( $this->_email_prefs() );
 
     // set the action URI for the form
     $this->_set_submission_page();
@@ -135,24 +135,36 @@ class PDb_Signup extends PDb_Shortcode {
     $this->_setup_iteration();
 
     if ( $this->submitted ) {
-
-      /**
-       * filter provides access to the freshly-stored record and the email and 
-       * thanks message properties so user feedback can be altered.
-       * 
-       * @action pdb-before_signup_thanks
-       * @param object feedback messages      
-       * @param string form status
-       * 
-       */
-      if ( has_action( Participants_Db::$prefix . 'before_signup_thanks' ) ) {
         
-        $this->feedback->participant_values = $this->participant_values;
-
+      $this->feedback->participant_values = $this->participant_values;
+        
+      if ( $this->form_submission_is_signup() ) {
+        /**
+         * filter provides access to the freshly-stored record and the email and 
+         * thanks message properties so user feedback can be altered.
+         * 
+         * @action pdb-before_signup_thanks
+         * @param object feedback messages      
+         * @param string form status
+         * 
+         */
         do_action( Participants_Db::$prefix . 'before_signup_thanks', $this->feedback, $this->get_form_status() );
         
-        $this->participant_values = $this->feedback->participant_values;
+      } else {
+        
+        /**
+         * filter provides access to the freshly-stored record and the email and 
+         * thanks message properties so user feedback can be altered.
+         * 
+         * @action pdb-before_update_thanks
+         * @param object feedback messages
+         * 
+         */
+        do_action( Participants_Db::$prefix . 'before_update_thanks', $this->feedback );
+        
       }
+      
+      $this->participant_values = $this->feedback->participant_values;
 
       $this->_send_email();
 
@@ -214,7 +226,7 @@ class PDb_Signup extends PDb_Shortcode {
   /**
    * sets up the signup form email preferences
    */
-  private function _email_prefs()
+  protected function _email_prefs()
   {
     return array(
         "send_notification" => Participants_Db::plugin_setting( 'send_signup_notify_email' ),
@@ -225,6 +237,7 @@ class PDb_Signup extends PDb_Shortcode {
         "receipt_body" => Participants_Db::plugin_setting( 'signup_receipt_email_body' ),
         "email_header" => Participants_Db::$email_headers,
         "recipient" => $this->recipient_email(),
+        "thanks_message" => $this->_thanks_message(),
     );
   }
 
@@ -336,11 +349,7 @@ class PDb_Signup extends PDb_Shortcode {
   {
     $data = $this->participant_values;
 
-    if ( strpos( $this->get_form_status(), 'update' ) !== false ) {
-      $thanks_message = $this->shortcode_thanks_message( 'record_updated_message' );
-    } elseif ( strpos( $this->get_form_status(), 'signup' ) !== false ) {
-      $thanks_message = $this->shortcode_thanks_message( 'signup_thanks' );
-    }
+    $thanks_message = $this->feedback->thanks_message;
 
     // add the "record_link" tag
     if ( isset( $data[ 'private_id' ] ) ) {
@@ -351,10 +360,37 @@ class PDb_Signup extends PDb_Shortcode {
       $this->output = PDb_Tag_Template::replaced_rich_text( $thanks_message, $data );
       unset( $_POST );
     } else {
-      $this->output = $thanks_message;
+      $this->output = '';
     }
 
     return $this->output;
+  }
+  
+  /**
+   * provides the thanks message from the settings according to the form type
+   * @return string
+   */
+  protected function _thanks_message()
+  {
+    $thanks_message = '';
+    
+    if ( $this->form_submission_is_signup() ) {
+      $thanks_message = $this->shortcode_thanks_message( 'signup_thanks' );
+    } else {
+      $thanks_message = $this->shortcode_thanks_message( 'record_updated_message' );
+    }
+    
+    return $thanks_message;
+  }
+  
+  /**
+   * tells if the current form submission is a signup
+   * 
+   * @return bool
+   */
+  public function form_submission_is_signup()
+  {
+    return strpos( $this->get_form_status(), 'signup' ) !== false;
   }
 
   /**
@@ -365,7 +401,7 @@ class PDb_Signup extends PDb_Shortcode {
    */
   protected function shortcode_thanks_message( $setting )
   {
-    return isset( $this->shortcode_atts[ 'content' ] ) && !empty( $this->shortcode_atts[ 'content' ] ) ? $this->shortcode_atts[ 'content' ] : Participants_Db::plugin_setting( $setting, $this->feedback->thanks_message );
+    return isset( $this->shortcode_atts[ 'content' ] ) && !empty( $this->shortcode_atts[ 'content' ] ) ? $this->shortcode_atts[ 'content' ] : Participants_Db::plugin_setting( $setting, '' );
   }
 
   /**
@@ -463,7 +499,7 @@ class PDb_Signup extends PDb_Shortcode {
         'subject' => $this->feedback->notify_subject,
         'template' => $this->feedback->notify_body,
         'context' => __METHOD__,
-            ), $this->participant_values );
+            ), $this->feedback->participant_values );
   }
 
   /**
@@ -476,7 +512,7 @@ class PDb_Signup extends PDb_Shortcode {
         'subject' => Participants_Db::plugin_setting( 'record_update_email_subject' ),
         'template' => Participants_Db::plugin_setting( 'record_update_email_body' ),
         'context' => __METHOD__,
-            ), $this->participant_values );
+            ), $this->feedback->participant_values );
   }
 
   /**
@@ -528,56 +564,6 @@ class PDb_Signup extends PDb_Shortcode {
     foreach ( array( 'captcha_vars', 'captcha_result' ) as $value ) {
       Participants_Db::$session->clear( $value );
     }
-  }
-
-}
-
-/**
- * class for managing signup feedback properties
- */
-class signup_feedback {
-
-  /**
-   * @var array of signup feedback property values
-   */
-  private $properties;
-
-  /**
-   * sets up the object
-   * 
-   * @param array $props
-   */
-  public function __construct( $props = array() )
-  {
-    $this->properties = $props;
-  }
-
-  /**
-   * provides a property value
-   * 
-   * @param string $name of the property
-   */
-  public function __get( $name )
-  {
-    try {
-      $value = $this->properties[ $name ];
-    } catch ( Exception $exc ) {
-      $value = '';
-      Participants_Db::debug_log( __METHOD__ . ' property "' . $name . '" not found.' );
-    }
-
-    return $value;
-  }
-
-  /**
-   * sets a property value
-   * 
-   * @param string $name of the property
-   * @param mixed $value
-   */
-  public function __set( $name, $value )
-  {
-    $this->properties[ $name ] = $value;
   }
 
 }
