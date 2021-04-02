@@ -2729,6 +2729,20 @@ class Participants_Db extends PDb_Base {
          * send the update notification
          */
         if ( !is_admin() ) {
+          
+          $feedback_props = array(
+              "send_notification" => Participants_Db::plugin_setting( 'send_signup_notify_email' ),
+              "notify_recipients" => Participants_Db::plugin_setting( 'email_signup_notify_addresses' ),
+              "notify_subject" => Participants_Db::plugin_setting( 'record_update_email_subject' ),
+              "notify_body" => Participants_Db::plugin_setting( 'record_update_email_body' ),
+              "email_header" => Participants_Db::$email_headers,
+              "thanks_message" => self::plugin_setting('record_updated_message'),
+              'participant_values' => $record,
+          );
+          
+          $feedback = new \PDb_submission\feedback($feedback_props);
+          
+          do_action( 'pdb-before_update_thanks', $feedback );
 
           /*
            * if the user is an admin, the validation object won't be instantiated, 
@@ -2737,16 +2751,16 @@ class Participants_Db extends PDb_Base {
           if ( !is_object( self::$validation_errors ) )
             self::$validation_errors = new PDb_FormValidation();
 
-          self::$validation_errors->add_error( '', self::plugin_setting('record_updated_message') );
+          self::$validation_errors->add_error( '', $feedback->thanks_message );
 
           if ( self::plugin_setting_is_true('send_record_update_notify_email') && !self::is_multipage_form() ) {
 
             PDb_Template_Email::send( array(
-                'to' => self::plugin_setting( 'email_signup_notify_addresses' ),
-                'subject' => self::plugin_setting( 'record_update_email_subject' ),
-                'template' => self::plugin_setting( 'record_update_email_body' ),
+                'to' => $feedback->notify_recipients,
+                'subject' => $feedback->notify_subject,
+                'template' => $feedback->notify_body,
                 'context' => 'record update notify',
-                    ), $participant_id
+                    ), $feedback->participant_values
             );
           }
           
