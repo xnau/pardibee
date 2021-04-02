@@ -423,12 +423,14 @@ class PDb_Signup extends PDb_Shortcode {
   private function _send_email()
   {
     switch ( $this->get_form_status() ) {
+      
       case 'multipage-update':
-        // this is a multipage record form
+        // this is a record form with a separate thanks page
         if ( Participants_Db::plugin_setting_is_true( 'send_record_update_notify_email' ) ) {
           $this->_do_update_notify();
         }
         break;
+        
       case 'multipage-signup':
         // this is a multipage signup form
         if ( $this->feedback->send_notification ) {
@@ -438,7 +440,9 @@ class PDb_Signup extends PDb_Shortcode {
           $this->_do_receipt();
         }
         break;
+        
       case 'normal':
+      case 'signup-thanks':
       default:
         if ( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING ) === 'update' ) {
           // this is a record form using a thanks page
