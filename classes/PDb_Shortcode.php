@@ -536,16 +536,14 @@ abstract class PDb_Shortcode {
    */
   public function print_errors( $container = false, $wrap = false )
   {
-
     if ( is_object( Participants_Db::$validation_errors ) ) {
 
-      if ( $container )
+      if ( $container ) {
         Participants_Db::$validation_errors->set_error_html( $container, $wrap );
+      }
 
       echo Participants_Db::$validation_errors->get_error_html();
     }
-
-    //echo $this->error_html;
   }
 
   /**
