@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -22,7 +22,7 @@ class PDb_Participant_Cache {
   /**
    * @var string name of the cache group
    */
-  const group = 'get_participant';
+  const prefix = 'participant-cache-';
 
   /**
    * @var name of the site transient to use for the cache staleness status
@@ -33,7 +33,7 @@ class PDb_Participant_Cache {
   const stale_flags = 'participant_cache_stale_flags';
 
   /**
-   * @var string identifies the cache within the group
+   * @var int identifies the cache within the group
    */
   private $cache_key;
 
@@ -82,7 +82,7 @@ class PDb_Participant_Cache {
    */
   public function clear()
   {
-    wp_cache_delete( $this->cache_key, self::group );
+    $this->_clear_cache();
   }
 
   /**
@@ -134,9 +134,7 @@ class PDb_Participant_Cache {
    */
   private function set_stale()
   {
-    if ( !$this->cache_is_stale() ) {
-      $this->set_staleness( true );
-    }
+    $this->set_staleness( true );
   }
 
   /**
@@ -144,9 +142,7 @@ class PDb_Participant_Cache {
    */
   private function set_fresh()
   {
-    if ( $this->cache_is_stale() ) {
-      $this->set_staleness( false );
-    }
+    $this->set_staleness( false );
   }
 
   /**
@@ -164,9 +160,9 @@ class PDb_Participant_Cache {
    */
   private function setup_staleness()
   {
-    $staleness = wp_cache_get( self::stale_flags );
+    $staleness = $this->get_staleness();
     
-    $this->staleness = $staleness === false || ( ! isset($staleness[$this->cache_key]) ? true : $staleness[$this->cache_key] );
+    $this->staleness = (bool) $staleness === false || ( ! isset($staleness[$this->cache_key]) ? true : $staleness[$this->cache_key] );
   }
 
   /**
@@ -177,9 +173,31 @@ class PDb_Participant_Cache {
   private function set_staleness( $state = true )
   {
     $this->staleness = (bool) $state;
-    $staleness = (array) wp_cache_get( self::stale_flags );
+    
+    $staleness = $this->get_staleness();
     $staleness[$this->cache_key] = $this->staleness;
-    wp_cache_set( self::stale_flags, $staleness );
+    
+    set_transient( self::stale_flags, $staleness );
+  }
+  
+  /**
+   * provides the stored staleness record
+   * 
+   * @return array as $id => $staleness
+   */
+  private function get_staleness()
+  {
+    return get_transient( self::stale_flags );
+  }
+  
+  /**
+   * provides the cache key used to get/set the cache
+   * 
+   * @return string
+   */
+  private function _cache_key()
+  {
+    return self::prefix . $this->cache_key;
   }
 
   /**
@@ -187,16 +205,17 @@ class PDb_Participant_Cache {
    */
   private function set_data()
   {
-    $this->data = wp_cache_get( $this->cache_key, self::group );
+    $this->data = empty( $this->data ) ? $this->get_cache() : $this->data;
+    
     if ( $this->data === false || $this->cache_is_stale() ) {
       $this->refresh_cache();
-    } else {
-      //error_log(__METHOD__.' getting from cache...key: '.$this->cache_key);
     }
   }
 
   /**
    * refreshes the cache
+   * 
+   * @global wpdb $wpdb
    */
   private function refresh_cache()
   {
@@ -214,10 +233,37 @@ class PDb_Participant_Cache {
         $this->data[$key] = $data;
       }
     }
-
-    wp_cache_set( $this->cache_key, $this->data, self::group, Participants_Db::apply_filters( 'participant_cache_time', 0) );
+    
+    $this->set_cache();
     
     $this->set_fresh();
+  }
+  
+  /**
+   * supplies the cached value
+   * 
+   * @return array|bool false if not cached or cache expired
+   */
+  private function get_cache()
+  {
+    return get_transient( $this->_cache_key() );
+  }
+  
+  /**
+   * sets the cache value
+   * 
+   */
+  private function set_cache()
+  {
+    set_transient( $this->_cache_key(), $this->data );
+  }
+  
+  /**
+   * clears the cache
+   */
+  private function _clear_cache()
+  {
+    delete_transient( $this->_cache_key() );
   }
 
 }
