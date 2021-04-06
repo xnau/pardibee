@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.0
+ * @version    3.1
  * 
  * 
  */
@@ -268,13 +268,16 @@ class PDb_Session {
     $validator = array('options' => array(
             'regexp' => '/^[0-9a-zA-Z,-]{22,40}$/',
         ));
+    $source = 'none';
 
     if ( array_key_exists( self::id_var, $_POST ) ) {
 
       $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
+      $source = 'POST';
     } elseif ( array_key_exists( self::id_var, $_GET ) ) {
 
       $sessid = filter_input( INPUT_GET, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
+      $source = 'GET';
     }
 
     if ( !$sessid ) {
@@ -286,13 +289,13 @@ class PDb_Session {
        */
       $get_var_keys = Participants_Db::apply_filters( 'session_get_var_keys', array('cm') );
       foreach ( $get_var_keys as $key ) {
-        $value = filter_input( INPUT_GET, 'cm', FILTER_VALIDATE_REGEXP, $validator );
+        $value = filter_input( INPUT_GET, $key, FILTER_VALIDATE_REGEXP, $validator );
         if ( $value ) {
+          $source = 'GET';
           break;
         }
       }
       
-      // if we are unable to get the ID, make one up: this one will be used from now on
       $sessid = $value;
     }
     
@@ -305,13 +308,13 @@ class PDb_Session {
       }
 
       $sessid = filter_input( INPUT_COOKIE, $phpcookie, FILTER_VALIDATE_REGEXP, $validator );
-      
+      $source = 'php cookie';
     }
     
     if ( ! $sessid ) {
       // try our own cookie
       $sessid = filter_input( INPUT_COOKIE, $this->cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
-      
+      $source = 'PDB cookie';
     }
     
     if ( ! $sessid ) {
@@ -319,10 +322,11 @@ class PDb_Session {
       $sessid = $this->create_id();
       // save it in our cookie
       setcookie( $this->cookie_name(), $sessid, 0, '/' );
+      $source = 'create new';
     }
 
-    if ( PDB_DEBUG > 1 ) {
-      Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $sessid );
+    if ( PDB_DEBUG > 2 ) {
+      Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $source . ': ' . $sessid );
     }
 
     return $sessid;
