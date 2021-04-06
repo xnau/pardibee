@@ -60,7 +60,7 @@ class string_combine extends dynamic_db_field {
   {  
     $this->element_id = uniqid();
     
-    $field->type = 'text-line';
+    $field->form_element = 'text-line';
     
     $this->set_field( $field );
     
