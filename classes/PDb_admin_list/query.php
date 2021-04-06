@@ -110,7 +110,7 @@ class query {
         
       default:
 
-        $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' ';
+        $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
 
         if ( $this->filter->has_search() ) {
           $this->list_query .= 'WHERE ';
