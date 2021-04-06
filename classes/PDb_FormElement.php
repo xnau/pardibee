@@ -169,7 +169,7 @@ class PDb_FormElement extends xnau_FormElement {
      * 
      * @action pdb-form_element_build_{$type}
      */
-    Participants_Db::do_action( 'form_element_build_' . $this->type, $this );
+    Participants_Db::do_action( 'form_element_build_' . $this->form_element, $this );
 
     if ( empty( $this->output ) ) {
       $this->call_element_method();
@@ -351,7 +351,7 @@ class PDb_FormElement extends xnau_FormElement {
 
     $this->add_options_to_attributes();
     
-    if ( $this->type === 'currency' && ! isset( $this->attributes['step'] ) ) {
+    if ( $this->form_element === 'currency' && ! isset( $this->attributes['step'] ) ) {
       $this->attributes['step'] = '0.01';
     } 
 
@@ -900,6 +900,29 @@ class PDb_FormElement extends xnau_FormElement {
      * @return string $datatype 
      */
     return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $form_element ), $form_element, $fieldname );
+  }
+  
+  /**
+   * provides some property value
+   * 
+   * this is for backward compatibility
+   * 
+   * @param string $name of the property
+   * @return mixed property value
+   */
+  public function __get( $name )
+  {
+    switch ( $name ) {
+      
+      case 'type':
+        return $this->form_element;
+        
+      case 'size':
+        return isset($this->attributes['size']) ? $this->attributes['size'] : '';
+        
+      default:
+        Participants_Db::debug_log( __METHOD__.' invalid property: ' .  $name );
+    }
   }
 
 }
