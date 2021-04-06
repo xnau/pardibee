@@ -1759,10 +1759,10 @@ class PDb_Base {
     $url = site_url($path);
     
     // WP Cloudflare Super Page Cache
-    global $sw_cloudflare_pagecache;
-    if ( is_object( $sw_cloudflare_pagecache ) ) {
-      $objects["cache_controller"]->purge_urls( array( $url ) );
-    }
+//    global $sw_cloudflare_pagecache;
+//    if ( is_object( $sw_cloudflare_pagecache ) ) {
+//      $sw_cloudflare_pagecache->objects["cache_controller"]->purge_urls( array( $url ) );
+//    }
   }
 
   /**
