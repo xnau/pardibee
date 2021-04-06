@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.14
+ * @version    1.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -47,21 +47,21 @@ abstract class xnau_FormElement {
    *
    * @var string 
    */
-  var $type;
+  public $form_element;
 
   /**
    * holds the current value of the element
    *
    * @var string
    */
-  var $value;
+  public $value;
 
   /**
    * the name attribute of the form data field
    *
    * @var string
    */
-  var $name;
+  public $name;
 
   /**
    * for elements that have set options such as checkboxes and dropdowns, this 
@@ -69,40 +69,33 @@ abstract class xnau_FormElement {
    *
    * @var array
    */
-  var $options;
+  public $options;
 
   /**
    * holds any other html element attributes in name=>value pairs
    * 
    * @var array 
    */
-  var $attributes = array();
+  public $attributes = array();
 
   /**
    * @var array of class names
    */
-  var $classes = array();
+  public $classes = array();
 
   /**
    * array holding the text lines of an element to be output
    *
    * @var array
    */
-  var $output = array();
-
-  /**
-   * the size attribute of the input tag
-   *
-   * @var type 
-   */
-  var $size;
+  public $output = array();
 
   /**
    * sets the height and width of the textarea element
    *
    * @var array
    */
-  var $textarea_dims = array( 'rows' => 2, 'cols' => 40 );
+  public $textarea_dims = array( 'rows' => 2, 'cols' => 40 );
   
   /**
    * holds the form element definition
@@ -129,7 +122,7 @@ abstract class xnau_FormElement {
    * 
    * @var bool
    */
-  var $inside = false;
+  public $inside = false;
 
   /**
    * @var string the linebreak character
@@ -156,26 +149,20 @@ abstract class xnau_FormElement {
   protected $i18n;
 
   /**
-   *
-   * @var array of all available form element types
-   */
-  var $element_types;
-
-  /**
    * a namespacing prefix for CSS classes and such
    */
-  var $prefix = 'form-element';
+  public $prefix = 'form-element';
 
   /**
    * 
    * @var string name of the instantiating module
    */
-  var $module;
+  public $module;
 
   /**
    * @var string  URL element link property
    */
-  var $link;
+  public $link;
 
   /**
    * @var int holds the record ID
@@ -208,8 +195,6 @@ abstract class xnau_FormElement {
    */
   public function __construct( $parameters )
   {
-    $this->_set_types();
-
     $defaults = array(
         'options' => NULL,
         'attributes' => array(),
@@ -223,26 +208,19 @@ abstract class xnau_FormElement {
         'record_id' => 0,
     );
     $params = wp_parse_args( $parameters, $defaults );
+    
+    $this->field_def = Participants_Db::get_field_def( $params['name'] );
 
-    $this->type = $params[ 'type' ];
     $this->form_element = $params[ 'type' ];
     $this->value = $params[ 'value' ];
     $this->name = $params[ 'name' ];
-    $this->size = $params[ 'size' ];
     $this->container_id = $params[ 'container_id' ];
     $this->group = $params[ 'group' ];
     $this->module = isset( $params[ 'module' ] ) ? $params[ 'module' ] : '';
-    $this->attributes = $params[ 'attributes' ];
+    $this->setup_attributes( $params );
+    $this->setup_options( $params['options'] );
     $this->link = $params[ 'link' ];
     $this->record_id = $params[ 'record_id' ];
-    
-    $this->field_def = Participants_Db::get_field_def( $this->name );
-
-    if ( NULL !== $params[ 'options' ] || !empty( $params[ 'options' ] ) ) {
-
-      // this value is stored as a serialized array, but the class could be called with an array for this value
-      $this->options = maybe_unserialize( $params[ 'options' ] );
-    }
 
     $this->i18n = array(
         'other' => _x( 'other', 'indicates a write-in choice', 'participants-database' ),
@@ -280,7 +258,7 @@ abstract class xnau_FormElement {
   protected function call_element_method()
   {
 
-    switch ( $this->type ) :
+    switch ( $this->form_element ) :
 
       case 'date':
         $this->_date_field();
@@ -389,7 +367,7 @@ abstract class xnau_FormElement {
    *
    * @static
    */
-  static function _HTML( $parameters )
+  public static function _HTML( $parameters )
   {
     
   }
@@ -1110,7 +1088,7 @@ abstract class xnau_FormElement {
       $value = $this->value;
     }
 
-    $size = $this->size ? ' size="' . $this->size . '" ' : '';
+    $size = empty( $this->attributes['size'] ) ? ''  : ' size="' . $this->attributes['size'] . '" ';
 
     if ( $type === 'text' && isset( $this->attributes[ 'type' ] ) ) {
       $this->attributes = array_merge( array( 'type' => $type ), (array) $this->attributes );
@@ -1864,18 +1842,6 @@ abstract class xnau_FormElement {
     return $datatype;
   }
 
-  /**
-   * sets the array of available form element types
-   * 
-   * merges in an array in the config file, this allowing new types to be registered, 
-   * also a language translation of type titles is possible by overwriting an existing 
-   * entry
-   */
-  protected function _set_types()
-  {
-    $this->element_types = self::get_types();
-  }
-
   /*
    * static function for assembling the types array
    */
@@ -1908,6 +1874,58 @@ abstract class xnau_FormElement {
      * it is set
      */
     return $types;
+  }
+  
+  /**
+   * tells if the current form element is a PDB field
+   * 
+   * @return bool
+   */
+  public function is_pdb_field()
+  {
+    return is_a( $this->field_def, '\PDb_Form_Field_Def' );
+  }
+  
+  /**
+   * sets up the attributes property
+   * 
+   * this is used in the constructor
+   * 
+   * @param array $params the supplied configuration params
+   */
+  protected function setup_attributes( array $params )
+  {
+    $attributes = $params['attributes'];
+    
+    if ( $this->is_pdb_field() ) {
+      if ( is_array($attributes) ) {
+        $this->attributes = array_merge( $this->field_def->attributes(), $attributes );
+      } else {
+        $this->attributes = $this->field_def->attributes();
+      }
+    } else {
+      $this->attributes = $attributes;
+    }
+    
+    if ( $params['size'] ) {
+      $this->attributes['size'] = $params['size'];
+    }
+  }
+  
+  /**
+   * sets up the options property
+   * 
+   * this is used in the constructor
+   * 
+   * @param array|string $options the supplied options as $title => $value
+   */
+  protected function setup_options( $options )
+  {
+    if ( empty($options) && $this->is_pdb_field() ) {
+      $this->options = $this->field_def->options();
+    } elseif ( ! empty( $options ) ) {
+      $this->options = maybe_unserialize( $options );
+    }
   }
 
 }
