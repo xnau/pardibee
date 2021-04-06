@@ -422,9 +422,16 @@ abstract class PDb_Shortcode {
     $custom_template_file = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
     
     /**
-     * @version 1.6 'pdb-template_select' filter added
+     * @filter pdb-template_select
+     * @param string the name of the template file
+     * @return template file name or absolute path to the template file
      */
-    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file );
+    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file );  
+    
+    if ( !file_exists( $template ) ) {
+      // look for a built-in template
+      $template = Participants_Db::$plugin_path . 'templates/' . $custom_template_file;
+    }
 
     /**
      * provides a global custom template location for the main and auxiliary plugins
@@ -440,13 +447,18 @@ abstract class PDb_Shortcode {
     }
 
     if ( !file_exists( $template ) ) {
-      $template = Participants_Db::$plugin_path . 'templates/' . $custom_template_file;
-    }
+      /* 
+       * checking the custom template file location
+       * this is the location used by the Custom Template Folder add-on, 
+       * but we're adding it here too #2253
+       */
+      $template = trailingslashit( WP_CONTENT_DIR ) . Participants_Db::PLUGIN_NAME . '-templates/' . $custom_template_file;
+    }  
 
     if ( !file_exists( $template ) ) {
       
       if ( $this->module !== 'API' ) {
-        Participants_Db::debug_log( __METHOD__ . ' custom template not found: ' . $template );
+        Participants_Db::debug_log( __METHOD__ . ' custom template not found: "' . $template . '," using the default template instead.' );
       }
       
       $template = Participants_Db::$plugin_path . 'templates/pdb-' . $this->module . '-default.php';
