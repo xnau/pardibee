@@ -122,7 +122,7 @@ abstract class search_field_group {
   }
   
   /**
-   * tells of the field type is a value set
+   * tells if the field type is a value set
    * 
    * @return bool
    */
