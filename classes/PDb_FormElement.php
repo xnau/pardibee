@@ -903,9 +903,9 @@ class PDb_FormElement extends xnau_FormElement {
   }
   
   /**
-   * provides some property value
+   * provides some property values
    * 
-   * this is for backward compatibility
+   * this is for backward compatibility for removed class properties
    * 
    * @param string $name of the property
    * @return mixed property value
