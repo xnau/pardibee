@@ -20,9 +20,9 @@
 class PDb_Participant_Cache {
 
   /**
-   * @var string name of the cache group
+   * @var string prefix for the transient name
    */
-  const prefix = 'participant-cache-';
+  const prefix = 'participant_cache_';
 
   /**
    * @var name of the site transient to use for the cache staleness status
@@ -72,7 +72,7 @@ class PDb_Participant_Cache {
      */
     $this->cache_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
     $this->cache_key = (int) ( $this->id / $this->cache_size );
-    
+
     $this->setup_staleness();
     $this->set_data();
   }
@@ -92,7 +92,7 @@ class PDb_Participant_Cache {
    */
   public function get()
   {
-    return isset( $this->data[$this->id] ) ? (array) $this->data[$this->id] : false;
+    return isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
   }
 
   /**
@@ -111,8 +111,9 @@ class PDb_Participant_Cache {
    * 
    * this would be done whenever a record is created or altered
    */
-  public static function is_now_stale($id) {
-    $cache = new self($id);
+  public static function is_now_stale( $id )
+  {
+    $cache = new self( $id );
     $cache->set_stale();
   }
 
@@ -161,8 +162,8 @@ class PDb_Participant_Cache {
   private function setup_staleness()
   {
     $staleness = $this->get_staleness();
-    
-    $this->staleness = (bool) $staleness === false || ( ! isset($staleness[$this->cache_key]) ? true : $staleness[$this->cache_key] );
+
+    $this->staleness = (bool) $staleness === false || (!isset( $staleness[ $this->cache_key ] ) ? true : $staleness[ $this->cache_key ] );
   }
 
   /**
@@ -173,13 +174,13 @@ class PDb_Participant_Cache {
   private function set_staleness( $state = true )
   {
     $this->staleness = (bool) $state;
-    
+
     $staleness = $this->get_staleness();
-    $staleness[$this->cache_key] = $this->staleness;
-    
+    $staleness[ $this->cache_key ] = $this->staleness;
+
     set_transient( self::stale_flags, $staleness );
   }
-  
+
   /**
    * provides the stored staleness record
    * 
@@ -189,7 +190,7 @@ class PDb_Participant_Cache {
   {
     return get_transient( self::stale_flags );
   }
-  
+
   /**
    * provides the cache key used to get/set the cache
    * 
@@ -206,7 +207,7 @@ class PDb_Participant_Cache {
   private function set_data()
   {
     $this->data = empty( $this->data ) ? $this->get_cache() : $this->data;
-    
+
     if ( $this->data === false || $this->cache_is_stale() ) {
       $this->refresh_cache();
     }
@@ -224,21 +225,15 @@ class PDb_Participant_Cache {
     $series_start = $this->cache_key * $this->cache_size;
     $series_end = $series_start + $this->cache_size;
 
-      $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ORDER BY p.id ASC';
+    $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p WHERE p.id >= ' . $series_start . ' AND p.id < ' . $series_end . ' ORDER BY p.id ASC';
 
-      $result = $wpdb->get_results( $sql, OBJECT_K );
-    
-    foreach( $result as $key => $data ) {
-      if ( $key >= $series_start && $key <= $series_end ) {
-        $this->data[$key] = $data;
-      }
-    }
-    
+    $this->data = $wpdb->get_results( $sql, OBJECT_K );
+
     $this->set_cache();
-    
+
     $this->set_fresh();
   }
-  
+
   /**
    * supplies the cached value
    * 
@@ -248,7 +243,7 @@ class PDb_Participant_Cache {
   {
     return get_transient( $this->_cache_key() );
   }
-  
+
   /**
    * sets the cache value
    * 
@@ -257,7 +252,7 @@ class PDb_Participant_Cache {
   {
     set_transient( $this->_cache_key(), $this->data );
   }
-  
+
   /**
    * clears the cache
    */
