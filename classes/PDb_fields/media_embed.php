@@ -86,7 +86,7 @@ class media_embed extends core {
    */
   public function form_element_build( $field )
   {  
-    $field->type = 'text-line';
+    $field->form_element = 'text-line';
     parent::form_element_build($field);
   }
 
