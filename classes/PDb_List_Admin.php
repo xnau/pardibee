@@ -59,12 +59,12 @@ class PDb_List_Admin {
   public static $display_columns;
 
   /**
-   * @var \PDb_submission\admin_list_query holds the admin_list_query instance
+   * @var \PDb_admin_list\query holds the admin_list_query instance
    */
   public static $query;
 
   /**
-   * @var \PDb_submission\admin_list_filter the current filter object
+   * @var \PDb_admin_list\filter the current filter object
    */
   public static $list_filter;
 
