@@ -547,6 +547,7 @@ class PDb_List extends PDb_Shortcode {
     }
 
     global $post;
+    /** @var WP_Post $post */
 
     $output = array();
 
@@ -565,6 +566,13 @@ class PDb_List extends PDb_Shortcode {
     $output[] = '<form method="post" class="sort_filter_form" action="' . $action . '"' . $class_att . ' data-ref="' . $ref . '" >';
     
     $hidden_fields = array();
+    
+    if ( $this->module === 'search' && $ref !== 'remote' ) {
+      // this should provide a working target instance value if it was not included in the shortcode
+      if ( $this->shortcode_atts['target_instance'] == '1' && strpos( $post->post_content, '[pdb_list' ) !== false  ) {
+        $this->shortcode_atts['target_instance'] = 2;
+      }
+    }
     
     if ( Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
     
