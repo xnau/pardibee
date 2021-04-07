@@ -70,7 +70,7 @@ class PDb_Update {
     
     // set the filter for getting an update message for display in the plugins list
     $hook = "in_plugin_update_message-" . $this->plugin_file;
-    add_action( $hook, array(&$this, 'getRemote_update_message'), 20, 2 );
+    add_action( $hook, array( $this, 'getRemote_update_message' ), 20, 2 );
   }
 
   /**
