@@ -491,6 +491,7 @@ class Participants_Db extends PDb_Base {
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
     }
+
   }
 
   /**
@@ -3663,6 +3664,12 @@ class Participants_Db extends PDb_Base {
        */
       self::$Settings->initialize();
     } 
+    
+    global $pagenow;
+    if ( $pagenow === 'plugins.php' ) {
+      $hook = 'in_plugin_update_message-participants-database/participants-database.php';
+      add_action( $hook, array( 'PDb_Init', 'print_upgrade_notice' ), 20, 2 );
+    }
 
     /*
      * this allows the possibility of a child class handling the admin list display
