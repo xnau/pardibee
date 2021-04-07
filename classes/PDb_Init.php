@@ -152,6 +152,28 @@ class PDb_Init {
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin activated' );
   }
+  
+  /**
+   * prints an update notice to the plugins page
+   * 
+   * @param array $plugin_data
+   * @param array $response
+   */
+  public static function print_upgrade_notice( $plugin_data, $response )
+  {
+    $readme = wp_safe_remote_get('https://plugins.svn.wordpress.org/participants-database/trunk/readme.txt');
+    
+    // extract the upgrade notice from the readme
+    preg_match( '/== Upgrade Notice ==\s(.+?)\s==/s', $readme['body'], $matches );
+    
+    if ( isset( $matches[1] ) && strlen( $matches[1] ) > 0 ) {
+    
+      $response = '</p>' . preg_replace( '#(</p>)$#', '', wpautop( trim( $matches[1] ) ) );
+    
+      echo $response;
+      
+    }
+  }
 
   /**
    * performs the activation on a network
