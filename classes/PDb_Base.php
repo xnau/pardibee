@@ -2161,5 +2161,5 @@ class PDb_Base {
   {
     return self::apply_filters('user_ip', $_SERVER['REMOTE_ADDR']);
   }
-
-}
+  
+  }
