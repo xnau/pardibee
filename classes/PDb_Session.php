@@ -204,7 +204,7 @@ class PDb_Session {
     if ( session_status() !== PHP_SESSION_ACTIVE ) {
 
       if ( PDB_DEBUG && headers_sent() ) {
-        error_log( __METHOD__ . ' trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
+        Participants_Db::debug_log( __METHOD__ . ' headers sent before session start. trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
       }
 
       session_start();

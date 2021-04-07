@@ -289,7 +289,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           }
           
         } elseif ( $test_result === false ) {
-          error_log( __METHOD__ . ' captcha or regex error with regex: "' . $regex . '"' );
+          Participants_Db::debug_log( __METHOD__ . ' captcha or regex error with regex: "' . $regex . '"' );
           $validating_field->error_type = 'invalid';
         } elseif ( $test_result === 1 ) {
           $validating_field->set_validation_state( 'valid' );

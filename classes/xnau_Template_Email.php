@@ -143,7 +143,7 @@ message:
     $sent = wp_mail( $recipients, $subject, $body, $this->email_header(), $this->attachments );
 
     if ( false === $sent )
-      error_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
+      Participants_Db::debug_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
     return $sent;
   }
 

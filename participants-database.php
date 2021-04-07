@@ -3124,7 +3124,7 @@ class Participants_Db extends PDb_Base {
               ), $match_id
       );
     } else {
-      error_log( __METHOD__ . ' primary email address field undefined' );
+      self::debug_log( __METHOD__ . ' primary email address field undefined' );
     }
 
     if ( self::plugin_setting_is_true( 'send_retrieve_link_notify_email' ) ) {

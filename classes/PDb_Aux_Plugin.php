@@ -930,7 +930,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     function _trigger_error( $message, $errno = E_USER_ERROR )
     {
       if ( isset( $_GET['action'] ) and false !== stripos( $_GET['action'], 'error_scrape' ) ) {
-        error_log( 'Plugin Activation Failed: ' . $_GET['plugin'] );
+        Participants_Db::debug_log( 'Plugin Activation Failed: ' . $_GET['plugin'] );
         echo($message);
         exit;
       } else {

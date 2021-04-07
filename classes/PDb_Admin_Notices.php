@@ -419,7 +419,7 @@ class PDb_Admin_Notices {
     }
 
     // write to wp-content/debug.log if logging enabled
-    error_log( $message );
+    Participants_Db::debug_log( $message );
 
     // Don't execute PHP internal error handler
     return true;

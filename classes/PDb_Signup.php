@@ -469,7 +469,7 @@ class PDb_Signup extends PDb_Shortcode {
   {
 
     if ( filter_var( $this->feedback->recipient, FILTER_VALIDATE_EMAIL ) === false ) {
-      error_log( Participants_Db::$plugin_title . ': no valid email address was found for the user receipt email, mail could not be sent.' );
+      Participants_Db::debug_log( Participants_Db::$plugin_title . ': no valid email address was found for the user receipt email, mail could not be sent.' );
       return NULL;
     }
 
