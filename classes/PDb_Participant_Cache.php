@@ -163,7 +163,7 @@ class PDb_Participant_Cache {
   {
     $staleness = $this->get_staleness();
 
-    $this->staleness = (bool) $staleness === false || (!isset( $staleness[ $this->cache_key ] ) ? true : $staleness[ $this->cache_key ] );
+    $this->staleness = (bool) $staleness === false || ( ! isset( $staleness[ $this->cache_key ] ) ? true : $staleness[ $this->cache_key ] );
   }
 
   /**
@@ -188,7 +188,9 @@ class PDb_Participant_Cache {
    */
   private function get_staleness()
   {
-    return get_transient( self::stale_flags );
+    $staleness = get_transient( self::stale_flags );
+    
+    return $staleness ? : array();
   }
 
   /**
@@ -232,6 +234,10 @@ class PDb_Participant_Cache {
     $this->set_cache();
 
     $this->set_fresh();
+    
+    if ( PDB_DEBUG > 2 ) {
+      Participants_Db::debug_log('Refreshing cache for cache group ' . $this->cache_key );
+    }
   }
 
   /**
