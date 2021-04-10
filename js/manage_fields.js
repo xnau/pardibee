@@ -131,6 +131,7 @@ PDbManageFields = (function ($) {
     return false;
   };
   var update_editor = function (el) {
+    el = el.length ? el : $(el.target);
     var editor = el.closest('.def-fieldset');
     editor.css({opacity:0.3});
     $.ajax({
@@ -509,8 +510,10 @@ PDbManageFields = (function ($) {
 
       // defeat return key submit behavior
       tabcontrols.on("keypress", 'form', cancelReturn);
+      // set the form element change update
+      tabcontrols.on('change', '.form-element-select.column-empty', update_editor);
       // set the form element change warning
-      tabcontrols.on('change.confirm', 'select.column-has-values', form_element_change_confirm);
+      tabcontrols.on('change.confirm', '.form-element-select.column-has-values', form_element_change_confirm);
       // pre-set CAPTCHA settings
       $('.manage-fields-wrap').on('change', '.manage-fields tbody .form_element-attribute select', captchaPreset);
       // set up the delete functionality
@@ -520,7 +523,7 @@ PDbManageFields = (function ($) {
       // set up the field sorting
       $(".manage-field-groups").sortable(sortGroups);
       $('section[id$="_fields"]').sortable(sortFields);
-      // clear the unsaved changes opo-up
+      // clear the unsaved changes pop-up
       $('.manage-fields-update, .manage-groups-update').on('click', clearUnsavedChangesWarning);
       // set up the open/close field editor button
       $('.manage-fields').on('click', '.def-fieldset .editor-opener.field-open-icon', open_field_editor);
