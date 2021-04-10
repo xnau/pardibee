@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 1.9.6.8
+Stable tag: 1.9.6.9
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -297,7 +297,7 @@ PLEASE NOTE: Version 1.9.7 is a major upgrade for Participants Database. Please 
 * New field types: Heading, String Combine, Media Embed, Shortcode
 * Relative Date field defaults like "current_date"
 * Code optimizations
-* Numerous bug fixes
+* Bug fixes
 
 = 1.9.6.9 =
 * added Greek translation files
