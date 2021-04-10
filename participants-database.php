@@ -246,7 +246,7 @@ class Participants_Db extends PDb_Base {
   /**
    * @var int the number of characters to use in the private ID
    */
-  public static $private_id_length = 5;
+  public static $private_id_length = 7;
 
   /**
    * @var int maximum number of emails to send per session
@@ -596,8 +596,7 @@ class Participants_Db extends PDb_Base {
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
     wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.5' );
-    wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.4' );
-//    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.5' );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery'), '0.5' );
   }
 
