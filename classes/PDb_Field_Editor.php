@@ -320,7 +320,7 @@ class PDb_Field_Editor {
         $config = array(
             'type' => 'dropdown',
             'options' => array_flip( $this->form_element_options() ) + array(PDb_FormElement::null_select_key() => false),
-            'attributes' => array('class' => $this->column_has_data( $this->field_def->name() ) ? 'column-has-values' : 'column-empty'),
+            'attributes' => array('class' => 'form-element-select ' . ( $this->column_has_data( $this->field_def->name() ) ? 'column-has-values' : 'column-empty') ),
         );
         break;
       case 'validation':
