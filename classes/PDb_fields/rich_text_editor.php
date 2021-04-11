@@ -7,7 +7,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -32,7 +32,7 @@ class rich_text_editor {
    * array holds the editor configuration array
    */
   private $config;
-  
+
   /**
    * array holds the tinymce config 
    */
@@ -87,14 +87,39 @@ class rich_text_editor {
     <script>
       jQuery(function ($) {
         if (wp.editor) {
-          wp.editor.initialize("<?php echo $this->element_id() ?>", <?php echo $this->editor_config_object() ?> );
+          wp.editor.initialize("<?php echo $this->element_id() ?>", <?php echo $this->editor_config_object() ?>);
+          <?php $this->field_editor_label_fix() ?>
         } else {
-          console.warn( 'WP Core text editor not loaded: rich text editors are disabled.');
+          console.warn('WP Core text editor not loaded: rich text editors are disabled.');
         }
       });
     </script>
     <?php
     return ob_get_clean();
+  }
+
+  /**
+   * provides specific code for the manage database fields page
+   * 
+   * @return null
+   */
+  private function field_editor_label_fix()
+  {
+    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === 'participants-database-manage_fields' ) {
+      ob_start();
+      ?>
+      <script>
+        $(document).on('wp-before-quicktags-init', function () {
+          var el = $('#<?php echo $this->element_id() ?>').closest('.wp-editor-wrap');
+          if (el.length) {
+            var label = el.nextAll('.attribute-control.rich-text-control-wrap').first();
+            el.prepend(label.css({position: 'relative', bottom: '-2em', 'margin-top': '-1.5em'}));
+          }
+        });
+      </script>
+      <?php
+      echo str_replace( array( '<script>', '</script>' ), '', ob_get_clean() );
+    }
   }
 
   /**
@@ -105,12 +130,12 @@ class rich_text_editor {
   private function editor_config_object()
   {
     $settings = json_encode( $this->editor_settings(), JSON_FORCE_OBJECT );
-    
+
     /*
      * these replacements set the correct js syntax for 2nd dimensional arrays 
      * and remove unneeded escapes
      */
-    return str_replace( array('"{', '}"', '"[', ']"', '\\'), array('{', '}', '[', ']', ''), $settings ); // 
+    return str_replace( array( '"{', '}"', '"[', ']"', '\\' ), array( '{', '}', '[', ']', '' ), $settings ); // 
   }
 
   /**
@@ -120,17 +145,19 @@ class rich_text_editor {
    */
   private function editor_settings()
   {
+    $this->check_for_class_include();
+
     // use a filter to get the default configuration from WP core
     add_filter( 'tiny_mce_before_init', array( $this, 'get_tinymce_config' ) );
-    
+
     $settings = \_WP_Editors::parse_settings( $this->element_id(), $this->config );
-    
+
     \_WP_Editors::editor_settings( $this->element_id(), $settings );
-    
+
     remove_filter( 'tiny_mce_before_init', array( $this, 'get_tinymce_config' ) );
-    
-    $settings['tinymce'] = $this->tinymce_config;
-    
+
+    $settings[ 'tinymce' ] = $this->tinymce_config;
+
     return $settings;
   }
 
@@ -153,7 +180,7 @@ class rich_text_editor {
   {
     return Participants_Db::apply_filters( 'rich_text_editor_dimensions', array( 'rows' => $this->rows(), 'cols' => 40 ) );
   }
-  
+
   /**
    * gets the textarea row value
    * 
@@ -164,20 +191,18 @@ class rich_text_editor {
   private function rows()
   {
     $rows = 20; // default
-    
+
     if ( \PDb_Form_Field_Def::is_field( $this->fieldname ) ) {
-    
-      $field = \Participants_Db::$fields[$this->fieldname];
+
+      $field = \Participants_Db::$fields[ $this->fieldname ];
       /** @var \PDb_Form_Field_Def $field */
-    
       $rows_att = intval( $field->get_attribute( 'rows' ) );
 
       if ( $rows_att > 0 ) {
-         $rows = $rows_att;
+        $rows = $rows_att;
       }
-      
     }
-    
+
     return $rows;
   }
 
@@ -200,7 +225,7 @@ class rich_text_editor {
    */
   private function default_config()
   {
-    return array( 
+    return array(
         'wpautop' => true,
         'media_buttons' => false,
         'default_editor' => '',
@@ -217,7 +242,7 @@ class rich_text_editor {
         'quicktags' => true,
     );
   }
-  
+
   /**
    * gets the tinymce config from a filter
    * 
@@ -228,10 +253,10 @@ class rich_text_editor {
    */
   public function get_tinymce_config( $tinymce_config )
   {
-    $tinymce_config['height'] =  strval( $this->rows() * 1.2 ) . 'em';
-    
+    $tinymce_config[ 'height' ] = strval( $this->rows() * 1.2 ) . 'em';
+
     $this->tinymce_config = $tinymce_config;
-    
+
     return $tinymce_config;
   }
 
@@ -243,6 +268,17 @@ class rich_text_editor {
   private function setup_config( $config )
   {
     $this->config = array_merge( $this->default_config(), $config );
+  }
+
+  /**
+   * checks for the need to include the editor class script
+   */
+  private function check_for_class_include()
+  {
+    if ( !class_exists( '\_WP_Editors' ) ) {
+      require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+    }
+    \_WP_Editors::enqueue_default_editor();
   }
 
 }
