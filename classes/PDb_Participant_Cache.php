@@ -236,7 +236,7 @@ class PDb_Participant_Cache {
     $this->set_fresh();
     
     if ( PDB_DEBUG > 2 ) {
-      Participants_Db::debug_log('Refreshing cache for cache group ' . $this->cache_key );
+      Participants_Db::debug_log('Refreshing Participants Database cache for cache group ' . $this->cache_key );
     }
   }
 
