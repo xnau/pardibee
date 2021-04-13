@@ -171,16 +171,7 @@ abstract class core {
    */
   protected function find_record_id()
   {
-    global $post;
-    $record_id = false;
-
-    if ( is_a( $post, 'WP_Post' ) ) {
-      $record_id = get_post_meta( $post->ID, \pdblog\Plugin::id_meta_name, true );
-    }
-
-    if ( !$record_id ) {
-      $record_id = \Participants_Db::get_record_id();
-    }
+    $record_id = \Participants_Db::get_record_id();
 
     return empty( $record_id ) ? 0 : $record_id;
   }
