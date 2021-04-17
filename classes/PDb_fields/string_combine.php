@@ -163,20 +163,6 @@ class string_combine extends dynamic_db_field {
   }
 
   /**
-   * sets the field property
-   * 
-   * @param string|\PDb_FormElement $field the incoming field
-   */
-  private function set_field( $field )
-  {
-    $field_item = new \PDb_Field_Item( $field );
-
-    $this->setup_field( $field_item );
-    
-    $this->field->set_readonly();
-  }
-
-  /**
    *  provides the field editor configuration switches array
    * 
    * @param array $switches
