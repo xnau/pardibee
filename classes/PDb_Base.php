@@ -340,6 +340,24 @@ class PDb_Base {
   }
   
   /**
+   * provides a list of fields that have columns in the main db
+   * 
+   * @return array of field names
+   */
+  public static function db_field_list()
+  {
+    $field_list = array();
+    
+    foreach( self::field_defs() as $fieldname => $field ) {
+      if ( $field->stores_data() ) {
+        $field_list[] = $fieldname;
+      }
+    }
+    
+    return $field_list;
+  }
+  
+  /**
    * provides the name of the main database table
    * 
    * @return string
