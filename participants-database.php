@@ -2269,9 +2269,7 @@ class Participants_Db extends PDb_Base {
   {
     global $wpdb;
 
-    $columns = array_keys( self::field_defs() );
-
-    $sql = 'SELECT p.' . implode( ',p.', $columns ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %s';
+    $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %s';
 
     $result = $wpdb->get_row( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
