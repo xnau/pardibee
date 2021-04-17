@@ -5,7 +5,7 @@
  *
  * this works by dividing the database into blocks of records. When a request for 
  * a record comes in, the block it is in is loaded from the cache. This allows potentially 
- * hundreds of database queries to be reduced to a few querites: one for each block
+ * hundreds of database queries to be reduced to a few queries: one for each block
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
