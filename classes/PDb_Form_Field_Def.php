@@ -42,7 +42,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string default value of the field
    */
-  private $default;
+  protected $default;
 
   /**
    * @var string name of the field's group
@@ -72,7 +72,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string raw string from the "values" parameter of the field def
    */
-  private $values;
+  protected $values;
 
   /**
    * @var string validation type
