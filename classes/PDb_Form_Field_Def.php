@@ -141,10 +141,10 @@ class PDb_Form_Field_Def {
    */
   public function __construct( $field )
   {
-    $def = is_string( $field ) ? self::get_field_def( $field ) : $field;
+    $field_def = is_string( $field ) ? self::get_field_def( $field ) : self::get_field_def( $field->name );
 
-    if ( $def ) {
-      $this->assign_def_props( $def );
+    if ( $field_def ) {
+      $this->assign_def_props( $field_def, $field );
     }
   }
 
@@ -846,11 +846,12 @@ class PDb_Form_Field_Def {
   /**
    * assigns the object properties
    * 
-   * @param object $def the field definition values
+   * @param object $field_def the field definition values
+   * @param object $field overriding values
    */
-  private function assign_def_props( $def )
+  private function assign_def_props( $field_def, $field )
   {
-    foreach ( $def as $prop => $value ) {
+    foreach ( $field_def as $prop => $value ) {
       switch ( $prop ) {
 
         case 'sortable':
@@ -867,30 +868,39 @@ class PDb_Form_Field_Def {
         
         case 'values':
 
-          $this->values = $def->values; // this is for backward compatibility
+          $this->values = $field_def->values; // this is for backward compatibility
           
           // if the values parameter has a value, then the field def is of the old format
-          if ( $def->values !== '' && !is_null($def->values) && $def->values !== 'a:0:{}' ) {
+          if ( $field_def->values !== '' && !is_null($field_def->values) && $field_def->values !== 'a:0:{}' ) {
             $values = $this->values_array();
             /*
              * for "value set" fields, the values parameter defines the options; for 
              * other fields, it defines the attributes
              */
             if ( $this->is_value_set() ) {
-              if ( empty( $def->options ) || $def->options === 'a:0:{}' ) {
+              if ( empty( $field_def->options ) || $field_def->options === 'a:0:{}' ) {
                 $this->options = $values;
               }
-            } elseif ( empty( $def->attributes ) || $def->attributes === 'a:0:{}' ) {
+            } elseif ( empty( $field_def->attributes ) || $field_def->attributes === 'a:0:{}' ) {
               $this->attributes = $values;
             }
           }
           break;
 
         case 'attributes':
+          
+          if ( empty( $this->{$prop} ) ) {
+              $this->{$prop} = (array) maybe_unserialize($value);
+          }
+          break;
+          
         case 'options':
           
           if ( empty( $this->{$prop} ) ) {
-            $this->{$prop} = (array) maybe_unserialize($value);
+              $this->{$prop} = (array) maybe_unserialize($value);
+          }
+          if ( isset( $field->{$prop} ) &&  ! empty( $field->{$prop} ) && is_array( $field->{$prop} ) ) {
+            $this->{$prop} = $field->{$prop};
           }
           break;
 
