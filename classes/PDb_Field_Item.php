@@ -66,7 +66,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       $config = (object) $config;
     }
 
-    parent::__construct( $config->name );
+    parent::__construct( $config );
 
     if ( $id ) {
       $this->set_record_id( $id );
