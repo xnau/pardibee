@@ -2852,7 +2852,7 @@ class Participants_Db extends PDb_Base {
 
             // gets the export field list from the session value or the default set for CSV exports
             $csv_columns = self::get_column_atts( self::$session->getArray( 'csv_export_fields', 'CSV' ) );
-            self::$session->clear('csv_export_fields');
+//            self::$session->clear('csv_export_fields');
             $export_columns = array();
 
             foreach ( $csv_columns as $column ) {
@@ -2881,7 +2881,7 @@ class Participants_Db extends PDb_Base {
               if ( $query ) {
                 $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_columns . ' FROM', $query );
               }
-              self::$session->clear('csv_export_query');
+//              self::$session->clear('csv_export_query');
             }
 
             if ( $query ) {
