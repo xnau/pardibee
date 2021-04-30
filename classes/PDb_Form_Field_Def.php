@@ -402,6 +402,9 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
+    if ( Participants_Db::is_dynamic_value( $this->default ) ) {
+      return htmlspecialchars_decode( $this->default );
+    }
     return Participants_Db::apply_filters( 'translate_string', $this->default );
   }
   
