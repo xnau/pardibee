@@ -1610,7 +1610,7 @@ SELECT v.name, v.form_element, v.title, g.title AS grouptitle
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
-      WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") 
+      WHERE g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes()) ) . '") 
 ORDER BY g.order, v.order';
 
     $columns = $wpdb->get_results( $sql, OBJECT_K );
