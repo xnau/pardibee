@@ -727,7 +727,7 @@ class PDb_List_Query {
       }
 
       foreach ( $columns as $fieldname ) {
-        if ( in_array( $fieldname, Participants_Db::table_columns() ) ) {
+        if ( PDb_Form_Field_Def::is_field( $fieldname ) ) {
           $this->columns[] = $fieldname;
         }
       }
