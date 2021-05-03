@@ -1887,6 +1887,16 @@ abstract class xnau_FormElement {
   }
   
   /**
+   * provides the field definition object
+   * 
+   * @return PDb_Form_Field_Def
+   */
+  public function get_field_def()
+  {
+    return $this->field_def;
+  }
+  
+  /**
    * sets up the attributes property
    * 
    * this is used in the constructor
