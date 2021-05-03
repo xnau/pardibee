@@ -117,8 +117,7 @@ abstract class core {
   /**
    * provides the form element HTML
    * 
-   * @param \PDb_FormElement $field the form element object
-   * @return null
+   * @return string
    */
   abstract protected function form_element_html();
 
