@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.6
+ * @version 2.8
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -38,58 +38,58 @@ PDbManageFields = (function ($) {
     if (not_empty_group && thing === 'group') {
 
       confirmationBox.html(PDb_L10n.must_remove.replace('{name}', name));
-
       // initialize the dialog action
       confirmationBox.dialog(dialogOptions, {
-        buttons: {
-          "Ok": function () {
-            $(this).dialog('close');
-          }
-        }
+        buttons: [{
+            icon: "dashicons dashicons-yes",
+            click: function () {
+              $(this).dialog('close');
+            }
+          }]
       });
-
     } else {
 
       confirmationBox.html(PDb_L10n.delete_confirm.replace('{name}', name).replace('{thing}', thing));
-
       confirmationBox.dialog(dialogOptions, {
-        buttons: {
-          "Ok": function () {
-            parent.css('opacity', '0.3');
-            $(this).dialog('close');
-            $.ajax({
-              type: 'post',
-              url: ajaxurl,
-              data: {
-                list: [row_id],
-                action: PDb_L10n.action,
-                task: 'delete_' + thing,
-                _wpnonce: PDb_L10n._wpnonce,
-                sess: PDb_L10n.sess
-              },
-              beforeSend: function () {
-              },
-              success: function (response) {
-                if (response.status === 'success') {
-                  parent.slideUp(600, function () {
-                    parent.remove();
-                  });
-                  countDisplay.html(count - 1);
-                  $('#tab_' + row_id).fadeOut();
-                } else {
-                  parent.css('opacity', 'inherit');
+        buttons: [{
+            icon: "dashicons dashicons-yes",
+            click: function () {
+              parent.css('opacity', '0.3');
+              $(this).dialog('close');
+              $.ajax({
+                type: 'post',
+                url: ajaxurl,
+                data: {
+                  list: [row_id],
+                  action: PDb_L10n.action,
+                  task: 'delete_' + thing,
+                  _wpnonce: PDb_L10n._wpnonce,
+                  sess: PDb_L10n.sess
+                },
+                beforeSend: function () {
+                },
+                success: function (response) {
+                  if (response.status === 'success') {
+                    parent.slideUp(600, function () {
+                      parent.remove();
+                    });
+                    countDisplay.html(count - 1);
+                    $('#tab_' + row_id).fadeOut();
+                  } else {
+                    parent.css('opacity', 'inherit');
+                  }
+                  if (response.feedback) {
+                    set_feedback(response.feedback);
+                  }
                 }
-                if (response.feedback) {
-                  set_feedback(response.feedback);
-                }
-              }
-            });// ajax
-          }, // ok
-          "Cancel": function () {
-            $(this).dialog('close');
-          } // cancel
-        } // buttons
-      });// dialog
+              }); // ajax
+            }}, {
+            icon: 'dashicons dashicons-no-alt',
+            click: function () {
+              $(this).dialog('close');
+            } // cancel
+          }] // buttons
+      }); // dialog
     }
     confirmationBox.dialog('open');
     return false;
@@ -126,14 +126,14 @@ PDbManageFields = (function ($) {
           }
         }
       ] // buttons
-    });// dialog 
+    }); // dialog 
     confirmationBox.dialog('open');
     return false;
   };
   var update_editor = function (el) {
     el = el.length ? el : $(el.target);
     var editor = el.closest('.def-fieldset');
-    editor.css({opacity:0.3});
+    editor.css({opacity: 0.3});
     $.ajax({
       type: 'post',
       url: ajaxurl,
@@ -151,10 +151,10 @@ PDbManageFields = (function ($) {
         if (response.status === 'success') {
           editor.replaceWith(response.body);
         }
-        editor.css({opacity:1});
+        editor.css({opacity: 1});
         clearUnsavedChangesWarning();
       }
-    });// ajax
+    }); // ajax
   };
   var captchaPreset = function () {
     var el = $(this);
@@ -416,43 +416,45 @@ PDbManageFields = (function ($) {
   var delete_selected_fields = function (list, group) {
 
     confirmationBox.html(list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field);
-
     // initialize the dialog action
     confirmationBox.dialog(dialogOptions, {
-      buttons: {
-        "Ok": function () { //If the user choose to click on "OK" Button
+      buttons: [{
+          icon: 'dashicons dashicons-yes',
+          click: function () {
 
-          $.each(list, function (index, value) {
-            $('#db_row_' + value).css('opacity', '0.3');
-          });
-          $(this).dialog('close');
-          $.ajax({
-            type: 'post',
-            url: ajaxurl,
-            data: {
-              list: list,
-              action: PDb_L10n.action,
-              task: 'delete_field',
-              _wpnonce: PDb_L10n._wpnonce
-            },
-            success: function (response) {
-              $.each(list, function (index, value) {
-                $('#db_row_' + value).slideUp(600, function () {
-                  $(this).remove();
+            $.each(list, function (index, value) {
+              $('#db_row_' + value).css('opacity', '0.3');
+            });
+            $(this).dialog('close');
+            $.ajax({
+              type: 'post',
+              url: ajaxurl,
+              data: {
+                list: list,
+                action: PDb_L10n.action,
+                task: 'delete_field',
+                _wpnonce: PDb_L10n._wpnonce
+              },
+              success: function (response) {
+                $.each(list, function (index, value) {
+                  $('#db_row_' + value).slideUp(600, function () {
+                    $(this).remove();
+                  });
                 });
-              });
-              var countDisplay = $('#field_count_' + group);
-              countDisplay.html(parseInt(countDisplay.html()) - list.length);
-              $('.with-selected-control').slideUp(effect_speed);
-              set_feedback(response.feedback);
-            }
-          });
-        }, // ok
-        "Cancel": function () { //if the User Clicks the button "cancel"
-          $(this).dialog('close');
-        } // cancel
-      } // buttons
-    });// dialog
+                var countDisplay = $('#field_count_' + group);
+                countDisplay.html(parseInt(countDisplay.html()) - list.length);
+                $('.with-selected-control').slideUp(effect_speed);
+                set_feedback(response.feedback);
+              }
+            });
+          }}, {
+          icon: 'dashicons dashicons-no-alt',
+          click: function () {
+            $(this).dialog('close');
+            withSelected.spinner.remove();
+          } // cancel
+        }] // buttons
+    }); // dialog
     confirmationBox.dialog('open');
   };
   var set_feedback = function (html) {
@@ -494,7 +496,6 @@ PDbManageFields = (function ($) {
   return {
     init: function () {
       var tabcontrols = $("#fields-tabs");
-
       clearUnsavedChangesWarning();
       // set up tabs
       tabcontrols.tabs(getTabSettings());
@@ -504,10 +505,8 @@ PDbManageFields = (function ($) {
       tabcontrols.find('.attribute-control input, .attribute-control textarea').on('input', setChangedFlag);
       // flag the row as changed for dropdowns, checkboxes
       tabcontrols.find('.attribute-control select, .attribute-control input[type=checkbox]').on('change', setChangedFlag);
-
       // flag the row as changed for rich text editors
       tabcontrols.find('.def-fieldset.heading-form-element').on('pdb-tinymce-change', '.mce-container', setChangedFlag);
-
       // defeat return key submit behavior
       tabcontrols.on("keypress", 'form', cancelReturn);
       // set the form element change update
@@ -558,6 +557,7 @@ PDbManageFields = (function ($) {
         if ($(this).val() === 'group') {
           $(this).next('.with-selected-group-select').show(effect_speed);
         }
+        $('.apply-with-selected').prop('disabled',$(this).val()==="");
       }).trigger('change');
       // field selection logic
       $('.general_fields_control_header .check-all input[type=checkbox]').click(function () {
@@ -579,7 +579,6 @@ PDbManageFields = (function ($) {
       $('#fields-tabs').on('click', '.notice-dismiss', function () {
         $(this).closest('div.notice').remove();
       });
-
       // handle empty field options
       $('textarea.option-list')
               .on('input', function () {
@@ -591,7 +590,6 @@ PDbManageFields = (function ($) {
                 this.setCustomValidity($(this).data('message'));
                 $(this).closest('.editor-closed').find('.field-open-icon').trigger('click');
               });
-
       // set up the incoming new field
       if (getUrlVars().newfield) {
         $('button.showhide.add-field').each(function () {
