@@ -173,7 +173,7 @@ class PDb_Tag_Template {
     
     $fulltext = self::replace_text( $this->template, $tag_data );
 
-//    error_log(__METHOD__.' pattern: '.$pattern.' data: '.print_r($this->data,1));
+//    error_log(__METHOD__.' data: '.print_r($this->data,1));
 //    error_log(__METHOD__.' rich text? '.($this->rich_text?'yes':'no'). '   '.$fulltext);
 //    error_log(__METHOD__.' template: '.$this->template);
 
@@ -202,7 +202,6 @@ class PDb_Tag_Template {
 
     // replace the tags with variables
     $pattern = str_replace( $tags, $placeholders, $template );
-    
 
     // replace the variables with strings
     return vsprintf( $pattern, $data );
