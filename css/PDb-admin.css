@@ -725,28 +725,28 @@ body[class*='participants-database'] .text-block li {
 .branch-3-5 .participants_db .ui-tabs-nav li {
   margin: 1px 0 2px;
 }
-.participants_db .ui-tabs-nav .ui-state-default a {
+.participants_db .ui-tabs-nav .ui-state-default a.ui-tabs-anchor {
   background-color: rgba(0,0,0,0.1);
   text-shadow: none;
   padding-bottom: 9px;
 }
-.participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active a {
+.participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active a.ui-tabs-anchor {
   background-color: rgba(0,0,0,0);
   padding-bottom: 11px;
   font-weight: bold;
 }
-.participants_db .ui-tabs-nav .utility a {
+.participants_db .ui-tabs-nav .utility a.ui-tabs-anchor {
   background-color: hsla(0, 0%, 0%, 0.2);
   color: hsla(0,0%,44.3%,1);
 }
 .participants_db .ui-tabs-nav .ui-tabs-active.ui-state-active .mask {
   visibility: visible;
 }
-.participants_db .ui-tabs-nav li a {
+.participants_db .ui-tabs-nav li a.ui-tabs-anchor {
   padding: 4px 20px 6px;
   font-weight: normal;
 }
-.participants_db .ui-tabs-nav li a {
+.participants_db .ui-tabs-nav li a.ui-tabs-anchor {
   line-height: 1.4;
   display: inline-block;
   padding: 9px 12px 5px;
@@ -829,7 +829,7 @@ body[class*='participants-database'] .text-block li {
   line-height: 1.4;
   border-radius: 5px;
   background:#FFFFFF;
-  border: 2px solid #D54E21;
+  border: 2px solid hsl(205.6, 77.5%, 33.1%);
   box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
   max-width: 25em;
   position:absolute;
@@ -898,7 +898,8 @@ body[class*='participants-database'] .text-block li {
   border: 1px solid #b3b3b3;
 }
 .participants-database-confirm.ui-dialog .ui-icon {
-  vertical-align: middle;
+  background: none;
+  vertical-align: baseline;
   text-indent: 0;
 }
 .participants-database-confirm.ui-dialog .ui-icon.dashicons[class*="no"] {
