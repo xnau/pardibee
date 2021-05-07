@@ -79,11 +79,9 @@ a:visited.pdb-jquery-ui .ui-button,
   display: inline-block;
   padding: 9px 12px 5px;
   margin: 0 4px 0 0;
-  border-style: solid;
-  border-color: #CCC #CCC #F9F9F9;
-  border-width: 1px 1px 0;
+  border: 2px solid transparent;
   color: #888888;
-  background-color:#eeeeee;
+  background-color:hsl(0, 0%, 89.8%);
   text-shadow: none;
   text-decoration: none;
   -moz-border-radius: 2px 2px 0 0;
@@ -96,7 +94,17 @@ a:visited.pdb-jquery-ui .ui-button,
 }
 .pdb-jquery-ui .ui-button {
   padding:  1px 10px 0;
+  font-weight: normal;
 }
+
+.pdb-jquery-ui .ui-button .ui-icon.dashicons {
+  background: none;
+  background-image: none !important;
+  vertical-align: middle;
+  height: 100%;
+  width: 100%;
+}
+
 .pdb-jquery-ui  .ui-tabs-nav .ui-state-default a:focus,
 .pdb-jquery-ui  .ui-tabs-nav .ui-state-active a:focus {
     box-shadow: none;
@@ -104,13 +112,23 @@ a:visited.pdb-jquery-ui .ui-button,
 .pdb-jquery-ui .ui-state-hover,
 .pdb-jquery-ui .ui-widget-content .ui-state-hover,
 .pdb-jquery-ui .ui-widget-header .ui-state-hover,
+.pdb-jquery-ui .ui-button:hover {
+	border: 2px solid transparent;
+	background: hsl(0, 2.6%, 84.7%);
+	font-weight: inherit;
+	color: inherit;
+}
+
+.pdb-jquery-ui .ui-tabs.ui-widget-content .ui-state-hover.ui-tabs-tab {
+  border: none;
+}
+
 .pdb-jquery-ui .ui-state-focus,
 .pdb-jquery-ui .ui-widget-content .ui-state-focus,
 .pdb-jquery-ui .ui-widget-header .ui-state-focus,
-.pdb-jquery-ui .ui-button:hover,
 .pdb-jquery-ui .ui-button:focus {
-	border: none;
-	background: transparentx;
+	border: 2px solid transparent;
+	background: hsl(0, 0%, 89.8%);
 	font-weight: inherit;
 	color: inherit;
 }
