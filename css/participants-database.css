@@ -632,13 +632,16 @@ svg.ajax-loading image {
   color: #0073aa;
 }
 .dashicons-no:before,
+.dashicons-no-alt:before,
 .dashicons-info.warning:before {
   color: #D64E07;
 }
-.dashicons-no:hover:before {
+.dashicons-no:hover:before,
+.dashicons-no-alt:hover:before {
   color: white;
 }
-.dashicons-no:hover:before {
+.dashicons-no:hover:before,
+.dashicons-no-alt:hover:before {
   background-color: #D64E07;
 }
 .dashicons-yes:before {
