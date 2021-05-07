@@ -722,12 +722,16 @@ class PDb_List_Query {
   {
     $this->columns = array();
     if ( is_array( $columns ) ) {
-      if ( !in_array( 'id', $columns ) ) {
-        array_unshift( $columns, 'id' );
+      
+      // make sure the id column is first
+      if ( in_array( 'id', $columns ) ) {
+        unset($columns[array_search( 'id', $columns )]);
       }
+      array_unshift( $columns, 'id' );
 
       foreach ( $columns as $fieldname ) {
-        if ( PDb_Form_Field_Def::is_field( $fieldname ) ) {
+//        $field = new PDb_Form_Field_Def($fieldname);
+        if ( Participants_Db::get_field_def($fieldname)->stores_data() ) {
           $this->columns[] = $fieldname;
         }
       }
