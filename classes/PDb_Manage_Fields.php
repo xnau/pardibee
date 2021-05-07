@@ -429,7 +429,7 @@ class PDb_Manage_Fields {
                     )
             );
             ?>
-            <button type="button" class="button-secondary apply-with-selected" ><span class="dashicons dashicons-yes"></span><?php echo $this->i18n[ 'apply' ] ?></button>
+            <button type="button" class="button-secondary apply-with-selected" disabled ><span class="dashicons dashicons-yes"></span><?php echo $this->i18n[ 'apply' ] ?></button>
           </div>
         </form>
       </div>
