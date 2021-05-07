@@ -370,6 +370,8 @@ class Participants_Db extends PDb_Base {
       
       $events['pdb-view_single_record'] = __( 'View Single Record', 'participants-database' );
       $events['pdb-open_record_edit'] = __( 'Open Edit Record Form', 'participants-database' );
+      $events['pdb-record_accessed_using_private_link'] = __( 'Record Accessed with Private Link', 'participants-database' );
+      $events['pdb-first_time_record_access_with_private_link'] = __( 'Record Accessed First Time with Private Link', 'participants-database' );
       
       return $events;
     });
@@ -639,13 +641,13 @@ class Participants_Db extends PDb_Base {
      */
     $presuffix = self::use_minified_assets() ? '.min' : '';
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
-    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.1', true );
+    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.6', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.6' );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$presuffix.js" ), array('jquery'), self::$plugin_version );
@@ -661,14 +663,14 @@ class Participants_Db extends PDb_Base {
     // jquery UI theme
     wp_register_style( self::$prefix . 'jquery-ui', self::asset_url( "css/jquery-ui-theme/jquery-ui.min.css" ) );
     wp_register_style(self::$prefix . 'jquery-ui-structure', self::asset_url( "css/jquery-ui-theme/jquery-ui.structure.min.css" ) );
-    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.1' );
+    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.9' );
     
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
-    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.3' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.4' );
+    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       
@@ -878,14 +880,6 @@ class Participants_Db extends PDb_Base {
 
       if ( !empty( $get_pid ) ) {
         $record_id = self::get_participant_id( $get_pid );
-
-        if ( $record_id && array_key_exists( Participants_Db::$record_query, $_GET ) ) {
-          /**
-           * @action pdb-record_accessed_using_private_link
-           * @param int record ID
-           */
-          do_action( 'pdb-record_accessed_using_private_link', $record_id );
-        }
       }
 
       if ( $record_id === false ) {
