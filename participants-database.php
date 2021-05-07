@@ -2406,7 +2406,6 @@ class Participants_Db extends PDb_Base {
     if ( NULL !== $id_exists )
       return $id_exists === '0' ? false : true;
     else {
-      error_log( __METHOD__ . ' called with invalid arguments' );
       return false;
     }
   }
