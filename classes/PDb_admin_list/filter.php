@@ -144,6 +144,7 @@ class filter {
    * provides global filter values
    * 
    * @param string $name of the value to get
+   * @return mixed
    */
   public function __get( $name )
   {
@@ -151,7 +152,6 @@ class filter {
     if ( isset( $filter[$name] ) ) {
       return $filter[$name];
     }
-    error_log(__METHOD__.' undefined property: '.$name);
   }
   
   /**
