@@ -161,17 +161,13 @@ class PDb_Init {
    */
   public static function print_upgrade_notice( $plugin_data, $response )
   {
-    $readme = wp_safe_remote_get('https://plugins.svn.wordpress.org/participants-database/trunk/readme.txt');
+    $notice_path = apply_filters( 'pdb-upgrade_notice_content_path',  'https://plugins.svn.wordpress.org/participants-database/trunk/upgrade.html' );
     
-    // extract the upgrade notice from the readme
-    preg_match( '/== Upgrade Notice ==\s(.+?)\s==/s', $readme['body'], $matches );
+    $notice = wp_safe_remote_get( $notice_path );
     
-    if ( isset( $matches[1] ) && strlen( $matches[1] ) > 0 ) {
+    if ( !empty( $notice['body'] )  ) {
     
-      $response = '</p>' . preg_replace( '#(</p>)$#', '', wpautop( trim( $matches[1] ) ) );
-    
-      echo $response;
-      
+      echo Participants_Db::apply_filters( 'inline_upgrade_notice', $notice['body'] );
     }
   }
 
