@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 5.6
 Stable tag: 1.9.6.9
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
