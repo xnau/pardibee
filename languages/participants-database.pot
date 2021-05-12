@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2021-04-06 14:03-1000\n"
+"POT-Creation-Date: 2021-05-12 08:09-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: classes/PDb_Base.php:1662
+#: classes/PDb_Base.php:1680
 #, php-format
 msgid ""
 "Participants Database will require PHP version %1$s in future releases, you "
@@ -237,19 +237,19 @@ msgstr ""
 msgid "regex/match"
 msgstr ""
 
-#: classes/PDb_Init.php:1174
+#: classes/PDb_Init.php:1192
 msgid "Participant Info"
 msgstr ""
 
-#: classes/PDb_Init.php:1175
+#: classes/PDb_Init.php:1193
 msgid "Personal Info"
 msgstr ""
 
-#: classes/PDb_Init.php:1176
+#: classes/PDb_Init.php:1194
 msgid "Administrative Info"
 msgstr ""
 
-#: classes/PDb_Init.php:1177
+#: classes/PDb_Init.php:1195
 msgid "Record Info"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr ""
 msgid "send signup email"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1084 participants-database.php:3577
+#: classes/PDb_List_Admin.php:1084 participants-database.php:3568
 msgid "Apply"
 msgstr ""
 
@@ -488,7 +488,7 @@ msgctxt ""
 msgid "With selected"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:74 participants-database.php:3775
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3772
 msgid "Manage Database Fields"
 msgstr ""
 
@@ -839,11 +839,11 @@ msgstr ""
 msgid "First"
 msgstr ""
 
-#: classes/PDb_Pagination.php:377 participants-database.php:3579
+#: classes/PDb_Pagination.php:377 participants-database.php:3570
 msgid "Previous"
 msgstr ""
 
-#: classes/PDb_Pagination.php:396 participants-database.php:3578
+#: classes/PDb_Pagination.php:396 participants-database.php:3569
 msgid "Next"
 msgstr ""
 
@@ -851,12 +851,12 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-#: classes/PDb_Path.php:159 participants-database.php:3382
+#: classes/PDb_Path.php:159 participants-database.php:3373
 #, php-format
 msgid "The uploads directory (%s) could not be created."
 msgstr ""
 
-#: classes/PDb_Record.php:199
+#: classes/PDb_Record.php:225
 msgid "back"
 msgstr ""
 
@@ -2077,8 +2077,8 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: classes/PDb_Settings.php:1815 participants-database.php:3777
-#: participants-database.php:3835
+#: classes/PDb_Settings.php:1815 participants-database.php:3774
+#: participants-database.php:3832
 msgid "Settings"
 msgstr ""
 
@@ -2344,91 +2344,99 @@ msgstr ""
 msgid "Open Edit Record Form"
 msgstr ""
 
+#: participants-database.php:373
+msgid "Record Accessed with Private Link"
+msgstr ""
+
+#: participants-database.php:374
+msgid "Record Accessed First Time with Private Link"
+msgstr ""
+
 #. Plugin Name of the plugin/theme
-#: participants-database.php:526
+#: participants-database.php:529
 msgid "Participants Database"
 msgstr ""
 
-#: participants-database.php:721
+#: participants-database.php:723
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr ""
 
-#: participants-database.php:723
+#: participants-database.php:725
 msgid "Delete the {name} {thing}?"
 msgstr ""
 
-#: participants-database.php:724
+#: participants-database.php:726
 msgid "Delete the selected field?"
 msgstr ""
 
-#: participants-database.php:725
+#: participants-database.php:727
 msgid "Delete the selected fields?"
 msgstr ""
 
-#: participants-database.php:726
+#: participants-database.php:728
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: participants-database.php:727
+#: participants-database.php:729
 msgid ""
 "Changing the form element on a field that has stored data can result in data "
 "loss."
 msgstr ""
 
-#: participants-database.php:727
+#: participants-database.php:729
 msgid "More information here…"
 msgstr ""
 
-#: participants-database.php:728
+#: participants-database.php:730
 msgid "Yes, change the form element"
 msgstr ""
 
-#: participants-database.php:729
+#: participants-database.php:731
 msgid "No, don't change the form element"
 msgstr ""
 
-#: participants-database.php:3576 templates/pdb-retrieve-bootstrap.php:70
+#: participants-database.php:3567 templates/pdb-retrieve-bootstrap.php:70
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr ""
 
-#: participants-database.php:3580
+#: participants-database.php:3571
 msgid "The record has been updated."
 msgstr ""
 
-#: participants-database.php:3581
+#: participants-database.php:3572
 msgid "The new record has been added."
 msgstr ""
 
-#: participants-database.php:3582
+#: participants-database.php:3573
 #, php-format
 msgid "No record was added on query: %s"
 msgstr ""
 
-#: participants-database.php:3583
+#: participants-database.php:3574
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr ""
 
-#: participants-database.php:3743
+#: participants-database.php:3740
 msgid "WordPress Plugin"
 msgstr ""
 
-#: participants-database.php:3744
+#: participants-database.php:3741
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr ""
 
-#: participants-database.php:3747
+#: participants-database.php:3744
 msgid "Developed by"
 msgstr ""
 
-#: participants-database.php:3748
+#: participants-database.php:3745
 msgid ""
 "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr ""
 
-#: participants-database.php:3751
+#: participants-database.php:3748
 #, php-format
 msgid ""
 "Please consider contributing to the continued support and development of "
@@ -2437,39 +2445,39 @@ msgid ""
 "Thanks!"
 msgstr ""
 
-#: participants-database.php:3773
+#: participants-database.php:3770
 msgid "Add Participant"
 msgstr ""
 
-#: participants-database.php:3774 participants-database.php:3781
+#: participants-database.php:3771 participants-database.php:3778
 msgid "List Participants"
 msgstr ""
 
-#: participants-database.php:3776 upload_csv.php:41
+#: participants-database.php:3773 upload_csv.php:41
 msgid "Import CSV File"
 msgstr ""
 
-#: participants-database.php:3778
+#: participants-database.php:3775
 msgid "Setup Guide"
 msgstr ""
 
-#: participants-database.php:3779
+#: participants-database.php:3776
 msgid "Add New Participant Record"
 msgstr ""
 
-#: participants-database.php:3780
+#: participants-database.php:3777
 msgid "Edit Existing Participant Record"
 msgstr ""
 
-#: participants-database.php:3782
+#: participants-database.php:3779
 msgid "Export CSV"
 msgstr ""
 
-#: participants-database.php:3783
+#: participants-database.php:3780
 msgid "Manage List Columns"
 msgstr ""
 
-#: participants-database.php:3915
+#: participants-database.php:3912
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
