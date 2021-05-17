@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -85,7 +85,8 @@ class string_combine extends dynamic_db_field {
       return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
     }
     
-    return preg_replace( '/\[[a-z_]+\]/', '', $replaced_string );
+    // remove unreplaced tags, trim spaces and dangling commas
+    return preg_replace( '/^([ ,]*)|([ ,]*)$|\[[a-z_]+\]/', '', $replaced_string );
   }
   
   /**
@@ -133,10 +134,13 @@ class string_combine extends dynamic_db_field {
    */
   private function replacement_data()
   {
-    $record = \Participants_Db::get_participant( $this->field->record_id );
+    $data = array();
     
-    if ( empty( $record ) ) { 
-      return array(); // should this be the default record?
+    foreach( $this->template_field_list() as $fieldname ) {
+      
+      $template_field = new \PDb_Field_Item( array('name' => $fieldname ), $this->field->record_id );
+      
+      $data[$fieldname] = $template_field->display_array_value();
     }
     /**
      * provides a way to bring in other values for use by the field
@@ -146,7 +150,30 @@ class string_combine extends dynamic_db_field {
      * @param \PDb_Field_Item
      * @return array
      */
-    return \Participants_Db::apply_filters( 'string_combine_replacement_data', $this->clear_empty_values( \Participants_Db::get_participant( $this->field->record_id ) ), $this->field );
+    return \Participants_Db::apply_filters( 'string_combine_replacement_data', $this->clear_empty_values( $data ), $this->field );
+  }
+  
+  /**
+   * provides a list of the fields that are included in the template
+   * 
+   * @return array of field names
+   */
+  private function template_field_list()
+  {
+    $template = $this->field->default_value();
+    
+    preg_match_all('/\[([^\]]+)\]/', $template, $matches );
+    
+    $list = array();
+    
+    foreach( $matches[1] as $fieldname )
+    {
+      if( \PDb_Form_Field_Def::is_field( $fieldname ) ) {
+        $list[] = $fieldname;
+      }
+    }
+    
+    return $list;
   }
   
   /**
