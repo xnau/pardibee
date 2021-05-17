@@ -86,7 +86,7 @@ class string_combine extends dynamic_db_field {
     }
     
     // remove unreplaced tags, trim spaces and dangling commas
-    return preg_replace( '/^([ ,]*)|([ ,]*)$|\[[a-z_]+\]/', '', $replaced_string );
+    return preg_replace( array('/\[[a-z_]+\]/','/^([ ,]*)/','/([ ,]*)$/'), '', $replaced_string );
   }
   
   /**
