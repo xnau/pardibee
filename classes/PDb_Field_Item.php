@@ -727,8 +727,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     // for compatibility we are not prefixing the form element class name
     echo PDb_Template_Item::prep_css_class_string( $this->form_element ) . ' ' . $this->name() . '-input-group';
 
-    if ( $this->is_readonly() )
+    if ( $this->is_readonly() ) {
       echo ' readonly-element';
+    }
+    
+    if ( isset($this->attributes['class'] ) ) {
+      echo ' ' . $this->attributes['class'];
+    }
   }
 
   /**
