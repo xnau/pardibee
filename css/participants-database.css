@@ -13,6 +13,9 @@
 .readonly-element .helptext {
   display: none;
 }
+.readonly-element.show-help .helptext {
+  display: inherit;
+}
 .textarea {
   white-space: pre-wrap;
 }
