@@ -177,9 +177,13 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
         $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
 
-        Puc_v4_Factory::buildUpdateChecker(
+        $update_checker = Puc_v4_Factory::buildUpdateChecker(
                 $update_url, $plugin_file, $this->aux_plugin_name
         );
+        
+        add_action( 'participants_database_uninstall', function () use ( $update_checker ) {
+          $update_checker->resetUpdateState();
+        });
       }
     }
 
