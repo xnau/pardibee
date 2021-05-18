@@ -389,7 +389,7 @@ class PDb_Session {
     global $wpdb;
 
     // truncate the session table
-    $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}sm_sessions;" );
+    $wpdb->query( "TRUNCATE TABLE IF EXISTS {$wpdb->prefix}sm_sessions;" );
   }
 
   /**
@@ -400,7 +400,7 @@ class PDb_Session {
     global $wpdb;
 
     // delete session table
-    $wpdb->query( "DROP TABLE {$wpdb->prefix}sm_sessions;" );
+    $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}sm_sessions;" );
 
     delete_option( 'sm_session_db_version' );
   }
