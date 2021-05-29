@@ -593,22 +593,6 @@ class PDb_Field_Editor {
         );
         break;
       
-      case 'placeholder':
-        
-        $this->colorclass = 'utility';
-        $def = array(
-            'help_text' => false,
-            'attributes' => false,
-            'validation' => false,
-            'validation_message' => false,
-            'sortable' => false,
-            'csv' => false,
-            'persistent' => false,
-            'signup' => false,
-            'readonly' => false,
-        );
-        break;
-      
       case 'timestamp':
         
         $this->colorclass = 'numeric';

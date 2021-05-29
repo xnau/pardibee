@@ -72,6 +72,7 @@ class placeholder extends core {
   public function editor_config( $switches )
   {
     return array(
+        'form_element' => false,
         'readonly' => false,
         'help_text' => false,
         'persistent' => false,
