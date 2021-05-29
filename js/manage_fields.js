@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.8
+ * @version 2.9
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -149,7 +149,7 @@ PDbManageFields = (function ($) {
       },
       success: function (response) {
         if (response.status === 'success') {
-          editor.replaceWith(response.body);
+          editor.replaceWith($(response.body));
         }
         editor.css({opacity: 1});
         clearUnsavedChangesWarning();
@@ -528,7 +528,7 @@ PDbManageFields = (function ($) {
       $('.manage-fields').on('click', '.def-fieldset .editor-opener.field-open-icon', open_field_editor);
       $('.manage-fields').on('click', '.def-fieldset .editor-opener.field-close-icon', close_field_editor);
       // show/hide the validation message setting
-      $('.validation-attribute select').on('change', showhide_validation_message).each(showhide_validation_message);
+      $('.def-fieldset').on('change', '.validation-attribute select', showhide_validation_message).find('.validation-attribute select').each(showhide_validation_message);
       // set up the manage fields global action panels
       $('.button-showhide').slideUp();
       $('button.showhide').on('click.show', function () {
