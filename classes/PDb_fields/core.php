@@ -259,6 +259,16 @@ abstract class core {
   }
   
   /**
+   * provides the attributes string for an anchor tag
+   * 
+   * @return string html attribute
+   */
+  public function anchor_tag_attributes()
+  {
+    return \PDb_FormElement::html_attributes( $this->field->attributes, array('rel','download','target','type') );
+  }
+  
+  /**
    * sets the color class for the element
    * 
    * this is the key color used in the field editors
