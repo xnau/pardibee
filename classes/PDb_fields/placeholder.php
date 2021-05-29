@@ -46,11 +46,11 @@ class placeholder extends core {
   protected function display_value()
   {
     if ( $this->field->has_link() ) {
-      $template = '<a class="%3$s-link" href="%2$s">%1$s</a>';
+      $template = '<a class="%3$s-link" href="%2$s" %4$s >%1$s</a>';
     } else {
       $template = '%1$s';
     }
-    return sprintf( $template, $this->field->default_value, $this->field->link(), $this->field->name() );
+    return sprintf( $template, $this->field->default_value, $this->field->link(), $this->field->name(), $this->anchor_tag_attributes() );
   }
 
   /**
