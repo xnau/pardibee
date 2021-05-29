@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -85,8 +85,16 @@ class string_combine extends dynamic_db_field {
       return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
     }
     
-    // remove unreplaced tags, trim spaces and dangling commas
-    return preg_replace( array('/\[[a-z_]+\]/','/^([ ,]*)/','/([ ,]*)$/'), '', $replaced_string );
+    $cleanup_expression = apply_filters('pdb-string_combine_cleanup_expression_array', array(
+        '/\[[a-z0-9_]+\]/',
+        '/^([ ,]*)/',
+        '/([ ,]*)$/',
+        '/( )(?= )/',
+        '/(, |,)(?=,)/',
+        ) );
+    
+    // remove unreplaced tags, trim spaces and dangling or duplicate commas
+    return preg_replace( $cleanup_expression, '', $replaced_string );
   }
   
   /**
@@ -97,7 +105,9 @@ class string_combine extends dynamic_db_field {
    */
   private function replaced_string( $data )
   {
-    return \PDb_Tag_Template::replace_text( $this->field->default_value, $data ? : $this->replacement_data() );
+    $replacement_data = $data ? : $this->replacement_data();
+    
+    return \PDb_Tag_Template::replace_text( $this->field->default_value, $replacement_data );
   }
 
   /**
