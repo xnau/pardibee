@@ -115,7 +115,7 @@ class media_embed extends core {
   {
     $html = $this->media_embed_html();
     
-    if (! $this->field->is_read_only() ) {
+    if (! $this->field->is_read_only() || \Participants_Db::is_admin() ) {
       $parameters = array(
           'name' => $this->field->name(),
           'type' => 'text-line',
