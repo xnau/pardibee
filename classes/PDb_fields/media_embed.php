@@ -39,8 +39,8 @@ class media_embed extends core {
    */
   protected function display_value()
   {
-    if ( strpos( $this->field->module(), 'list' ) !== false ) {
-      return $this->field->value();
+    if ( apply_filters( 'pdb-media_embed_shows_link_in_list', true ) && strpos( $this->field->module(), 'list' ) !== false ) {
+      return $this->fallback_content( $this->field->value() );
     }
     
     return implode( PHP_EOL, $this->media_embed_html() );
@@ -85,6 +85,10 @@ class media_embed extends core {
    */
   private function fallback_content( $url )
   {
+    if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+      return $url; // not a valid url, return as-is
+    }
+    
     if ( preg_match( '/\.(' . implode( '|', self::valid_img_src_types() ) . ')$/', $url ) ) {
       return sprintf( '<img src="%s" />', $url );
     }
