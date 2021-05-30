@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.7
+ * @version    2.8
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -211,7 +211,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       }
       return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
     }
-    return $this->value_title($this->value);
+      
+    return $this->value_title($this->value);  
   }
 
   /**
@@ -698,8 +699,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" title="%2$s" >%2$s</a>';
     $url = Participants_Db::single_record_url( $this->record_id );
+    $clickable_text = strlen( $this->value ) === 0 ? $this->default : $this->value;
 
-    return sprintf( $pattern, $url, (empty( $this->value ) ? $this->default : $this->value ) );
+    return sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ) );
+  }
+  
+  /**
+   * strip out invalid tags for anchor tag
+   * 
+   * @param string $text
+   * @return string
+   */
+  private function anchor_tag_cleanup( $text )
+  {
+    $disallowed = implode( '|', apply_filters( 'pdb-disallowed_tags_in_anchor_tag', array('a','div') ) );
+    return preg_replace( '#<(' . $disallowed . ')(.*?)>(.*?)</\1>#ms', '$3', $text );
   }
 
   /**
