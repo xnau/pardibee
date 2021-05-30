@@ -148,10 +148,11 @@ class string_combine extends dynamic_db_field {
     
     foreach( $this->template_field_list() as $fieldname ) {
       
-      $template_field = new \PDb_Field_Item( array('name' => $fieldname ), $this->field->record_id );
+      $template_field = new \PDb_Field_Item( array('name' => $fieldname, 'module' => 'list' ), $this->field->record_id );
       
-      $data[$fieldname] = $template_field->display_array_value();
+      $data[$fieldname] = $template_field->get_value_display();
     }
+    
     /**
      * provides a way to bring in other values for use by the field
      * 
