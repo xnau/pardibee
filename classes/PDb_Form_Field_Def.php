@@ -763,6 +763,16 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * tells if the title (field label) is empty
+   * 
+   * @return bool true if there is a title string defined
+   */
+  public function has_title()
+  {
+    return strlen( $this->title ) > 0;
+  }
+
+  /**
    * tells if the field has a default value
    * 
    * @return bool true if the default is non-empty
@@ -780,6 +790,16 @@ class PDb_Form_Field_Def {
   public function has_validation_message()
   {
     return strlen( $this->validation_message ) > 0;
+  }
+  
+  /**
+   * tells if the current field can have an anchor tag wrapped around it
+   * 
+   * @return bool
+   */
+  public function is_linkable()
+  {
+    return PDb_FormElement::field_is_linkable( $this );
   }
 
   /**
