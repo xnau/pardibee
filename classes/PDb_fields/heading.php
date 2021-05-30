@@ -8,14 +8,14 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 
 namespace PDb_fields;
 
-class heading extends core {
+class heading extends utility {
 
   /**
    * @var string name of the form element
@@ -33,11 +33,7 @@ class heading extends core {
     
     $this->customize_default_attribute( __( 'Heading', 'participants-database' ), 'rich-text' );
     
-    $this->set_colorclass('utility');
-    
     $this->suppressed_shortcodes(array('list'));
-    
-    $this->is_dynamic_field();
   }
 
   /**
@@ -69,36 +65,6 @@ class heading extends core {
   public function form_element_html()
   {
     return \Participants_Db::apply_filters('translate_string', $this->field->default );
-  }
-
-  /**
-   *  provides the field editor configuration switches array
-   * 
-   * @param array $switches
-   * @return array
-   */
-  public function editor_config( $switches )
-  {
-    return array(
-        'readonly' => false,
-        'help_text' => false,
-        'persistent' => false,
-        'signup' => true,
-        'validation' => false,
-        'validation_message' => false,
-        'csv' => false,
-        'sortable' => false,
-    );
-  }
-
-  /**
-   * provides the form element's mysql datatype
-   * 
-   * @return string
-   */
-  protected function element_datatype()
-  {
-    return ''; // this element does not store data
   }
 
   /**
@@ -147,4 +113,15 @@ class heading extends core {
     return ! isset( $this->field->attributes()[ 'form_only' ] );
   }
 
+
+  /**
+   *  provides the field editor configuration switches array
+   * 
+   * @param array $switches
+   * @return array
+   */
+  public function editor_config( $switches )
+  {
+    return array_merge( parent::editor_config($switches), array( 'attributes' => false ) );
+  }
 }
