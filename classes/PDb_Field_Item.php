@@ -446,16 +446,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * tells if the title (field label) is empty
-   * 
-   * @return bool true if there is a title string defined
-   */
-  public function has_title()
-  {
-    return strlen( $this->title ) > 0;
-  }
-
-  /**
    * tells if the field has a non-empty value
    * 
    * alias of has_content()
@@ -633,11 +623,25 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( !$this->is_upload_field() ) {
       return false;
     }
+    
+    $has_file = false;
+    
     if ( $this->has_content() ) {
-      $filepath = trailingslashit( Participants_Db::files_path() ) . $this->value;
-      return is_file( $filepath );
+      
+      if ( class_exists( '\pdbiex\Media_Library_Image' ) ) {
+        $media = new \pdbiex\Media_Library_Image( $this->value );
+        
+        $has_file = $media->is_attachment();
+      }
+      
+      if ( ! $has_file ) {
+      
+        $filepath = trailingslashit( Participants_Db::files_path() ) . $this->value;
+        $has_file = is_file( $filepath );
+      }
     }
-    return false;
+    
+    return $has_file;
   }
 
   /**
@@ -903,7 +907,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return (
             Participants_Db::is_single_record_link( $this->name ) &&
-            !in_array( $this->form_element, array('rich-text', 'link') ) &&
+            $this->is_linkable() &&
             $this->record_id
             );
   }
