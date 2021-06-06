@@ -796,8 +796,6 @@ class PDb_FormElement extends xnau_FormElement {
         'hidden' => __( 'Hidden Field', 'participants-database' ),
         'password' => __( 'Password Field', 'participants-database' ),
         'captcha' => __( 'CAPTCHA', 'participants-database' ),
-//        'placeholder' => __( 'Placeholder', 'participants-database' ),
-//         'timestamp'          => __('Timestamp', 'participants-database'),
     );
     /**
      * this gives access to the list of form element types for alteration before
