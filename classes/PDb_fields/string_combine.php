@@ -150,7 +150,7 @@ class string_combine extends dynamic_db_field {
       
       $template_field = new \PDb_Field_Item( array('name' => $fieldname, 'module' => 'list' ), $this->field->record_id );
       
-      $data[$fieldname] = $template_field->get_value_display();
+      $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
     }
     
     /**
