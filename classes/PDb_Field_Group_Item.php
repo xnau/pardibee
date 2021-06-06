@@ -232,6 +232,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
         /* @var $field PDb_Form_Field_Def */
         if ( $field->has_value() ) {
           $has_field_values = true;
+          
           break;
         }
       }
