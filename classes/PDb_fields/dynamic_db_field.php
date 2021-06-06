@@ -41,8 +41,6 @@ abstract class dynamic_db_field extends core {
     add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
     add_filter( 'pdb-before_submit_add', array( $this, 'update_db_value' ) );
 
-    add_filter( 'pdb-field_has_content_test_value', array( $this, 'content_test_value' ), 10, 2 );
-
     add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
   }
 
@@ -125,18 +123,14 @@ abstract class dynamic_db_field extends core {
    * 
    * this value is used to determine if the field has content
    * 
-   * @param string $value the current value to test
    * @param \PDb_Field_Item $field
    * @return string the value to test
    */
-  public function content_test_value( $value, $field )
+  public function has_content_test( $field )
   {
-    if ( $field->form_element() === $this->name ) {
-      $this->set_field( $field );
-      $value = $this->dynamic_value();
-    }
-
-    return $value;
+    $this->field = $field;
+    
+    return $this->dynamic_value();
   }
 
   /**
