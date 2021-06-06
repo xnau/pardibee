@@ -2848,7 +2848,7 @@ class Participants_Db extends PDb_Base {
 
             // gets the export field list from the session value or the default set for CSV exports
             $csv_columns = self::get_column_atts( self::$session->getArray( 'csv_export_fields', 'CSV' ) );
-//            self::$session->clear('csv_export_fields');
+            
             $export_columns = array();
 
             foreach ( $csv_columns as $column ) {
@@ -2859,25 +2859,26 @@ class Participants_Db extends PDb_Base {
               $title_row[] = $field->title();
             }
             
-            $export_columns = implode( ', ', $export_columns );
+            $export_column_list = implode( ', ', $export_columns );
 
             $data['header'] = $header_row;
 
-            if ( $post_input['include_csv_titles'] )
+            if ( $post_input['include_csv_titles'] ) {
               $data['titles'] = $title_row;
+            }
 
             $query = false;
             
             if ( is_admin() ) {
               global $current_user;
-              $query = self::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
-              $query = str_replace( '*', ' ' . $export_columns . ' ', $query );
+              $saved_query = self::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
+              $query = str_replace( '*', ' ' . $export_column_list . ' ', $saved_query );
             } else {
-              $query = self::$session->get('csv_export_query');
-              if ( $query ) {
-                $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_columns . ' FROM', $query );
+              $saved_query = self::$session->get('csv_export_query');
+              if ( $saved_query ) {
+                $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_column_list . ' FROM', $saved_query );
               }
-//              self::$session->clear('csv_export_query');
+              
             }
 
             if ( $query ) {
