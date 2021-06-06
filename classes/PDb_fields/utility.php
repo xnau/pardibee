@@ -97,11 +97,13 @@ abstract class utility extends core {
   /**
    * supplies the value for testing if the element has content
    * 
+   * utility fields do not have a stored value, return false
+   * 
    * @param \PDb_Field_Item $field the current field
    * @return mixed the value to test
    */
   protected function has_content_test( $field ) {
-    return $field->default_value;
+    return false;
   }
   
 }
