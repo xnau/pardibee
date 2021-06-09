@@ -1967,6 +1967,33 @@ class PDb_Base {
     
     return stripos( $form_status, 'multipage' ) !== false;
   }
+  
+  /**
+   * provides the byte value for a php configuration shortcoand value
+   * 
+   * @param string $value
+   * @return int bytes
+   */
+  public static function shorthand_bytes_value( $value )
+  {
+    $mult = 1;
+    switch (true) {
+      
+      case stripos( $value, 'K' ) !== false:
+        $mult = 1000;
+        break;
+      
+      case stripos( $value, 'M' ) !== false:
+        $mult = 1000000;
+        break;
+      
+      case stripos( $value, 'G' ) !== false:
+        $mult = 1000000000;
+        break;
+    }
+    
+    return intval( $value ) * $mult;
+  }
 
   /**
    * Remove slashes from strings, arrays and objects
