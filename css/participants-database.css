@@ -530,12 +530,15 @@ svg.ajax-loading image {
 .hide-titles dl dt,
 .hide-titles .pdb-field-title,
 .hide-blank .blank-field,
-.hide-blank .image-blank-field {
+.hide-blank .image-blank-field,
+.pdb-single.hide-empty-group .pdb-group-novalues {
   display: none;
 }
 .pdb-single-flex.show-blank .flex-field.blank-field {
   display: inherit;
 }
+
+
 
 /* SINGLE FLEX */
 .pdb-single-flex {
