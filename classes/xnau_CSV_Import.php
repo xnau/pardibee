@@ -85,7 +85,7 @@ abstract class xnau_CSV_Import {
 
     if ( isset($_POST[$file_field]) && $this->check_submission() ) {
 
-      if ($this->_set_upload_dir()) {
+      if ($this->set_upload_dir()) {
 
         $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES['uploadedfile']['name']);
 
@@ -161,17 +161,15 @@ abstract class xnau_CSV_Import {
   /**
    * sets up the column name array
    *
-   * @param array $array an indexed array of string field names
-   *
    */
-  abstract protected function _set_column_array();
+  abstract protected function set_column_array();
 
   /**
    * sets and verifies the uploads directory
    *
    * @return bool true if the directory can be used
    */
-  abstract protected function _set_upload_dir();
+  abstract protected function set_upload_dir();
 
   /**
    * stores the record in the database
