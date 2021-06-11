@@ -50,31 +50,28 @@ class PDb_File_Uploads {
     if ( !is_dir( Participants_Db::files_path() ) ) {
 
       if ( false === Participants_Db::_make_uploads_dir() ) {
-        if ( PDB_DEBUG ) {
-          Participants_Db::debug_log('Uploads directory could not be created at: ' . Participants_Db::files_path() );
-        }
+        Participants_Db::debug_log('Uploads directory could not be created at: ' . Participants_Db::files_path() );
         return false;
       }
     }
 
+    /* this will fail either because the file size exceeds php configured maximums 
+     * or the file itself is not valid for some reason
+     */
     if ( !is_uploaded_file( realpath( $file['tmp_name'] ) ) ) {
       
       if ( filesize( realpath( $field_file['tmp_name'][$i] ) ) > ini_get( 'upload_max_filesize' ) ) {
 
         \Participants_Db::validation_error( sprintf( __( 'The file you tried to upload is too large. The file must be smaller than %sK.', 'participants-database' ), ceil( Participants_Db::shorthand_bytes_value( ini_get( 'upload_max_filesize' ) )/1000 ) ), $field_name );
       
-      if ( PDB_DEBUG ) {
         Participants_Db::debug_log( "File size exceeded php configuration limits: " . $file['name'] );
-      }
 
         return false;
       }
 
       Participants_Db::validation_error( __( 'There is something wrong with the file you tried to upload. Try another.', 'participants-database' ), $field_name );
       
-      if ( PDB_DEBUG ) {
-        Participants_Db::debug_log( "File upload could not be validated by the server: " . $file['name'] );
-      }
+      Participants_Db::debug_log( "File upload could not be validated by the server: " . $file['name'] );
 
       return false;
     }
@@ -90,9 +87,7 @@ class PDb_File_Uploads {
         Participants_Db::validation_error( sprintf( __( 'The file selected for "%s" must be one of these types: %s. ', 'participants-database' ), $field_def->title(), implode( ', ', $allowed_extensions ) ), $field_name );
       }
       
-      if ( PDB_DEBUG ) {
-        Participants_Db::debug_log( "File upload rejected, not of an allowed type: " . $file['name'] );
-      }      
+      Participants_Db::debug_log( "File upload rejected, not of an allowed type: " . $file['name'] );     
 
       return false;
     } else {
@@ -124,9 +119,7 @@ class PDb_File_Uploads {
 
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_def->title() ), $field_name );
         
-        if ( PDB_DEBUG ) {
-          Participants_Db::debug_log( "Image upload does not validate as an image file: " . $file['name'] );
-        }
+        Participants_Db::debug_log( "Image upload does not validate as an image file: " . $file['name'] );
       
         return false;
       }
@@ -136,9 +129,7 @@ class PDb_File_Uploads {
 
       Participants_Db::validation_error( sprintf( __( 'The file you tried to upload is too large. The file must be smaller than %sK.', 'participants-database' ), Participants_Db::plugin_setting_value('image_upload_limit') ), $field_name );
       
-      if ( PDB_DEBUG ) {
-        Participants_Db::debug_log( sprintf( "File upload is too large: %s is %s K bytes.", $file['name'], round( $file['size']/1024 ) ) );
-      }
+      Participants_Db::debug_log( sprintf( "File upload is too large: %s is %s K bytes.", $file['name'], round( $file['size']/1024 ) ) );
 
       return false;
     }
@@ -147,16 +138,12 @@ class PDb_File_Uploads {
 
       Participants_Db::validation_error( __( 'The file could not be saved.', 'participants-database' ) );
       
-      if ( PDB_DEBUG ) {
-        Participants_Db::debug_log( sprintf( "The file %s could not be saved in %s", $file['name'], Participants_Db::files_path() ) );
-      }
+      Participants_Db::debug_log( sprintf( "The file %s could not be saved in %s", $file['name'], Participants_Db::files_path() ) );
 
       return false;
     }
     
-    if ( PDB_DEBUG ) {
-      Participants_Db::debug_log( sprintf( __METHOD__ . ": The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
-    }
+    Participants_Db::debug_log( sprintf( __METHOD__ . ": The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
 
     return $new_filename;
   }
