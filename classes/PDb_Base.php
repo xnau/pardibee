@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -2183,14 +2183,17 @@ class PDb_Base {
    * 
    * @global PDb_Debug $PDb_Debugging
    * @param string $message the debugging message
+   * @param int $verbosity the verbosity level
    */
-  public static function debug_log( $message )
+  public static function debug_log( $message, $verbosity = 1 )
   {
-    global $PDb_Debugging;
-    if ( $PDb_Debugging && method_exists( $PDb_Debugging, 'write_debug' ) ) {
-      $PDb_Debugging->write_debug($message);
-    } else {
-      error_log( $message );
+    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG >= $verbosity ) {
+      global $PDb_Debugging;
+      if ( $PDb_Debugging && method_exists( $PDb_Debugging, 'write_debug' ) ) {
+        $PDb_Debugging->write_debug($message);
+      } else {
+        error_log( $message );
+      }
     }
   }
   
