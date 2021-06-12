@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.8
+ * @version    2.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -94,9 +94,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * allows direct setting of the value property
-   * 
-   * this is for backward compatibility
+   * allows direct setting of object properties
    * 
    * @param string $prop name of the property
    * @oaram mixed $value to set the property to
@@ -107,6 +105,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       case 'value':
         $this->_set_value( $value );
         break;
+      default:
+        $this->{$prop} = $value;
     }
   }
 
