@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -58,45 +58,6 @@ class PDb_Participant_Cache {
   private $staleness;
 
   /**
-   * sets up the cache handler
-   * 
-   * @param int $id of the record to get or update
-   */
-  public function __construct( $id )
-  {
-    $this->id = (int) $id;
-    
-    /**
-     * @version 1.6.2.6
-     * 
-     * filter 'pdb-get_participant_cache_size' sets the number or records to cache in each group
-     */
-    $this->group_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
-    $this->cache_group = (int) ( $this->id / $this->group_size );
-
-    $this->setup_staleness();
-    $this->set_data();
-  }
-
-  /**
-   * clears the cache where the target id is found
-   */
-  public function clear()
-  {
-    $this->_clear_cache();
-  }
-
-  /**
-   * supplies the participant data
-   * 
-   * @return array
-   */
-  public function get()
-  {
-    return isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
-  }
-
-  /**
    * static function to clear the cache in which the record is found
    * 
    * @param int $id the id of the record
@@ -131,6 +92,58 @@ class PDb_Participant_Cache {
     return $cache->get();
   }
   
+  /**
+   * clears all stale flags
+   */
+  public static function make_all_stale()
+  {
+    delete_transient(self::stale_flags);
+  }
+
+  /**
+   * sets up the cache handler
+   * 
+   * @param int $id of the record to get or update
+   */
+  private function __construct( $id )
+  {
+    $this->id = (int) $id;
+    
+    /**
+     * @version 1.6.2.6
+     * 
+     * filter 'pdb-get_participant_cache_size' sets the number or records to cache in each group
+     */
+    $this->group_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
+    $this->cache_group = (int) ( $this->id / $this->group_size );
+
+    $this->setup_staleness();
+    $this->set_data();
+  }
+
+  /**
+   * clears the cache where the target id is found
+   */
+  private function clear()
+  {
+    $this->_clear_cache();
+  }
+
+  /**
+   * supplies the participant data
+   * 
+   * @return array
+   */
+  private function get()
+  {
+    $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
+    
+    if ( ! $participant_data ) {
+      Participants_Db::debug_log(__METHOD__ . ' getting participant id ' . $this->id . ' failed' );
+    }
+    
+    return $participant_data;
+  }
   /**
    * provides the cache persistence time
    * 
@@ -176,7 +189,7 @@ class PDb_Participant_Cache {
   {
     $staleness = $this->get_staleness();
 
-    $this->staleness = (bool) $staleness === false || ( isset( $staleness[ $this->cache_group ] ) ? $staleness[ $this->cache_group ] : true );
+    $this->staleness = (bool) ( $staleness === false || ( isset( $staleness[ $this->cache_group ] ) ? $staleness[ $this->cache_group ] : true ) );
   }
 
   /**
@@ -248,9 +261,7 @@ class PDb_Participant_Cache {
 
     $this->set_fresh();
     
-    if ( PDB_DEBUG > 2 ) {
-      Participants_Db::debug_log('Refreshing Participants Database cache for cache group ' . $this->cache_group );
-    }
+    Participants_Db::debug_log( __METHOD__ . ': Refreshing Participants Database cache for cache group ' . $this->cache_group, 2 );
   }
 
   /**
