@@ -3445,8 +3445,9 @@ class Participants_Db extends PDb_Base {
 
     global $post;
 
-    if ( !is_object( $post ) )
+    if ( !is_object( $post ) ) {
       $post = get_post( $postinput['postID'] );
+    }
 
     self::print_list_search_result( $post, self::$instance_index );
 
