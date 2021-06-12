@@ -169,8 +169,10 @@ class PDb_List_Query {
        * @return bool true to allow
        */
       if ( Participants_Db::apply_filters( 'allow_get_searches', true ) ) {
+        
         $this->_add_filter_from_get();
       }
+      
       $this->_add_filter_from_post();
 
       /*
@@ -1546,18 +1548,22 @@ class PDb_List_Query {
   {
     switch ( urldecode( $operator ) ) {
       case '<':
+      case 'lt':
         return 'lt';
       case '>':
+      case 'gt':
         return 'gt';
       case '=':
+      case 'eq':
         return 'eq';
-      case 'lt':
-      case 'gt':
+      case 'ne':
+      case '<>':
+      case '!=':
+        return 'ne';
       case '~':
       case 'LIKE':
-      case 'eq':
-      case 'ne':
-        return $operator;
+      case 'like':
+        return 'LIKE';
       default:
         return '';
     }
