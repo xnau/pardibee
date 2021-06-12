@@ -575,7 +575,7 @@ class PDb_Form_Field_Def {
       $extensions_array = explode( '|', strtolower( $this->get_attribute('allowed') ) );
     }
     
-    return $extensions_array;
+    return array_filter( $extensions_array );
   }
   
   /**
