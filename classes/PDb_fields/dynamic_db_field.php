@@ -147,13 +147,16 @@ abstract class dynamic_db_field extends core {
   public function maybe_update_database( $field_data, $info )
   {
     if ( $field_data[ 'form_element' ] === $this->name ) {
+      
       $field_def = \Participants_Db::get_field_atts( $info[ 'name' ] );
 
       if ( $field_def->default_value() !== $field_data[ 'default' ] ) {
-
-        $field_def->default = $field_data[ 'default' ];
+      
+        $this->set_field($field_def);
+        $this->field->default = $field_data[ 'default' ];
+    
         // do the update
-        $this->update_all_records( $field_def );
+        $this->update_all_records();
       }
     }
 
@@ -164,19 +167,18 @@ abstract class dynamic_db_field extends core {
    * updates all records with the dynamic value
    * 
    * @global \wpdb $wpdb
-   * @param \PDb_Form_Field_Def $field_def
    */
-  protected function update_all_records( $field_def )
+  protected function update_all_records()
   {
     global $wpdb;
 
-    $record_list = $wpdb->get_results( 'SELECT p.id, p.' . $field_def->name() . ' FROM ' . \Participants_Db::$participants_table . ' p ORDER BY p.id ASC' );
+    $record_list = $wpdb->get_results( 'SELECT p.id, p.' . $this->field->name() . ' FROM ' . \Participants_Db::$participants_table . ' p ORDER BY p.id ASC' );
         
     status_header( 200 );
 
     foreach ( $record_list as $record ) {
     
-      $packet = (object) array( 'record_id' => $record->id, 'field' => $field_def );
+      $packet = (object) array( 'record_id' => $record->id, 'field' => $this->field->name(), 'default' => $this->field->default_value() );
       $this->process->push_to_queue( $packet );
     }
 
@@ -192,9 +194,9 @@ abstract class dynamic_db_field extends core {
   public function update_record( $packet )
   {
     global $wpdb;
-
     $this->set_field( $packet->field );
     $this->field->set_record_id( $packet->record_id );
+    $this->field->default = $packet->default;
     $value = $this->dynamic_value();
     
     $wpdb->update( \Participants_Db::participants_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
@@ -214,6 +216,10 @@ class dynamic_value_update extends \WP_Background_Process {
    */
   public $dynamic_db_field;
 
+  /**
+   * 
+   * @param dynamic_db_field $dynamic_db_field
+   */
   public function __construct( $dynamic_db_field )
   {
     $this->dynamic_db_field = $dynamic_db_field;
