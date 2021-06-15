@@ -70,11 +70,6 @@ class PDb_List_Query {
   private $post_input;
 
   /**
-   * @var \PDb_submission\list_search_get the sanitized get array
-   */
-  private $get_input;
-
-  /**
    * 
    * @var string name of the query session value
    */
@@ -469,10 +464,10 @@ class PDb_List_Query {
    */
   private function _add_filter_from_get()
   {
-    $this->get_input = new PDb_submission\list_search_get();
+    $get_input = new PDb_submission\list_search_get();
 
-    if ( $this->get_input->has_search() ) {
-      $this->_add_filter_from_input( $this->get_input->submission() );
+    if ( $get_input->has_search() ) {
+      $this->_add_filter_from_input( $get_input->submission() );
     }
   }
 
@@ -512,7 +507,6 @@ class PDb_List_Query {
    */
   private function _add_filter_from_input( $input )
   {
-
 //   error_log(__METHOD__.' input: '.print_r($input,1));
 
     $set_logic = Participants_Db::plugin_setting_is_true( 'strict_search' ) ? 'AND' : 'OR';
@@ -1349,7 +1343,7 @@ class PDb_List_Query {
   /**
    * restores the query session
    * 
-   * @return bool true is valid session was found
+   * @return bool true if valid session was found
    */
   private function _restore_query_session()
   {
@@ -1496,6 +1490,7 @@ class PDb_List_Query {
   /**
    * supplies a common input filter array
    * 
+   * @return array
    */
   private static function _common_search_input_filter()
   {
