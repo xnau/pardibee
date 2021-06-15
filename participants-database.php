@@ -2236,37 +2236,44 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_participant( $id )
   {
-
-    if ( false === $id )
+    if ( false === $id ) {
       return self::get_default_record();
-
-    if ( self::apply_filters( 'use_participant_caching', true ) ) {
-      return PDb_Participant_Cache::get_participant( $id );
-    } else {
-      return self::_get_participant( $id );
     }
+    
+    $record = false;
+
+    /**
+     * provides a way to bypass the cache when getting a participant record
+     * 
+     * @filter pdb-use_participant_caching
+     * @param bool
+     * @return bool
+     */
+    if ( self::apply_filters( 'use_participant_caching', true ) ) {
+      $record = PDb_Participant_Cache::get_participant( $id );
+    } 
+    
+    if ( ! $record ) {
+     $record = self::_get_participant( $id );
+    }
+    
+    return $record;
   }
 
   /**
    * gets an array of record values
    *
-   * as of 1.5.5 returns only registered columns
-   *
-   * @ver 1.5 added $wpdb->prepare
-   * 
-   * @var 1.6.2.6 added as alternative to cache
-   *
-   * @global object $wpdb
-   * @param  string|bool $id the record ID; returns default record if omitted or bool false 
+   * @global wpdb $wpdb
+   * @param  int $id the record ID
    * 
    * @return array|bool associative array of name=>value pairs; false if no record 
    *                    matching the ID was found 
    */
-  private static function _get_participant( $id = false )
+  private static function _get_participant( $id )
   {
     global $wpdb;
 
-    $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %s';
+    $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %d';
 
     $result = $wpdb->get_row( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
