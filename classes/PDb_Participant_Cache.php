@@ -58,6 +58,19 @@ class PDb_Participant_Cache {
   private $staleness;
 
   /**
+   * supplies the cached data for the record
+   * 
+   * @param int $id
+   * 
+   * @return array|bool data array or bool false if no cached record found
+   */
+  public static function get_participant( $id )
+  {
+    $cache = new self( $id );
+    return $cache->get();
+  }
+
+  /**
    * static function to clear the cache in which the record is found
    * 
    * @param int $id the id of the record
@@ -78,19 +91,6 @@ class PDb_Participant_Cache {
     $cache = new self( $id );
     $cache->set_stale();
   }
-
-  /**
-   * supplies the cached data for the record
-   * 
-   * @param int $id
-   * 
-   * @return array|bool data array or bool false if no record matches the id
-   */
-  public static function get_participant( $id )
-  {
-    $cache = new self( $id );
-    return $cache->get();
-  }
   
   /**
    * clears all stale flags
@@ -110,9 +110,11 @@ class PDb_Participant_Cache {
     $this->id = (int) $id;
     
     /**
-     * @version 1.6.2.6
+     * sets the number or records to cache in each group
      * 
-     * filter 'pdb-get_participant_cache_size' sets the number or records to cache in each group
+     * @filter pdb-get_participant_cache_size
+     * @param int number of records in a group
+     * @return int
      */
     $this->group_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
     $this->cache_group = (int) ( $this->id / $this->group_size );
