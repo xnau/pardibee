@@ -202,8 +202,6 @@ abstract class xnau_CSV_Import {
 
       return false;
     }
-    
-    include_once Participants_Db::$plugin_path . 'vendor/ParseCsv/parsecsv.lib.php';
 
     $this->CSV = new \ParseCsv\Csv();
 
@@ -220,8 +218,9 @@ abstract class xnau_CSV_Import {
     $this->CSV->enclosure = $this->_detect_enclosure($src_file);
     $this->CSV->parse($src_file);
 
-    if (PDB_DEBUG and $this->CSV->error)
+    if (PDB_DEBUG and $this->CSV->error) {
       Participants_Db::debug_log(__METHOD__ . ' CSV parse error:' . print_r($this->CSV->error_info, 1));
+    }
 
     /*
      * build the column names from the CSV if we have one and it's different from 

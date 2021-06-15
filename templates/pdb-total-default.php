@@ -3,7 +3,7 @@
  *
  * template for a total value output
  * 
- * this demonstrates how to show various types ot total from the database
+ * this demonstrates how to show various types of totals from the database
  *
  */
   
@@ -41,4 +41,3 @@ if (empty($this->shortcode_atts['fields'])) {
   echo $total;
   
 }
-?>

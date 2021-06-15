@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.9.6.8
+ * Version: 1.9.7
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -14,7 +14,7 @@
  * 
  * 
  * 
- * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
+ * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 3, as
@@ -41,9 +41,9 @@ spl_autoload_register( 'PDb_class_loader' );
  * @category   WordPress Plugins
  * @package    wordPress
  * @author     Roland Barker <webdesign@xnau.com>
- * @copyright  2011 - 2020 7th Veil, LLC
+ * @copyright  2011 - 2021 7th Veil, LLC
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GPL2
- * @version    Release: 1.8.1
+ * @version    Release: 1.8.2
  * 
  */
 class Participants_Db extends PDb_Base {
@@ -189,12 +189,6 @@ class Participants_Db extends PDb_Base {
   public static $email_headers;
 
   /**
-   * enclosure character to use
-   * @var string
-   */
-  public static $CSV_enclosure = '"';
-
-  /**
    * list of reserved field names
    * @var array
    */
@@ -252,7 +246,7 @@ class Participants_Db extends PDb_Base {
   /**
    * @var int the number of characters to use in the private ID
    */
-  public static $private_id_length = 5;
+  public static $private_id_length = 7;
 
   /**
    * @var int maximum number of emails to send per session
@@ -286,6 +280,9 @@ class Participants_Db extends PDb_Base {
     
     // set the debug global if not already
     self::set_debug_mode();
+    
+    // add the composer autoload
+    require_once self::$plugin_path . '/vendor/autoload.php';
 
     self::$last_record = self::$prefix . 'last_record';
     self::$css_prefix = self::$prefix;
@@ -367,6 +364,17 @@ class Participants_Db extends PDb_Base {
     
     // action for handling the list columns UI
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
+    
+    // register some plugin events
+    add_filter( 'pdb-register_global_event', function ($events){
+      
+      $events['pdb-view_single_record'] = __( 'View Single Record', 'participants-database' );
+      $events['pdb-open_record_edit'] = __( 'Open Edit Record Form', 'participants-database' );
+      $events['pdb-record_accessed_using_private_link'] = __( 'Record Accessed with Private Link', 'participants-database' );
+      $events['pdb-first_time_record_access_with_private_link'] = __( 'Record Accessed First Time with Private Link', 'participants-database' );
+      
+      return $events;
+    });
 
     /*
      * any plugins that require Participants Database should initialize on this action
@@ -464,12 +472,7 @@ class Participants_Db extends PDb_Base {
    * runs any admin-only initializations
    */
   public static function admin_init()
-  {
-    /**
-     * sets up the update notification and update detail screens
-     */
-    new PDb_Update_Notices( __FILE__ );
-    
+  { 
     // set up the fields update processor
     new PDb_Manage_Fields_Updates();
     
@@ -490,6 +493,7 @@ class Participants_Db extends PDb_Base {
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
     }
+
   }
 
   /**
@@ -588,14 +592,13 @@ class Participants_Db extends PDb_Base {
     /*
      * register frontend scripts and stylesheets
      */
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), '1.6' );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), '1.7' );
     wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$Settings->option_version() );
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
     wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.5' );
-    wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.4' );
-//    wp_register_script( self::$prefix . 'jq-placeholder', plugins_url( 'js/jquery.placeholder.min.js', __FILE__ ), array('jquery') );
+    wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.5' );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery'), '0.5' );
   }
 
@@ -638,13 +641,13 @@ class Participants_Db extends PDb_Base {
      */
     $presuffix = self::use_minified_assets() ? '.min' : '';
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
-    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.6', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.6' );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$presuffix.js" ), array('jquery'), self::$plugin_version );
@@ -657,16 +660,16 @@ class Participants_Db extends PDb_Base {
       wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$Settings->option_version() );
     }
     
-    // jquery UI rheme
+    // jquery UI theme
     wp_register_style( self::$prefix . 'jquery-ui', self::asset_url( "css/jquery-ui-theme/jquery-ui.min.css" ) );
     wp_register_style(self::$prefix . 'jquery-ui-structure', self::asset_url( "css/jquery-ui-theme/jquery-ui.structure.min.css" ) );
-    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.1' );
+    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.9' );
     
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.4' );
     wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
@@ -691,6 +694,15 @@ class Participants_Db extends PDb_Base {
 
     if ( false !== stripos( $hook, 'participants-database_settings_page' ) ) {
       wp_enqueue_script( self::$prefix . 'settings_script' );
+    }
+    
+
+    if ( false !== stripos( $hook, 'participants-database_settings_page' ) || false !== stripos( $hook, 'participants-database-manage_fields' ) ) {
+    
+      if ( !class_exists( '\_WP_Editors' ) ) {
+        require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+      }
+      \_WP_Editors::enqueue_default_editor();
     }
 
     if ( false !== stripos( $hook, 'participants-database-edit_participant' ) ) {
@@ -854,29 +866,26 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_record_edit_form( $atts )
   {
-    $record_id = false;
+    // check for the ID in the shortcode first
+    $record_id = PDb_Record::get_id_from_shortcode( $atts );
     
-    // get the pid from the get string if given
-    $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
-
-    if ( empty( $get_pid ) ) {
-      $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
-    }
+    if ( ! $record_id ) {
     
-    if ( !empty( $get_pid ) ) {
-      $record_id = self::get_participant_id( $get_pid );
-    }
+      // get the pid from the get string if given
+      $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
 
-    if ( $record_id === false ) {
-      $record_id = self::$session->record_id( true );
-    }
-
-    if ( $record_id === false && (isset( $atts['id'] ) || isset( $atts['record_id'] )) ) {
-      if ( isset( $atts['id'] ) & !isset( $atts['record_id'] ) ) {
-        $atts['record_id'] = $atts['id'];
-        unset( $atts['id'] );
+      if ( empty( $get_pid ) ) {
+        $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
       }
-      $record_id = self::get_record_id_by_term( 'id', $atts['record_id'] );
+
+      if ( !empty( $get_pid ) ) {
+        $record_id = self::get_participant_id( $get_pid );
+      }
+
+      if ( $record_id === false ) {
+        $record_id = self::$session->record_id( true );
+      }
+      
     }
     
     $atts['record_id'] = $record_id;
@@ -894,7 +903,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _record_access( $id )
   {
-
     global $wpdb;
 
     $sql = 'UPDATE ' . self::$participants_table . ' SET `last_accessed` = NOW() WHERE `id` = %s';
@@ -1086,28 +1094,45 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * sets up the $fields array
+   * sets up the field definition array
    * 
    * @global wpdb $wpdb
    */
   private static function _setup_fields()
   {
-    $cachekey = 'pdb_fields_array';
-    self::$fields = wp_cache_get($cachekey);
+    $field_defs = wp_cache_get( PDb_Form_Field_Def::def_cache );
     
-    if ( ! self::$fields ) {
+    if ( ! $field_defs ) {
+      
       global $wpdb;
-      self::$fields = array();
-      $sql = 'SELECT v.name 
-              FROM ' . self::$fields_table . ' v 
+      
+      $sql = 'SELECT v.name, v.*, g.title AS grouptitle, g.id AS groupid  
+              FROM ' . Participants_Db::$fields_table . ' v 
+                JOIN ' . Participants_Db::$groups_table . ' g
+                  ON v.group = g.name 
               ORDER BY v.order';
-      $result = $wpdb->get_results( $sql );
+      $field_defs = $wpdb->get_results( $sql, OBJECT_K );
       
-      foreach ( $result as $column ) {
-        self::$fields[$column->name] = new PDb_Form_Field_Def( $column->name );
-      }
+      wp_cache_set( PDb_Form_Field_Def::def_cache, $field_defs );
+    }
+    
+    self::_setup_fields_prop( $field_defs );
+    
+    // add our modular fields
+    new \PDb_fields\initialize();
+  }
+  
+  /**
+   * sets up the fields property
+   * 
+   * @param array $field_defs array of fields definition objects
+   */
+  private static function _setup_fields_prop( $field_defs )
+  {
+    self::$fields = array();
       
-      wp_cache_set($cachekey, self::$fields, '', self::cache_expire() );
+    foreach ( $field_defs as $field ) {
+      self::$fields[$field->name] = new PDb_Form_Field_Def( $field->name );
     }
   }
 
@@ -1357,7 +1382,8 @@ class Participants_Db extends PDb_Base {
   /**
    * checks a string against active columns to validate input
    * 
-   * @var string $string the name to test
+   * @param string $string the name to test
+   * @return bool
    */
   public static function is_column( $string )
   {
@@ -1367,16 +1393,18 @@ class Participants_Db extends PDb_Base {
   /**
    * checks a string against defined groups to validate a group name
    * 
-   * @var string $string the name to test
+   * @global wpdb $wpdb
+   * @param string $string the name to test
+   * @return bool
    */
   public static function is_group( $string )
   {
-
     global $wpdb;
 
     $sql = 'SELECT COUNT(*)
 		        FROM ' . self::$groups_table . ' g
-            WHERE g.name = %s';
+            WHERE g.name = %s 
+            AND g.mode IN ("admin","private","public")';
 
     $count = $wpdb->get_var( $wpdb->prepare( $sql, trim( $string ) ) );
 
@@ -1396,7 +1424,7 @@ class Participants_Db extends PDb_Base {
   public static function get_column_atts( $filter = 'new' )
   {
     global $wpdb;
-
+    
     if ( is_array( $filter ) ) {
       $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
     } else {
@@ -1466,6 +1494,31 @@ class Participants_Db extends PDb_Base {
 
     return $result;
   }
+  
+  /**
+   * provides a list of main db columns
+   * 
+   * @global wpdb $wpdb
+   * @return array of column names
+   */
+  public static function table_columns()
+  {
+    $cachekey = 'pdb-table-columns';
+    
+    $columns = wp_cache_get($cachekey);
+    
+    if ( ! $columns ) {
+      global $wpdb;
+      $shown_columns = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::participants_table() );
+      $columns = array();
+      foreach( $shown_columns as $column ) {
+        $columns[] = $column->Field;
+      }
+      wp_cache_add( $cachekey, $columns );
+    }
+    
+    return $columns;
+  }
 
   /**
    * builds an object of all participant values structured by groups and columns
@@ -1525,7 +1578,7 @@ class Participants_Db extends PDb_Base {
   /**
    * processes a form submit
    *
-   * this processes all record form submissions front-end and back-
+   * this processes all record form submissions front- and back-end
    * 
    * @global wpdb $wpdb
    * 
@@ -1903,7 +1956,7 @@ class Participants_Db extends PDb_Base {
 
               if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
                 
-                if ( $participant_id && ( self::plugin_setting_is_true('file_delete') || is_admin() ) ) {
+                if ( $participant_id ) {
                   
                   $filename = '';
                   if ( array_key_exists( $column->name, $_POST ) ) {
@@ -1913,7 +1966,9 @@ class Participants_Db extends PDb_Base {
                     $record_filename = $wpdb->get_var( $wpdb->prepare('SELECT `' . $column->name . '` FROM ' . self::participants_table() . ' WHERE id = %s', $participant_id ) );
                     
                     if ( $post_filename === $record_filename ) {
-                      self::delete_file( $record_filename );
+                      if ( self::plugin_setting_is_true('file_delete') || self::is_admin() ) {
+                        self::delete_file( $record_filename );
+                      }
                       unset( $_POST[$column->name] );
                       $post[$column->name] = '';
                     }
@@ -2119,24 +2174,18 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_default_record( $add_persistent = true )
   {
-    $sql = 'SELECT f.name,f.default,f.form_element 
-            FROM ' . self::$fields_table . ' f
-              JOIN ' . self::$groups_table . ' g 
-                ON f.group = g.name
-                
-            WHERE f.group != "internal" 
-            AND f.form_element NOT IN ("placeholder","link")  
-            AND g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")';
-
-    global $wpdb;
-
-    $result = $wpdb->get_results( $sql );
-
     $default_record = array();
 
-    foreach ( $result as $column ) {
+    foreach ( self::$fields as $fieldname => $field ) {
+      /** @var PDb_Form_Field_Def $field */
+      
+      // skip fields that don't have a stored value in the main database
+      if ( ! in_array( $field->name(), Participants_Db::table_columns() ) ) {
+        continue;
+      }
 
-      $default_record[$column->name] = ( $column->form_element === 'hidden' && self::is_dynamic_value($column->default) ) ? '' : $column->default;
+      $default_record[$fieldname] = $field->default_display();
+
     }
 
     // get the id of the last record stored
@@ -2160,18 +2209,10 @@ class Participants_Db extends PDb_Base {
       }
     }
 
-    // fill in some convenience values
-    //global $current_user;
-
-//    if ( is_object( $current_user ) ) $default_record['by'] = $current_user->display_name;
-//    $default_record['when'] = date_i18n(self::$date_format);
     $default_record['private_id'] = self::generate_pid();
+
     PDb_Date_Display::reassert_timezone();
     $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
-    /*
-     * @version 1.6 stop setting date_updated on new record
-     */
-    // $default_record['date_updated'] = date('Y-m-d H:i:s');
 
     return $default_record;
   }
@@ -2220,12 +2261,9 @@ class Participants_Db extends PDb_Base {
    */
   private static function _get_participant( $id = false )
   {
-
     global $wpdb;
 
-    $columns = array_keys( self::field_defs() );
-
-    $sql = 'SELECT p.' . implode( ',p.', $columns ) . ' FROM ' . self::$participants_table . ' p WHERE p.id = %s';
+    $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %s';
 
     $result = $wpdb->get_row( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
@@ -2368,7 +2406,6 @@ class Participants_Db extends PDb_Base {
     if ( NULL !== $id_exists )
       return $id_exists === '0' ? false : true;
     else {
-      error_log( __METHOD__ . ' called with invalid arguments' );
       return false;
     }
   }
@@ -2529,6 +2566,12 @@ class Participants_Db extends PDb_Base {
     global $wpdb;
 
     $datatype = PDb_FormElement::get_datatype( $atts );
+    
+    // an empty or false datatype skips adding the field's column to the main table
+    if ( ! $datatype ) {
+      
+      return true;
+    }
 
     $sql = 'ALTER TABLE `' . self::participants_table() . '` ADD `' . $atts['name'] . '` ' . $datatype . ' NULL';
 
@@ -2677,6 +2720,20 @@ class Participants_Db extends PDb_Base {
          * send the update notification
          */
         if ( !is_admin() ) {
+          
+          $feedback_props = array(
+              "send_notification" => Participants_Db::plugin_setting( 'send_signup_notify_email' ),
+              "notify_recipients" => Participants_Db::plugin_setting( 'email_signup_notify_addresses' ),
+              "notify_subject" => Participants_Db::plugin_setting( 'record_update_email_subject' ),
+              "notify_body" => Participants_Db::plugin_setting( 'record_update_email_body' ),
+              "email_header" => Participants_Db::$email_headers,
+              "thanks_message" => self::plugin_setting('record_updated_message'),
+              'participant_values' => $record,
+          );
+          
+          $feedback = new \PDb_submission\feedback($feedback_props);
+          
+          do_action( 'pdb-before_update_thanks', $feedback );
 
           /*
            * if the user is an admin, the validation object won't be instantiated, 
@@ -2685,16 +2742,16 @@ class Participants_Db extends PDb_Base {
           if ( !is_object( self::$validation_errors ) )
             self::$validation_errors = new PDb_FormValidation();
 
-          self::$validation_errors->add_error( '', self::plugin_setting('record_updated_message') );
+          self::$validation_errors->add_error( '', $feedback->thanks_message );
 
           if ( self::plugin_setting_is_true('send_record_update_notify_email') && !self::is_multipage_form() ) {
 
             PDb_Template_Email::send( array(
-                'to' => self::plugin_setting( 'email_signup_notify_addresses' ),
-                'subject' => self::plugin_setting( 'record_update_email_subject' ),
-                'template' => self::plugin_setting( 'record_update_email_body' ),
+                'to' => $feedback->notify_recipients,
+                'subject' => $feedback->notify_subject,
+                'template' => $feedback->notify_body,
                 'context' => 'record update notify',
-                    ), $participant_id
+                    ), $feedback->participant_values
             );
           }
           
@@ -2788,7 +2845,7 @@ class Participants_Db extends PDb_Base {
 
             // gets the export field list from the session value or the default set for CSV exports
             $csv_columns = self::get_column_atts( self::$session->getArray( 'csv_export_fields', 'CSV' ) );
-            self::$session->clear('csv_export_fields');
+//            self::$session->clear('csv_export_fields');
             $export_columns = array();
 
             foreach ( $csv_columns as $column ) {
@@ -2817,7 +2874,7 @@ class Participants_Db extends PDb_Base {
               if ( $query ) {
                 $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_columns . ' FROM', $query );
               }
-              self::$session->clear('csv_export_query');
+//              self::$session->clear('csv_export_query');
             }
 
             if ( $query ) {
@@ -2857,7 +2914,7 @@ class Participants_Db extends PDb_Base {
 
           // output the data lines
           foreach ( $data as $line ) {
-            fputcsv( $output, $line, ',', self::$CSV_enclosure );
+            fputcsv( $output, $line, PDb_admin_list\csv::delimiter(), PDb_admin_list\csv::enclosure() );
           }
 
           fclose( $output );
@@ -2889,7 +2946,7 @@ class Participants_Db extends PDb_Base {
          * filter: pdb-before_submit_signup
          */
         $post_data = self::apply_filters( 'before_submit_signup', $_POST );
-
+        
         /*
          * the signup form should update the current record if it is revisited during a multipage form session
          */
@@ -3057,7 +3114,7 @@ class Participants_Db extends PDb_Base {
               ), $match_id
       );
     } else {
-      error_log( __METHOD__ . ' primary email address field undefined' );
+      self::debug_log( __METHOD__ . ' primary email address field undefined' );
     }
 
     if ( self::plugin_setting_is_true( 'send_retrieve_link_notify_email' ) ) {
@@ -3119,7 +3176,7 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * applies the rict text filter
+   * applies the rich text filter
    * 
    * this can be overridden; the filter is set in self::init()
    * 
@@ -3174,7 +3231,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _prepare_CSV_rows( $raw_array )
   {
-
     $output = array();
 
     foreach ( $raw_array as $value ) {
@@ -3598,6 +3654,12 @@ class Participants_Db extends PDb_Base {
        */
       self::$Settings->initialize();
     } 
+    
+    global $pagenow;
+    if ( $pagenow === 'plugins.php' ) {
+      $hook = 'in_plugin_update_message-participants-database/participants-database.php';
+      add_action( $hook, array( 'PDb_Init', 'print_upgrade_notice' ), 20, 2 );
+    }
 
     /*
      * this allows the possibility of a child class handling the admin list display
@@ -3727,10 +3789,6 @@ class Participants_Db extends PDb_Base {
    */
   private static function _get_plugin_data( $key = 'Name' )
   {
-
-    if ( !defined( 'ABSPATH' ) )
-      return '';
-
     if ( ! function_exists( 'get_plugin_data' ) ) {
       include_once ABSPATH . '/wp-admin/includes/plugin.php';
     }
@@ -3831,7 +3889,7 @@ function PDb_class_loader( $class )
 /**
  * PHP version checks and notices before initializing the plugin
  */
-if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) { // 
+if ( version_compare( PHP_VERSION, Participants_Db::min_php_version, '>=' ) ) {
   
   if ( is_null( Participants_Db::$plugin_version ) ) { // check for the uninitialized class
     Participants_Db::initialize();

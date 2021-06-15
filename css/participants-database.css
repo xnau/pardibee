@@ -242,7 +242,6 @@ input[type="color"] {
 .pdb-list .pdb-searchform {
   margin-bottom: 1.5em;
 }
-.pdb-list .pdb-searchform fieldset,
 .pdb-list table caption {
   margin: 1em 0;
 }
@@ -262,6 +261,13 @@ input[type="color"] {
 .hide-titles.pdb-list thead {
   display: none;
 }
+.pdb-searchform .radio-group {
+    display: inline-block;
+    vertical-align: middle;
+}
+.pdb-searchform .radio-group fieldset {
+    margin: 0
+}
 .pdb-searchform input[type=text],
 .pdb-searchform input[type=submit],
 .pdb-searchform select,
@@ -272,16 +278,13 @@ input[type="color"] {
 .pdb-searchform input[type=radio] {
   margin-left:5px;
 }
-.pdb-searchform .radio-group {
-  display: inline-block;
-}
 .ajax-loading {
   display: inline-block;
   margin-left: 5px;
   margin-right: 5px;
   visibility: visible;
   position: relative;
-  vertical-align: middle;
+  vertical-align: top;
   width: 32px;
   height: 32px;
 }
@@ -461,7 +464,7 @@ svg.ajax-loading image {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  width: 100%;
+  width: auto;
   text-align: center;
 }
 .pdb-flexbox-list.pdb-list .pagination li {
@@ -472,7 +475,7 @@ svg.ajax-loading image {
   vertical-align: middle;
 }
 .pdb-flexbox-list .pdb-pagination span.ajax-loading {
-  postion: absolute;
+  position: absolute;
 }
 .pdb-flexbox-list .pdb-list .pagination li > span, 
 .pdb-flexbox-list .pdb-pagination li > span, 
@@ -629,13 +632,16 @@ svg.ajax-loading image {
   color: #0073aa;
 }
 .dashicons-no:before,
+.dashicons-no-alt:before,
 .dashicons-info.warning:before {
   color: #D64E07;
 }
-.dashicons-no:hover:before {
+.dashicons-no:hover:before,
+.dashicons-no-alt:hover:before {
   color: white;
 }
-.dashicons-no:hover:before {
+.dashicons-no:hover:before,
+.dashicons-no-alt:hover:before {
   background-color: #D64E07;
 }
 .dashicons-yes:before {

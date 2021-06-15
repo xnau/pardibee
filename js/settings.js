@@ -3,43 +3,59 @@
  * 
  * sets up the tab functionality on the plugin settings page
  * 
- * @version 0.4
+ * @version 0.5
  * 
  */
 PDbSettings = (function ($) {
-  var
-          tabsetup,
-          lastTab = 'pdb-settings-page-tab',
-          effect = {
-            effect : 'fadeToggle',
-            duration : 200
-          };
-  if ($.versioncompare("1.9", $.ui.version) == 1) {
-    tabsetup = {
-      fx : {
-        opacity : "show",
-        duration : "fast"
-      },
-      cookie : {
-        expires : 1
+  var lastTab = 'pdb-settings-page-tab';
+  var effect = {
+    effect: 'fadeToggle',
+    duration: 200
+  };
+  var getCurrentTab = function () {
+    var currentTab = isNaN(Cookies.get(lastTab)) ? 0 : Cookies.get(lastTab);
+    var tabvar = 'settingstab';
+    if (typeof URLSearchParams !== 'function') {
+      return currentTab; // if the browser doesn't support this function, return now
+    }
+    var urlTab = new URLSearchParams(window.location.search).get(tabvar);
+    if (urlTab) {
+      var selectedTab = $('[href="#pdb-'+urlTab+'"]');
+      if (selectedTab.length) {
+        currentTab = selectedTab.data('index');
+      } else {
+        currentTab = urlTab;
       }
     }
-  } else {
-    tabsetup = {
-      hide : effect,
-      show : effect,
-      active : Cookies.get(lastTab),
-      activate : function (event, ui) {
-        Cookies.set(lastTab, ui.newTab.index(), {
-          expires : 365, path : ''
-        });
-      }
-    }
+    return parseInt(currentTab);
   }
   return {
-    init : function () {
+    init: function () {
       var wrapped = $(".participants_db.wrap .ui-tabs>h2, .participants_db.wrap .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">");
       var wrapclass = $('.participants_db.wrap').attr('class');
+      var tabsetup;
+      if ($.versioncompare("1.9", $.ui.version) == 1) {
+        tabsetup = {
+          fx: {
+            opacity: "show",
+            duration: "fast"
+          },
+          cookie: {
+            expires: 1
+          }
+        }
+      } else {
+        tabsetup = {
+          hide: effect,
+          show: effect,
+          active: getCurrentTab(),
+          activate: function (event, ui) {
+            Cookies.set(lastTab, ui.newTab.index(), {
+              expires: 365, path: ''
+            });
+          }
+        }
+      }
       wrapped.each(function () {
         $(this).parent().append($(this).parent().nextUntil("div.ui-tabs-panel"));
       });
@@ -52,9 +68,7 @@ PDbSettings = (function ($) {
         var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
         $(".participants_db.wrap").removeClass().addClass(wrapclass + " " + activeclass);
       });
-//      if ($.browser.mozilla) {
-        $("form").attr("autocomplete", "off");
-//      }
+      $("form").attr("autocomplete", "off");
     }
   }
 }(jQuery));

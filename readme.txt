@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 5.5.3
+Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 1.9.6.7
+Stable tag: 1.9.6.9
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -101,6 +101,8 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * German: Martin Sauter
 
+* Greek: Toni Bishop [Jrop](https://www.jrop.com)
+
 * Hebrew: Gila Baam
 
 * Indonesian: Jordan Silaen [ChameleonJohn.com](http://chameleonjohn.com)
@@ -121,7 +123,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Slovak: Branco Radenovich [WebHostingGeeks.com](http://webhostinggeeks.com/blog/)
 
-* Spanish: Cristhofer Chávez
+* Spanish: Chema Bescos [IBIDEM GROUP](https://www.ibidemgroup.com)
 
 * Ukranian: Michael Yunat, [getvoip.com](http://getvoip.com/blog)
 
@@ -288,11 +290,23 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+PLEASE NOTE: Version 1.9.7 is a major upgrade for Participants Database. Please make sure you have a current WordPress backup before you upgrade Participants Database.
+
+= 1.9.7 =
+* UI improvements: Manage Database Fields page, List Participants page
+* New field types: Heading, String Combine, Media Embed, Shortcode
+* Relative Date field defaults like "current_date"
+* Code optimizations
+* Bug fixes
+
+= 1.9.6.9 =
+* added Greek translation files
+
 = 1.9.6.8 =
 * fixed issue with settings loss on session failure
 
 = 1.9.6.7 =
-* fixed bug with quotes around filter sting in list shortcode
+* fixed bug with quotes around filter string in list shortcode
 * attempt to avoid conflicts with other plugins initializing sessions
 
 = 1.9.6.6 =
@@ -1373,9 +1387,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-= 1.9.6.8 =
-minor bug fix release
-
+1.9.7 is a major update: we recommend you have a WordPress backup available before updating. 
 
 == Plugin Support ==
 

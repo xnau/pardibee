@@ -8,8 +8,11 @@
  * @version 1.2
  *
  */
-if ( !defined( 'ABSPATH' ) )
+if ( !defined( 'ABSPATH' ) ) {
   die;
+}
+
+wp_enqueue_editor();
 
 // clear out this unneeded value #2331
 Participants_Db::$session->clear('form_status');
@@ -244,14 +247,19 @@ if ( $participant_values ) :
               do_action( 'pdb-before_display_form_input', $column );
 
               if ( 'rich-text' == $column->form_element ) {
+               
+//                wp_editor(
+//                  $column->value(), Participants_Db::rich_text_editor_id( $column->name() ), array(
+//                      'media_buttons' => false,
+//                      'textarea_name' => $column->name(),
+//                      'editor_class' => $field_class,
+//                          )
+//                );
 
-                wp_editor(
-                        $column->value(), Participants_Db::rich_text_editor_id( $column->name() ), array(
-                    'media_buttons' => false,
-                    'textarea_name' => $column->name(),
-                    'editor_class' => $field_class,
-                        )
-                );
+                $editor = new PDb_fields\rich_text_editor($column->name(), $column->value(), array('editor_class' => $field_class) );
+
+                $editor->print_editor();
+                
               } else {
                 
                 PDb_FormElement::print_element( array(

@@ -343,7 +343,7 @@ class incoming_record_match {
 
     $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::participants_table() . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
     
-    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 1 ) {
+    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
       \Participants_Db::debug_log(__METHOD__.' query: '.$wpdb->last_query );
     }
 

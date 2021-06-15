@@ -5,14 +5,14 @@
  *
  * this works by dividing the database into blocks of records. When a request for 
  * a record comes in, the block it is in is loaded from the cache. This allows potentially 
- * hundreds of database queries to be reduced to a few querites: one for each block
+ * hundreds of database queries to be reduced to a few queries: one for each block
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -20,9 +20,9 @@
 class PDb_Participant_Cache {
 
   /**
-   * @var string name of the cache group
+   * @var string prefix for the transient name
    */
-  const group = 'get_participant';
+  const prefix = 'participant_cache_';
 
   /**
    * @var name of the site transient to use for the cache staleness status
@@ -33,7 +33,7 @@ class PDb_Participant_Cache {
   const stale_flags = 'participant_cache_stale_flags';
 
   /**
-   * @var string identifies the cache within the group
+   * @var int identifies the cache within the group
    */
   private $cache_key;
 
@@ -72,7 +72,7 @@ class PDb_Participant_Cache {
      */
     $this->cache_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
     $this->cache_key = (int) ( $this->id / $this->cache_size );
-    
+
     $this->setup_staleness();
     $this->set_data();
   }
@@ -82,15 +82,17 @@ class PDb_Participant_Cache {
    */
   public function clear()
   {
-    wp_cache_delete( $this->cache_key, self::group );
+    $this->_clear_cache();
   }
 
   /**
    * supplies the participant data
+   * 
+   * @return array
    */
   public function get()
   {
-    return isset( $this->data[$this->id] ) ? (array) $this->data[$this->id] : false;
+    return isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
   }
 
   /**
@@ -109,8 +111,9 @@ class PDb_Participant_Cache {
    * 
    * this would be done whenever a record is created or altered
    */
-  public static function is_now_stale($id) {
-    $cache = new self($id);
+  public static function is_now_stale( $id )
+  {
+    $cache = new self( $id );
     $cache->set_stale();
   }
 
@@ -132,9 +135,7 @@ class PDb_Participant_Cache {
    */
   private function set_stale()
   {
-    if ( !$this->cache_is_stale() ) {
-      $this->set_staleness( true );
-    }
+    $this->set_staleness( true );
   }
 
   /**
@@ -142,9 +143,7 @@ class PDb_Participant_Cache {
    */
   private function set_fresh()
   {
-    if ( $this->cache_is_stale() ) {
-      $this->set_staleness( false );
-    }
+    $this->set_staleness( false );
   }
 
   /**
@@ -162,9 +161,9 @@ class PDb_Participant_Cache {
    */
   private function setup_staleness()
   {
-    $staleness = wp_cache_get( self::stale_flags );
-    
-    $this->staleness = $staleness === false || ( ! isset($staleness[$this->cache_key]) ? true : $staleness[$this->cache_key] );
+    $staleness = $this->get_staleness();
+
+    $this->staleness = (bool) $staleness === false || ( ! isset( $staleness[ $this->cache_key ] ) ? true : $staleness[ $this->cache_key ] );
   }
 
   /**
@@ -175,9 +174,33 @@ class PDb_Participant_Cache {
   private function set_staleness( $state = true )
   {
     $this->staleness = (bool) $state;
-    $staleness = (array) wp_cache_get( self::stale_flags );
-    $staleness[$this->cache_key] = $this->staleness;
-    wp_cache_set( self::stale_flags, $staleness );
+
+    $staleness = $this->get_staleness();
+    $staleness[ $this->cache_key ] = $this->staleness;
+
+    set_transient( self::stale_flags, $staleness );
+  }
+
+  /**
+   * provides the stored staleness record
+   * 
+   * @return array as $id => $staleness
+   */
+  private function get_staleness()
+  {
+    $staleness = get_transient( self::stale_flags );
+    
+    return $staleness ? : array();
+  }
+
+  /**
+   * provides the cache key used to get/set the cache
+   * 
+   * @return string
+   */
+  private function _cache_key()
+  {
+    return self::prefix . $this->cache_key;
   }
 
   /**
@@ -185,16 +208,17 @@ class PDb_Participant_Cache {
    */
   private function set_data()
   {
-    $this->data = wp_cache_get( $this->cache_key, self::group );
+    $this->data = empty( $this->data ) ? $this->get_cache() : $this->data;
+
     if ( $this->data === false || $this->cache_is_stale() ) {
       $this->refresh_cache();
-    } else {
-      //error_log(__METHOD__.' getting from cache...key: '.$this->cache_key);
     }
   }
 
   /**
    * refreshes the cache
+   * 
+   * @global wpdb $wpdb
    */
   private function refresh_cache()
   {
@@ -205,17 +229,42 @@ class PDb_Participant_Cache {
 
     $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p WHERE p.id >= ' . $series_start . ' AND p.id < ' . $series_end . ' ORDER BY p.id ASC';
 
-    $result = $wpdb->get_results( $sql, OBJECT_K );
-    
-//    error_log(__METHOD__.' query: '.$wpdb->last_query);
+    $this->data = $wpdb->get_results( $sql, OBJECT_K );
 
-    $this->data = (array) $result;
-    
-//    error_log(__METHOD__.' data: '.print_r($this->data,1));
+    $this->set_cache();
 
-    wp_cache_set( $this->cache_key, $this->data, self::group, Participants_Db::apply_filters( 'participant_cache_time', 0) );
-    
     $this->set_fresh();
+    
+    if ( PDB_DEBUG > 2 ) {
+      Participants_Db::debug_log('Refreshing Participants Database cache for cache group ' . $this->cache_key );
+    }
+  }
+
+  /**
+   * supplies the cached value
+   * 
+   * @return array|bool false if not cached or cache expired
+   */
+  private function get_cache()
+  {
+    return get_transient( $this->_cache_key() );
+  }
+
+  /**
+   * sets the cache value
+   * 
+   */
+  private function set_cache()
+  {
+    set_transient( $this->_cache_key(), $this->data );
+  }
+
+  /**
+   * clears the cache
+   */
+  private function _clear_cache()
+  {
+    delete_transient( $this->_cache_key() );
   }
 
 }

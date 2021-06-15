@@ -5,19 +5,13 @@
  *
  * static class for managing a set of modules which together out put a listing of 
  * records in various configurations
- *
- * the general plan is that this class's initialization method is called by the
- * shortcode [pdb_list] which will initialize the class and pass in the parameters
- * (if any) to print the list to the website.
- *
- * Requires PHP Version 5.3 or greater
  * 
  * @category   
  * @package    WordPress
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.17
+ * @version    1.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -29,7 +23,7 @@ class PDb_List extends PDb_Shortcode {
    *
    * @var PDb_List_Query
    */
-  private $list_query;
+  protected $list_query;
 
   /**
    *
@@ -110,7 +104,7 @@ class PDb_List extends PDb_Shortcode {
   /**
    * @var int the current page number
    */
-  private $current_page = 1;
+  protected $current_page = 1;
 
   /**
    * @var string nonce key string
@@ -210,8 +204,19 @@ class PDb_List extends PDb_Shortcode {
 
     return self::$instance->output;
   }
-  
-  
+
+  /**
+   * finds the number of records that would be selected by the provided filter
+   *
+   * @param string $filter a list shortcode filter string
+   * @return int
+   */
+  public static function get_record_count( String $filter = '' )
+  {
+    self::$instance = new PDb_List( array( 'filter' => $filter ) );
+
+    return self::$instance->num_records;
+  }
   
   /**
    * provides the default shortcode attributes
@@ -288,14 +293,17 @@ class PDb_List extends PDb_Shortcode {
      */
     $list_query = Participants_Db::apply_filters( 'list_query', $this->list_query->get_list_query() );
 
-    if ( PDB_DEBUG )
+    if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ .' list query: ' . $list_query );
+    }
 
     // get the $wpdb object
     global $wpdb;
 
     // get the number of records returned
     $this->num_records = count( $wpdb->get_results( $list_query ) );
+    
+    $this->do_search_result_action();
 
     $this->_set_list_limit();
 
@@ -311,6 +319,7 @@ class PDb_List extends PDb_Shortcode {
     
     // instantiate the pagination object
     $this->pagination = new PDb_Pagination( $pagination_defaults );
+    
     /*
      * get the records for this page, adding the pagination limit clause
      *
@@ -318,37 +327,7 @@ class PDb_List extends PDb_Shortcode {
      */
     $records = $wpdb->get_results( $list_query . ' ' . $this->pagination->getLimitSql(), OBJECT );
     
-    /*
-     * build an array of record objects, indexed by ID
-     */
-    $this->records = array();
-    foreach ( $records as $record ) {
-
-      $id = $record->id;
-      if ( !in_array( 'id', $this->display_columns ) )
-        unset( $record->id );
-
-      $this->records[$id] = $record;
-    }
-
-    foreach ( $this->records as $record_id => $record_fields ) {
-
-      //$this->participant_values = Participants_Db::get_participant($record_id);
-
-      foreach ( $record_fields as $field => $value ) {
-
-        // add the field to the records object
-        $this->records[$record_id]->{$field} = new PDb_Field_Item( (object) array( 
-            'name' => $field, 
-            'record_id' => $record_id, 
-            'module' => $this->module, 
-            'value' => $value,
-                ) );
-        
-      }
-    }
-    
-    reset( $this->records );
+    $this->assign_record_fields($records);
     
     /*
      * at this point, $this->records has been defined as an array of records,
@@ -356,6 +335,74 @@ class PDb_List extends PDb_Shortcode {
      * which is a PDb_Field_Item instance
      */
 //     error_log( __METHOD__.' all records:'.print_r( $this->records,1));
+  }
+  
+  /**
+   * assigns the record fields to the main object
+   * 
+   * @param array $records array of record data
+   */
+  protected function assign_record_fields( $records )
+  {
+    /*
+     * build an array of record objects, indexed by ID
+     */
+    $this->records = array();
+    
+    foreach ( $records as $record ) {
+
+      $this->records[$record->id] = $record;
+    }
+
+    foreach ( array_keys($this->records) as $record_id ) {
+      
+      $record = array();
+
+      foreach ( $this->display_columns as $field ) {   //  foreach ( $record_fields as $field => $value )
+        
+        $record[$field] = $this->get_field_object($field, $record_id);
+      }
+      
+      $this->records[ $record_id ] = (object) $record;
+      
+    }
+    
+    reset( $this->records );
+  }
+  
+  /**
+   * provides the record field object
+   * 
+   * @param string $fieldname
+   * @param int $record_id
+   * @return PDb_Field_Item
+   */
+  protected function get_field_object( $fieldname, $record_id )
+  {
+    return new PDb_Field_Item( (object) array( 
+            'name' => $fieldname,
+            'module' => $this->module,
+                ), $record_id );
+  }
+  
+  /**
+   * triggers a search result action
+   */
+  protected function do_search_result_action()
+  {
+    if ( has_action( 'pdb-list_search_result' ) && $this->list_query->is_search_result() ) {
+        
+      $filter = array_intersect_key( $this->list_query->current_filter() , array( 'search_fields' => true, 'search_values' => true, 'sort_fields' => true ) );
+      
+      $filter['result_count'] = intval( $this->num_records );
+      
+      $filter['query'] = $this->list_query->get_list_query();
+      /**
+       * @action pdb-list_search_result
+       * @param array search parameters
+       */
+      do_action( 'pdb-list_search_result', $filter );
+    }
   }
   
   /**
@@ -484,10 +531,12 @@ class PDb_List extends PDb_Shortcode {
 
     $this->shortcode_atts['target_page'] = trim( $this->shortcode_atts['target_page'] );
 
-    if ( !empty( $this->shortcode_atts['action'] ) && empty( $this->shorcode_atts['target_page'] ) )
-      $this->shorcode_atts['target_page'] = $this->shortcode_atts['action'];
+    if ( !empty( $this->shortcode_atts['action'] ) && empty( $this->shortcode_atts['target_page'] ) ) {
+      $this->shortcode_atts['target_page'] = $this->shortcode_atts['action'];
+    }
 
     global $post;
+    /** @var WP_Post $post */
 
     $output = array();
 
@@ -506,6 +555,13 @@ class PDb_List extends PDb_Shortcode {
     $output[] = '<form method="post" class="sort_filter_form" action="' . $action . '"' . $class_att . ' data-ref="' . $ref . '" >';
     
     $hidden_fields = array();
+    
+    if ( $this->module === 'search' && $ref !== 'remote' ) {
+      // this should provide a working target instance value if it was not included in the shortcode
+      if ( $this->shortcode_atts['target_instance'] == '1' && strpos( $post->post_content, '[pdb_list' ) !== false  ) {
+        $this->shortcode_atts['target_instance'] = 2;
+      }
+    }
     
     if ( Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
     
@@ -552,8 +608,19 @@ class PDb_List extends PDb_Shortcode {
    */
   public function column_selector( $all = false, $print = true, $columns = false, $sort = 'column', $multi = false )
   {
-
     static $multifield_count = 0;
+    
+    // set up the default search column list
+    if ($columns === false ) {
+      /**
+       * @filter pdb-searchable_columns
+       * 
+       * @param array of column $title => $name
+       * @return array
+       */
+      $columns = Participants_Db::apply_filters( 'searchable_columns', $this->searchable_columns() );
+    }
+    
     $value = $this->list_query->current_filter( 'search_field' );
     if ( empty( $value ) && isset( $_POST['search_field'] ) ) {
       $value = filter_input( INPUT_POST, 'search_field', FILTER_SANITIZE_STRING );
@@ -564,20 +631,12 @@ class PDb_List extends PDb_Shortcode {
     }
     
     // override the search columns with the shortcode attribute if present
-    if ( isset( $this->shortcode_atts['search_fields'] ) ) {
+    if ( isset( $this->shortcode_atts['search_fields'] ) && ! empty( $this->shortcode_atts['search_fields'] ) ) {
       $columns = $this->shortcode_atts['search_fields'];
     }
-
-    /**
-     * @filter pdb-searchable_columns
-     * 
-     * @param array of column $title => $name
-     * @return array
-     */
-    $all_search_columns = Participants_Db::apply_filters( 'searchable_columns', $this->searchable_columns( self::field_list( $columns ) ) );
     
-    // filter by the search_fields shortcode attribute if present
-    $search_columns = $this->column_options($all_search_columns);
+    // sets up the search field selector options
+    $search_columns = $this->column_options( $this->searchable_columns( self::field_list( $columns ) ) );
     
     $all_string = false === $all ? '(' . __( 'select', 'participants-database' ) . ')' : $all;
     $base_array = array( $all_string => 'none', PDb_FormElement::null_select_key() => false );

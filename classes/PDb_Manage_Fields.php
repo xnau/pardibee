@@ -79,7 +79,7 @@ class PDb_Manage_Fields {
           <?php
           $mask = '<span class="mask"></span>';
           foreach ( $this->group_defs as $group ) {
-            echo '<li class="display-' . $group['mode'] . '"><a href="#' . $group['name'] . '" id="tab_' . $group['name'] . '">' . $this->group_title( $group['name'] ) . '</a>' . $mask . '</li>';
+            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . $this->group_title( $group[ 'name' ] ) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -108,12 +108,12 @@ class PDb_Manage_Fields {
       {
         $hscroll = false; // Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
         // number of rows in the group
-        $num_group_rows = count( $this->fields_data[$group] );
+        $num_group_rows = count( $this->fields_data[ $group ] );
 
-        $data_group_id = $num_group_rows > 1 ? $this->fields_data[$group][0]['group_id'] : '';
+        $data_group_id = $num_group_rows > 1 ? $this->fields_data[ $group ][ 0 ][ 'group_id' ] : '';
         ?>
         <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $data_group_id ?>" >
-          <h3><?php printf(_x('%s Fields','Title of the field group','participants-database'),$this->group_title( $group )) ?></h3>
+          <h3><?php printf( _x( '%s Fields', 'Title of the field group', 'participants-database' ), $this->group_title( $group ) ) ?></h3>
           <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
             <div class="pdb-horiz-scroll-scroller">
@@ -121,13 +121,13 @@ class PDb_Manage_Fields {
               <?php endif ?>
               <form id="manage_<?php echo $group ?>_fields" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
                 <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
-                <div class="submit top-bar-submit">
-                  <span class="field-group-title"><?php echo $this->group_title( $group ) ?></span>
-                  <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n['update fields'] ?></button>
-                </div>
+                  <div class="submit top-bar-submit">
+                    <span class="field-group-title"><?php echo $this->group_title( $group ) ?></span>
+                    <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n[ 'update fields' ] ?></button>
+                  </div>
                 <?php endif ?>
                 <?php
-                PDb_FormElement::print_hidden_fields( array('group' => $group, 'order' => $this->next_field_order( $group ), 'with_selected' => '' ) );
+                PDb_FormElement::print_hidden_fields( array( 'group' => $group, 'order' => $this->next_field_order( $group ), 'with_selected' => '' ) );
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
@@ -138,28 +138,17 @@ class PDb_Manage_Fields {
                       <p><?php _e( 'No fields in this group', 'participants-database' ) ?></p>
                       <?php
                     } else {
-                      
+
                       // add the rows of the group
-                      foreach ( $this->fields_data[$group] as $database_row ) :
-                        
-                        if ( ! $this->is_registered_type( $database_row['form_element'] ) ) {
+                      foreach ( $this->fields_data[ $group ] as $database_row ) :
+
+                        if ( !$this->is_registered_type( $database_row[ 'form_element' ] ) ) {
                           // skip field types that are not currently registered
                           continue;
                         }
-
-                        $field_definition_attributes = new PDb_Field_Editor( new PDb_Form_Field_Def( $database_row['name'] ) );
-                        ?>
-                        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $database_row['id'] ?>" data-numid="<?php echo $database_row['id'] ?>" data-groupid="<?php echo $this->fields_data[$group][0]['group_id'] ?>">
-                          <?php /* <input type="hidden" name="row_<?php echo $database_row['id'] ?>[order]" value="<?php echo $database_row['order'] ?>" /> */ ?>
-
-                          <?php
-                          while ( $control_html = $field_definition_attributes->get_next_control() ) {
-                            echo $control_html;
-                          }
-                          ?>
-
-                        </div>
-                        <?php
+                        
+                        echo self::field_editor_html( $database_row[ 'name' ] );
+                        
                       endforeach; // rows
                     } // num group rows 
                     ?>
@@ -170,11 +159,43 @@ class PDb_Manage_Fields {
             </div>
           <?php endif ?>
           <p class="submit">
-            <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n['update fields'] ?></button>
+            <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n[ 'update fields' ] ?></button>
           </p>
           </form>
         </div><!-- tab content container -->
         <?php
+      }
+
+      /**
+       * provides the field editor HTML
+       * 
+       * @param string $name of the field
+       * @return string HTML
+       */
+      public static function field_editor_html( $name )
+      {
+        if ( ! PDb_Form_Field_Def::is_field( $name ) ) {
+          return '';
+        }
+        
+        $field_def = new PDb_Form_Field_Def( $name );
+        
+        $field_definition_attributes = new PDb_Field_Editor( $field_def );
+
+        ob_start();
+        ?>
+
+        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $field_def->id ?>" data-numid="<?php echo $field_def->id ?>" data-groupid="<?php echo $field_def->groupid ?>">
+
+          <?php
+          while ( $control_html = $field_definition_attributes->get_next_control() ) {
+            echo $control_html;
+          }
+          ?>
+
+        </div>
+        <?php
+        return ob_get_clean();
       }
 
       /**
@@ -190,44 +211,44 @@ class PDb_Manage_Fields {
         <div id="field_groups" class="manage-fields-wrap">
           <form id="manage_field_groups" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
             <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
-            <div class="submit top-bar-submit">
-              <span class="field-group-title"><?php _e( 'Field Groups', 'participants-database' ) ?></span>
-              <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n['update groups'] ?></button>
-            </div>
+              <div class="submit top-bar-submit">
+                <span class="field-group-title"><?php _e( 'Field Groups', 'participants-database' ) ?></span>
+                <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n[ 'update groups' ] ?></button>
+              </div>
             <?php endif ?>
 
             <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
             <h3><?php _e( 'Edit / Add / Remove Field Groups', 'participants-database' ) ?></h3>
             <p class="add-group-inputs">
-              <button type="submit" class="button button-secondary add-group-submit disabled" name="action" value="add_group" disabled="disabled"><?php echo $this->i18n['add group'] ?></button>
+              <button type="submit" class="button button-secondary add-group-submit disabled" name="action" value="add_group" disabled="disabled"><?php echo $this->i18n[ 'add group' ] ?></button>
               <?php
               PDb_FormElement::print_element( array(
                   'type' => 'text',
                   'name' => 'group_title',
                   'value' => '',
                   'attributes' => array(
-                      'placeholder' => $this->i18n['new group title'] . '&hellip;',
+                      'placeholder' => $this->i18n[ 'new group title' ] . '&hellip;',
                       'class' => 'add_field'
                   )
                       )
               );
               $next_order = count( $this->group_defs ) + 1;
-              PDb_FormElement::print_hidden_fields( array('group_order' => $next_order) );
+              PDb_FormElement::print_hidden_fields( array( 'group_order' => $next_order ) );
               ?>
             </p>
             <div class="manage-fields manage-field-groups" >
               <?php
               foreach ( $this->group_defs as $group => $group_def ) {
-                
+
                 $group_item = new PDb_Field_Group_Item( $group_def, 'admin-edit' );
 
                 $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                 ?>
-                <div class="def-fieldset def-line color-group view-mode-<?php echo $group_def['mode'] ?>" data-id="<?php echo $group ?>" data-numid="<?php echo $group_def['id'] ?>" data-groupid="0">
+                <div class="def-fieldset def-line color-group view-mode-<?php echo $group_def[ 'mode' ] ?>" data-id="<?php echo $group ?>" data-numid="<?php echo $group_def[ 'id' ] ?>" data-groupid="0">
                   <input type="hidden" name="<?php echo $group ?>[status]" id="status_<?php echo $group ?>" value />
                   <div class="field-header">
                     <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
-                    <?php if ( $group_def['name'] !== 'internal' ) : ?>
+                    <?php if ( $group_def[ 'name' ] !== 'internal' ) : ?>
                       <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
                     <?php endif ?>
                     <div id="field_count_<?php echo $group ?>" title="<?php _e( 'field count', 'participants-database' ) ?>"><?php echo $group_count ?></div>
@@ -252,7 +273,7 @@ class PDb_Manage_Fields {
 
                       case 'name':
                         $type = 'text';
-                        $attributes = array('readonly' => 'readonly');
+                        $attributes = array( 'readonly' => 'readonly' );
                         break;
 
                       case 'title':
@@ -267,13 +288,13 @@ class PDb_Manage_Fields {
                         'name' => ( empty( $name ) ? $group . '[' . $column . ']' : $name ),
                         'value' => htmlspecialchars( stripslashes( $value ) ),
                         'type' => $type,
-                        'attributes' => array_merge( array('id' => 'group-' . $group . '-attribute-' . $column), $attributes ),
+                        'attributes' => array_merge( array( 'id' => 'group-' . $group . '-attribute-' . $column ), $attributes ),
                         'options' => $options,
                     );
                     ?>
                     <div class="attribute-control <?php echo $column ?>-attribute">
                       <?php PDb_FormElement::print_element( $element_atts ); ?>
-                      <label for="<?php echo $element_atts['attributes']['id'] ?>"><?php echo $this->table_header( $column ) ?></label>
+                      <label for="<?php echo $element_atts[ 'attributes' ][ 'id' ] ?>"><?php echo $this->table_header( $column ) ?></label>
                     </div>
                     <?php
                   }
@@ -284,7 +305,7 @@ class PDb_Manage_Fields {
               ?>
             </div>
             <p class="submit">
-              <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n['update groups'] ?></button>
+              <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n[ 'update groups' ] ?></button>
             </p>
           </form>
           <script type="text/javascript">
@@ -329,16 +350,16 @@ class PDb_Manage_Fields {
         <form id="general_fields_control_<?php echo $group ?>" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
           <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
           <div id="check-all-<?php echo $group ?>" class="check-all">
-            <input id="select-all-checkbox-<?php echo $group ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo $group ?>" style="display:none" ><?php echo $this->i18n['all'] ?></label>
+            <input id="select-all-checkbox-<?php echo $group ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo $group ?>" style="display:none" ><?php echo $this->i18n[ 'all' ] ?></label>
           </div>
           <?php if ( $group !== 'internal' ) : ?>
-            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo $group ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n['add field'] ?></button>
+            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo $group ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n[ 'add field' ] ?></button>
           <?php endif ?>
-          <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n['all'] ?></button>
+          <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n[ 'all' ] ?></button>
           <?php if ( $group !== 'internal' ) : ?>
             <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions" style="display:none">
-              <h4><?php echo $this->i18n['add field'] ?></h4>
-              <label><?php echo $this->i18n['new field title'] ?></label>
+              <h4><?php echo $this->i18n[ 'add field' ] ?></h4>
+              <label><?php echo $this->i18n[ 'new field title' ] ?></label>
               <?php
               PDb_FormElement::print_element( array(
                   'type' => 'hidden',
@@ -362,11 +383,11 @@ class PDb_Manage_Fields {
                       )
               );
               ?>
-              <label><?php echo $this->i18n['new field form element'] ?></label>
+              <label><?php echo $this->i18n[ 'new field form element' ] ?></label>
               <?php
               PDb_FormElement::print_element( array(
                   'type' => 'dropdown',
-                  'options' => array_flip( PDb_FormElement::get_types() ) + array(PDb_FormElement::null_select_key() => false),
+                  'options' => array_flip( PDb_FormElement::get_types() ) + array( PDb_FormElement::null_select_key() => false ),
                   'name' => 'form_element',
                   'value' => '',
                   'attributes' => array(
@@ -377,13 +398,13 @@ class PDb_Manage_Fields {
               );
               ?>
               <div class="add-field-submit-wrap">
-                <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n['add field'] ?></button>
+                <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n[ 'add field' ] ?></button>
                 <button class="button button-secondary add-field-submit" name="add-field-cancel" ><?php _e( 'Cancel', 'participants-database' ) ?></button>
               </div>
             </div>
           <?php endif ?>
           <div id="with-selected-control-<?php echo $group ?>" class="with-selected-control" style="display:none">
-            <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n['with selected'] ?>: </label>
+            <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n[ 'with selected' ] ?>: </label>
             <?php
             PDb_FormElement::print_element( array(
                 'type' => 'dropdown',
@@ -408,7 +429,7 @@ class PDb_Manage_Fields {
                     )
             );
             ?>
-            <button type="button" class="button-secondary apply-with-selected" ><span class="dashicons dashicons-yes"></span><?php echo $this->i18n['apply'] ?></button>
+            <button type="button" class="button-secondary apply-with-selected" disabled ><span class="dashicons dashicons-yes"></span><?php echo $this->i18n[ 'apply' ] ?></button>
           </div>
         </form>
       </div>
@@ -437,7 +458,7 @@ class PDb_Manage_Fields {
        * @return array
        */
       return Participants_Db::apply_filters( 'manage_fields_with_selected_actions', array(
-                  'delete' => $this->i18n['delete'],
+                  'delete' => $this->i18n[ 'delete' ],
                   'group' => __( 'Assign Group', 'participants-database' ),
                   'add_csv' => __( 'Add to CSV', 'participants-database' ),
                   'remove_csv' => __( 'Remove from CSV', 'participants-database' ),
@@ -457,25 +478,25 @@ class PDb_Manage_Fields {
       foreach ( Participants_Db::get_groups() as $group => $defs ) {
         // mode is the 1.8.5 group visibility mode
         // this converts the previous visibility settings to the new mode
-        if ( !isset( $defs['mode'] ) || empty( $defs['mode'] ) ) {
+        if ( !isset( $defs[ 'mode' ] ) || empty( $defs[ 'mode' ] ) ) {
           switch ( true ) {
-            case $defs['admin'] == 0 && $defs['display'] == 0:
+            case $defs[ 'admin' ] == 0 && $defs[ 'display' ] == 0:
               // we set to 'public' not 'private' #1817
-              $defs['mode'] = 'public';
+              $defs[ 'mode' ] = 'public';
               break;
-            case $defs['admin'] == 0 && $defs['display'] == 1:
-            case $defs['admin'] == 1 && $defs['display'] == 1:
-              $defs['mode'] = 'public';
+            case $defs[ 'admin' ] == 0 && $defs[ 'display' ] == 1:
+            case $defs[ 'admin' ] == 1 && $defs[ 'display' ] == 1:
+              $defs[ 'mode' ] = 'public';
               break;
-            case $defs['admin'] == 1 && $defs['display'] == 0:
-              $defs['mode'] = 'admin';
+            case $defs[ 'admin' ] == 1 && $defs[ 'display' ] == 0:
+              $defs[ 'mode' ] = 'admin';
           }
           $this->fix_group_mode( $defs );
         }
-        unset( $defs['admin'], $defs['display'] ); // not needed
+        unset( $defs[ 'admin' ], $defs[ 'display' ] ); // not needed
         // only include groups with main database display modes
-        if ( in_array( $defs['mode'], array_keys( self::group_display_modes() ) ) ) {
-          $this->group_defs[$group] = $defs;
+        if ( in_array( $defs[ 'mode' ], array_keys( self::group_display_modes() ) ) ) {
+          $this->group_defs[ $group ] = $defs;
         }
       }
     }
@@ -504,20 +525,20 @@ class PDb_Manage_Fields {
 
         $sql = "SELECT f.id,f.name,f.form_element,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
 
-        $this->fields_data[$group] = $wpdb->get_results( $sql, ARRAY_A );
+        $this->fields_data[ $group ] = $wpdb->get_results( $sql, ARRAY_A );
       }
     }
-    
+
     /**
      * tells if the field element type is registered
      * 
      * @param string $form_element
      * @return bool
      */
-    protected function is_registered_type ( $form_element )
+    protected function is_registered_type( $form_element )
     {
       // timestamp is a special case: visible in the editor but nor chooseable otherwise
-      return PDb_FormElement::is_form_element($form_element) || $form_element === 'timestamp';
+      return PDb_FormElement::is_form_element( $form_element ) || $form_element === 'timestamp';
     }
 
     /**
@@ -549,7 +570,7 @@ class PDb_Manage_Fields {
      */
     protected function group_title( $group )
     {
-      $group_title = Participants_Db::apply_filters( 'translate_string', stripslashes($this->group_defs[$group]['title']) );
+      $group_title = Participants_Db::apply_filters( 'translate_string', stripslashes( $this->group_defs[ $group ][ 'title' ] ) );
       /**
        * @since 1.7.3.2
        * group titles on tabs and such are limited to 30 characters to preserve layout
@@ -567,9 +588,9 @@ class PDb_Manage_Fields {
     private function next_field_order( $group )
     {
       // number of rows in the group
-      $num_group_rows = count( $this->fields_data[$group] );
+      $num_group_rows = count( $this->fields_data[ $group ] );
 
-      return $num_group_rows > 1 ? $this->fields_data[$group][$num_group_rows - 1]['order'] + 1 : 1;
+      return $num_group_rows > 1 ? $this->fields_data[ $group ][ $num_group_rows - 1 ][ 'order' ] + 1 : 1;
     }
 
     /**
@@ -582,9 +603,9 @@ class PDb_Manage_Fields {
     {
 
       // check for a translated string, use it if found
-      $string = isset( $this->i18n[$string] ) ? $this->i18n[$string] : $string;
+      $string = isset( $this->i18n[ $string ] ) ? $this->i18n[ $string ] : $string;
 
-      return str_replace( array('_'), array(" "), $string );
+      return str_replace( array( '_' ), array( " " ), $string );
     }
 
     /**
@@ -596,7 +617,7 @@ class PDb_Manage_Fields {
     private function fix_group_mode( $group )
     {
       global $wpdb;
-      $wpdb->update( Participants_Db::$groups_table, array('mode' => $group['mode']), array('name' => $group['name']) );
+      $wpdb->update( Participants_Db::$groups_table, array( 'mode' => $group[ 'mode' ] ), array( 'name' => $group[ 'name' ] ) );
     }
 
     /**

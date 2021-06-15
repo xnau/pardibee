@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -170,7 +170,15 @@ class PDb_Field_Editor {
         );
     }
 
-    return implode( PHP_EOL, $lines );
+    /**
+     * allows modification of the attribute editor control html
+     * 
+     * @filter pdb-field_editor_control_html
+     * @param array the html lines
+     * @param PDb_Field_Def_Parameter the field attribute object
+     * @return array
+     */
+    return implode( PHP_EOL, Participants_Db::apply_filters('field_editor_control_html', $lines, $field_def_att ) );
   }
   
   /**
@@ -181,11 +189,21 @@ class PDb_Field_Editor {
    */
   protected function def_att_object( $attribute )
   {
-    return new PDb_Field_Def_Parameter( $attribute, Participants_Db::array_merge2( array(
+    $config = Participants_Db::array_merge2( array(
                 'name' => 'row_' . $this->field_def->id . '[' . $attribute . ']',
                 'value' => $this->attribute_value( $attribute ),
                 'attributes' => array('id' => 'row_' . $this->field_def->id . '_' . $attribute),
-            ), $this->attribute_config($attribute) ) );
+            ), $this->attribute_config($attribute) );
+    
+    /**
+     * provides a way to alter the field attribute editor
+     * 
+     * @filter pdb-field_{$attribute}_attribute_edit_config
+     * @param array configuration
+     * @param PDb_Form_field_Def field
+     * @return array
+     */
+    return new PDb_Field_Def_Parameter( $attribute, Participants_Db::apply_filters( 'field_' . $attribute . '_attribute_edit_config', $config, $this->field_def ) );
   }
   
   
@@ -301,8 +319,8 @@ class PDb_Field_Editor {
       case 'form_element':
         $config = array(
             'type' => 'dropdown',
-            'options' => array_flip( PDb_FormElement::get_types() ) + array(PDb_FormElement::null_select_key() => false),
-            'attributes' => array('class' => $this->column_has_data( $this->field_def->name() ) ? 'column-has-values' : 'column-empty'),
+            'options' => array_flip( $this->form_element_options() ) + array(PDb_FormElement::null_select_key() => false),
+            'attributes' => array('class' => 'form-element-select ' . ( $this->column_has_data( $this->field_def->name() ) ? 'column-has-values' : 'column-empty') ),
         );
         break;
       case 'validation':
@@ -315,6 +333,21 @@ class PDb_Field_Editor {
         $config = false;
     }
     return $config;
+  }
+  
+  /**
+   * provides a list of form element to choose from
+   * 
+   * @return array as $name => $title
+   */
+  protected function form_element_options()
+  {
+    /**
+     * @filter pdb-field_editor_form_element_options
+     * @param array of form element types
+     * @return array
+     */
+    return Participants_Db::apply_filters( 'field_editor_form_element_options', PDb_FormElement::get_types() );
   }
 
   /**
@@ -333,7 +366,6 @@ class PDb_Field_Editor {
       case 'name':
       case 'group':
       case 'options':
-      case 'attributes':
       case 'help_text':
       case 'validation':
       case 'validation_message':
@@ -342,20 +374,44 @@ class PDb_Field_Editor {
       case 'persistent':
       case 'signup':
       case 'readonly':
-        
         return $this->field_def->$attribute;
 //        return $this->field_def->get_prop( $attribute );
+        
+      case 'attributes':
+        return $this->field_attributes();
+        
       case 'groupable':
         return $this->field_def->group();
+        
       case 'orderable':
         return true;
+        
       case 'id':
       case 'selectable':
       case 'deletable':
         return false;
+        
       case 'status':
         return null;
     }
+  }
+  
+  /**
+   * provides the field's attribute values
+   * 
+   * this is primarily to update legacy attributes settings for upload fields
+   * 
+   * @return string
+   */
+  private function field_attributes()
+  {
+    $attributes = $this->field_def->attributes();
+    
+    if ( $this->field_def->is_upload_field() && ! isset( $attributes['allowed'] ) && ( array_values( $attributes ) === array_keys( $attributes ) ) ) {
+      $attributes = array( 'allowed' => implode( '|', $attributes ) );
+    }
+    
+    return $attributes;
   }
 
   /**
@@ -407,7 +463,7 @@ class PDb_Field_Editor {
     foreach( $this->field_def->options() as $k => $v ) {
       $key = strip_tags($k);
       if ( strlen( $key ) === 0 ) {
-        $key = $v;
+        $key = strip_tags($v);
       }
       $options[$key] = $v;
     }
@@ -461,7 +517,7 @@ class PDb_Field_Editor {
    * 
    * @return array
    */
-  protected function form_element_atts()
+  public function form_element_atts()
   {
     // set up the built-in form elements
     switch ( $this->field_def->form_element() ) {
@@ -631,6 +687,11 @@ class PDb_Field_Editor {
      * @return string table to use for this field
      */
     $table = Participants_Db::apply_filters('field_data_table', Participants_Db::$participants_table, $fieldname );
+    
+    if ( $wpdb->get_var('SHOW COLUMNS FROM ' . $table . ' LIKE "' . $fieldname . '"' ) !== $fieldname ) {
+      return false;
+    }
+    
     $result = $wpdb->get_col( 'SELECT `' . $fieldname . '` FROM ' . $table );
     return count( array_filter( $result ) ) > 0;
   }
@@ -667,7 +728,7 @@ class PDb_Field_Def_Parameter {
   {
     $this->name = $name;
     $this->config = $config;
-    $this->label = $this->get_label();
+    $this->label = isset( $config['label'] ) && ! empty( $config['label'] ) ? $config['label'] : $this->get_label();
   }
 
   /**
@@ -714,6 +775,16 @@ class PDb_Field_Def_Parameter {
   public function label()
   {
     return $this->label;
+  }
+
+  /**
+   *  provides the attribute name
+   * 
+   * @return string
+   */
+  public function name()
+  {
+    return $this->name;
   }
 
   /**

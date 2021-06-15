@@ -8,11 +8,16 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.9
+ * @version    0.12
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 class PDb_Form_Field_Def {
+  
+  /**
+   * @var string holds the name of the field definition qurey result cache
+   */
+  const def_cache = 'pdb-field_def';
 
   /**
    * @var int id of the field definition
@@ -37,7 +42,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string default value of the field
    */
-  public $default;
+  protected $default;
 
   /**
    * @var string name of the field's group
@@ -49,6 +54,11 @@ class PDb_Form_Field_Def {
    */
   protected $grouptitle;
 
+  /**
+   * @var int id of the field's group
+   */
+  protected $groupid;
+  
   /**
    * @var string field help text
    */
@@ -62,7 +72,7 @@ class PDb_Form_Field_Def {
   /**
    * @var string raw string from the "values" parameter of the field def
    */
-  private $values;
+  protected $values;
 
   /**
    * @var string validation type
@@ -131,10 +141,10 @@ class PDb_Form_Field_Def {
    */
   public function __construct( $field )
   {
-    $def = is_string( $field ) ? self::get_field_def( $field ) : $field;
+    $field_def = is_string( $field ) ? self::get_field_def( $field ) : self::get_field_def( $field->name );
 
-    if ( $def ) {
-      $this->assign_def_props( $def );
+    if ( $field_def ) {
+      $this->assign_def_props( $field_def, $field );
     }
   }
 
@@ -154,27 +164,47 @@ class PDb_Form_Field_Def {
    * 
    * @global wpdb $wpdb
    * @param string  $fieldname
+   * @param bool $main_only true if only field from main plugin
    * @return bool
    */
-  public static function is_field( $fieldname )
+  public static function is_field( $fieldname, $main_only = false )
   {
     if ( ! is_string($fieldname) ) {
       return false;
     }
     
-    $cachekey = 'pdb-field_list';
+    $cachekey = 'pdb-field_list' . strval($main_only);
     $field_list = wp_cache_get( $cachekey );
     
     if ( ! $field_list ) {
+      
       global $wpdb;
+      
       $sql = 'SELECT v.name 
-              FROM ' . Participants_Db::$fields_table . ' v';
+              FROM ' . Participants_Db::$fields_table . ' v
+              JOIN ' . Participants_Db::$groups_table . ' g ON g.name = v.group';
+      
+      if ( $main_only ) {
+        $sql .= ' WHERE g.mode IN ("admin","private","public")';
+      }
+      
       $field_list = $wpdb->get_col( $sql );
       
       wp_cache_set( $cachekey, $field_list, '', Participants_Db::cache_expire() );
     }
     
     return in_array( $fieldname, $field_list );
+  }
+  
+  /**
+   * tells if the field is in the main plugin fields
+   * 
+   * @param string $fieldname
+   * @return bool
+   */
+  public static function is_main_field( $fieldname )
+  {
+    return self::is_field($fieldname, true);
   }
 
   /**
@@ -186,23 +216,35 @@ class PDb_Form_Field_Def {
    */
   private static function get_field_def( $fieldname )
   {
-    $cachekey = 'pdb-field_def';
-    $def = wp_cache_get( $fieldname, $cachekey );
+    $field_defs = wp_cache_get(self::def_cache);
     
-    if ( ! $def ) {
+    if ( ! $field_defs ) {
       global $wpdb;
-      $sql = 'SELECT v.*, g.title AS grouptitle 
+      $sql = 'SELECT v.*, g.title AS grouptitle, g.id AS groupid  
               FROM ' . Participants_Db::$fields_table . ' v 
                 JOIN ' . Participants_Db::$groups_table . ' g
                   ON v.group = g.name 
               WHERE v.name = %s';
       $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
-      
-      wp_cache_set( $fieldname, $def, $cachekey, Participants_Db::cache_expire() );
-      
+    } else {
+      $def = isset( $field_defs[$fieldname] ) ? $field_defs[$fieldname] : new stdClass();
     }
     
     return $def;
+  }
+  
+  /**
+   * tells if the field stores a value in the db
+   * 
+   * if the form_element definition has a non-empty datatype, then it stores 
+   * its value in the db
+   * 
+   * @return bool
+   */
+  public function stores_data()
+  {
+    $datatype = Participants_Db::apply_filters('form_element_datatype', xnau_FormElement::get_datatype($this->form_element()), $this->form_element() );
+    return $datatype !== '';
   }
   
   /**
@@ -237,6 +279,8 @@ class PDb_Form_Field_Def {
       case 'id':
       case 'order':
       case 'title':
+      case 'grouptitle':
+      case 'groupid':
         return $this->{$prop};
       default:
         return null;
@@ -358,7 +402,25 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
+    if ( Participants_Db::is_dynamic_value( $this->default ) ) {
+      return htmlspecialchars_decode( $this->default );
+    }
     return Participants_Db::apply_filters( 'translate_string', $this->default );
+  }
+  
+  /**
+   * provides the default display string
+   * 
+   * @return string
+   */
+  public function default_display()
+  {
+    if ( $this->is_dynamic_field() ) {
+      // dynamic fields don't display the default value
+      return '';
+    }
+    
+    return $this->default_value();
   }
 
   /**
@@ -615,6 +677,18 @@ class PDb_Form_Field_Def {
   }
 
   /**
+   * tells if the field is a dynamic field
+   * 
+   * @return bool true if the field uses the default value to generate its value dynamically
+   */
+  public function is_dynamic_field()
+  {
+    $registered_dynamic = in_array( $this->form_element, Participants_Db::apply_filters( 'dynamic_field_list', array('date') ) );
+    
+    return $registered_dynamic || $this->is_dynamic_hidden_field();
+  }
+
+  /**
    * tells if the field is the single record link field
    * 
    * @return bool
@@ -775,11 +849,12 @@ class PDb_Form_Field_Def {
   /**
    * assigns the object properties
    * 
-   * @param object $def the field definition values
+   * @param object $field_def the field definition values
+   * @param object $field overriding values
    */
-  private function assign_def_props( $def )
+  private function assign_def_props( $field_def, $field )
   {
-    foreach ( $def as $prop => $value ) {
+    foreach ( $field_def as $prop => $value ) {
       switch ( $prop ) {
 
         case 'sortable':
@@ -796,30 +871,39 @@ class PDb_Form_Field_Def {
         
         case 'values':
 
-          $this->values = $def->values; // this is for backward compatibility
+          $this->values = $field_def->values; // this is for backward compatibility
           
           // if the values parameter has a value, then the field def is of the old format
-          if ( $def->values !== '' && !is_null($def->values) && $def->values !== 'a:0:{}' ) {
+          if ( $field_def->values !== '' && !is_null($field_def->values) && $field_def->values !== 'a:0:{}' ) {
             $values = $this->values_array();
             /*
              * for "value set" fields, the values parameter defines the options; for 
              * other fields, it defines the attributes
              */
             if ( $this->is_value_set() ) {
-              if ( empty( $def->options ) || $def->options === 'a:0:{}' ) {
+              if ( empty( $field_def->options ) || $field_def->options === 'a:0:{}' ) {
                 $this->options = $values;
               }
-            } elseif ( empty( $def->attributes ) || $def->attributes === 'a:0:{}' ) {
+            } elseif ( empty( $field_def->attributes ) || $field_def->attributes === 'a:0:{}' ) {
               $this->attributes = $values;
             }
           }
           break;
 
         case 'attributes':
+          
+          if ( empty( $this->{$prop} ) ) {
+              $this->{$prop} = (array) maybe_unserialize($value);
+          }
+          break;
+          
         case 'options':
           
           if ( empty( $this->{$prop} ) ) {
-            $this->{$prop} = (array) maybe_unserialize($value);
+              $this->{$prop} = (array) maybe_unserialize($value);
+          }
+          if ( isset( $field->{$prop} ) &&  ! empty( $field->{$prop} ) && is_array( $field->{$prop} ) ) {
+            $this->{$prop} = $field->{$prop};
           }
           break;
 

@@ -51,7 +51,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
     // determine the type of text-area elements to use for email body settings
     $this->textarea_type = Participants_Db::plugin_setting_is_true('html_email') ? 'rich-text' : 'text-area';
 
-
     // run the parent class initialization to finish setting up the class 
     parent::__construct( __CLASS__ );
 
@@ -867,6 +866,21 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
     
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'split_search',
+        'title' => __( 'Split Search Phrases', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'When checked, words separated by spaces will each be searched for separately.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+    
 
     $this->plugin_settings[] = array(
         'name' => 'list_default_image_size',
@@ -1596,7 +1610,7 @@ SELECT v.name, v.form_element, v.title, g.title AS grouptitle
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g 
     ON v.group = g.name 
-      WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") 
+      WHERE g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes()) ) . '") 
 ORDER BY g.order, v.order';
 
     $columns = $wpdb->get_results( $sql, OBJECT_K );
@@ -1804,8 +1818,11 @@ ORDER BY g.order, v.order';
         <div class="ui-tabs">
           <ul class="ui-tabs-nav">
             <?php
-            foreach ( $this->sections as $id => $title )
-              printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $id ), $title );
+            $i = 0;
+            foreach ( $this->sections as $id => $title ) {
+              printf( '<li><a data-index="%s" href="#%s">%s</a></li>', $i, Participants_Db::make_anchor( $id ), $title );
+              $i++;
+            }
             ?>
           </ul>
           <?php

@@ -66,7 +66,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       $config = (object) $config;
     }
 
-    parent::__construct( $config->name );
+    parent::__construct( $config );
 
     if ( $id ) {
       $this->set_record_id( $id );
@@ -413,10 +413,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   /**
    * sets the value from the db if it has not been set
    */
-  private function set_value_from_db()
+  protected function set_value_from_db()
   {
     if ( is_null( $this->value ) && $this->record_id > 0 ) {
       $data = Participants_Db::get_participant( $this->record_id );
+      
       if ( $data && isset( $data[$this->name] ) ) {
         $this->_set_value( $data[$this->name] );
       }
@@ -519,9 +520,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function has_content()
   {
     switch ( $this->form_element ) {
-      case 'placeholder':
-        $value = $this->default_value();
-        break;
       case 'link':
         $value = $this->value . $this->link;
         break;
@@ -679,7 +677,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * 
    * @return bool
    */
-  private function is_valid_single_record_link_field()
+  public function is_valid_single_record_link_field()
   {
     return (
             !in_array( $this->module, array('single', 'signup') ) &&
@@ -1233,14 +1231,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           } else {
             $return = $this->display_array_value();
           }
-
-          break;
-
-        case 'placeholder':
-
-          $this->set_value( $this->default_value() );
-
-          $return = $this->html_output ? $this->make_link() : $this->value();
 
           break;
 

@@ -593,6 +593,20 @@ abstract class xnau_Image_Handler {
   {
     return 0 !== preg_match( "#^(https?:|)//.+/.+\..{2,4}$#", $url );
   }
+  
+  /**
+   * provides the path to the image file
+   * 
+   * @return string path
+   */
+  public function image_path()
+  {
+    if ( $this->image_defined ) {
+      return trailingslashit( $this->image_directory ) . $this->image_file;
+    } else {
+      return  WP_CONTENT_DIR . str_replace( '/wp-content', '', Participants_Db::plugin_setting( 'default_image', '' ) );
+    }
+  }
 
   /**
    * sets the dimension properties
@@ -600,8 +614,7 @@ abstract class xnau_Image_Handler {
    */
   protected function _set_dimensions()
   {
-
-    $getimagesize = self::getimagesize( $this->image_uri );
+    $getimagesize = self::getimagesize( $this->image_path() );
 
     if ( false !== $getimagesize ) {
 
@@ -621,7 +634,13 @@ abstract class xnau_Image_Handler {
     $found = false;
     $result = wp_cache_get( $uri, self::group, false, $found );
     if ( $found === false ) {
-      $result = @getimagesize( $uri );
+      
+      try {
+        $result = getimagesize( $uri );
+      } catch (Exception $e) {
+        Participants_Db::debug_log( __METHOD__ . ' ' . $e->getMessage() );
+      }
+      
       wp_cache_set( $uri, $result, self::group, Participants_Db::cache_expire() );
     }
     return $result;

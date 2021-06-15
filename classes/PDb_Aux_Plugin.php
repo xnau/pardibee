@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    5.0
+ * @version    5.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -167,28 +167,19 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
 
       /**
-       * include the aux plugin update class
+       * set up the aux plugin update class
        * 
        * this sets up a check to the xnau plugin packages, and looks for a zip 
        * archive matching the name $this->aux_plugin_name
        * 
-       * @version 1.6.3
        */
-      require_once Participants_Db::$plugin_path . '/vendor/aux-plugin-update/plugin-update-checker.php';
-
-      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) /* && $this->update_check_ok() */ ) {
+      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) ) {
 
         $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
-
-        //$urlcheck = @get_headers( $update_url );
-        //if ( is_array( $urlcheck ) && strpos( $urlcheck[0], '200' ) !== false ) {
 
         Puc_v4_Factory::buildUpdateChecker(
                 $update_url, $plugin_file, $this->aux_plugin_name
         );
-
-        // $this->set_update_check_timeout();
-        //}
       }
     }
 
@@ -218,39 +209,6 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     }
 
     /**
-     * checks the throttling transient
-     * 
-     * @return bool true if the wait period is over
-     */
-    private function update_check_ok()
-    {
-      if ( filter_input( INPUT_GET, 'force-check', FILTER_SANITIZE_NUMBER_INT ) === '1' ) {
-        return true;
-      }
-      return !(bool) get_transient( $this->timeout_key() );
-    }
-
-    /**
-     * sets the throttling timer
-     * 
-     * @return null
-     */
-    private function set_update_check_timeout()
-    {
-      set_transient( $this->timeout_key(), 1, apply_filters( 'pdbaux-update_throttler_timeout', 12 * HOUR_IN_SECONDS ) ); // check for updates maximum once per 12 hours
-    }
-
-    /**
-     * provides a name for the throttler transient
-     * 
-     * @return string
-     */
-    private function timeout_key()
-    {
-      return self::throttler . $this->aux_plugin_name;
-    }
-
-    /**
      * provides the setting definition
      * 
      * @param string  $name of the setting to get
@@ -259,6 +217,22 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public function setting_definition( $name )
     {
       return isset( $this->setting_definitions[$name] ) ? $this->setting_definitions[$name] : false;
+    }
+    
+    /**
+     * provides the setting default value
+     * 
+     * @param string $name name of the setting
+     * @return string
+     */
+    protected function setting_default( $name )
+    {
+      $default = '';
+      if ( $setting = $this->setting_definition( $name ) ) {
+        $default = $setting->default;
+      }
+      
+      return $default;
     }
 
     /**
@@ -275,7 +249,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function plugin_option( $option_name, $default = false )
     {
-      $option_value = apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default );
+      $default_setting = $default === false ? $this->setting_default($option_name) : $default;
+      
+      $option_value = apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default_setting );
+      
       return is_string( $option_value ) ? Participants_Db::apply_filters( 'translate_string', $option_value ) : $option_value;
     }
 
@@ -953,7 +930,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     function _trigger_error( $message, $errno = E_USER_ERROR )
     {
       if ( isset( $_GET['action'] ) and false !== stripos( $_GET['action'], 'error_scrape' ) ) {
-        error_log( 'Plugin Activation Failed: ' . $_GET['plugin'] );
+        Participants_Db::debug_log( 'Plugin Activation Failed: ' . $_GET['plugin'] );
         echo($message);
         exit;
       } else {

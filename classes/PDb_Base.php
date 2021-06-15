@@ -340,6 +340,24 @@ class PDb_Base {
   }
   
   /**
+   * provides a list of fields that have columns in the main db
+   * 
+   * @return array of field names
+   */
+  public static function db_field_list()
+  {
+    $field_list = array();
+    
+    foreach( self::field_defs() as $fieldname => $field ) {
+      if ( $field->stores_data() ) {
+        $field_list[] = $fieldname;
+      }
+    }
+    
+    return $field_list;
+  }
+  
+  /**
    * provides the name of the main database table
    * 
    * @return string
@@ -536,6 +554,23 @@ class PDb_Base {
       $id = Participants_Db::$session->get( 'pdbid' );
     }
     return $id;
+  }
+  
+  /**
+   * tells if the private ID is in the URL
+   * 
+   * this is primarily to detect if a pretty permalink was used to access the record, 
+   * a lot easier to do it here, than in the pretty permalinks plugin
+   * 
+   * @param int $record_id
+   * @return bool true if the record was accessed with a URL containing the private ID
+   */
+  public static function pid_in_url( $record_id )
+  {
+    $url = $_SERVER['REQUEST_URI'];
+    $record = Participants_Db::get_participant( $record_id );
+    
+    return is_array( $record ) && strpos( $url, $record['private_id'] ) !== false;
   }
 
   /**
@@ -947,6 +982,7 @@ class PDb_Base {
   {
 
     $capability = 'read'; // assume the lowest cap
+    
     if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
       /**
        * provides access to individual access privileges
@@ -1742,11 +1778,10 @@ class PDb_Base {
     $url = site_url($path);
     
     // WP Cloudflare Super Page Cache
-    global $sw_cloudflare_pagecache;
-    if ( is_object( $sw_cloudflare_pagecache ) ) {
-      $objects["cache_controller"]->purge_urls( array( $url ) );
-    }
-    
+//    global $sw_cloudflare_pagecache;
+//    if ( is_object( $sw_cloudflare_pagecache ) ) {
+//      $sw_cloudflare_pagecache->objects["cache_controller"]->purge_urls( array( $url ) );
+//    }
   }
 
   /**
@@ -2145,5 +2180,5 @@ class PDb_Base {
   {
     return self::apply_filters('user_ip', $_SERVER['REMOTE_ADDR']);
   }
-
-}
+  
+  }

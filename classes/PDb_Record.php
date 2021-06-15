@@ -39,13 +39,15 @@ class PDb_Record extends PDb_Shortcode {
    */
   public function __construct( $shortcode_atts )
   {
-
+    $this->rich_text_editor_includes();
+    
     // define shortcode-specific attributes to use
     $add_atts = array(
         'module' => 'record',
         'class' => 'edit-participant ' . $this->wrap_class,
         'submit_button' => Participants_Db::plugin_setting( 'save_changes_button' ),
     );
+    
     // run the parent class initialization to set up the parent methods 
     parent::__construct( $shortcode_atts, $add_atts );
 
@@ -86,6 +88,12 @@ class PDb_Record extends PDb_Shortcode {
 
         $this->_setup_iteration();
 
+        /**
+         * @action pdb-open_record_edit
+         * @param array record data
+         */
+        do_action( 'pdb-open_record_edit', $this->participant_values );
+
         $this->_print_from_template();
       }
     }
@@ -102,10 +110,62 @@ class PDb_Record extends PDb_Shortcode {
    */
   public static function print_form( $params )
   {
-
     $record = new PDB_Record( $params );
 
     return $record->output;
+  }
+  
+  /**
+   *  provides the record ID if present in the shortcode attribute
+   * 
+   * includes handling of the deprecated 'id' attribute
+   * 
+   * @param array $atts shortcode attributes
+   * @return int|bool the record ID; bool false if not found in the attributes
+   */
+  public static function get_id_from_shortcode( $atts )
+  {
+    $record_id = false;
+    
+    // checking 'id' atribute for backward compatibility
+    if ( (isset( $atts['id'] ) || isset( $atts['record_id'] ) ) ) {
+      if ( isset( $atts['id'] ) & !isset( $atts['record_id'] ) ) {
+        $atts['record_id'] = $atts['id'];
+      }
+      $record_id = Participants_Db::get_record_id_by_term( 'id', $atts['record_id'] );
+      
+      if ( $record_id && Participants_Db::pid_in_url( $record_id ) ) {
+        
+        $record = Participants_Db::get_participant($record_id);
+          /**
+           * @action pdb-record_accessed_using_private_link
+           * @param array record data
+           */
+        do_action( 'pdb-record_accessed_using_private_link', $record );
+        
+        if ( has_action( 'pdb-first_time_record_access_with_private_link' ) ) {
+          
+          global $wpdb;
+          
+          $sql = 'SELECT count(*) FROM ' . Participants_Db::$participants_table . ' WHERE `id` = %s AND `last_accessed` IS NULL';
+          
+          // check for a null value in the last_accessed field
+          if ( $wpdb->get_var( $wpdb->prepare( $sql, $record_id ) ) ) {
+            
+            /**
+             * @action pdb-first_time_record_access_with_private_link
+             * @param array record data
+             */
+            do_action( 'pdb-first_time_record_access_with_private_link', $record );
+            
+            // set the last_accessed field the the current timestamp
+            Participants_Db::set_record_access($record_id);
+          }
+        }
+      }
+    }
+    
+    return $record_id;
   }
 
   /**
@@ -236,6 +296,23 @@ class PDb_Record extends PDb_Shortcode {
     $this->previous_multipage = Participants_Db::$session->get( 'previous_multipage', '' );
     if ( strlen( $this->previous_multipage ) === 0 ) {
       $this->clear_multipage_session();
+    }
+  }
+  
+  /**
+   * includes the code support for the rich text editor
+   * 
+   * @global wpdb $wpdb
+   */
+  private function rich_text_editor_includes()
+  {
+    global $wpdb;
+    
+    $rich_text_field_exists = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' f WHERE f.form_element = "rich-text"' );
+    
+    if ( $rich_text_field_exists ) {
+      require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+      \_WP_Editors::enqueue_default_editor();
     }
   }
 

@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -169,7 +169,7 @@ class PDb_FormElement extends xnau_FormElement {
      * 
      * @action pdb-form_element_build_{$type}
      */
-    Participants_Db::do_action( 'form_element_build_' . $this->type, $this );
+    Participants_Db::do_action( 'form_element_build_' . $this->form_element, $this );
 
     if ( empty( $this->output ) ) {
       $this->call_element_method();
@@ -210,8 +210,6 @@ class PDb_FormElement extends xnau_FormElement {
 
     // checkboxes are grouped, radios are not
     $this->group = $type === 'checkbox';
-      
-    $field_def = Participants_Db::get_field_def($this->name);
 
     // checkboxes are given a null select so an "unchecked" state is possible
     $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
@@ -233,23 +231,23 @@ class PDb_FormElement extends xnau_FormElement {
     
     $this->_addline( '<fieldset class="no-border">' );
     
-    if ( is_a( $field_def, 'PDb_Form_Field_Def' ) ) {
-      $this->_addline('<legend class="screen-reader-text">' . esc_attr( strip_tags( $field_def->title() ) ) . '</legend>' );
+    if ( $this->field_def ) {
+      $this->_addline('<legend class="screen-reader-text">' . esc_attr( strip_tags( $this->field_def->title() ) ) . '</legend>' );
     }
 
-    $optgroup = false;
+    $in_optgroup = false;
 
     foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
       $option_key = Participants_Db::apply_filters( 'translate_string', stripslashes( $option_key ) );
 
       if ( ( $option_value === 'optgroup') and ! empty( $option_key ) ) {
-        if ( $optgroup ) {
+        if ( $in_optgroup ) {
           $this->_addline( '</fieldset>' );
         }
         $id = $this->element_id( $this->legal_name( $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_key ) ) ) ) );
         $this->_addline( '<fieldset class="' . esc_attr( $type . '-subgroup ' . $this->name . '-subgroup' ) . '" id="' . esc_attr( $id ) . '"><legend>' . esc_html( $option_key ) . '</legend>' );
-        $optgroup = true;
+        $in_optgroup = true;
       } else {
         $id = $this->element_id();
         $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
@@ -259,9 +257,9 @@ class PDb_FormElement extends xnau_FormElement {
         $this->attributes['id'] = $id;
       }
     }
-    if ( $optgroup ) {
+    if ( $in_optgroup ) {
       $this->_addline( '</fieldset>' );
-      $optgroup = false;
+      $in_optgroup = false;
     }
     if ( $otherlabel ) {
 
@@ -309,11 +307,26 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _rich_text_field()
   {
-
-    if ( !is_admin() and ! Participants_Db::plugin_setting_is_true('rich_text_editor') )
+    if ( !is_admin() and ! Participants_Db::plugin_setting_is_true('rich_text_editor') ) {
       $this->_text_field();
-    else
+    } else {
+      add_filter( 'tiny_mce_before_init', array( $this, 'tinymce_config' ), 5 );
       parent::_rich_text_field();
+    }
+  }
+  
+  /**
+   * provides the visual editor configuration array
+   * 
+   * 
+   * @param array $config
+   * @return array
+   */
+  public function tinymce_config( $config )
+  {
+    // sets up a javascript event that is triggered when a rich text field is changed
+    $config['setup'] = "[function(ed){ed.on('input',function(e){jQuery(this.container).trigger('pdb-tinymce-change');});}][0]";
+    return $config;
   }
 
   /**
@@ -338,7 +351,7 @@ class PDb_FormElement extends xnau_FormElement {
 
     $this->add_options_to_attributes();
     
-    if ( $this->type === 'currency' && ! isset( $this->attributes['step'] ) ) {
+    if ( $this->form_element === 'currency' && ! isset( $this->attributes['step'] ) ) {
       $this->attributes['step'] = '0.01';
     } 
 
@@ -352,7 +365,13 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $this->add_class( 'date_field' );
     
-    if ( $this->value !== '' ) {
+    if ( $this->field_def && empty( $this->value ) ) {
+      
+      // set the default value using a relative date key
+      $this->value = PDb_Date_Display::get_date( PDb_Date_Parse::timestamp( PDb_List_Query::process_search_term_keys( $this->field_def->default_value() ) ), 'date field dynamic default' );
+      
+    } else {
+      
       $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ );
     }
 
@@ -366,21 +385,22 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _upload( $type )
   {
-    $field_def = Participants_Db::get_field_def($this->name);
-    /* @var $field_def PDb_Form_field_Def */
+    $field_default = $this->field_def->default_value();
+    
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
-    if ( $this->value !== $field_def->default_value() ) {
+    if ( $this->value !== $field_default ) {
 
       $this->_addline( self::get_field_value_display( $this ) );
     }
 
     // add the MAX_FILE_SIZE field
     // this is really just for guidance, not a valid safeguard; this must be checked on submission
-    if ( isset( $this->options['max_file_size'] ) )
+    if ( isset( $this->options['max_file_size'] ) ) {
       $max_size = $this->options['max_file_size'];
-    else
+    } else {
       $max_size = ( (int) ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
+    }
 
     $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value), false ) );
 
@@ -389,7 +409,7 @@ class PDb_FormElement extends xnau_FormElement {
       $this->_addline( $this->_input_tag( 'file' ) );
 
       // add the delete checkbox if there is a file defined
-      if ( $this->value !== $field_def->default_value() && $this->module !== 'signup' ) {
+      if ( $this->value !== $field_default && $this->module !== 'signup' ) {
         unset($this->attributes['id']);
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
       }
@@ -578,11 +598,11 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $value = $title; // if no match is found, return the title argument
     
-    $field = Participants_Db::get_field_def( $fieldname );
+    $field_def = Participants_Db::get_field_def($fieldname);
     
-    if ( $field && $field->is_value_set() ) {
+    if ( $field_def->is_value_set() ) {
       
-      $options_array = $field->options();
+      $options_array = $field_def->options();
       
       // first check if there is a direct match
       if ( isset( $options_array[$title] ) ) {
@@ -600,7 +620,7 @@ class PDb_FormElement extends xnau_FormElement {
        * 
        * first, strip out any tags in the keys
        */
-      $options_array = self::striptags_keys($field->options());
+      $options_array = self::striptags_keys( $field_def->options() );
       
       // now check if there is a direct case-insensitive match with a tag-stripped title
       if ( isset( $options_array[strtolower($title)] ) ) {
@@ -625,11 +645,9 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $value = $title; // if no match is found, return the title argument
     
-    $field = Participants_Db::get_field_def( $fieldname );
-    
-    if ( $field && $field->is_value_set() ) {
+    if ( $this->field_def && $this->field_def->is_value_set() ) {
       
-      $options_array = $field->options();
+      $options_array = $this->field_def->options();
       
       // first check if there is a direct match
       if ( isset( $options_array[$title] ) ) {
@@ -647,7 +665,7 @@ class PDb_FormElement extends xnau_FormElement {
        * 
        * first, strip out any tags in the keys
        */
-      $options_array = self::striptags_keys($field->options());
+      $options_array = self::striptags_keys($this->field_def->options());
       
       // now check if there is a direct case-insensitive match with a tag-stripped title
       if ( isset( $options_array[strtolower($title)] ) ) {
@@ -734,6 +752,7 @@ class PDb_FormElement extends xnau_FormElement {
      * @param string the name of the filter called
      */
     $attributes_array = Participants_Db::apply_filters( 'form_element_attributes_filter', $this->attributes, $filter );
+    
     switch ( $filter ) {
       case 'none':
         break;
@@ -777,7 +796,7 @@ class PDb_FormElement extends xnau_FormElement {
         'hidden' => __( 'Hidden Field', 'participants-database' ),
         'password' => __( 'Password Field', 'participants-database' ),
         'captcha' => __( 'CAPTCHA', 'participants-database' ),
-        'placeholder' => __( 'Placeholder', 'participants-database' ),
+//        'placeholder' => __( 'Placeholder', 'participants-database' ),
 //         'timestamp'          => __('Timestamp', 'participants-database'),
     );
     /**
@@ -841,7 +860,7 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * determines if a field type is "linkable"
    * 
-   * meaning it is displayed as a string that can be wrapped in an anchor tag
+   * meaning it is displayed as an element that can be wrapped in an anchor tag
    * 
    * @param object $field the field object
    * @return bool true if the type is linkable
@@ -855,7 +874,6 @@ class PDb_FormElement extends xnau_FormElement {
         'dropdown',
         'checkbox',
         'radio',
-        'placeholder',
         'hidden',
             )
     );
@@ -882,6 +900,29 @@ class PDb_FormElement extends xnau_FormElement {
      * @return string $datatype 
      */
     return Participants_Db::apply_filters( 'form_element_datatype', parent::get_datatype( $form_element ), $form_element, $fieldname );
+  }
+  
+  /**
+   * provides some property values
+   * 
+   * this is for backward compatibility for removed class properties
+   * 
+   * @param string $name of the property
+   * @return mixed property value
+   */
+  public function __get( $name )
+  {
+    switch ( $name ) {
+      
+      case 'type':
+        return $this->form_element;
+        
+      case 'size':
+        return isset($this->attributes['size']) ? $this->attributes['size'] : '';
+        
+      default:
+        Participants_Db::debug_log( __METHOD__.' invalid property: ' .  $name );
+    }
   }
 
 }

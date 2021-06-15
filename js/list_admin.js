@@ -52,9 +52,7 @@ var PDbListAdmin = (function ($) {
     width : 'auto',
     resizable : false,
     buttons : [{
-        icons : {
-          primary : "dashicons dashicons-yes ui-icon-check"
-        },
+        icon : "dashicons dashicons-yes",
         click : function () {
           listform.prepend(submitElement.clone().val(list_adminL10n.apply));
           armDeleteButton(true);
@@ -63,9 +61,7 @@ var PDbListAdmin = (function ($) {
           listform.submit();
         }
       }, {
-        icons : {
-          primary : "dashicons dashicons-no-alt ui-icon-close"
-        },
+        icon : 'dashicons dashicons-no-alt',
         click : function () {
           checkState = true;
           $(this).dialog("close").html('');

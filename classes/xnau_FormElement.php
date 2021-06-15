@@ -33,27 +33,12 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.13
+ * @version    1.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
 if ( !defined( 'ABSPATH' ) )
   die;
-/*
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License, version 2, as
-  published by the Free Software Foundation.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
 
 abstract class xnau_FormElement {
 
@@ -62,21 +47,21 @@ abstract class xnau_FormElement {
    *
    * @var string 
    */
-  var $type;
+  public $form_element;
 
   /**
    * holds the current value of the element
    *
    * @var string
    */
-  var $value;
+  public $value;
 
   /**
    * the name attribute of the form data field
    *
    * @var string
    */
-  var $name;
+  public $name;
 
   /**
    * for elements that have set options such as checkboxes and dropdowns, this 
@@ -84,40 +69,40 @@ abstract class xnau_FormElement {
    *
    * @var array
    */
-  var $options;
+  public $options;
 
   /**
    * holds any other html element attributes in name=>value pairs
    * 
    * @var array 
    */
-  var $attributes = array();
+  public $attributes = array();
 
   /**
    * @var array of class names
    */
-  var $classes = array();
+  public $classes = array();
 
   /**
    * array holding the text lines of an element to be output
    *
    * @var array
    */
-  var $output = array();
-
-  /**
-   * the size attribute of the input tag
-   *
-   * @var type 
-   */
-  var $size;
+  public $output = array();
 
   /**
    * sets the height and width of the textarea element
    *
    * @var array
    */
-  var $textarea_dims = array('rows' => 2, 'cols' => 40);
+  public $textarea_dims = array( 'rows' => 2, 'cols' => 40 );
+  
+  /**
+   * holds the form element definition
+   * 
+   * @var PDb_Form_Field_Def
+   */
+  protected $field_def;
 
   /**
    * element group status
@@ -137,7 +122,7 @@ abstract class xnau_FormElement {
    * 
    * @var bool
    */
-  var $inside = false;
+  public $inside = false;
 
   /**
    * @var string the linebreak character
@@ -164,27 +149,21 @@ abstract class xnau_FormElement {
   protected $i18n;
 
   /**
-   *
-   * @var array of all available form element types
-   */
-  var $element_types;
-
-  /**
    * a namespacing prefix for CSS classes and such
    */
-  var $prefix = 'form-element';
+  public $prefix = 'form-element';
 
   /**
    * 
    * @var string name of the instantiating module
    */
-  var $module;
-  
+  public $module;
+
   /**
    * @var string  URL element link property
    */
-  var $link;
-  
+  public $link;
+
   /**
    * @var int holds the record ID
    */
@@ -216,8 +195,6 @@ abstract class xnau_FormElement {
    */
   public function __construct( $parameters )
   {
-    $this->_set_types();
-
     $defaults = array(
         'options' => NULL,
         'attributes' => array(),
@@ -231,24 +208,19 @@ abstract class xnau_FormElement {
         'record_id' => 0,
     );
     $params = wp_parse_args( $parameters, $defaults );
+    
+    $this->field_def = Participants_Db::get_field_def( $params['name'] );
 
-    $this->type = $params['type'];
-    $this->form_element = $params['type'];
-    $this->value = $params['value'];
-    $this->name = $params['name'];
-    $this->size = $params['size'];
-    $this->container_id = $params['container_id'];
-    $this->group = $params['group'];
-    $this->module = isset( $params['module'] ) ? $params['module'] : '';
-    $this->attributes = $params['attributes'];
-    $this->link = $params['link'];
-    $this->record_id = $params['record_id'];
-
-    if ( NULL !== $params['options'] || !empty( $params['options'] ) ) {
-
-      // this value is stored as a serialized array, but the class could be called with an array for this value
-      $this->options = maybe_unserialize( $params['options'] );
-    }
+    $this->form_element = $params[ 'type' ];
+    $this->value = $params[ 'value' ];
+    $this->name = $params[ 'name' ];
+    $this->container_id = $params[ 'container_id' ];
+    $this->group = $params[ 'group' ];
+    $this->module = isset( $params[ 'module' ] ) ? $params[ 'module' ] : '';
+    $this->setup_attributes( $params );
+    $this->setup_options( $params['options'] );
+    $this->link = $params[ 'link' ];
+    $this->record_id = $params[ 'record_id' ];
 
     $this->i18n = array(
         'other' => _x( 'other', 'indicates a write-in choice', 'participants-database' ),
@@ -258,13 +230,13 @@ abstract class xnau_FormElement {
      * classes can come in in the classes parameter or as part of the attributes array. 
      * We consolidate them into the classes property here.
      */
-    $this->classes = empty( $params['class'] ) ? array() : explode( ' ', $params['class'] );
-    if ( isset( $this->attributes['class'] ) ) {
-      $this->classes = array_merge( $this->classes, explode( ' ', $this->attributes['class'] ) );
-      unset( $this->attributes['class'] );
+    $this->classes = empty( $params[ 'class' ] ) ? array() : explode( ' ', $params[ 'class' ] );
+    if ( isset( $this->attributes[ 'class' ] ) ) {
+      $this->classes = array_merge( $this->classes, explode( ' ', $this->attributes[ 'class' ] ) );
+      unset( $this->attributes[ 'class' ] );
     }
 
-    $this->indent = $params['indent'];
+    $this->indent = $params[ 'indent' ];
 
     // clear the output array
     $this->output = array();
@@ -286,7 +258,7 @@ abstract class xnau_FormElement {
   protected function call_element_method()
   {
 
-    switch ( $this->type ) :
+    switch ( $this->form_element ) :
 
       case 'date':
         $this->_date_field();
@@ -395,7 +367,7 @@ abstract class xnau_FormElement {
    *
    * @static
    */
-  static function _HTML( $parameters )
+  public static function _HTML( $parameters )
   {
     
   }
@@ -459,10 +431,10 @@ abstract class xnau_FormElement {
             'link' => (isset( $field->link ) ? $field->link : ''),
             'mode' => 'both',
             'module' => $field->module,
-        ) );
+                ) );
 
         if ( $html and ( !is_admin() or ( defined( 'DOING_AJAX' ) and DOING_AJAX)) ) {
-          if ( isset( $field->module ) and in_array( $field->module, array('single', 'list') ) ) {
+          if ( isset( $field->module ) and in_array( $field->module, array( 'single', 'list' ) ) ) {
             $image->display_mode = 'image';
           } elseif ( isset( $field->module ) and $field->module == 'signup' ) {
             $image->display_mode = $image->image_defined ? 'both' : 'none';
@@ -489,7 +461,7 @@ abstract class xnau_FormElement {
             $return = $field->value;
           } else {
             $upload_dir = wp_upload_dir();
-            $field->link = $upload_dir['url'] . $field->value;
+            $field->link = $upload_dir[ 'url' ] . $field->value;
             $return = self::make_link( $field );
           }
           break;
@@ -517,8 +489,8 @@ abstract class xnau_FormElement {
       case 'multi-dropdown':
 
         $multivalues = maybe_unserialize( $field->value );
-        if ( is_array( $multivalues ) and empty( $multivalues['other'] ) )
-          unset( $multivalues['other'] );
+        if ( is_array( $multivalues ) and empty( $multivalues[ 'other' ] ) )
+          unset( $multivalues[ 'other' ] );
 
         $return = implode( ', ', (array) $multivalues );
         break;
@@ -535,13 +507,13 @@ abstract class xnau_FormElement {
           break;
         }
 
-        if ( empty( $linkdata[1] ) )
-          $linkdata[1] = str_replace( 'http://', '', $linkdata[0] );
+        if ( empty( $linkdata[ 1 ] ) )
+          $linkdata[ 1 ] = str_replace( 'http://', '', $linkdata[ 0 ] );
 
         if ( $html )
-          $return = vsprintf( ( empty( $linkdata[0] ) ? '%1$s%2$s' : '<a href="%1$s">%2$s</a>' ), $linkdata );
+          $return = vsprintf( ( empty( $linkdata[ 0 ] ) ? '%1$s%2$s' : '<a href="%1$s">%2$s</a>' ), $linkdata );
         else
-          $return = $linkdata[0];
+          $return = $linkdata[ 0 ];
         break;
 
       case 'text-line' :
@@ -565,12 +537,12 @@ abstract class xnau_FormElement {
 
         $return = $html ? '<span class="' . self::class_attribute( 'textarea richtext' ) . '">' . $field->value . '</span>' : $field->value;
         break;
-      
+
       case 'decimal':
-        
+
         $return = floatval( $field->value );
         break;
-      
+
       default :
 
         $return = $field->value;
@@ -647,11 +619,11 @@ abstract class xnau_FormElement {
     }
 
     if ( Participants_Db::apply_filters( 'edit_record_timestamps', false ) === false ) {
-      $this->attributes['disabled'] = true;
+      $this->attributes[ 'disabled' ] = true;
     } else {
-      unset( $this->attributes['readonly'] );
+      unset( $this->attributes[ 'readonly' ] );
     }
-    
+
     $this->_addline( $this->_input_tag() );
   }
 
@@ -663,7 +635,7 @@ abstract class xnau_FormElement {
 
     $value = !empty( $this->value ) ? $this->value : '';
 
-    $this->_addline( '<textarea name="' . $this->name . '" rows="' . $this->textarea_dims['rows'] . '" cols="' . $this->textarea_dims['cols'] . '" ' . $this->_attributes() . $this->_class() . ' >' . $value . '</textarea>', empty( $this->value ) ? 0 : -1  );
+    $this->_addline( '<textarea name="' . $this->name . '" rows="' . $this->textarea_dims[ 'rows' ] . '" cols="' . $this->textarea_dims[ 'cols' ] . '" ' . $this->_attributes() . $this->_class() . ' >' . $value . '</textarea>', empty( $this->value ) ? 0 : -1  );
   }
 
   /**
@@ -671,16 +643,10 @@ abstract class xnau_FormElement {
    */
   protected function _rich_text_field()
   {
-    $value = isset( $this->value ) ? $this->value : '';
+    // we encode the brackets (if any) so that it will go into the editor JS without an error
+   $editor = new PDb_fields\rich_text_editor( str_replace( array('[',']'), array('&#91;','&#93;'), $this->name ), $this->value );
 
-    wp_editor(
-            htmlspecialchars_decode( $value ), 
-            Participants_Db::rich_text_editor_id( $this->name ), 
-            array(
-              'media_buttons' => false,
-              'textarea_name' => $this->name,
-            )
-    );
+   $editor->print_editor();
   }
 
   /**
@@ -722,11 +688,11 @@ abstract class xnau_FormElement {
     }
 
     $id = $this->element_id();
-    $this->attributes['id'] = $id . '-default';
+    $this->attributes[ 'id' ] = $id . '-default';
     $this->_addline( $this->_input_tag( 'hidden', $unchecked_value ) );
-    $this->attributes['id'] = $id;
+    $this->attributes[ 'id' ] = $id;
     if ( false !== $title ) {
-      $this->_addline( '<label for="' . $this->attributes['id'] . '">' );
+      $this->_addline( '<label for="' . $this->attributes[ 'id' ] . '">' );
     }
     $this->_addline( $this->_input_tag( 'checkbox', $checked_value, 'checked' ), 1 );
 
@@ -749,25 +715,25 @@ abstract class xnau_FormElement {
    */
   protected function _dropdown( $other = false )
   {
-    if ( isset( $this->attributes['other'] ) ) {
-      $otherlabel = $this->attributes['other'];
-      unset( $this->attributes['other'] );
+    if ( isset( $this->attributes[ 'other' ] ) ) {
+      $otherlabel = $this->attributes[ 'other' ];
+      unset( $this->attributes[ 'other' ] );
     } else {
-      $otherlabel = $this->i18n['other'];
+      $otherlabel = $this->i18n[ 'other' ];
     }
 
     // set the ID for the select element
     $id = $this->element_id();
-    
-    if ( !isset( $this->attributes['readonly'] ) ) {
+
+    if ( !isset( $this->attributes[ 'readonly' ] ) ) {
 
       // make a unique prefix for the js function
       $js_prefix = $this->_prep_js_string( $this->name );
 
       // set the ID for the select element
       $id = $this->element_id();
-      $this->attributes['id'] = (empty( $id ) ? $js_prefix . '_select' : $id);
-      if ( isset( $this->attributes['multiple'] ) && $this->attributes['multiple'] === true ) {
+      $this->attributes[ 'id' ] = (empty( $id ) ? $js_prefix . '_select' : $id);
+      if ( isset( $this->attributes[ 'multiple' ] ) && $this->attributes[ 'multiple' ] === true ) {
         $this->group = true;
         $this->name = $this->name . '[]';
         $this->value = self::field_value_array( $this->value );
@@ -777,11 +743,11 @@ abstract class xnau_FormElement {
         $this->add_class( 'otherselect' );
         //$this->_addline('<select id="' . $js_prefix . '_otherselect" onChange="' . $js_prefix . 'SelectOther()" name="' . $this->name . '" ' . $this->_attributes() . ' >');
       }
-      
+
       $this->_addline( '<select name="' . $this->name . '" ' . $this->_attributes() . $this->_class() . ' >' );
 
       // restore the ID attribute
-      $this->attributes['id'] = $id;
+      $this->attributes[ 'id' ] = $id;
 
       $this->indent++;
 
@@ -790,26 +756,26 @@ abstract class xnau_FormElement {
        */
       $this->_set_null_select();
 
-      $this->_add_option_series( $other ? $otherlabel : false );
+      $this->_add_option_series( $other ? $otherlabel : false  );
 
       $this->_addline( '</select>', -1 );
 
       if ( $other ) {
-        
+
         // build the text input element
-        $this->attributes['id'] .= '_other';
+        $this->attributes[ 'id' ] .= '_other';
         $is_other = $this->_set_selected( $this->options, $this->value, 'selected', false ) !== '';
-        
+
         $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other ? htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false ) : '' ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' >' );
         $this->_addline( '</div>' );
       }
     } else {
-      
+
       // readonly display
-      $this->attributes['id'] = $this->element_id() . '_readonly';
+      $this->attributes[ 'id' ] = $this->element_id() . '_readonly';
       $options = $this->_make_assoc( $this->options );
-      
-      $this->_addline( '<input type="text" name="' . $this->name . '" value="' . array_search($this->value, $options) . '" ' . $this->_attributes('no validate') . $this->_class( 'pdb-readonly' ) . ' >' );
+
+      $this->_addline( '<input type="text" name="' . $this->name . '" value="' . array_search( $this->value, $options ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'pdb-readonly' ) . ' >' );
     }
   }
 
@@ -832,7 +798,7 @@ abstract class xnau_FormElement {
   protected function _dropdown_multi()
   {
 
-    $this->attributes['multiple'] = true;
+    $this->attributes[ 'multiple' ] = true;
     $this->_dropdown();
   }
 
@@ -873,8 +839,8 @@ abstract class xnau_FormElement {
       $this->value = is_array( $this->value ) ? current( $this->value ) : $this->value;
     } else {
       $this->value = self::field_value_array( $this->value );
-      if ( !isset( $this->value['other'] ) )
-        $this->value['other'] = '';
+      if ( !isset( $this->value[ 'other' ] ) )
+        $this->value[ 'other' ] = '';
     }
 
     /*
@@ -882,14 +848,14 @@ abstract class xnau_FormElement {
      * in the field definition, the finally the string if set in the template via 
      * the attributes array
      */
-    $otherlabel = $this->i18n['other'];
+    $otherlabel = $this->i18n[ 'other' ];
     if ( $i = array_search( 'other', $this->options ) ) {
       $otherlabel = array_search( 'other', $this->options );
-      unset( $this->options[$otherlabel] );
+      unset( $this->options[ $otherlabel ] );
     }
-    if ( isset( $this->attributes['other'] ) ) {
-      $otherlabel = $this->attributes['other'];
-      unset( $this->attributes['other'] );
+    if ( isset( $this->attributes[ 'other' ] ) ) {
+      $otherlabel = $this->attributes[ 'other' ];
+      unset( $this->attributes[ 'other' ] );
     }
 
     // make a unique prefix for the function
@@ -903,14 +869,13 @@ abstract class xnau_FormElement {
 
     $controltag = array_pop( $this->output ); // save the <span.othercontrol> close tag
     $closetag = array_pop( $this->output ); // save the <span.checkbox-group> close tag
-
     // add the text input element
-    $value = $type == 'checkbox' ? $this->value['other'] : (!in_array( $this->value, $this->options ) ? $this->value : '' );
+    $value = $type == 'checkbox' ? $this->value[ 'other' ] : (!in_array( $this->value, $this->options ) ? $this->value : '' );
     $name = $type == 'checkbox' ? str_replace( '[]', '', $this->name ) . '[other]' : '';
     $id = $this->element_id();
-    $this->attributes['id'] = $id . '_other';
-    $this->_addline( '<input type="text" name="' . $name . '" value="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8', false ) . '" ' . $this->_attributes('no validate') . $this->_class( 'otherfield' ) . ' />' );
-    $this->attributes['id'] = $id;
+    $this->attributes[ 'id' ] = $id . '_other';
+    $this->_addline( '<input type="text" name="' . $name . '" value="' . htmlspecialchars( $value, ENT_QUOTES, 'UTF-8', false ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' />' );
+    $this->attributes[ 'id' ] = $id;
     array_push( $this->output, $closetag, $controltag ); // replace the span close tags, enclosing the input element in it
     // close the container
     $this->_addline( '</div><!-- .' . $type . '-other-control-group -->', -1 ); //  control-group div
@@ -938,55 +903,55 @@ abstract class xnau_FormElement {
     // this element's value is stored as an array
     $this->group = true;
 
-    $link_placeholder = isset( $this->attributes['url_placeholder'] ) ? $this->attributes['url_placeholder'] : '(URL)';
-    $linktext_placeholder = isset( $this->attributes['placeholder'] ) ? $this->attributes['placeholder'] : $this->i18n['linktext'];
-    
+    $link_placeholder = isset( $this->attributes[ 'url_placeholder' ] ) ? $this->attributes[ 'url_placeholder' ] : '(URL)';
+    $linktext_placeholder = isset( $this->attributes[ 'placeholder' ] ) ? $this->attributes[ 'placeholder' ] : $this->i18n[ 'linktext' ];
+
     // set the correct format for an empty value
     if ( $this->value === array() || is_null( $this->value ) || ( is_string( $this->value ) && strlen( $this->value ) === 0 ) ) {
-      $this->value = array('');
+      $this->value = array( '' );
     }
-    
+
     $parts = maybe_unserialize( $this->value );
-    
-    if ( ! is_array( $parts ) ) {
+
+    if ( !is_array( $parts ) ) {
       if ( filter_var( $parts, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $this->value = $parts;
         $parts = array( $parts, $linktext_placeholder );
       } elseif ( filter_var( $this->link, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $parts = array( $this->link, $parts );
       } else {
-        $parts = array('', $this->value );
+        $parts = array( '', $this->value );
       }
     } elseif ( !empty( $this->link ) ) {
-      $parts[0] = $this->link;
+      $parts[ 0 ] = $this->link;
     }
-    
+
     // if the value contains only a URL, the linktext and URL are made the same
     // if the value is not a URL, only the linked text is used
-    
+
     if ( count( $parts ) < 2 ) {
-      $parts[1] = ''; // when showing an edit form, leave the click text blank
-      if ( !filter_var( $parts[0], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) )
-        $parts[0] = '';
+      $parts[ 1 ] = ''; // when showing an edit form, leave the click text blank
+      if ( !filter_var( $parts[ 0 ], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) )
+        $parts[ 0 ] = '';
     }
-    
+
     list( $url, $title ) = $parts;
 
     $this->_addline( '<div class="link-element">' );
 
     $title = empty( $title ) ? '' : $title;
 
-    $this->attributes['placeholder'] = $link_placeholder;
+    $this->attributes[ 'placeholder' ] = $link_placeholder;
 
     $id = $this->element_id();
-    $this->attributes['id'] = $id . '-url';
+    $this->attributes[ 'id' ] = $id . '-url';
     $this->_addline( $this->_input_tag( 'url', $url, false ) );
 
-    $this->attributes['placeholder'] = $linktext_placeholder;
+    $this->attributes[ 'placeholder' ] = $linktext_placeholder;
 
-    $this->attributes['id'] = $id . '-text';
+    $this->attributes[ 'id' ] = $id . '-text';
     $this->_addline( $this->_input_tag( 'text', htmlspecialchars( $title, ENT_QUOTES, 'UTF-8', false ), false ) . '</div>' );
-    $this->attributes['id'] = $id;
+    $this->attributes[ 'id' ] = $id;
   }
 
   /**
@@ -1072,14 +1037,14 @@ abstract class xnau_FormElement {
 
     // add the MAX_FILE_SIZE field
     // this is really just for guidance, not a valid safeguard; this must be checked on submission
-    if ( isset( $this->options['max_file_size'] ) )
-      $max_size = $this->options['max_file_size'];
+    if ( isset( $this->options[ 'max_file_size' ] ) )
+      $max_size = $this->options[ 'max_file_size' ];
     else
       $max_size = ( ini_get( 'post_max_size' ) / 2 ) * 1048576; // half it to give a cushion
 
-    $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value), false ) );
+    $this->_addline( $this->print_hidden_fields( array( 'MAX_FILE_SIZE' => $max_size, $this->name => $this->value ), false ) );
 
-    if ( !isset( $this->attributes['readonly'] ) ) {
+    if ( !isset( $this->attributes[ 'readonly' ] ) ) {
       $this->_addline( $this->_input_tag( 'file' ) );
 
       // add the delete checkbox if there is a file defined
@@ -1122,26 +1087,26 @@ abstract class xnau_FormElement {
     if ( $value === false ) {
       $value = $this->value;
     }
-    
-    $size = $this->size ? ' size="' . $this->size . '" ' : '';
 
-    if ( $type === 'text' && isset( $this->attributes['type'] ) ) {
-      $this->attributes = array_merge( array('type' => $type), (array) $this->attributes );
+    $size = empty( $this->attributes['size'] ) ? ''  : ' size="' . $this->attributes['size'] . '" ';
+
+    if ( $type === 'text' && isset( $this->attributes[ 'type' ] ) ) {
+      $this->attributes = array_merge( array( 'type' => $type ), (array) $this->attributes );
     } else {
-      $this->attributes['type'] = $type;
+      $this->attributes[ 'type' ] = $type;
     }
 
-    if ( in_array( $type, array('checkbox', 'radio', 'multi-checkbox', 'select-other') ) && isset( $this->attributes['readonly'] ) ) {
-      $this->attributes['disabled'] = 'disabled';
-      unset( $this->attributes['readonly'] );
+    if ( in_array( $type, array( 'checkbox', 'radio', 'multi-checkbox', 'select-other' ) ) && isset( $this->attributes[ 'readonly' ] ) ) {
+      $this->attributes[ 'disabled' ] = 'disabled';
+      unset( $this->attributes[ 'readonly' ] );
     }
 
-    $value_att = in_array( $type, array('file', 'image') ) ? '' : 'value="' . esc_attr( $value ) . '"';
-    
-    $html = '<input name="' . esc_attr( $this->name . ( $this->group ? '[]' : '' ) ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes($type) . $this->_class() . '  ' . $value_att . ' />';
-    
+    $value_att = in_array( $type, array( 'file', 'image' ) ) ? '' : 'value="' . esc_attr( $value ) . '"';
+
+    $html = '<input name="' . esc_attr( $this->name . ( $this->group ? '[]' : '' ) ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes( $type ) . $this->_class() . '  ' . $value_att . ' />';
+
     // unset the type attribute so it doesn't carry over to the next element
-    unset( $this->attributes['type'] );
+    unset( $this->attributes[ 'type' ] );
     return $html;
   }
 
@@ -1159,17 +1124,17 @@ abstract class xnau_FormElement {
 
     // checkboxes are grouped, radios are not
     $this->group = $type === 'checkbox';
-    
+
     // checkboxes are given a null select so an "unchecked" state is possible
-    $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
+    $null_select = (isset( $this->options[ self::null_select_key() ] )) ? $this->options[ self::null_select_key() ] : ($type == 'checkbox' ? true : false);
 
     if ( $null_select !== false && $null_select !== 'false' ) {
       $id = $this->element_id();
-      $this->attributes['id'] = $id . '-default';
+      $this->attributes[ 'id' ] = $id . '-default';
       $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) ? $null_select : '' ), false ), 1 );
-      $this->attributes['id'] = $id;
+      $this->attributes[ 'id' ] = $id;
     }
-    unset( $this->options[self::null_select_key()] );
+    unset( $this->options[ self::null_select_key() ] );
 
     $this->_addline( '<div class="' . $type . '-group" >' );
 
@@ -1186,11 +1151,11 @@ abstract class xnau_FormElement {
         $optgroup = true;
       } else {
         $id = $this->element_id();
-        $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
-        $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
+        $this->attributes[ 'id' ] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
+        $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes[ 'id' ] . '">' );
         $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
         $this->_addline( $option_key . '</label>' );
-        $this->attributes['id'] = $id;
+        $this->attributes[ 'id' ] = $id;
       }
     }
     if ( $optgroup ) {
@@ -1199,14 +1164,14 @@ abstract class xnau_FormElement {
     }
     if ( $otherlabel ) {
 
-      $value = $type == 'checkbox' ? (isset( $this->value['other'] ) ? $this->value['other'] : '') : $this->value;
+      $value = $type == 'checkbox' ? (isset( $this->value[ 'other' ] ) ? $this->value[ 'other' ] : '') : $this->value;
       $this->_addline( '<div class="othercontrol">' );
       $id = $this->element_id();
-      $this->attributes['id'] = $id . '_otherselect';
-      $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
+      $this->attributes[ 'id' ] = $id . '_otherselect';
+      $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes[ 'id' ] . '">' );
       $this->_addline( sprintf( '<input type="%s" name="%s"  value="%s" %s %s />', $type, $type === 'radio' ? $this->name : 'pdb-otherselector', $otherlabel, $this->_set_selected( $this->options, $value, 'checked', $value === '' ), $this->_attributes() . $this->_class( 'otherselect' )
               ), 1 );
-      $this->attributes['id'] = $id;
+      $this->attributes[ 'id' ] = $id;
       //$this->_addline('<input type="' . $type . '" id="' . $this->name . '_otherselect" name="' . ($type == 'checkbox' ? 'temp' : $this->name) . '"  value="' . $otherlabel . '" ' . $this->_set_selected($this->options, ( $type == 'checkbox' ? $this->value['other'] : $this->value), 'checked', false) . ' ' . $this->_attributes() . ' />', 1);
       $this->_addline( $otherlabel . ':' );
       $this->_addline( '</label>', -1 );
@@ -1247,13 +1212,14 @@ abstract class xnau_FormElement {
    */
   protected function _add_option_series( $otherlabel = false )
   {
-    if ( empty( $this->options ) )
+    if ( empty( $this->options ) ) {
       return;
+    }
 
     foreach ( $this->_make_assoc( $this->options ) as $title => $value ) {
 
       $title = Participants_Db::apply_filters( 'translate_string', $title );
-      
+
       if ( $value == 'false' && $title === self::null_select_key() ) {
         continue 1;
       } elseif ( $value === 'optgroup' && strlen( $title ) > 0 ) {
@@ -1265,8 +1231,9 @@ abstract class xnau_FormElement {
       }
     }
     // add the "other" option
-    if ( $otherlabel !== false )
+    if ( $otherlabel !== false ) {
       $this->_addline( '<option ' . ( $this->value !== '' ? $this->_set_selected( $this->options, $this->value, 'selected', false ) : '' ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
+    }
 
     if ( $this->inside ) {
       $this->_addline( '</optgroup>' );
@@ -1316,7 +1283,7 @@ abstract class xnau_FormElement {
   /*   * ************************* 
    * UTILITY FUNCTIONS
    */
-  
+
   /**
    * provides an array of values from a stored field value
    * 
@@ -1325,7 +1292,7 @@ abstract class xnau_FormElement {
    */
   public static function field_value_array( $value )
   {
-    return PDb_Field_Item::field_value_array($value);
+    return PDb_Field_Item::field_value_array( $value );
   }
 
   /**
@@ -1376,7 +1343,7 @@ abstract class xnau_FormElement {
     // default template for links
     $linktemplate = $template === false ? '<a href="%1$s" >%2$s</a>' : $template;
 
-    $linktext = empty( $linktext ) ? str_replace( array('http://', 'https://'), '', $URI ) : $linktext;
+    $linktext = empty( $linktext ) ? str_replace( array( 'http://', 'https://' ), '', $URI ) : $linktext;
 
     //construct the link
     return sprintf( $linktemplate, $URI, esc_html( $linktext ) );
@@ -1406,9 +1373,9 @@ abstract class xnau_FormElement {
     if ( empty( $attributes_array ) )
       return '';
 
-    return self::html_attributes($attributes_array);
+    return self::html_attributes( $attributes_array );
   }
-  
+
   /**
    * builds an html attributes string
    * 
@@ -1422,28 +1389,26 @@ abstract class xnau_FormElement {
     $output = array();
 
     foreach ( (array) $attributes as $name => $value ) {
-      
+
       if ( ( $allowed && in_array( $name, $allowed ) ) || !is_array( $allowed ) ) {
 
         if ( $value === false ) {
           continue;
         } elseif ( $value === true ) {
           $output[] = sprintf( '%1$s="%1$s"', esc_attr( $name ) );
-        } elseif ( preg_match('/^\d+$/', $name) || $value === $name ) {
+        } elseif ( preg_match( '/^\d+$/', $name ) || $value === $name ) {
           $output[] = esc_attr( $value );
-        } elseif ( self::is_translatable_att($name) ) {
+        } elseif ( self::is_translatable_att( $name ) ) {
           $output[] = sprintf( '%s="%s"', esc_attr( $name ), esc_attr( Participants_Db::apply_filters( 'translate_string', $value ) ) );
         } else {
           $output[] = sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );
         }
-      
       }
-      
     }
 
     return implode( ' ', $output );
   }
-  
+
   /**
    * provides a list of attributes that should be passed through the translation filter
    * 
@@ -1452,11 +1417,11 @@ abstract class xnau_FormElement {
    */
   protected static function is_translatable_att( $name )
   {
-    $translatable = Participants_Db::apply_filters('translatable_html_attributes', array(
-        'placeholder',
-        'title',
-    ) );
-    
+    $translatable = Participants_Db::apply_filters( 'translatable_html_attributes', array(
+                'placeholder',
+                'title',
+            ) );
+
     return in_array( $name, $translatable );
   }
 
@@ -1601,17 +1566,17 @@ abstract class xnau_FormElement {
      */
     $null_select = true;
     $null_select_label = '';
-    
-    if ( isset( $this->options[self::null_select_key()] ) ) {
-      
-      if ( $this->options[self::null_select_key()] !== 'false' ) {
-        $null_select = $this->options[self::null_select_key()];
-        $null_select_label = strlen( $null_select ) > 0 ? Participants_Db::apply_filters('translate_string', $null_select ) : '&nbsp;';
+
+    if ( isset( $this->options[ self::null_select_key() ] ) ) {
+
+      if ( $this->options[ self::null_select_key() ] !== 'false' ) {
+        $null_select = $this->options[ self::null_select_key() ];
+        $null_select_label = strlen( $null_select ) > 0 ? Participants_Db::apply_filters( 'translate_string', $null_select ) : '&nbsp;';
       } else {
         $null_select = false;
       }
       // remove the null_select from the options array
-      unset( $this->options[self::null_select_key()] );
+      unset( $this->options[ self::null_select_key() ] );
     }
 
     if ( $null_select !== false ) {
@@ -1619,7 +1584,7 @@ abstract class xnau_FormElement {
       $this->_addline( '<option value="" ' . $selected . '  >' . esc_html( $null_select_label ) . '</option>' );
     }
   }
-  
+
   /**
    * provides the null select key string
    * 
@@ -1627,7 +1592,7 @@ abstract class xnau_FormElement {
    */
   public static function null_select_key()
   {
-    return 'null_select';//
+    return 'null_select'; //
   }
 
   /**
@@ -1665,7 +1630,7 @@ abstract class xnau_FormElement {
   {
 
     $prepped_new_value_array = $this->_prep_comp_array( $selected_value_array );
-    
+
     $prepped_string = $this->_prep_comp_string( $element_value );
 
     if ( $state === in_array( $prepped_string, $prepped_new_value_array ) )
@@ -1698,7 +1663,7 @@ abstract class xnau_FormElement {
   protected function _prep_js_string( $string )
   {
 
-    return str_replace( array('[', ']', '{', '}', '-', '.', '(', ')'), '', $string );
+    return str_replace( array( '[', ']', '{', '}', '-', '.', '(', ')' ), '', $string );
   }
 
   /**
@@ -1759,7 +1724,7 @@ abstract class xnau_FormElement {
     // eliminate any non-legal characters
     $string = preg_replace( '/[^_a-zA-Z0-9- ]/', '', $string );
     // replace spaces with a dash
-    return strtolower( str_replace( array(' '), array('-'), $string ) );
+    return strtolower( str_replace( array( ' ' ), array( '-' ), $string ) );
   }
 
   /**
@@ -1771,8 +1736,9 @@ abstract class xnau_FormElement {
   public static function is_empty( $test )
   {
     // collapse an array
-    if ( is_array( $test ) )
+    if ( is_array( $test ) ) {
       $test = implode( '', $test );
+    }
 
     switch ( true ) {
       case $test === '0000-00-00 00:00:00':
@@ -1796,13 +1762,13 @@ abstract class xnau_FormElement {
    */
   public function element_id( $baseid = false )
   {
-    if ( ! $baseid ) {
-      $baseid = isset( $this->attributes['id'] ) ? $this->attributes['id'] : '';
+    if ( !$baseid ) {
+      $baseid = isset( $this->attributes[ 'id' ] ) ? $this->attributes[ 'id' ] : '';
     }
-    $id = ( ! empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
-    
+    $id = (!empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
+
     // attach the instance index if it is not present
-    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) == 0 ) {
+    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0 ) {
       $id = $id . '-' . Participants_Db::$instance_index;
     }
     return $id;
@@ -1817,11 +1783,11 @@ abstract class xnau_FormElement {
   public static function is_numeric_datatype( $column )
   {
     global $wpdb;
-    $sql = 'SHOW FIELDS FROM '. Participants_Db::$participants_table . ' WHERE Field = "%s"';
+    $sql = 'SHOW FIELDS FROM ' . Participants_Db::$participants_table . ' WHERE Field = "%s"';
     $result = $wpdb->get_row( $wpdb->prepare( $sql, $column ) );
     $type = isset( $result->Type ) ? strtoupper( $result->Type ) : '';
-    
-    return preg_match('/(INT|DECIMAL|FLOAT|NUMERIC|DOUBLE)/', $type) === 1;
+
+    return preg_match( '/(INT|DECIMAL|FLOAT|NUMERIC|DOUBLE)/', $type ) === 1;
   }
 
   /**
@@ -1858,6 +1824,10 @@ abstract class xnau_FormElement {
         $datatype = 'tinytext';
         break;
 
+      case 'captcha':
+        $datatype = '';
+        break;
+
       case 'checkbox':
       case 'radio':
       case 'multi-select':
@@ -1870,18 +1840,6 @@ abstract class xnau_FormElement {
     }
 
     return $datatype;
-  }
-
-  /**
-   * sets the array of available form element types
-   * 
-   * merges in an array in the config file, this allowing new types to be registered, 
-   * also a language translation of type titles is possible by overwriting an existing 
-   * entry
-   */
-  protected function _set_types()
-  {
-    $this->element_types = self::get_types();
   }
 
   /*
@@ -1916,6 +1874,68 @@ abstract class xnau_FormElement {
      * it is set
      */
     return $types;
+  }
+  
+  /**
+   * tells if the current form element is a PDB field
+   * 
+   * @return bool
+   */
+  public function is_pdb_field()
+  {
+    return is_a( $this->field_def, '\PDb_Form_Field_Def' );
+  }
+  
+  /**
+   * provides the field definition object
+   * 
+   * @return PDb_Form_Field_Def
+   */
+  public function get_field_def()
+  {
+    return $this->field_def;
+  }
+  
+  /**
+   * sets up the attributes property
+   * 
+   * this is used in the constructor
+   * 
+   * @param array $params the supplied configuration params
+   */
+  protected function setup_attributes( array $params )
+  {
+    $attributes = $params['attributes'];
+    
+    if ( $this->is_pdb_field() ) {
+      if ( is_array($attributes) ) {
+        $this->attributes = array_merge( $this->field_def->attributes(), $attributes );
+      } else {
+        $this->attributes = $this->field_def->attributes();
+      }
+    } else {
+      $this->attributes = $attributes;
+    }
+    
+    if ( $params['size'] ) {
+      $this->attributes['size'] = $params['size'];
+    }
+  }
+  
+  /**
+   * sets up the options property
+   * 
+   * this is used in the constructor
+   * 
+   * @param array|string $options the supplied options as $title => $value
+   */
+  protected function setup_options( $options )
+  {
+    if ( empty($options) && $this->is_pdb_field() ) {
+      $this->options = $this->field_def->options();
+    } elseif ( ! empty( $options ) ) {
+      $this->options = maybe_unserialize( $options );
+    }
   }
 
 }

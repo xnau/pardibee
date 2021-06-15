@@ -2,20 +2,13 @@
 /**
  * class for handling the listing of participant records in the admin
  *
- * static class for managing a set of modules which together out put a listing of 
- * records in various configurations
- *
- * the general plan is that this class's initialization method is called in the
- * admin to generate the page.
- *
- * Requires PHP Version 5.3 or greater
  * 
  * @category   
  * @package    WordPress
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    Release: 1.13
+ * @version    1.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -24,93 +17,72 @@ if ( !defined( 'ABSPATH' ) )
 class PDb_List_Admin {
 
   /**
-   * @var string holds the main query for building the list
-   */
-  static $list_query;
-
-  /**
    * @var string translations strings for buttons
    */
-  static $i18n;
+  public static $i18n;
 
   /**
    * @var object holds the pagination object
    */
-  static $pagination;
+  public static $pagination;
 
   /**
    * @var int holds the number of list items to show per page
    */
-  static $page_list_limit;
+  public static $page_list_limit;
 
   /**
    * @var string the name of the list page variable
    */
-  static $list_page = 'listpage';
+  public static $list_page = 'listpage';
 
   /**
    * @var string name of the list anchor element
    */
-  static $list_anchor = 'participants-list';
-
-  /**
-   * @var int the number of records after filtering
-   */
-  static $num_records;
+  public static $list_anchor = 'participants-list';
 
   /**
    * @var array all the records are held in this array
    */
-  static $participants;
+  public static $participants;
 
   /**
    * @var string holds the url of the registrations page
    */
-  static $registration_page_url;
+  public static $registration_page_url;
 
   /**
    * holds the columns to display in the list
    * 
    * @var array of field objects
    */
-  static $display_columns;
+  public static $display_columns;
 
   /**
-   * @var array holds the settings for the list filtering and sorting
+   * @var \PDb_admin_list\query holds the admin_list_query instance
    */
-  static $filter;
+  public static $query;
+
+  /**
+   * @var \PDb_admin_list\filter the current filter object
+   */
+  public static $list_filter;
 
   /**
    *  @var string base name of admin user options
    */
-  static $user_setting_name = 'admin-user-settings';
+  public static $user_setting_name = 'admin-user-settings';
 
   /**
    *  @var string name of admin user options
    */
-  static $user_settings;
-
-  /**
-   * 
-   * @var string name of the admin user filter option
-   */
-  public static $filter_option = 'admin_list_filter';
-
-  /**
-   * @var array set of values making up the default list filter
-   */
-  public static $default_filter;
-
-  /**
-   * @var bool holds the current parenthesis status used while building a query where clause
-   */
-  protected static $inparens = false;
+  public static $user_settings;
 
   /**
    * @param array $errors array of error messages
    */
   public static $error_messages = array();
-  
+
   /**
    * initializes and outputs the list for the backend
    * 
@@ -151,15 +123,15 @@ class PDb_List_Admin {
                     "singular" => __( 'Send the "resend link" email to the selected record?', 'participants-database' ),
                     "plural" => __( 'Send the "resend link" email to the selected records?', 'participants-database' ),
                 ),
-                'recipient_count_exceeds_limit' => sprintf( __( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database'), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}'),
+                'recipient_count_exceeds_limit' => sprintf( __( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database' ), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}' ),
                     )
     );
 
     wp_localize_script(
             Participants_Db::$prefix . 'list-admin', 'list_adminL10n', array(
-        'delete' => self::$i18n['delete_checked'],
-        'cancel' => self::$i18n['change'],
-        'apply' => self::$i18n['apply'],
+        'delete' => self::$i18n[ 'delete_checked' ],
+        'cancel' => self::$i18n[ 'change' ],
+        'apply' => self::$i18n[ 'apply' ],
         'apply_confirm' => $apply_confirm_messages,
         'send_limit' => (int) Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit ),
         /**
@@ -167,16 +139,16 @@ class PDb_List_Admin {
          * @param array of actions that are not quantity limited
          * @return array
          */
-        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array('delete','approve','unapprove') ),
+        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove' ) ),
             )
     );
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
-    
+
     // set up email error feedback
     add_action( 'wp_mail_failed', array( __CLASS__, 'get_email_error_feedback' ) );
     add_action( 'pdb-list_admin_head', array( __CLASS__, 'show_email_error_feedback' ) );
-    
+
     // delete images and files when record is deleted
     if ( Participants_Db::plugin_setting_is_true( 'delete_uploaded_files', false ) ) {
       add_action( 'pdb-list_admin_with_selected_delete', array( 'PDb_submission\delete_uploads', 'delete_record_uploaded_files' ) );
@@ -184,9 +156,8 @@ class PDb_List_Admin {
 
     $current_user = wp_get_current_user();
 
-    // set up the user settings transient
+    // set up the user settings options
     self::$user_settings = Participants_Db::$prefix . self::$user_setting_name . '-' . $current_user->ID;
-    self::$filter_option = Participants_Db::$prefix . self::$filter_option . '-' . $current_user->ID;
 
 //    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
 
@@ -196,28 +167,13 @@ class PDb_List_Admin {
 
     self::setup_display_columns();
 
-    // set up the basic values
-    self::$default_filter = array(
-        'search' => array(
-            0 => array(
-                'search_field' => 'none',
-                'value' => '',
-                'operator' => 'LIKE',
-                'logic' => 'AND'
-            )
-        ),
-        'sortBy' => Participants_Db::plugin_setting( 'admin_default_sort' ),
-        'ascdesc' => Participants_Db::plugin_setting( 'admin_default_sort_order' ),
-        'list_filter_count' => 1,
-    );
+    self::$list_filter = new \PDb_admin_list\filter();
 
-    // merge the defaults with the $_REQUEST array so if there are any new values coming in, they're included
-    self::_update_filter();
-    
-    // process delete and items-per-page form submissions
-    self::_process_general();
+    self::$query = new \PDb_admin_list\query( self::$list_filter );
 
-    self::_process_search();
+    // process list form submissions
+    new \PDb_admin_list\process();
+
     /*
      * save the query in a session value so it can be used by the export CSV functionality
      */
@@ -227,21 +183,10 @@ class PDb_List_Admin {
 
     // get the $wpdb object
     global $wpdb;
-    
-    /**
-     * @filter pdb-admin_list_query
-     * @param string the current list query
-     * @return string query
-     */
-    self::$list_query = Participants_Db::apply_filters( 'admin_list_query', self::$list_query );
-
-    // get the number of records returned
-    //self::$num_records = $wpdb->get_var( str_replace( '*', 'COUNT(*)', self::list_query() ) );
-    self::$num_records = count( $wpdb->get_results( self::$list_query, ARRAY_A ) );
 
     // set the pagination object
-    $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array('options' => array('default' => 1, 'min_range' => 1)) );
-    
+    $current_page = filter_input( INPUT_GET, self::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'default' => 1, 'min_range' => 1 ) ) );
+
     // include the session ID if using the alternate method
     $sess = Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ? '&' . PDb_Session::id_var . '=' . Participants_Db::$session->session_id() : '';
 
@@ -250,18 +195,18 @@ class PDb_List_Admin {
      * @param array of configuration values
      * @return array
      */
-    self::$pagination = new PDb_Pagination( Participants_Db::apply_filters('admin_list_pagination_config', array(
-        'link' => self::prepare_page_link( $_SERVER['REQUEST_URI'] ) . $sess . '&' . self::$list_page . '=%1$s',
-        'page' => $current_page,
-        'size' => self::$page_list_limit,
-        'total_records' => self::$num_records,
+    self::$pagination = new PDb_Pagination( Participants_Db::apply_filters( 'admin_list_pagination_config', array(
+                'link' => self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) . $sess . '&' . self::$list_page . '=%1$s',
+                'page' => $current_page,
+                'size' => self::$page_list_limit,
+                'total_records' => self::$query->result_count(),
 //        'wrap_tag' => '<div class="pdb-list"><div class="pagination"><label>' . _x('Page', 'noun; page number indicator', 'participants-database') . ':</label> ',
 //        'wrap_tag_close' => '</div></div>',
-        'add_variables' => '#pdb-list-admin',
+                'add_variables' => '#pdb-list-admin',
             ) ) );
 
     // get the records for this page, adding the pagination limit clause
-    self::$participants = $wpdb->get_results( self::$list_query . ' ' . self::$pagination->getLimitSql(), ARRAY_A );
+    self::$participants = $wpdb->get_results( self::$query->query() . ' ' . self::$pagination->getLimitSql(), ARRAY_A );
 
     if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ . '
@@ -301,98 +246,29 @@ class PDb_List_Admin {
   public static function user_can_export_csv()
   {
     $csv_role = Participants_Db::plugin_setting_is_true( 'editor_allowed_csv_export' ) ? 'record_edit_capability' : 'plugin_admin_capability';
-    
+
     return current_user_can( Participants_Db::plugin_capability( $csv_role, 'export csv' ) );
   }
-  
+
   /**
    * provides a default admin list query
    * 
    * @return string
    */
-  public static function default_query() {
+  public static function default_query()
+  {
     global $wpdb;
     return 'SELECT * FROM ' . $wpdb->prefix . 'participants_database p ORDER BY p.date_recorded desc';
   }
-  
+
   /**
    * provides the last list query with the placeholders removed
-   * 
-   * @global wpdb $wpdb
    * 
    * @return string
    */
   public static function list_query()
   {
-    global $wpdb;
-    if ( method_exists( $wpdb, 'remove_placeholder_escape' ) ) {
-      return $wpdb->remove_placeholder_escape( self::$list_query );
-    }
-    return self::$list_query;
-  }
-
-  /**
-   * updates the filter property
-   * 
-   * gets the incoming filter values from the POST array and updates the filter 
-   * property, filling in default values as needed
-   * 
-   * @return null
-   */
-  private static function _update_filter()
-  {
-    self::$filter = self::get_filter();
-    
-    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'admin_list_filter' ) {
-      
-      $post = filter_input_array( INPUT_POST, self::list_filter_sanitize() );
-      
-      unset( self::$filter['search'] );
-      
-      for ( $i = $post['list_filter_count']; $i > 0; $i-- ) {
-        self::$filter['search'][] = current( self::$default_filter['search'] );
-      }
-      
-      foreach ( $post as $key => $postval ) {
-        if ( is_array( $postval ) ) {
-          foreach ( $postval as $index => $value ) {
-            if ( $value !== '' ) {
-              self::$filter['search'][$index][$key] = $value;
-            }
-          }
-        } elseif ( in_array( $key, array( 'list_filter_count', 'sortBy', 'ascdesc' ) ) ) {
-          self::$filter[$key] = $post[$key];
-        }
-      }
-    } elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_SANITIZE_STRING ) ) {
-      if ( self::$filter['sortBy'] !== $column_sort ) {
-        // if we're changing the sort column, set the sort to ASC
-        self::$filter['ascdesc'] = 'ASC';
-      } else {
-        self::$filter['ascdesc'] = self::$filter['ascdesc'] === 'ASC' ? 'DESC' : 'ASC';
-      }
-      self::$filter['sortBy'] = $column_sort;
-    }
-    
-    self::save_filter( self::$filter );
-  }
-  
-  /**
-   * provides the sanitize filter array for the list filter submission
-   * 
-   * @return array of filter settings
-   */
-  private static function list_filter_sanitize()
-  {
-    return array(
-        'list_filter_count' => FILTER_SANITIZE_NUMBER_INT,
-        'ascdesc'           => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(asc|desc)$/i' ) ),
-        'sortBy'            => array( 'filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name' ),
-        'search_field'      => array( 'filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name' ),
-        'operator'          => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE)$/i' ), 'flags' => FILTER_REQUIRE_ARRAY ),
-        'value'             => array( 'filter' => FILTER_SANITIZE_STRING, 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY ),
-        'logic'             => array( 'filter' => FILTER_VALIDATE_REGEXP, 'options' => array( 'regexp' => '/^(OR|AND)$/' ), 'flags' => FILTER_REQUIRE_ARRAY ),
-    );
+    return self::$query->query();
   }
 
   /**
@@ -407,15 +283,15 @@ class PDb_List_Admin {
 
     $URI_parts = explode( '?', $uri );
 
-    if ( empty( $URI_parts[1] ) ) {
+    if ( empty( $URI_parts[ 1 ] ) ) {
 
       $values = array();
     } else {
 
-      parse_str( $URI_parts[1], $values );
+      parse_str( $URI_parts[ 1 ], $values );
 
       // take out the list page number
-      unset( $values[self::$list_page] );
+      unset( $values[ self::$list_page ] );
 
       /* clear out our filter variables so that all that's left in the URI are 
        * variables from WP or any other source-- this is mainly so query string 
@@ -428,399 +304,10 @@ class PDb_List_Admin {
           'column_sort',
       );
       foreach ( $filter_atts as $att )
-        unset( $values[$att] );
+        unset( $values[ $att ] );
     }
 
-    return $URI_parts[0] . '?' . http_build_query( $values );
-  }
-
-  /** 	
-   * processes all the general list actions: delete and  set items-per-page
-   * 
-   * @global wpdb $wpdb
-   */
-  private static function _process_general()
-  {
-    global $wpdb;
-
-    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'list_action' ) {
-
-      switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
-
-        //case self::$i18n['delete_checked']:
-        case self::$i18n['apply']:
-          $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
-          /**
-           * @version 1.7.1
-           * @filter  pdb-before_list_admin_with_selected_action
-           * @param array $selected_ids list of ids to apply the list action to
-           * @param string action called
-           * @return array
-           */
-          $selected_ids = Participants_Db::apply_filters( 'before_list_admin_with_selected_action', filter_input_array( INPUT_POST, array(
-                              'pid' => array(
-                                  'filter' => FILTER_VALIDATE_INT,
-                                  'flags' => FILTER_REQUIRE_ARRAY,
-                              )
-                          ) ), $selected_action );
-          $selected_ids = $selected_ids['pid'];
-          $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
-          $selected_count = count( $selected_ids );
-          self::set_admin_user_setting('with_selected', $selected_action );
-          
-          switch ( $selected_action ) {
-
-            case 'delete':
-              /**
-               * @version 1.6.3
-               * @filter  pdb-before_admin_delete_record
-               * @param array $selected_ids list of ids to delete
-               */
-              $selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $selected_ids );
-              $selected_count = count( $selected_ids );
-
-              if ( $selected_count > 0 ) {
-                do_action( 'pdb-list_admin_with_selected_delete', $selected_ids );
-                $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= %s';
-                $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
-                $result = $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
-                if ( $result > 0 ) {
-                  Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
-                }
-                $last_query = $wpdb->last_query;
-              }
-              break;
-
-            case 'approve':
-            case 'unapprove':
-              if ( $selected_count > 0 ) {
-                $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
-                $approval_field = Participants_Db::$fields[$approval_field_name];
-                /* @var $approval_field PDb_Form_Field_Def */
-                list ( $yes, $no ) = $approval_field->option_values();
-                $set_value = $selected_action === 'approve' ? $yes : $no;
-
-                $pattern = $selected_count > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $selected_count ), ',' ) . ' )' : '= "%s"';
-
-                $sql = "UPDATE " . Participants_Db::$participants_table . " SET `$approval_field_name` = '$set_value' WHERE id $pattern";
-                $result = $wpdb->query( $wpdb->prepare( $sql, $selected_ids ) );
-                if ( $result > 0 ) {
-                  do_action( 'pdb-list_admin_with_selected_' . $selected_action, $selected_ids );
-                  Participants_Db::set_admin_message( Participants_Db::apply_filters('admin_list_action_feedback', sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $selected_count ) ), 'updated' );
-                }
-                $last_query = $wpdb->last_query;
-              }
-              break;
-
-            case 'send_signup_email':
-
-              $email_limit = Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit );
-              $send_count = 0;
-              foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
-                $data = Participants_Db::get_participant( $id );
-                $recipient = $data[Participants_Db::plugin_setting( 'primary_email_address_field' )];
-                
-                $success = PDb_Template_Email::send( array(
-                    'to' => $recipient,
-                    'subject' => Participants_Db::apply_filters( 'receipt_email_subject', Participants_Db::plugin_setting( 'signup_receipt_email_subject' ), $data ),
-                    'template' => Participants_Db::apply_filters( 'receipt_email_template', Participants_Db::plugin_setting( 'signup_receipt_email_body' ), $data ),
-                    'context' => __METHOD__,
-                        ), $data );
-                $send_count += (int) $success;
-                do_action( 'pdb-list_admin_with_selected_send_signup_email', $data );
-                
-              }
-              $message_type = $send_count > 0 ? 'success' : 'warning';
-              $message = sprintf( _nx( '%d email was sent.', '%d emails were sent.', $send_count, 'number of emails sent', 'participants-database' ), $send_count );
-              Participants_Db::set_admin_message( $message, $message_type );
-              break;
-
-            case 'send_resend_link_email':
-
-              $email_limit = Participants_Db::apply_filters( 'mass_email_session_limit', Participants_Db::$mass_email_session_limit );
-              $send_count = 0;
-              foreach ( array_slice( $selected_ids, 0, $email_limit ) as $id ) {
-                $data = Participants_Db::get_participant( $id );
-                $recipient = $data[Participants_Db::plugin_setting( 'primary_email_address_field' )];
-                
-                $success = PDb_Template_Email::send( array(
-                    'to' => $recipient,
-                    'subject' => Participants_Db::plugin_setting( 'retrieve_link_email_subject' ),
-                    'template' => Participants_Db::plugin_setting( 'retrieve_link_email_body' ),
-                    'context' => __METHOD__,
-                        ), $data );
-                $send_count += (int) $success;
-                do_action( 'pdb-list_admin_with_selected_send_resend_link', $data );
-              }
-              $message_type = $send_count > 0 ? 'success' : 'warning';
-              $message = sprintf( _nx( '%d email was sent.', '%d emails were sent.', $send_count, 'number of emails sent', 'participants-database' ), $send_count );
-              Participants_Db::set_admin_message( $message, $message_type );
-              break;
-
-            default:
-              /**
-               * @action pdb_admin_list_with_selected/{$selected_action}
-               * 
-               * this action is executed if none of the default actions were selected 
-               * so that a custom action can be performed
-               * 
-               * @param array of selected record ids
-               */
-              do_action( 'pdb_admin_list_with_selected/' . $selected_action, $selected_ids );
-              /**
-               * @filter pdb-admin_list_action_feedback
-               * 
-               * @param string feedback to show after the action has been performed
-               */
-              Participants_Db::set_admin_message( Participants_Db::apply_filters( 'admin_list_action_feedback', '' ), 'updated' );
-          }
-          
-          if ( PDB_DEBUG ) {
-            Participants_Db::debug_log(__METHOD__.' 
-action: ' . $selected_action . ( isset($last_query) ? '   
-query: '. $last_query : '' ));
-          }
-          break;
-
-        case self::$i18n['change']:
-
-          $list_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT );
-          if ( $list_limit > 0 ) {
-            self::set_admin_user_setting( 'list_limit', $list_limit );
-          }
-          $_GET[self::$list_page] = 1;
-          break;
-
-        default:
-          /**
-           * action: pdb-process_admin_list_submission
-           * 
-           * @version 1.6
-           */
-          do_action( Participants_Db::$prefix . 'process_admin_list_submission' );
-      }
-    }
-  }
-
-  /**
-   * processes searches and sorts to build the listing query
-   *
-   * @param string $submit the value of the submit field
-   */
-  private static function _process_search()
-  {
-    switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
-
-      case self::$i18n['clear'] :
-        self::$filter = self::$default_filter;
-        self::save_filter( self::$filter );
-        
-      case self::$i18n['sort']:
-      case self::$i18n['filter']:
-      case self::$i18n['search']:
-        // go back to the first page to display the newly sorted/filtered list
-        $_GET[self::$list_page] = 1;
-        
-      default:
-
-        self::$list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
-
-        if ( self::is_search_submission() ) {
-          self::$list_query .= 'WHERE ';
-          for ( $i = 0; $i <= count( self::$filter['search'] ) - 1; $i++ ) {
-            if ( self::$filter['search'][$i]['search_field'] !== 'none' && self::$filter['search'][$i]['search_field'] !== '' && Participants_Db::is_column( self::$filter['search'][$i]['search_field'] ) ) {
-              self::_add_where_clause( self::$filter['search'][$i] );
-            }
-            if ( $i === count( self::$filter['search'] ) - 1 ) {
-              if ( self::$inparens ) {
-                self::$list_query .= ') ';
-                self::$inparens = false;
-              }
-            } elseif ( self::$filter['search'][$i + 1]['search_field'] !== 'none' && self::$filter['search'][$i + 1]['search_field'] !== '' ) {
-              self::$list_query .= self::$filter['search'][$i]['logic'] . ' ';
-            }
-          }
-          // if no where clauses were added, remove the WHERE operator
-          if ( preg_match( '/WHERE $/', self::$list_query ) ) {
-            self::$list_query = str_replace( 'WHERE', '', self::$list_query );
-          }
-        }
-
-        // add the sorting
-        self::$list_query .= ' ORDER BY p.' . esc_sql( self::$filter['sortBy'] ) . ' ' . esc_sql( self::$filter['ascdesc'] );
-    }
-  }
-  
-  /**
-   * checks the search filter for a valid search
-   * 
-   * @return bool true if a search has been submitted
-   */
-  private static function is_search_submission()
-  {
-    if ( ! isset( self::$filter['search'] ) || ! is_array( self::$filter['search'] ) ) {
-      return false;
-    }
-    
-    foreach( self::$filter['search'] as $fieldsearch ) {
-      if ( $fieldsearch['search_field'] !== '' ) {
-        return true;
-      }
-    }
-    
-    return false;
-  }
-
-  /**
-   * adds a where clause to the query
-   * 
-   * the filter set has the structure:
-   *    'search_field' => name of the field to search on
-   *    'value' => search term
-   *    'operator' => mysql operator
-   *    'logic' => join to next statement (AND or OR)
-   * 
-   * @param array $filter_set
-   * @return null
-   */
-  protected static function _add_where_clause( $filter_set )
-  {
-
-    if ( $filter_set['logic'] === 'OR' && !self::$inparens ) {
-      self::$list_query .= ' (';
-      self::$inparens = true;
-    }
-    $filter_set['value'] = str_replace( array('*', '?'), array('%', '_'), $filter_set['value'] );
-
-    $delimiter = array("'", "'");
-
-    switch ( $filter_set['operator'] ) {
-
-
-      case 'gt':
-
-        $operator = '>';
-        break;
-
-      case 'lt':
-
-        $operator = '<';
-        break;
-
-      case '=':
-
-        $operator = '=';
-        if ( $filter_set['value'] === '' ) {
-          $filter_set['value'] = 'null';
-        } elseif ( strpos( $filter_set['value'], '%' ) !== false ) {
-          $operator = 'LIKE';
-          $delimiter = array("'", "'");
-        }
-        break;
-
-      case 'NOT LIKE':
-      case '!=':
-      case 'LIKE':
-      default:
-
-        $operator = esc_sql( $filter_set['operator'] );
-        if ( stripos( $operator, 'LIKE' ) !== false ) {
-          $delimiter = array('"%', '%"');
-        }
-        if ( $filter_set['value'] === '' ) {
-          $filter_set['value'] = 'null';
-          $operator = '<>';
-        } elseif ( self::term_has_wildcard( $filter_set['value'] ) ) {
-          $delimiter = array("'", "'");
-        }
-    }
-
-    $search_field_form_element = Participants_Db::$fields[ $filter_set['search_field'] ]->form_element();
-
-    $value = PDb_FormElement::maybe_option_value( $filter_set['value'], $filter_set['search_field'] );
-
-    if ( $search_field_form_element == 'timestamp' ) {
-
-      $value = $filter_set['value'];
-      $value2 = false;
-      if ( strpos( $filter_set['value'], ' to ' ) ) {
-        list($value, $value2) = explode( 'to', $filter_set['value'] );
-      }
-
-      $value = PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $search_field_form_element );
-      if ( $value2 )
-        $value2 = PDb_Date_Parse::timestamp( $value2, array(), __METHOD__ . ' ' . $search_field_form_element );
-
-      if ( $value !== false ) {
-
-        $stored_date = "DATE(p." . esc_sql( $filter_set['search_field'] ) . ")";
-
-        if ( $value2 !== false ) {
-
-          //self::$list_query .= " " . $stored_date . " > DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value ) . " second) AND " . $stored_date . " < DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value2 ) . " second)";
-
-          self::$list_query .= ' ' . $stored_date . ' >= DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) AND ' . $stored_date . ' <= DATE(FROM_UNIXTIME(' . esc_sql( $value2 ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW())))';
-        } else {
-
-          if ( $operator == 'LIKE' )
-            $operator = '=';
-
-          //self::$list_query .= " " . $stored_date . " " . $operator . " DATE_ADD(FROM_UNIXTIME(0), interval " . esc_sql( $value ) . " second) ";
-          self::$list_query .= ' ' . $stored_date . ' ' . $operator . ' DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
-        }
-      }
-    } elseif ( $filter_set['value'] === 'null' ) {
-
-      $is_numeric = PDb_FormElement::is_numeric_datatype( $filter_set['search_field'] );
-
-      switch ( $filter_set['operator'] ) {
-        case '<>':
-        case '!=':
-        case 'NOT LIKE':
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NOT NULL' . ( $is_numeric ? '' : ' AND p.' . esc_sql( $filter_set['search_field'] ) . ' <> ""' ) . ')';
-          break;
-        case 'LIKE':
-        case '=':
-        default:
-          self::$list_query .= ' (p.' . esc_sql( $filter_set['search_field'] ) . ' IS NULL' . ( $is_numeric ? '' : ' OR p.' . esc_sql( $filter_set['search_field'] ) . ' = ""' ) . ')';
-          break;
-      }
-    } elseif ( $search_field_form_element == 'date' ) {
-
-      $value = $filter_set['value'];
-      $value2 = false;
-      if ( strpos( $filter_set['value'], ' to ' ) ) {
-        list($value, $value2) = explode( 'to', $filter_set['value'] );
-      }
-
-      $value = PDb_Date_Parse::timestamp( $value, array('zero_time' => $operator === '='), __METHOD__ . ' ' . $search_field_form_element ); //Participants_Db::parse_date( $value, $field_atts, true );
-      if ( $value2 )
-        $value2 = PDb_Date_Parse::timestamp( $value, array('zero_time' => $operator === '='), __METHOD__ . ' ' . $search_field_form_element ); //Participants_Db::parse_date( $value2, $field_atts, $search_field_form_element == 'date' );
-
-      if ( $value !== false ) {
-
-        $stored_date = "CAST(p." . esc_sql( $filter_set['search_field'] ) . " AS SIGNED)";
-
-        if ( $value2 !== false and ! empty( $value2 ) ) {
-
-          self::$list_query .= " " . $stored_date . " > CAST(" . esc_sql( $value ) . " AS SIGNED) AND " . $stored_date . " < CAST(" . esc_sql( $value2 ) . "  AS SIGNED)";
-        } else {
-
-          if ( $operator == 'LIKE' )
-            $operator = '=';
-
-          self::$list_query .= " " . $stored_date . " " . $operator . " CAST(" . esc_sql( $value ) . " AS SIGNED)";
-        }
-      }
-    } else {
-
-      self::$list_query .= ' p.' . esc_sql( $filter_set['search_field'] ) . ' ' . $operator . " " . $delimiter[0] . esc_sql( $value ) . $delimiter[1];
-    }
-    if ( $filter_set['logic'] === 'AND' && self::$inparens ) {
-      self::$list_query .= ') ';
-      self::$inparens = false;
-    }
-    self::$list_query .= ' ';
+    return $URI_parts[ 0 ] . '?' . http_build_query( $values );
   }
 
   /**
@@ -831,7 +318,7 @@ query: '. $last_query : '' ));
     ?>
     <div id="pdb-list-admin"   class="wrap participants_db">
       <?php Participants_Db::admin_page_heading() ?>
-      <?php do_action('pdb-list_admin_head'); ?>
+      <?php do_action( 'pdb-list_admin_head' ); ?>
       <div id="poststuff">
         <div class="post-body">
           <h2><?php echo Participants_Db::plugin_label( 'list_participants_title' ) ?></h2>
@@ -848,33 +335,36 @@ query: '. $last_query : '' ));
         {
 
           global $post;
-          $filter_count = intval( self::$filter['list_filter_count'] );
-          
+          $filter_count = self::$list_filter->list_fiter_count();
+
           //build the list of columns available for filtering
           $filter_columns = array();
           $group_title = '';
-          
+
           foreach ( self::filter_columns() as $column ) {
-            
-            if ( empty($column->grouptitle) ) {
+
+            if ( empty( $column->grouptitle ) ) {
               $column->grouptitle = $column->group;
             }
-            
+
             if ( $column->grouptitle !== $group_title ) {
               $group_title = $column->grouptitle;
-              $filter_columns[$group_title] = 'optgroup';
+              $filter_columns[ $group_title ] = 'optgroup';
             }
-            
+
             // add the field name if a field with the same title is already in the list
             $title = Participants_Db::apply_filters( 'translate_string', $column->title );
-            $select_title = ( isset( $filter_columns[$column->title] ) || strlen( $column->title ) === 0 ) ? $title . ' (' . $column->name . ')' : $title;
+            $select_title = ( isset( $filter_columns[ $column->title ] ) || strlen( $column->title ) === 0 ) ? $title . ' (' . $column->name . ')' : $title;
 
-            $filter_columns[$select_title] = $column->name;
+            $filter_columns[ $select_title ] = $column->name;
           }
+          
+          // add the multi-field selection
+          $filter_columns = array_merge( $filter_columns, PDb_admin_list\search_field_group::group_selector() );
           
           ?>
           <div class="pdb-searchform">
-            <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER['REQUEST_URI'] ) ?>" >
+            <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ?>" >
               <input type="hidden" name="action" value="admin_list_filter">
               <table class="form-table">
                 <tbody><tr><td>
@@ -891,7 +381,7 @@ query: '. $last_query : '' ));
                           $element = array(
                               'type' => 'dropdown',
                               'name' => 'search_field[' . $i . ']',
-                              'value' => $filter_set['search_field'],
+                              'value' => $filter_set[ 'search_field' ],
                               'options' => $filter_columns,
                           );
                           PDb_FormElement::print_element( $element );
@@ -899,7 +389,7 @@ query: '. $last_query : '' ));
                           $element = array(
                               'type' => 'dropdown',
                               'name' => 'operator[' . $i . ']',
-                              'value' => $filter_set['operator'],
+                              'value' => $filter_set[ 'operator' ],
                               'options' => array(
                                   PDb_FormElement::null_select_key() => false,
                                   __( 'is', 'participants-database' ) => '=',
@@ -912,14 +402,14 @@ query: '. $last_query : '' ));
                           );
                           PDb_FormElement::print_element( $element );
                           ?>
-                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set['value'] ) ?>">
+                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
                           <?php
                           if ( $i < $filter_count - 1 ) {
                             echo '<br />';
                             $element = array(
                                 'type' => 'radio',
                                 'name' => 'logic[' . $i . ']',
-                                'value' => $filter_set['logic'],
+                                'value' => $filter_set[ 'logic' ],
                                 'options' => array(
                                     __( 'and', 'participants-database' ) => 'AND',
                                     __( 'or', 'participants-database' ) => 'OR',
@@ -929,7 +419,7 @@ query: '. $last_query : '' ));
                             $element = array(
                                 'type' => 'hidden',
                                 'name' => 'logic[' . $i . ']',
-                                'value' => $filter_set['logic'],
+                                'value' => $filter_set[ 'logic' ],
                             );
                           }
                           PDb_FormElement::print_element( $element );
@@ -938,8 +428,8 @@ query: '. $last_query : '' ));
                         </fieldset>
                       <?php endfor ?>
                       <fieldset class="widefat inline-controls">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n['filter'] ?>">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n['clear'] ?>">
+                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'filter' ] ?>">
+                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'clear' ] ?>">
                         <div class="widefat inline-controls filter-count">
                           <label for="list_filter_count"><?php _e( 'Number of filters to use: ', 'participants-database' ) ?><input id="list_filter_count" name="list_filter_count" class="number-entry single-digit" type="number" max="5" min="1" value="<?php echo $filter_count ?>"  /></label>
                         </div>
@@ -951,7 +441,7 @@ query: '. $last_query : '' ));
                         $element = array(
                             'type' => 'dropdown',
                             'name' => 'sortBy',
-                            'value' => self::$filter['sortBy'],
+                            'value' => self::$list_filter->value( 'sortBy' ),
                             'options' => $filter_columns,
                         );
                         PDb_FormElement::print_element( $element );
@@ -959,7 +449,7 @@ query: '. $last_query : '' ));
                         $element = array(
                             'type' => 'radio',
                             'name' => 'ascdesc',
-                            'value' => strtolower( self::$filter['ascdesc'] ),
+                            'value' => strtolower( self::$list_filter->value( 'ascdesc' ) ),
                             'options' => array(
                                 __( 'Ascending', 'participants-database' ) => 'asc',
                                 __( 'Descending', 'participants-database' ) => 'desc'
@@ -967,13 +457,11 @@ query: '. $last_query : '' ));
                         );
                         PDb_FormElement::print_element( $element );
                         ?>
-                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo self::$i18n['sort'] ?>">
+                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo self::$i18n[ 'sort' ] ?>">
                       </fieldset>
                     </td></tr></tbody></table>
             </form>
           </div>
-
-          <h3><?php printf( _n( '%s record found, sorted by: %s.', '%s records found, sorted by: %s.', self::$num_records, 'participants-database' ), self::$num_records, Participants_Db::column_title( self::$filter['sortBy'] ) ) ?></h3>
           <?php
         }
 
@@ -985,67 +473,25 @@ query: '. $last_query : '' ));
           ?>
 
           <form id="list_form"  method="post">
-            <?php PDb_FormElement::print_hidden_fields( array('action' => 'list_action') ) ?>
+            <?php PDb_FormElement::print_hidden_fields( array( 'action' => 'list_action' ) ) ?>
             <input type="hidden" id="select_count" value="0" />
             <?php
             /**
              * action pdb-admin_list_form_top
              * @since 1.6
              * 
-             * todo: add relevent data to action
+             * todo: add relevant data to action
              * 
              * good for adding functionality to the admin list
              */
 //            do_action(Participants_Db::$prefix . 'admin_list_form_top', $this);
             do_action( Participants_Db::$prefix . 'admin_list_form_top' );
-            
-            $with_selection_actions = array();
-            
-            // add the approval actions
-            $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
-            if ( isset( Participants_Db::$fields[$approval_field_name] ) ) {
-            $with_selection_actions = array(
-                        __( 'approve', 'participants-database' ) => 'approve',
-                        __( 'unapprove', 'participants-database' ) => 'unapprove',
-                    );
-            }
-            
-            // add the delete action
-            if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
-              $with_selection_actions = array(
-                        __( 'delete', 'participants-database' ) => 'delete'
-                    ) + $with_selection_actions;
-            }
-            
-            /**
-             * filter to add additional actions to the with selected selector
-             * 
-             * @filter pdb-admin_list_with_selected_actions
-             * @param array as $title => $action of actions to apply to selected records
-             * @return array
-             */
-            $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
-            $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
             ?>
-            <table class="form-table"><tbody><tr><td>
-                    <fieldset class="widefat inline-controls">
-                      <?php
-                      if ( self::user_can_use_with_selected() ) :
-                        ?>
-                        <span style="padding-right:20px" >
-                          <?php echo self::$i18n['with_selected'] ?>: 
-                          <?php
-                          $element = array(
-                              'type' => 'dropdown',
-                              'name' => 'with_selected',
-                              'value' => $with_selected_value,
-                              'options' => $with_selected_selections,
-                          );
-                          PDb_FormElement::print_element( $element );
-                          ?>
-                          <input type="submit" name="submit-button" class="button button-default" value="<?php echo self::$i18n['apply'] ?>" id="apply_button"  >
-                        </span>
-                      <?php endif ?>
+            <table class="form-table">
+              <tbody>
+                <tr>
+                  <td>
+                    <fieldset class="list-controls">
                       <?php
                       $list_limit = PDb_FormElement::get_element( array(
                                   'type' => 'text-line',
@@ -1059,20 +505,33 @@ query: '. $last_query : '' ));
                               )
                       ?>
                       <?php printf( __( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
-                      <?php PDb_FormElement::print_element( array('type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n['change']) ) ?>
-
+                      <?php PDb_FormElement::print_element( array( 'type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n[ 'change' ] ) ) ?>
                     </fieldset>
-                  </td></tr></tbody></table>
+                  </td>
+                </tr>
+                <?php if ( self::user_can_use_with_selected() ) : ?>
+                <tr>
+                  <td>
+                    <fieldset class="list-controls">
+                      <?php echo self::with_selected_control(); ?>
+                    </fieldset>
+                  </td>
+                </tr>
+                <?php endif ?>
+              </tbody>
+            </table>
             <?php
           }
 
           /**
            * prints the main body of the list, including headers
            *
-           * @param string $mode dtermines the print mode: 'noheader' skips headers, (other choices to be determined)
+           * @param string $mode determines the print mode: 'noheader' skips headers, (other choices to be determined)
            */
           private static function _main_table( $mode = '' )
           {
+            self::list_count_display();
+            
             $hscroll = Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
             ?>
             <?php if ( $hscroll ) : ?>
@@ -1115,14 +574,14 @@ query: '. $last_query : '' ));
                           <?php // print delete check     ?>
                           <td>
                             <?php if ( self::user_can_use_with_selected() ) : ?>
-                              <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value['id'] ?>" />
+                              <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value[ 'id' ] ?>" />
                             <?php endif ?>
-                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value['id'] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
+                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value[ 'id' ] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
                           </td>
                           <?php
                           foreach ( self::$display_columns as $column ) {
-                            
-                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array('value' => $value[$column->name], 'record_id' => $value['id'], 'module' =>'admin-list') ) );
+
+                            $field = new PDb_Field_Item( (object) array_merge( (array) $column, array( 'value' => ( isset( $value[ $column->name ] ) ? $value[ $column->name ] : '' ), 'record_id' => $value[ 'id' ], 'module' => 'admin-list' ) ) );
                             $display_value = '';
 
                             // this is where we place form-element-specific text transformations for display
@@ -1135,7 +594,7 @@ query: '. $last_query : '' ));
                                     'link' => '',
                                     'mode' => Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename',
                                 );
-                                
+
                                 // this is to display the image as a linked thumbnail
                                 $image = new PDb_Image( $image_params );
 
@@ -1175,7 +634,7 @@ query: '. $last_query : '' ));
                                 break;
 
                               case 'text-line':
-                                
+
                                 if ( Participants_Db::plugin_setting_is_true( 'make_links' ) ) {
                                   if ( $field->has_content() ) {
                                     $display_value = PDb_FormElement::make_link( $field );
@@ -1185,14 +644,14 @@ query: '. $last_query : '' ));
                                   $display_value = $field->get_value_display();
                                 }
                                 break;
-                                
+
                               case 'hidden':
-                                
+
                                 $display_value = $field->get_value_display();
                                 break;
 
                               default:
-                                
+
                                 $display_value = $field->get_value_display();
                             }
 
@@ -1231,7 +690,7 @@ query: '. $last_query : '' ));
          */
         private static function _print_export_form()
         {
-          Participants_Db::$session->clear('csv_export_fields'); // reset the stored export field list #2406
+          Participants_Db::$session->clear( 'csv_export_fields' ); // reset the stored export field list #2406
           $base_filename = self::get_admin_user_setting( 'csv_base_filename', Participants_Db::PLUGIN_NAME );
           ?>
 
@@ -1269,7 +728,6 @@ query: '. $last_query : '' ));
    */
   private static function _print_header_row()
   {
-
     $head_pattern = '
 <th class="%2$s" scope="col">
   <span>%1$s%3$s</span>
@@ -1281,9 +739,9 @@ query: '. $last_query : '' ));
 </th>
 ';
 
-    $sorticon_class = strtolower( self::$filter['ascdesc'] ) === 'asc' ? 'dashicons-arrow-up' : 'dashicons-arrow-down';
-    // template for printing the registration page link in the admin
+    $sorticon_class = strtolower( self::$list_filter->value( 'ascdesc' ) ) === 'asc' ? 'dashicons-arrow-up' : 'dashicons-arrow-down';
     $sorticon = '<span class="dashicons ' . $sorticon_class . ' sort-icon"></span>';
+
     // print the "select all" header 
     ?>
     <th scope="col" style="width:3em">
@@ -1296,21 +754,84 @@ query: '. $last_query : '' ));
     // print the top header row
     foreach ( self::$display_columns as $column ) {
       $title = Participants_Db::apply_filters( 'translate_string', strip_tags( stripslashes( $column->title ) ) );
-      $field = Participants_Db::$fields[$column->name];
+      $field = Participants_Db::$fields[ $column->name ];
       printf(
-              $field->sortable ? $sortable_head_pattern : $head_pattern, str_replace( array('"', "'"), array('&quot;', '&#39;'), $title ), $column->name, $column->name === self::$filter['sortBy'] ? $sorticon : ''
+              $field->sortable ? $sortable_head_pattern : $head_pattern, str_replace( array( '"', "'" ), array( '&quot;', '&#39;' ), $title ), $column->name, $column->name === self::$list_filter->value( 'sortBy' ) ? $sorticon : ''
       );
     }
   }
   
   /**
-   * tealls if the current user can utilize the "with selected" functionality
+   * prints the list count display
+   */
+  private static function list_count_display()
+  {
+    ?>
+    <h3><?php printf( _n( '%s record found, sorted by: %s.', '%s records found, sorted by: %s.', self::$query->result_count(), 'participants-database' ), self::$query->result_count(), Participants_Db::column_title( self::$list_filter->value( 'sortBy' ) ) ) ?></h3>
+    <?php
+  }
+
+  /**
+   * tells if the current user can utilize the "with selected" functionality
    * 
    * @return bool true if the user is allowed
    */
   private static function user_can_use_with_selected()
   {
     return current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) || current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'with selected actions' ) );
+  }
+
+  /**
+   * provides the "with selected" control HTML
+   * 
+   * @return string HTML
+   */
+  private static function with_selected_control()
+  {
+    $with_selection_actions = array();
+
+    // add the approval actions
+    $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
+    if ( PDb_Form_Field_Def::is_field( $approval_field_name ) ) {
+      $with_selection_actions = array(
+          __( 'approve', 'participants-database' ) => 'approve',
+          __( 'unapprove', 'participants-database' ) => 'unapprove',
+      );
+    }
+
+    // add the delete action
+    if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
+      $with_selection_actions = array(
+          __( 'delete', 'participants-database' ) => 'delete'
+              ) + $with_selection_actions;
+    }
+
+    /**
+     * filter to add additional actions to the with selected selector
+     * 
+     * @filter pdb-admin_list_with_selected_actions
+     * @param array as $title => $action of actions to apply to selected records
+     * @return array
+     */
+    $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
+    $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
+
+    $selector = array(
+        'type' => 'dropdown',
+        'name' => 'with_selected',
+        'value' => $with_selected_value,
+        'options' => $with_selected_selections,
+    );
+
+    $html = array(
+        '<span style="padding-right:20px" >',
+        self::$i18n[ 'with_selected' ],
+        PDb_FormElement::get_element( $selector ),
+        '<input type="submit" name="submit-button" class="button button-default" value="' . self::$i18n[ 'apply' ] . '" id="apply_button"  >',
+        '</span>',
+    );
+
+    return implode( PHP_EOL, Participants_Db::apply_filters( 'admin_list_with_selected_control_html', $html ) );
   }
 
   /**
@@ -1322,18 +843,19 @@ query: '. $last_query : '' ));
    */
   private static function sort_link_base_URI()
   {
-    $uri = parse_url( $_SERVER['REQUEST_URI'] );
-    parse_str( $uri['query'], $query );
-    unset( $query['column_sort'] );
-    return $uri['path'] . '?' . http_build_query( $query );
+    $uri = parse_url( $_SERVER[ 'REQUEST_URI' ] );
+    parse_str( $uri[ 'query' ], $query );
+    unset( $query[ 'column_sort' ] );
+    return $uri[ 'path' ] . '?' . http_build_query( $query );
   }
 
   /**
    * sets up the main list columns
+   * 
+   * @global wpdb $wpdb
    */
   private static function setup_display_columns()
   {
-
     global $wpdb;
     $sql = '
           SELECT f.name, f.form_element, f.default, f.group, f.title
@@ -1349,74 +871,16 @@ query: '. $last_query : '' ));
    */
   private static function set_list_limit()
   {
-
     $limit_value = self::get_admin_user_setting( 'list_limit', Participants_Db::plugin_setting( 'list_limit' ) );
-    $input_limit = filter_input( INPUT_GET, 'list_limit', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+    $input_limit = filter_input( INPUT_GET, 'list_limit', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     if ( empty( $input_limit ) ) {
-      $input_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+      $input_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     }
     if ( !empty( $input_limit ) ) {
       $limit_value = $input_limit;
     }
     self::$page_list_limit = $limit_value;
     self::set_admin_user_setting( 'list_limit', $limit_value );
-  }
-
-  /**
-   * sets the admin list limit value
-   */
-  private static function set_list_sort()
-  {
-
-    $sort_order = filter_input( INPUT_POST, 'ascdesc', FILTER_SANITIZE_STRING );
-    $sort_by = filter_input( INPUT_POST, 'sortBy', FILTER_SANITIZE_STRING );
-
-    $sort_by = empty( $sort_by ) ? self::get_admin_user_setting( 'sort_by', Participants_Db::plugin_setting( 'admin_default_sort' ) ) : $sort_by;
-    $sort_order = empty( $sort_order ) ? self::get_admin_user_setting( 'sort_order', Participants_Db::plugin_setting( 'admin_default_sort_order' ) ) : $sort_order;
-
-    self::set_admin_user_setting( 'sort_by', $sort_by );
-    self::set_admin_user_setting( 'sort_order', $sort_order );
-  }
-
-  /**
-   * saves the filter array
-   * 
-   * @param array $filter_array
-   */
-  public static function save_filter( $value )
-  {
-    update_option(self::$filter_option, $value);
-  }
-
-  /**
-   * gets a filter array
-   * 
-   * this is used for pagination to set the query and the search form values
-   * 
-   * returns an array of default values if no filter array has been saved
-   * 
-   * @return array the filter values
-   */
-  public static function get_filter()
-  {
-    $filter = get_option( self::$filter_option, self::$default_filter );
-    
-    // set invalid fields to default values
-    if ( ! isset( $filter['sortBy'] ) || ( isset( $filter['sortBy'] ) && !Participants_Db::is_column( $filter['sortBy'] ) ) ) {
-      $filter['sortBy'] = 'date_recorded';
-    }
-    if ( isset( $filter['search'] ) && is_array( $filter['search'] ) ) {
-      foreach ( $filter['search'] as $search ) {
-        if ( !Participants_Db::is_column( $search['search_field'] ) ) {
-          $search['search_field'] = 'none';
-        }
-      }
-    }
-    if ( !isset( $filter['list_filter_count'] ) || empty( $filter['list_filter_count'] ) ) {
-      $filter['list_filter_count'] = 1;
-    }
-    
-    return $filter ? $filter : self::$default_filter;
   }
 
   /**
@@ -1430,11 +894,7 @@ query: '. $last_query : '' ));
    */
   public static function get_filter_set( $index )
   {
-    if ( isset( self::$filter['search'][$index] ) && is_array( self::$filter['search'][$index] ) ) {
-      return self::$filter['search'][$index];
-    } else {
-      return self::$default_filter['search'][0];
-    }
+    return self::$list_filter->get_set( $index );
   }
 
   /**
@@ -1490,7 +950,7 @@ query: '. $last_query : '' ));
     if ( is_array( $saved_settings ) ) {
       $settings = $saved_settings;
     }
-    $settings[$name] = $value;
+    $settings[ $name ] = $value;
     update_option( $setting_name, $settings );
   }
 
@@ -1505,7 +965,7 @@ query: '. $last_query : '' ));
   public static function get_user_setting( $name, $setting, $setting_name )
   {
     if ( $settings = (array) get_option( $setting_name ) ) {
-      $setting = isset( $settings[$name] ) ? $settings[$name] : $setting;
+      $setting = isset( $settings[ $name ] ) ? $settings[ $name ] : $setting;
     }
     return $setting;
   }
@@ -1519,9 +979,9 @@ query: '. $last_query : '' ));
    */
   public static function filename_datestamp()
   {
-    return '-' . str_replace( array('/', '#', '.', '\\', ', ', ',', ' '), '-', PDb_Date_Display::get_date() );
+    return '-' . str_replace( array( '/', '#', '.', '\\', ', ', ',', ' ' ), '-', PDb_Date_Display::get_date() );
   }
-  
+
   /**
    * registers admin list events
    * 
@@ -1531,7 +991,7 @@ query: '. $last_query : '' ));
    */
   public static function register_admin_list_events( $list )
   {
-    $prefix = __('PDb Admin List With Selected: ', 'participants-database');
+    $prefix = __( 'PDb Admin List With Selected: ', 'participants-database' );
     $admin_list_events = array(
         'pdb-list_admin_with_selected_delete' => $prefix . __( 'delete', 'participants-database' ),
         'pdb-list_admin_with_selected_approve' => $prefix . __( 'approve', 'participants-database' ),
@@ -1540,10 +1000,7 @@ query: '. $last_query : '' ));
     );
     return $list + $admin_list_events;
   }
-  
-  
-  
-  
+
   /**
    * registers error messages
    * 
@@ -1558,11 +1015,11 @@ query: '. $last_query : '' ));
     $pattern = '
 <p>%s</p>
 ';
-    foreach( $errors->get_error_messages() as $code => $message ) {
-      self::$error_messages[$code] = sprintf( $pattern, esc_html( $message ) );
+    foreach ( $errors->get_error_messages() as $code => $message ) {
+      self::$error_messages[ $code ] = sprintf( $pattern, esc_html( $message ) );
     }
   }
-  
+
   /**
    * provides a list columns to use in the list filter and sort
    * 
@@ -1575,7 +1032,7 @@ query: '. $last_query : '' ));
     remove_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ) );
     return $columns;
   }
-  
+
   /**
    * filters the available columns by user role
    * 
@@ -1590,8 +1047,7 @@ query: '. $last_query : '' ));
     }
     return $cap;
   }
-  
-  
+
   /**
    * registers error messages
    * 
@@ -1606,20 +1062,9 @@ query: '. $last_query : '' ));
 	%s
 </div>
 ';
-    if ( !empty(self::$error_messages)) {
+    if ( !empty( self::$error_messages ) ) {
       printf( $wrap, $error_class, implode( "\r", self::$error_messages ) );
     }
-  }
-  
-  /**
-   * tells if the search term contains a wildcard
-   * 
-   * @param string $term
-   * @return bool true if there is a wildcard in the term
-   */
-  private static function term_has_wildcard( $term )
-  {
-    return strpos( $term, '%' ) !== false || strpos( $term, '_' ) !== false;
   }
 
   /**

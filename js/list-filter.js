@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.8
+ * version: 1.9
  * 
  * xnau webdesign xnau.com
  * 
@@ -16,8 +16,8 @@ PDbListFilter = (function ($) {
   var submission = {
       filterNonce : PDb_ajax.filterNonce,
       postID : PDb_ajax.postID
-  },
-  submit_search = function (event, remote) {
+  }
+  var submit_search = function (event, remote) {
     remote = remote || false;
     if (event.preventDefault) {
       event.preventDefault();
@@ -148,7 +148,7 @@ PDbListFilter = (function ($) {
     var target_instance = $('.pdb-list.pdb-instance-' + submission.instance_index);
     var container = target_instance.length ? target_instance : $('.pdb-list').first();
     var pagination = container.find('.pdb-pagination');
-    var buttonParent = button.closest('fieldset, ul, div');
+    var buttonParent = button.closest('fieldset, div');
     var spinner = $(PDb_ajax.loading_indicator).clone();
     $.ajax({
       type : "POST",
@@ -156,7 +156,7 @@ PDbListFilter = (function ($) {
       data : submission,
       beforeSend : function () {
         pagination.find('a').prop('disabled',true);
-        buttonParent.after(spinner);
+        buttonParent.append(spinner);
       },
       success : function (html, status) {
         if (/^failed/.test(html)) {

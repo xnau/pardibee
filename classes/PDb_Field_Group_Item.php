@@ -224,6 +224,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
    */
   private function group_fields_have_values()
   {
+    $found = false;
     $has_field_values = wp_cache_get( $this->name, 'pdb-group_fields_have_value', false, $found );
     
     if ( ! $found ) {

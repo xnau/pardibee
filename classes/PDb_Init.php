@@ -152,6 +152,24 @@ class PDb_Init {
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin activated' );
   }
+  
+  /**
+   * prints an update notice to the plugins page
+   * 
+   * @param array $plugin_data
+   * @param array $response
+   */
+  public static function print_upgrade_notice( $plugin_data, $response )
+  {
+    $notice_path = apply_filters( 'pdb-upgrade_notice_content_path',  'https://plugins.svn.wordpress.org/participants-database/trunk/upgrade.html' );
+    
+    $notice = wp_safe_remote_get( $notice_path );
+    
+    if ( !empty( $notice['body'] )  ) {
+    
+      echo Participants_Db::apply_filters( 'inline_upgrade_notice', $notice['body'] );
+    }
+  }
 
   /**
    * performs the activation on a network
@@ -340,7 +358,7 @@ class PDb_Init {
 // clear user options
     $delete_keys = array(
         Participants_Db::$prefix . PDb_List_Admin::$user_setting_name . '%',
-        Participants_Db::$prefix . PDb_List_Admin::$filter_option . '%',
+        Participants_Db::$prefix . PDb_submission\admin_list_filter::$filter_option . '%',
     );
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $delete_keys ) . '"';
     $options = $wpdb->get_col( $sql );

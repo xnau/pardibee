@@ -2,7 +2,7 @@
 /**
  * Shortcode class
  *
- * provides basic functionality for rendering a shortcode's output
+ * provides core functionality for rendering a shortcode's output
  *
  * common functionality we will handle here:
  *  choosing a template
@@ -13,7 +13,7 @@
  *  maintaining loop pointers
  *  instantiating Field_Group and Field objects for the display loop
  *  converting dynamic value notation to the value it represents
- *  perfoming a field key replace on blocks of text for emails and user feedback
+ *  performing a field key replace on blocks of text for emails and user feedback
  * 
  * @package    WordPress
  * @subpackage Participants Database Plugin
@@ -205,6 +205,7 @@ abstract class PDb_Shortcode {
     // increment the index each time this class is instantiated
     Participants_Db::$instance_index++;
 
+    
     $this->set_instance_index();
 
     // set the global shortcode flag and trigger the action on the first instantiation of this class
@@ -420,9 +421,16 @@ abstract class PDb_Shortcode {
     $custom_template_file = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
     
     /**
-     * @version 1.6 'pdb-template_select' filter added
+     * @filter pdb-template_select
+     * @param string the name of the template file
+     * @return template file name or absolute path to the template file
      */
-    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file );
+    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file );  
+    
+    if ( !file_exists( $template ) ) {
+      // look for a built-in template
+      $template = Participants_Db::$plugin_path . 'templates/' . $custom_template_file;
+    }
 
     /**
      * provides a global custom template location for the main and auxiliary plugins
@@ -438,13 +446,18 @@ abstract class PDb_Shortcode {
     }
 
     if ( !file_exists( $template ) ) {
-      $template = Participants_Db::$plugin_path . 'templates/' . $custom_template_file;
-    }
+      /* 
+       * checking the custom template file location
+       * this is the location used by the Custom Template Folder add-on, 
+       * but we're adding it here too #2253
+       */
+      $template = trailingslashit( WP_CONTENT_DIR ) . Participants_Db::PLUGIN_NAME . '-templates/' . $custom_template_file;
+    }  
 
     if ( !file_exists( $template ) ) {
       
       if ( $this->module !== 'API' ) {
-        Participants_Db::debug_log( __METHOD__ . ' custom template not found: ' . $template );
+        Participants_Db::debug_log( __METHOD__ . ' custom template not found: "' . $template . '," using the default template instead.' );
       }
       
       $template = Participants_Db::$plugin_path . 'templates/pdb-' . $this->module . '-default.php';
@@ -533,16 +546,14 @@ abstract class PDb_Shortcode {
    */
   public function print_errors( $container = false, $wrap = false )
   {
-
     if ( is_object( Participants_Db::$validation_errors ) ) {
 
-      if ( $container )
+      if ( $container ) {
         Participants_Db::$validation_errors->set_error_html( $container, $wrap );
+      }
 
       echo Participants_Db::$validation_errors->get_error_html();
     }
-
-    //echo $this->error_html;
   }
 
   /**
@@ -1044,7 +1055,7 @@ abstract class PDb_Shortcode {
 
       foreach ( $raw_list as $column ) {
 
-        if ( Participants_Db::is_column( $column ) ) {
+        if ( PDb_Form_Field_Def::is_main_field( $column ) ) {
 
           $field_list[$column] = $column; // prevent accidental duplicates from getting added twice
         }
@@ -1121,7 +1132,7 @@ abstract class PDb_Shortcode {
     /**
      * @filter pdb-display_column_suppressed_form_elements
      * @param array of form elements to exclude from the display
-     * @param PDb_Shortcode the shortcoe instance
+     * @param PDb_Shortcode the shortcode instance
      * @return array of form elements to exclude
      */
     return '"' . implode( '","', Participants_Db::apply_filters( 'display_column_suppressed_form_elements', $list, $this ) ) . '"';
@@ -1291,7 +1302,7 @@ abstract class PDb_Shortcode {
    */
   public function template_basename()
   {
-    if ( PDB_DEBUG > 2 ) {
+    if ( PDB_DEBUG > 0 && current_user_can( 'manage_options') ) {
       $path = $this->template;
     } else {
       $path = '';
@@ -1499,7 +1510,6 @@ abstract class PDb_Shortcode {
    */
   protected function apply_empty_class( $field )
   {
-//    return $this->_empty( $field->get_value() ) && $this->_empty( $field->link ) && $this->_empty( $field->default_value() );
     return ! $field->has_content();
   }
 

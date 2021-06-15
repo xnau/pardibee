@@ -117,7 +117,7 @@ class xnau_Template_Email {
   }
 
   /**
-   * sends a mesage through the WP mail handler function
+   * sends a message through the WP mail handler function
    *
    * @param string $recipients comma-separated list of email addresses
    * @param string $subject    the subject of the email
@@ -143,7 +143,7 @@ message:
     $sent = wp_mail( $recipients, $subject, $body, $this->email_header(), $this->attachments );
 
     if ( false === $sent )
-      error_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
+      Participants_Db::debug_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
     return $sent;
   }
 
