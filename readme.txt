@@ -297,7 +297,7 @@ PLEASE NOTE: Version 1.9.7 is a major upgrade for Participants Database. Please 
 * added hide-empty-group template variation
 * better handling of file uploads that exceed system size limits
 * main CSS file now minimized for faster loading
-* improvements to the main db record cache
+* improvements to the participant record cache
 
 = 1.9.7.2 =
 * string combine field now supports linked content
