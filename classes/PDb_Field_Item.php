@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.7
+ * @version    2.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -94,9 +94,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * allows direct setting of the value property
-   * 
-   * this is for backward compatibility
+   * allows direct setting of object properties
    * 
    * @param string $prop name of the property
    * @oaram mixed $value to set the property to
@@ -107,6 +105,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       case 'value':
         $this->_set_value( $value );
         break;
+      default:
+        $this->{$prop} = $value;
     }
   }
 
@@ -211,7 +211,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       }
       return implode( Participants_Db::apply_filters( 'stringify_array_glue', ', ' ), $titles );
     }
-    return $this->value_title($this->value);
+      
+    return $this->value_title($this->value);  
   }
 
   /**
@@ -445,16 +446,6 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * tells if the title (field label) is empty
-   * 
-   * @return bool true if there is a title string defined
-   */
-  public function has_title()
-  {
-    return strlen( $this->title ) > 0;
-  }
-
-  /**
    * tells if the field has a non-empty value
    * 
    * alias of has_content()
@@ -632,11 +623,25 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( !$this->is_upload_field() ) {
       return false;
     }
+    
+    $has_file = false;
+    
     if ( $this->has_content() ) {
-      $filepath = trailingslashit( Participants_Db::files_path() ) . $this->value;
-      return is_file( $filepath );
+      
+      if ( class_exists( '\pdbiex\Media_Library_Image' ) ) {
+        $media = new \pdbiex\Media_Library_Image( $this->value );
+        
+        $has_file = $media->is_attachment();
+      }
+      
+      if ( ! $has_file ) {
+      
+        $filepath = trailingslashit( Participants_Db::files_path() ) . $this->value;
+        $has_file = is_file( $filepath );
+      }
     }
-    return false;
+    
+    return $has_file;
   }
 
   /**
@@ -698,8 +703,21 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" title="%2$s" >%2$s</a>';
     $url = Participants_Db::single_record_url( $this->record_id );
+    $clickable_text = strlen( $this->value ) === 0 ? $this->default : $this->value;
 
-    return sprintf( $pattern, $url, (empty( $this->value ) ? $this->default : $this->value ) );
+    return sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ) );
+  }
+  
+  /**
+   * strip out invalid tags for anchor tag
+   * 
+   * @param string $text
+   * @return string
+   */
+  private function anchor_tag_cleanup( $text )
+  {
+    $disallowed = implode( '|', apply_filters( 'pdb-disallowed_tags_in_anchor_tag', array('a','div') ) );
+    return preg_replace( '#<(' . $disallowed . ')(.*?)>(.*?)</\1>#ms', '$3', $text );
   }
 
   /**
@@ -727,8 +745,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     // for compatibility we are not prefixing the form element class name
     echo PDb_Template_Item::prep_css_class_string( $this->form_element ) . ' ' . $this->name() . '-input-group';
 
-    if ( $this->is_readonly() )
+    if ( $this->is_readonly() ) {
       echo ' readonly-element';
+    }
+    
+    if ( isset($this->attributes['class'] ) ) {
+      echo ' ' . $this->attributes['class'];
+    }
   }
 
   /**
@@ -884,7 +907,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     return (
             Participants_Db::is_single_record_link( $this->name ) &&
-            !in_array( $this->form_element, array('rich-text', 'link') ) &&
+            $this->is_linkable() &&
             $this->record_id
             );
   }

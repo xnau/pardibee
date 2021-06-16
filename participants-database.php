@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.9.7
+ * Version: 1.9.7.3
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -266,9 +266,10 @@ class Participants_Db extends PDb_Base {
    * 
    * sets up the class autoloading, configuration values, hooks, filters and shortcodes
    * 
-   * @global object $wpdb
+   * @global wpdb $wpdb
+   * @param bool $activate options flag for a non-activation use of this method
    */
-  public static function initialize()
+  public static function initialize( $activate = true )
   {
     // set the plugin version
     self::$plugin_version = self::_get_plugin_data( 'Version' );
@@ -380,7 +381,9 @@ class Participants_Db extends PDb_Base {
      * any plugins that require Participants Database should initialize on this action
      * 'participants-database_activated'
      */
-    do_action( self::PLUGIN_NAME . '_activated' );
+    if ( $activate ) {
+      do_action( self::PLUGIN_NAME . '_activated' );
+    }
   }
   
   /**
@@ -592,7 +595,7 @@ class Participants_Db extends PDb_Base {
     /*
      * register frontend scripts and stylesheets
      */
-    wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), array('dashicons'), '1.7' );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( "/css/participants-database$presuffix.css", __FILE__ ), array('dashicons'), '1.7.3' );
     wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$Settings->option_version() );
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
@@ -641,7 +644,7 @@ class Participants_Db extends PDb_Base {
      */
     $presuffix = self::use_minified_assets() ? '.min' : '';
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
-    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.6', true );
+    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.5', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
@@ -2233,37 +2236,44 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_participant( $id )
   {
-
-    if ( false === $id )
+    if ( false === $id ) {
       return self::get_default_record();
-
-    if ( self::apply_filters( 'use_participant_caching', true ) ) {
-      return PDb_Participant_Cache::get_participant( $id );
-    } else {
-      return self::_get_participant( $id );
     }
+    
+    $record = false;
+
+    /**
+     * provides a way to bypass the cache when getting a participant record
+     * 
+     * @filter pdb-use_participant_caching
+     * @param bool
+     * @return bool
+     */
+    if ( self::apply_filters( 'use_participant_caching', true ) ) {
+      $record = PDb_Participant_Cache::get_participant( $id );
+    } 
+    
+    if ( ! $record ) {
+     $record = self::_get_participant( $id );
+    }
+    
+    return $record;
   }
 
   /**
    * gets an array of record values
    *
-   * as of 1.5.5 returns only registered columns
-   *
-   * @ver 1.5 added $wpdb->prepare
-   * 
-   * @var 1.6.2.6 added as alternative to cache
-   *
-   * @global object $wpdb
-   * @param  string|bool $id the record ID; returns default record if omitted or bool false 
+   * @global wpdb $wpdb
+   * @param  int $id the record ID
    * 
    * @return array|bool associative array of name=>value pairs; false if no record 
    *                    matching the ID was found 
    */
-  private static function _get_participant( $id = false )
+  private static function _get_participant( $id )
   {
     global $wpdb;
 
-    $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %s';
+    $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %d';
 
     $result = $wpdb->get_row( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
@@ -2845,7 +2855,7 @@ class Participants_Db extends PDb_Base {
 
             // gets the export field list from the session value or the default set for CSV exports
             $csv_columns = self::get_column_atts( self::$session->getArray( 'csv_export_fields', 'CSV' ) );
-//            self::$session->clear('csv_export_fields');
+            
             $export_columns = array();
 
             foreach ( $csv_columns as $column ) {
@@ -2856,25 +2866,26 @@ class Participants_Db extends PDb_Base {
               $title_row[] = $field->title();
             }
             
-            $export_columns = implode( ', ', $export_columns );
+            $export_column_list = implode( ', ', $export_columns );
 
             $data['header'] = $header_row;
 
-            if ( $post_input['include_csv_titles'] )
+            if ( $post_input['include_csv_titles'] ) {
               $data['titles'] = $title_row;
+            }
 
             $query = false;
             
             if ( is_admin() ) {
               global $current_user;
-              $query = self::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
-              $query = str_replace( '*', ' ' . $export_columns . ' ', $query );
+              $saved_query = self::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
+              $query = str_replace( '*', ' ' . $export_column_list . ' ', $saved_query );
             } else {
-              $query = self::$session->get('csv_export_query');
-              if ( $query ) {
-                $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_columns . ' FROM', $query );
+              $saved_query = self::$session->get('csv_export_query');
+              if ( $saved_query ) {
+                $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_column_list . ' FROM', $saved_query );
               }
-//              self::$session->clear('csv_export_query');
+              
             }
 
             if ( $query ) {
@@ -3441,8 +3452,9 @@ class Participants_Db extends PDb_Base {
 
     global $post;
 
-    if ( !is_object( $post ) )
+    if ( !is_object( $post ) ) {
       $post = get_post( $postinput['postID'] );
+    }
 
     self::print_list_search_result( $post, self::$instance_index );
 

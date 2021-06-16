@@ -1371,7 +1371,6 @@ class PDb_List extends PDb_Shortcode {
    */
   private function set_list_query_object()
   {
-
     $this->list_query = new PDb_List_Query( $this );
     $search_term = $this->list_query->current_filter( 'search_term' );
 

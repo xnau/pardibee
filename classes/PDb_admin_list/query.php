@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -19,7 +19,7 @@ use \PDb_List_Admin;
 use \Participants_Db;
 
 class query {
-  
+
   /**
    * @var \PDb_admin_list\filter the admin list filter
    */
@@ -29,12 +29,12 @@ class query {
    * @var bool holds the current parenthesis status used while building a query where clause
    */
   protected $inparens = false;
-  
+
   /**
    * @var string holds the current list query
    */
   protected $list_query;
-  
+
   /**
    * sets up the object
    * 
@@ -45,7 +45,7 @@ class query {
     $this->filter = $filter;
     $this->_process_search();
   }
-  
+
   /**
    * supplies the list query
    * 
@@ -60,7 +60,7 @@ class query {
      */
     return Participants_Db::apply_filters( 'admin_list_query', $this->_query() );
   }
-  
+
   /**
    * provides the result count for the current query
    * 
@@ -72,7 +72,7 @@ class query {
     global $wpdb;
     return count( $wpdb->get_results( $this->query(), ARRAY_A ) );
   }
-  
+
   /**
    * provides the sanitized query
    * 
@@ -85,10 +85,9 @@ class query {
     if ( method_exists( $wpdb, 'remove_placeholder_escape' ) ) {
       return $wpdb->remove_placeholder_escape( $this->list_query );
     }
-    
+
     return $this->list_query;
   }
-   
 
   /**
    * processes searches and sorts to build the listing query
@@ -99,15 +98,15 @@ class query {
   {
     switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
 
-      case PDb_List_Admin::$i18n['clear'] :
+      case PDb_List_Admin::$i18n[ 'clear' ] :
         $this->filter->reset();
-        
-      case PDb_List_Admin::$i18n['sort']:
-      case PDb_List_Admin::$i18n['filter']:
-      case PDb_List_Admin::$i18n['search']:
+
+      case PDb_List_Admin::$i18n[ 'sort' ]:
+      case PDb_List_Admin::$i18n[ 'filter' ]:
+      case PDb_List_Admin::$i18n[ 'search' ]:
         // go back to the first page to display the newly sorted/filtered list
-        $_GET[PDb_List_Admin::$list_page] = 1;
-        
+        $_GET[ PDb_List_Admin::$list_page ] = 1;
+
       default:
 
         $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
@@ -116,6 +115,7 @@ class query {
           $this->list_query .= 'WHERE ';
           for ( $i = 0; $i <= $this->filter->count() - 1; $i++ ) {
             if ( $this->filter->is_valid_set( $i ) ) {
+
               $this->_add_where_clause( $this->filter->get_set( $i ) );
             }
             if ( $i === $this->filter->count() - 1 ) {
@@ -123,8 +123,8 @@ class query {
                 $this->list_query .= ') ';
                 $this->inparens = false;
               }
-            } elseif ( $this->filter->get_set( $i + 1 )['search_field'] !== 'none' && $this->filter->get_set( $i + 1 )['search_field'] !== '' ) {
-              $this->list_query .= $this->filter->get_set( $i )['logic'] . ' ';
+            } elseif ( $this->filter->get_set( $i + 1 )[ 'search_field' ] !== 'none' && $this->filter->get_set( $i + 1 )[ 'search_field' ] !== '' ) {
+              $this->list_query .= $this->filter->get_set( $i )[ 'logic' ] . ' ';
             }
           }
           // if no where clauses were added, remove the WHERE operator
@@ -153,15 +153,15 @@ class query {
   protected function _add_where_clause( $filter_set )
   {
 
-    if ( $filter_set['logic'] === 'OR' && !$this->inparens ) {
+    if ( $filter_set[ 'logic' ] === 'OR' && !$this->inparens ) {
       $this->list_query .= ' (';
       $this->inparens = true;
     }
-    $filter_set['value'] = str_replace( array('*', '?'), array('%', '_'), $filter_set['value'] );
+    $filter_set[ 'value' ] = str_replace( array( '*', '?' ), array( '%', '_' ), $filter_set[ 'value' ] );
 
-    $delimiter = array("'", "'");
+    $delimiter = array( "'", "'" );
 
-    switch ( $filter_set['operator'] ) {
+    switch ( $filter_set[ 'operator' ] ) {
 
 
       case 'gt':
@@ -177,11 +177,11 @@ class query {
       case '=':
 
         $operator = '=';
-        if ( $filter_set['value'] === '' ) {
-          $filter_set['value'] = 'null';
-        } elseif ( strpos( $filter_set['value'], '%' ) !== false ) {
+        if ( $filter_set[ 'value' ] === '' ) {
+          $filter_set[ 'value' ] = 'null';
+        } elseif ( strpos( $filter_set[ 'value' ], '%' ) !== false ) {
           $operator = 'LIKE';
-          $delimiter = array("'", "'");
+          $delimiter = array( "'", "'" );
         }
         break;
 
@@ -190,28 +190,28 @@ class query {
       case 'LIKE':
       default:
 
-        $operator = esc_sql( $filter_set['operator'] );
+        $operator = esc_sql( $filter_set[ 'operator' ] );
         if ( stripos( $operator, 'LIKE' ) !== false ) {
-          $delimiter = array('"%', '%"');
+          $delimiter = array( '"%', '%"' );
         }
-        if ( $filter_set['value'] === '' ) {
-          $filter_set['value'] = 'null';
+        if ( $filter_set[ 'value' ] === '' ) {
+          $filter_set[ 'value' ] = 'null';
           $operator = '<>';
-        } elseif ( $this->term_has_wildcard( $filter_set['value'] ) ) {
-          $delimiter = array("'", "'");
+        } elseif ( $this->term_has_wildcard( $filter_set[ 'value' ] ) ) {
+          $delimiter = array( "'", "'" );
         }
     }
-    
-    $search_field = $this->get_search_field_object( $filter_set['search_field'] );
 
-    $value = $this->field_value( $filter_set['value'], $search_field );
+    $search_field = $this->get_search_field_object( $filter_set[ 'search_field' ] );
+
+    $value = $this->field_value( $filter_set[ 'value' ], $search_field );
 
     if ( $search_field->form_element() == 'timestamp' ) {
 
-      $value = $filter_set['value'];
+      $value = $filter_set[ 'value' ];
       $value2 = false;
-      if ( strpos( $filter_set['value'], ' to ' ) ) {
-        list($value, $value2) = explode( 'to', $filter_set['value'] );
+      if ( strpos( $filter_set[ 'value' ], ' to ' ) ) {
+        list($value, $value2) = explode( 'to', $filter_set[ 'value' ] );
       }
 
       $value = \PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $search_field->form_element() );
@@ -236,64 +236,106 @@ class query {
       }
     } elseif ( $search_field->form_element() == 'date' ) {
 
-      $value = $filter_set['value'];
-      $value2 = false;
-      if ( strpos( $filter_set['value'], ' to ' ) ) {
-        list($value, $value2) = explode( 'to', $filter_set['value'] );
-      }
+      $value = $filter_set[ 'value' ];
 
-      $date1 = \PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $search_field->form_element() );
-      
-      if ( $value2 ) {
-        $date2 = \PDb_Date_Parse::timestamp( $value2, array(), __METHOD__ . ' ' . $search_field->form_element() );
-      }
+      if ( $value === 'null' ) {
 
-      if ( $date1 !== false ) {
+        $this->list_query .= $this->empty_value_where_clause( $filter_set[ 'operator' ], $search_field );
+      } else {
 
-        $date_column = esc_sql( $search_field->name() );
+        $value2 = false;
+        if ( strpos( $filter_set[ 'value' ], ' to ' ) ) {
+          list($value, $value2) = explode( 'to', $filter_set[ 'value' ] );
+        }
 
-        if ( $date2 !== false and ! empty( $date2 ) ) {
+        $date1 = \PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $search_field->form_element() );
 
-          $this->list_query .= " " . $date_column . " >= CAST(" . esc_sql( $date1 ) . " AS SIGNED) AND " . $date_column . " < CAST(" . esc_sql( $date2 ) . "  AS SIGNED)";
-        } else {
+        if ( $value2 ) {
+          $date2 = \PDb_Date_Parse::timestamp( $value2, array(), __METHOD__ . ' ' . $search_field->form_element() );
+        }
 
-          if ( $operator === 'LIKE' ) {
-            $operator = '=';
+        if ( $date1 !== false ) {
+
+          $date_column = esc_sql( $search_field->name() );
+
+          if ( $date2 !== false and ! empty( $date2 ) ) {
+
+            $this->list_query .= " " . $date_column . " >= CAST(" . esc_sql( $date1 ) . " AS SIGNED) AND " . $date_column . " < CAST(" . esc_sql( $date2 ) . "  AS SIGNED)";
+          } else {
+
+            if ( $operator === 'LIKE' ) {
+              $operator = '=';
+            }
+
+            $this->list_query .= " " . $date_column . " " . $operator . " CAST(" . esc_sql( $date1 ) . " AS SIGNED)";
           }
-
-          $this->list_query .= " " . $date_column . " " . $operator . " CAST(" . esc_sql( $date1 ) . " AS SIGNED)";
         }
       }
-    } elseif ( $filter_set['value'] === 'null' ) {
+    } elseif ( $filter_set[ 'value' ] === 'null' ) {
 
-      switch ( $filter_set['operator'] ) {
-        
-        case '<>':
-        case '!=':
-        case 'NOT LIKE':
-          $this->list_query .= ' (' . esc_sql( $search_field->name() ) . ' IS NOT NULL' . ( $search_field->is_numeric() ? '' : ' AND ' . esc_sql( $search_field->name() ) . ' <> ""' ) . ')';
-          break;
-        
-        case 'LIKE':
-        case '=':
-        default:
-          $this->list_query .= ' (' . esc_sql( $search_field->name() ) . ' IS NULL' . ( $search_field->is_numeric() ? '' : ' OR ' . esc_sql( $search_field->name() ) . ' = ""' ) . ')';
-          break;
-        
-      }
+      $this->list_query .= $this->empty_value_where_clause( $filter_set[ 'operator' ], $search_field );
     } else {
 
-      $this->list_query .= ' ' . stripslashes( esc_sql( $search_field->name() ) ) . ' ' . $operator . " " . $delimiter[0] . esc_sql( $value ) . $delimiter[1];
+      $this->list_query .= ' ' . stripslashes( esc_sql( $search_field->name() ) ) . ' ' . $operator . " " . $delimiter[ 0 ] . esc_sql( $value ) . $delimiter[ 1 ];
     }
-    
-    if ( $filter_set['logic'] === 'AND' && $this->inparens ) {
+
+    if ( $filter_set[ 'logic' ] === 'AND' && $this->inparens ) {
       $this->list_query .= ') ';
       $this->inparens = false;
     }
-    
+
     $this->list_query .= ' ';
   }
-  
+
+  /**
+   * provides the where clause for a search for a blank or empty value
+   * 
+   * @param string $operator
+   * @param object $search_field
+   * @return string where clause
+   */
+  private function empty_value_where_clause( $operator, $search_field )
+  {
+    switch ( $operator ) {
+
+      case '<>':
+      case '!=':
+      case 'NOT LIKE':
+        $clause = ' (' . esc_sql( $search_field->name() ) . ' IS NOT NULL' . $this->empty_value_phrase( $search_field, true ) . ')';
+        break;
+
+      case 'LIKE':
+      case '=':
+      default:
+        $clause = ' (' . esc_sql( $search_field->name() ) . ' IS NULL' . $this->empty_value_phrase( $search_field, false ) . ')';
+        break;
+    }
+
+    return $clause;
+  }
+
+  /**
+   * provides a field-specific empty value phrase
+   * 
+   * @param object $search_field
+   * @param bool $not the clause logic
+   * @retrun string
+   */
+  private function empty_value_phrase( $search_field, $not = false )
+  {
+    if ( $search_field->is_numeric() && $search_field->form_element !== 'date' ) {
+      return '';
+    }
+
+    $clause = $not ? ' AND ' . esc_sql( $search_field->name() ) . ' <> ""' : ' OR ' . esc_sql( $search_field->name() ) . ' = ""';
+
+    if ( $search_field->form_element === 'date' ) {
+      $clause .= $not ? ' AND ' . esc_sql( $search_field->name() ) . ' <> 0' : ' OR ' . esc_sql( $search_field->name() ) . ' = 0';
+    }
+
+    return $clause;
+  }
+
   /**
    * provides the search field object
    * 
@@ -303,12 +345,12 @@ class query {
   private function get_search_field_object( $name )
   {
     if ( in_array( $name, search_field_group::group_list() ) ) {
-      return search_field_group::get_search_group_object($name);
+      return search_field_group::get_search_group_object( $name );
     } else {
       return new \PDb_Form_Field_Def( $name );
     }
   }
-  
+
   /**
    * provides the field value
    * 
@@ -321,19 +363,19 @@ class query {
    */
   private function field_value( $value, $field )
   {
-    if ( ! $field->is_value_set() ) {
+    if ( !$field->is_value_set() ) {
       return $value;
     }
-    
+
     $options = $field->options();
-    
-    if ( isset( $options[$value] ) ) {
-      return $options[$value];
+
+    if ( isset( $options[ $value ] ) ) {
+      return $options[ $value ];
     }
-    
+
     return $value;
   }
-  
+
   /**
    * tells if the search term contains a wildcard
    * 
@@ -344,4 +386,5 @@ class query {
   {
     return strpos( $term, '%' ) !== false || strpos( $term, '_' ) !== false;
   }
+
 }

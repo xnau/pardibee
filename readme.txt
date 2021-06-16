@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 1.9.6.9
+Stable tag: 1.9.7.2
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -291,6 +291,24 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 PLEASE NOTE: Version 1.9.7 is a major upgrade for Participants Database. Please make sure you have a current WordPress backup before you upgrade Participants Database.
+
+= 1.9.7.3 =
+* fixed empty group classname in single record template
+* added hide-empty-group template variation
+* better handling of file uploads that exceed system size limits
+* main CSS file now minimized for faster loading
+* improvements to the main db record cache
+
+= 1.9.7.2 =
+* string combine field now supports linked content
+* search for blank dates now works as expected
+* target attribute can now be added to linked fields
+* media embed field now shown as clickable link if not embedding
+
+= 1.9.7.1 =
+* fix display issues with the String Combine field
+* better handling of broken media links in the Media embed field
+* fixed fatal errors on plugin delete
 
 = 1.9.7 =
 * UI improvements: Manage Database Fields page, List Participants page
@@ -1387,7 +1405,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-1.9.7 is a major update: we recommend you have a WordPress backup available before updating. 
+1.9.7 is a major update: we recommend you have a WordPress backup available before updating.
+1.9.7.3 is a bug fix release
 
 == Plugin Support ==
 

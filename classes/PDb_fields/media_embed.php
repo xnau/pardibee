@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -39,8 +39,8 @@ class media_embed extends core {
    */
   protected function display_value()
   {
-    if ( strpos( $this->field->module(), 'list' ) !== false ) {
-      return $this->field->value();
+    if ( apply_filters( 'pdb-media_embed_shows_link_in_list', true ) && strpos( $this->field->module(), 'list' ) !== false ) {
+      return $this->fallback_content( $this->field->value() );
     }
     
     return implode( PHP_EOL, $this->media_embed_html() );
@@ -67,15 +67,33 @@ class media_embed extends core {
     
     if ( $display === false ) {
       
-      // attempt to display the media as an image
-      $display = sprintf( '<img src="%s" />', $media_url );
+      $display = $this->fallback_content( $media_url );
     }
 
-    $html[] = '<div class="pdb-media-container ' . $this->field->name . '-media">';
+    $html[] = '<div class="pdb-media-container ' . $this->field->name . '-media ">';
     $html[] = $display;
     $html[] = '</div>';
    
     return $html;
+  }
+  
+  /**
+   * supplies a substitute display if the embed fails
+   * 
+   * @param string $url
+   * @return string HTML
+   */
+  private function fallback_content( $url )
+  {
+    if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+      return $url; // not a valid url, return as-is
+    }
+    
+    if ( preg_match( '/\.(' . implode( '|', self::valid_img_src_types() ) . ')$/', $url ) ) {
+      return sprintf( '<img src="%s" />', $url );
+    }
+    
+    return sprintf( '<a href="%1$s" rel="external nofollow" target="_blank" >%1$s</a>', esc_attr( $url ) );
   }
 
   /**
@@ -87,6 +105,7 @@ class media_embed extends core {
   public function form_element_build( $field )
   {  
     $field->form_element = 'text-line';
+    
     parent::form_element_build($field);
   }
 
@@ -100,12 +119,14 @@ class media_embed extends core {
   {
     $html = $this->media_embed_html();
     
-    $parameters = array(
-        'name' => $this->field->name(),
-        'type' => 'text-line',
-        'value' => $this->field->value(),
-    );
-    $html[] = \PDb_FormElement::get_element($parameters);
+    if (! $this->field->is_read_only() || \Participants_Db::is_admin() ) {
+      $parameters = array(
+          'name' => $this->field->name(),
+          'type' => 'text-line',
+          'value' => $this->field->value(),
+      );
+      $html[] = \PDb_FormElement::get_element($parameters);
+    }
     
     return implode( PHP_EOL, $html );
   }
@@ -119,7 +140,7 @@ class media_embed extends core {
   public function editor_config( $switches )
   {
     return array(
-        'readonly' => false,
+        'readonly' => true,
         'default' => false,
         'persistent' => false,
         'csv' => false,
@@ -171,6 +192,18 @@ class media_embed extends core {
     }
     
     return $output;
+  }
+  
+  /**
+   * supplies a list of valid img tag file extensions
+   * 
+   * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
+   * 
+   * @return array
+   */
+  public static function valid_img_src_types()
+  {
+    return array('apng', 'avif', 'gif', 'jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'svg', 'webp');
   }
 
 }

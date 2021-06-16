@@ -220,7 +220,7 @@ class PDb_Init {
 
 
     // delete tables
-    $sql = 'DROP TABLE `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
+    $sql = 'DROP TABLE IF EXISTS `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
     $wpdb->query( $sql );
 
     // return to the current blog selection
@@ -337,15 +337,16 @@ class PDb_Init {
    */
   private function _uninstall()
   {
-    Participants_Db::initialize();
+    Participants_Db::initialize( false );
     Participants_Db::setup_source_names();
 
     do_action( 'participants_database_uninstall' );
+    do_action( 'uninstall_participants-database' );
 
     global $wpdb;
 
 // delete tables
-    $sql = 'DROP TABLE `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
+    $sql = 'DROP TABLE IF EXISTS `' . Participants_Db::$fields_table . '`, `' . Participants_Db::$participants_table . '`, `' . Participants_Db::$groups_table . '`;';
     $wpdb->query( $sql );
 
 // remove options
@@ -358,7 +359,7 @@ class PDb_Init {
 // clear user options
     $delete_keys = array(
         Participants_Db::$prefix . PDb_List_Admin::$user_setting_name . '%',
-        Participants_Db::$prefix . PDb_submission\admin_list_filter::$filter_option . '%',
+        Participants_Db::$prefix . PDb_admin_list\filter::$filter_option . '%',
     );
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $delete_keys ) . '"';
     $options = $wpdb->get_col( $sql );
@@ -1171,7 +1172,7 @@ class PDb_Init {
     // build the list of orphans
     $delete_list = array();
     foreach( $columns as $column ) {
-      $delete_list[] = 'DROP COLUMN `' . $column->Field . '`';
+      $delete_list[] = 'DROP COLUMN IF EXISTS `' . $column->Field . '`';
     }
     
     $drop_query = 'ALTER TABLE ' . Participants_Db::$participants_table . " \n " . implode( ", \n" , $delete_list ) . ';';

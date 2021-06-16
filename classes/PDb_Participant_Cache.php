@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -27,20 +27,20 @@ class PDb_Participant_Cache {
   /**
    * @var name of the site transient to use for the cache staleness status
    * 
-   * this transient holds an array of flags, one for each cache, that are set to 
-   * true when the data is stale
+   * this transient holds an array of flags, one for each cache group, that are  
+   * set to true when the data is stale
    */
   const stale_flags = 'participant_cache_stale_flags';
 
   /**
-   * @var int identifies the cache within the group
+   * @var int identifies the cache group
    */
-  private $cache_key;
+  private $cache_group;
 
   /**
-   * @var int the size of the cache (number of records it holds)
+   * @var int the number of records in the cache group
    */
-  private $cache_size;
+  private $group_size;
 
   /**
    * @var int the id of the record of interest
@@ -58,41 +58,16 @@ class PDb_Participant_Cache {
   private $staleness;
 
   /**
-   * sets up the cache handler
+   * supplies the cached data for the record
    * 
-   * @param int $id of the record to get or update
-   */
-  public function __construct( $id )
-  {
-    $this->id = (int) $id;
-    /**
-     * @version 1.6.2.6
-     * 
-     * filter 'pdb-get_participant_cache_size' sets the number or records to cache in each group
-     */
-    $this->cache_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
-    $this->cache_key = (int) ( $this->id / $this->cache_size );
-
-    $this->setup_staleness();
-    $this->set_data();
-  }
-
-  /**
-   * clears the cache where the target id is found
-   */
-  public function clear()
-  {
-    $this->_clear_cache();
-  }
-
-  /**
-   * supplies the participant data
+   * @param int $id
    * 
-   * @return array
+   * @return array|bool data array or bool false if no cached record found
    */
-  public function get()
+  public static function get_participant( $id )
   {
-    return isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
+    $cache = new self( $id );
+    return $cache->get();
   }
 
   /**
@@ -116,18 +91,71 @@ class PDb_Participant_Cache {
     $cache = new self( $id );
     $cache->set_stale();
   }
+  
+  /**
+   * clears all stale flags
+   */
+  public static function make_all_stale()
+  {
+    delete_transient(self::stale_flags);
+  }
 
   /**
-   * supplies the cached data for the record
+   * sets up the cache handler
    * 
-   * @param int $id
-   * 
-   * @return array|bool data array or bool false if no record matches the id
+   * @param int $id of the record to get or update
    */
-  public static function get_participant( $id )
+  private function __construct( $id )
   {
-    $cache = new self( $id );
-    return $cache->get();
+    $this->id = (int) $id;
+    
+    /**
+     * sets the number or records to cache in each group
+     * 
+     * @filter pdb-get_participant_cache_size
+     * @param int number of records in a group
+     * @return int
+     */
+    $this->group_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
+    $this->cache_group = (int) ( $this->id / $this->group_size );
+
+    $this->setup_staleness();
+    $this->set_data();
+  }
+
+  /**
+   * clears the cache where the target id is found
+   */
+  private function clear()
+  {
+    $this->_clear_cache();
+  }
+
+  /**
+   * supplies the participant data
+   * 
+   * @return array
+   */
+  private function get()
+  {
+    $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
+    
+    if ( ! $participant_data ) {
+      Participants_Db::debug_log(__METHOD__ . ' getting participant id ' . $this->id . ' failed' );
+    }
+    
+    return $participant_data;
+  }
+  /**
+   * provides the cache persistence time
+   * 
+   * defaults to 24 hours
+   * 
+   * @return int seconds
+   */
+  private function expiration()
+  {
+    return Participants_Db::apply_filters( 'participant_cache_expiration',  DAY_IN_SECONDS );
   }
 
   /**
@@ -163,7 +191,7 @@ class PDb_Participant_Cache {
   {
     $staleness = $this->get_staleness();
 
-    $this->staleness = (bool) $staleness === false || ( ! isset( $staleness[ $this->cache_key ] ) ? true : $staleness[ $this->cache_key ] );
+    $this->staleness = (bool) ( $staleness === false || ( isset( $staleness[ $this->cache_group ] ) ? $staleness[ $this->cache_group ] : true ) );
   }
 
   /**
@@ -176,9 +204,9 @@ class PDb_Participant_Cache {
     $this->staleness = (bool) $state;
 
     $staleness = $this->get_staleness();
-    $staleness[ $this->cache_key ] = $this->staleness;
+    $staleness[ $this->cache_group ] = $this->staleness;
 
-    set_transient( self::stale_flags, $staleness );
+    set_transient( self::stale_flags, $staleness, $this->expiration() );
   }
 
   /**
@@ -200,7 +228,7 @@ class PDb_Participant_Cache {
    */
   private function _cache_key()
   {
-    return self::prefix . $this->cache_key;
+    return self::prefix . $this->cache_group;
   }
 
   /**
@@ -224,8 +252,8 @@ class PDb_Participant_Cache {
   {
     global $wpdb;
 
-    $series_start = $this->cache_key * $this->cache_size;
-    $series_end = $series_start + $this->cache_size;
+    $series_start = $this->cache_group * $this->group_size;
+    $series_end = $series_start + $this->group_size;
 
     $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p WHERE p.id >= ' . $series_start . ' AND p.id < ' . $series_end . ' ORDER BY p.id ASC';
 
@@ -235,9 +263,7 @@ class PDb_Participant_Cache {
 
     $this->set_fresh();
     
-    if ( PDB_DEBUG > 2 ) {
-      Participants_Db::debug_log('Refreshing Participants Database cache for cache group ' . $this->cache_key );
-    }
+    Participants_Db::debug_log( __METHOD__ . ': Refreshing Participants Database cache for cache group ' . $this->cache_group, 2 );
   }
 
   /**
@@ -256,7 +282,7 @@ class PDb_Participant_Cache {
    */
   private function set_cache()
   {
-    set_transient( $this->_cache_key(), $this->data );
+    set_transient( $this->_cache_key(), $this->data, $this->expiration() );
   }
 
   /**

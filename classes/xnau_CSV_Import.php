@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -85,7 +85,7 @@ abstract class xnau_CSV_Import {
 
     if ( isset($_POST[$file_field]) && $this->check_submission() ) {
 
-      if ($this->_set_upload_dir()) {
+      if ($this->set_upload_dir()) {
 
         $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES['uploadedfile']['name']);
 
@@ -120,17 +120,19 @@ abstract class xnau_CSV_Import {
         } // file move successful
         else { // file move failed
           $this->set_error_heading(
-                  __('There was an error uploading the file. This could be a problem with permissions on the uploads directory.', 'participants-database'), __('Destination', 'participants-database') . ': ' . $target_path
+                  __('There was an error uploading the file. This could be a problem with permissions on the uploads directory.', 'participants-database'), __('Destination', 'participants-database') . ': ' . dirname( $target_path )
           );
         }
       } else {
 
         $this->set_error_heading(
-                __('Target directory does not exist and could not be created. Try creating it manually.', 'participants-database'), __('Destination', 'participants-database') . ': ' . $upload_location
+                __('Target directory does not exist and could not be created. Try creating it manually.', 'participants-database'), __('Destination', 'participants-database') . ': ' . dirname( $target_path )
         );
       }
       // we are done with the file, delete it
       Participants_Db::delete_file($target_path);
+      
+      PDb_Participant_Cache::make_all_stale();
       
       do_action( 'pdb-after_import_csv', $this );
     }
@@ -161,17 +163,15 @@ abstract class xnau_CSV_Import {
   /**
    * sets up the column name array
    *
-   * @param array $array an indexed array of string field names
-   *
    */
-  abstract protected function _set_column_array();
+  abstract protected function set_column_array();
 
   /**
    * sets and verifies the uploads directory
    *
    * @return bool true if the directory can be used
    */
-  abstract protected function _set_upload_dir();
+  abstract protected function set_upload_dir();
 
   /**
    * stores the record in the database
@@ -218,7 +218,7 @@ abstract class xnau_CSV_Import {
     $this->CSV->enclosure = $this->_detect_enclosure($src_file);
     $this->CSV->parse($src_file);
 
-    if (PDB_DEBUG and $this->CSV->error) {
+    if ( $this->CSV->error ) {
       Participants_Db::debug_log(__METHOD__ . ' CSV parse error:' . print_r($this->CSV->error_info, 1));
     }
 
@@ -232,11 +232,11 @@ abstract class xnau_CSV_Import {
 
     foreach ($this->CSV->data as $csv_line) {
 
-      if (PDB_DEBUG) Participants_Db::debug_log( __METHOD__.'
+      Participants_Db::debug_log( __METHOD__.'
         
 columns:'.implode(', ',$this->column_names).'
   
-csv line= '.print_r( $csv_line, true ) );
+csv line= '.print_r( $csv_line, true ), 2 );
 
       $values = array();
 
