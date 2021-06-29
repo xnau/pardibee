@@ -215,9 +215,13 @@ class PDb_Signup extends PDb_Shortcode {
   {
     foreach ( Participants_Db::field_defs() as $field ) {
       /* @var $field PDb_Form_Field_Def */
+      
       if ( $field->is_hidden_field() && $field->signup ) {
+        
         $field_item = new PDb_Field_Item( $field );
+        
         $this->_set_field_value( $field_item );
+        
         $this->hidden_fields[ $field_item->name() ] = $field_item->value();
       }
     }
