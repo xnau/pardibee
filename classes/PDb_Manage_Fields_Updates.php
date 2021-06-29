@@ -86,7 +86,8 @@ class PDb_Manage_Fields_Updates {
           }
         }
 
-        if ( !empty( $row[ 'validation' ] ) && !in_array( $row[ 'validation' ], array( 'yes', 'no' ) ) ) {
+        // validate a regex/match validation setting
+        if ( !empty( $row[ 'validation' ] ) && !in_array( $row[ 'validation' ], array_keys( PDb_FormValidation::validation_methods() ) ) ) {
 
           $row['validation'] = str_replace( '\\\\', '\\', $row['validation'] );
           
