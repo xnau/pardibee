@@ -644,7 +644,10 @@ abstract class PDb_Shortcode {
       }
     }
     
-    $this->field->set_record_id( $record_id );
+    if ( ! $this->field->record_id ) {
+      $this->field->set_record_id( $record_id );
+    }
+    
     $this->field->set_module( $this->module );
 
     /*
@@ -663,7 +666,6 @@ abstract class PDb_Shortcode {
    */
   protected function reset_field_counter()
   {
-
     $this->current_field_pointer = 1;
   }
 
@@ -672,7 +674,6 @@ abstract class PDb_Shortcode {
    */
   public function have_records()
   {
-
     // for the total shortcode, we don't use the list limit, so set it to the maximum number
     if ( $this->shortcode_atts['list_limit'] == '-1' ) {
       $this->shortcode_atts['list_limit'] = $this->num_records;
@@ -693,7 +694,6 @@ abstract class PDb_Shortcode {
    */
   public function the_record()
   {
-
     // the first time through, use current()
     if ( $this->current_record_pointer == 1 ) {
 
@@ -762,8 +762,10 @@ abstract class PDb_Shortcode {
            */
           if ( in_array( $field->name(), $this->display_columns ) ) {
             $field_count++;
-            if ( $field->has_value() )
+            if ( $field->has_value() ) {
               $all_empty_fields = false;
+            }
+            
             /**
              * @filter pdb-before_field_added_to_iterator
              * @param PDb_Form_field $field
@@ -950,7 +952,9 @@ abstract class PDb_Shortcode {
   }
 
   /**
-   * sets the field value; uses the default value if no stored value is present
+   * sets the field value of the passed-in field object
+   * 
+   * uses the default value if no stored value is present
    * 
    * as of version 1.5.5 we slightly changed how this works: formerly, the default 
    * value was only used in the record module if the "persistent" flag was set, now 
@@ -960,7 +964,6 @@ abstract class PDb_Shortcode {
    *
    *
    * @param PDb_Field_Item|PDb_Form_Field_Def $field the current field object
-   * @return string the value of the field
    */
   protected function _set_field_value( $field )
   {
@@ -1506,7 +1509,7 @@ abstract class PDb_Shortcode {
    * tells whether to apply the empty class to the element
    * 
    * @param PDb_Field_Item $field
-   * @return bool true to apply the emapty class
+   * @return bool true to apply the empty class
    */
   protected function apply_empty_class( $field )
   {
