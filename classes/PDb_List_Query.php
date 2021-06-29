@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.1
+ * @version    2.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -177,7 +177,7 @@ class PDb_List_Query {
       if ( $this->requested_page() ) {
         // we're getting a list page
         $this->_restore_query_session();
-      } elseif ( filter_input( INPUT_POST, 'action' ) === 'pdb_list_filter' && $this->is_search_result() ) {
+      } elseif ( $this->is_search_result() ) {
         // we're showing a search result
         $this->_save_query_session();
       } else {
@@ -421,7 +421,7 @@ class PDb_List_Query {
         $value = date( 'M j,Y 00:00', strtotime( $numeric . ' months' ) );
         break;
     }
-//    error_log(__METHOD__.' key: '.$key.' value: '.$value);
+    
     return $value;
   }
 
@@ -451,6 +451,7 @@ class PDb_List_Query {
     if ( !$page_number ) {
       $page_number = filter_input( INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     }
+    
     if ( !$page_number ) {
       return false;
     }
@@ -507,8 +508,6 @@ class PDb_List_Query {
    */
   private function _add_filter_from_input( $input )
   {
-//   error_log(__METHOD__.' input: '.print_r($input,1));
-
     $set_logic = Participants_Db::plugin_setting_is_true( 'strict_search' ) ? 'AND' : 'OR';
 
     $this->_reset_filters();
@@ -1367,10 +1366,13 @@ class PDb_List_Query {
   private function _restore_query_session()
   {
     $data = Participants_Db::$session->getArray( $this->query_session_name() );
+    
+    Participants_Db::debug_log(__METHOD__.' getting session: '.$this->query_session_name().' got: '.print_r($data,1), 3);
 
     if ( !is_array( $data ) ) {
       return false;
     }
+    
     $where_clauses = $data[ 'where_clauses' ]; // do we need to unserialize here?
     $sort = $data[ 'sort' ];
     $this->clause_count = $data[ 'clause_count' ];
