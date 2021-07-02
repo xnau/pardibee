@@ -103,7 +103,7 @@ abstract class utility extends core {
    * @return mixed the value to test
    */
   protected function has_content_test( $field ) {
-    return false;
+    return $field->default_value();
   }
   
 }
