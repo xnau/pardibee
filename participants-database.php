@@ -2066,7 +2066,9 @@ class Participants_Db extends PDb_Base {
 
     $result = $wpdb->query( $query );
 
-    if ( PDB_DEBUG ) {
+    if ( ! $result ) {
+      self::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error );
+    } else {
       self::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
     }
 
@@ -2272,6 +2274,8 @@ class Participants_Db extends PDb_Base {
   private static function _get_participant( $id )
   {
     global $wpdb;
+    
+    self::debug_log(__METHOD__.' using fallback method to get record ' . $id, 3);
 
     $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %d';
 
