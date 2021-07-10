@@ -85,6 +85,27 @@ class PDb_Field_Editor {
     $session_value = Participants_Db::$session->getArray(PDb_Manage_Fields_Updates::action_key, array() );
     return isset( $session_value['editoropen'][$this->field_def->get_prop( 'id' )] ) && $session_value['editoropen'][$this->field_def->get_prop( 'id' )] ? 'editor-open' : 'editor-closed';
   }
+  
+  /**
+   * provides the HTML for the hidden inputs
+   * 
+   * these are field editor controls that are suppressed but must be included as 
+   * static values in the editor submission
+   * 
+   * @return string HTML
+   */
+  public function get_hidden_inputs()
+  {
+    $html = array();
+    
+    foreach( array( 'form_element' ) as $hidden_att ) {
+      if ( ! isset( $this->definition_attributes[$hidden_att] ) ) {
+        $html[] = sprintf( '<input type="hidden" name="%s" value="%s" />', esc_attr( 'row_' . $this->field_def->id . '[' . $hidden_att . ']' ), esc_attr( $this->field_def->{$hidden_att} ) );
+      }
+    }
+    
+    return implode( PHP_EOL, $html );
+  }
 
   /**
    * sets up the definition attribute switches
@@ -93,10 +114,12 @@ class PDb_Field_Editor {
   {
     $form_element_switches = $this->form_element_atts();
     $this->definition_attributes = Participants_Db::array_merge2( $this->default_def_att_switches(), $form_element_switches );
+    
     if ( isset($form_element_switches['validation']) && $form_element_switches['validation'] === false ) {
       // disable the validation if disabled in the form element
       $this->definition_attributes['validation'] = false;
     }
+    
     /**
      * @filter pdb-field_editor_switches
      * @param array of editor attribute enable/disable switches
@@ -104,6 +127,7 @@ class PDb_Field_Editor {
      * @return array of switches
      */
     $this->definition_attributes = array_filter( Participants_Db::apply_filters('field_editor_switches', $this->definition_attributes, $this->field_def ) ); // remove the disabled elements
+    
     reset( $this->definition_attributes );
   }
 
