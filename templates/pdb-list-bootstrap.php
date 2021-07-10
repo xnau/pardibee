@@ -125,7 +125,7 @@ $this->pagination->set_props( array(
 
                 <?php if ( $this->field->has_content() ) : ?>
                 <td class="<?php echo $this->field->name() ?>-field" >
-        <?php echo $this->field->print_value(); ?>
+        <?php $this->field->print_value(); ?>
                 </td>
 
               <?php else : // if the field is empty  ?>
