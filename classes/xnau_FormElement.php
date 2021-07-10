@@ -931,8 +931,9 @@ abstract class xnau_FormElement {
 
     if ( count( $parts ) < 2 ) {
       $parts[ 1 ] = ''; // when showing an edit form, leave the click text blank
-      if ( !filter_var( $parts[ 0 ], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) )
+      if ( !filter_var( $parts[ 0 ], FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $parts[ 0 ] = '';
+      }
     }
 
     list( $url, $title ) = $parts;
@@ -1728,7 +1729,7 @@ abstract class xnau_FormElement {
   }
 
   /**
-   * unambiguously test for all the flavors of emptiness
+   * unambiguously test for all the flavors of emptiness that a field value may have
    * 
    * @var unknown $test the value to test
    * @return bool true if the value is the equivalent of empty, zero or undefined
