@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -72,12 +72,12 @@ class string_combine extends dynamic_db_field {
    * 
    * this removes any unreplaced tags
    * 
-   * @param array $data the data
+   * @param array $data optional data set to override the data in the db
    * @return string
    */
   protected function dynamic_value( $data = false )
   {
-    $replaced_string = $this->replaced_string($data);
+    $replaced_string = $this->replaced_string( $data );
     
     if ( $replaced_string === $this->field->default_value ) {
       
@@ -105,7 +105,7 @@ class string_combine extends dynamic_db_field {
    */
   private function replaced_string( $data )
   {
-    $replacement_data = $data ? : $this->replacement_data();
+    $replacement_data = $data ? $this->replacement_data( $data ) : $this->replacement_data();
     
     return \PDb_Tag_Template::replace_text( $this->field->default_value, $replacement_data );
   }
@@ -118,7 +118,7 @@ class string_combine extends dynamic_db_field {
    */
   protected function form_element_html()
   {
-    return sprintf( $this->wrap_template(), $this->dynamic_value() );
+    return sprintf( $this->wrap_template(), $this->dynamic_value(), esc_attr( $this->dynamic_value() ) );
   }
   
   /**
@@ -128,7 +128,7 @@ class string_combine extends dynamic_db_field {
    */
   private function wrap_template()
   {
-    $template[] = '<input type="hidden" name="' . $this->field->name() . '" value="%1$s" />';
+    $template[] = '<input type="hidden" name="' . $this->field->name() . '" value="%2$s" />';
     $template[] = '<span class="pdb-string_combine_field">%1$s</span>';
     
     return \Participants_Db::apply_filters( 'string_combine_wrap_template', implode( PHP_EOL, $template ) );
@@ -139,16 +139,23 @@ class string_combine extends dynamic_db_field {
    * provides the data set for the value tag replacement
    * 
    * defaults to the current record
+   * if the $post array is provided, that will be used as the field value source
    * 
+   * @param array $post optional fresh data; uses db value if not provided
    * @return array as $name => $value
    */
-  private function replacement_data()
+  protected function replacement_data( $post = array() )
   {
     $data = array();
     
     foreach( $this->template_field_list() as $fieldname ) {
       
       $template_field = new \PDb_Field_Item( array('name' => $fieldname, 'module' => 'list' ), $this->field->record_id );
+      
+      if ( isset( $post[$template_field->name()] ) && ! \PDb_FormElement::is_empty( $post[$template_field->name()] ) ) {
+        // get the value from the provided data
+        $template_field->set_value( $post[$template_field->name()] );
+      }
       
       $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
     }
