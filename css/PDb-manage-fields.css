@@ -56,7 +56,7 @@
 }
 
 .def-fieldset .form-element-label {
-  align-self: center;
+  margin-top: 0.5em;
   font-size: 130%;
 }
 .editor-open.def-fieldset .form-element-label {
