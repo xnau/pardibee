@@ -186,6 +186,8 @@ class PDb_Manage_Fields {
         ?>
 
         <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $field_def->id ?>" data-numid="<?php echo $field_def->id ?>" data-groupid="<?php echo $field_def->groupid ?>">
+          
+          <?php echo $field_definition_attributes->get_hidden_inputs() ?>
 
           <?php
           while ( $control_html = $field_definition_attributes->get_next_control() ) {
