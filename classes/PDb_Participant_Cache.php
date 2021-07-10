@@ -109,18 +109,23 @@ class PDb_Participant_Cache {
   {
     $this->id = (int) $id;
     
-    /**
-     * sets the number or records to cache in each group
-     * 
-     * @filter pdb-get_participant_cache_size
-     * @param int number of records in a group
-     * @return int
-     */
-    $this->group_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
-    $this->cache_group = (int) ( $this->id / $this->group_size );
+    if ( $this->id === 0 ) {
+      $this->data[0] = array();
+    } else {
+    
+      /**
+       * sets the number or records to cache in each group
+       * 
+       * @filter pdb-get_participant_cache_size
+       * @param int number of records in a group
+       * @return int
+       */
+      $this->group_size = Participants_Db::apply_filters( 'get_participant_cache_size', 100 );
+      $this->cache_group = (int) ( $this->id / $this->group_size );
 
-    $this->setup_staleness();
-    $this->set_data();
+      $this->setup_staleness();
+      $this->set_data();
+    }
   }
 
   /**
@@ -140,7 +145,7 @@ class PDb_Participant_Cache {
   {
     $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
     
-    if ( ! $participant_data ) {
+    if ( ! $participant_data && $this->id !== 0 ) {
       Participants_Db::debug_log(__METHOD__ . ' cache missed for participant id ' . $this->id );
     }
     
