@@ -181,9 +181,7 @@ class PDb_Manage_Fields_Updates {
          */
         $result = $wpdb->update( Participants_Db::$fields_table, Participants_Db::apply_filters( 'update_field_def', $row, $status ), array( 'id' => $id ) );
 
-        if ( PDB_DEBUG > 1 ) {
-          Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
-        }
+        Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
 
         if ( $result ) {
           PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
