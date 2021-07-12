@@ -54,6 +54,15 @@ class with_selected {
         $this->with_selected_action( $action );
       }
     }
+    $this->clear_cache();
+  }
+  
+  /**
+   * clears the cache for the selected ids
+   */
+  protected function clear_cache()
+  {
+    \PDb_Participant_Cache::make_all_stale();
   }
   
   /**
