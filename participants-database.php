@@ -2238,7 +2238,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_participant( $id )
   {
-    if ( false === $id ) {
+    if ( ! $id ) {
       return self::get_default_record();
     }
     
