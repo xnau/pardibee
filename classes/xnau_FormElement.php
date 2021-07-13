@@ -674,17 +674,17 @@ abstract class xnau_FormElement {
    */
   protected function _checkbox()
   {
-
-    // if no options are defined, then it's a selectbox
     if ( false === $this->options or ! is_array( $this->options ) ) {
-      $this->_selectbox();
-      return NULL;
-    } else {
-      $title = $this->is_assoc( $this->options ) ? key( $this->options ) : false;
-      $checked_value = current( $this->options );
-      $unchecked_value = next( $this->options );
-      if ( $unchecked_value === false )
-        $unchecked_value = '';
+      
+      // give it a default set of options
+      $this->options = array( 1, 0 );
+    }
+      
+    $title = $this->is_assoc( $this->options ) ? key( $this->options ) : false;
+    $checked_value = current( $this->options );
+    $unchecked_value = next( $this->options );
+    if ( $unchecked_value === false ) {
+      $unchecked_value = '';
     }
 
     $id = $this->element_id();
@@ -1089,25 +1089,28 @@ abstract class xnau_FormElement {
       $value = $this->value;
     }
 
-    $size = empty( $this->attributes['size'] ) ? ''  : ' size="' . $this->attributes['size'] . '" ';
-
     if ( $type === 'text' && isset( $this->attributes[ 'type' ] ) ) {
-      $this->attributes = array_merge( array( 'type' => $type ), (array) $this->attributes );
-    } else {
-      $this->attributes[ 'type' ] = $type;
+      $type = $this->attributes[ 'type' ];
     }
+    
+    unset( $this->attributes['type'] );
 
     if ( in_array( $type, array( 'checkbox', 'radio', 'multi-checkbox', 'select-other' ) ) && isset( $this->attributes[ 'readonly' ] ) ) {
       $this->attributes[ 'disabled' ] = 'disabled';
       unset( $this->attributes[ 'readonly' ] );
     }
 
-    $value_att = in_array( $type, array( 'file', 'image' ) ) ? '' : 'value="' . esc_attr( $value ) . '"';
-
-    $html = '<input name="' . esc_attr( $this->name . ( $this->group ? '[]' : '' ) ) . '"' . $size . ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' ) . ' ' . $this->_attributes( $type ) . $this->_class() . '  ' . $value_att . ' />';
-
-    // unset the type attribute so it doesn't carry over to the next element
-    unset( $this->attributes[ 'type' ] );
+    $value_att = in_array( $type, array( 'file', 'image' ) ) ? '' : esc_attr( $value );
+    $select_att = ( false !== $select ? $this->_set_selected( $value, $this->value, $select ) : '' );
+    
+    $html = sprintf( '<input name="%s" %s %s %s type="%s" value="%s" />', 
+            esc_attr( $this->name . ( $this->group ? '[]' : '' ) ), 
+            $select_att, 
+            $this->_attributes(), 
+            $this->_class(),
+            esc_attr( $type ),
+            $value_att  );
+    
     return $html;
   }
 
@@ -1454,7 +1457,7 @@ abstract class xnau_FormElement {
    * supplies a class attribute string
    * 
    * @param string $add_class any additional classes to add
-   * 
+   * @param array $classes array of classnames
    * @return string an html class attribute string
    */
   public static function class_attribute( $add_class, $classes = array() )
