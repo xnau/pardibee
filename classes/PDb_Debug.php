@@ -98,7 +98,7 @@ class PDb_Debug {
    */
   public function write_php_error( $errno, $errstr, $errfile, $errline )
   {
-    $this->write_log_entry( "\n\n<header>" . $this->timestamp() . '</header> ' . $errstr . '<footer>in ' . $errfile . ' on line ' . $errline . '</footer>' );
+    $this->write_log_entry( "\n\n<header>" . $this->timestamp() . '</header> ' . $this->format_message( $errstr ) . '<footer>in ' . $errfile . ' on line ' . $errline . '</footer>' );
     return false;
   }
 
@@ -111,8 +111,19 @@ class PDb_Debug {
    */
   public function write_debug( $message )
   {
-    $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . str_replace( array(PHP_EOL, "\t"), array('<br/>', '&emsp;'), htmlspecialchars( $message ) ) );
+    $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . str_replace( array(PHP_EOL, "\t"), array('<br/>', '&emsp;'), $this->format_message( $message ) ) );
     error_log( $message );
+  }
+  
+  /**
+   * attempts to format the message for the log
+   * 
+   * @param string $message
+   * @return string
+   */
+  private function format_message( $message )
+  {
+    return '<pre>' . preg_replace( array('/[ ]{3}/'), array('&nbsp;'), htmlspecialchars( $message ) ) . '</pre>';
   }
 
   /**
@@ -156,7 +167,7 @@ class PDb_Debug {
     if ( $this->log_file_resource() ) {
       rewind( $this->log_file );
       $line_limit = $this->line_limit();
-      while ( ($line = fgets( $this->log_file, 4096 )) !== false ) {
+      while ( ($line = fgets( $this->log_file, 8192 )) !== false ) {
         $buffer[] = $line;
         if ( count( $buffer ) >= $line_limit ) {
           $buffer = array(); // clear it if it gets too large
@@ -344,7 +355,7 @@ class PDb_Debug {
    */
   private function line_limit()
   {
-    return Participants_Db::apply_filters( 'debug_log_line_buffer_limit', 200 );
+    return Participants_Db::apply_filters( 'debug_log_line_buffer_limit', 1024 );
   }
 
   /**
