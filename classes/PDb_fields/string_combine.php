@@ -86,7 +86,7 @@ class string_combine extends dynamic_db_field {
     }
     
     $cleanup_expression = apply_filters('pdb-string_combine_cleanup_expression_array', array(
-        '/\[[a-z0-9_]+\]/',
+        '/\[[a-z0-9_:]+\]/',
         '/^([ ,]*)/',
         '/([ ,]*)$/',
         '/( )(?= )/',
@@ -107,7 +107,32 @@ class string_combine extends dynamic_db_field {
   {
     $replacement_data = $data ? $this->replacement_data( $data ) : $this->replacement_data();
     
-    return \PDb_Tag_Template::replace_text( $this->field->default_value, $replacement_data );
+    return \PDb_Tag_Template::replace_text( $this->template(), $replacement_data );
+  }
+  
+  /**
+   * preps the template for the use of raw values in element attributes
+   * 
+   * @return string
+   */
+  private function template()
+  {
+    $template = $this->field->default_value();
+    
+    // if there are no tags, don't do anything
+    if ( strip_tags( $template ) === $template ) {
+      return $template;
+    }
+    
+    $pattern = <<<PATT
+/(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|\s*\/?[>"']))+.)["']?/m
+PATT;
+    
+    $template = preg_replace_callback( $pattern, function ($tag) {
+      return str_replace('[', '[value:', $tag[0] );
+    }, $this->field->default_value() );
+    
+    return $template;
   }
 
   /**
@@ -158,6 +183,7 @@ class string_combine extends dynamic_db_field {
       }
       
       $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
+      $data['value:'.$fieldname] = $template_field->has_content() ? $template_field->raw_value() : '';
     }
     
     /**
