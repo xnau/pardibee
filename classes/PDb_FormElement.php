@@ -595,17 +595,22 @@ class PDb_FormElement extends xnau_FormElement {
    * @return string the value
    */
   public static function maybe_option_value ( $title, $fieldname )
-  {
+  { 
     $value = $title; // if no match is found, return the title argument
     
     $field_def = Participants_Db::get_field_def($fieldname);
     
     if ( $field_def->is_value_set() ) {
       
+      // reject terms that match utility options
+      if ( in_array( $value, array( 'null_select' ) ) ) {
+        return $value;
+      }
+      
       $options_array = $field_def->options();
       
-      // first check if there is a direct match
-      if ( isset( $options_array[$title] ) ) {
+      // first check if there is a direct match to a regular option
+      if ( isset( $options_array[$title] ) && ! in_array( $options_array[$title], array( 'optgroup', 'other' ) ) ) {
         return $options_array[$title];
       }
       
@@ -627,6 +632,7 @@ class PDb_FormElement extends xnau_FormElement {
         return $options_array[strtolower($title)];
       }
     }
+    
     return $value;
   }
 
@@ -723,7 +729,7 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * strips the tags out of the array keys
    * 
-   * this generally used on the options array to make the elements easier to git by the index
+   * this generally used on the options array to make the elements easier to get by the index
    * 
    * @param array
    * @return array
@@ -732,7 +738,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $sanitized = array();
     foreach ( $array as $key => $value ) {
-      $sanitized[strip_tags($key)] = $value;
+      $sanitized[ strip_tags( $key ) ] = $value;
     }
     return $sanitized;
   }
