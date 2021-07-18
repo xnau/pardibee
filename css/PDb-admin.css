@@ -930,6 +930,11 @@ body[class*='participants-database'] .text-block li {
   background: white;
   padding: 1em;
 }
+.pdb-log-display pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+}
 .loghead {
   font-weight: bold;
 }
