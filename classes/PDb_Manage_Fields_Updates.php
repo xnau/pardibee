@@ -554,11 +554,11 @@ class PDb_Manage_Fields_Updates {
         'title' => self::text_sanitize(),
         'group' => self::string_sanitize(),
         'form_element' => self::string_sanitize(),
-        'help_text' => self::text_sanitize( true ),
+        'help_text' => self::html_sanitize(),
         'options' => self::text_sanitize(),
         'validation' => self::string_sanitize(),
         'validation_message' => self::text_sanitize(),
-        'default' => self::text_sanitize( true ),
+        'default' => self::html_sanitize(),
         'attributes' => self::string_sanitize(),
         'signup' => self::bool_sanitize(),
         'csv' => self::bool_sanitize(),
@@ -634,6 +634,16 @@ class PDb_Manage_Fields_Updates {
         'filter' => FILTER_SANITIZE_STRING,
         'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
     );
+  }
+  
+  /**
+   * sanitizes a string with some HTML
+   * 
+   * @return array
+   */
+  protected static function html_sanitize()
+  {
+    return self::text_sanitize(true);
   }
 
   /**
@@ -899,8 +909,6 @@ class PDb_Manage_Fields_Updates {
   /**
    * sanitizes a string that allows an expanded range of HTML tags
    * 
-   * this is generally for the help text only, but could be used for other attributes
-   * 
    * @param string $string
    * @return string
    */
@@ -917,7 +925,7 @@ class PDb_Manage_Fields_Updates {
   }
   
   /**
-   * provdes the set of basic allowed HTML tags
+   * provides the set of basic allowed HTML tags
    * 
    * @return array
    */
@@ -935,11 +943,13 @@ class PDb_Manage_Fields_Updates {
             'href' => true,
             'rel' => true,
             'target' => true,
+            'title' => true,
         ),
         'img' => array(
             'class' => true,
             'style' => true,
             'src' => true,
+            'alt' => true,
         ),
         'br' => $def_atts,
         'b' => $def_atts,
