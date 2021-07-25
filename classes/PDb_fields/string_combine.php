@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -111,6 +111,8 @@ class string_combine extends dynamic_db_field {
   }
   
   /**
+   * provides the template string
+   * 
    * preps the template for the use of raw values in element attributes
    * 
    * @return string
@@ -119,7 +121,7 @@ class string_combine extends dynamic_db_field {
   {
     $template = $this->field->default_value();
     
-    // if there are no tags, don't do anything
+    // if there are no tags, use the template as-is
     if ( strip_tags( $template ) === $template ) {
       return $template;
     }
@@ -130,7 +132,7 @@ PATT;
     
     $template = preg_replace_callback( $pattern, function ($tag) {
       return str_replace('[', '[value:', $tag[0] );
-    }, $this->field->default_value() );
+    }, $template );
     
     return $template;
   }
@@ -177,13 +179,25 @@ PATT;
       
       $template_field = new \PDb_Field_Item( array('name' => $fieldname, 'module' => 'list' ), $this->field->record_id );
       
-      if ( isset( $post[$template_field->name()] ) && ! \PDb_FormElement::is_empty( $post[$template_field->name()] ) ) {
-        // get the value from the provided data
-        $template_field->set_value( $post[$template_field->name()] );
-      }
       
-      $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
-      $data['value:'.$fieldname] = $template_field->has_content() ? $template_field->raw_value() : '';
+      if ( $template_field->form_element() === $this->name ) {
+        
+        /* if we are using the value from another string combine field, get the 
+         * value directly from the db to avoid recursion
+         */
+        $data[$fieldname] = $this->field_db_value( $template_field->name() );
+        $data['value:'.$fieldname] = $data[$fieldname];
+        
+      } else {
+      
+        if ( isset( $post[$template_field->name()] ) && ! \PDb_FormElement::is_empty( $post[$template_field->name()] ) ) {
+          // get the value from the provided data
+          $template_field->set_value( $post[$template_field->name()] );
+        }
+
+        $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
+        $data['value:'.$fieldname] = $template_field->has_content() ? $template_field->raw_value() : '';
+      }
     }
     
     /**
@@ -195,6 +209,22 @@ PATT;
      * @return array
      */
     return \Participants_Db::apply_filters( 'string_combine_replacement_data', $this->clear_empty_values( $data ), $this->field );
+  }
+  
+  /**
+   * provides the value for a field, drawn from the database
+   * 
+   * @global \wpdb $wpdb
+   * @param string $fieldname
+   * @return string
+   */
+  private function field_db_value( $fieldname )
+  {
+    global $wpdb;
+    
+    $db_value = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $fieldname . '` FROM ' . \Participants_Db::participants_table() . ' WHERE `id` = %s', $this->field->record_id ) );
+    
+    return is_null( $db_value ) ? '': $db_value;
   }
   
   /**
