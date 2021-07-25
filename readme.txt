@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 1.9.7.3
+Stable tag: 1.9.7.4
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -291,6 +291,11 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 PLEASE NOTE: Version 1.9.7 is a major upgrade for Participants Database. Please make sure you have a current WordPress backup before you upgrade Participants Database.
+
+= 1.9.7.5 =
+* string combine fields can now be used to build a link
+* fixed approval checkbox not responding to change in admin record edit
+* fixed several bugs in the string combine and placeholder fields
 
 = 1.9.7.4 =
 * fixed list result pagination issue with URL filter
@@ -1410,7 +1415,7 @@ Taking defensive precautions against other plugins in the admin:
 == Upgrade Notice ==
 
 1.9.7 is a major update: we recommend you have a WordPress backup available before updating.
-1.9.7.4 is a bug fix release
+1.9.7.5 is a bug fix release
 
 == Plugin Support ==
 
