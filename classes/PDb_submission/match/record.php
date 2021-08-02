@@ -8,19 +8,20 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2019  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
-namespace PDb_submission;
 
-class incoming_record_match {
+namespace PDb_submission\match;
+
+abstract class record {
 
   /**
    * @var string name of the configured field to match
    * 
    */
-  private $match_field;
+  protected $match_field;
 
   /**
    * @var string the duplicate record preference
@@ -44,23 +45,36 @@ class incoming_record_match {
   private $post;
 
   /**
-   * @var bool true if importing CSV
-   */
-  private $csv_import;
-  
-  /**
    * @var bool match status
    * 
    * null: not checked; true: matched; false:no match found
    */
   private $match_status;
-  
+
   /**
-   * @var string the matched field error message key
-   * 
-   * this can also be a literal message
+   * @var string the action key
    */
-  public $message_key = 'duplicate';
+  protected $action;
+
+  /**
+   * tells if the current operation is a csv import
+   * 
+   * @return bool
+   */
+  abstract public function is_csv_import();
+
+  /**
+   * sets the default match mode (duplicate preference)
+   */
+  abstract protected function setup_match_mode();
+
+  /**
+   * sets the current match field
+   * 
+   * this is the field that is checked for a match between two records
+   * 
+   */
+  abstract protected function set_match_field();
 
   /**
    * @param array $post the posted data
@@ -69,10 +83,121 @@ class incoming_record_match {
   public function __construct( $post, $record_id = 0 )
   {
     $this->post = $post;
-    $this->csv_import = isset( $_POST['csv_file_upload'] );
     $this->set_record_id( $record_id );
     $this->set_match_field();
     $this->setup_match_mode();
+  }
+
+  /**
+   * provides the record ID based on the action
+   * 
+   * this changes the action according to the match mode
+   * 
+   * @param string @action
+   * @return string the updated action value
+   */
+  public function get_action( $action )
+  {
+    $this->action = $action;
+    
+    $this->adjust_action();
+    
+    return $this->action;
+  }
+  
+  /**
+   * modifies the action if needed
+   */
+  protected function adjust_action()
+  {
+    switch ( $this->action ) {
+      case 'update':
+        $this->update_action();
+        break;
+
+      case 'insert':
+        $this->insert_action();
+        break;
+
+      default:
+      case 'skip':
+        $this->skip_action();
+    } 
+  }
+
+  /**
+   * sets the match mode for the update action
+   * 
+   */
+  protected function update_action()
+  {
+    if ( $this->is_matched() && $this->match_mode === 'skip' ) {
+      
+      $this->register_duplicate_record_error();
+      $this->action = 'skip';
+    }
+  }
+
+  /**
+   * sets the match mode for the insert action
+   */
+  protected function insert_action()
+  {
+    if ( $this->is_matched() ) {
+      if ( $this->match_mode === 'update' ) {
+
+        /**
+         * @filter pdb-process_form_matched_record
+         * 
+         * @param int id of the matched record
+         * @param array the submitted post data
+         * 
+         * @return int the id of the matched record
+         */
+        $this->record_id = \Participants_Db::apply_filters( 'process_form_matched_record', $this->matched_record_id(), $this->post );
+
+        // set the update mode
+        $this->action = 'update';
+      } elseif ( $this->match_mode === 'skip' ) {
+
+        $this->register_duplicate_record_error();
+
+        // we won't be saving this record
+        $this->action = 'skip';
+      }
+    } elseif ( $this->is_id_update_mode() ) {
+        
+        /*
+         * if we are updating by record id, but there is no matching record to update, 
+         * try to get the record id from the incoming record data then add a new record
+         * 
+         */
+        $this->record_id = $record_match->matched_record_id();
+        
+        if ( $this->record_id !== 0 ) {
+          $this->action = 'insert';
+        } else {
+          $this->record_id = false;
+        }
+    }
+  }
+
+  /**
+   * sets the match mode for the skip action
+   */
+  protected function skip_action()
+  {
+    
+  }
+  
+  /**
+   * provides the record ID
+   * 
+   * @return int
+   */
+  public function record_id()
+  {
+    return $this->record_id;
   }
 
   /**
@@ -118,7 +243,7 @@ class incoming_record_match {
 
     // for backward compatibility
     if ( is_null( $this->match_status ) && has_filter( 'pdb-incoming_record_match' ) ) {
-      
+
       /**
        * 
        * @filter pdb-incoming_record_match
@@ -132,18 +257,21 @@ class incoming_record_match {
     }
 
     if ( is_null( $this->match_status ) ) {
-      
+
       // use the configured match
       $this->_match_check();
     }
-    
+
     if ( $this->match_mode() === 'skip' && $this->match_status ) {
-      $this->setup_matched_field_message();
+      /* 
+       * we've got a matching record and we're supposed to skip updating it
+       */
+      $this->register_duplicate_record_error();
     }
 
     return (bool) $this->match_status;
   }
-  
+
   /**
    * checks for a match
    * 
@@ -180,7 +308,7 @@ class incoming_record_match {
         break;
     }
   }
-  
+
   /**
    * sets the record id value
    * 
@@ -190,21 +318,23 @@ class incoming_record_match {
   {
     $this->record_id = intval( $value );
   }
-  
+
   /**
    * sets the match status
    * 
    * @param bool $status
    */
-  public function set_match_status( $status ) {
+  public function set_match_status( $status )
+  {
     $this->match_status = (bool) $status;
   }
-  
+
   /**
    * clears the match status
    * 
    */
-  public function clear_match_status( $status ) {
+  public function clear_match_status( $status )
+  {
     unset( $this->match_status );
   }
 
@@ -225,23 +355,13 @@ class incoming_record_match {
    */
   public function skip_mode()
   {
-    return $this->match_mode == 'skip';
+    return $this->match_mode === 'skip';
   }
 
   /**
-   * tells if the current operation is a csv import
-   * 
-   * @return bool
-   */
-  public function is_csv_import()
-  {
-    return $this->csv_import;
-  }
-  
-  /**
    * tells if the current configuration is to overwrite a matched record id
    * 
-   * @reutnr bool
+   * @return bool
    */
   public function is_id_update_mode()
   {
@@ -278,7 +398,7 @@ class incoming_record_match {
    */
   public function match_field_value()
   {
-    return isset( $this->post[$this->match_field] ) ? filter_var( $this->post[$this->match_field], FILTER_SANITIZE_STRING ) : '';
+    return isset( $this->post[ $this->match_field ] ) ? filter_var( $this->post[ $this->match_field ], FILTER_SANITIZE_STRING ) : '';
   }
 
   /**
@@ -302,13 +422,13 @@ class incoming_record_match {
   /**
    * sets up the matched field error message
    */
-  public function setup_matched_field_message()
+  protected function register_duplicate_record_error()
   {
     if ( !is_object( \Participants_Db::$validation_errors ) ) {
       \Participants_Db::$validation_errors = new \PDb_FormValidation();
     }
-    
-    \Participants_Db::$validation_errors->add_error( $this->match_field, $this->message_key );
+
+    \Participants_Db::$validation_errors->add_error( $this->match_field, 'duplicate' );
   }
 
   /**
@@ -342,58 +462,12 @@ class incoming_record_match {
     global $wpdb;
 
     $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::participants_table() . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
-    
+
     if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
-      \Participants_Db::debug_log(__METHOD__.' query: '.$wpdb->last_query );
+      \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query );
     }
 
     return is_null( $match_count ) ? false : (bool) $match_count;
-  }
-
-  /**
-   * sets the default match mode (duplicate preference)
-   */
-  private function setup_match_mode()
-  {
-    if ( $this->is_csv_import() ) {
-      $this->set_match_mode( filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING ) );
-    } else {
-      $this->set_match_mode( \Participants_Db::plugin_setting( 'unique_email', '0' ) );
-    }
-
-    if ( !$this->is_csv_import() ) {
-      
-      if ( \Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && is_admin() && \Participants_Db::current_user_has_plugin_role( 'admin', 'record edit/add skip validation' ) ) {
-        /*
-         * set the preference to 0 if current user is an admin in the admin and not 
-         * importing a CSV
-         * 
-         * this allows administrators to create new records without being affected 
-         * by the duplicate record preference
-         */
-        $this->set_match_mode( 'add' );
-      }
-
-      /*
-       * to prevent possible exposure of private data when using multipage forms we 
-       * don't allow the "update" preference for multipage forms
-       * 
-       * we also don't allow the "insert" preference because duplicate records can be 
-       * created if the user goes back to the signup form page
-       */
-      if ( \Participants_Db::is_multipage_form() ) {
-        $this->set_match_mode( 'skip' );
-      }
-    }
-  }
-
-  /**
-   * gets the current match field
-   * 
-   */
-  private function set_match_field()
-  {
-    $this->match_field = $this->csv_import ? filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING ) : \Participants_Db::plugin_setting( 'unique_field', 'id' );
   }
 
 }
