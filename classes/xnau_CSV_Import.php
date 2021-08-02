@@ -75,6 +75,11 @@ abstract class xnau_CSV_Import {
    * @var string name of the nonce
    */
   const nonce = 'pdb_csv_import';
+  
+  /**
+   * @var string name of the CSV upload field
+   */
+  const csv_field = 'pdb_csv_uploadfile';
 
   /**
    * instantiates the object
@@ -87,11 +92,11 @@ abstract class xnau_CSV_Import {
 
       if ($this->set_upload_dir()) {
 
-        $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES['uploadedfile']['name']);
+        $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES[PDb_CSV_Import::csv_field]['name']);
 
-        if (false !== move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
+        if (false !== move_uploaded_file($_FILES[PDb_CSV_Import::csv_field]['tmp_name'], $target_path)) {
 
-          $this->set_error(sprintf(__('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES['uploadedfile']['name'] . '</strong>'), false);
+          $this->set_error(sprintf(__('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES[PDb_CSV_Import::csv_field]['name'] . '</strong>'), false);
 
           $this->insert_from_csv($target_path);
 
@@ -150,10 +155,10 @@ abstract class xnau_CSV_Import {
       return false;
     }
     
-    $filename = sanitize_file_name( filter_var( $_FILES['uploadedfile']['name'], FILTER_SANITIZE_STRING ) );
+    $filename = sanitize_file_name( filter_var( $_FILES[PDb_CSV_Import::csv_field]['name'], FILTER_SANITIZE_STRING ) );
     
     if ( pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv' ) {
-      $_FILES['uploadedfile']['name'] = $filename;
+      $_FILES[PDb_CSV_Import::csv_field]['name'] = $filename;
       return true;
     }
     $this->set_error_heading( __('Invalid file for import.', 'participants-database') );
