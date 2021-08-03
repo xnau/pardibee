@@ -26,7 +26,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   private $match_field;
 
   /**
-   * @var int the current dulicate record preference
+   * @var int the current duplicate record preference
    */
   private $match_preference;
 
