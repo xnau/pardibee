@@ -184,7 +184,7 @@ foreach ( $preferences as $i => $preference ) {
 ?></h4>
 
 
-<?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="uploadedfile" type="file" /><br />
+<?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="<?php echo PDb_CSV_Import::csv_field ?>" type="file" /><br />
             <input type="submit" class="button button-primary" value="<?php _e( 'Upload File', 'participants-database' ) ?>" />
           </form>
         </div>
