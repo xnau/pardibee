@@ -1426,76 +1426,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_column_atts( $filter = 'new' )
   {
-    global $wpdb;
-    
-    if ( is_array( $filter ) ) {
-      $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
-    } else {
-      $where = 'WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") ';
-      switch ( $filter ) {
-
-        case 'signup':
-
-          $where .= 'AND v.signup = 1 AND v.form_element <> "placeholder"';
-          break;
-
-        case 'sortable':
-
-          $where .= 'AND v.sortable = 1 AND v.form_element <> "placeholder"';
-          break;
-
-        case 'CSV':
-
-          $where .= 'AND v.CSV = 1 ';
-          break;
-
-        case 'all':
-
-          $where .= '';
-          break;
-
-        case 'frontend_list':
-
-          $where .= 'AND g.mode = "public" ';
-          break;
-
-        case 'frontend': // record and single modules
-
-          $where .= 'AND g.mode = "public" AND v.form_element <> "placeholder"';
-          break;
-
-        case 'readonly':
-
-          $where .= 'AND v.group = "internal" OR v.readonly = 1';
-          break;
-
-        case 'backend':
-          
-          $omit_element_types = self::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder') );
-          $where .= 'AND v.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
-          
-          if ( !current_user_can( self::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
-            // don't show non-displaying groups to non-admin users
-            // the "approved" field is an exception; it should be visible to editor users
-            $where .= 'AND g.mode <> "admin" OR v.name = "approved"';
-          }
-          break;
-
-        case 'new':
-        default:
-
-          $where .= 'AND v.name <> "id"  AND v.form_element <> "captcha"';
-      }
-    }
-
-    $sql = 'SELECT v.*, g.order, g.title AS grouptitle FROM ' . self::$fields_table . ' v INNER JOIN ' . self::$groups_table . ' g ON v.group = g.name ' . $where . ' ORDER BY g.order, v.order';
-    
-    $result = $wpdb->get_results( $sql, OBJECT_K );
-    
-//    error_log(__METHOD__.' sql: '.$wpdb->last_query);
-//    error_log(__METHOD__.' result: '.print_r($result,1));
-
-    return $result;
+    return PDb_submission\main_query\columns::field_definition_list( $filter );
   }
   
   /**
@@ -1610,141 +1541,40 @@ class Participants_Db extends PDb_Base {
     }
     
     do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
-    
-    // if the column names are getting supplied, assume it is a function call, not a post submission
-    $func_call = is_array( $column_names );
 
     $currently_importing_csv = isset( $_POST['csv_file_upload'] );
     
-    $record_match = new PDb_submission\incoming_record_match($post, $participant_id);
+    $record_match = $currently_importing_csv ? new PDb_submission\match\import( $post, $participant_id ) : new \PDb_submission\match\form( $post, $participant_id );
+    /** @var PDb_submission\match $record_match */
 
-    global $wpdb;
-
-    if ( !empty( $_FILES ) && !$currently_importing_csv ) {
-
-      foreach ( $_FILES as $fieldname => $attributes ) {
-
-        if ( UPLOAD_ERR_NO_FILE == $attributes['error'] )
-          continue;
-
-        $filepath = PDb_File_Uploads::upload( $fieldname, $attributes, $participant_id );
-
-        if ( false !== $filepath ) {
-
-          // place the path to the file in the field value
-          $post[$fieldname] = $filepath;
-
-          $_POST[$fieldname] = basename( $filepath );
-        }
-      }
-    }
-
-    /*
-     * conditionally check for matching records:
-     * 
-     * if we are adding a record and need to know if an incoming record matches 
-     * an existing record
-     * 
-     * or if we are updating records and need to know if the update should be 
-     * skipped
-     */
-    if ( ( $action === 'insert' && $record_match->match_mode() !== 'add' ) || ( $action === 'update' && $record_match->match_mode() === 'skip' ) ) {
-
-      /**
-       * @version 1.6.2.6
-       * 
-       * if we are adding a record in the admin, we don't perform a record update 
-       * on a matching record if the intent is to add a new record
-       */
-      if ( self::is_admin() && $action === 'insert' && ! $currently_importing_csv ) {
-        $record_match->set_match_mode( 'skip' );
-      }
-
-      if ( $record_match->is_matched() ) {
-        /*
-         * we have found a match
-         */
-        switch ( $record_match->match_mode() ) {
-
-          case 'update':
-            
-            /**
-             * @since 1.7.2
-             * @filter pdb-process_form_matched_record
-             * 
-             * @param int id of the matched record
-             * @param array the submitted post data
-             * 
-             * @return int the id of the matched record
-             */
-            $participant_id = self::apply_filters('process_form_matched_record', $record_match->matched_record_id(), $post );
-
-            // set the update mode
-            $action = 'update';
-
-            break;
-
-          case 'skip': // or set error
-
-            $record_match->setup_matched_field_message();
-            
-            // we won't be saving this record
-            $action = 'skip';
-            // go on validating the rest of the form
-            break;
-        }
-      } elseif ( $record_match->is_id_update_mode() ) {
-        
-        /*
-         * if we are updating by record id, but there is no matching record to update, 
-         * try to get the record id from the incoming record data then add a new record
-         * 
-         */
-        $participant_id = $record_match->matched_record_id();
-        
-        if ( $participant_id !== 0 ) {
-          $action = 'insert';
-        } else {
-          $participant_id = false;
-        }
-      }
-    } elseif ( $action === 'insert' && $record_match->match_mode() === 'add' ) {
+    // modify the action according the the match mode
+    $action = $record_match->get_action( $action );
+    
+    // get the record id to use in the query
+    $participant_id = $record_match->record_id();
+    
+    if ( $participant_id === 0 ) {
       /*
-       * don't set the record id from the incoming data
+       * don't set the record id from the incoming data if creating a new record
        */
       unset( $post['id'] );
     }
+
+    /*
+     * upload any files included in the form submission
+     * 
+     * the validated file names are placed in the $post array
+     */
+    $post = PDb_File_Uploads::process_submission_uploads( $post );
+
+    global $wpdb;
+    
     // set the insert status value
     self::$insert_status = $action;
-
-    switch ( $action ) {
-
-      case 'update':
-        $sql = 'UPDATE ' . self::participants_table() . ' SET ';
-        
-        if ( !$currently_importing_csv || ( $currently_importing_csv && ( !isset($post['date_updated']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) ) ) {
-          $sql .= ' `date_updated` = NOW(), ';
-        }
-        
-        $where = " WHERE id = " . $participant_id;
-        break;
-
-      case 'insert':
-        $sql = 'INSERT INTO ' . self::participants_table() . ' SET ';
-
-        if ( !isset($post['date_recorded']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_recorded'] ) ) {
-          $sql .= ' `date_recorded` = NOW(), ';
-        }
-        if ( !isset($post['date_updated']) || !PDb_Date_Parse::is_mysql_timestamp( @$post['date_updated'] ) ) {
-          $sql .= ' `date_updated` = NOW(), ';
-        }
-        $where = '';
-        break;
-
-      case 'skip':
-        // do nothing, this record won't be saved because there is a duplicate error
-        $sql = '';
-    }
+    
+    $main_query = PDb_submission\main_query\record::set_instance( $action, $post, $participant_id, $column_names );
+    
+    /** @var \PDb_submission\main_query\record $main_query */
 
     /*
      * determine the set of columns to process
@@ -1752,32 +1582,12 @@ class Participants_Db extends PDb_Base {
      */
     $new_values = array();
     $column_data = array();
-
-    if ( is_array( $column_names ) ) {
-      $default_cols = ( $action === 'insert' ? array('private_id') : array() );
-      $column_set = array_merge( $column_names, $default_cols );
-    } else {
-
-      /**
-       * @filter pdb-post_action_override
-       * @param the current $_POST action value
-       * @return the action value to use: either "signup" or "update"
-       */
-      if ( self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) === 'signup' ) {
-
-        $column_set = 'signup';
-      } else {
-
-        $column_set = $action == 'update' ? ( is_admin() ? 'backend' : 'frontend' ) : ( $participant_id ? 'all' : 'new' );
-
-      }
-    }
-    
-    $columns = self::get_column_atts( $column_set );
     
     // gather the submit values and add them to the query
-    foreach ( $columns as $column ) {
+    foreach ( $main_query->column_array( $column_names ) as $column ) {
+      
       /** @var object $column */
+      
       /**
        * @action pdb-process_form_submission_column_{$fieldname}
        * 
@@ -1793,249 +1603,29 @@ class Participants_Db extends PDb_Base {
         self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post, $participant_id );
       }
       
-      $field = new PDb_Field_Item( $column );
-      if ( array_key_exists($column->name, $post) ) {
-        $field->set_value( $post[$column->name] );
-      }
-
-      /**
-       * readonly field data is prevented from being saved by unauthorized users 
-       * except when using the signup form or this method is directly called by 
-       * a function
-       */
-      if (  
-              $field->is_readonly() && 
-              ! $field->is_hidden_field() && 
-              self::current_user_has_plugin_role( 'editor', 'readonly access' ) === false && 
-              self::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) !== 'signup' &&
-              $func_call === false
-              ) {
-        $post[$column->name] = '';
-      }
-      
-      $new_value = false;
-          
-      // first process the internal fields
-      switch ( $column->name ) {
-
-        case 'id':
-          $new_value = $participant_id;
-          break;
-
-        case 'date_recorded':
-        case 'date_updated':
-        case 'last_accessed':
-          // these are the internal record timestamps
-          /*
-           *  remove the value from the post data if it is already set in the sql
-           */
-          if ( strpos( $sql, $column->name ) !== false ) {
-            unset( $post[$column->name] );
-            $new_value = false;
-            break;
-          }
-          /*
-           * always include the value if importing a CSV
-           * 
-           * also parses the value if "pdb-edit_record_timestamps" filter is true
-           */
-          if ( $currently_importing_csv || self::apply_filters( 'edit_record_timestamps', false ) ) {
-            $new_value = false;
-            if ( isset( $post[$column->name] ) && ! empty( $post[$column->name] ) ) {
-              if ( PDb_Date_Parse::is_mysql_timestamp( $post[$column->name] ) ) {
-                // record it if it is a valid mysql timestamp
-                $new_value = $post[$column->name];
-              } else {
-                // convert the date to a mysql timestamp
-                $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-                $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array('input_format' => $display_format), __METHOD__ . ' saving internal timestamp fields, standard format' );
-                if ( ! $timestamp ) {
-                  $timestamp = PDb_Date_Parse::timestamp( $post[$column->name], array(), __METHOD__ . ' saving internal timestamp fields' );
-                } elseif ( $timestamp ) {
-                  $new_value = PDb_Date_Display::get_mysql_timestamp( $timestamp );
-                }
-              }
-            }
-            break;
-          }
-          /*
-           * skip the "last_accessed" field: it is set by the PDb_Record class
-           */
-          if ( $column->name === 'last_accessed' ) {
-            $new_value = false;
-            break;
-          }
-          /*
-           * skip the "date_recorded" field: it is either set in the query or left alone
-           */
-          if ( $column->name === 'date_recorded' ) {
-            $new_value = false;
-          }
-          break;
-
-        case 'private_id':
-          /*
-           * supplied private ID is tested for validity and rejected if not valid
-           * 
-           * @filter pdb-private_id_validity
-           * @param bool  test result using the regex
-           * @return bool true if valid
-           */
-          if ( isset( $post['private_id'] ) && self::apply_filters( 'private_id_validity', preg_match( '#^\w{' . self::private_id_length() . ',}$#', $post['private_id'] ) === 1 ) && self::get_participant_id( $post['private_id'] ) === false ) {
-            $new_value = $post['private_id'];
-          } else {
-            $new_value = $action == 'insert' ? self::generate_pid() : false;
-          }
-
-          break;
-
-        default : // process the non-internal fields
-
-          if ( !isset( $post[$column->name] ) ) {
-            break;
-          }
-
-          switch ( $column->form_element ) {
-
-            case 'multi-select-other':
-            case 'multi-checkbox':
-            case 'multi-dropdown':
-
-              $new_value = self::_prepare_array_mysql( array_values( $field->get_value() ) );
-              
-              break;
-
-            case 'link':
-              
-              /* translate the link markdown used in CSV files to the array format used in the database
-               */
-              if ( !is_array( $post[$column->name] ) ) {
-
-                $new_value = self::_prepare_array_mysql( self::get_link_array( $post[$column->name] ) );
-              } else {
-
-                $new_value = self::_prepare_array_mysql( $post[$column->name] );
-              }
-              break;
-
-            case 'rich-text':
-              global $allowedposttags;
-              $new_value = wp_kses( stripslashes( $post[$column->name] ), $allowedposttags );
-              break;
-
-            case 'date':
-
-              if ( $post[$column->name] !== '' ) {
-                $new_value = PDb_Date_Parse::timestamp( $post[$column->name], array(), __METHOD__ . ' date field value' );
-              } else {
-                $new_value = null;
-              }
-              break;
-
-            case 'captcha':
-              $new_value = false;
-              break;
-
-            case 'password':
-              if ( !empty( $post[$column->name] ) && self::is_new_password( $post[$column->name] ) ) {
-                $new_value = wp_hash_password( trim( $post[$column->name] ) );
-              } else {
-                $new_value = false;
-              }
-              break;
-              
-            case 'numeric':
-            case 'decimal':
-            case 'currency':
-              if ( strlen( $post[$column->name] ) > 0 ) {
-                $new_value = filter_var( $post[$column->name], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
-              } else {
-                $new_value = null;
-              }
-              break;
-
-            case 'image-upload':
-            case 'file-upload':
-
-              if ( filter_input( INPUT_POST, $column->name . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
-                
-                if ( $participant_id ) {
-                  
-                  $filename = '';
-                  if ( array_key_exists( $column->name, $_POST ) ) {
-                    $post_filename = filter_input( INPUT_POST, $column->name, FILTER_SANITIZE_STRING );
-                    
-                    global $wpdb;
-                    $record_filename = $wpdb->get_var( $wpdb->prepare('SELECT `' . $column->name . '` FROM ' . self::participants_table() . ' WHERE id = %s', $participant_id ) );
-                    
-                    if ( $post_filename === $record_filename ) {
-                      if ( self::plugin_setting_is_true('file_delete') || self::is_admin() ) {
-                        self::delete_file( $record_filename );
-                      }
-                      unset( $_POST[$column->name] );
-                      $post[$column->name] = '';
-                    }
-                  }
-                }
-              }
-              $new_value = self::_prepare_string_mysql( trim( $post[$column->name] ) );
-              break;
-
-            default:
-
-              if ( is_array( $post[$column->name] ) ) {
-
-                $new_value = self::_prepare_array_mysql( $post[$column->name] );
-              } else {
-
-                $new_value = self::_prepare_string_mysql( trim( $post[$column->name] ) );
-              }
-          } // switch column_atts->form_element
-      }  // swtich column_atts->name
-      
-      // don't update the value if importing a CSV and the incoming value is empty #1647
-      if ( $currently_importing_csv && strlen( $new_value ) === 0 ) {
-        $new_value = false;
-      }
+      $column_object = PDb_submission\main_query\columns::get_column_object( $column, $post[$column->name], $main_query );
 
       /*
        * add the column and value to the sql; if it is bool false, skip it entirely. 
-       * Nulls are added as true nulls
+       * Nulls are added as true nulls in the query
        */
-      if ( $new_value !== false ) {
+      if ( $column_object->add_to_query() ) {
         
-        $new_values[] = $new_value;
+        $new_values[] = $column_object->value();
         
-        $column_data[] = "`" . $column->name . "` = " . ( $new_value === null ? "NULL" : "%s" );
+        $column_data[] = $column_object->query_clause();
       }
     } // columns
 
     // if the validation object exists and there are errors, stop here
     if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
 
-//       error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
+//      error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
       return false;
     } elseif ( !empty( self::admin_message_content() ) and 'error' == self::admin_message_type() ) {
+//      error_log( __METHOD__.' admin message set; returning: '.self::admin_message_content());
       return false;
-    }
-
-    /*
-     * @version 1.6
-     * 
-     * add in any missing default values
-     */
-    if ( $action === 'insert' && self::apply_filters( 'process_form_fill_default_values', true ) ) {
-      $default_record = self::get_default_record( $currently_importing_csv === false );
-      unset( $default_record['private_id'], $default_record['date_recorded'], $default_record['date_updated'] );
-      foreach ( $default_record as $name => $value ) {
-        $find_result = preg_grep( '/' . $name . '/', $column_data );
-        if ( count( $find_result ) === 0 && self::is_set_value( $value ) ) {
-          // if a field with a defined default value is missing from the submission, add it in
-          $column_data[] = "`$name` = %s";
-          $new_values[] = $value;
-        }
-      }
     }
     
     // filter for controlling the columns and values in the query
@@ -2052,6 +1642,8 @@ class Participants_Db extends PDb_Base {
       $new_values = array_values($data);
     }
     
+    $sql = $main_query->query_head();
+    
     // remove null values from the values array
     $new_values = array_filter($new_values, function ($v) { return ! is_null($v); } );
 
@@ -2059,7 +1651,7 @@ class Participants_Db extends PDb_Base {
     $sql .= implode( ', ', $column_data );
 
     // add the WHERE clause
-    $sql .= $where;
+    $sql .= $main_query->query_where();
     
     // sanitize the values if including user input
     $query = strpos( $sql, '%s' ) !== false ? $wpdb->prepare( $sql, $new_values ) : $sql;
@@ -2477,7 +2069,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
-    return PDb_submission\incoming_record_match::field_value_exists($value, $field, $mask_id);
+    return \PDb_submission\match\record::field_value_exists($value, $field, $mask_id);
   }
 
   /**
@@ -2659,8 +2251,9 @@ class Participants_Db extends PDb_Base {
      * of fields, not just what's found in the POST array
      */
     $columns = false;
-    if ( !empty( $post_input['pdb_data_keys'] ) )
+    if ( !empty( $post_input['pdb_data_keys'] ) ) {
       $columns = self::get_data_key_columns( $post_input['pdb_data_keys'] );
+    }
 
     /*
      * instantiate the validation object if we need to. This is necessary
