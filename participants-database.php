@@ -1574,9 +1574,9 @@ class Participants_Db extends PDb_Base {
     // set the insert status value
     self::$insert_status = $action;
     
-    $main_query = PDb_submission\main_query\record::set_instance( $action, $post, $participant_id, $func_call );
+    $main_query = PDb_submission\main_query\base_query::set_instance( $action, $post, $participant_id, $func_call );
     
-    /** @var \PDb_submission\main_query\record $main_query */
+    /** @var \PDb_submission\main_query\base_query $main_query */
 
     /*
      * determine the set of columns to process
@@ -1603,7 +1603,7 @@ class Participants_Db extends PDb_Base {
 
       // the validation object is only instantiated when this method is called
       // by a form submission
-      if ( is_object( self::$validation_errors ) && ! $currently_importing_csv ) {
+      if ( is_object( self::$validation_errors ) && ! $currently_importing_csv && ! $main_query->is_func_call() ) {
         self::$validation_errors->validate( self::deep_stripslashes( $column_object->value() ), $column, $post, $participant_id );
       }
 
@@ -1611,7 +1611,7 @@ class Participants_Db extends PDb_Base {
        * add the column and value to the sql; if it is bool false, skip it entirely. 
        * Nulls are added as true nulls in the query
        */
-      if ( $column_object->add_to_query() ) {
+      if ( $column_object->add_to_query( $main_query->write_mode() ) ) {
         
         $new_values[] = $column_object->value();
         
@@ -1626,7 +1626,7 @@ class Participants_Db extends PDb_Base {
 
       return false;
     } elseif ( !empty( self::admin_message_content() ) and 'error' == self::admin_message_type() ) {
-//      error_log( __METHOD__.' admin message set; returning: '.self::admin_message_content());
+      self::debug_log( __METHOD__.' admin error message set; returning: '.self::admin_message_content(), 3 );
       return false;
     }
     
@@ -1773,45 +1773,53 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_default_record( $add_persistent = true )
   {
-    $default_record = array();
-
-    foreach ( self::$fields as $fieldname => $field ) {
-      /** @var PDb_Form_Field_Def $field */
+    $cachekey = 'pdb-default_record';
+    $default_record = wp_cache_get( $cachekey );
+    
+    if ( ! $default_record ) {
       
-      // skip fields that don't have a stored value in the main database
-      if ( ! in_array( $field->name(), Participants_Db::table_columns() ) ) {
-        continue;
+      $default_record = array();
+
+      foreach ( self::$fields as $fieldname => $field ) {
+        /** @var PDb_Form_Field_Def $field */
+
+        // skip fields that don't have a stored value in the main database
+        if ( ! in_array( $field->name(), Participants_Db::table_columns() ) ) {
+          continue;
+        }
+
+        $default_record[$fieldname] = $field->default_display();
+
       }
 
-      $default_record[$fieldname] = $field->default_display();
+      // get the id of the last record stored
+      $prev_record_id = get_transient( self::$last_record );
 
-    }
+      if ( $add_persistent && self::is_admin() && $prev_record_id ) {
 
-    // get the id of the last record stored
-    $prev_record_id = get_transient( self::$last_record );
+        $previous_record = self::get_participant( $prev_record_id );
 
-    if ( $add_persistent && is_admin() && $prev_record_id ) {
+        if ( $previous_record ) {
 
-      $previous_record = self::get_participant( $prev_record_id );
+          $persistent_fields = self::get_persistent();
 
-      if ( $previous_record ) {
+          foreach ( $persistent_fields as $persistent_field ) {
 
-        $persistent_fields = self::get_persistent();
+            if ( !empty( $previous_record[$persistent_field] ) ) {
 
-        foreach ( $persistent_fields as $persistent_field ) {
-
-          if ( !empty( $previous_record[$persistent_field] ) ) {
-
-            $default_record[$persistent_field] = $previous_record[$persistent_field];
+              $default_record[$persistent_field] = $previous_record[$persistent_field];
+            }
           }
         }
       }
+
+      $default_record['private_id'] = self::generate_pid();
+
+      PDb_Date_Display::reassert_timezone();
+      $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
+      
+      wp_cache_add( $cachekey, $default_record );
     }
-
-    $default_record['private_id'] = self::generate_pid();
-
-    PDb_Date_Display::reassert_timezone();
-    $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
 
     return $default_record;
   }
