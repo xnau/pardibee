@@ -1024,7 +1024,6 @@ abstract class PDb_Shortcode {
    */
   protected function _set_display_columns()
   {
-
     // if this has already been set, we're done
     if ( is_array( $this->display_columns ) )
       return;
