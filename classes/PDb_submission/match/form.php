@@ -41,7 +41,7 @@ class form extends record {
      */
     $this->set_match_mode( \Participants_Db::plugin_setting( 'unique_email', '0' ) );
 
-    if ( \Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && is_admin() && \Participants_Db::current_user_has_plugin_role( 'admin', 'record edit/add skip validation' ) ) {
+    if ( \Participants_Db::plugin_setting( 'admin_edits_validated', '0' ) == '0' && \Participants_Db::is_admin() && \Participants_Db::current_user_has_plugin_role( 'admin', 'record edit/add skip validation' ) ) {
       /*
        * set the preference to 0 if current user is an admin in the admin and not 
        * importing a CSV
