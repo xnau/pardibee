@@ -15,7 +15,7 @@
 
 namespace PDb_submission\main_query;
 
-class update extends record {
+class update_query extends base_query {
 
   /**
    * provides the query top clause
