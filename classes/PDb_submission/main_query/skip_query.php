@@ -15,7 +15,7 @@
 
 namespace PDb_submission\main_query;
 
-class skip {
+class skip_query {
   
   /**
    * @param array $post
