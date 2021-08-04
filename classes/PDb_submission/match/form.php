@@ -81,7 +81,7 @@ class form extends record {
      * on a matching record if the intent is to add a new record
      */
     if ( \Participants_Db::is_admin() && $action === 'insert' ) {
-      $record_match->set_match_mode( 'skip' );
+      $this->set_match_mode( 'skip' );
     }
     
     return parent::get_action($action);
