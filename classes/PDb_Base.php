@@ -145,7 +145,7 @@ class PDb_Base {
     if ( is_numeric( $id ) ) {
       $action = Participants_Db::get_participant( $id ) === false ? 'insert' : 'update';
     }  
-    return Participants_Db::process_form( $post, $action, $id, array_keys( $post ) );
+    return Participants_Db::process_form( $post, $action, $id, array_keys( $post ), true );
   }
 
   /**
