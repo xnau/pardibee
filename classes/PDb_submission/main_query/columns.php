@@ -24,15 +24,34 @@ class columns {
   private $column_array;
   
   /**
-   * @param string $action
+   * @param string $action update or insert
    * @param bool $new true if the columns are for a new record
    * @param array $columns optional list of column names
    */
   private function __construct( $action, $new, $columns )
   {
     if ( is_array( $columns ) ) {
-      $default_cols = ( $action === 'insert' ? array('private_id') : array() );
+      
+      // signup form or function call
+      
+      $default_cols = array();
+      
+      if ( $action === 'insert' ) {
+        /**
+         * switch to enable filling in a new record with default values
+         * @filter pdb-process_form_fill_default_values
+         * @param bool
+         * @return bool
+         */
+        if ( Participants_Db::apply_filters( 'process_form_fill_default_values', true ) ) {
+          $default_cols = array_merge( $this->column_default_list(), array('private_id') );
+        } else {
+          $default_cols = array('private_id');
+        }
+      }
+      
       $column_set = array_merge( $columns, $default_cols );
+      
     } else {
       /**
        * @filter pdb-post_action_override
@@ -44,16 +63,23 @@ class columns {
         $column_set = 'signup';
       } else {
 
-        $column_set = $action == 'update' ? ( is_admin() ? 'backend' : 'frontend' ) : ( $new ?'new' : 'all' );
+        $column_set = $action == 'update' ? ( is_admin() ? 'backend' : 'frontend' ) : ( $new ? 'new' : 'all' );
 
       }
     }
     
     $this->column_array = self::column_atts( $column_set );
+      
+    $array = [];
+    foreach( $this->column_array as $column ) {
+      $array[] = $column->name;
+    }
+//    error_log(__METHOD__.' set: '.$column_set.' columns array: '.print_r($array,1));
+    
   }
   
   /**
-   * provides the column array
+   * provides the column array for use in the iterator
    * 
    * @param string $action
    * @param bool $new true if the columns are for a new record
@@ -112,8 +138,13 @@ class columns {
     global $wpdb;
     
     if ( is_array( $filter ) ) {
+      
       $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
+      // omit non-writing fields
+      $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+      
     } else {
+      
       $where = 'WHERE g.mode IN ("' . implode( '","', array_keys( \PDb_Manage_Fields::group_display_modes() ) ) . '") ';
       switch ( $filter ) {
 
@@ -152,10 +183,13 @@ class columns {
           $where .= 'AND v.group = "internal" OR v.readonly = 1';
           break;
 
-        case 'backend':
+        case 'backend': // used to lay out the admin participant edit/add form
           
           $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder') );
           $where .= 'AND v.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
+          
+          // omit non-writing fields
+          $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
           
           if ( !current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
             // don't show non-displaying groups to non-admin users
@@ -166,8 +200,9 @@ class columns {
 
         case 'new':
         default:
-
-          $where .= 'AND v.name <> "id" AND v.form_element <> "captcha"';
+          // omit non-writing fields
+          $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+          $where .= ' AND v.name <> "id" AND v.form_element <> "captcha"';
       }
     }
 
@@ -179,5 +214,21 @@ class columns {
 //    error_log(__METHOD__.' result: '.print_r($result,1));
 
     return $result;
+  }
+  
+  /**
+   * provides a list of columns that have defined default values
+   * 
+   * @global \wpdb $wpdb
+   * @return array of column names
+   */
+  private function column_default_list()
+  {
+    global $wpdb;
+    $sql = 'SELECT v.name FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name WHERE v.default <> "" AND g.mode IN ("' . implode( '","', array_keys( \PDb_Manage_Fields::group_display_modes() ) ) . '") AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+    
+    $list = $wpdb->get_col( $sql );
+    
+    return $list;
   }
 }
