@@ -19,11 +19,11 @@ Participants_Db::$session->clear('form_status');
 
 $participant_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1), 'flags' => FILTER_NULL_ON_FAILURE) );
 
-if ( !Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id === false ? 'admin add ' : 'admin edit ' ) . 'record' ) ) {
+if ( !Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id ? 'admin edit' : 'admin add ' ) . 'record' ) ) {
   exit;
 }
 
-if ( false === $participant_id ) {
+if ( ! $participant_id ) {
 
   $action = 'insert';
   $page_title = Participants_Db::plugin_label( 'add_record_title' );
