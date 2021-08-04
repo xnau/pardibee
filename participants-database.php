@@ -1529,7 +1529,7 @@ class Participants_Db extends PDb_Base {
    * @return int|bool   int ID of the record created or updated, bool false if submission 
    *                    does not validate
    */
-  public static function process_form( $post, $action, $participant_id = false, $column_names = false )
+  public static function process_form( $post, $action, $participant_id = false, $column_names = false, $func_call = false )
   {
     /**
      * reject submissions that aren't properly tagged
@@ -1574,7 +1574,7 @@ class Participants_Db extends PDb_Base {
     // set the insert status value
     self::$insert_status = $action;
     
-    $main_query = PDb_submission\main_query\record::set_instance( $action, $post, $participant_id, $column_names );
+    $main_query = PDb_submission\main_query\record::set_instance( $action, $post, $participant_id, $func_call );
     
     /** @var \PDb_submission\main_query\record $main_query */
 
@@ -1598,14 +1598,14 @@ class Participants_Db extends PDb_Base {
        * 
        */
       do_action( 'pdb-process_form_submission_column_' . $column->name, $column, $post );
+      
+      $column_object = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ), $main_query );
 
       // the validation object is only instantiated when this method is called
       // by a form submission
       if ( is_object( self::$validation_errors ) && ! $currently_importing_csv ) {
-        self::$validation_errors->validate( ( isset( $post[$column->name] ) ? self::deep_stripslashes( $post[$column->name] ) : '' ), $column, $post, $participant_id );
+        self::$validation_errors->validate( self::deep_stripslashes( $column_object->value() ), $column, $post, $participant_id );
       }
-      
-      $column_object = PDb_submission\main_query\columns::get_column_object( $column, $post[$column->name], $main_query );
 
       /*
        * add the column and value to the sql; if it is bool false, skip it entirely. 
