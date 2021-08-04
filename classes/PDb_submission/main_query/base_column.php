@@ -72,19 +72,20 @@ abstract class base_column {
   /**
    * provides the main_query object
    * 
-   * @return \PDb_submission\main_query\record
+   * @return \PDb_submission\main_query\base_query
    */
   protected function main_query()
   {
-    return record::get_instance();
+    return base_query::get_instance();
   }
   
   /**
    * tells if the incoming value should be added to the query
    * 
+   * @param string $write_mode insert or update
    * @return bool
    */
-  public function add_to_query()
+  public function add_to_query( $write_mode )
   {
     return ! ( $this->skip || $this->skip_imported_value() );
   }
