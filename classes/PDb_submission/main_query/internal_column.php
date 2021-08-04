@@ -42,7 +42,7 @@ class internal_column extends base_column {
         /*
          *  remove the value from the post data if it is already set in the sql
          */
-        if ( strpos( $this->main_query()->top_clause(), $this->field->name() ) !== false ) {
+        if ( strpos( $this->main_query()->query_head(), $this->field->name() ) !== false ) {
           $this->skip = true;
           break;
         }
