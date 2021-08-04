@@ -25,10 +25,9 @@ class columns {
   
   /**
    * @param string $action update or insert
-   * @param bool $new true if the columns are for a new record
    * @param array $columns optional list of column names
    */
-  private function __construct( $action, $new, $columns )
+  private function __construct( $action, $columns )
   {
     if ( is_array( $columns ) ) {
       
@@ -37,13 +36,17 @@ class columns {
       $default_cols = array();
       
       if ( $action === 'insert' ) {
+        
+        $main_query = base_query::get_instance();
+        
         /**
          * switch to enable filling in a new record with default values
          * @filter pdb-process_form_fill_default_values
          * @param bool
          * @return bool
          */
-        if ( Participants_Db::apply_filters( 'process_form_fill_default_values', true ) ) {
+        // intent here is to add the default values with a signup submission or an import add only
+        if ( ( !Participants_Db::is_admin() || $main_query->is_import() ) && Participants_Db::apply_filters( 'process_form_fill_default_values', true ) ) {
           $default_cols = array_merge( $this->column_default_list(), array('private_id') );
         } else {
           $default_cols = array('private_id');
@@ -53,7 +56,14 @@ class columns {
       $column_set = array_merge( $columns, $default_cols );
       
     } else {
+      
+      $column_set = 'all';
+      
       /**
+       * provides a way force a signup
+       * 
+       * used in pdb-member_payments/pdbmps/Ajax.php:54:pdb-post_action_override
+       * 
        * @filter pdb-post_action_override
        * @param the current $_POST action value
        * @return the action value to use: either "signup" or "update"
@@ -61,10 +71,14 @@ class columns {
       if ( Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) === 'signup' ) {
 
         $column_set = 'signup';
-      } else {
+        
+      } elseif ( $action === 'update' ) {
 
-        $column_set = $action == 'update' ? ( is_admin() ? 'backend' : 'frontend' ) : ( $new ? 'new' : 'all' );
+        $column_set = Participants_Db::is_admin() ? 'backend' : 'frontend' ;
 
+      } elseif ( $action === 'insert' ) {
+        
+        $column_set = 'new';
       }
     }
     
@@ -82,13 +96,12 @@ class columns {
    * provides the column array for use in the iterator
    * 
    * @param string $action
-   * @param bool $new true if the columns are for a new record
    * @param array $columns optional list of column names
    * @return array
    */
-  public static function column_array( $action, $new, $columns = false )
+  public static function column_array( $action, $columns = false )
   {
-    $columns = new self( $action, $new, $columns );
+    $columns = new self( $action, $columns );
     
     return $columns->column_array;
   }
@@ -98,17 +111,16 @@ class columns {
    * 
    * @param object $column_def raw database object
    * @param string $value
-   * @param \PDb_submission\main_query\record $main_query
    * @return object \PDb_submission/main_query/base_column
    */
-  public static function get_column_object( $column, $value, $main_query )
+  public static function get_column_object( $column, $value )
   {
     $internal_fields = array('id','date_recorded','date_updated','last_accessed','private_id');
     
     if ( in_array( $column->name, $internal_fields ) ) {
-      return new internal_column( $column, $value, $main_query );
+      return new internal_column( $column, $value );
     } else {
-      return new user_column( $column, $value, $main_query );
+      return new user_column( $column, $value );
     }
   }
   
