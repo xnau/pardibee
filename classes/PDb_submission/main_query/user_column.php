@@ -132,6 +132,24 @@ class user_column extends base_column {
     }
   }
   
+  
+  /**
+   * tells if the incoming value should be added to the query
+   * 
+   * @param string $write_mode insert or update
+   * @return bool
+   */
+  public function add_to_query( $write_mode )
+  {
+    $add = ! $this->skip && ! $this->skip_imported_value();
+    
+    if ( $add && $write_mode === 'insert' && $this->value() === ''  ) {
+      $add = false;
+    }
+    
+    return $add;
+  }
+  
   /**
    * provides the base value to use
    * 
@@ -141,7 +159,7 @@ class user_column extends base_column {
   {
     $initialvalue = $this->value;
     
-    if ( ! $this->add_to_query() ) {
+    if ( ! $this->add_to_query( 'any' ) ) {
       
       // possibly use the default value
       $defaultvalue = $this->main_query()->default_value( $this->field->name() );
