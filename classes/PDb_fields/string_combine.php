@@ -143,7 +143,7 @@ class string_combine extends dynamic_db_field {
   {
     $replaced_string = $this->replaced_string( $data );
     
-    if ( $replaced_string === $this->field->default_value ) {
+    if ( $replaced_string === $this->template() ) {
       
       // if there is no replacement data
       return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
