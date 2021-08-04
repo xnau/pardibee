@@ -84,14 +84,14 @@ abstract class record {
   /**
    * @param array $post
    * @param int $record_id
-   * @param array|bool $column_names the supplied column names if any
+   * @param bool $func_call true if getting called by a function instead of a form submission
    */
-  public function __construct( $post, $record_id, $column_names )
+  public function __construct( $post, $record_id, $func_call )
   {
     $this->post = $post;
     $this->record_id = $record_id;
     $this->is_import = isset( $_POST['csv_file_upload'] );
-    $this->is_func_call = is_array( $column_names );
+    $this->is_func_call = $func_call;
   }
   
   /**
@@ -133,7 +133,7 @@ abstract class record {
    */
   public function column_array( $function_columns )
   {
-    return columns::column_array( $this->query_mode(), (bool) $this->record_id, $function_columns );
+    return columns::column_array( $this->query_mode(), $this->is_new(), $function_columns );
   }
   
   /**
@@ -185,6 +185,16 @@ abstract class record {
   }
   
   /**
+   * tells if the record is a new record
+   * 
+   * @return bool
+   */
+  public function is_new()
+  {
+    return $this->record_id == 0;
+  }
+  
+  /**
    * tells if the request is an import
    * 
    * @return bool
@@ -202,6 +212,24 @@ abstract class record {
   public function is_func_call()
   {
     return $this->is_func_call;
+  }
+  
+  
+  /**
+   * provides the column value
+   * 
+   * @return string
+   */
+  public function column_value( $column_name )
+  {
+    $value = isset( $this->post[$column_name] ) ? $this->post[$column_name] : '';
+    
+    if ( $this->query_mode() === 'insert' && ! isset( $this->post[$column_name] ) ) {
+      $field =  new \PDb_Form_Field_Def($column_name);
+      $value = $field->default_display();
+    }
+    
+    return $value;
   }
   
   /**
