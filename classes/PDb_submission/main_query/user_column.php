@@ -35,7 +35,11 @@ class user_column extends base_column {
       case 'multi-checkbox':
       case 'multi-dropdown':
 
-        $this->value = Participants_Db::_prepare_array_mysql( array_values( $this->field->get_value() ) );
+        $multi_value = $initialvalue; // $this->field->get_value();
+        
+        if ( is_array( $multi_value ) ) {
+          $this->value = Participants_Db::_prepare_array_mysql( array_values( $multi_value ) );
+        }
 
         break;
 
@@ -50,6 +54,7 @@ class user_column extends base_column {
 
           $this->value = Participants_Db::_prepare_array_mysql( $initialvalue );
         }
+        
         break;
 
       case 'rich-text':
@@ -125,8 +130,6 @@ class user_column extends base_column {
           $this->value = Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
         }
     }
-    
-    error_log(__METHOD__.' field: '.$this->field->name().' initial value: '.$initialvalue.' end value: '.$this->value );
   }
   
   /**
@@ -142,6 +145,7 @@ class user_column extends base_column {
       
       // possibly use the default value
       $defaultvalue = $this->main_query()->default_value( $this->field->name() );
+      
       if ( \Participants_Db::is_set_value( $defaultvalue ) ) {
         $initialvalue = $defaultvalue;
       }
