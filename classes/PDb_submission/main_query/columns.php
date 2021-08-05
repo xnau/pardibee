@@ -30,8 +30,7 @@ class columns {
   private function __construct( $action, $columns )
   {
     if ( is_array( $columns ) ) {
-      
-      // signup form or function call
+      // shortcode with "fields" attribute or function call
       
       $default_cols = array();
       
@@ -47,7 +46,7 @@ class columns {
          */
         // intent here is to add the default values with a signup submission or an import add only
         if ( ( !Participants_Db::is_admin() || $main_query->is_import() ) && Participants_Db::apply_filters( 'process_form_fill_default_values', true ) ) {
-          $default_cols = array_merge( $this->column_default_list(), array('private_id') );
+          $default_cols = array_merge( self::column_default_list(), array('private_id') );
         } else {
           $default_cols = array('private_id');
         }
@@ -162,7 +161,10 @@ class columns {
 
         case 'signup':
 
-          $where .= 'AND v.signup = 1 AND v.form_element <> "placeholder"';
+          $where .= 'AND v.signup = 1';
+          $where .= ' OR v.name IN ("' . implode( '","', self::column_default_list() ) . '") ';
+          $where .= ' OR v.name = "private_id" ';
+          
           break;
 
         case 'sortable':
@@ -185,9 +187,11 @@ class columns {
           $where .= 'AND g.mode = "public" ';
           break;
 
-        case 'frontend': // record and single modules
+        case 'frontend': // record module
 
-          $where .= 'AND g.mode = "public" AND v.form_element <> "placeholder"';
+          $where .= 'AND g.mode IN ("public","private") AND v.form_element NOT IN ("placeholder","captcha")';
+          // omit non-writing fields
+          $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
           break;
 
         case 'readonly':
@@ -195,7 +199,7 @@ class columns {
           $where .= 'AND v.group = "internal" OR v.readonly = 1';
           break;
 
-        case 'backend': // used to lay out the admin participant edit/add form
+        case 'backend': // used to lay out the admin participant edit/add form, also the admin list participants page
           
           $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder') );
           $where .= 'AND v.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
@@ -222,7 +226,7 @@ class columns {
     
     $result = $wpdb->get_results( $sql, OBJECT_K );
     
-//    error_log(__METHOD__.' sql: '.$wpdb->last_query);
+    error_log(__METHOD__.' filter: "'.$filter.'" sql: '.$wpdb->last_query);
 //    error_log(__METHOD__.' result: '.print_r($result,1));
 
     return $result;
@@ -234,7 +238,7 @@ class columns {
    * @global \wpdb $wpdb
    * @return array of column names
    */
-  private function column_default_list()
+  private static function column_default_list()
   {
     global $wpdb;
     $sql = 'SELECT v.name FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name WHERE v.default <> "" AND g.mode IN ("' . implode( '","', array_keys( \PDb_Manage_Fields::group_display_modes() ) ) . '") AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
