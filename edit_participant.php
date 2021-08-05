@@ -29,6 +29,8 @@ if ( ! $participant_id ) {
   $page_title = Participants_Db::plugin_label( 'add_record_title' );
   $participant_values = Participants_Db::get_default_record();
 } else {
+  
+  PDb_Participant_Cache::clear_cache($participant_id);
 
   $action = 'update';
   $page_title = Participants_Db::plugin_label( 'edit_record_title' );
