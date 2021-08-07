@@ -15,6 +15,11 @@
 
 namespace PDb_submission\main_query;
 
+use \Participants_Db as PDB;
+
+if ( !defined( 'ABSPATH' ) )
+  exit;
+
 abstract class base_query {
   
   /**
@@ -133,7 +138,7 @@ abstract class base_query {
    */
   public function column_array( $function_columns )
   {
-    return columns::column_array( $this->query_mode(), $this->is_new(), $function_columns );
+    return columns::column_array( $this->query_mode(), $function_columns );
   }
   
   /**
@@ -157,6 +162,16 @@ abstract class base_query {
   }
   
   /**
+   * provides the data body of the query
+   * 
+   * @return string
+   */
+  protected function data_clause()
+  {
+    return implode( ', ', $this->column_clauses );
+  }
+  
+  /**
    * provides the query header
    * 
    * @return string
@@ -168,10 +183,124 @@ abstract class base_query {
   
   /**
    * executes the query
+   * 
+   * @global \wpdb $wpdb
+   * @return int record id
    */
   public function execute_query()
   {
-    return $wpdb->query( $this->sanitized_query() );
+    if ( has_filter( PDB::$prefix . 'process_form_query_column_data' ) ) {
+      /**
+       * provides a way to alter the data structure before going into the query
+       * 
+       * @filter pdb-process_form_query_column_data
+       * @param array as $insert_template => $value
+       * @return array
+       */
+      $data = PDB::apply_filters( 'process_form_query_column_data', array_combine( $this->column_clauses, $this->values ) );
+      $this->column_clauses = array_keys($data);
+      $this->values = array_values($data);
+    }
+    
+    global $wpdb;
+    
+    // run the query
+    $result = $wpdb->query( $this->sanitized_query() );
+
+    if ( ! $result ) {
+      PDB::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error );
+    } else {
+      PDB::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
+    }
+
+    $db_error_message = '';
+    if ( $result === 0 ) {
+      if ( !$this->is_import ) {
+        $db_error_message = sprintf( PDB::$i18n['zero_rows_error'], $wpdb->last_query );
+      }
+      PDB::$insert_status = 'skip';
+    } elseif ( $result === false ) {
+      $db_error_message = sprintf( PDB::$i18n['database_error'], $wpdb->last_query, $wpdb->last_error );
+      PDB::$insert_status = 'error';
+    } else {
+      // is it a new record?
+      if ( $this->query_mode() === 'insert' ) {
+
+        // get the new record id for the return
+        $this->record_id = $wpdb->insert_id;
+
+        /*
+         * is this record a new one created in the admin? This also applies to CSV 
+         * imported new records
+         */
+        if ( PDB::is_admin() ) {
+          // if in the admin hang on to the id of the last record for an hour
+          set_transient( PDB::$last_record, $this->record_id, HOUR_IN_SECONDS );
+        }
+      }
+    }
+    
+    /*
+     * set up user feedback
+     */
+    if ( PDB::is_admin() ) {
+      if ( !$this->is_import && $result ) {
+        PDB::set_admin_message( ($this->query_mode() === 'insert' ? PDB::$i18n['added'] : PDB::$i18n['updated'] ), 'updated' );
+      } elseif ( !empty( $db_error_message ) ) {
+        PDB::set_admin_message( PDB::db_error_message( $db_error_message ), 'record-insert error' );
+      }
+    }
+    
+    return $this->record_id;
+  }
+  
+  /**
+   * adds a column to the data arrays
+   * 
+   * @param string $value the column value
+   * @param string $clause the column query clause
+   */
+  public function add_column( $value, $clause )
+  {
+    $this->values[] = $value;
+    $this->column_clauses[] = $clause;
+  }
+  
+  /**
+   * validates a column
+   * 
+   * @param string $value the submitted value
+   * @para, object $column the column object
+   */
+  public function validate_column( $value, $column )
+  {
+    // validation is only performed on form submissions
+    if ( is_object( PDB::$validation_errors ) && ! $this->is_import() && ! $this->is_func_call() ) {
+        PDB::$validation_errors->validate( PDB::deep_stripslashes( $value ), $column, $this->post, $this->record_id );
+      }
+  }
+  
+  /**
+   * tells if there are validation errors
+   * 
+   * @return bool true if there are validation errors
+   */
+  public function has_validation_errors()
+  {
+    $invalid = false;
+    
+    if ( is_object( PDB::$validation_errors ) && PDB::$validation_errors->errors_exist() ) {
+
+//      error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
+
+      $invalid = true;
+      
+    } elseif ( !empty( PDB::admin_message_content() ) and 'error' == PDB::admin_message_type() ) {
+      PDB::debug_log( __METHOD__.' admin error message set; returning: '.PDB::admin_message_content(), 3 );
+      $invalid = true;
+    }
+    
+    return $invalid;
   }
   
   /**
@@ -233,16 +362,6 @@ abstract class base_query {
   }
   
   /**
-   * provides the data body of the query
-   * 
-   * @return string
-   */
-  protected function data_clause()
-  {
-    
-  }
-  
-  /**
    * provides the default record values
    * 
    * this also includes persistent values
@@ -251,7 +370,7 @@ abstract class base_query {
    */
   protected function default_record()
   {
-    return \Participants_Db::get_default_record( $this->is_import === false );
+    return PDB::get_default_record( $this->is_import === false );
   }
   
   /**
@@ -273,12 +392,17 @@ abstract class base_query {
    */
   protected function sanitized_query()
   {
-    global $wpdb;
-    
     $query = $this->query();
     
+    // check if the query has placeholders
     if ( strpos( $query, '%s' ) !== false ) {
-      return $wpdb->prepare($query);
+      
+      global $wpdb;
+    
+      // remove null values from the values array
+      $values = array_filter( $this->values, function ($v) { return ! is_null($v); } );
+      
+      $query = $wpdb->prepare( $query, $values );
     }
     
     return $query;
