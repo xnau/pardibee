@@ -369,10 +369,12 @@ csv line= '.print_r( $csv_line, true ), 2 );
    */
   protected function set_error($message, $error_status = true) {
 
-    if (!empty($message))
+    if (!empty($message)) {
       $this->errors[] = $message;
-    if ($error_status)
+    }
+    if ($error_status) {
       $this->error_status = 'error';
+    }
   }
 
   /**
