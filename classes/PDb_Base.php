@@ -145,6 +145,7 @@ class PDb_Base {
     
     // if the ID isn't in the DB, the action is an insert
     if ( ( is_numeric( $id ) && ! self::id_exists( $id ) ) || !is_numeric( $id ) ) {
+      
       $action = 'insert';
       $id = false;
     }
