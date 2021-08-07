@@ -73,11 +73,11 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   protected function setup_import_columns()
   {
     // build the column names from the CSV if it's there
-    if ( is_array( $this->CSV->titles ) and $this->column_names != $this->CSV->titles ) {
+    if ( is_array( $this->CSV->titles ) && $this->column_names != $this->CSV->titles ) {
 
       $this->column_names = $this->CSV->titles;
 
-      $this->errors[] = __( 'New columns imported from the CSV file.', 'participants-database' );
+//      $this->errors[] = __( 'New columns imported from the CSV file.', 'participants-database' );
 
       // remove enclosure characters
       array_walk( $this->column_names, array( $this, '_enclosure_trim' ), $this->CSV->enclosure );
@@ -202,10 +202,4 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       return parent::_detect_delimiter( $csv_file );
     }
   }
-
-  /*
-   * provides the current matching record policy
-   * 
-   * @return string
-   */
 }
