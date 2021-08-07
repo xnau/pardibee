@@ -141,12 +141,31 @@ class PDb_Base {
    */
   public static function write_participant( Array $post, $id = '' )
   {
-    $action = 'insert';
-    if ( is_numeric( $id ) ) {
-      $action = Participants_Db::get_participant( $id ) === false ? 'insert' : 'update';
-    }  
+    $action = 'update';
+    
+    // if the ID isn't in the DB, the action is an insert
+    if ( ( is_numeric( $id ) && ! self::id_exists( $id ) ) || !is_numeric( $id ) ) {
+      $action = 'insert';
+      $id = false;
+    }
+    
     return Participants_Db::process_form( $post, $action, $id, array_keys( $post ), true );
   }
+  
+  /**
+   * tells if the ID is in the main DB
+   * 
+   * @global \wpdb $wpdb
+   * @param int $id
+   * @return bool true if the ID is found in the table
+   */
+  public static function id_exists( $id )
+  {
+    global $wpdb;
+    
+    return (bool) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::participants_table() . ' WHERE `id` = %d', $id ) );
+  }
+  
 
   /**
    * parses a list shortcode filter string into an array
