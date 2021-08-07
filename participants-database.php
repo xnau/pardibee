@@ -1531,36 +1531,16 @@ class Participants_Db extends PDb_Base {
    */
   public static function process_form( $post, $action, $participant_id = false, $column_names = false, $func_call = false )
   {
-    /**
-     * reject submissions that aren't properly tagged
-     */
-    if ( 
-            !isset( $action ) || 
-            !in_array( $action, array('insert', 'update') ) || 
-            ( isset( $post['subsource'] ) && $post['subsource'] !== Participants_Db::PLUGIN_NAME )
-            ) {
-      return false;
-    }
-    
     do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
-
-    $currently_importing_csv = isset( $_POST['csv_file_upload'] );
     
-    $record_match = $currently_importing_csv ? new PDb_submission\match\import( $post, $participant_id ) : new \PDb_submission\match\form( $post, $participant_id );
-    /** @var PDb_submission\match $record_match */
+    $record_match = \PDb_submission\match\record::get_object( $post, $participant_id );
+    /** @var PDb_submission\match\record $record_match */
 
     // modify the action according the the match mode
     $action = $record_match->get_action( $action );
     
     // get the record id to use in the query
     $participant_id = $record_match->record_id();
-    
-    if ( $participant_id === 0 ) {
-      /*
-       * don't set the record id from the incoming data if creating a new record
-       */
-      unset( $post['id'] );
-    }
 
     /*
      * upload any files included in the form submission
@@ -1568,24 +1548,16 @@ class Participants_Db extends PDb_Base {
      * the validated file names are placed in the $post array
      */
     $post = PDb_File_Uploads::process_submission_uploads( $post );
-
-    global $wpdb;
     
     // set the insert status value
     self::$insert_status = $action;
     
     $main_query = PDb_submission\main_query\base_query::set_instance( $action, $post, $participant_id, $func_call );
-    
     /** @var \PDb_submission\main_query\base_query $main_query */
-
-    /*
-     * determine the set of columns to process
-     * 
-     */
-    $new_values = array();
-    $column_data = array();
     
-    // gather the submit values and add them to the query
+    /*
+     * process the submitted data
+     */
     foreach ( $main_query->column_array( $column_names ) as $column ) {
       
       /** @var object $column */
@@ -1601,111 +1573,25 @@ class Participants_Db extends PDb_Base {
       
       $column_object = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ), $main_query );
 
-      // the validation object is only instantiated when this method is called
-      // by a form submission
-      if ( is_object( self::$validation_errors ) && ! $currently_importing_csv && ! $main_query->is_func_call() ) {
-        self::$validation_errors->validate( self::deep_stripslashes( $column_object->value() ), $column, $post, $participant_id );
-      }
-
-      /*
-       * add the column and value to the sql; if it is bool false, skip it entirely. 
-       * Nulls are added as true nulls in the query
-       */
+      $main_query->validate_column( $column_object->value(), $column );
+      
       if ( $column_object->add_to_query( $main_query->write_mode() ) ) {
         
-        $new_values[] = $column_object->value();
-        
-        $column_data[] = $column_object->query_clause();
+        // add the column to the query
+        $main_query->add_column( $column_object->value(), $column_object->query_clause() );
       }
     } // columns
 
-    // if the validation object exists and there are errors, stop here
-    if ( is_object( self::$validation_errors ) && self::$validation_errors->errors_exist() ) {
-
-//      error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
-
-      return false;
-    } elseif ( !empty( self::admin_message_content() ) and 'error' == self::admin_message_type() ) {
-      self::debug_log( __METHOD__.' admin error message set; returning: '.self::admin_message_content(), 3 );
+    /*
+     * now that we're done adding the submitted data to the query, check for 
+     * validation and abort the process if there are validation errors
+     */
+    if ( $main_query->has_validation_errors() ) {
       return false;
     }
     
-    // filter for controlling the columns and values in the query
-    if ( has_filter( self::$prefix . 'process_form_query_column_data' ) ) {
-      /**
-       * provides a way to alter the data structure before going into the query
-       * 
-       * @filter pdb-process_form_query_column_data
-       * @param array as $insert_template => $value
-       * @return array
-       */
-      $data = self::apply_filters( 'process_form_query_column_data', array_combine($column_data, $new_values) );
-      $column_data = array_keys($data);
-      $new_values = array_values($data);
-    }
+    $participant_id = $main_query->execute_query();
     
-    $sql = $main_query->query_head();
-    
-    // remove null values from the values array
-    $new_values = array_filter($new_values, function ($v) { return ! is_null($v); } );
-
-    // add in the column names
-    $sql .= implode( ', ', $column_data );
-
-    // add the WHERE clause
-    $sql .= $main_query->query_where();
-    
-    // sanitize the values if including user input
-    $query = strpos( $sql, '%s' ) !== false ? $wpdb->prepare( $sql, $new_values ) : $sql;
-
-    $result = $wpdb->query( $query );
-
-    if ( ! $result ) {
-      self::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error . ' with query: ' . $wpdb->last_query );
-    } else {
-      self::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
-    }
-
-    $db_error_message = '';
-    if ( $result === 0 ) {
-      if ( ! $currently_importing_csv ) {
-        $db_error_message = sprintf( self::$i18n['zero_rows_error'], $wpdb->last_query );
-      }
-      self::$insert_status = 'skip';
-    } elseif ( $result === false ) {
-      $db_error_message = sprintf( self::$i18n['database_error'], $wpdb->last_query, $wpdb->last_error );
-      self::$insert_status = 'error';
-    } else {
-      // is it a new record?
-      if ( $action === 'insert' ) {
-
-        // get the new record id for the return
-        $participant_id = $wpdb->insert_id;
-
-        /*
-         * is this record a new one created in the admin? This also applies to CSV 
-         * imported new records
-         */
-        if ( is_admin() ) {
-          // if in the admin hang on to the id of the last record for an hour
-          set_transient( self::$last_record, $participant_id, HOUR_IN_SECONDS );
-        }
-      }
-    }
-    /*
-     * set up user feedback
-     */
-    if ( is_admin() ) {
-      if ( !$currently_importing_csv && $result ) {
-        self::set_admin_message( ($action == 'insert' ? self::$i18n['added'] : self::$i18n['updated'] ), 'updated' );
-      } elseif ( !empty( $db_error_message ) ) {
-        self::set_admin_message( self::db_error_message( $db_error_message ), 'record-insert error' );
-      }
-    }
-    /*
-     * when a record is updated or added, make the cache stale so the new data will be used
-     * 
-     */
     PDb_Participant_Cache::is_now_stale( $participant_id );
 
     return $participant_id;
@@ -1858,7 +1744,7 @@ class Participants_Db extends PDb_Base {
     } 
     
     if ( ! $record ) {
-     $record = self::_get_participant( $id );
+      $record = self::_get_participant( $id );
     }
     
     return $record;
