@@ -55,6 +55,18 @@ abstract class record {
    * @var string the action key
    */
   protected $action;
+  
+  /**
+   * provides the match object instance
+   * 
+   * @param array $post data
+   * @param int $record_id
+   * @return PDb_submission\match\record
+   */
+  public static function get_object( $post, $record_id )
+  {
+    return isset( $_POST['csv_file_upload'] ) ? new import( $post, $record_id ) : new form( $post, $record_id );
+  }
 
   /**
    * tells if the current operation is a csv import
