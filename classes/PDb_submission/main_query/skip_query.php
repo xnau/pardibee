@@ -16,12 +16,12 @@
 namespace PDb_submission\main_query;
 
 class skip_query {
-  
+
   /**
    * @var int the record id
    */
   private $record_id;
-  
+
   /**
    * @param array $post
    * @param int $record_id
@@ -41,7 +41,7 @@ class skip_query {
   {
     return array();
   }
-  
+
   /**
    * tells if there are validation errors
    * 
@@ -51,7 +51,7 @@ class skip_query {
   {
     return false;
   }
-  
+
   /**
    * executes the query
    * 
@@ -63,4 +63,5 @@ class skip_query {
   {
     return $this->record_id;
   }
+
 }
