@@ -76,16 +76,15 @@ abstract class base_column {
    */
   protected function main_query()
   {
-    return base_query::get_instance();
+    return base_query::instance();
   }
   
   /**
    * tells if the incoming value should be added to the query
    * 
-   * @param string $write_mode insert or update
    * @return bool
    */
-  public function add_to_query( $write_mode )
+  public function add_to_query()
   {
     return ! ( $this->skip || $this->skip_imported_value() );
   }
