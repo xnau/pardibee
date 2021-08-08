@@ -1518,7 +1518,7 @@ class Participants_Db extends PDb_Base {
    * 
    * @param array       $post           the array of new values (typically the $_POST array)
    * @param string      $action         the db action to be performed: insert or update
-   * @param int|bool    $participant_id the id of the record to update. If it is false 
+   * @param int|bool    $record_id      the id of the record to update. If it is false 
    *                                    or omitted, it creates a new record, if true, it 
    *                                    creates or updates the default record.
    * @param array|bool  $column_names   array of column names to process from the $post 
@@ -1527,18 +1527,18 @@ class Participants_Db extends PDb_Base {
    * @return int|bool   int ID of the record created or updated, bool false if submission 
    *                    does not validate
    */
-  public static function process_form( $post, $action, $participant_id = false, $column_names = false, $func_call = false )
+  public static function process_form( $post, $action, $record_id = false, $column_names = false, $func_call = false )
   {
     do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
     
-    $record_match = \PDb_submission\match\record::get_object( $post, $participant_id );
+    $record_match = \PDb_submission\match\record::get_object( $post, $record_id );
     /** @var PDb_submission\match\record $record_match */
 
     // modify the action according the the match mode
     $action = $record_match->get_action( $action );
     
     // get the record id to use in the query
-    $participant_id = $record_match->record_id();
+    $record_id = $record_match->record_id();
 
     /*
      * upload any files included in the form submission
@@ -1550,7 +1550,7 @@ class Participants_Db extends PDb_Base {
     // set the insert status value
     self::$insert_status = $action;
     
-    $main_query = PDb_submission\main_query\base_query::set_instance( $action, $post, $participant_id, $func_call );
+    $main_query = PDb_submission\main_query\base_query::get_instance( $action, $post, $record_id, $func_call );
     /** @var \PDb_submission\main_query\base_query $main_query */
     
     /*
@@ -1569,11 +1569,11 @@ class Participants_Db extends PDb_Base {
        */
       do_action( 'pdb-process_form_submission_column_' . $column->name, $column, $post );
       
-      $column_object = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ), $main_query );
+      $column_object = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
       $main_query->validate_column( $column_object->value(), $column );
       
-      if ( $column_object->add_to_query( $main_query->write_mode() ) ) {
+      if ( $column_object->add_to_query() ) {
         
         // add the column to the query
         $main_query->add_column( $column_object->value(), $column_object->query_clause() );
@@ -1588,11 +1588,11 @@ class Participants_Db extends PDb_Base {
       return false;
     }
     
-    $participant_id = $main_query->execute_query();
+    $updated_record_id = $main_query->execute_query();
     
-    PDb_Participant_Cache::is_now_stale( $participant_id );
+    PDb_Participant_Cache::is_now_stale( $updated_record_id );
 
-    return $participant_id;
+    return $updated_record_id;
   }
 
   /**
