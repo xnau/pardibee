@@ -21,44 +21,44 @@ if ( !defined( 'ABSPATH' ) )
   exit;
 
 abstract class base_query {
-  
+
   /**
    * @var array of column values
    */
   protected $values;
-  
+
   /**
    * @var array of column clause strings
    */
   protected $column_clauses;
-  
+
   /**
    * @var array the posted data
    */
   protected $post;
-  
+
   /**
    * @var int holds the record id
    */
   protected $record_id;
-  
+
   /**
    * @var bool tells if the current request is a CSV import
    */
   protected $is_import;
-  
+
   /**
    * @var bool tells if the current request is a CSV import
    */
   protected $is_func_call;
-  
+
   /**
    * @var PDb_submission\main_query\base_query
    */
-  private static $instance = null;
-  
+  private static $instance;
+
   /**
-   * provides the class instance
+   * provides a class instance
    * 
    * @param string $type update, insert or skip
    * @param array $post
@@ -66,26 +66,24 @@ abstract class base_query {
    * @param bool $func_call true if the submission is a function call
    * @return PDb_submission\main_query\base_query
    */
-  public static function set_instance( $type, $post, $record_id, $func_call  )
+  public static function get_instance( $type, $post, $record_id, $func_call )
   {
-    if ( self::$instance === null ) {
-      $class = "PDb_submission\main_query\\{$type}_query";
-      self::$instance = new $class( $post, $record_id, $func_call );
-    }
-    
+    $class = "\PDb_submission\main_query\\{$type}_query";
+    self::$instance = new $class( $post, $record_id, $func_call );
+
     return self::$instance;
   }
-  
+
   /**
    * provides the class instance without specifying parameters
    * 
    * @return  PDb_submission\main_query\base_query
    */
-  public static function get_instance()
+  public static function instance()
   {
     return self::$instance;
   }
-  
+
   /**
    * @param array $post
    * @param int $record_id
@@ -95,31 +93,31 @@ abstract class base_query {
   {
     $this->post = $post;
     $this->record_id = $record_id;
-    $this->is_import = isset( $_POST['csv_file_upload'] );
+    $this->is_import = isset( $_POST[ 'csv_file_upload' ] );
     $this->is_func_call = $func_call;
   }
-  
+
   /**
    * provides the query top clause
    * 
    * @return string
    */
   abstract protected function top_clause();
-  
+
   /**
    * provides the query where clause
    * 
    * @return string
    */
   abstract protected function where_clause();
-  
+
   /**
    * provides the name of the query mode: update or insert
    * 
    * @return string
    */
   abstract protected function query_mode();
-  
+
   /**
    * provides the current query mode
    * 
@@ -140,7 +138,7 @@ abstract class base_query {
   {
     return columns::column_array( $this->query_mode(), $function_columns );
   }
-  
+
   /**
    * provides the completed query
    * 
@@ -150,7 +148,7 @@ abstract class base_query {
   {
     return $this->top_clause() . $this->data_clause() . $this->where_clause();
   }
-  
+
   /**
    * provides the query header
    * 
@@ -160,7 +158,7 @@ abstract class base_query {
   {
     return $this->top_clause();
   }
-  
+
   /**
    * provides the data body of the query
    * 
@@ -170,7 +168,7 @@ abstract class base_query {
   {
     return implode( ', ', $this->column_clauses );
   }
-  
+
   /**
    * provides the query header
    * 
@@ -180,7 +178,7 @@ abstract class base_query {
   {
     return $this->where_clause();
   }
-  
+
   /**
    * executes the query
    * 
@@ -198,16 +196,16 @@ abstract class base_query {
        * @return array
        */
       $data = PDB::apply_filters( 'process_form_query_column_data', array_combine( $this->column_clauses, $this->values ) );
-      $this->column_clauses = array_keys($data);
-      $this->values = array_values($data);
+      $this->column_clauses = array_keys( $data );
+      $this->values = array_values( $data );
     }
-    
+
     global $wpdb;
-    
+
     // run the query
     $result = $wpdb->query( $this->sanitized_query() );
 
-    if ( ! $result ) {
+    if ( !$result ) {
       PDB::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error );
     } else {
       PDB::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
@@ -216,11 +214,11 @@ abstract class base_query {
     $db_error_message = '';
     if ( $result === 0 ) {
       if ( !$this->is_import ) {
-        $db_error_message = sprintf( PDB::$i18n['zero_rows_error'], $wpdb->last_query );
+        $db_error_message = sprintf( PDB::$i18n[ 'zero_rows_error' ], $wpdb->last_query );
       }
       PDB::$insert_status = 'skip';
     } elseif ( $result === false ) {
-      $db_error_message = sprintf( PDB::$i18n['database_error'], $wpdb->last_query, $wpdb->last_error );
+      $db_error_message = sprintf( PDB::$i18n[ 'database_error' ], $wpdb->last_query, $wpdb->last_error );
       PDB::$insert_status = 'error';
     } else {
       // is it a new record?
@@ -239,21 +237,21 @@ abstract class base_query {
         }
       }
     }
-    
+
     /*
      * set up user feedback
      */
     if ( PDB::is_admin() ) {
       if ( !$this->is_import && $result ) {
-        PDB::set_admin_message( ($this->query_mode() === 'insert' ? PDB::$i18n['added'] : PDB::$i18n['updated'] ), 'updated' );
+        PDB::set_admin_message( ($this->query_mode() === 'insert' ? PDB::$i18n[ 'added' ] : PDB::$i18n[ 'updated' ] ), 'updated' );
       } elseif ( !empty( $db_error_message ) ) {
         PDB::set_admin_message( PDB::db_error_message( $db_error_message ), 'record-insert error' );
       }
     }
-    
+
     return $this->record_id;
   }
-  
+
   /**
    * adds a column to the data arrays
    * 
@@ -265,7 +263,7 @@ abstract class base_query {
     $this->values[] = $value;
     $this->column_clauses[] = $clause;
   }
-  
+
   /**
    * validates a column
    * 
@@ -275,11 +273,11 @@ abstract class base_query {
   public function validate_column( $value, $column )
   {
     // validation is only performed on form submissions
-    if ( is_object( PDB::$validation_errors ) && ! $this->is_import() && ! $this->is_func_call() ) {
-        PDB::$validation_errors->validate( PDB::deep_stripslashes( $value ), $column, $this->post, $this->record_id );
-      }
+    if ( is_object( PDB::$validation_errors ) && !$this->is_import() && !$this->is_func_call() ) {
+      PDB::$validation_errors->validate( PDB::deep_stripslashes( $value ), $column, $this->post, $this->record_id );
+    }
   }
-  
+
   /**
    * tells if there are validation errors
    * 
@@ -288,21 +286,20 @@ abstract class base_query {
   public function has_validation_errors()
   {
     $invalid = false;
-    
+
     if ( is_object( PDB::$validation_errors ) && PDB::$validation_errors->errors_exist() ) {
 
 //      error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
       $invalid = true;
-      
     } elseif ( !empty( PDB::admin_message_content() ) and 'error' == PDB::admin_message_type() ) {
-      PDB::debug_log( __METHOD__.' admin error message set; returning: '.PDB::admin_message_content(), 3 );
+      PDB::debug_log( __METHOD__ . ' admin error message set; returning: ' . PDB::admin_message_content(), 3 );
       $invalid = true;
     }
-    
+
     return $invalid;
   }
-  
+
   /**
    * provides the record ID
    * 
@@ -312,7 +309,7 @@ abstract class base_query {
   {
     return $this->record_id;
   }
-  
+
   /**
    * tells if the record is a new record
    * 
@@ -322,7 +319,7 @@ abstract class base_query {
   {
     return $this->record_id == 0;
   }
-  
+
   /**
    * tells if the request is an import
    * 
@@ -332,7 +329,7 @@ abstract class base_query {
   {
     return $this->is_import;
   }
-  
+
   /**
    * tells if the current request is a function call
    * 
@@ -342,8 +339,7 @@ abstract class base_query {
   {
     return $this->is_func_call;
   }
-  
-  
+
   /**
    * provides the column value
    * 
@@ -351,16 +347,16 @@ abstract class base_query {
    */
   public function column_value( $column_name )
   {
-    $value = isset( $this->post[$column_name] ) ? $this->post[$column_name] : '';
-    
-    if ( $this->query_mode() === 'insert' && ! isset( $this->post[$column_name] ) ) {
-      $field =  new \PDb_Form_Field_Def($column_name);
+    $value = isset( $this->post[ $column_name ] ) ? $this->post[ $column_name ] : '';
+
+    if ( $this->query_mode() === 'insert' && !isset( $this->post[ $column_name ] ) ) {
+      $field = new \PDb_Form_Field_Def( $column_name );
       $value = $field->default_display();
     }
-    
+
     return $value;
   }
-  
+
   /**
    * provides the default record values
    * 
@@ -372,7 +368,7 @@ abstract class base_query {
   {
     return PDB::get_default_record( $this->is_import === false );
   }
-  
+
   /**
    * provides the default value for the named field
    * 
@@ -381,9 +377,9 @@ abstract class base_query {
    */
   public function default_value( $fieldname )
   {
-    return isset( $this->default_record()[$fieldname] ) ? $this->default_record()[$fieldname] : '';
+    return isset( $this->default_record()[ $fieldname ] ) ? $this->default_record()[ $fieldname ] : '';
   }
-  
+
   /**
    * provides the sanitized query
    * 
@@ -393,20 +389,21 @@ abstract class base_query {
   protected function sanitized_query()
   {
     $query = $this->query();
-    
+
     // check if the query has placeholders
     if ( strpos( $query, '%s' ) !== false ) {
-      
+
       global $wpdb;
-    
+
       // remove null values from the values array
-      $values = array_filter( $this->values, function ($v) { return ! is_null($v); } );
-      
+      $values = array_filter( $this->values, function ($v) {
+        return !is_null( $v );
+      } );
+
       $query = $wpdb->prepare( $query, $values );
     }
-    
+
     return $query;
   }
-  
-  
+
 }
