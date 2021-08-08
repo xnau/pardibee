@@ -36,7 +36,7 @@ class columns {
       
       if ( $action === 'insert' ) {
         
-        $main_query = base_query::get_instance();
+        $main_query = base_query::instance();
         
         /**
          * switch to enable filling in a new record with default values
@@ -45,7 +45,7 @@ class columns {
          * @return bool
          */
         // intent here is to add the default values with a signup submission or an import add only
-        if ( ( !Participants_Db::is_admin() || $main_query->is_import() ) && Participants_Db::apply_filters( 'process_form_fill_default_values', true ) ) {
+        if ( ( $main_query->is_import() || !$main_query->is_func_call() ) && Participants_Db::apply_filters( 'process_form_fill_default_values', true ) ) {
           $default_cols = array_merge( self::column_default_list(), array('private_id') );
         } else {
           $default_cols = array('private_id');
@@ -87,7 +87,6 @@ class columns {
     foreach( $this->column_array as $column ) {
       $array[] = $column->name;
     }
-//    error_log(__METHOD__.' set: '.$column_set.' columns array: '.print_r($array,1));
     
   }
   
