@@ -285,19 +285,19 @@ abstract class base_query {
    */
   public function has_validation_errors()
   {
-    $invalid = false;
+    $has_errors = false;
 
     if ( is_object( PDB::$validation_errors ) && PDB::$validation_errors->errors_exist() ) {
 
 //      error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
-      $invalid = true;
+      $has_errors = true;
     } elseif ( !empty( PDB::admin_message_content() ) and 'error' == PDB::admin_message_type() ) {
       PDB::debug_log( __METHOD__ . ' admin error message set; returning: ' . PDB::admin_message_content(), 3 );
-      $invalid = true;
+      $has_errors = true;
     }
 
-    return $invalid;
+    return $has_errors;
   }
 
   /**
