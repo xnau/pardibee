@@ -1150,14 +1150,14 @@ class PDb_List_Query {
         case 'WORD':
 
           $operator = 'REGEXP';
-          $delimiter = $this->word_boundaries();
+          $delimiter = self::word_boundaries();
           $filter->is_regex = true;
           break;
 
         case 'NOT WORD':
 
           $operator = 'NOT REGEXP';
-          $delimiter = $this->word_boundaries();
+          $delimiter = self::word_boundaries();
           $filter->is_regex = true;
           break;
 
@@ -1240,7 +1240,7 @@ class PDb_List_Query {
    * @global wpdb $wpdb
    * @return array
    */
-  private function word_boundaries()
+  public static function word_boundaries()
   {
     global $wpdb;
 
