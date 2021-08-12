@@ -152,7 +152,6 @@ class query {
    */
   protected function _add_where_clause( $filter_set )
   {
-
     if ( $filter_set[ 'logic' ] === 'OR' && !$this->inparens ) {
       $this->list_query .= ' (';
       $this->inparens = true;
@@ -177,6 +176,12 @@ class query {
       case '=':
 
         $operator = '=';
+        
+        if ( in_array( $filter_set['search_field'], search_field_group::group_list() ) ) {
+          $operator = 'REGEXP';
+          $delimiter = \PDb_List_Query::word_boundaries();
+        }
+        
         if ( $filter_set[ 'value' ] === '' ) {
           $filter_set[ 'value' ] = 'null';
         } elseif ( strpos( $filter_set[ 'value' ], '%' ) !== false ) {
@@ -184,16 +189,29 @@ class query {
           $delimiter = array( "'", "'" );
         }
         break;
+        
+      case '!=':
+
+        $operator = esc_sql( $filter_set[ 'operator' ] );
+        
+        if ( in_array( $filter_set['search_field'], search_field_group::group_list() ) ) {
+          $operator = 'NOT REGEXP';
+          $delimiter = \PDb_List_Query::word_boundaries();
+        } elseif ( $filter_set[ 'value' ] === '' ) {
+          $filter_set[ 'value' ] = 'null';
+          $operator = '<>';
+        } elseif ( $this->term_has_wildcard( $filter_set[ 'value' ] ) ) {
+          $delimiter = array( "'", "'" );
+        }
+        break;
 
       case 'NOT LIKE':
-      case '!=':
       case 'LIKE':
       default:
 
         $operator = esc_sql( $filter_set[ 'operator' ] );
-        if ( stripos( $operator, 'LIKE' ) !== false ) {
-          $delimiter = array( '"%', '%"' );
-        }
+        $delimiter = array( '"%', '%"' );
+        
         if ( $filter_set[ 'value' ] === '' ) {
           $filter_set[ 'value' ] = 'null';
           $operator = '<>';
@@ -221,7 +239,7 @@ class query {
 
       if ( $value !== false ) {
 
-        $date_column = "DATE(" . esc_sql( $search_field->name() ) . ")";
+        $date_column = "DATE(" . $this->name_clause( $search_field ) . ")";
 
         if ( $value2 !== false ) {
 
@@ -256,7 +274,7 @@ class query {
 
         if ( $date1 !== false ) {
 
-          $date_column = esc_sql( $search_field->name() );
+          $date_column = $this->name_clause( $search_field );
 
           if ( $date2 !== false and ! empty( $date2 ) ) {
 
@@ -276,7 +294,7 @@ class query {
       $this->list_query .= $this->empty_value_where_clause( $filter_set[ 'operator' ], $search_field );
     } else {
 
-      $this->list_query .= ' ' . stripslashes( esc_sql( $search_field->name() ) ) . ' ' . $operator . " " . $delimiter[ 0 ] . esc_sql( $value ) . $delimiter[ 1 ];
+      $this->list_query .= ' ' . $this->name_clause( $search_field ) . ' ' . $operator . " " . $delimiter[ 0 ] . esc_sql( $value ) . $delimiter[ 1 ];
     }
 
     if ( $filter_set[ 'logic' ] === 'AND' && $this->inparens ) {
@@ -301,13 +319,13 @@ class query {
       case '<>':
       case '!=':
       case 'NOT LIKE':
-        $clause = ' (' . esc_sql( $search_field->name() ) . ' IS NOT NULL' . $this->empty_value_phrase( $search_field, true ) . ')';
+        $clause = ' (' . $this->name_clause( $search_field ) . ' IS NOT NULL' . $this->empty_value_phrase( $search_field, true ) . ')';
         break;
 
       case 'LIKE':
       case '=':
       default:
-        $clause = ' (' . esc_sql( $search_field->name() ) . ' IS NULL' . $this->empty_value_phrase( $search_field, false ) . ')';
+        $clause = ' (' . $this->name_clause( $search_field ) . ' IS NULL' . $this->empty_value_phrase( $search_field, false ) . ')';
         break;
     }
 
@@ -323,17 +341,24 @@ class query {
    */
   private function empty_value_phrase( $search_field, $not = false )
   {
-    if ( $search_field->is_numeric() && $search_field->form_element !== 'date' ) {
-      return '';
-    }
+    $clause = $not ? ' AND ' . $this->name_clause( $search_field ) . ' <> ""' : ' OR ' . $this->name_clause( $search_field ) . ' = ""';
 
-    $clause = $not ? ' AND ' . esc_sql( $search_field->name() ) . ' <> ""' : ' OR ' . esc_sql( $search_field->name() ) . ' = ""';
-
-    if ( $search_field->form_element === 'date' ) {
-      $clause .= $not ? ' AND ' . esc_sql( $search_field->name() ) . ' <> 0' : ' OR ' . esc_sql( $search_field->name() ) . ' = 0';
+    if ( $search_field->form_element() === 'date' ) {
+      $clause .= $not ? ' AND ' . $this->name_clause( $search_field ) . ' <> 0' : ' OR ' . $this->name_clause( $search_field ) . ' = 0';
     }
 
     return $clause;
+  }
+  
+  /**
+   * provides the sanitized name clause
+   * 
+   * @param object $search_field
+   * @return string
+   */
+  private function name_clause( $search_field )
+  {
+    return stripslashes( esc_sql( $search_field->name() ) );
   }
 
   /**
