@@ -25,7 +25,7 @@ class all_fields extends search_field_group {
    */
   protected function include_field( $field )
   {
-    return $this->_include_field( $field );
+    return $this->_include_field( $field ) && ! in_array( $field->group(), $this->disallowed_groups() );
   }
   
   /**
