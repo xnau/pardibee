@@ -240,8 +240,7 @@ class PDb_Session {
   {
     if ( ! $this->alt_session_setting() ) {
       // change the setting if php sessions are not providing an ID
-      $plugin_setting['use_session_alternate_method'] = 1;
-      update_option( Participants_Db::$participants_db_options, $plugin_setting );
+      Participants_Db::update_plugin_setting( 'use_session_alternate_method', 1 );
     }
   }
   
