@@ -132,6 +132,16 @@ abstract class search_field_group {
   }
   
   /**
+   * provides a list of the disallowed groups
+   * 
+   * @return array of group names
+   */
+  protected function disallowed_groups()
+  {
+    return \Participants_Db::apply_filters('admin_list_multi_field_search_disallowed_groups', array('internal') );
+  }
+  
+  /**
    * build the list of fields to use in the filter
    * 
    */

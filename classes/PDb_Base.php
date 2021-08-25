@@ -1247,6 +1247,21 @@ class PDb_Base {
       return (bool) $default;
     }
   }
+  
+  /**
+   * updates a main setting option
+   * 
+   * @param string $option_name
+   * @param string|int|bool $setting
+   */
+  public static function update_plugin_setting( $option_name, $setting )
+  {
+    $options = get_option( Participants_Db::$participants_db_options );
+    
+    $options[$option_name] = $setting;
+    
+    update_option( Participants_Db::$participants_db_options, $options );
+  }
 
   /**
    * sets up an API filter
@@ -2044,11 +2059,12 @@ class PDb_Base {
   {
     // if the setting was made in previous versions and is a slug, convert it to a post ID
     $regpage = isset( Participants_Db::$plugin_options['registration_page'] ) ? Participants_Db::$plugin_options['registration_page'] : '';
+    
     if ( !empty( $regpage ) && !is_numeric( $regpage ) ) {
+      
+      Participants_Db::update_plugin_setting('registration_page', self::get_id_by_slug( $regpage ) );
 
       Participants_Db::$plugin_options['registration_page'] = self::get_id_by_slug( $regpage );
-
-      update_option( Participants_Db::$participants_db_options, Participants_Db::$plugin_options );
     }
   }
 

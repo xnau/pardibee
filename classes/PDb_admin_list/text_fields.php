@@ -27,7 +27,7 @@ class text_fields extends search_field_group {
    */
   protected function include_field( $field )
   {
-    return in_array( $field->form_element(), $this->valid_types() );
+    return in_array( $field->form_element(), $this->valid_types() ) && ! in_array( $field->group(), $this->disallowed_groups() );
   }
   
   /**
