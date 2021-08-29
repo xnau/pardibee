@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.3.2
+ * @version    1.3.3
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -190,7 +190,6 @@ class PDb_Admin_Notices {
    */
   public function action_admin_notices()
   {
-//    error_log(__METHOD__.' notices: '.print_r($this->admin_notice_list(),1));
     foreach ( $this->admin_notice_list() as $admin_notice ) {
       
       /* @var $admin_notice pdb_admin_notice_message */
@@ -379,6 +378,7 @@ class PDb_Admin_Notices {
       $this->admin_notice_list[$notice->id] = $notice;
       $this->update_notices();
     }
+    
     return $notice->id;
   }
 
@@ -530,12 +530,14 @@ class pdb_admin_notice_message {
   /**
    * tells if the current message should be shown to the current user
    * 
+   * if the user id is 0, show to all users
+   * 
    * @return bool true if it should be shown
    */
   public function show_to_current_user()
   {
     $current_user = wp_get_current_user();
-    return $this->message_user_id() == $current_user->ID;
+    return $this->message_user_id() == $current_user->ID || $this->message_user_id() == 0;
   }
   
   /**
