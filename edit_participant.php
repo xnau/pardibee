@@ -244,6 +244,10 @@ if ( $participant_values ) :
                   break;
               }
               
+              /**
+               * @action pdb-before_display_form_input
+               * @param PDb_Field_Item the current field
+               */
               do_action( 'pdb-before_display_form_input', $column );
 
               if ( 'rich-text' == $column->form_element ) {
