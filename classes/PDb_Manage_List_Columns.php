@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -45,6 +45,26 @@ class PDb_Manage_List_Columns {
         break;
     }
     wp_die();
+  }
+  
+  /**
+   * provides a list of the configured list columns
+   * 
+   * @param string $type 'admin' or 'public'
+   * @reutnr array of field names in the configured order
+   */
+  public static function column_list( $type = 'public' )
+  {
+    $list_columns = new self();
+    
+    $field_list = array();
+    
+    foreach ( $list_columns->configured_fields($type) as $index => $field )
+    {
+      $field_list[$index] = $field->name;
+    }
+    
+    return $field_list;
   }
 
   /**
@@ -180,7 +200,7 @@ class PDb_Manage_List_Columns {
   /**
    * provides the list of fields that have been configured to appear
    * 
-   * @param string $typw 'admin or 'public'
+   * @param string $type 'admin or 'public'
    * @return array of data objects
    */
   private function configured_fields( $type )
