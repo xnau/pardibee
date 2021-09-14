@@ -230,7 +230,14 @@ class PDb_Form_Field_Def {
       $def = isset( $field_defs[$fieldname] ) ? $field_defs[$fieldname] : new stdClass();
     }
     
-    return $def;
+    /**
+     * provides a way to temporarily change a field's definition
+     * 
+     * @filter pdb-raw_field_definition
+     * @param stdClass field definition properties
+     * @return stdClass
+     */
+    return Participants_Db::apply_filters( 'raw_field_definition', $def );
   }
   
   /**
