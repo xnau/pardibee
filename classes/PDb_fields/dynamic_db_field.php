@@ -82,7 +82,7 @@ abstract class dynamic_db_field extends core {
    * 
    * @return array of PDb_Form_Field_Def objects
    */
-  private function field_list()
+  protected function field_list()
   {
     $cachekey = $this->name . '_field_list';
     $list = wp_cache_get( $cachekey );
