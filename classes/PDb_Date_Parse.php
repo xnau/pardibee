@@ -37,7 +37,7 @@ class PDb_Date_Parse {
    * @var bool if true, use "european" day/month order
    * 
    * "european" order is day/month, in the US it tends to be month/day. this is 
-   * used when a date string parse without an input forma is attempted
+   * used when a date string parse without an input format is attempted
    */
   private $europen_order;
 
