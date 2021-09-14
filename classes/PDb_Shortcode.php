@@ -837,7 +837,7 @@ abstract class PDb_Shortcode {
       $field = Participants_Db::$fields[$column];
       /* @var $field PDb_Form_Field_Def */
       
-      if ( $field->group() == $group ) {
+      if ( $field->group() === $group ) {
         
         $group_fields[$field->name()] = new PDb_Field_Item( $field );
         
@@ -846,6 +846,7 @@ abstract class PDb_Shortcode {
         $group_fields[$field->name()]->set_record_id( $this->participant_id );
       }
     }
+    
     return $group_fields;
   }
 
@@ -1273,7 +1274,10 @@ abstract class PDb_Shortcode {
      * @ver 1.6.2.6
      * add filter 'pdb-{module}_form_action_attribute'
      */
-    printf( '<form method="post" enctype="multipart/form-data"  autocomplete="%s" action="%s" >', $this->shortcode_atts['autocomplete'], Participants_Db::apply_filters( $this->module . '_form_action_attribute', $_SERVER['REQUEST_URI'] )
+    printf( 
+            '<form method="post" enctype="multipart/form-data"  autocomplete="%s" action="%s" >', 
+            $this->shortcode_atts['autocomplete'], 
+            Participants_Db::apply_filters( $this->module . '_form_action_attribute', $_SERVER['REQUEST_URI'] )
     );
     $default_hidden_fields = array(
         'action' => $this->module,
