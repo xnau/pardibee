@@ -207,7 +207,8 @@ class PDb_Signup extends PDb_Shortcode {
   /**
    * sets up the hidden fields array
    * 
-   * in this class, this simply adds all defined hidden fields
+   * in this class, this simply adds all defined hidden fields set to be included 
+   * in the signup form, regardless of group
    * 
    * @return null
    */
