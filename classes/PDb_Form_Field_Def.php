@@ -422,12 +422,24 @@ class PDb_Form_Field_Def {
    */
   public function default_display()
   {
+    $default = $this->default_value();
+    
     if ( $this->is_dynamic_field() ) {
       // dynamic fields don't display the default value
-      return '';
+      $default = '';
     }
     
-    return $this->default_value();
+    /**
+     * provides a way to set the default value
+     * 
+     * this is the value used to pad a new record with default values
+     * 
+     * @filter pdb-field_default_display
+     * @param string configured field default
+     * @param PDb_Form_Field instance
+     * @return string
+     */
+    return Participants_Db::apply_filters( 'field_default_display', $default, $this );
   }
 
   /**
