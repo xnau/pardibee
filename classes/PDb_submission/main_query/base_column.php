@@ -82,9 +82,10 @@ abstract class base_column {
   /**
    * tells if the incoming value should be added to the query
    * 
+   * @param string $write_mode insert or update
    * @return bool
    */
-  public function add_to_query()
+  public function add_to_query( $write_mode )
   {
     return ! ( $this->skip || $this->skip_imported_value() );
   }
