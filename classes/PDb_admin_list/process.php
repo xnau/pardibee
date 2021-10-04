@@ -43,7 +43,7 @@ class process {
           $this->handle_with_selected();
           break;
 
-        // handles changing the number of items to whow in the list
+        // handles changing the number of items to show in the list
         case PDb_List_Admin::$i18n['change']:
 
           $list_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT );
@@ -91,6 +91,8 @@ class process {
     $with_selected = new with_selected( $submitted_ids['pid'] );
 
     $with_selected->execute( $selected_action );
+    
+    do_action( 'pdb-admin_list_with_selected_complete', $selected_action );
 
     if ( PDB_DEBUG ) {
       Participants_Db::debug_log( __METHOD__ . ' 
