@@ -73,10 +73,21 @@ class attributes {
    */
   public static function last_attributes()
   {
+    return $this->attribute_set('last');
+  }
+  
+  /**
+   * provides the shortcode attribute values
+   * 
+   * @param string $set the tag or name of the attribute set to get
+   * @return array
+   */
+  private function attribute_set( $set )
+  {
     $attributes = get_transient( self::attribute_store );
     
-    if ( $attributes && isset( $attributes['last'] ) ) {
-      return $attributes['last'];
+    if ( $attributes && isset( $attributes[$set] ) ) {
+      return $attributes[$set];
     }
     
     return array();
