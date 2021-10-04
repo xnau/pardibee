@@ -1575,7 +1575,7 @@ class Participants_Db extends PDb_Base {
 
       $main_query->validate_column( $column_object->value(), $column );
       
-      if ( $column_object->add_to_query() ) {
+      if ( $column_object->add_to_query( $action ) ) {
         
         // add the column to the query
         $main_query->add_column( $column_object->value(), $column_object->query_clause() );
