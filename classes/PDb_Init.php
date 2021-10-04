@@ -369,6 +369,7 @@ class PDb_Init {
 
 // clear transients
     delete_transient( Participants_Db::$last_record );
+    delete_transient( \PDb_shortcodes\attributes::attribute_store );
     $delete_keys = array(
         '%' . PDb_List_Admin::$user_setting_name . '%',
         '%' . Participants_Db::$prefix . 'captcha_key',
