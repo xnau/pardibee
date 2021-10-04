@@ -820,8 +820,9 @@ class PDb_Base {
     $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
     
     // return the value if it was set in the filter
-    if ( $dynamic_value !== '' )
+    if ( $dynamic_value !== '' ) {
       return $dynamic_value;
+    }
 
     if ( strpos( $dynamic_key, '->' ) > 0 ) {
 
@@ -831,6 +832,8 @@ class PDb_Base {
        * so far, that is only $post amd $current_user
        */
       global $post, $current_user;
+      
+      $shortcode = self::last_shortcode_atts();
 
       list( $object, $property ) = explode( '->', $dynamic_key );
 
@@ -930,6 +933,16 @@ class PDb_Base {
      * not a big deal.
      */
     return filter_var( $dynamic_value, FILTER_SANITIZE_STRING );
+  }
+  
+  /**
+   * provides the attributes of the last shortcode called
+   * 
+   * @return stdClass object with properties for each shortcode attribute
+   */
+  public static function last_shortcode_atts()
+  {
+    return (object) \PDb_shortcodes\attributes::last_attributes();
   }
 
   /**

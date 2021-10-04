@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 1.9.7.6
+ * Version: 1.9.7.7
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -536,6 +536,8 @@ class Participants_Db extends PDb_Base {
      * @version 1.6 filter pdb-private_id_length
      */
     self::$private_id_length = self::apply_filters( 'private_id_length', self::$private_id_length );
+    
+    new \PDb_shortcodes\attributes();
 
     /*
      * checks for the need to update the DB
@@ -944,7 +946,7 @@ class Participants_Db extends PDb_Base {
     /**
      * @version 1.6
      * 
-     * 'pdb-shortcode_call_{$tag}' filter allows the shortcode atrributes to be 
+     * 'pdb-shortcode_call_{$tag}' filter allows the shortcode attributes to be 
      * altered before instantiating the shortcode object
      */
     $shortcode_parameters = self::apply_filters( 'shortcode_call_' . $tag, $params );
@@ -3175,7 +3177,11 @@ class Participants_Db extends PDb_Base {
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, self::plugin_label( 'list_participants' ), self::plugin_label( 'list_participants' ), self::plugin_capability( 'record_edit_capability', 'list participants' ), self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
+            self::PLUGIN_NAME, 
+            self::plugin_label( 'list_participants' ), 
+            self::plugin_label( 'list_participants' ), 
+            self::plugin_capability( 'record_edit_capability', 'list participants' ), 
+            self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
             array($list_admin_classname, 'initialize')
     );
     /**

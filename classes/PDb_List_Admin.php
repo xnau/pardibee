@@ -90,7 +90,6 @@ class PDb_List_Admin {
    */
   public static function initialize()
   {
-
     self::_setup_i18n();
 
     /**
@@ -358,10 +357,9 @@ class PDb_List_Admin {
 
             $filter_columns[ $select_title ] = $column->name;
           }
-          
+
           // add the multi-field selection
           $filter_columns = array_merge( $filter_columns, PDb_admin_list\search_field_group::group_selector() );
-          
           ?>
           <div class="pdb-searchform">
             <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ?>" >
@@ -372,7 +370,7 @@ class PDb_List_Admin {
                       for ( $i = 0; $i <= $filter_count - 1; $i++ ) :
                         $filter_set = self::get_filter_set( $i );
                         ?>
-                        <fieldset class="widefat inline-controls">
+                        <fieldset class="widefat inline-controls" data-index="<?php echo $i ?>">
                           <?php if ( $i === 0 ): ?>
                             <legend><?php _e( 'Show only records with', 'participants-database' ) ?>:</legend>
                             <?php
@@ -385,24 +383,30 @@ class PDb_List_Admin {
                               'options' => $filter_columns,
                           );
                           PDb_FormElement::print_element( $element );
-                          _ex( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' );
-                          $element = array(
-                              'type' => 'dropdown',
-                              'name' => 'operator[' . $i . ']',
-                              'value' => $filter_set[ 'operator' ],
-                              'options' => array(
-                                  PDb_FormElement::null_select_key() => false,
-                                  __( 'is', 'participants-database' ) => '=',
-                                  __( 'is not', 'participants-database' ) => '!=',
-                                  __( 'contains', 'participants-database' ) => 'LIKE',
-                                  __( 'doesn&#39;t contain', 'participants-database' ) => 'NOT LIKE',
-                                  __( 'is greater than', 'participants-database' ) => 'gt',
-                                  __( 'is less than', 'participants-database' ) => 'lt',
-                              ),
-                          );
-                          PDb_FormElement::print_element( $element );
                           ?>
-                          <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
+
+                          <span class="filter-search-term">
+
+                            <?php
+                            _ex( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' );
+                            $element = array(
+                                'type' => 'dropdown',
+                                'name' => 'operator[' . $i . ']',
+                                'value' => $filter_set[ 'operator' ],
+                                'options' => array(
+                                    PDb_FormElement::null_select_key() => false,
+                                    __( 'is', 'participants-database' ) => '=',
+                                    __( 'is not', 'participants-database' ) => '!=',
+                                    __( 'contains', 'participants-database' ) => 'LIKE',
+                                    __( 'doesn&#39;t contain', 'participants-database' ) => 'NOT LIKE',
+                                    __( 'is greater than', 'participants-database' ) => 'gt',
+                                    __( 'is less than', 'participants-database' ) => 'lt',
+                                ),
+                            );
+                            PDb_FormElement::print_element( $element );
+                            ?>
+                            <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
+                          </span>
                           <?php
                           if ( $i < $filter_count - 1 ) {
                             echo '<br />';
@@ -510,13 +514,13 @@ class PDb_List_Admin {
                   </td>
                 </tr>
                 <?php if ( self::user_can_use_with_selected() ) : ?>
-                <tr>
-                  <td>
-                    <fieldset class="list-controls">
-                      <?php echo self::with_selected_control(); ?>
-                    </fieldset>
-                  </td>
-                </tr>
+                  <tr>
+                    <td>
+                      <fieldset class="list-controls">
+                        <?php echo self::with_selected_control(); ?>
+                      </fieldset>
+                    </td>
+                  </tr>
                 <?php endif ?>
               </tbody>
             </table>
@@ -531,7 +535,7 @@ class PDb_List_Admin {
           private static function _main_table( $mode = '' )
           {
             self::list_count_display();
-            
+
             $hscroll = Participants_Db::plugin_setting_is_true( 'admin_horiz_scroll' );
             ?>
             <?php if ( $hscroll ) : ?>
@@ -760,7 +764,7 @@ class PDb_List_Admin {
       );
     }
   }
-  
+
   /**
    * prints the list count display
    */

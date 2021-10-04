@@ -703,6 +703,7 @@ class PDb_List extends PDb_Shortcode {
   {
     $return = array();
     $search_columns = is_array( $columns ) && !empty( $columns ) ? $columns : $this->display_columns;
+    
     foreach ( $search_columns as $col ) {
       $column = $this->get_column_atts( $col );
       /**

@@ -387,9 +387,17 @@ class PDb_Manage_Fields {
               ?>
               <label><?php echo $this->i18n[ 'new field form element' ] ?></label>
               <?php
+              /**
+               * filter to control which form elements are available for new fields
+               * 
+               * @filter pdb-create_field_form_element_options
+               * @param array of form element types as $name => $title
+               * @return array
+               */
+              $available_form_elements = array_flip( Participants_Db::apply_filters( 'create_field_form_element_options', PDb_FormElement::get_types() ) );
               PDb_FormElement::print_element( array(
                   'type' => 'dropdown',
-                  'options' => array_flip( PDb_FormElement::get_types() ) + array( PDb_FormElement::null_select_key() => false ),
+                  'options' => $available_form_elements + array( PDb_FormElement::null_select_key() => false ),
                   'name' => 'form_element',
                   'value' => '',
                   'attributes' => array(

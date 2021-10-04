@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.6
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -32,6 +32,9 @@ class string_combine extends dynamic_db_field {
     $this->customize_default_attribute( __( 'Template', 'participants-database' ), 'text-area' );
     
     $this->is_linkable();
+    
+    add_filter( 'pdb-shortcode_call_pdb_signup', array( $this, 'setup_field_for_signup' ) );
+    add_filter( 'pdb-before_submit_signup', array( $this, 'set_submission_value' ) );
   }
 
   /**
@@ -65,6 +68,67 @@ class string_combine extends dynamic_db_field {
     $this->set_field( $field );
     
     $field->output = $this->form_element_html();
+  }
+  
+  /**
+   * sets up the field as a hidden field for a signup form
+   * 
+   * @param array $params
+   * @return array
+   */
+  public function setup_field_for_signup( $params )
+  {
+    add_filter( 'pdb-raw_field_definition', array( $this, 'redefine_for_signup' ) );
+    add_action( 'pdb-after_include_shortcode_template', function(){
+      remove_filter( 'pdb-raw_field_definition', array( $this, 'redefine_for_signup' ) );
+    });
+    
+    return $params;
+  }
+  
+  /**
+   * redefines the field for the signup form
+   * 
+   * @param stdClass $definition
+   * @return stdClass
+   */
+  public function redefine_for_signup( $definition )
+  {
+    if ( $definition->form_element === self::element_name && $definition->signup ) {
+    
+      $definition->form_element = 'hidden';
+      $definition->default = '';
+      
+      // prevent the field from getting added to the main iterator now that is it hidden
+      add_filter( 'pdb-add_field_to_iterator', function ( $add, $field ) use ( $definition ) {
+        if ( $field->name() === $definition->name && $field->form_element() === self::element_name ) {
+          $add = false;
+        }
+        return $add;
+      }, 10, 2 );
+      
+    } 
+    
+    return $definition;
+  }
+  
+  /**
+   * places the dynamic value in the signup submission
+   * 
+   * @param array $post
+   * @return array
+   */
+  public function set_submission_value( $post )
+  {
+    foreach( $this->field_list() as $field )
+    {
+      if ( $field->is_signup() && isset( $post[$field->name()] ) ) {
+        $this->set_field( $field->name() );
+        $post[$field->name()] = $this->dynamic_value($post);
+      }
+    }
+    
+    return $post;
   }
   
   /**
@@ -280,7 +344,7 @@ PATT;
         'help_text' => false,
         'validation' => false,
         'validation_message' => false,
-        'signup' => false,
+        'signup' => true,
     );
   }
 

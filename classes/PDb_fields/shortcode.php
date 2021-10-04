@@ -104,6 +104,16 @@ class shortcode extends core {
   { 
     $shortcode = new shortcode_string( $this->field->default_value );
     
+    /**
+     * allows a computed value to be used for the shortcode replacement value
+     * 
+     * @filter pdb-shortcode_field_replacement_value
+     * @param string the field's value
+     * @param \Pdb_fields\shortcode instance
+     * @return string replacement value
+     */
+    $replacement = \Participants_Db::apply_filters( 'shortcode_field_replacement_value', $this->field_value(), $this );
+    
     $replaced_shortcode = $shortcode->replaced_shortcode( $this->field_value() );
 
     $done_shortcode = do_shortcode( $replaced_shortcode );
