@@ -236,7 +236,7 @@ class with_selected {
    */
   private function id_count()
   {
-    return count( $this->selected_ids );
+    return is_countable( $this->selected_ids ) ? count( $this->selected_ids ) : 0;
   }
 
 }
