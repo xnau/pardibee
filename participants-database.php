@@ -536,6 +536,8 @@ class Participants_Db extends PDb_Base {
      * @version 1.6 filter pdb-private_id_length
      */
     self::$private_id_length = self::apply_filters( 'private_id_length', self::$private_id_length );
+    
+    new \PDb_shortcodes\attributes();
 
     /*
      * checks for the need to update the DB
@@ -2067,7 +2069,7 @@ class Participants_Db extends PDb_Base {
     $result = $wpdb->query( $query );
 
     if ( ! $result ) {
-      self::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error );
+      self::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error . ' with query: ' . $wpdb->last_query );
     } else {
       self::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
     }
@@ -3688,7 +3690,11 @@ class Participants_Db extends PDb_Base {
     );
 
     add_submenu_page(
-            self::PLUGIN_NAME, self::plugin_label( 'list_participants' ), self::plugin_label( 'list_participants' ), self::plugin_capability( 'record_edit_capability', 'list participants' ), self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
+            self::PLUGIN_NAME, 
+            self::plugin_label( 'list_participants' ), 
+            self::plugin_label( 'list_participants' ), 
+            self::plugin_capability( 'record_edit_capability', 'list participants' ), 
+            self::PLUGIN_NAME, //self::$plugin_page . '-list_participants', 
             array($list_admin_classname, 'initialize')
     );
     /**
