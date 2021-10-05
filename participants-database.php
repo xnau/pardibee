@@ -3405,8 +3405,10 @@ class Participants_Db extends PDb_Base {
   {
 
     $target_page = $target_page === '' ? self::plugin_setting('registration_page') : $target_page;
+    
+    $registration_page = self::find_permalink( $target_page );
 
-    if ( false === $registration_page = self::find_permalink( $target_page ) ) {
+    if ( false === $registration_page ) {
       //error_log( 'Participants Database: "Participant Record Page" setting is invalid.' );
       return '';
     }
