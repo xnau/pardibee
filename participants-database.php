@@ -2661,8 +2661,9 @@ class Participants_Db extends PDb_Base {
      * of fields, not just what's found in the POST array
      */
     $columns = false;
-    if ( !empty( $post_input['pdb_data_keys'] ) )
+    if ( !empty( $post_input['pdb_data_keys'] ) ) {
       $columns = self::get_data_key_columns( $post_input['pdb_data_keys'] );
+    }
 
     /*
      * instantiate the validation object if we need to. This is necessary
