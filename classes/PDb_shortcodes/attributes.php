@@ -73,7 +73,7 @@ class attributes {
    */
   public static function last_attributes()
   {
-    return $this->attribute_set('last');
+    return self::attribute_set('last');
   }
   
   /**
@@ -82,7 +82,7 @@ class attributes {
    * @param string $set the tag or name of the attribute set to get
    * @return array
    */
-  private function attribute_set( $set )
+  private static function attribute_set( $set )
   {
     $attributes = get_transient( self::attribute_store );
     
