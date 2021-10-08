@@ -41,11 +41,11 @@ if ( !PDb_Form_Field_Def::is_field( $match_field ) ) {
       <h2><?php echo __( 'Import CSV File', 'participants-database' ) ?></h2>
 
 <?php
-if ( !empty( $CSV_import->errors ) ):
+if ( !empty( $CSV_import->has_errors() ) ):
   ?>
 
         <div class="<?php echo $CSV_import->error_status ?> fade below-h2" id="message">
-          <p><?php echo implode( '</p><p>', $CSV_import->errors ) ?></p>
+          <p><?php echo implode( '</p><p>', $CSV_import->get_errors() ) ?></p>
         </div>
 
   <?php
@@ -64,18 +64,18 @@ endif;
             <table class="spreadsheet">
               <tr>
 <?php
-foreach ( $CSV_import->column_names as $name ) {
+foreach ( $CSV_import->column_names() as $name ) {
   echo '<th>' . $name . '</th>';
 }
 ?>
               </tr>
               <tr>
 <?php
-echo str_repeat( '<td>&nbsp;</td>', $CSV_import->column_count );
+echo str_repeat( '<td>&nbsp;</td>', $CSV_import->column_count() );
 ?>
               </tr>
             </table>
-            <p><?php printf( __( 'This means your spreadsheet needs to have %s columns, and the heading in each of those columns needs to match exactly the names above. If there is no data for a particular column, you can include it and leave it blank, or leave it out entirely. The order of the columns doesn&#39;t matter.', 'participants-database' ), $CSV_import->column_count ) ?></p>
+            <p><?php printf( __( 'This means your spreadsheet needs to have %s columns, and the heading in each of those columns needs to match exactly the names above. If there is no data for a particular column, you can include it and leave it blank, or leave it out entirely. The order of the columns doesn&#39;t matter.', 'participants-database' ), $CSV_import->column_count() ) ?></p>
             <p><?php _e( 'If the imported CSV file has a different column set, that column set will be imported and used. If a column name does not match a defined column in the database, the data from that column will be discarded', 'participants-database' ) ?></p>
             <p><input class="button button-default" type="submit" value="<?php _e( 'Get Blank CSV File', 'participants-database' ) ?>" style="float:left;margin:0 5px 5px 0" /><?php _e( 'You can download this file, then open it in Open Office, Excel or Google Docs.', 'participants-database' ) ?></p>
           </div>
