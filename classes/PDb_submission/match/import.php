@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -38,7 +38,7 @@ class import extends record {
      * * update
      * * skip
      */
-    $this->set_match_mode( filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING ) );
+    $this->set_match_mode( $this->post['match_preference'] );
   }
 
   /**
@@ -49,7 +49,7 @@ class import extends record {
    */
   protected function set_match_field()
   {
-    $this->match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING );
+    $this->match_field = $this->post['match_field'];
   }
 
 }
