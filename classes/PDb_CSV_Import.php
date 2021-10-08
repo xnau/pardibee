@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class, CSV_Import
  *
@@ -29,6 +29,11 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    * @var int the current duplicate record preference
    */
   private $match_preference;
+  
+  /**
+   * @var \PDb_import\process instance
+   */
+  private $process;
 
   /**
    * 
@@ -36,16 +41,73 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    */
   public function __construct( $file_field_name )
   {
-    $this->i10n_context = Participants_Db::PLUGIN_NAME;
-
     $this->set_column_array();
 
     $this->match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING );
-    $this->match_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_NUMBER_INT );
+    $this->match_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING);
 
     Participants_Db::$session->set( 'form_status', 'normal' ); // CSV import is a normal status
+    
+    // get the process instance from \PDb_import\controller
+    $this->process = Participants_Db::apply_filters( 'get_import_process', false );
 
     parent::__construct( $file_field_name );
+    
+    $this->check_for_report();
+  }
+  
+  /**
+   * checks for a background process report and adds it to the error heading
+   */
+  public function check_for_report()
+  {
+    $tally = \PDb_import\tally::get_instance();
+    
+    if ( $tally->has_report() ) {
+      $this->errors[] = $tally->report();
+    }
+  }
+  
+  /**
+   * supplies the import error messages
+   * 
+   * @return array
+   */
+  public function get_errors()
+  {
+    return $this->errors;
+  }
+  
+  /**
+   * supplies the import error messages
+   * 
+   * @return array
+   */
+  public function has_errors()
+  {
+    return is_array( $this->errors ) && count( $this->errors ) > 0;
+  }
+  
+  /**
+   * provides the columns names array
+   * 
+   * @return array
+   * 
+   */
+  public function column_names()
+  {
+    return $this->column_names;
+  }
+  
+  /**
+   * provides the number of columns
+   * 
+   * @return int
+   * 
+   */
+  public function column_count()
+  {
+    return $this->column_count;
   }
 
   /**
@@ -83,6 +145,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       array_walk( $this->column_names, array( $this, '_enclosure_trim' ), $this->CSV->enclosure );
 
       $this->column_count = count( $this->column_names );
+    
+      $this->process->setup( $this->column_names, $this->match_preference, $this->match_field );
     }
   }
 
@@ -110,58 +174,43 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   {
     return Participants_Db::apply_filters( 'csv_import_value', $this->_enclosure_trim( $value, '', $this->CSV->enclosure ), $column );
   }
+  
+  /**
+   * inserts the record data from the CSV file
+   *
+   * @param string $src_file the file to parse
+   *
+   * @return bool success/failure
+   * 
+   */
+  protected function insert_from_csv($src_file)
+  {
+    $success = parent::insert_from_csv($src_file);
+    
+    if ( $success ) {
+      
+      \PDb_import\tally::get_instance()->reset();
+      
+      $this->process->save()->dispatch();
+    }
+    
+    return $success;
+  }
 
   /**
    * stores the record in the database
    * 
-   * @param array $post associative array of imported data
+   * @param array $post array of imported data
    */
   protected function store_record( $post )
   {
-    // reset the validation object
-    Participants_Db::$validation_errors = new PDb_FormValidation();
-
     /**
      * @version 1.6.3
      * @filter pdb-before_csv_store_record
      */
     $post = Participants_Db::apply_filters( 'before_csv_store_record', $post );
 
-    $post[ 'csv_file_upload' ] = 'true';
-    $post[ 'subsource' ] = Participants_Db::PLUGIN_NAME;
-    $post[ 'match_field' ] = $this->match_field;
-    $post[ 'match_preference' ] = $this->match_preference;
-
-    // add the record data to the database
-    $id = Participants_Db::process_form( $post, 'insert', false, $this->column_names );
-
-    /**
-     * @action pdb-after_import_record
-     * @param array $post the saved data
-     * @param int $id the record id
-     * @param string $insert_status the insert status for the record
-     */
-    do_action( 'pdb-after_import_record', $post, $id, Participants_Db::$insert_status );
-
-    // count the insert type for the record
-    switch ( Participants_Db::$insert_status ) {
-
-      case 'insert' :
-        $this->insert_count++;
-        break;
-
-      case 'update' :
-        $this->update_count++;
-        break;
-
-      case 'skip' :
-        $this->skip_count++;
-        break;
-
-      case 'error' :
-        $this->error_count++;
-        break;
-    }
+    $this->process->push_to_queue( array_values( $post ) );
   }
 
   /**
