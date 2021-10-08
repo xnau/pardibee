@@ -42,7 +42,7 @@ abstract class record {
    * 
    * don't assume sanitized
    */
-  private $post;
+  protected $post;
 
   /**
    * @var bool match status
