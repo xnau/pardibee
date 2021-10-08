@@ -526,6 +526,11 @@ class Participants_Db extends PDb_Base {
      * this is to reduce the number of db queries
      */
     self::_setup_fields();
+    
+    /**
+     * initialize the import background process
+     */
+    new \PDb_import\controller();
 
     self::load_plugin_textdomain( __FILE__ );
 
@@ -1525,6 +1530,7 @@ class Participants_Db extends PDb_Base {
    *                                    creates or updates the default record.
    * @param array|bool  $column_names   array of column names to process from the $post 
    *                                    array, if false, processes a preset set of columns
+   * @param bool        $func_call      optional flag to indicate the method is getting called by external code
    *
    * @return int|bool   int ID of the record created or updated, bool false if submission 
    *                    does not validate
