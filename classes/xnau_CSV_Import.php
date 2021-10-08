@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -24,52 +24,38 @@ abstract class xnau_CSV_Import {
   /**
    * @var array all the valid column names in the receiving database
    */
-  var $column_names;
+  protected $column_names;
+  
   /**
    *
    * @var int number of valid columns
    */
-  var $column_count;
+  protected $column_count;
+  
   /**
    * @var string holds the path to the target location for the uploaded file 
    */
-  var $upload_directory;
-  /**
-   * @var string holds the name of the $_POST element with the uploaded file name
-   */
-  var $file_field_name;
+  protected $upload_directory;
+  
   /**
    * @var array holds any errors or confirmation messages
    */
-  var $errors;
+  protected $errors;
+  
   /**
    *  @var string status of the error message
    */
-  var $error_status = 'updated';
+  public $error_status = 'updated';
+  
   /**
-   * @var int holds the number of inserted records
+   * @var int the number of lines imported
    */
-  var $insert_count = 0;
-  /**
-   * @var int holds the number of updated records
-   */
-  var $update_count = 0;
-  /**
-   * @var int holds the number of skipped records
-   */
-  var $skip_count = 0;
-  /**
-   * @var int holds the number of skipped records
-   */
-  var $error_count = 0;
-  /**
-   * @var string holds the context string for the internationalization functions
-   */
-  var $i10n_context;
+  protected $lines;
+  
   /**
    * @var object the parseCSV instance
    */
-  var $CSV;
+  protected $CSV;
   
   /**
    * @var string name of the nonce
@@ -95,37 +81,20 @@ abstract class xnau_CSV_Import {
         $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES[PDb_CSV_Import::csv_field]['name']);
 
         if (false !== move_uploaded_file($_FILES[PDb_CSV_Import::csv_field]['tmp_name'], $target_path)) {
+          
+          error_log(__METHOD__.' upload begins: '. microtime(true));
 
           $this->set_error(sprintf(__('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES[PDb_CSV_Import::csv_field]['name'] . '</strong>'), false);
 
-          $this->insert_from_csv($target_path);
-
-          if ($this->insert_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s record added', '%s records added', $this->insert_count, 'participants-database'), $this->insert_count), '', false);
-          }
-          if ($this->update_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s matching record updated', '%s matching records updated', $this->update_count, 'participants-database'), $this->update_count), '', false);
-          }
-
-          if ($this->skip_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s duplicate record skipped', '%s duplicate records skipped', $this->skip_count, 'participants-database'), $this->skip_count), '', false);
-          }
-
-          if ($this->error_count > 0) {
-
-            $this->set_error_heading(sprintf(_n('%s record skipped due to errors', '%s records skipped due to errors', $this->error_count, 'participants-database'), $this->error_count), '', false);
-          }
-          if ($this->update_count == 0 and $this->insert_count == 0) {
-
-            $this->set_error_heading(__('Zero records imported', 'participants-database'));
+          $success = $this->insert_from_csv($target_path);
+          
+          if ( $success ) {
+            $this->set_error_heading( $this->upload_success_message(), '', false);
           }
         } // file move successful
         else { // file move failed
           $this->set_error_heading(
-                  __('There was an error uploading the file. This could be a problem with permissions on the uploads directory.', 'participants-database'), __('Destination', 'participants-database') . ': ' . dirname( $target_path )
+                  __('There was an error uploading the file. This is often because the file is larger than the server configuration will allow.', 'participants-database'), __('Destination', 'participants-database') . ': ' . dirname( $target_path )
           );
         }
       } else {
@@ -141,6 +110,22 @@ abstract class xnau_CSV_Import {
       
       do_action( 'pdb-after_import_csv', $this );
     }
+  }
+  
+  /**
+   * supplies tue upload success message
+   * 
+   * @return string
+   */
+  protected function upload_success_message()
+  {
+    $message = array( __( 'File upload complete', 'participants-database') . ': ' );
+    
+    $message[] = sprintf( _n( '%d line received.', '%d lines received.', $this->lines, 'participants-database' ), $this->lines  );
+    
+    $message[] = '<br/>' . __( 'The data is importing in the background, refresh the page to get the current status of the import.', 'participants-database');
+    
+    return implode( PHP_EOL, $message );
   }
   
   /**
@@ -233,7 +218,7 @@ abstract class xnau_CSV_Import {
      */
     $this->setup_import_columns();
 
-    $line_num = 1;
+    $this->lines = 1;
 
     foreach ($this->CSV->data as $csv_line) {
 
@@ -243,17 +228,17 @@ columns:'.implode(', ',$this->column_names).'
   
 csv line= '.print_r( $csv_line, true ), 2 );
 
-      $values = array();
+      $column_values = array();
 
       foreach ($csv_line as $value) {
 
-        $values[] = $this->process_value($value);
+        $column_values[] = $this->process_value($value);
       }
 
-      if (count($values) != $this->column_count) {
+      if (count($column_values) != $this->column_count) {
 
         $this->set_error(sprintf(
-                        __('The number of items in line %s is incorrect.<br />There are %s and there should be %s.', 'participants-database'), $line_num, count($values), $this->column_count
+                        __('The number of items in line %s is incorrect.<br />There are %s and there should be %s.', 'participants-database'), $this->lines, count($column_values), $this->column_count
                 )
         );
 
@@ -261,13 +246,15 @@ csv line= '.print_r( $csv_line, true ), 2 );
       }
 
       // put the keys and the values together into the $post array
-      if (!$post = array_combine($this->column_names, $values))
+      if ( !$post = array_combine( $this->column_names, $column_values ) ) {
         $this->set_error(__('Number of values does not match number of columns', 'participants-database'));
+      } else {
 
-      // store the record
-      $this->store_record($post);
+        // store the record
+        $this->store_record( $post );
+      }
 
-      $line_num++;
+      $this->lines++;
     }
 
     return true;
