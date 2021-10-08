@@ -207,12 +207,12 @@ abstract class dynamic_db_field extends core {
 class dynamic_value_update extends \WP_Background_Process {
 
   /**
-   * @var string
+   * @var string name for the action
    */
   protected $action = 'pdb_dynamic_value_update';
   
   /**
-   * @var dynamic_db_field the current field type object
+   * @var dynamic_db_field the current field type object 
    */
   public $dynamic_db_field;
 
