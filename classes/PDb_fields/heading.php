@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -122,6 +122,6 @@ class heading extends utility {
    */
   public function editor_config( $switches )
   {
-    return array_merge( parent::editor_config($switches), array( 'attributes' => false ) );
+    return array_merge( parent::editor_config($switches), array( 'attributes' => false, 'signup' => true ) );
   }
 }
