@@ -258,6 +258,11 @@ p.submit.top-bar-submit  {
   }
 }
 
+.import-tally-report .import-tally-report-item {
+  display:block;
+}
+
+
 /*** ***/
 .admin-edit-participant .fieldnote {
   color: #AAAAAA;
