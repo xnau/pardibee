@@ -138,9 +138,18 @@ class PDb_List_Admin {
          * @param array of actions that are not quantity limited
          * @return array
          */
-        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove' ) ),
+        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove', PDb_admin_list\mass_edit::edit_action ) ),
             )
     );
+    
+    
+    wp_localize_script( 'pdb-list-admin', 'mass_editL10n', array(
+        'edit_action' => PDb_admin_list\mass_edit::edit_action,
+        'action' => PDb_admin_list\mass_edit::action,
+        'selector' => PDb_admin_list\mass_edit::field_selector,
+        'spinner' => Participants_Db::get_loading_spinner(),
+    ) );
+    
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
 
@@ -170,8 +179,7 @@ class PDb_List_Admin {
 
     self::$query = new \PDb_admin_list\query( self::$list_filter );
 
-    // process list form submissions
-    new \PDb_admin_list\process();
+    new PDb_admin_list\process();
 
     /*
      * save the query in a session value so it can be used by the export CSV functionality
