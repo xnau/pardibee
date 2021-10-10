@@ -239,7 +239,7 @@ class mass_edit {
    */
   private function included_types()
   {
-    $excluded = \Participants_Db::apply_filters( 'with_selected_mass_edit_included_field_types', array(
+    $included = \Participants_Db::apply_filters( 'with_selected_mass_edit_included_field_types', array(
                 'text-line',
                 'text-area',
                 'rich-text',
@@ -258,7 +258,7 @@ class mass_edit {
                 'hidden',
             ) );
     
-    return "'" . implode( "','", $excluded ) . "'";
+    return "'" . implode( "','", $included ) . "'";
   }
 
   /**
