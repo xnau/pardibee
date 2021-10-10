@@ -1660,6 +1660,7 @@ class PDb_Base {
         case 'updated':
           $type = 'success';
       }
+      
       Participants_Db::$session->set( 'admin_message', array($message, $type) );
     }
   }
