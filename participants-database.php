@@ -496,7 +496,8 @@ class Participants_Db extends PDb_Base {
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
     }
-
+    
+    new PDb_admin_list\mass_edit();
   }
 
   /**
@@ -657,7 +658,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.6' );
+    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.1' );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$presuffix.js" ), array('jquery'), self::$plugin_version );
@@ -679,7 +680,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.4' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.6' );
     wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
@@ -691,15 +692,9 @@ class Participants_Db extends PDb_Base {
       
       wp_enqueue_style(self::$prefix . 'jquery-ui-theme');
     }
-
-    if ( false !== stripos( $hook, 'participants-database-list_participants' ) ) {
-//      wp_localize_script(self::$prefix.'list-admin', 'list_adminL10n', array(
-//          'delete' => PDb_List_Admin::$i18n['delete_checked'],
-//          'cancel' => PDb_List_Admin::$i18n['change'],
-//          "record" => __("Do you really want to delete the selected record?", 'participants-database' ),
-//          "records" => __("Do you really want to delete the selected records?", 'participants-database' ),
-//      ));
-//      wp_enqueue_script(self::$prefix.'list-admin');
+    
+    if ( $hook === 'toplevel_page_participants-database' ) {
+      new \PDb_admin_list\mass_edit_update();
     }
 
     if ( false !== stripos( $hook, 'participants-database_settings_page' ) ) {
