@@ -396,7 +396,7 @@ class PDb_List_Admin {
                           <span class="filter-search-term">
 
                             <?php
-                            _ex( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' );
+                            echo _x( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' ) . '&nbsp;';
                             $element = array(
                                 'type' => 'dropdown',
                                 'name' => 'operator[' . $i . ']',
