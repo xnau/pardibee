@@ -64,6 +64,11 @@ class field_input {
   public function __construct( $fieldname, $value )
   {
     $this->field = new \PDb_Field_Item( $fieldname );
+    
+    if ( $value === false ) {
+      $value = $this->field->default_value();
+    }
+    
     $this->field->set_value($value);
     
     $this->modify_field();
