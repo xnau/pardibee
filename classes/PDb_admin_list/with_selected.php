@@ -226,7 +226,10 @@ class with_selected {
      * 
      * @param string feedback to show after the action has been performed
      */
-    Participants_Db::set_admin_message( Participants_Db::apply_filters( 'admin_list_action_feedback', '' ), 'updated' );
+    $message = Participants_Db::apply_filters( 'admin_list_action_feedback', '' );
+    if ( !empty( $message ) ) {
+      Participants_Db::set_admin_message( $message, 'updated' );
+    }
   }
 
   /**
