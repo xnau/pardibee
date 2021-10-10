@@ -53,25 +53,29 @@ var PDbListAdmin = (function ($) {
     var edit_control = el.closest('.list-controls').find('.mass-edit-control');
     if (el.val() === mass_editL10n.edit_action) {
       edit_control.show(speed);
+      set_input(el);
     } else {
       edit_control.hide(speed);
     }
   }
   // provides the field-specific input for the mass edit control
-  var set_input = function () {
-    var el = $(this).closest('.list-controls');
-    var input = el.find('.mass-edit-input');
-    input.find('.field-input-label, .field-input').fadeTo(speed,0,function(){input.addClass('changeout');});
+  var set_input = function (e) {
+    var el = e.target ? $(e.target) : $(e);
+    var control = el.closest('.list-controls');
+    var input = control.find('.mass-edit-input');
+    input.find('.field-input-label, .field-input').fadeTo(speed,0,function(){
+      input.addClass('changeout');
+    });
     input.append(spinner);
-    var field = el.find('[name="' + mass_editL10n.selector + '"]').val();
     var data = {action: mass_editL10n.action};
-    data[mass_editL10n.selector] = field;
+    data[mass_editL10n.selector] = control.find('[name="' + mass_editL10n.selector + '"]').val();
     $.post(ajaxurl,
             data,
             function (response) {
               input.html(response.input);
               input.find('.field-input-label, .field-input').fadeTo(speed,1);
               input.removeClass('changeout');
+              PDbOtherSelect.init();
             }
     );
   }
