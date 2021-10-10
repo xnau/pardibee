@@ -102,9 +102,7 @@ class mass_edit_update {
     
     $result = $wpdb->query( $this->update_query(  $id_list ) );
     
-//    error_log(__METHOD__.' query: '.$wpdb->last_query . ' 
-//      
-//result: ' . print_r($result,1));
+    //error_log(__METHOD__.' query: '.$wpdb->last_query );
     
     return $result > 0 ? intval( $result/2 ) : 0;
   }
