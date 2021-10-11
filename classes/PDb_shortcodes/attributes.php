@@ -38,6 +38,7 @@ class attributes {
     foreach( \Participants_Db::plugin_shortcode_list() as $tag ) {
       add_filter( 'pdb-shortcode_call_' . $tag, function ( $atts ) use ( $tag ) {
         $this->stash_attributes( $atts, $tag );
+        return $atts;
       } );
     }
   }
