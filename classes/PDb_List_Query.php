@@ -391,52 +391,7 @@ class PDb_List_Query {
    */
   public static function process_search_term_keys( $key )
   {
-    $value = $key;
-
-    // get the numeric part, if included
-    if ( $numeric = self::search_key_numeric_value( $key ) ) {
-      $key = preg_replace( '/^[+-]?\d+/', 'n', $key );
-    }
-
-    switch ( $key ) {
-      case 'current_date':
-        $value = time();
-        break;
-      case 'current_day':
-        $value = date( 'M j,Y 00:00' );
-        break;
-      case 'current_week':
-        $value = date( 'M j,Y 00:00', strtotime( 'this week' ) );
-        break;
-      case 'current_month':
-        $value = date( 'M 01,Y 00:00' );
-        break;
-      case 'current_year':
-        $value = date( '\j\a\n 01,Y 00:00' );
-        break;
-      case 'n_days':
-        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' ) );
-        break;
-      case 'n_months':
-        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' months' ) );
-        break;
-    }
-    
-    return $value;
-  }
-
-  /**
-   * provides the search term key numeric value
-   * 
-   * @param string $key
-   * @return string|bool extracted numeric value or bool false if no number can be extracted
-   */
-  private static function search_key_numeric_value( $key )
-  {
-    if ( preg_match( '/^([+-]?\d+)_/', $key, $matches ) === 0 ) {
-      return false;
-    }
-    return $matches[ 1 ];
+    return Participants_Db::date_key($key);
   }
 
   /**
