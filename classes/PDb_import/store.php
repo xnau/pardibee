@@ -30,21 +30,20 @@ trait store {
   /**
    * performs the import
    * 
-   * @param array $values the import data
+   * @param array $column_values array of values from the imported line
    * @param array $settings
    */
-  public function import( $values, $settings )
+  public function import( $column_values, $settings )
   {
     $this->column_names = $settings['column_names'];
     $this->tally = tally::get_instance();
     
-    $post = array_combine( $this->column_names, $values );
+    $post = array_combine( $this->column_names, $column_values );
     
     $post['match_preference'] = $settings['match_mode'];
     $post['match_field'] = $settings['match_field'];
     
     $result = $this->import_record( $post );
-    //$result = sleep(10);
     
     if ( $result ) {
       /**
