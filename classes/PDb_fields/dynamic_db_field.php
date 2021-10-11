@@ -76,9 +76,9 @@ abstract class dynamic_db_field extends core {
   }
 
   /**
-   * gets the string combine field list
+   * gets the dynamic db field list
    * 
-   * caches a list of all the string combine fields
+   * caches a list of all the field types that extend this class
    * 
    * @return array of PDb_Form_Field_Def objects
    */
@@ -149,6 +149,7 @@ abstract class dynamic_db_field extends core {
     if ( $field_data[ 'form_element' ] === $this->name ) {
       
       $field_def = \Participants_Db::get_field_atts( $info[ 'name' ] );
+      /** @var \PDb_Form_Field_Def $field_def */
 
       if ( $field_def->default_value() !== $field_data[ 'default' ] ) {
       
