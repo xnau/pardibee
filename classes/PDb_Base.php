@@ -1410,6 +1410,66 @@ class PDb_Base {
     
     return $check === 1 ? $value : $fallback;
   }
+  
+  
+
+  /**
+   * processes the search term keys for use in shortcode filters
+   * 
+   * if the supplied key is not defined here, returns the key
+   * 
+   * @param string  $key the search term
+   * @return string the search term to use
+   */
+  public static function date_key( $key )
+  {
+    $value = $key;
+
+    // get the numeric part, if included
+    if ( $numeric = self::search_key_numeric_value( $key ) ) {
+      $key = preg_replace( '/^[+-]?\d+/', 'n', $key );
+    }
+
+    switch ( $key ) {
+      case 'current_date':
+        $value = time();
+        break;
+      case 'current_day':
+        $value = date( 'M j,Y 00:00' );
+        break;
+      case 'current_week':
+        $value = date( 'M j,Y 00:00', strtotime( 'this week' ) );
+        break;
+      case 'current_month':
+        $value = date( 'M 01,Y 00:00' );
+        break;
+      case 'current_year':
+        $value = date( '\j\a\n 01,Y 00:00' );
+        break;
+      case 'n_days':
+        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' days' ) );
+        break;
+      case 'n_months':
+        $value = date( 'M j,Y 00:00', strtotime( $numeric . ' months' ) );
+        break;
+    }
+    
+    return $value;
+  }
+
+  /**
+   * provides the search term key numeric value
+   * 
+   * @param string $key
+   * @return string|bool extracted numeric value or bool false if no number can be extracted
+   */
+  private static function search_key_numeric_value( $key )
+  {
+    if ( preg_match( '/^([+-]?\d+)_/', $key, $matches ) === 0 ) {
+      return false;
+    }
+    return $matches[ 1 ];
+  }
 
   /**
    * supplies an image/file upload location
