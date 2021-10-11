@@ -154,7 +154,7 @@ class numeric_calc extends templated_field {
     $sum = 0;
     $op = 'add';
     
-    foreach( $this->calc_list as $item ) {
+    foreach( $this->calc_list as $i => $item ) {
       
       switch ( $item ) {
         
@@ -310,7 +310,10 @@ class numeric_calc extends templated_field {
         case '*':
         case '/':
         case '=':
-          $calc_list[] = $buffer;
+          if ( is_numeric( $buffer ) ) {
+            // add any literal number
+            $calc_list[] = $buffer;
+          }
           $calc_list[] = $chr;
           $buffer = '';
           break;
@@ -335,10 +338,9 @@ class numeric_calc extends templated_field {
             
             // this is a key value, add it to the list as-is
             $calc_list[] = $buffer;
-          } elseif ( is_numeric( $buffer ) ) {
-            // add any literal number
-            $calc_list[] = $buffer;
+            
           }
+          
           $buffer = '';
           break;
           
