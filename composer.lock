@@ -43,20 +43,24 @@
                 }
             ],
             "description": "WP Background Processing can be used to fire off non-blocking asynchronous requests or as a background processing tool, allowing you to queue tasks.",
+            "support": {
+                "issues": "https://github.com/deliciousbrains/wp-background-processing/issues",
+                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/master"
+            },
             "time": "2020-07-31T07:00:11+00:00"
         },
         {
             "name": "parsecsv/php-parsecsv",
-            "version": "1.2.1",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parsecsv/parsecsv-for-php.git",
-                "reference": "947b1c0866cc0a8162692d42c814a6ce07caf319"
+                "reference": "009820d190342581c05ce84a71237153d09e754d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parsecsv/parsecsv-for-php/zipball/947b1c0866cc0a8162692d42c814a6ce07caf319",
-                "reference": "947b1c0866cc0a8162692d42c814a6ce07caf319",
+                "url": "https://api.github.com/repos/parsecsv/parsecsv-for-php/zipball/009820d190342581c05ce84a71237153d09e754d",
+                "reference": "009820d190342581c05ce84a71237153d09e754d",
                 "shasum": ""
             },
             "require": {
@@ -103,20 +107,24 @@
                 }
             ],
             "description": "CSV data parser for PHP",
-            "time": "2020-04-25T17:17:04+00:00"
+            "support": {
+                "issues": "https://github.com/parsecsv/parsecsv-for-php/issues",
+                "source": "https://github.com/parsecsv/parsecsv-for-php"
+            },
+            "time": "2021-06-20T21:25:35+00:00"
         },
         {
             "name": "yahnis-elsts/plugin-update-checker",
-            "version": "v4.10",
+            "version": "v4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/YahnisElsts/plugin-update-checker.git",
-                "reference": "0edd15f67822464af8a23285ce367b30d515a855"
+                "reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/0edd15f67822464af8a23285ce367b30d515a855",
-                "reference": "0edd15f67822464af8a23285ce367b30d515a855",
+                "url": "https://api.github.com/repos/YahnisElsts/plugin-update-checker/zipball/3155f2d3f1ca5e7ed3f25b256f020e370515af43",
+                "reference": "3155f2d3f1ca5e7ed3f25b256f020e370515af43",
                 "shasum": ""
             },
             "require": {
@@ -126,7 +134,7 @@
             "type": "library",
             "autoload": {
                 "files": [
-                    "load-v4p10.php"
+                    "load-v4p11.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -149,7 +157,11 @@
                 "theme updates",
                 "wordpress"
             ],
-            "time": "2020-08-21T11:36:45+00:00"
+            "support": {
+                "issues": "https://github.com/YahnisElsts/plugin-update-checker/issues",
+                "source": "https://github.com/YahnisElsts/plugin-update-checker/tree/v4.11"
+            },
+            "time": "2021-03-15T16:07:52+00:00"
         }
     ],
     "packages-dev": [],
@@ -160,5 +172,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }
