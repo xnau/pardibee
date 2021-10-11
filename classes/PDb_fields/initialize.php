@@ -24,6 +24,7 @@ class initialize {
     new string_combine();
     new shortcode();
     new placeholder();
+    new numeric_calc();
   }
 
 }
