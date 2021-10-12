@@ -145,9 +145,9 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       array_walk( $this->column_names, array( $this, '_enclosure_trim' ), $this->CSV->enclosure );
 
       $this->column_count = count( $this->column_names );
-    
-      $this->process->setup( $this->column_names, $this->match_preference, $this->match_field );
     }
+    
+    $this->process->setup( $this->column_names, $this->match_preference, $this->match_field );
   }
 
   /**
