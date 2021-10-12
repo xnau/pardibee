@@ -262,7 +262,8 @@ class numeric_calc extends templated_field {
       
       case 'average':
       case 'average_n':
-        $formatted = number_format( $value / $sum_count, $numeric );
+        $average = $sum_count > 0 ? $value / $sum_count : $value;
+        $formatted = number_format( $average, $numeric );
         break;
         
       default:
