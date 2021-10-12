@@ -181,22 +181,7 @@ abstract class templated_field extends dynamic_db_field {
    */
   protected function template()
   {
-    $template = $this->field->default_value();
-    
-    // if there are no tags, use the template as-is
-    if ( preg_match( '/\[.+\]/', $template ) !== 1 ) {
-      return $template;
-    }
-    
-    $pattern = <<<PATT
-/(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|\s*\/?[>"']))+.)["']?/m
-PATT;
-    
-    $template = preg_replace_callback( $pattern, function ($tag) {
-      return str_replace('[', '[value:', $tag[0] );
-    }, $template );
-    
-    return $template;
+    return $this->field->default_value();
   }
 
   /**
