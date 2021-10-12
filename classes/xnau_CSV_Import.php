@@ -178,8 +178,8 @@ abstract class xnau_CSV_Import {
    * @return bool success/failure
    * 
    */
-  protected function insert_from_csv($src_file) {
-
+  protected function insert_from_csv($src_file)
+  {
     global $wpdb;
     $wpdb->hide_errors();
 
@@ -218,7 +218,7 @@ abstract class xnau_CSV_Import {
      */
     $this->setup_import_columns();
 
-    $this->lines = 1;
+    $this->lines = 0;
 
     foreach ($this->CSV->data as $csv_line) {
 
