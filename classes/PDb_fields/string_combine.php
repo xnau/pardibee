@@ -15,7 +15,7 @@
 
 namespace PDb_fields;
 
-class string_combine extends templated_field {
+class string_combine extends calculated_field {
 
   /**
    * @var string name of the form element
@@ -45,7 +45,13 @@ class string_combine extends templated_field {
     
     $replacement_data = $this->replacement_data( $data );
     
-    return \PDb_Tag_Template::replace_text( $this->template(), $replacement_data );
+    $replaced_string = \PDb_Tag_Template::replace_text( $this->template(), $replacement_data );
+    
+    if ( $this->field->get_attribute( 'complete_only' ) && ! $this->complete ) {
+      $replaced_string = '';
+    }
+    
+    return $replaced_string;
   }
 
   /**
@@ -86,6 +92,10 @@ class string_combine extends templated_field {
       }
     }
     
+    $clean_data = $this->clear_empty_values( $data );
+    
+    $this->complete = count( $data ) === count( $clean_data );
+    
     /**
      * provides a way to bring in other values for use by the field
      * 
@@ -94,7 +104,7 @@ class string_combine extends templated_field {
      * @param \PDb_Field_Item
      * @return array
      */
-    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $this->clear_empty_values( $data ), $this->field );
+    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $clean_data, $this->field );
   }
   
   
