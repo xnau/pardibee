@@ -25,6 +25,7 @@ class initialize {
     new shortcode();
     new placeholder();
     new numeric_calc();
+    new date_calc();
   }
 
 }
