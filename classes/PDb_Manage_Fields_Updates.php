@@ -957,6 +957,7 @@ class PDb_Manage_Fields_Updates {
         'ul' => $def_atts,
         'li' => $def_atts,
         'abbr' => $def_atts,
+        'address' => $def_atts,
     );
     
     return Participants_Db::apply_filters( 'field_def_allowed_tags', $allowed_html );
