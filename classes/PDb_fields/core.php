@@ -324,5 +324,15 @@ abstract class core {
   protected function has_content_test( $field ) {
     return $field->value();
   }
+  
+  /**
+   * provides the name of the form element type
+   * 
+   * @return string
+   */
+  public function name()
+  {
+    return $this->name;
+  }
 
 }
