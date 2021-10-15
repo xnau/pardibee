@@ -183,6 +183,7 @@ class PDb_Date_Display {
   {
     self::reassert_timezone();
     $date_func = function_exists('wp_date') ? 'wp_date' : 'date_i18n';
+    
     return $this->timestamp ? $date_func( $this->format(), $this->timestamp ) : '';
   }
 
