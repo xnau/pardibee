@@ -87,6 +87,10 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function __get( $name )
   {
+    if ( method_exists( $this, $name ) ) {
+      return $this->{$name}();
+    }
+    
     if ( property_exists( $this, $name ) ) {
       return $this->{$name};
     }
@@ -108,6 +112,29 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
       default:
         $this->{$prop} = $value;
     }
+  }
+  
+  /**
+   * provides the field's record id
+   * 
+   * @return int
+   */
+  public function record_id()
+  {
+    return $this->record_id;
+  }
+  
+  /**
+   * provides the field value from the db
+   * 
+   * @global \wpdb $wpdb
+   * @return string|int the stored value
+   */
+  public function db_value()
+  {
+    global $wpdb;
+    
+    return $wpdb->get_var( $wpdb->prepare( 'SELECT ' . esc_sql( $this->name() ) . ' FROM ' . \Participants_Db::participants_table() . ' WHERE id = %s', $this->record_id ) );
   }
 
   /**
