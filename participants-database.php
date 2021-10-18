@@ -550,8 +550,9 @@ class Participants_Db extends PDb_Base {
      * 
      * this is to allow for updates to occur in many different ways
      */
-    if ( false === get_option( self::$db_version_option ) || get_option( self::$db_version_option ) != self::$db_version )
+    if ( false === get_option( self::$db_version_option ) || get_option( self::$db_version_option ) != self::$db_version ) {
       PDb_Init::on_update();
+    }
     
     // gives us a way to update the fields to version 1.9.0 manually
     add_action( 'admin_init', function () {
@@ -681,7 +682,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.6' );
-    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version );
+    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       
