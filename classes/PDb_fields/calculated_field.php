@@ -1,7 +1,7 @@
 <?php
 
 /**
- * defines a field that produces a value from a template in the field definition
+ * defines a field that calculates a value following a template in the field definition
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
@@ -131,14 +131,15 @@ abstract class calculated_field extends dynamic_db_field {
    */
   public function redefine_for_signup( $definition )
   {
-    if ( $definition->form_element === self::element_name && $definition->signup ) {
+    $class = get_class($this);
+    if ( $definition->form_element === $class::element_name && $definition->signup ) {
     
       $definition->form_element = 'hidden';
       $definition->default = '';
       
       // prevent the field from getting added to the main iterator now that is it hidden
-      add_filter( 'pdb-add_field_to_iterator', function ( $add, $field ) use ( $definition ) {
-        if ( $field->name() === $definition->name && $field->form_element() === self::element_name ) {
+      add_filter( 'pdb-add_field_to_iterator', function ( $add, $field ) use ( $definition, $class ) {
+        if ( $field->name() === $definition->name && $field->form_element() === $class::element_name ) {
           $add = false;
         }
         return $add;
@@ -178,28 +179,39 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function dynamic_value( $data = false )
   {
-    $replaced_string = $this->replaced_string( $data );
+    $cachegroup = 'pdb-calculated_field-' . $this->field->name();
     
-    if ( $replaced_string === false ) {
-      return false;
-    }
+    $dynamic_value = wp_cache_get( $this->field->record_id(), $cachegroup, false, $found );
     
-    if ( $replaced_string === $this->template() ) {
+    if ( $found === false ) {
       
-      // if there is no replacement data
-      return $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
+      $replaced_string = $this->replaced_string( $data );
+
+      if ( $replaced_string === false ) {
+        
+        $dynamic_value = false;
+      } elseif ( $replaced_string === $this->template() ) {
+
+        // if there is no replacement data
+        $dynamic_value = $this->field->module() === 'admin-edit' ? '' : $this->field->get_attribute( 'default' );
+      } else {
+
+        $cleanup_expression = apply_filters('pdb-' . $this->name . '_cleanup_expression_array', array(
+            '/\[[a-z0-9_:]+\]/',
+            '/^([ ,]*)/',
+            '/([ ,]*)$/',
+            '/( )(?= )/',
+            '/(, |,)(?=,)/',
+            ) );
+
+        // remove unreplaced tags, trim spaces and dangling or duplicate commas
+        $dynamic_value = preg_replace( $cleanup_expression, '', $replaced_string );
+      }
+      
+      wp_cache_add( $this->field->record_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
     }
     
-    $cleanup_expression = apply_filters('pdb-' . $this->name . '_cleanup_expression_array', array(
-        '/\[[a-z0-9_:]+\]/',
-        '/^([ ,]*)/',
-        '/([ ,]*)$/',
-        '/( )(?= )/',
-        '/(, |,)(?=,)/',
-        ) );
-    
-    // remove unreplaced tags, trim spaces and dangling or duplicate commas
-    return preg_replace( $cleanup_expression, '', $replaced_string );
+    return $dynamic_value;
   }
   
   /**
