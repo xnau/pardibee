@@ -564,8 +564,7 @@ class PDb_Init {
 
     $db_version = get_option( Participants_Db::$db_version_option );
 
-    if ( PDB_DEBUG )
-      Participants_Db::debug_log( 'participants database db version determined to be: ' . $db_version );
+    Participants_Db::debug_log( 'participants database db version determined to be: ' . $db_version );
 
     if ( false === $db_version || '0.1' == $db_version ) {
 
