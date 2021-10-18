@@ -35,6 +35,9 @@
   height: 0px;
   overflow: hidden;
 }
+.manage-fields-wrap .default-attribute.rich-text-control-wrap label {
+    display: none;
+}
 
 .def-fieldset .field-header {
   margin: 0;
