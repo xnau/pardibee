@@ -200,7 +200,11 @@ abstract class dynamic_db_field extends core {
     $this->field->default = $packet->default;
     $value = $this->dynamic_value();
     
-    $wpdb->update( \Participants_Db::participants_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
+    if ( $value !== false ) {
+      $wpdb->update( \Participants_Db::participants_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
+    
+      \Participants_Db::debug_log( __METHOD__.' query: '.$wpdb->last_query, 3 );
+    }
   }
 
 }
@@ -208,23 +212,34 @@ abstract class dynamic_db_field extends core {
 class dynamic_value_update extends \WP_Background_Process {
 
   /**
-   * @var string name for the action
+   * @var string stem name for the action
    */
-  protected $action = 'pdb_dynamic_value_update';
+  protected $action = 'pdb_dynamic_value_update_';
   
   /**
-   * @var dynamic_db_field the current field type object 
+   * @var \PDb_fields\dynamic_db_field the current field type object 
    */
   public $dynamic_db_field;
 
   /**
    * 
-   * @param dynamic_db_field $dynamic_db_field
+   * @param \PDb_fields\dynamic_db_field $dynamic_db_field
    */
   public function __construct( $dynamic_db_field )
   {
-    $this->dynamic_db_field = $dynamic_db_field;
+    $this->action .= $dynamic_db_field->name();
+    $this->set_object($dynamic_db_field);
     parent::__construct();
+  }
+  
+  /**
+   * sets the dynamic_db_field property
+   * 
+   * @param \PDb_fields\dynamic_db_field $dynamic_db_field
+   */
+  public function set_object( $dynamic_db_field )
+  {
+    $this->dynamic_db_field = $dynamic_db_field;
   }
 
   /**
