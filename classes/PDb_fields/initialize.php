@@ -26,6 +26,7 @@ class initialize {
     new placeholder();
     new numeric_calc();
     new date_calc();
+    new last_update_user();
   }
 
 }
