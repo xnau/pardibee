@@ -63,8 +63,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function _HTML( $parameters )
   {
-
-    $Element = new PDb_FormElement( $parameters );
+    $Element = new self( $parameters );
 
     return $Element->_output();
   }
@@ -81,8 +80,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function print_element( $parameters )
   {
-
-    $Element = new PDb_FormElement( $parameters );
+    $Element = new self( $parameters );
 
     echo $Element->_output();
   }
@@ -95,7 +93,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_element( $parameters )
   {
-    $Element = new PDb_FormElement( $parameters );
+    $Element = new self( $parameters );
 
     return $Element->_output();
   }
@@ -120,10 +118,11 @@ class PDb_FormElement extends xnau_FormElement {
       $output[] = self::_HTML( $atts );
     }
 
-    if ( $print )
+    if ( $print ) {
       echo implode( PHP_EOL, $output );
-    else
+    } else {
       return implode( PHP_EOL, $output );
+    }
   }
   
   /**
@@ -444,6 +443,13 @@ class PDb_FormElement extends xnau_FormElement {
     $default = '';
     if ( $field ) {
       $default = $field->default;
+    }
+    
+    // swap the null select option if the value is the title
+    $null_select_index = array_search( self::null_select_key(), $this->options );
+    if ( $null_select_index !== false ) {
+      $this->options[self::null_select_key()] = $null_select_index;
+      unset( $this->options[$null_select_index]);
     }
 
     /*
