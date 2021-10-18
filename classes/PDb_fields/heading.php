@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -33,7 +33,7 @@ class heading extends utility {
     
     $this->customize_default_attribute( __( 'Heading', 'participants-database' ), 'rich-text' );
     
-    $this->suppressed_shortcodes(array('list','record'));
+    $this->suppressed_shortcodes(array('list'));
   }
 
   /**
@@ -73,11 +73,15 @@ class heading extends utility {
    * called on the pdb-add_field_to_iterator filter
    * 
    * @param bool $shown
-   * @param PDb_Field_Item the current field
+   * @param \PDb_Field_Item $field the current field
    * @return bool
    */
   public function yes_show_field( $shown, $field )
   {
+    if ( $field->form_element() !== self::element_name ) {
+      return true;
+    }
+    
     $this->setup_field($field);
     switch ( $field->module() ) {
       case 'email-template':
@@ -100,7 +104,7 @@ class heading extends utility {
    */
   private function show_in_write_context()
   {
-    return ! isset( $this->field->attributes()[ 'display_only' ] );
+    return isset( $this->field->attributes()[ 'show_in_form' ] );
   }
 
   /**
@@ -122,6 +126,6 @@ class heading extends utility {
    */
   public function editor_config( $switches )
   {
-    return array_merge( parent::editor_config($switches), array( 'attributes' => false, 'signup' => true ) );
+    return array_merge( parent::editor_config($switches), array( 'attributes' => true, 'signup' => true ) );
   }
 }
