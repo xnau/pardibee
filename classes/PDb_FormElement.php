@@ -384,7 +384,7 @@ class PDb_FormElement extends xnau_FormElement {
    */
   protected function _upload( $type )
   {
-    $field_default = $this->field_def->default_value();
+    $field_default = $this->is_pdb_field() ? $this->field_def->default_value() : '';
     
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
