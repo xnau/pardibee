@@ -1893,7 +1893,8 @@ abstract class xnau_FormElement {
   /**
    * provides the field definition object
    * 
-   * @return PDb_Form_Field_Def
+   * @return PDb_Form_Field_Def|bool false if the form element does not have 
+   *                                 a corresponding field definition
    */
   public function get_field_def()
   {
