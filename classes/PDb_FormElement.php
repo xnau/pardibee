@@ -249,9 +249,9 @@ class PDb_FormElement extends xnau_FormElement {
         $in_optgroup = true;
       } else {
         $id = $this->element_id();
-        $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
-        $this->_addline( '<label ' . $this->_class() . ' for="' . esc_attr( $this->attributes['id'] ) . '">' );
-        $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
+        $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : esc_attr( trim( strtolower( $option_value ) ) ) ) ) );
+        $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
+        $this->_addline( $this->_input_tag( $type, esc_attr( $option_value ), 'checked' ), 1 );
         $this->_addline( $option_key . '</label>' );
         $this->attributes['id'] = $id;
       }
