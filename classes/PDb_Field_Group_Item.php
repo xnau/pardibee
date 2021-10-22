@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -28,7 +28,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   public $field_count;
   
   /**
-   * @var array of group fields
+   * @var array of field definitions
    */
   public $fields = array();
   
@@ -43,6 +43,8 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     
     // load the object properties
     $this->assign_props( $group );
+    
+    $this->setup_fields();
     
     // set the field count for the group
     $this->field_count = isset( $group->fields ) ? count( (array) $group->fields ) : 0;
@@ -218,6 +220,24 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   }
   
   /**
+   * sets up the fields property
+   * 
+   * @global \wpdb $wpdb
+   */
+  private function setup_fields()
+  {
+    if ( empty( $this->fields ) ) {
+      global $wpdb;
+      
+      $results = $wpdb->get_col( $wpdb->prepare( 'SELECT f.name FROM '  . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON g.name = f.group WHERE f.group = %s', $this->name ) );
+      
+      foreach ( $results as $fieldname ) {
+        $this->fields[$fieldname] = Participants_Db::$fields[$fieldname];
+      }
+    }
+  }
+  
+  /**
    * determine if the group is composed of empty fields
    * 
    * @return bool true if one or more field have values
@@ -230,9 +250,10 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     if ( ! $found ) {
       foreach( $this->fields as $field ) {
         /* @var $field PDb_Form_Field_Def */
-        if ( $field->has_value() ) {
-          $has_field_values = true;
+        
+        if ( is_a( $field, '\PDb_Field_Item' ) && $field->has_value() ) {
           
+          $has_field_values = true;
           break;
         }
       }
