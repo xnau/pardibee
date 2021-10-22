@@ -1224,7 +1224,7 @@ abstract class xnau_FormElement {
 
       $title = Participants_Db::apply_filters( 'translate_string', $title );
 
-      if ( $value == 'false' && $title === self::null_select_key() ) {
+      if ( $title === self::null_select_key() && ( $value === 'false' || $value === false ) ) {
         continue 1;
       } elseif ( $value === 'optgroup' && strlen( $title ) > 0 ) {
         $this->_add_options_divider( $title );
@@ -1573,7 +1573,7 @@ abstract class xnau_FormElement {
 
     if ( isset( $this->options[ self::null_select_key() ] ) ) {
 
-      if ( $this->options[ self::null_select_key() ] !== 'false' ) {
+      if ( $this->options[ self::null_select_key() ] !== 'false' && $this->options[ self::null_select_key() ] !== false ) {
         $null_select = $this->options[ self::null_select_key() ];
         $null_select_label = strlen( $null_select ) > 0 ? Participants_Db::apply_filters( 'translate_string', $null_select ) : '&nbsp;';
       } else {
@@ -1936,11 +1936,22 @@ abstract class xnau_FormElement {
    */
   protected function setup_options( $options )
   {
+    $field_options = '';
     if ( empty($options) && $this->is_pdb_field() ) {
-      $this->options = $this->field_def->options();
+      $field_options = $this->field_def->options();
     } elseif ( ! empty( $options ) ) {
-      $this->options = maybe_unserialize( $options );
+      $field_options = maybe_unserialize( $options );
     }
+    
+    if ( is_array( $field_options ) ) {
+      // escape all values
+      array_walk( $field_options, function(&$v) { 
+        $v = $v === false ? $v : esc_attr( $v );
+      } );
+      
+      $this->options = $field_options;
+    }
+    
   }
 
 }
