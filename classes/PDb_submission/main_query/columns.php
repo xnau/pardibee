@@ -200,11 +200,8 @@ class columns {
 
         case 'backend': // used to lay out the admin participant edit/add form, also the admin list participants page
           
-          $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder') );
+          $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder','heading') );
           $where .= 'AND v.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
-          
-          // omit non-writing fields
-          $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
           
           if ( !current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
             // don't show non-displaying groups to non-admin users
