@@ -616,13 +616,11 @@ class PDb_Form_Field_Def {
   public function value_title( $value )
   {
     if ( $this->is_value_set() ) {
-      foreach ( $this->options as $option_title => $option_value ) {
-        if ( !is_string( $option_title ) || $option_title === 'other' ) {
-          // do nothing: we use the stored value
-        } elseif ( $option_value === $value ) {
-          // grab the option title
-          return Participants_Db::apply_filters( 'translate_string', stripslashes( $option_title ) );
-        }
+      
+      $key = array_search( $value, $this->options );
+      
+      if ( $key ) {
+        $value = Participants_Db::apply_filters( 'translate_string', stripslashes( $key ) );
       }
     }
     return $value;
@@ -819,6 +817,17 @@ class PDb_Form_Field_Def {
   public function is_linkable()
   {
     return PDb_FormElement::field_is_linkable( $this );
+  }
+  
+  /**
+   * tells of the field is marked as searchable
+   * 
+   * @return bool
+   */
+  public function is_searchable()
+  {
+    // main fields don't yet have the ability to be marked as searchable #2661
+    return self::is_main_field($this->name) || $this->searchable;
   }
 
   /**
