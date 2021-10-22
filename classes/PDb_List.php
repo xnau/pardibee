@@ -612,13 +612,7 @@ class PDb_List extends PDb_Shortcode {
     
     // set up the default search column list
     if ($columns === false ) {
-      /**
-       * @filter pdb-searchable_columns
-       * 
-       * @param array of column $title => $name
-       * @return array
-       */
-      $columns = Participants_Db::apply_filters( 'searchable_columns', $this->searchable_columns() );
+      $columns = $this->display_columns;
     }
     
     $value = $this->list_query->current_filter( 'search_field' );
@@ -635,14 +629,19 @@ class PDb_List extends PDb_Shortcode {
       $columns = $this->shortcode_atts['search_fields'];
     }
     
-    // sets up the search field selector options
-    $search_columns = $this->column_options( $this->searchable_columns( self::field_list( $columns ) ) );
+    /**
+     * @filter pdb-searchable_columns
+     * 
+     * @param array of column $title => $name
+     * @return array
+     */
+    $search_columns = Participants_Db::apply_filters( 'searchable_columns', $this->column_options( $this->searchable_columns( self::field_list( $columns ) ) ) );
     
-    $all_string = false === $all ? '(' . __( 'select', 'participants-database' ) . ')' : $all;
+    $all_string = $all ? $all : '(' . __( 'select', 'participants-database' ) . ')';
     $base_array = array( $all_string => 'none', PDb_FormElement::null_select_key() => false );
     
     if ( in_array( $this->shortcode_atts['default_search_field'], $search_columns ) ) {
-      $base_array = array(PDb_FormElement::null_select_key() => false);
+      $base_array = array( PDb_FormElement::null_select_key() => false );
       if ( $value === false ) {
         $value = $this->shortcode_atts['default_search_field'];
       }
@@ -654,7 +653,7 @@ class PDb_List extends PDb_Shortcode {
           'name' => 'search_field' . ($multi ? '[]' : ''),
           'value' => $value,
           'class' => 'search-item',
-          'options' => $base_array + $search_columns,
+          'options' => array_merge($base_array,$search_columns),
       );
     } else {
       $element = array(
@@ -679,18 +678,13 @@ class PDb_List extends PDb_Shortcode {
    */
   protected function column_options( $searchable_columns )
   {
-    if ( $this->shortcode_atts['search_fields'] !== '' ) {
-      $shortcode_search_fields = self::field_list( $this->shortcode_atts['search_fields'] );
-      $searchable_columns = array_intersect($searchable_columns, $shortcode_search_fields);
-    }
-    
     return $searchable_columns;
   }
 
   /**
    * supplies an array of searchable columns
    * 
-   * this is needed because the shorcode can define which fields to show, so the 
+   * this is needed because the shortcode can define which fields to show, so the 
    * total set of potentially searchable fields would be the shortcode defined 
    * fields plus the fields given a display column in the database
    * 
@@ -712,7 +706,7 @@ class PDb_List extends PDb_Shortcode {
        * @param array of exempt form elements
        * @return array
        */
-      if ( $column && !in_array( $column->form_element, Participants_Db::apply_filters('searchable_column_form_element_exceptions', array('placeholder', 'captcha') ) ) )
+      if ( $column && !in_array( $column->form_element, Participants_Db::apply_filters('searchable_column_form_element_exceptions', array('placeholder', 'captcha', 'heading') ) ) )
         $return[$column->title] = $column->name;
     }
     return $return;
