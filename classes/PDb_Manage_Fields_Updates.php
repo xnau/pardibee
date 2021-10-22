@@ -83,6 +83,13 @@ class PDb_Manage_Fields_Updates {
             if ( is_string( $attvalue ) ) {
               $row[ $attname ] = self::string_notation_to_array( $attvalue );
             }
+            
+            if ( $attname === 'options' && is_array( $row[ $attname ] ) ) {
+              // clean up the values so they are valid
+              array_walk( $row[ $attname ], function (&$v) {
+                $v = strip_tags( $v );
+              } );
+            }
           }
         }
 
