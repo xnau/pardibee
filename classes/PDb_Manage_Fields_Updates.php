@@ -190,15 +190,25 @@ class PDb_Manage_Fields_Updates {
 
         Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
 
-        if ( $result ) {
-          PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
-          Participants_Db::set_admin_message( __( 'Fields Updated', 'participants-database' ), 'success' );
-          /**
-           * @action pdb-field_defs_updated
-           * @param string action
-           * @param string last query
-           */
-          do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_fields', $wpdb->last_query );
+        if ( $result !== false ) {
+          
+          $with_selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+          
+          if ( $with_selected_action ) {
+            PDb_List_Admin::set_user_setting( 'with_selected_selection', $with_selected_action, 'manage_fields' . $current_user->ID );
+          }
+          
+          if ( $result > 0 ) {
+            Participants_Db::set_admin_message( __( 'Fields Updated', 'participants-database' ), 'success' );
+            /**
+             * @action pdb-field_defs_updated
+             * @param string action
+             * @param string last query
+             */
+            do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_fields', $wpdb->last_query );
+          }
+        } else {
+          Participants_Db::set_admin_message( __( 'Field update error:', 'participants-database' ) . '<br/>' . $wpdb->last_error, 'error' );
         }
       }
     }
@@ -441,7 +451,7 @@ class PDb_Manage_Fields_Updates {
       WHERE id IN ("' . implode( '","', $list ) . '")'
         );
 
-        PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'selection', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
+        PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
 
         wp_send_json( array( 'status' => 'success', 'feedback' => $this->dismissable_message( __( 'Field settings updated.', 'participants-database' ) ) ) );
 
