@@ -187,7 +187,7 @@ abstract class dynamic_db_field extends core {
   }
 
   /**
-   * updates a record with their dynamic values
+   * updates a record with the dynamic value
    * 
    * @global \wpdb $wpdb
    * @param object $packet
