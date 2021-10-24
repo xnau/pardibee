@@ -875,7 +875,8 @@ class Participants_Db extends PDb_Base {
     // check for the ID in the shortcode first
     $record_id = PDb_Record::get_id_from_shortcode( $atts );
     
-    if ( ! $record_id ) {
+    // if the record ID is set to 0, don't print #2635
+    if ( $record_id !== '0' && $record_id !== 0 ) {
     
       // get the pid from the get string if given
       $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
