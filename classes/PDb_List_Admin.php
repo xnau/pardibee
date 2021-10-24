@@ -970,16 +970,15 @@ class PDb_List_Admin {
    * gets a user setting
    * 
    * @param string $name name of the setting to get
-   * @param string|bool $setting if there is no setting, supply this value instead
+   * @param string|bool $default if there is no setting, supply this value instead
    * @param string $setting_name the name of the transient to use
    * @return string|bool the setting value or false if not found
    */
-  public static function get_user_setting( $name, $setting, $setting_name )
+  public static function get_user_setting( $name, $default, $setting_name )
   {
-    if ( $settings = (array) get_option( $setting_name ) ) {
-      $setting = isset( $settings[ $name ] ) ? $settings[ $name ] : $setting;
-    }
-    return $setting;
+    $saved_settings = get_option( $setting_name );
+    
+    return is_array( $saved_settings ) && isset( $saved_settings[ $name ] ) ? $saved_settings[ $name ] : $default;
   }
 
   /**
