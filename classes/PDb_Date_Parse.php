@@ -141,6 +141,8 @@ class PDb_Date_Parse {
       $this->parse_input();
     }
     
+    PDb_Date_Display::revert_timezone();
+    
     return $this->timestamp;
   }
 
