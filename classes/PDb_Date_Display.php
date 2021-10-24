@@ -96,11 +96,32 @@ class PDb_Date_Display {
    */
   public static function reassert_timezone()
   {
-    // this defaults to false as of 1.9.6.2 #2413
-    if ( Participants_Db::apply_filters( 'php_timezone_sync', true ) && Participants_Db::plugin_setting_is_true( 'sync_timezone' ) ) {
+    if ( self::tz_sync_enabled() ) {
+      set_transient(__CLASS__.'-initial-tz', date_default_timezone_get());
       // doing this will trigger a warning in Site Health
       date_default_timezone_set( self::timezone() );
     }
+  }
+  
+  /**
+   * reverts the timezone setting to its previously set value
+   */
+  public static function revert_timezone()
+  {
+    if ( self::tz_sync_enabled() ) {
+      // doing this will trigger a warning in Site Health
+      date_default_timezone_set( get_transient(__CLASS__.'-initial-tz') );
+    }
+  }
+  
+  /**
+   * tells if timezone syncing is enabled
+   * 
+   * @return bool
+   */
+  private static function tz_sync_enabled()
+  {
+    return Participants_Db::apply_filters( 'php_timezone_sync', true ) && Participants_Db::plugin_setting_is_true( 'sync_timezone' );
   }
   
   /**
