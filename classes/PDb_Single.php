@@ -32,11 +32,19 @@ class PDb_Single extends PDb_Shortcode {
      * the 'term' value, which defaults to 'id'
      *
      */
-    if ( $this->shortcode_atts[ 'record_id' ] !== false && PDb_Form_Field_Def::is_field( $this->shortcode_atts[ 'term' ] ) ) {
-      $record_id = Participants_Db::get_record_id_by_term( $this->shortcode_atts[ 'term' ], $this->shortcode_atts[ 'record_id' ] );
-    } else {
+    if ( $this->shortcode_atts[ 'record_id' ] !== false ) {
+      
+      $term = PDb_Form_Field_Def::is_field( $this->shortcode_atts[ 'term' ] ) ? $this->shortcode_atts[ 'term' ] : 'id';
+      $record_id = Participants_Db::get_record_id_by_term( $term, $this->shortcode_atts[ 'record_id' ] );
+      
+    } elseif ( array_key_exists( Participants_Db::$single_query, $_GET )) {
+      
       $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
-      ; // Participants_Db::$session->record_id();
+      
+    } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )) {
+      
+      $private_id = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+      $record_id = Participants_Db::get_participant_id( $private_id );
     }
 
     if ( false === $record_id && version_compare( $this->template_version, '0.2', '<' ) ) {
