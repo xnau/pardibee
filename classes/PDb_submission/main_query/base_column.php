@@ -68,6 +68,22 @@ abstract class base_column {
   {
     return $this->value;
   }
+  
+  /**
+   * provides the column value from imported data
+   * 
+   * @return string|int|bool
+   */
+  public function import_value()
+  {
+    $import_value = $this->value;
+    
+    if ( $this->field->is_multi() ) {
+      $import_value = serialize( \PDb_Field_Item::field_value_array( $this->value ) );
+    }
+    
+    return $import_value;
+  }
 
   /**
    * provides the main_query object
