@@ -42,6 +42,8 @@ abstract class dynamic_db_field extends core {
     add_filter( 'pdb-before_submit_add', array( $this, 'update_db_value' ) );
 
     add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
+    
+    add_action( 'admin_enqueue_scripts', array( $this, 'admin_update_all' ) );
   }
 
   /**
@@ -206,62 +208,29 @@ abstract class dynamic_db_field extends core {
       \Participants_Db::debug_log( __METHOD__.' query: '.$wpdb->last_query, 3 );
     }
   }
+  
+  /**
+   * forces an administrative regeneration of dynamic field values
+   * 
+   * called on the admin_enqueue_scripts hook
+   * 
+   * @param string $hook
+   */
+  public function admin_update_all( $hook )
+  {
+    if ( strpos( $hook, 'participants-database' ) !== false && array_key_exists( 'pdb-regenerate-dynamic-fields', $_GET ) ) {
+      
+      $rebuild_field = filter_input(INPUT_GET, 'pdb-regenerate-dynamic-fields', FILTER_SANITIZE_STRING. FILTER_NULL_ON_FAILURE );
+      $field_list = \PDb_Form_Field_Def::is_field( $rebuild_field )? array( new \PDb_Form_Field_Def( $rebuild_field ) ) : $this->field_list();
+      
+      foreach( $field_list as $field ) {
+        $this->set_field( $field->name() );
+        $this->update_all_records();
+      }
+      
+    }
+  }
 
 }
 
-class dynamic_value_update extends \WP_Background_Process {
 
-  /**
-   * @var string stem name for the action
-   */
-  protected $action = 'pdb_dynamic_value_update_';
-  
-  /**
-   * @var \PDb_fields\dynamic_db_field the current field type object 
-   */
-  public $dynamic_db_field;
-
-  /**
-   * 
-   * @param \PDb_fields\dynamic_db_field $dynamic_db_field
-   */
-  public function __construct( $dynamic_db_field )
-  {
-    $this->action .= $dynamic_db_field->name();
-    $this->set_object($dynamic_db_field);
-    parent::__construct();
-  }
-  
-  /**
-   * sets the dynamic_db_field property
-   * 
-   * @param \PDb_fields\dynamic_db_field $dynamic_db_field
-   */
-  public function set_object( $dynamic_db_field )
-  {
-    $this->dynamic_db_field = $dynamic_db_field;
-  }
-
-  /**
-   * updates the dynamic value for a field
-   * 
-   * @param object $packet
-   */
-  protected function task( $packet )
-  {
-    $this->dynamic_db_field->update_record( $packet );
-
-    return false;
-  }
-
-  /**
-   * called when all operations are complete
-   */
-  protected function complete()
-  {
-    parent::complete();
-
-    do_action( $this->action . '_complete' );
-  }
-
-}
