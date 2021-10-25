@@ -596,8 +596,9 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $multivalues = maybe_unserialize( $value );
 
     if ( !is_array( $multivalues ) ) {
-      // make it into an array
-      $multivalues = explode( ',', $value );
+      
+      // make it into an array and trim the values
+      $multivalues = array_map( 'trim', explode( ',', $value ) );
     }
 
     // remove empty elements
