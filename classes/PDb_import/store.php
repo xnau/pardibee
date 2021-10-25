@@ -103,12 +103,12 @@ trait store {
       
       $column_object = \PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
-      $main_query->validate_column( $column_object->value(), $column );
+//      $main_query->validate_column( $column_object->value(), $column );
       
       if ( $column_object->add_to_query( $action ) ) {
         
         // add the column to the query
-        $main_query->add_column( $column_object->value(), $column_object->query_clause() );
+        $main_query->add_column( $column_object->import_value(), $column_object->query_clause() );
       }
     } // columns
 
