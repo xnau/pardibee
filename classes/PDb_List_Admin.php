@@ -367,7 +367,7 @@ class PDb_List_Admin {
           }
 
           // add the multi-field selection
-          $filter_columns = array_merge( $filter_columns, PDb_admin_list\search_field_group::group_selector() );
+          $filter_columns = array_merge( self::recent_field_option(), $filter_columns, PDb_admin_list\search_field_group::group_selector() );
           ?>
           <div class="pdb-searchform">
             <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ?>" >
@@ -476,6 +476,30 @@ class PDb_List_Admin {
           </div>
           <?php
         }
+        
+        /**
+         * provides the recent fields option
+         * 
+         * @return array
+         */
+        private static function recent_field_option()
+        {
+          $recents = array();
+          
+          $field_list = self::$list_filter->recents();
+          
+          if ( count( $field_list ) > 0 ) {
+            $recents[ __('Recent Fields', 'participants-database' ) ] = 'optgroup';
+            
+            foreach ( $field_list as $fieldname ) {
+              
+              $recents[ Participants_Db::$fields[$fieldname]->title() . ' ' ] = $fieldname;
+            }
+          }
+          
+          return $recents;
+        }
+        
 
         /**
          * prints the general list form controls for the admin lising: deleting and items-per-page selector
