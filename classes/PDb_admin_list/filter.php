@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -55,7 +55,7 @@ class filter {
     
     if ( ! $filter ) {
       $filter = get_option( self::$filter_option, $this->default_filter() );
-      wp_cache_add( self::cachekey, $filter );
+      wp_cache_add( self::cachekey, $filter, \Participants_Db::cache_expire() );
     }
     
     return $filter;
@@ -117,7 +117,15 @@ class filter {
    */
   public function reset()
   {
-    $this->save_filter( $this->default_filter() );
+    $default_filter = $this->default_filter();
+    
+    // retain the recent fields set
+    $stored_filter = get_option( self::$filter_option, array() );
+    if ( isset( $stored_filter['recent_fields'] ) ) {
+      $default_filter['recent_fields'] = $stored_filter['recent_fields'];
+    }
+    
+    $this->save_filter( $default_filter );
   }
   
   /**
@@ -152,6 +160,20 @@ class filter {
     if ( isset( $filter[$name] ) ) {
       return $filter[$name];
     }
+    error_log(__METHOD__.' invalid property "' . $name . '"');
+    return false;
+  }
+  
+  /**
+   * provides the list of recently used fields
+   * 
+   * @return array
+   * 
+   */
+  public function recents()
+  {
+    $filter = $this->get_filter();
+    return isset( $filter['recent_fields'] ) ? $filter['recent_fields'] : array();
   }
   
   /**
@@ -183,17 +205,22 @@ class filter {
 
       $post = filter_input_array( INPUT_POST, $this->list_filter_sanitize() );
 
-      unset( $filter['search'] );
+      $filter['search'] = array();
 
       for ( $i = $post['list_filter_count']; $i > 0; $i-- ) {
         $filter['search'][] = current( $this->default_filter()['search'] );
       }
 
       foreach ( $post as $key => $postval ) {
+        
         if ( is_array( $postval ) ) {
+          
           foreach ( $postval as $index => $value ) {
-            if ( $value !== '' ) {
+            if ( isset( $filter['search'][$index] ) && $value !== '' ) {
               $filter['search'][$index][$key] = $value;
+              if ( $key === 'search_field' ) {
+                $filter['recent_fields'] = self::add_to_recents($value, $filter['recent_fields']);
+              }
             }
           }
         } elseif ( in_array( $key, array('list_filter_count', 'sortBy', 'ascdesc') ) ) {
@@ -237,6 +264,10 @@ class filter {
     if ( !isset( $filter['list_filter_count'] ) || empty( $filter['list_filter_count'] ) ) {
       $filter['list_filter_count'] = 1;
     }
+    
+    if ( ! isset( $filter['recent_fields'] ) ) {
+      $filter['recent_fields'] = array();
+    }
 
     return $filter;
   }
@@ -270,6 +301,7 @@ class filter {
     $filter = wp_cache_get( $cachekey );
 
     if ( !$filter ) {
+      
       $filter = array(
           'search' => array(
               0 => array(
@@ -282,11 +314,38 @@ class filter {
           'sortBy' => Participants_Db::plugin_setting( 'admin_default_sort' ),
           'ascdesc' => Participants_Db::plugin_setting( 'admin_default_sort_order' ),
           'list_filter_count' => 1,
+          'recent_fields' => array(),
       );
-      wp_cache_set( $cachekey, $filter );
+      
+      wp_cache_set( $cachekey, $filter, \Participants_Db::cache_expire() );
     }
 
     return $filter;
+  }
+  
+  /**
+   * adds a field to the recent fields array
+   * 
+   * @param string $fieldname
+   * @param array $recents the array of recent fields
+   * @return array
+   */
+  private static function add_to_recents( $fieldname, $recents )
+  {
+    // sets the number of recent fields to keep
+    $max_recents = \Participants_Db::apply_filters('pdb-admin_list_max_recent_fields', 6 );
+    
+    if ( in_array( $fieldname, $recents ) ) {
+      unset( $recents[ array_search( $fieldname, $recents ) ] );
+    }
+    
+    $recents[] = $fieldname;
+    
+    while ( count( $recents ) > $max_recents ) {
+      array_shift( $recents );
+    }
+    
+    return $recents;
   }
 
 }
