@@ -1,7 +1,7 @@
 <?php
 
 /**
- * handles multiple-records processes on the admin list page
+ * handles multiple-record processes on the admin list page
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
