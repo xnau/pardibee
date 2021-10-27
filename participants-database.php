@@ -3181,6 +3181,7 @@ class Participants_Db extends PDb_Base {
             self::$plugin_title, self::$plugin_title, self::plugin_capability( 'record_edit_capability', 'main admin menu' ), self::PLUGIN_NAME, null
     );
 
+    // add the list participants page
     add_submenu_page(
             self::PLUGIN_NAME, 
             self::plugin_label( 'list_participants' ), 
