@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -45,8 +45,11 @@ class csv {
 
     $csv_options = get_option( Participants_Db::$prefix . 'csv_import_params', $csv_paramdefaults );
     
-    if ( $csv_options !== $csv_paramdefaults ) {
-      $csv_params = array_merge( $csv_paramdefaults, $csv_options );
+    // make sure these are not empty values #2669
+    foreach( array( 'delimiter_character', 'enclosure_character' ) as $param ) {
+      if ( empty( $csv_options[$param] ) ) {
+        $csv_options[$param] = $csv_paramdefaults[$param];
+      }
     }
     
     return $csv_options;
