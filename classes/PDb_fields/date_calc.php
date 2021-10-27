@@ -107,7 +107,7 @@ class date_calc extends calculated_field {
       $replacement_data[ $fieldname ] = $field_value;
     }
     
-    $this->calculate_value( $replacement_data );
+    $this->calculate_value( $this->apply_filter( $replacement_data ) );
 
     $replacement_data[ self::calc_tag ] = $this->result;
 

@@ -99,12 +99,14 @@ class string_combine extends calculated_field {
     /**
      * provides a way to bring in other values for use by the field
      * 
+     * this data is also passed through the global pdb-calculated_field_data filter 
+     * 
      * @filter pdb-{$name}_replacement_data
      * @param array as $name => $value
      * @param \PDb_Field_Item
      * @return array
      */
-    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $clean_data, $this->field );
+    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $this->apply_filter( $clean_data ), $this->field );
   }
   
   

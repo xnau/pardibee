@@ -116,7 +116,7 @@ class numeric_calc extends calculated_field {
       }
     }
     
-    $this->calculate_value( $replacement_data );
+    $this->calculate_value( $this->apply_filter( $replacement_data ) );
     
     $replacement_data[ self::calc_tag ] = $this->result;
     
