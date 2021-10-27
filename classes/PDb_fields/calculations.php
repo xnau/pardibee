@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -24,16 +24,35 @@ trait calculations {
    */
   private function calculate_value( $replacement_data )
   {
-    error_log( __METHOD__ . ' template: ' . $this->calc_template() );
-    ob_start();
-    var_dump( $replacement_data );
-    error_log( __METHOD__ . ' replacement data: ' . ob_get_clean() );
+    /**
+     * @filter pdb-calculated_field_calc_value
+     * 
+     * provides a way to implement a custom calculation
+     * 
+     * if the filter returns false, the normal calculation is performed, if it 
+     * returns a value, the normal calculation is skipped and the value is used 
+     * as the calculated value
+     * 
+     * @param bool false the nominal initial value
+     * @param array $replacement_data
+     * @param \PDb_Field_Item $field the current field
+     * @return int|float the result of the calculation 
+     */
+    $this->result = \Participants_Db::apply_filters('calculated_field_calc_value', false, $replacement_data, $this->field );
+    
+    if ( $this->result === false ) {
+    
+      error_log( __METHOD__ . ' template: ' . $this->calc_template() );
+      ob_start();
+      var_dump( $replacement_data );
+      error_log( __METHOD__ . ' replacement data: ' . ob_get_clean() );
 
-    $this->calc_list( $replacement_data );
+      $this->calc_list( $replacement_data );
 
-    error_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ) );
+      error_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ) );
 
-    $this->result = $this->get_calculated_value();
+      $this->result = $this->get_calculated_value();
+    }
   }
 
   /**
@@ -141,7 +160,7 @@ trait calculations {
     $value = get_transient( $cachekey );
 
     if ( $value === false ) {
-      error_log( __METHOD__ . ' getting conversion for ' . $matchkey );
+//      error_log( __METHOD__ . ' getting conversion for ' . $matchkey );
       switch ( $matchkey ) {
 
         case 'current_date':
@@ -176,7 +195,7 @@ trait calculations {
           return $key;
       }
 
-      error_log( __METHOD__ . ' result ' . $value );
+//      error_log( __METHOD__ . ' result ' . $value );
       set_transient( $cachekey, $value, HOUR_IN_SECONDS );
     }
 
