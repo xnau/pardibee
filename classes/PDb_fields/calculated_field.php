@@ -126,6 +126,9 @@ abstract class calculated_field extends dynamic_db_field {
   /**
    * redefines the field for the signup form
    * 
+   * this reconfigures the field when included in the signup form as a hidden 
+   * field so the calculated value can be added before the submission is saved
+   * 
    * @param stdClass $definition
    * @return stdClass
    */
@@ -292,6 +295,26 @@ abstract class calculated_field extends dynamic_db_field {
     }
     
     return $list;
+  }
+  
+  /**
+   * provides a global filter for the replacement data array
+   * 
+   * @param array $replacement_data
+   * @return array
+   */
+  protected function apply_filter( $replacement_data )
+  {
+    /**
+     * @filter pdb-calculated_field_data
+     * 
+     * provides a way to alter or add to the replacement data array
+     * 
+     * @param array $replacement_data the replacement data set
+     * @param \PDb_Field_Item $field the current field
+     * @return array the filtered replacement data
+     */
+    return \Participants_Db::apply_filters( 'calculated_field_data', $replacement_data, $this->field );
   }
   
   /**
