@@ -657,9 +657,11 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $value = $title; // if no match is found, return the title argument
     
-    if ( $this->field_def && $this->field_def->is_value_set() ) {
+    $field_def = new PDb_Form_Field_Def( $fieldname );
+    
+    if ( $field_def && $field_def->is_value_set() ) {
       
-      $options_array = $this->field_def->options();
+      $options_array = $field_def->options();
       
       // first check if there is a direct match
       if ( isset( $options_array[$title] ) ) {
@@ -677,7 +679,7 @@ class PDb_FormElement extends xnau_FormElement {
        * 
        * first, strip out any tags in the keys
        */
-      $options_array = self::striptags_keys($this->field_def->options());
+      $options_array = self::striptags_keys($field_def->options());
       
       // now check if there is a direct case-insensitive match with a tag-stripped title
       if ( isset( $options_array[strtolower($title)] ) ) {
