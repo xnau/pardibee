@@ -190,7 +190,7 @@ class PDb_Tag_Template {
   public static function replace_text( $template, $data )
   {
     if ( count($data) !== count($data, COUNT_RECURSIVE) ) {
-      error_log(__METHOD__.' multidimensional array encountered: trace: '.print_r(wp_debug_backtrace_summary(),1));
+      Participants_Db::debug_log(__METHOD__.' multidimensional array encountered: trace: '.print_r(wp_debug_backtrace_summary(),1), 1 );
     }
     
     
