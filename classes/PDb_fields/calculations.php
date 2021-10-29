@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -42,14 +42,16 @@ trait calculations {
     
     if ( $this->result === false ) {
     
-      error_log( __METHOD__ . ' template: ' . $this->calc_template() );
-      ob_start();
-      var_dump( $replacement_data );
-      error_log( __METHOD__ . ' replacement data: ' . ob_get_clean() );
+      if ( defined( 'PDB_DEBUG') && PDB_DEBUG > 2 ) {
+        \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->calc_template(), 3 );
+        ob_start();
+        var_dump( $replacement_data );
+        \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
+      }
 
       $this->calc_list( $replacement_data );
 
-      error_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ) );
+      \Participants_Db::debug_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ), 3 );
 
       $this->result = $this->get_calculated_value();
     }
