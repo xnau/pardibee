@@ -160,7 +160,9 @@ class filter {
     if ( isset( $filter[$name] ) ) {
       return $filter[$name];
     }
-    error_log(__METHOD__.' invalid property "' . $name . '"');
+    
+    Participants_Db::debug_log(__METHOD__.' invalid property "' . $name . '"');
+    
     return false;
   }
   
