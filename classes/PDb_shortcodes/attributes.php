@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -52,7 +52,7 @@ class attributes {
    */
   private function stash_attributes( $shortcode_atts, $tag )
   {
-    $attributes = get_transient( self::attribute_store );
+    $attributes = self::get_attributes();
     
     if ( ! $attributes ) {
       $attributes = array();
@@ -85,13 +85,23 @@ class attributes {
    */
   private static function attribute_set( $set )
   {
-    $attributes = get_transient( self::attribute_store );
+    $attributes = self::get_attributes();
     
     if ( $attributes && isset( $attributes[$set] ) ) {
       return $attributes[$set];
     }
     
     return array();
+  }
+  
+  /**
+   * provides the stored attribute array
+   * 
+   * @return array
+   */
+  private static function get_attributes()
+  {
+    return get_transient( self::attribute_store );
   }
   
 }
