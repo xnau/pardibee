@@ -148,8 +148,6 @@ class tally {
    */
   public function report()
   {
-    error_log(__METHOD__.' tally: '.print_r($this->tally,1));
-    
     $report = array( '<span class="import-tally-report">' );
     
     $report[] = '<strong>' . $this->context_string() . ':</strong><br>';
