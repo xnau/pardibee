@@ -92,7 +92,5 @@ class process extends \WP_Background_Process {
     parent::complete();
     
     tally::get_instance()->complete();
-    
-    error_log(__METHOD__.' import complete: '.microtime(true));
   }
 }
