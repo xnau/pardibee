@@ -1800,6 +1800,7 @@ class Participants_Db extends PDb_Base {
    * 
    * @param string $term the name of the field to use in matching the record
    * @param string $value the value to match
+   * @param bool $single if true, only return a match if it is unique
    * @return int|bool false if no valid id found
    */
   public static function get_record_id_by_term( $term, $value, $single = true )
@@ -1840,13 +1841,13 @@ class Participants_Db extends PDb_Base {
       if ( !is_array( $result ) ) {
         $output = false;
       } else {
-    $output = array();
+        $output = array();
 
-    foreach ( $result as $id ) {
-      $output[] = current( $id );
-    }
+        foreach ( $result as $id ) {
+          $output[] = current( $id );
+        }
       }
-      wp_cache_set($value, $output, $cachekey);
+      wp_cache_set($value, $output, $cachekey, self::cache_expire() );
     }
 
     if ( $output === false ) {
