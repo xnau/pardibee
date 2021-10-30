@@ -162,7 +162,7 @@ trait calculations {
     $value = get_transient( $cachekey );
 
     if ( $value === false ) {
-//      error_log( __METHOD__ . ' getting conversion for ' . $matchkey );
+      
       switch ( $matchkey ) {
 
         case 'current_date':
@@ -197,7 +197,6 @@ trait calculations {
           return $key;
       }
 
-//      error_log( __METHOD__ . ' result ' . $value );
       set_transient( $cachekey, $value, HOUR_IN_SECONDS );
     }
 
@@ -249,7 +248,6 @@ trait calculations {
           }
       }
 
-//      error_log( __METHOD__ . ' sum: ' . $sum . ' sum count: ' . $sum_count . ' sum list: ' . print_r( $sum_list, 1 ) );
     }
 
     $product = $sum;
