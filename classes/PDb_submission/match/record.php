@@ -65,7 +65,7 @@ abstract class record {
    */
   public static function get_object( $post, $record_id )
   {
-    return isset( $_POST['csv_file_upload'] ) ? new import( $post, $record_id ) : new form( $post, $record_id );
+    return \PDb_submission\main_query\base_query::is_csv_import() ? new import( $post, $record_id ) : new form( $post, $record_id );
   }
 
   /**
@@ -143,7 +143,7 @@ abstract class record {
    */
   protected function update_action()
   {
-    if ( $this->is_matched() && $this->match_mode === 'skip' ) {
+    if ( $this->match_mode === 'skip' && $this->is_matched()  ) {
       
       $this->register_duplicate_record_error();
       $this->action = 'skip';
