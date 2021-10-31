@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.8
+ * @version 0.9
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -115,10 +115,10 @@ var PDbListAdmin = (function ($) {
         confirmDialog.append($('<h3/>').append(list_adminL10n.apply_confirm[action][sense])).append(limit_message).dialog('open').find('a').blur();
       });
 
+      spinner = mass_editL10n.spinner;
       task_selector.on('change', taskSelect);
       taskSelect(task_selector);
       $('[name="' + mass_editL10n.selector + '"]').on('change',set_input);
-      spinner = mass_editL10n.spinner;
 
       checkall.click(checkAll);
 
