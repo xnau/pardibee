@@ -96,9 +96,10 @@ echo str_repeat( '<td>&nbsp;</td>', $CSV_import->column_count() );
             <input type="hidden" name="csv_file_upload" id="file_upload" value="true" />
             <fieldset class="widefat inline-controls">
               <p>
-                <label style="margin-left:0">
+                <label>
+<?php _e( 'Enclosure character', 'participants-database' ); ?>
+:  
 <?php
-_e( 'Enclosure character', 'participants-database' );
 $parameters = array(
     'type' => 'dropdown',
     'name' => 'enclosure_character',
@@ -114,9 +115,9 @@ PDb_FormElement::print_element( $parameters );
 ?>
                 </label>
                 <label>
-<?php
-_e( 'Delimiter character', 'participants-database' );
-$parameters = array(
+<?php _e( 'Delimiter character', 'participants-database' ); ?>
+: 
+<?php $parameters = array(
     'type' => 'dropdown',
     'name' => 'delimiter_character',
     'value' => $delimiter_character,
