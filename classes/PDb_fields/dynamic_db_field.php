@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -44,6 +44,8 @@ abstract class dynamic_db_field extends core {
     add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
     
     add_action( 'admin_enqueue_scripts', array( $this, 'admin_update_all' ) );
+    
+    add_filter( 'pdb-before_list_admin_with_selected_action', array( $this, 'mass_edit_update' ), 10, 2 );
   }
 
   /**
@@ -173,9 +175,26 @@ abstract class dynamic_db_field extends core {
    */
   protected function update_all_records()
   {
-    global $wpdb;
+    $this->update_record_list();
+  }
 
-    $record_list = $wpdb->get_results( 'SELECT p.id, p.' . $this->field->name() . ' FROM ' . \Participants_Db::$participants_table . ' p ORDER BY p.id ASC' );
+  /**
+   * updates all records with the dynamic value
+   * 
+   * @global \wpdb $wpdb
+   * @param array $record_id_list list of record ids to update, updates all records if omitted
+   */
+  protected function update_record_list( $record_id_list = false )
+  {
+    global $wpdb;
+    
+    $where = '';
+    
+    if ( is_array( $record_id_list ) ) {
+      $where = ' WHERE p.id IN ("' . implode( '","', $record_id_list ) . '")';
+    }
+
+    $record_list = $wpdb->get_results( 'SELECT p.id, p.' . $this->field->name() . ' FROM ' . \Participants_Db::$participants_table . ' p ' . $where . ' ORDER BY p.id ASC' );
         
     status_header( 200 );
 
@@ -229,6 +248,34 @@ abstract class dynamic_db_field extends core {
       }
       
     }
+  }
+  
+  /**
+   * checks for the need to update when performing a mass edit on the admin list
+   * 
+   * @param array $selected_ids the list of selected record ids
+   * @param string $action name of the with selected action
+   * @return array the list of selected ids
+   */
+  public function mass_edit_update( $selected_ids, $action )
+  {
+    $updatable_actions = \Participants_Db::apply_filters('dynamic_field_updates_enabled_with_selected_actions', array( 'mass_edit' ) );
+    
+    if ( in_array( $action, $updatable_actions ) && count( $selected_ids['pid'] ) > 0 ) {
+      
+      $id_list = $selected_ids['pid'];
+      
+      add_action( 'pdb-admin_list_with_selected_complete', function () use ( $id_list ) {
+      
+        foreach( $this->field_list() as $field ) {
+          $this->set_field( $field->name() );
+          $this->update_record_list( $id_list );
+        }
+        
+      });
+    }
+    
+    return $selected_ids;
   }
 
 }
