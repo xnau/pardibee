@@ -93,7 +93,7 @@ abstract class base_query {
   {
     $this->post = $post;
     $this->record_id = $record_id;
-    $this->is_import = isset( $_POST[ 'csv_file_upload' ] );
+    $this->is_import = self::is_csv_import();
     $this->is_func_call = $func_call;
   }
 
@@ -117,6 +117,16 @@ abstract class base_query {
    * @return string
    */
   abstract protected function query_mode();
+  
+  /**
+   * tells if the current request is for a CSV import
+   * 
+   * @return bool
+   */
+  public static function is_csv_import()
+  {
+    return isset( $_POST[ 'csv_file_upload' ] );
+  }
 
   /**
    * provides the current query mode
