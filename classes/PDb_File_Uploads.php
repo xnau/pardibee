@@ -25,7 +25,7 @@ class PDb_File_Uploads {
   public static function process_submission_uploads( $post )
   {
     // don't process a CSV import
-    if ( isset( $_POST['csv_file_upload'] ) || empty( $_FILES ) || ! isset( $post['id'] ) ) {
+    if ( \PDb_submission\main_query\base_query::is_csv_import() || empty( $_FILES ) || ! isset( $post['id'] ) ) {
       return $post;
     }
     
