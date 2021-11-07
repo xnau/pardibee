@@ -145,7 +145,7 @@ class rich_text_editor {
    */
   private function editor_settings()
   {
-    $this->check_for_class_include();
+    $this->initialize_core_editor();
 
     // use a filter to get the default configuration from WP core
     add_filter( 'tiny_mce_before_init', array( $this, 'get_tinymce_config' ) );
@@ -271,12 +271,14 @@ class rich_text_editor {
   }
 
   /**
+   * add the core editor code
+   * 
    * checks for the need to include the editor class script
    */
-  private function check_for_class_include()
+  private function initialize_core_editor()
   {
     if ( !class_exists( '\_WP_Editors' ) ) {
-      require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+      require_once ABSPATH . WPINC . '/class-wp-editor.php';
     }
     \_WP_Editors::enqueue_default_editor();
   }
