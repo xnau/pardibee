@@ -1,7 +1,7 @@
 <?php
 
 /**
- * initializes all the custom fields in the namespace
+ * initializes all the additional fields in the namespace
  *
  * @package    WordPress
  * @subpackage Participants Database Plugin
