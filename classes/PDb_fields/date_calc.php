@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -47,7 +47,6 @@ class date_calc extends calculated_field {
    */
   protected function replaced_string( $data )
   {
-    $this->complete = true;
     $replacement_data = $this->replacement_data( $data );
     
     if ( ! $this->check_data( $replacement_data ) ) {
@@ -58,23 +57,21 @@ class date_calc extends calculated_field {
   }
 
   /**
-   * extracts the calculation part of the template
-   * 
-   * @return string
-   */
-  private function calc_template()
-  {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$2', $this->field->default_value() );
-  }
-
-  /**
    * replaces the calculation part of the template with the calculation tag
    * 
    * @return string
    */
-  private function prepped_template()
+  protected function prepped_template()
   {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1[' . self::calc_tag . ']$3', $this->field->default_value() );
+    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1[' . self::calc_tag . ']$3', $this->template() );
+  }
+  
+  /**
+   * supplies the formatted display
+   */
+  protected function formatted_display()
+  {
+    return $this->format( $this->dynamic_value(), $this->display_format, 0 );
   }
 
   /**
@@ -107,7 +104,7 @@ class date_calc extends calculated_field {
       $replacement_data[ $fieldname ] = $field_value;
     }
     
-    $this->calculate_value( $this->apply_filter( $replacement_data ) );
+    $this->calculate_value( $this->filter_data( $replacement_data ) );
 
     $replacement_data[ self::calc_tag ] = $this->result;
 
@@ -140,6 +137,26 @@ class date_calc extends calculated_field {
     }
 
     return $list;
+  }
+  
+  /**
+   * provides the default format tag
+   * 
+   * @return string
+   */
+  protected function default_format_tag()
+  {
+    return '[?date]';
+  }
+
+  /**
+   * provides the form element's mysql datatype
+   * 
+   * @return string
+   */
+  protected function element_datatype()
+  {
+    return 'BIGINT(20)';
   }
   
   /**
