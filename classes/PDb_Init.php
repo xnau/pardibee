@@ -376,7 +376,8 @@ class PDb_Init {
         '%' . Participants_Db::$prefix . 'signup-email-sent',
         '%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%',
         '%' . \PDb_shortcodes\attributes::attribute_store . '%',
-        PDb_Aux_Plugin::throttler . '%'
+        '%' . PDb_Aux_Plugin::throttler . '%',
+        '%' . \PDb_fields\calculated_field::keycache . '%',
     );
     $sql = 'SELECT `option_name` FROM ' . $wpdb->prefix . 'options WHERE `option_name` LIKE "' . join( '" OR `option_name` LIKE "', $delete_keys ) . '"';
     $transients = $wpdb->get_col( $sql );
