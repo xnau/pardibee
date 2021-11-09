@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 5.8.1
 Requires PHP: 5.6
-Stable tag: 1.9.7.7
+Stable tag: 1.9.7.8
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -289,6 +289,18 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 1.9.8=
+New Features:
+* "Mass Edit" on the admin list participants page
+* new field types: Numeric Calculation and Date Calculation
+* CSV imports in the background, avoids timeouts on very large imports
+* recently used fields convenience list in the admin list filter selector
+* new Last Updater ID field records the id of the last user to update a record
+* hidden field value can be determined by literal string in the shortcode
+
+Also:
+* many minor bug fixes and code optimizations
 
 = 1.9.7.8 =
 * fixed bug when using search parameters in the URL on a selector field
@@ -1423,7 +1435,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-1.9.7.8 is a bug fix release
+1.9.8 is a new feature and bug fix release
 
 == Plugin Support ==
 
