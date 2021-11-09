@@ -252,7 +252,7 @@ class query {
           $this->list_query .= ' ' . $date_column . ' ' . $operator . ' DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
         }
       }
-    } elseif ( $search_field->form_element() == 'date' ) {
+    } elseif ( in_array( $search_field->form_element(), array( 'date', 'date-calc' ) ) ) {
 
       $value = $filter_set[ 'value' ];
 
@@ -267,6 +267,8 @@ class query {
         }
 
         $date1 = \PDb_Date_Parse::timestamp( $value, array(), __METHOD__ . ' ' . $search_field->form_element() );
+        
+        $date2 = false;
 
         if ( $value2 ) {
           $date2 = \PDb_Date_Parse::timestamp( $value2, array(), __METHOD__ . ' ' . $search_field->form_element() );
