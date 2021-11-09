@@ -63,6 +63,7 @@ class user_column extends base_column {
         break;
 
       case 'date':
+      case 'date-calc':
 
         if ( $initialvalue !== '' ) {
           $this->value = PDb_Date_Parse::timestamp( $initialvalue, array(), __METHOD__ . ' date field value' );
