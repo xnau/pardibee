@@ -106,7 +106,7 @@ class string_combine extends calculated_field {
      * @param \PDb_Field_Item
      * @return array
      */
-    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $this->apply_filter( $clean_data ), $this->field );
+    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $this->filter_data( $clean_data ), $this->field );
   }
   
   
