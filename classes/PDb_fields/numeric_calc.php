@@ -30,11 +30,6 @@ class numeric_calc extends calculated_field {
   const calc_tag = 'pdb_numeric_calc_result';
   
   /**
-   * @var array of calculation steps
-   */
-  private $calc_list;
-  
-  /**
    * provides the field's title
    * 
    * @return string
@@ -62,23 +57,21 @@ class numeric_calc extends calculated_field {
   }
   
   /**
-   * extracts the calculation part of the template
-   * 
-   * @return string
-   */
-  private function calc_template()
-  {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$2', $this->field->default_value() );
-  }
-  
-  /**
    * replaces the calculation part of the template with the calculation tag
    * 
    * @return string
    */
-  private function prepped_template()
+  protected function prepped_template()
   {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1['. self::calc_tag . ']$3', $this->field->default_value() );
+    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1['. self::calc_tag . ']$3', $this->template() );
+  }
+  
+  /**
+   * supplies the formatted display
+   */
+  protected function formatted_display()
+  {
+    return $this->format( $this->dynamic_value(), $this->display_format, 0 );
   }
   
   /**
@@ -91,6 +84,7 @@ class numeric_calc extends calculated_field {
   {
     $source_data = $post ? $post : array();
     $replacement_data = array();
+    $this->complete = true;
     
     // iterate through the fields named in the template
     foreach( $this->template_field_list() as $fieldname ) {
@@ -106,6 +100,10 @@ class numeric_calc extends calculated_field {
         $replacement_data['value:'.$fieldname] = $source_data[$fieldname];
         
       } else {
+        
+        if ( ! $template_field->has_content() || ( is_array( $post ) && is_null( $post[$template_field->name()] ) ) ) {
+          $this->complete = false;
+        }
       
         if ( isset( $post[$template_field->name()] ) && ! \PDb_FormElement::is_empty( $post[$template_field->name()] ) ) {
           // get the value from the provided data
@@ -116,11 +114,25 @@ class numeric_calc extends calculated_field {
       }
     }
     
-    $this->calculate_value( $this->apply_filter( $replacement_data ) );
+    if ( $this->complete ) {
+      $this->calculate_value( $this->filter_data( $replacement_data ) );
+    } else {
+      $this->result = '';
+    }
     
     $replacement_data[ self::calc_tag ] = $this->result;
     
     return $replacement_data;
+  }
+
+  /**
+   * provides the form element's mysql datatype
+   * 
+   * @return string
+   */
+  protected function element_datatype()
+  {
+    return 'FLOAT';
   }
   
 }
