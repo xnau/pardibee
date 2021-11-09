@@ -83,7 +83,7 @@ class last_update_user {
   {
     global $wpdb;
     
-    $wpdb->update(\Participants_Db::participants_table(), array( self::fieldname => $this->user_id ), array( 'id' => $record_id ) );
+    $wpdb->update( \Participants_Db::participants_table(), array( self::fieldname => $this->user_id ), array( 'id' => $record_id ) );
   }
   
   /**
