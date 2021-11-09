@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -16,6 +16,11 @@
 namespace PDb_fields;
 
 trait calculations {
+
+  /**
+   * @var array of calculation steps
+   */
+  protected $calc_list;
 
   /**
    * calculates the total
@@ -33,23 +38,23 @@ trait calculations {
      * returns a value, the normal calculation is skipped and the value is used 
      * as the calculated value
      * 
-     * @param bool false the nominal initial value
+     * @param bool false the initial result
      * @param array $replacement_data
      * @param \PDb_Field_Item $field the current field
      * @return int|float the result of the calculation 
      */
-    $this->result = \Participants_Db::apply_filters('calculated_field_calc_value', false, $replacement_data, $this->field );
-    
+    $this->result = \Participants_Db::apply_filters( 'calculated_field_calc_value', false, $replacement_data, $this->field );
+
     if ( $this->result === false ) {
-    
-      if ( defined( 'PDB_DEBUG') && PDB_DEBUG > 2 ) {
+
+      if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
         \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->calc_template(), 3 );
         ob_start();
         var_dump( $replacement_data );
         \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
       }
 
-      $this->calc_list( $replacement_data );
+      $this->build_calc_list( $replacement_data );
 
       \Participants_Db::debug_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ), 3 );
 
@@ -63,12 +68,13 @@ trait calculations {
    * @param array $data replacement data
    * @return array
    */
-  private function calc_list( $data )
+  private function build_calc_list( $data )
   {
     $calc_list = array();
     $tag = false;
     $buffer = '';
 
+    // build the list character by character
     foreach ( str_split( $this->calc_template() ) as $chr ) {
 
       switch ( $chr ) {
@@ -84,7 +90,7 @@ trait calculations {
             $calc_list[] = $buffer;
             $buffer = '';
           }
-          
+
           // get the last item added to the list
           $previous = end( $calc_list );
 
@@ -114,15 +120,21 @@ trait calculations {
           /* tag is closed: get the matching value from the data, but only if it 
            * is a number of some kind
            */
-          if ( isset( $data[ $buffer ] ) && is_numeric( $data[ $buffer ] ) ) {
+          if ( isset( $data[ $buffer ] ) ) {
 
-            // get the value of the tag
-            $calc_list[] = $data[ $buffer ];
+            // filter out anything non-numeric
+            $n = filter_var( $data[ $buffer ], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+
+            if ( is_numeric( $n ) ) {
+              // get the value of the tag
+              $calc_list[] = $n;
+            }
           } elseif ( strpos( $buffer, '#' ) === 0 ) {
 
-            // if this is a key value, convert it to a timestamp
+            // if this is a value key, convert it to its value
             $calc_list[] = $this->key_value( $buffer );
           } elseif ( strpos( $buffer, '?' ) === 0 ) {
+
             // this is a formatting key
             $calc_list[] = $buffer;
           }
@@ -162,7 +174,7 @@ trait calculations {
     $value = get_transient( $cachekey );
 
     if ( $value === false ) {
-      
+
       switch ( $matchkey ) {
 
         case 'current_date':
@@ -185,11 +197,15 @@ trait calculations {
           break;
 
         case 'n_days':
-          $value = strtotime( date( 'M j,Y 00:00', strtotime( $numeric . ' days' ) ) );
+          $value = strtotime( $numeric . ' days', 0 ); // provides a span of time
           break;
 
         case 'n_months':
-          $value = strtotime( date( 'M j,Y 00:00', strtotime( $numeric . ' months' ) ) );
+          $value = strtotime( $numeric . ' months', 0 );
+          break;
+
+        case 'n_years':
+          $value = strtotime( $numeric . ' years', 0 );
           break;
 
         default:
@@ -210,75 +226,58 @@ trait calculations {
    */
   private function get_calculated_value()
   {
-    $format = 'unformatted';
-    $sum_list = array();
     $sum_count = 0;
-    $sum = 0;
-    $op = 'add';
+    $product = 0;
+    $op = false;
 
-    // first pass to calc the sums
     foreach ( $this->calc_list as $i => $item ) {
 
       switch ( $item ) {
 
         case '+':
-          $op = 'add';
-          break;
-
         case '-':
-          $op = 'sub';
+        case '*';
+        case '/':
+
+          $op = $item;
           break;
 
-        case '=':
-        case '/':
-        case '*':
-          $sum_list[] = $sum;
-          $sum = 0;
-          break;
+        case '=';
+          $format_tag = $this->calc_list[ $i + 1 ];
+          break 2;
 
         default:
-          if ( is_numeric( $item ) ) {
-            if ( $op === 'add' ) {
-              $sum = $sum + $item;
-              $sum_count++;
-            } elseif ( $op === 'sub' ) {
-              $sum = $sum - $item;
-              $sum_count++;
+          // this will be a value
+          if ( $product && $op ) {
+
+            switch ( $op ) {
+
+              case '+':
+                $product = $product + $item;
+                $sum_count++;
+                break;
+
+              case '-':
+                $product = $product - $item;
+                $sum_count++;
+                break;
+
+              case '*':
+                $product = $product * $item;
+                break;
+
+              case '/':
+                $product = $product / $item;
+                break;
             }
+          } else {
+
+            $product = $item;
           }
-      }
-
-    }
-
-    $product = $sum;
-    $sum_index = 0;
-
-    // now perform the multiplication or division
-    foreach ( $this->calc_list as $i => $item ) {
-
-      switch ( $item ) {
-
-        case '*':
-          $product = $sum_list[ $sum_index ] * $sum_list[ $sum_index + 1 ];
-          $sum_index = $sum_index + 2;
-          break;
-
-        case '/':
-          $product = $sum_list[ $sum_index ] / $sum_list[ $sum_index + 1 ];
-          $sum_index = $sum_index + 2;
-          break;
-
-        case '=':
-          if ( $product === $sum ) {
-            $product = $sum_list[ $sum_index ];
-            $sum_index++;
-          }
-          $format = $this->calc_list[ $i + 1 ];
-          break 2;
       }
     }
 
-    return $this->format( $product, $format, $sum_count );
+    return $this->format( $product, $format_tag, $sum_count );
   }
 
   /**
@@ -300,6 +299,10 @@ trait calculations {
       $format_tag = $matches[ 1 ] . 'n';
     }
 
+    if ( !is_numeric( $value ) ) {
+      $format_tag = 'unformatted';
+    }
+
     switch ( $format_tag ) {
 
       case 'round_n':
@@ -308,6 +311,12 @@ trait calculations {
 
       case 'integer':
         $formatted = $this->truncate_number( $value );
+        break;
+
+      case 'average':
+      case 'average_n':
+        $average = $sum_count > 1 ? $value / $sum_count : $value;
+        $formatted = $this->format_number( $average, $numeric );
         break;
 
       case 'years':
@@ -321,14 +330,10 @@ trait calculations {
       case 'month':
       case 'week':
       case 'day':
+      case 'day_of_month':
       case 'day_of_week':
+      case 'day_of_year':
         $formatted = $this->partial_date( $value, $format_tag );
-        break;
-
-      case 'average':
-      case 'average_n':
-        $average = $sum_count > 0 ? $value / $sum_count : $value;
-        $formatted = $this->format_number( $average, $numeric );
         break;
 
       case 'date':
@@ -403,7 +408,12 @@ trait calculations {
         break;
 
       case 'day':
+      case 'day_of_month':
         $format = 'j';
+        break;
+
+      case 'day_of_year':
+        $format = 'z';
         break;
 
       case 'day_of_week':
