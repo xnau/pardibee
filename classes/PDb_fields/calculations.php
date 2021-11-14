@@ -58,7 +58,7 @@ trait calculations {
 
       \Participants_Db::debug_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ), 3 );
 
-      $this->result = $this->get_calculated_value();
+      $this->result = $this->complete ? $this->get_calculated_value() : '';
     }
   }
 
@@ -122,12 +122,12 @@ trait calculations {
            */
           if ( isset( $data[ $buffer ] ) ) {
 
-            // filter out anything non-numeric
-            $n = filter_var( $data[ $buffer ], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
-
-            if ( is_numeric( $n ) ) {
+            if ( is_numeric( $data[ $buffer ] ) ) {
               // get the value of the tag
-              $calc_list[] = $n;
+              $calc_list[] = $data[ $buffer ];
+            } else {
+              // not a numeric value, can't process
+              $this->mark_as_incomplete($buffer);
             }
           } elseif ( strpos( $buffer, '#' ) === 0 ) {
 
@@ -137,6 +137,9 @@ trait calculations {
 
             // this is a formatting key
             $calc_list[] = $buffer;
+          } else {
+            
+            $this->mark_as_incomplete($buffer);
           }
 
           $buffer = '';
@@ -148,6 +151,19 @@ trait calculations {
     }
 
     $this->calc_list = $calc_list;
+  }
+  
+  /**
+   * mark the calculation as incomplete
+   * 
+   * @param string $tag_text the string inside the value tag that triggered the incompletion 
+   */
+  private function mark_as_incomplete( $tag_text )
+  {
+    if ( !\PDb_Form_Field_Def::is_field($this->field->name()) ) {
+      \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() .' field missing calculation value "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
+    }
+    $this->complete = false;
   }
 
   /**
