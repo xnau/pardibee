@@ -67,6 +67,22 @@ class date_calc extends calculated_field {
   }
   
   /**
+   * adds the format tag to the calculation template if it is missing
+   * 
+   * @return string calculation format
+   */
+  protected function completed_template()
+  {
+    $template = $this->field->default_value();
+    
+    if ( preg_match( '/=$/', $template ) === 1 ) {
+      $template .= $this->default_format_tag();
+    }
+    
+    return $this->extract_display_format( $template );
+  }
+  
+  /**
    * supplies the formatted display
    */
   protected function formatted_display()
