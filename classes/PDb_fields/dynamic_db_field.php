@@ -52,9 +52,10 @@ abstract class dynamic_db_field extends core {
    * provides the dynamically-generated value
    * 
    * @param array $data the data
+   * @param bool $display if true, return the value for display, if false, return the value for db storage
    * @return string
    */
-  abstract protected function dynamic_value( $data = false );
+  abstract protected function dynamic_value( $data = false, $display = true );
 
   /**
    * updates the database value for the field
@@ -73,7 +74,7 @@ abstract class dynamic_db_field extends core {
         $field->set_record_id( $post[ 'id' ] );
         $this->setup_field( $field );
 
-        $post[ $dynamic_db_field->name() ] = $this->dynamic_value( $post );
+        $post[ $dynamic_db_field->name() ] = $this->dynamic_value( $post, false );
       }
     }
     return $post;
