@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.2
+ * @version 1.3
  *
  */
 if ( !defined( 'ABSPATH' ) ) {
@@ -96,7 +96,7 @@ if ( $participant_values ) :
       // get the columns and output form
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
 
-        $value = isset($participant_values[$backend_column->name]) ? $participant_values[$backend_column->name] : '';
+        $value = isset($participant_values[$backend_column->name]) ? $participant_values[$backend_column->name] : $backend_column->default ;
       
         $column = new PDb_Field_Item( array(
             'name' => $backend_column->name,
