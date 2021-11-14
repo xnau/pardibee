@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -93,27 +93,37 @@ class numeric_calc extends calculated_field {
       
       if ( $template_field->form_element() === $this->name ) {
         
-        /* if we are using the value from another string combine field, get the 
+        /* if we are using the value from another numeric calc field, get the 
          * value directly from the db to avoid recursion
          */
         $replacement_data[$fieldname] = $this->field_db_value( $template_field->name() );
         $replacement_data['value:'.$fieldname] = $source_data[$fieldname];
         
       } else {
+      
+        if ( isset( $source_data[$template_field->name()] ) && ! \PDb_FormElement::is_empty( $source_data[$template_field->name()] ) ) {
+          
+          $value = $source_data[$template_field->name()];
+          
+          if ( in_array( $template_field->form_element(), array( 'date','timestamp' ) ) ) {
+            $value = \PDb_Date_Parse::timestamp($value);
+          }
+          
+          // get the value from the provided data
+          $template_field->set_value( $value );
+        }
         
-        if ( ! $template_field->has_content() || ( is_array( $post ) && is_null( $post[$template_field->name()] ) ) ) {
+        $field_value = $template_field->has_content() ? $template_field->value: $template_field->default_value();
+        
+        if ( $field_value !=  0 && empty( $field_value ) ) {
           $this->complete = false;
         }
-      
-        if ( isset( $post[$template_field->name()] ) && ! \PDb_FormElement::is_empty( $post[$template_field->name()] ) ) {
-          // get the value from the provided data
-          $template_field->set_value( $post[$template_field->name()] );
-        }
 
-        $replacement_data[$fieldname] = $template_field->has_content() ? $template_field->value : '';
+        $replacement_data[$fieldname] = $field_value;
       }
     }
     
+    // calculate the value only if the value set is complete
     if ( $this->complete ) {
       $this->calculate_value( $this->filter_data( $replacement_data ) );
     } else {
