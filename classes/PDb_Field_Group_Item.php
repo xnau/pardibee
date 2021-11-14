@@ -33,6 +33,24 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   public $fields = array();
   
   /**
+   * provides a list of the group's fields
+   * 
+   * @param string $group_name
+   * @param bool $object_list if true, return a list of PDb_Form_Field_Def objects
+   * @return array of field names or field def objects
+   */
+  public static function get_group_fields( $group_name, $object_list = false )
+  {
+    $group = new self( $group_name, '' );
+    
+    if ( $object_list ) {
+      return $group->fields;
+    } else {
+      return array_keys( $group->fields );
+    }
+  }
+  
+  /**
    * instantiates a field group object
    *
    * @param object $group a object with all the field group's properties
