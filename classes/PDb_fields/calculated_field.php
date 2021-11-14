@@ -181,7 +181,7 @@ abstract class calculated_field extends dynamic_db_field {
     {
       if ( $field->is_signup() && isset( $post[$field->name()] ) ) {
         $this->set_field( $field->name() );
-        $post[$field->name()] = $this->dynamic_value($post);
+        $post[$field->name()] = $this->dynamic_value($post, false);
       }
     }
     
@@ -194,11 +194,14 @@ abstract class calculated_field extends dynamic_db_field {
    * this removes any unreplaced tags
    * 
    * @param array $data optional data set to override the data in the db
+   * @param bool $display if true, returns a display string, if false, returns an unformatted number for numeric and date calc fields #2677
    * @return string
    */
-  protected function dynamic_value( $data = false )
+  protected function dynamic_value( $data = false, $display = true )
   {
     $cachegroup = 'pdb-calculated_field-' . $this->field->name();
+    
+    $is_numeric_field = in_array( $this->field->form_element(), array( 'date-calc','numeric-calc' ) );
     
     $dynamic_value = wp_cache_get( $this->field->record_id(), $cachegroup, false, $found );
     
@@ -230,7 +233,7 @@ abstract class calculated_field extends dynamic_db_field {
       wp_cache_add( $this->field->record_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
     }
     
-    return $dynamic_value;
+    return $is_numeric_field && $display === false ? filter_var( $dynamic_value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) : $dynamic_value;
   }
   
   /**
@@ -260,7 +263,7 @@ abstract class calculated_field extends dynamic_db_field {
       $template .= $this->default_format_tag();
     }
     
-    return $this->extract_display_format( $template );
+    return $template;
   }
   
   /**
@@ -274,7 +277,7 @@ abstract class calculated_field extends dynamic_db_field {
    * @param string $template
    * @return string template with the format tag converted
    */
-  private function extract_display_format( $template )
+  protected function extract_display_format( $template )
   {
     $has_format_tag = preg_match( '/=\[(.+)\]$/', $template, $matches );
     
@@ -367,7 +370,7 @@ abstract class calculated_field extends dynamic_db_field {
   {
     $template = $this->field->default_value();
     
-    preg_match_all('/\[([^\]]+)\]/', $template, $matches );
+    preg_match_all('/\[([^#\?][^\]]+)\]/', $template, $matches );
     
     $list = array();
     
