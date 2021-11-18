@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * class for handling the display of field groups in a template
  *
  *
@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Template_Item class
  */
@@ -28,9 +28,14 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   public $field_count;
   
   /**
-   * @var array of field definitions
+   * @var array of field definitions, either PDb_Form_Field_Def or PDb_Field_Item objects
    */
   public $fields = array();
+  
+  /**
+   * @var bool true if the fields in the group have values
+   */
+  private $has_values;
   
   /**
    * provides a list of the group's fields
@@ -41,7 +46,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
    */
   public static function get_group_fields( $group_name, $object_list = false )
   {
-    $group = new self( $group_name, '' );
+    $group = new self( $group_name );
     
     if ( $object_list ) {
       return $group->fields;
@@ -53,23 +58,17 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
   /**
    * instantiates a field group object
    *
-   * @param object $group a object with all the field group's properties
-   * @param string $module name of the current module
+   * @param object|array|string $group_config a object or array with all the field group's properties or the string name of the group
+   * @param string $module optional name of the current module
    */
-  public function __construct( $group, $module )
+  public function __construct( $group_config, $module = '' )
   {
-    
-    // load the object properties
-    $this->assign_props( $group );
-    
-    $this->setup_fields();
-    
-    // set the field count for the group
-    $this->field_count = isset( $group->fields ) ? count( (array) $group->fields ) : 0;
+    // load the object properties from the supplied configuration
+    $this->assign_props( $this->recast_config($group_config) );
     
     // set up some classes
     $this->add_class( $this->has_fields() ? '' : 'pdb-group-empty' );
-    $this->add_class( $this->group_fields_have_values() ? '' : 'pdb-group-novalues' );
+    $this->add_class( $this->has_values ? '' : 'pdb-group-novalues' );
     
     $this->module = $module;
   }
@@ -195,63 +194,111 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
    */
   public function has_all_empty_fields()
   {
-    return ! $this->group_fields_have_values();
+    return ! $this->has_values;
+  }
+  
+  /**
+   * recasts the supplied configuration into an object
+   * 
+   * @param string|array|object $group_config
+   * @return object
+   */
+  private function recast_config( $group_config )
+  {
+    switch (true) {
+      
+      case is_string( $group_config ):
+        
+        $config_obj = new stdClass();
+        $config_obj->name = $group_config;
+        break;
+      
+      case is_array( $group_config ) :
+        $config_obj = (object) $group_config;
+        break;
+      
+      default:
+        
+        $config_obj = $group_config;
+    }
+    
+    return $config_obj;
   }
   
   /**
    * assigns the object properties that match properties in the supplied object
    * 
-   * @param object $group the supplied object or config array
+   * @param object $group_config the supplied object or config array
    */
-  protected function assign_props( $group ) {
-    
-    if ( is_string( $group ) ) {
-      $group = array( 'name' => $group );
-    }
-    
-    $group = (object) $group;
-    
-    $class_properties = array_keys( get_class_vars( get_class( $this ) ) );
+  protected function assign_props( $group_config )
+  {$class_properties = array_keys( get_class_vars( get_class( $this ) ) );
       
-    $item_def = new stdClass;
+    $group_def = $this->group_def( $group_config->name );
     
-    $groups = Participants_Db::get_groups();
-    if ( in_array( $group->name, $groups ) ) {
-      $item_def = (object) $groups[$group->name];
-    }
+    $field_config = isset( $group_config->fields ) ? $group_config->fields : false;
+    unset( $group_config->fields );
     
     // grab and assign the class properties from the provided object
     foreach( $class_properties as $property ) {
       
-      if ( isset( $group->$property ) ) {
+      if ( isset( $group_config->$property ) ) {
         
-        $this->$property = $group->$property;
+        $this->$property = $group_config->$property;
       
-      } elseif ( isset( $item_def->$property ) ) {
+      } elseif ( isset( $group_def->$property ) ) {
         
-        $this->$property = $item_def->$property;
-        
+        $this->$property = $group_def->$property;
       }
-      
     }
     
+    $this->setup_fields($field_config);
+    
+    // set the field count for the group
+    $this->field_count = count( $this->fields );
+    
+    $this->group_fields_have_values();
+  }
+  
+  /**
+   * supplies the groups definition object
+   * 
+   * @param string $groupname
+   * @return object
+   */
+  private function group_def( $groupname )
+  {
+    $groups = Participants_Db::get_groups();
+    
+    return (object) $groups[$groupname];
   }
   
   /**
    * sets up the fields property
    * 
+   * @param object|array $fields_config the fields from the configuraiton array
    * @global \wpdb $wpdb
    */
-  private function setup_fields()
+  private function setup_fields( $fields_config = false )
   {
-    if ( empty( $this->fields ) ) {
+    if ( $fields_config === false ) {
+      
       global $wpdb;
-      
-      $results = $wpdb->get_col( $wpdb->prepare( 'SELECT f.name FROM '  . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON g.name = f.group WHERE f.group = %s', $this->name ) );
-      
+
+      $results = $wpdb->get_col( $wpdb->prepare( 'SELECT f.name FROM '  . Participants_Db::$fields_table . ' f WHERE f.group = %s', $this->name ) );
+
       foreach ( $results as $fieldname ) {
         $this->fields[$fieldname] = Participants_Db::$fields[$fieldname];
       }
+    
+      return;
+    }
+    
+    if ( is_object( $fields_config ) ) {
+      $fields_config = (array) $fields_config;
+    }
+    
+    foreach( $fields_config as $fieldname => $field_object ) {
+      $this->fields[ $fieldname ] = $field_object;
     }
   }
   
@@ -266,6 +313,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
     $has_field_values = wp_cache_get( $this->name, 'pdb-group_fields_have_value', false, $found );
     
     if ( ! $found ) {
+      
       foreach( $this->fields as $field ) {
         /* @var $field PDb_Form_Field_Def */
         
@@ -275,11 +323,12 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
           break;
         }
       }
+      
       reset( $this->fields );
       wp_cache_set( $this->name, $has_field_values, 'pdb-group_fields_have_value', Participants_Db::cache_expire() );
     }
     
-    return $has_field_values;
+    $this->has_values = $has_field_values;
   }
   
 }
