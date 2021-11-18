@@ -17,6 +17,8 @@ namespace PDb_fields;
 
 abstract class calculated_field extends dynamic_db_field {
   
+  use calculations;
+  
   /**
    * @var bool tells if the calculation has the info it needs
    */
@@ -28,14 +30,14 @@ abstract class calculated_field extends dynamic_db_field {
   const keycache = 'pdb-key_cache';
   
   /**
+   * @var \PDb_fields\calc_template instance
+   */
+  protected $template;
+  
+  /**
    * @var int|float holds the calculated value
    */
   protected $result;
-  
-  /**
-   * @var string the field's display format
-   */
-  protected $display_format;
 
   /**
    * 
@@ -60,13 +62,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   abstract protected function field_title();
   
-  /**
-   * replaces the template with string from the data
-   * 
-   * @param array|bool $data associative array of data or bool false if no data
-   * @return string
-   */
-  abstract protected function replaced_string( $data );
+
 
   /**
    * provides the data set for the value tag replacement
@@ -78,8 +74,13 @@ abstract class calculated_field extends dynamic_db_field {
    * @return array as $name => $value
    */
   abstract protected function replacement_data( $post );
-
-
+  
+  /**
+   * tells if the current field stores a numeric value
+   * 
+   * @return bool
+   */
+  abstract protected function is_numeric_field();
 
   /**
    * display the field value in a read context
@@ -88,6 +89,8 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function display_value()
   {
+    $this->set_field( $this->field );
+    
     if ( $this->field->is_valid_single_record_link_field() ) {
       
       $this->field->set_value( $this->formatted_display() );
@@ -113,14 +116,6 @@ abstract class calculated_field extends dynamic_db_field {
     $this->set_field( $field );
     
     $field->output = $this->form_element_html();
-  }
-  
-  /**
-   * supplies the formatted display
-   */
-  protected function formatted_display()
-  {
-    return $this->dynamic_value();
   }
   
   /**
@@ -181,11 +176,19 @@ abstract class calculated_field extends dynamic_db_field {
     {
       if ( $field->is_signup() && isset( $post[$field->name()] ) ) {
         $this->set_field( $field->name() );
-        $post[$field->name()] = $this->dynamic_value($post, false);
+        $post[$field->name()] = $this->dynamic_value($post);
       }
     }
     
     return $post;
+  }
+  
+  /**
+   * supplies the formatted display
+   */
+  protected function formatted_display()
+  {
+    return $this->format( $this->field->value, $this->display_format(), 0 ); // $this->dynamic_value()
   }
   
   /**
@@ -194,14 +197,11 @@ abstract class calculated_field extends dynamic_db_field {
    * this removes any unreplaced tags
    * 
    * @param array $data optional data set to override the data in the db
-   * @param bool $display if true, returns a display string, if false, returns an unformatted number for numeric and date calc fields #2677
    * @return string
    */
-  protected function dynamic_value( $data = false, $display = true )
+  protected function dynamic_value( $data = false )
   {
     $cachegroup = 'pdb-calculated_field-' . $this->field->name();
-    
-    $is_numeric_field = in_array( $this->field->form_element(), array( 'date-calc','numeric-calc' ) );
     
     $dynamic_value = wp_cache_get( $this->field->record_id(), $cachegroup, false, $found );
     
@@ -233,7 +233,27 @@ abstract class calculated_field extends dynamic_db_field {
       wp_cache_add( $this->field->record_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
     }
     
-    return $is_numeric_field && $display === false ? filter_var( $dynamic_value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) : $dynamic_value;
+    return $this->is_numeric_field() ? filter_var( $dynamic_value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) : $dynamic_value;
+  }
+  
+  
+  /**
+   * replaces the template with string from the data
+   * 
+   * @param array|bool $data associative array of data or bool false if no data
+   * @return string
+   */
+  protected function replaced_string( $data )
+  {
+    $replacement_data = $this->replacement_data( $data );
+    
+    if ( ! $this->check_data( $replacement_data ) ) {
+      return false;
+    }
+    
+    $class = get_class( $this );
+    
+    return $replacement_data[ $class::calc_tag ];
   }
   
   /**
@@ -266,34 +286,17 @@ abstract class calculated_field extends dynamic_db_field {
     return $template;
   }
   
+ 
   /**
-   * extracts the format from the template
-   * 
-   * this saves the template's format tag for use in the display of the value and 
-   * replaces it with the default template. This is so the saved value of the field 
-   * will be a timestamp, but the display will be controlled by the format tag in 
-   * the template.
-   * 
-   * @param string $template
-   * @return string template with the format tag converted
-   */
-  protected function extract_display_format( $template )
-  {
-    $has_format_tag = preg_match( '/=\[(.+)\]$/', $template, $matches );
-    
-    $this->display_format = $matches[1];
-    
-    return str_replace( '[' . $this->display_format . ']', '[?unformatted]', $template );
-  }
-
-  /**
-   * extracts the calculation part of the template
+   * provides the display format tag
    * 
    * @return string
    */
-  protected function calc_template()
+  protected function display_format()
   {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$2', $this->template() );
+    $format_tag = $this->template->format_tag();
+    
+    return $this->is_display_only_format($format_tag) ? $format_tag : $this->unformatted_tag();
   }
 
   /**
@@ -303,7 +306,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function prepped_template()
   {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1[' . self::calc_tag . ']$3', $this->template() );
+    return $this->template->prepped_template( self::calc_tag );
   }
   
   /**
@@ -312,6 +315,16 @@ abstract class calculated_field extends dynamic_db_field {
    * @return string
    */
   protected function default_format_tag()
+  {
+    return $this->unformatted_tag();
+  }
+  
+  /**
+   * provides the default format tag
+   * 
+   * @return string
+   */
+  protected function unformatted_tag()
   {
     return '[?unformatted]';
   }
@@ -339,11 +352,6 @@ abstract class calculated_field extends dynamic_db_field {
     
     return \Participants_Db::apply_filters( $this->name . '_wrap_template', implode( PHP_EOL, $template ) );
   }
-
-  
-  /**
-   * provides the form element name
-   */
   
   /**
    * provides the value for a field, drawn from the database
@@ -368,13 +376,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function template_field_list()
   {
-    $template = $this->field->default_value();
-    
-    preg_match_all('/\[([^#\?][^\]]+)\]/', $template, $matches );
-    
-    $list = array();
-    
-    foreach( $matches[1] as $fieldname )
+    foreach( $this->template->field_list() as $fieldname )
     {
       if( \PDb_Form_Field_Def::is_field( $fieldname ) ) {
         $list[] = $fieldname;
@@ -402,6 +404,18 @@ abstract class calculated_field extends dynamic_db_field {
      * @return array the filtered replacement data
      */
     return \Participants_Db::apply_filters( 'calculated_field_data', $replacement_data, $this->field );
+  }
+
+  /**
+   * sets the field property
+   * 
+   * @param string|\PDb_FormElement $field the incoming field
+   */
+  protected function set_field( $field )
+  {
+    parent::set_field($field);
+    
+    $this->template = new calc_template( $this->field, $this->default_format_tag() );
   }
   
   /**
