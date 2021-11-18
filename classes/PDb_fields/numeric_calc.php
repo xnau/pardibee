@@ -16,8 +16,6 @@
 namespace PDb_fields;
 
 class numeric_calc extends calculated_field {
-  
-  use calculations;
 
   /**
    * @var string name of the form element
@@ -40,23 +38,6 @@ class numeric_calc extends calculated_field {
   }
   
   /**
-   * replaces the template with string from the data
-   * 
-   * @param array|bool $data associative array of data or bool false if no data
-   * @return string
-   */
-  protected function replaced_string( $data )
-  {
-    $replacement_data = $this->replacement_data( $data );
-    
-    if ( ! $this->check_data( $replacement_data ) ) {
-      return false;
-    }
-    
-    return \PDb_Tag_Template::replace_text( $this->prepped_template(), $replacement_data );
-  }
-  
-  /**
    * replaces the calculation part of the template with the calculation tag
    * 
    * @return string
@@ -64,14 +45,6 @@ class numeric_calc extends calculated_field {
   protected function prepped_template()
   {
     return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1['. self::calc_tag . ']$3', $this->template() );
-  }
-  
-  /**
-   * supplies the formatted display
-   */
-  protected function formatted_display()
-  {
-    return $this->format( $this->dynamic_value(), $this->display_format, 0 );
   }
   
   /**
@@ -142,7 +115,17 @@ class numeric_calc extends calculated_field {
    */
   protected function element_datatype()
   {
-    return 'FLOAT';
+    return 'DOUBLE';
+  }
+  
+  /**
+   * tells if the current field stores a numeric value
+   * 
+   * @return bool
+   */
+  protected function is_numeric_field()
+  {
+    return true;
   }
   
 }
