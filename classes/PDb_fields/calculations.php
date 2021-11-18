@@ -27,7 +27,7 @@ trait calculations {
    * 
    * @param array $replacement_data the prepared data from the template
    */
-  private function calculate_value( $replacement_data )
+  protected function calculate_value( $replacement_data )
   {
     /**
      * @filter pdb-calculated_field_calc_value
@@ -48,7 +48,7 @@ trait calculations {
     if ( $this->result === false ) {
 
       if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
-        \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->calc_template(), 3 );
+        \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->template->calc_body(), 3 );
         ob_start();
         var_dump( $replacement_data );
         \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
@@ -75,7 +75,7 @@ trait calculations {
     $buffer = '';
 
     // build the list character by character
-    foreach ( str_split( $this->calc_template() ) as $chr ) {
+    foreach ( str_split( $this->template->calc_body() ) as $chr ) {
 
       switch ( $chr ) {
 
@@ -306,8 +306,8 @@ trait calculations {
    */
   private function format( $value, $format_tag, $sum_count )
   {
-    // remove the leading ?
-    $format_tag = str_replace( '?', '', $format_tag );
+    // remove the leading ? and brackets
+    $format_tag = str_replace( array('?', ']','['), '', $format_tag );
 
     $numeric = 0;
     if ( preg_match( '/(.+_)(\d+)$/', $format_tag, $matches ) === 1 ) {
@@ -326,7 +326,7 @@ trait calculations {
         break;
 
       case 'integer':
-        $formatted = $this->truncate_number( $value );
+        $formatted = $this->format_number( $this->truncate_number( $value ), $numeric );
         break;
 
       case 'average':
@@ -362,6 +362,17 @@ trait calculations {
     }
 
     return $formatted;
+  }
+  
+  /**
+   * tells if the format should only be applied to displaying the value
+   * 
+   * @param string $format_tag
+   * @return bool true if the format tag should be applied
+   */
+  public function is_display_only_format( $format_tag )
+  {
+    return  preg_match( '/(round|integer|date)/', $format_tag ) === 1;
   }
 
   /**
