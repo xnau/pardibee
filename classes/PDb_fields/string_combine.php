@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -30,6 +30,14 @@ class string_combine extends calculated_field {
   protected function field_title()
   {
     return _x( 'String Combine', 'name of a field type that shows a combined string', 'participants-database' );
+  }
+  
+  /**
+   * supplies the formatted display
+   */
+  protected function formatted_display()
+  {
+    return $this->field->value();
   }
   
   /**
@@ -135,6 +143,26 @@ PATT;
     }, $template );
     
     return $template;
+  }
+  
+  /**
+   * provides the default format tag
+   * 
+   * @return string
+   */
+  protected function default_format_tag()
+  {
+    return '[?unformatted]';
+  }
+  
+  /**
+   * tells if the current field stores a numeric value
+   * 
+   * @return bool
+   */
+  protected function is_numeric_field()
+  {
+    return false;
   }
 
 }
