@@ -16,8 +16,6 @@
 namespace PDb_fields;
 
 class date_calc extends calculated_field {
-  
-  use calculations;
 
   /**
    * @var string name of the form element
@@ -37,57 +35,6 @@ class date_calc extends calculated_field {
   protected function field_title()
   {
     return _x( 'Date Calculation', 'name of a field type that shows the result of a date calculation', 'participants-database' );
-  }
-
-  /**
-   * replaces the template with string from the data
-   * 
-   * @param array|bool $data associative array of data or bool false if no data
-   * @return string
-   */
-  protected function replaced_string( $data )
-  {
-    $replacement_data = $this->replacement_data( $data );
-    
-    if ( ! $this->check_data( $replacement_data ) ) {
-      return false;
-    }
-
-    return \PDb_Tag_Template::replace_text( $this->prepped_template(), $replacement_data );
-  }
-
-  /**
-   * replaces the calculation part of the template with the calculation tag
-   * 
-   * @return string
-   */
-  protected function prepped_template()
-  {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1[' . self::calc_tag . ']$3', $this->template() );
-  }
-  
-  /**
-   * adds the format tag to the calculation template if it is missing
-   * 
-   * @return string calculation format
-   */
-  protected function completed_template()
-  {
-    $template = $this->field->default_value();
-    
-    if ( preg_match( '/=$/', $template ) === 1 ) {
-      $template .= $this->default_format_tag();
-    }
-    
-    return $this->extract_display_format( $template );
-  }
-  
-  /**
-   * supplies the formatted display
-   */
-  protected function formatted_display()
-  {
-    return $this->format( $this->dynamic_value(), $this->display_format, 0 );
   }
 
   /**
@@ -134,13 +81,7 @@ class date_calc extends calculated_field {
    */
   protected function template_field_list()
   {
-    $template = $this->field->default_value();
-
-    preg_match_all( '/\[([^\]]+)\]/', $template, $matches );
-
-    $list = array();
-
-    foreach ( $matches[ 1 ] as $fieldname ) {
+    foreach ( $this->template->field_list() as $fieldname ) {
       if ( \PDb_Form_Field_Def::is_field( $fieldname ) ) {
         $field_def = \Participants_Db::$fields[ $fieldname ];
         /** @var \PDb_Form_Field_Def $field_def */
@@ -173,6 +114,16 @@ class date_calc extends calculated_field {
   protected function element_datatype()
   {
     return 'BIGINT(20)';
+  }
+  
+  /**
+   * tells if the current field stores a numeric value
+   * 
+   * @return bool
+   */
+  protected function is_numeric_field()
+  {
+    return true;
   }
   
   /**
