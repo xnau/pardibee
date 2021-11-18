@@ -1171,7 +1171,7 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * get an array of groups
+   * get an array of field groups
    *
    * @param string $column comma-separated list of columns to get, defaults to all (*)
    * @param mixed $exclude single group to exclude or array of groups to exclude
@@ -1215,8 +1215,9 @@ class Participants_Db extends PDb_Base {
 
       $output = array();
 
-      foreach ( $result as $row )
+      foreach ( $result as $row ) {
         $output[] = $row[$column];
+      }
 
       return $output;
     } else {
