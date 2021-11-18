@@ -52,10 +52,9 @@ abstract class dynamic_db_field extends core {
    * provides the dynamically-generated value
    * 
    * @param array $data the data
-   * @param bool $display if true, return the value for display, if false, return the value for db storage
    * @return string
    */
-  abstract protected function dynamic_value( $data = false, $display = true );
+  abstract protected function dynamic_value( $data = false );
 
   /**
    * updates the database value for the field
@@ -73,8 +72,10 @@ abstract class dynamic_db_field extends core {
         $field = new \PDb_Field_Item( $dynamic_db_field );
         $field->set_record_id( $post[ 'id' ] );
         $this->setup_field( $field );
+        
+        $this->template = new calc_template( $field, $this->default_format_tag() );
 
-        $post[ $dynamic_db_field->name() ] = $this->dynamic_value( $post, false );
+        $post[ $dynamic_db_field->name() ] = $this->dynamic_value( $post );
       }
     }
     return $post;
@@ -133,9 +134,12 @@ abstract class dynamic_db_field extends core {
    */
   public function has_content_test( $field )
   {
-    $this->field = $field;
-    
-    return $this->dynamic_value();
+    return $field->value();
+//    $this->field = $field;
+//    
+//    $this->template = new calc_template( $field, $this->default_format_tag() );
+//    
+//    return $this->dynamic_value();
   }
 
   /**
