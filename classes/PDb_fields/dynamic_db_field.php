@@ -226,6 +226,10 @@ abstract class dynamic_db_field extends core {
     $this->field->default = $packet->default;
     $value = $this->dynamic_value();
     
+    if ( $value === '' ) {
+      $value = null;
+    }
+    
     if ( $value !== false ) {
       $wpdb->update( \Participants_Db::participants_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
     
@@ -281,6 +285,66 @@ abstract class dynamic_db_field extends core {
     }
     
     return $selected_ids;
+  }
+  
+  /**
+   * provides the datatype for the column
+   * 
+   * @global \wpdb $wpdb
+   * @param string name of the field
+   * @return string string,numeric,float
+   */
+  protected function field_datatype( $fieldname )
+  {
+    $types = $this->column_datatypes();
+    
+    switch ( true ) {
+      
+      case stripos( $types[$fieldname], 'decimal' ) !== false:
+      case stripos( $types[$fieldname], 'int' ) !== false:
+        return 'numeric';
+        
+      case stripos( $types[$fieldname], 'double' ) !== false:
+      case stripos( $types[$fieldname], 'float' ) !== false:
+        return 'float';
+        
+      default:
+        return 'string';
+    }
+  }
+  
+  /**
+   * provides the main db table column datatypes
+   * 
+   * @return array as $column_name => $datatype
+   */
+  private function column_datatypes()
+  {
+    $cachekey = 'pdb-column-datatypes';
+    $table = \Participants_Db::participants_table();
+    $types = wp_cache_get( $table, $cachekey );
+    
+    if ( $types === false ) {
+      
+      global $wpdb;
+      
+      $sql = 'SELECT COLUMN_NAME , DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE 
+    TABLE_SCHEMA = Database()
+AND TABLE_NAME = %s';
+      
+      $columns = $wpdb->get_results( $wpdb->prepare( $sql, $table ), ARRAY_A );
+      
+      $types = array();
+      foreach( $columns as $info ) {
+        $types[$info['COLUMN_NAME']] = $info['DATA_TYPE'];
+      }
+      
+      wp_cache_add( $table, $types, $cachekey, DAY_IN_SECONDS );
+    }
+    
+    return $types;
   }
 
 }
