@@ -1045,6 +1045,12 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
         $this->value = $this->is_value_set() ? $this->make_assoc_value_array( $value_list ) : $value_list;
         break;
+        
+      case ( $this->is_templated_field() ) :
+        
+        if ( $raw_value === $this->default ) {
+          $raw_value = '';
+        }
 
       default:
 
