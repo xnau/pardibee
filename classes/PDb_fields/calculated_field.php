@@ -188,7 +188,9 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function formatted_display()
   {
-    return $this->format( $this->field->value, $this->display_format(), 0 ); // $this->dynamic_value()
+    $formatted_value = $this->format( $this->field->value, $this->display_format(), 0 );
+    
+    return $formatted_value === '' ? '' : $this->template->front_text() . $formatted_value . $this->template->back_text();
   }
   
   /**
