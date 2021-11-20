@@ -682,6 +682,16 @@ class PDb_Form_Field_Def {
   {
     return PDb_FormElement::is_value_set( $this->form_element );
   }
+  
+  /**
+   * tells if the current field is a dynamic field that uses the default value as a template
+   * 
+   * @return bool true if the field uses a template
+   */
+  public function is_templated_field()
+  {
+    return in_array( $this->form_element, Participants_Db::apply_filters( 'templated_field_list', array( 'string-combine', 'numeric-calc', 'date-calc' ) ) );
+  }
 
   /**
    * tells if the field is a dynamic hidden field
