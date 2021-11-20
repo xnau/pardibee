@@ -87,6 +87,8 @@ class user_column extends base_column {
       case 'numeric':
       case 'decimal':
       case 'currency':
+      case 'numeric-calc':
+        
         if ( strlen( $initialvalue ) > 0 ) {
           $this->value = filter_var( $initialvalue, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
         } else {
