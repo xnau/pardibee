@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -23,6 +23,11 @@ class calc_template {
   private $field_template;
   
   /**
+   * @var array of template components
+   */
+  private $components;
+  
+  /**
    * @param \PDb_Field_Item $field
    * @param string $default_format the default format tag
    */
@@ -30,6 +35,7 @@ class calc_template {
   {
     $this->field_template = $field->default_value();
     $this->complete_template( $default_format );
+    $this->extract_components();
   }
   
   /**
@@ -84,9 +90,7 @@ class calc_template {
    */
   public function format_tag()
   {
-    preg_match( '/=\[(.+)\]$/', $this->field_template, $matches );
-    
-    return $matches[1];
+    return $this->components['format'];
   }
 
   /**
@@ -96,7 +100,44 @@ class calc_template {
    */
   public function calc_body()
   {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$2', $this->field_template );
+    return $this->components['body'];
+  }
+  
+  /**
+   * provides the front peritext
+   * 
+   * @return string
+   */
+  public function front_text()
+  {
+    return $this->components['front'];
+  }
+  
+  /**
+   * provides the back peritext
+   * 
+   * @return string
+   */
+  public function back_text()
+  {
+    return $this->components['back'];
+  }
+  
+  /**
+   * extracts the template components
+   * 
+   */
+  private function extract_components()
+  {
+    $this->components = array( 'front' => '', 'body' => '', 'format' => '', 'back' => '' );
+    
+    if ( preg_match( '/^(?<front>.*?)(?<body>\[.+=(?<format>\[.+\]))(?<back>.*)$/', $this->field_template, $matches ) === 1 ) {
+    
+      $this->components = $matches;
+    } else {
+      
+      \Participants_Db::debug_log(' calculation template format not recognized for template: '.$this->field_template );
+    }
   }
   
   /**
