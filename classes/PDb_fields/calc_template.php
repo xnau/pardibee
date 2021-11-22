@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -151,7 +151,9 @@ class calc_template {
     $template = $this->field_template;
     
     if ( ! $this->has_format_tag() ) {
-      $template .= $default_format;
+      
+      $equals = $this->has_equals_sign() ? '' : '=';      
+      $template .= $equals . $default_format;
     }
     
     return $template;
@@ -164,6 +166,17 @@ class calc_template {
    */
   private function has_format_tag()
   {
-    return preg_match( '/=$/', $this->field_template ) === 0;
+    return preg_match( '/=\[\?/', $this->field_template ) === 1;
   }
+  
+  /**
+   * tells if the template has an equals sign
+   * 
+   * @return bool true if the equals sign is present
+   */
+  private function has_equals_sign()
+  {
+    return preg_match( '/=$/', $this->field_template ) === 1;
+  }
+  
 }
