@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -51,8 +51,10 @@ abstract class calculated_field extends dynamic_db_field {
     
     $this->is_linkable();
     
-    add_filter( 'pdb-shortcode_call_pdb_signup', array( $this, 'setup_field_for_signup' ) );
+    $this->set_signup_filter();
     add_filter( 'pdb-before_submit_signup', array( $this, 'set_submission_value' ) );
+    
+    add_filter( 'pdb-new_field_params', array( $this, 'new_field_defaults' ) );
   }
   
   /**
@@ -119,9 +121,19 @@ abstract class calculated_field extends dynamic_db_field {
   }
   
   /**
+   * places the filter for the signup form
+   */
+  private function set_signup_filter()
+  {
+    foreach( \Participants_Db::apply_filters( 'signup_shortcodes', array('pdb_signup') ) as $tag ) {
+      add_filter( 'pdb-shortcode_call_' . $tag, array( $this, 'setup_field_for_signup' ) );
+    }
+  }
+  
+  /**
    * sets up the field as a hidden field for a signup form
    * 
-   * @param array $params
+   * @param array $params the shortcode params
    * @return array
    */
   public function setup_field_for_signup( $params )
@@ -146,6 +158,7 @@ abstract class calculated_field extends dynamic_db_field {
   public function redefine_for_signup( $definition )
   {
     $class = get_class($this);
+    
     if ( $definition->form_element === $class::element_name && $definition->signup ) {
     
       $definition->form_element = 'hidden';
@@ -159,7 +172,7 @@ abstract class calculated_field extends dynamic_db_field {
         return $add;
       }, 10, 2 );
       
-    } 
+    }
     
     return $definition;
   }
@@ -431,6 +444,23 @@ abstract class calculated_field extends dynamic_db_field {
     return array_filter( $input, function($v) {
       return $v !== '' && !is_null( $v );
     } );
+  }
+  
+  /**
+   * sets the "signup" checkbox for new calculated fields
+   * 
+   * @param array $new_field_params
+   * @return array
+   */
+  public function new_field_defaults( $new_field_params )
+  {
+    $class = get_class($this);
+    
+    if ( $new_field_params['form_element'] === $class::element_name ) {
+      $new_field_params['signup'] = 1;
+    }
+    
+    return $new_field_params;
   }
 
   /**
