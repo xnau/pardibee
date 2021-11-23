@@ -223,7 +223,7 @@ class PDb_Manage_Fields_Updates {
   public function add_field()
   {
     // set up the new field's parameters
-    $params = array(
+    $new_field = array(
         'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name' ) ),
         'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::sanitize_text' ) ),
         'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
@@ -231,6 +231,13 @@ class PDb_Manage_Fields_Updates {
         'validation' => 'no',
         'form_element' => filter_input( INPUT_POST, 'form_element', FILTER_SANITIZE_STRING ),
     );
+    
+    /**
+     * @filter pdb-new_field_params
+     * @param array of the submitted new field values
+     * @return array
+     */
+    $params = Participants_Db::apply_filters('new_field_params',  $new_field );
 
     if ( empty( $params[ 'name' ] ) ) {
       $this->return_to_the_manage_database_fields_page(); // ignore empty field name
