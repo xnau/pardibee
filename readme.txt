@@ -290,7 +290,7 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.9.8=
+= 1.9.8 =
 New Features:
 * "Mass Edit" on the admin list participants page
 * new field types: Numeric Calculation and Date Calculation
