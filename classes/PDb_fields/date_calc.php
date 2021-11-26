@@ -81,6 +81,8 @@ class date_calc extends calculated_field {
    */
   protected function template_field_list()
   {
+    $list = array();
+    
     foreach ( $this->template->field_list() as $fieldname ) {
       if ( \PDb_Form_Field_Def::is_field( $fieldname ) ) {
         $field_def = \Participants_Db::$fields[ $fieldname ];
