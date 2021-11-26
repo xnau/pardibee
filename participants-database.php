@@ -439,7 +439,7 @@ class Participants_Db extends PDb_Base {
    * 
    * fired early on the 'plugins_loaded' hook
    * 
-   * @global wpdb $wpdb
+   * @global \wpdb $wpdb
    */
   public static function setup_source_names()
   {
