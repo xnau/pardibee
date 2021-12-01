@@ -425,7 +425,7 @@ abstract class PDb_Shortcode {
      * @param string the name of the template file
      * @return template file name or absolute path to the template file
      */
-    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file );  
+    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file ); 
     
     if ( !file_exists( $template ) ) {
       // look for a built-in template
