@@ -81,8 +81,6 @@ abstract class xnau_CSV_Import {
         $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES[PDb_CSV_Import::csv_field]['name']);
 
         if (false !== move_uploaded_file($_FILES[PDb_CSV_Import::csv_field]['tmp_name'], $target_path)) {
-          
-          error_log(__METHOD__.' upload begins: '. microtime(true));
 
           $this->set_error(sprintf(__('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES[PDb_CSV_Import::csv_field]['name'] . '</strong>'), false);
 
