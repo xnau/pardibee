@@ -197,8 +197,9 @@ class mass_edit {
             JOIN " . \Participants_Db::$groups_table . " g ON f.group = g.name
           WHERE 
             f.form_element IN (" . $this->included_types() . ") AND
-            g.mode IN ('public','admin','private') AND
-            f.group NOT IN ('internal')
+            g.mode IN ('public','admin','private') AND 
+            f.group NOT IN ('internal') 
+            " . $this->internal_fields() . "
           ORDER BY g.order ASC, f.order ASC";
     
     $result = $wpdb->get_results( $sql );
@@ -217,6 +218,22 @@ class mass_edit {
     }
 
     return \Participants_Db::apply_filters( 'with_selected_mass_edit_fields', $field_list );
+  }
+  
+  /**
+   * provides the where clause for internal fields
+   * 
+   * @return string
+   */
+  private function internal_fields()
+  {
+    $clause = "";
+    
+    if ( \Participants_Db::$plugin_options['allow_record_timestamp_edit'] == 1 ) {
+      $clause = "OR f.group = 'internal' AND f.form_element = 'timestamp'";
+    }
+    
+    return $clause;
   }
   
   /**
