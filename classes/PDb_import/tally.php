@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -158,9 +158,7 @@ class tally {
       $report[] = sprintf( $template, $this->status_phrase( $status ) );
     }
     
-    if ( $this->import_count() === 0 ) {
-      $report[] = printf( $template, __('Zero records imported', 'participants-database') );
-    }
+    $report[] = sprintf( $template, $this->count_report() );
     
     $report[] = '</span>';
     
@@ -194,13 +192,25 @@ class tally {
   }
   
   /**
+   * provides the import count report
+   * 
+   * @return string
+   */
+  private function count_report()
+  {
+    $count = $this->import_count();
+    
+    return sprintf( _n( '%s record imported.', '%s records imported', $count, 'participants-database' ), $count );
+  }
+  
+  /**
    * provides the context string
    * 
    * @return string
    */
   private function context_string()
   {
-    return __('Participants Database Import Report', 'participants-database' );
+    return __('Import Report', 'participants-database' );
   }
 
 
