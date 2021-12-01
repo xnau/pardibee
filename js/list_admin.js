@@ -76,6 +76,7 @@ var PDbListAdmin = (function ($) {
               input.find('.field-input-label, .field-input').fadeTo(speed,1);
               input.removeClass('changeout');
               PDbOtherSelect.init();
+              if (PDbDatepicker) PDbDatepicker.init();
             }
     );
   }
