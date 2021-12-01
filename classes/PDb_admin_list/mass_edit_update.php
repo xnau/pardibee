@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -98,11 +98,15 @@ class mass_edit_update {
    */
   private function perform_update( $id_list )
   {
-    global $wpdb;
+    $result = 0;
     
-    $result = $wpdb->query( $this->update_query(  $id_list ) );
-    
-    //error_log(__METHOD__.' query: '.$wpdb->last_query );
+    if ( $this->value !== false ) {
+      global $wpdb;
+
+      $result = $wpdb->query( $this->update_query( $id_list ) );
+
+      \Participants_Db::debug_log( 'Mass edit query: '.$wpdb->last_query );
+    }
     
     return $result > 0 ? intval( $result/2 ) : 0;
   }
@@ -140,14 +144,42 @@ class mass_edit_update {
    */
   private function new_value()
   {
-    $data = esc_sql( filter_input_array( INPUT_POST, $this->sanitizer() ) );
-    $value = $data[ $this->field->name()];
+    $data = filter_input_array( INPUT_POST, $this->sanitizer() );
     
-    if ( is_array( $value ) ) {
-      $value = serialize( $value );
+    $this->value = $this->prep_value( $data[ $this->field->name() ] );
+  }
+  
+  /**
+   * prepares the value for the update
+   * 
+   * @param string|array $raw_value
+   * @return string|bool false if the value should not be written
+   */
+  private function prep_value( $raw_value )
+  {
+    if ( is_array( $raw_value ) ) {
+      $value = serialize( $raw_value );
     }
     
-    $this->value = $value;
+    switch ( $this->field->form_element() ) {
+      
+      case 'date':
+        
+        $value = \PDb_Date_Parse::timestamp( $raw_value );
+        break;
+      
+      case 'timestamp':
+        
+        $value = \PDb_Date_Display::get_mysql_timestamp( \PDb_Date_Parse::timestamp( $raw_value ) );
+        break;
+      
+    }
+    
+    if ( $value === false ) {
+      \Participants_Db::debug_log( 'Mass edit invalid value "' . $raw_value . '" for field: '. $this->field->name() );
+    }
+    
+    return esc_sql( $value );
   }
   
   /**
