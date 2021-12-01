@@ -127,7 +127,7 @@ class string_combine extends calculated_field {
    */
   protected function template()
   {
-    $template = $this->field->default_value();
+    $template = $this->strip_format_tag( $this->field->default_value() );
     
     // if there are no tags, use the template as-is
     if ( preg_match( '/\[.+\]/', $template ) !== 1 ) {
@@ -143,6 +143,26 @@ PATT;
     }, $template );
     
     return $template;
+  }
+  
+  /**
+   * strips the format tag out of the template if present
+   * 
+   * @param string $template
+   * @return string
+   */
+  private function strip_format_tag( $template )
+  {
+    // substring that will be present if there is a format tag in the template
+    $key = '=[?'; 
+    
+    if ( strpos( $template, $key ) === false ) {
+      return $template;
+    }
+    
+    $split = explode( $key, $template );
+    
+    return $split[0];
   }
   
   /**
