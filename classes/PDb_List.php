@@ -358,13 +358,12 @@ class PDb_List extends PDb_Shortcode {
       
       $record = array();
 
-      foreach ( $this->display_columns as $field ) {   //  foreach ( $record_fields as $field => $value )
+      foreach ( $this->display_columns as $field ) {
         
         $record[$field] = $this->get_field_object($field, $record_id);
       }
       
       $this->records[ $record_id ] = (object) $record;
-      
     }
     
     reset( $this->records );
