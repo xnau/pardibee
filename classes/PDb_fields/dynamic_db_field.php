@@ -122,6 +122,8 @@ abstract class dynamic_db_field extends core {
   protected function set_field( $field )
   {
     $field_item = new \PDb_Field_Item( $field );
+    
+    $field_item->default = $this->get_field_default( $field_item->name() );
 
     $this->setup_field( $field_item );
 
@@ -161,11 +163,13 @@ abstract class dynamic_db_field extends core {
   {
     if ( $field_data[ 'form_element' ] === $this->name ) {
 
-      $field_def = \Participants_Db::get_field_atts( $info[ 'name' ] );
-      /** @var \PDb_Form_Field_Def $field_def */
-      if ( $field_def->default_value() !== $field_data[ 'default' ] ) {
+      $stored_field_default = $this->get_field_default( $info[ 'name' ] );
+      
+      if ( $stored_field_default !== $field_data[ 'default' ] ) {
+        
+        \PDb_Manage_Fields_Updates::clear_field_def_cache();
 
-        $this->set_field( $field_def );
+        $this->set_field( $info[ 'name' ] );
         $this->field->default = $field_data[ 'default' ];
 
         // do the update
@@ -174,6 +178,22 @@ abstract class dynamic_db_field extends core {
     }
 
     return $field_data;
+  }
+  
+  /**
+   * provides the field's default setting
+   * 
+   * this gets the value directly from the db
+   * 
+   * @global \wpdb $wpdb
+   * @param string $fieldname
+   * @return string field default
+   */
+  private function get_field_default( $fieldname )
+  {
+    global $wpdb;
+    
+    return $wpdb->get_var( $wpdb->prepare( 'SELECT f.default FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name = %s', $fieldname ) );
   }
 
   /**
@@ -209,6 +229,7 @@ abstract class dynamic_db_field extends core {
     foreach ( $record_list as $record ) {
 
       $packet = (object) array( 'record_id' => $record->id, 'field' => $this->field->name(), 'default' => $this->field->default_value() );
+   
       $this->process->push_to_queue( $packet );
     }
 
@@ -223,10 +244,10 @@ abstract class dynamic_db_field extends core {
    */
   public function update_record( $packet )
   {
-    global $wpdb;
     $this->set_field( $packet->field );
-    $this->field->set_record_id( $packet->record_id );
     $this->field->default = $packet->default;
+    $this->field->set_record_id( $packet->record_id );
+    
     $value = $this->dynamic_value();
 
     if ( $value === '' ) {
@@ -234,6 +255,8 @@ abstract class dynamic_db_field extends core {
     }
 
     if ( $value !== false ) {
+      
+      global $wpdb;
       $wpdb->update( \Participants_Db::participants_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
 
       \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query, 3 );
