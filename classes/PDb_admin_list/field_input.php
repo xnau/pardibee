@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -18,14 +18,9 @@ namespace PDb_admin_list;
 class field_input {
   
   /**
-   * @var \PDb_Field_Item
+   * @var \PDb_Field_Item the current field
    */
   private $field;
-  
-  /**
-   * @var bool whether to show the label or not
-   */
-  private $show_label = true;
   
   /**
    * provides the field input HTML including the label
@@ -52,24 +47,24 @@ class field_input {
   {
     $field = new self( $fieldname, $value );
     
-    $field->show_label = false;
-    
-    return $field->field_input();
+    return $field->field_input(false);
   }
   
   /**
    * @param string $fieldname name of the field
-   * @param string|array $value the field's initial value
+   * @param string|array|bool $value the field's initial value
    */
-  public function __construct( $fieldname, $value )
+  private function __construct( $fieldname, $value )
   {
     $this->field = new \PDb_Field_Item( $fieldname );
     
-    if ( $value === false ) {
+    if ( $value === false && $this->field_uses_default_value() ) {
       $value = $this->field->default_value();
     }
     
     $this->field->set_value($value);
+    
+    $this->field->set_module('admin_list_action');
     
     $this->modify_field();
   }
@@ -77,15 +72,16 @@ class field_input {
   /**
    * provides the input control for a field
    * 
+   * @param bool $show_label
    * @return string HTML the input control for the field
    */
-  private function field_input()
+  private function field_input( $show_label = true )
   {
     if ( !\PDb_Form_Field_Def::is_field( $this->field->name() ) ) {
       return '';
     }
     
-    $template = $this->show_label ? '<span class="field-input-label">%1$s:</span>%2$s' : '%2$s';
+    $template = $show_label ? '<span class="field-input-label">%1$s:</span>%2$s' : '%2$s';
     
     return sprintf( $template, $this->field->title(), $this->field->get_element() );
   }
@@ -103,6 +99,10 @@ class field_input {
       case 'hidden':
         $new_form_element = 'text-line';
         break;
+      
+      case 'rich-text':
+        $new_form_element = 'text-area';
+        break;
     }
     
     if ( $new_form_element ) {
@@ -113,5 +113,15 @@ class field_input {
     
     $this->field->attributes['id'] = 'mass_edit_' . $this->field->name();
     $this->field->add_class('field-input');
+  }
+  
+  /**
+   * tells of the field input should use the default value
+   * 
+   * @return bool
+   */
+  private function field_uses_default_value()
+  {
+    return ! $this->field->is_dynamic_field();
   }
 }
