@@ -34,6 +34,8 @@ class heading extends utility {
     $this->customize_default_attribute( __( 'Heading', 'participants-database' ), 'rich-text' );
     
     $this->suppressed_shortcodes(array('list'));
+    
+    $this->is_mass_edit_field();
   }
 
   /**

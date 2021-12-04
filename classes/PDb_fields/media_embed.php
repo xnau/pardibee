@@ -30,6 +30,8 @@ class media_embed extends core {
     parent::__construct( self::element_name, _x( 'Media Embed', 'name of a field type that shows embedded media', 'participants-database' ) );
     
     $this->is_dynamic_field();
+    
+    $this->is_mass_edit_field();
   }
 
   /**

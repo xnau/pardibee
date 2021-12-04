@@ -237,6 +237,22 @@ abstract class core {
       return $list;
     });
   }
+  
+  /**
+   * registers the field type as dynamic
+   * 
+   * this is a field that generates its value dynamically based on the field's defined default value
+   * 
+   */
+  protected function is_mass_edit_field()
+  {
+    add_filter( 'pdb-with_selected_mass_edit_included_field_types', function ( $list ) {
+      if ( ! in_array( $this->name, $list ) ) {
+        $list[] = $this->name;
+      }
+      return $list;
+    });
+  }
 
   /**
    * customizes the default attribute in the field editor

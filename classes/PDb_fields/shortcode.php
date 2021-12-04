@@ -32,6 +32,8 @@ class shortcode extends core {
     add_filter( 'pdb-field_default_attribute_edit_config', array( $this, 'change_default_attribute_title' ), 10, 2 );
     
     $this->is_dynamic_field();
+    
+    $this->is_mass_edit_field();
   }
 
   /**
