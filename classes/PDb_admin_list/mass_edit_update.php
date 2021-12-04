@@ -158,7 +158,7 @@ class mass_edit_update {
   private function prep_value( $raw_value )
   {
     if ( is_array( $raw_value ) ) {
-      $value = serialize( $raw_value );
+      $raw_value = serialize( $raw_value );
     }
     
     switch ( $this->field->form_element() ) {
@@ -172,6 +172,9 @@ class mass_edit_update {
         
         $value = \PDb_Date_Display::get_mysql_timestamp( \PDb_Date_Parse::timestamp( $raw_value ) );
         break;
+      
+      default:
+        $value = $raw_value;
       
     }
     
