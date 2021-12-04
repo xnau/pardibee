@@ -55,7 +55,7 @@ class mass_edit {
    */
   public function add_dropdown_actions( $action_list )
   {
-    $action_list += array( __( 'Mass Edit', 'participants-database' ) => self::edit_action );
+    $action_list += array( __( 'mass edit', 'participants-database' ) => self::edit_action );
     
     return $action_list;
   }
@@ -211,10 +211,13 @@ class mass_edit {
       
       if ( $field_data->groupname !== $group ) {
         
-        $field_list[ $this->filter_title( $field_data->grouptitle ) ] = 'optgroup';
+        $label = $this->filter_title( $field_data->grouptitle );
+        $field_list[ $label === '' ? $field_data->groupname : $label ] = 'optgroup';
+        $group = $field_data->groupname;
       }
       
-      $field_list[ $this->filter_title( $field_data->fieldtitle ) ] = $field_data->name; 
+      $label = $this->filter_title( $field_data->fieldtitle );
+      $field_list[ $label === '' ? $field_data->name : $label  ] = $field_data->name;
     }
 
     return \Participants_Db::apply_filters( 'with_selected_mass_edit_fields', $field_list );
