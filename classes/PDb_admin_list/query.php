@@ -165,7 +165,7 @@ class query {
 
       case 'gt':
 
-        $operator = '>=';
+        $operator = '>';
         break;
 
       case 'lt':
