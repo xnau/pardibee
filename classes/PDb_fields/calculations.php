@@ -53,12 +53,14 @@ trait calculations {
         var_dump( $replacement_data );
         \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
       }
+      
+      $this->complete = true;
 
       $this->build_calc_list( $replacement_data );
 
-      \Participants_Db::debug_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ), 3 );
-
       $this->result = $this->complete ? $this->get_calculated_value() : '';
+
+      \Participants_Db::debug_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ) ."\nresult: " . $this->result, 3 );
     }
   }
 
@@ -127,7 +129,7 @@ trait calculations {
               $calc_list[] = $data[ $buffer ];
             } else {
               // not a numeric value, can't process
-              $this->mark_as_incomplete($buffer);
+              $this->mark_as_incomplete($buffer, $data[ $buffer ] );
             }
           } elseif ( strpos( $buffer, '#' ) === 0 ) {
 
@@ -157,11 +159,21 @@ trait calculations {
    * mark the calculation as incomplete
    * 
    * @param string $tag_text the string inside the value tag that triggered the incompletion 
+   * @param mixed $value the derived value
    */
-  private function mark_as_incomplete( $tag_text )
+  private function mark_as_incomplete( $tag_text, $value = false )
   {
     if ( !\PDb_Form_Field_Def::is_field($this->field->name()) ) {
       \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() .' field missing calculation value "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
+    } else {
+      
+      $value_display = '';
+      if ( $value !== false ) {
+        ob_start();
+        var_dump( $value );
+        $value_display = ' invalid value ' . ob_get_clean();
+      }
+      \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() . $value_display . ' for "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
     }
     $this->complete = false;
   }
@@ -264,7 +276,7 @@ trait calculations {
 
         default:
           // this will be a value
-          if ( $product && $op ) {
+          if ( $op ) {
 
             switch ( $op ) {
 
@@ -293,7 +305,7 @@ trait calculations {
       }
     }
 
-    return $this->format( $product, $format_tag, $sum_count );
+    return $this->is_display_only_format($format_tag) ? $product : $this->format( $product, $format_tag, $sum_count );
   }
 
   /**
@@ -344,6 +356,8 @@ trait calculations {
 
       case 'year':
       case 'month':
+      case 'day_month':
+      case 'month_day':
       case 'week':
       case 'day':
       case 'day_of_month':
@@ -367,12 +381,53 @@ trait calculations {
   /**
    * tells if the format should only be applied to displaying the value
    * 
+   * this is for fields that are saved as an unformatted value, then formatted when displaying
+   * 
    * @param string $format_tag
-   * @return bool true if the format tag should be applied
+   * @return bool
    */
   public function is_display_only_format( $format_tag )
   {
-    return  preg_match( '/(round|integer|date)/', $format_tag ) === 1;
+    // remove the leading ? and brackets
+    $format_tag = str_replace( array('?', ']','['), '', $format_tag );
+    
+    // convert the _n to a literal _n
+    $format_tag = preg_replace( '/_\d+$/', '_n', $format_tag );
+    
+    switch ( $format_tag ) {
+
+      case 'round_n':
+      case 'integer':
+        return false;
+
+      case 'average':
+      case 'average_n':
+        return false;
+
+      case 'years':
+      case 'weeks':
+      case 'months':
+      case 'days':
+        return false;
+
+      case 'year':
+      case 'month':
+      case 'day_month':
+      case 'month_day':
+      case 'week':
+      case 'day':
+      case 'day_of_month':
+      case 'day_of_week':
+      case 'day_of_year':
+        return true;
+
+      case 'date':
+        return true;
+
+      case 'unformatted':
+      default:
+        return false;
+    }
   }
 
   /**
@@ -421,6 +476,7 @@ trait calculations {
   private function partial_date( $timestamp, $format_tag )
   {
     $format = false;
+    
     switch ( $format_tag ) {
       case 'year':
         $format = 'Y';
@@ -446,7 +502,16 @@ trait calculations {
       case 'day_of_week':
         $format = 'l';
         break;
+      
+      case 'day_month':
+        $format = 'j F';
+        break;
+      
+      case 'month_day':
+        $format = 'F j';
+        break;
     }
+    
     return $format ? date( $format, $timestamp ) : $timestamp;
   }
 
