@@ -418,18 +418,18 @@ abstract class PDb_Shortcode {
    */
   private function _find_template()
   {
-    $custom_template_file = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
+    $template_filename = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
     
     /**
      * @filter pdb-template_select
      * @param string the name of the template file
      * @return template file name or absolute path to the template file
      */
-    $template = Participants_Db::apply_filters( 'template_select', $custom_template_file ); 
+    $template = Participants_Db::apply_filters( 'template_select', $template_filename ); 
     
     if ( !file_exists( $template ) ) {
       // look for a built-in template
-      $template = Participants_Db::$plugin_path . 'templates/' . $custom_template_file;
+      $template = Participants_Db::$plugin_path . 'templates/' . $template_filename;
     }
 
     /**
@@ -442,7 +442,7 @@ abstract class PDb_Shortcode {
      * 
      */
     if ( !file_exists( $template ) ) {
-      $template = Participants_Db::apply_filters( 'custom_template_location', get_stylesheet_directory() . '/templates/' ) . $custom_template_file;
+      $template = Participants_Db::apply_filters( 'custom_template_location', get_stylesheet_directory() . '/templates/' ) . $template_filename;
     }
 
     if ( !file_exists( $template ) ) {
@@ -451,8 +451,8 @@ abstract class PDb_Shortcode {
        * this is the location used by the Custom Template Folder add-on, 
        * but we're adding it here too #2253
        */
-      $template = trailingslashit( WP_CONTENT_DIR ) . Participants_Db::PLUGIN_NAME . '-templates/' . $custom_template_file;
-    }  
+      $template = trailingslashit( WP_CONTENT_DIR ) . Participants_Db::PLUGIN_NAME . '-templates/' . $template_filename;
+    }
 
     if ( !file_exists( $template ) ) {
       
