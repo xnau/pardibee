@@ -22,7 +22,7 @@ abstract class calculated_field extends dynamic_db_field {
   /**
    * @var bool tells if the calculation has the info it needs
    */
-  protected $complete = true;
+  protected $complete;
   
   /**
    * @var string name of the date key transient
