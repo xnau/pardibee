@@ -86,9 +86,9 @@ class numeric_calc extends calculated_field {
           $template_field->set_value( $value );
         }
         
-        $field_value = $template_field->has_content() ? $template_field->value: $template_field->default_value();
+        $field_value = $template_field->has_content() ? $template_field->value: $this->template_field_default( $template_field );
         
-        if ( $field_value !=  0 && empty( $field_value ) ) {
+        if ( (string) $field_value === '' ) {
           $this->complete = false;
         }
 
@@ -106,6 +106,22 @@ class numeric_calc extends calculated_field {
     $replacement_data[ self::calc_tag ] = $this->result;
     
     return $replacement_data;
+  }
+  
+  /**
+   * provides the default value for a template field
+   * 
+   * @param \PDb_Field_Item $template_field
+   * @return string default value
+   */
+  private function template_field_default( $template_field )
+  {
+    // all numeric fields except date field should default to 0
+    $numeric_field = $template_field->is_numeric() && $template_field->form_element() !== 'date';
+    
+    $default_value = $template_field->default_value() === '' ? ( $numeric_field ? 0 : '' ) : $template_field->default_value();
+    
+    return $default_value;
   }
 
   /**
