@@ -187,7 +187,7 @@ class PDb_Manage_Fields_Updates {
          * @return array
          */
         $result = $wpdb->update( Participants_Db::$fields_table, Participants_Db::apply_filters( 'update_field_def', $row, $status ), array( 'id' => $id ) );
-
+        
         Participants_Db::debug_log( __METHOD__ . ' update fields: ' . $wpdb->last_query );
 
         if ( $result !== false ) {
@@ -209,6 +209,7 @@ class PDb_Manage_Fields_Updates {
           }
         } else {
           Participants_Db::set_admin_message( __( 'Field update error:', 'participants-database' ) . '<br/>' . $wpdb->last_error, 'error' );
+          Participants_Db::debug_log( __METHOD__ . ' field update error: ' . $wpdb->last_error );
         }
       }
     }
