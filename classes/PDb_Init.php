@@ -5,8 +5,7 @@
  * 
  * handles installation, activation, deactivation, deletion, updates
  *
- * @version 2.2
- *
+ * @version 2.3
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the update
  * queries to the series of upgrade steps that follow. Whichever version the
@@ -131,9 +130,6 @@ class PDb_Init {
 
     // install the db tables if needed
     $this->maybe_install();
-
-    if ( is_callable( 'EAMann\WPSession\DatabaseHandler::create_table' ) )
-      EAMann\WPSession\DatabaseHandler::create_table();
     
     // check for the need to run the fix for issue #2039
     $check = $wpdb->get_results('SELECT count(*) FROM `' . Participants_Db::$fields_table . '` WHERE `group` = ""');
@@ -268,13 +264,6 @@ class PDb_Init {
    */
   private function _deactivate()
   {
-    /*
-     * this gives users with a session buildup issue a way to delete them
-     * 
-     * that bug was fixed, though, so maybe not much call for it
-     */
-    self::delete_user_sessions();
-
     error_log( Participants_Db::PLUGIN_NAME . ' plugin deactivated' );
   }
 
@@ -385,8 +374,6 @@ class PDb_Init {
       delete_transient( $name );
     }
 
-    PDb_Session::uninstall();
-
     error_log( Participants_Db::PLUGIN_NAME . ' plugin uninstalled' );
   }
 
@@ -407,9 +394,6 @@ class PDb_Init {
     foreach ( $sessions as $name ) {
       delete_option( $name );
     }
-    
-    // clears the session table for newer versions of WP Sessions
-    PDb_Session::reset_session_table();
   }
 
   /**
@@ -430,7 +414,7 @@ class PDb_Init {
           `order` INT(3) NOT NULL DEFAULT 0,
           `name` VARCHAR(64) NOT NULL,
           `title` TINYTEXT NOT NULL,
-          `default` TINYTEXT NULL,
+          `default` TEXT NULL,
           `group` VARCHAR(64) NOT NULL,
           `form_element` TINYTEXT NULL,
           `options` LONGTEXT NULL,
@@ -904,7 +888,7 @@ class PDb_Init {
     }
     if ( '0.8' == $db_version ) {
       /*
-       * all field and group names need more staorage space, changing the datatype to VARCHAR(64)
+       * all field and group names need more storage space, changing the datatype to VARCHAR(64)
        */
       $sql = "ALTER TABLE " . Participants_Db::$fields_table . " MODIFY `name` VARCHAR(64) NOT NULL, MODIFY `group` VARCHAR(64) NOT NULL";
 
@@ -982,6 +966,19 @@ class PDb_Init {
       }
     }
     
+    // update from 1.1 to 1.2
+    if ( '1.1' == $db_version ) {
+      
+      // give the default parameter more space #2703
+      $success = $wpdb->query( "ALTER TABLE " . Participants_Db::$fields_table . " MODIFY COLUMN `default` TEXT NULL" );
+
+      if ( $success === false ) {
+        error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
+      } else {
+        $db_version = '1.2';
+      }
+    }
+    
     update_option( Participants_Db::$db_version_option, $db_version );
 
     if ( PDB_DEBUG && $success ) {
@@ -1016,8 +1013,8 @@ class PDb_Init {
     }
 
 // check for version 0.4
-    $column_test = $wpdb->get_results( 'SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "values"' );
-    if ( strtolower( $column_test[0]->DATA_TYPE ) == 'longtext' ) {
+    $column_test = $wpdb->get_results( 'SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '" AND table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "values"' );
+    if ( strtolower( current($column_test)->DATA_TYPE ) == 'longtext' ) {
 // we're skipping update 3 because all it does is insert default values
       $current_version = '0.4';
     }
@@ -1067,6 +1064,13 @@ class PDb_Init {
     $column_test = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$groups_table . ' LIKE "mode"' );
     if ( !empty( $column_test ) ) {
       $current_version = '1.1';
+    }
+    
+    // check for version 1.2
+    $column_test = $wpdb->get_results( "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . $wpdb->dbname . "' AND TABLE_NAME = '" . Participants_Db::$fields_table . "' AND COLUMN_NAME = 'default'");
+    
+    if ( strtolower( current($column_test)->DATA_TYPE ) === 'text' ) {
+      $current_version = '1.2';
     }
 
     update_option( Participants_Db::$db_version_option, $current_version );
