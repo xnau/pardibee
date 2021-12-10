@@ -475,7 +475,6 @@ abstract class calculated_field extends dynamic_db_field {
   {
     return array(
         'readonly' => false,
-        'default' => true,
         'persistent' => false,
         'csv' => true,
         'sortable' => true,
@@ -483,6 +482,7 @@ abstract class calculated_field extends dynamic_db_field {
         'validation' => false,
         'validation_message' => false,
         'signup' => true,
+        'default' => true,
     );
   }
 
