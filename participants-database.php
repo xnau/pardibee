@@ -101,7 +101,7 @@ class Participants_Db extends PDb_Base {
    * 
    * @var string current Db version
    */
-  public static $db_version = '1.1';
+  public static $db_version = '1.2';
 
   /**
    * name of the WP option where the current db version is stored
@@ -1542,6 +1542,10 @@ class Participants_Db extends PDb_Base {
 
     // modify the action according the the match mode
     $action = $record_match->get_action( $action );
+    
+    if ( $action === 'skip' ) {
+      return false;
+    }
     
     // get the record id to use in the query
     $record_id = $record_match->record_id();
