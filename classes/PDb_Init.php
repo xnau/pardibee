@@ -550,6 +550,8 @@ class PDb_Init {
     $db_version = get_option( Participants_Db::$db_version_option );
 
     Participants_Db::debug_log( 'participants database db version determined to be: ' . $db_version );
+    
+    $success = false;
 
     if ( false === $db_version || '0.1' == $db_version ) {
 
@@ -1014,7 +1016,7 @@ class PDb_Init {
 
 // check for version 0.4
     $column_test = $wpdb->get_results( 'SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '" AND table_name = "' . Participants_Db::$fields_table . '" AND COLUMN_NAME = "values"' );
-    if ( strtolower( current($column_test)->DATA_TYPE ) == 'longtext' ) {
+    if ( is_object(current($column_test)) && strtolower( current($column_test)->DATA_TYPE ) == 'longtext' ) {
 // we're skipping update 3 because all it does is insert default values
       $current_version = '0.4';
     }
