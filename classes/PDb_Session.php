@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.1
+ * @version    3.2
  * 
  * 
  */
@@ -176,17 +176,27 @@ class PDb_Session {
     $sessid = '';
     
     if ( $this->alt_session_setting() ) {
-      $session = $this->get_alt_session_id();
+      $sessid = $this->get_alt_session_id();
+      
+      Participants_Db::debug_log(__METHOD__.' using alt method, got: '. $sessid, 3 );
     }
 
     
     if ( $sessid === '' ) {
       $sessid = $this->get_php_session_id();
+      
+      Participants_Db::debug_log(__METHOD__.' using php method, got: '. $sessid, 3 );
     }
     
-    // if we still don't have the session ID, switch to the altenate method
+    // if we still don't have the session ID, switch to the alternate method
     if ( $sessid === '' ) {
       $sessid = $this->use_alternate_method();
+      
+      Participants_Db::debug_log(__METHOD__.' using fallback alt method, got: '. $sessid, 3 );
+    }
+    
+    if ( empty( $sessid ) ) {
+      Participants_Db::debug_log(__METHOD__.' unable to get session id', 3 );
     }
     
     $this->session_data = new \PDb_submission\db_session( $sessid );
