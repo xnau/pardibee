@@ -208,8 +208,11 @@ class PDb_Manage_Fields_Updates {
             do_action( Participants_Db::$prefix . 'field_defs_updated', 'update_fields', $wpdb->last_query );
           }
         } else {
-          Participants_Db::set_admin_message( __( 'Field update error:', 'participants-database' ) . '<br/>' . $wpdb->last_error, 'error' );
-          Participants_Db::debug_log( __METHOD__ . ' field update error: ' . $wpdb->last_error );
+          
+          $error_message = empty( $wpdb->last_error ) ? 'Data size too large, cannot save.' : $wpdb->last_error;
+          
+          Participants_Db::set_admin_message( __( 'Field update error:', 'participants-database' ) . '<br/>' . $error_message, 'error' );
+          Participants_Db::debug_log( __METHOD__ . ' field update error: ' . $error_message );
         }
       }
     }
