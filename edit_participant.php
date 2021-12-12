@@ -95,15 +95,16 @@ if ( $participant_values ) :
       
       // get the columns and output form
       foreach ( Participants_db::get_column_atts( 'backend' ) as $backend_column ) :
-
-        $value = isset($participant_values[$backend_column->name]) ? $participant_values[$backend_column->name] : $backend_column->default ;
       
         $column = new PDb_Field_Item( array(
             'name' => $backend_column->name,
-            'module' => 'backend-edit',
-            'value' => $value ),
+            'module' => 'backend-edit', ),
                 $participant_id
                 );
+
+        $value = isset($participant_values[$backend_column->name]) ? $participant_values[$backend_column->name] : ( $column->is_dynamic_field() ? '' : $backend_column->default ) ;
+        
+        $column->set_value($value);
         
         // force readonly on ID column: editing this will break things
         if ( in_array( $backend_column->name, array('id') ) ) {
