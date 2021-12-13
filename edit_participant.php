@@ -85,10 +85,12 @@ if ( $participant_values ) :
         ?>
       <div class="top-bar-submit">
         <span class="field-group-title"><?php _e( 'Save the Record', 'participants-database' ) ?></span>
-        <?php if ( !empty( $participant_id ) ) : ?><input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button"><?php endif ?>
+            <?php if ( !empty( $participant_id ) ) : ?>
+              <input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button">
+            <?php endif ?>
               <input class="button button-primary" type="submit" value="<?php echo self::$i18n['submit'] ?>" name="submit_button">
               <input class="button button-primary" type="submit" value="<?php echo self::$i18n['apply'] ?>" name="submit_button">
-              <input class="button button-default button-rightarrow" type="submit" value="<?php echo self::$i18n['next'] ?>" name="submit_button">
+              <input class="button button-default button-rightarrow" type="submit" value="<?php echo ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] )?>" name="submit_button">
       </div>
       <?php
       endif;
@@ -300,19 +302,24 @@ if ( $participant_values ) :
         <?php if ( is_admin() ) : ?>
           <tr>
             <td class="submit-buttons">
-              <?php if ( !empty( $participant_id ) ) : ?><input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button"><?php endif ?>
+              <?php if ( $action === 'update' ) : ?>
+                <input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button">
+              <?php endif ?>
               <input class="button button-primary" type="submit" value="<?php echo self::$i18n['submit'] ?>" name="submit_button">
               <input class="button button-primary" type="submit" value="<?php echo self::$i18n['apply'] ?>" name="submit_button">
-              <input class="button button-default button-rightarrow" type="submit" value="<?php echo self::$i18n['next'] ?>" name="submit_button">
+              <input class="button button-default button-rightarrow" type="submit" value="<?php echo ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] ) ?>" name="submit_button">
             </td>
           </tr>
           <tr>
             <td >
-              <?php _e( '<strong>Submit:</strong> save record and return to list<br><strong>Apply:</strong> save record and continue with same record<br><strong>Next:</strong> save record and then start a new one', 'participants-database' ) ?>
-              <br />
-              <?php
-              if ( !empty( $participant_id ) ) {
-                _e( '<strong>Previous:</strong> save and move to previous record', 'participants-database' );
+              <?php 
+              printf( __( '<%1$s>Submit:</%1$s> save record and return to list', 'participants-database' ) . '</br>', 'strong' );
+              printf( __( '<%1$s>Apply:</%1$s> save record and continue with same record', 'participants-database' ) . '</br>', 'strong' );
+              if ( $action === 'update' ) {
+                printf( __( '<%1$s>Next:</%1$s> save record and go to the next record', 'participants-database' ) . '</br>', 'strong' );
+                printf( __( '<%1$s>Previous:</%1$s> save and move to previous record', 'participants-database' ), 'strong' );
+              } else {
+                printf( __( '<%1$s>New:</%1$s> save record and then start a new one', 'participants-database' ), 'strong' );
               }
               ?>
             </td>
