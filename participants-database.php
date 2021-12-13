@@ -515,7 +515,7 @@ class Participants_Db extends PDb_Base {
     self::$Settings = new PDb_Settings();
     
     // start sessions management
-    self::$session = new PDb_Session();
+    self::$session = PDb_Session::get_instance();
     
     if ( self::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
       add_filter( 'pdb-record_id_in_get_var', function () { return true; } );
@@ -1120,7 +1120,7 @@ class Participants_Db extends PDb_Base {
               ORDER BY v.order';
       $field_defs = $wpdb->get_results( $sql, OBJECT_K );
       
-      wp_cache_set( PDb_Form_Field_Def::def_cache, $field_defs );
+      wp_cache_set( PDb_Form_Field_Def::def_cache, $field_defs, Participants_Db::cache_expire() );
     }
     
     self::_setup_fields_prop( $field_defs );
@@ -2306,6 +2306,7 @@ class Participants_Db extends PDb_Base {
             break;
 
           case self::$i18n['next'] :
+          case self::$i18n['new'] :
             $get_id = $post_input['action'] == 'update' ? '&id=' . self::next_id( $participant_id ) : '';
             $redirect = get_admin_url() . 'admin.php?page=' . self::PLUGIN_NAME . '-edit_participant' . $get_id;
             break;
@@ -3083,6 +3084,7 @@ class Participants_Db extends PDb_Base {
         'submit' => __( 'Submit', 'participants-database' ),
         'apply' => __( 'Apply', 'participants-database' ),
         'next' => __( 'Next', 'participants-database' ),
+        'new' => __( 'New', 'participants-database' ),
         'previous' => __( 'Previous', 'participants-database' ),
         'updated' => __( 'The record has been updated.', 'participants-database' ),
         'added' => __( 'The new record has been added.', 'participants-database' ),
