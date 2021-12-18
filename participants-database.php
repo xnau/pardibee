@@ -498,6 +498,7 @@ class Participants_Db extends PDb_Base {
     }
     
     new PDb_admin_list\mass_edit();
+    new PDb_admin_list\delete();
   }
 
   /**
