@@ -82,24 +82,9 @@ class with_selected {
    */
   private function delete()
   {
-    global $wpdb;
-    /**
-     * @version 1.6.3
-     * @filter  pdb-before_admin_delete_record
-     * @param array $selected_ids list of ids to delete
-     */
-    $this->selected_ids = Participants_Db::apply_filters( 'before_admin_delete_record', $this->selected_ids );
-
-    do_action( 'pdb-list_admin_with_selected_delete', $this->selected_ids );
-
-    $pattern = $this->id_count() > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $this->id_count() ), ',' ) . ' )' : '= %s';
-    $sql = "DELETE FROM " . Participants_Db::$participants_table . " WHERE id " . $pattern;
-    $result = $wpdb->query( $wpdb->prepare( $sql, $this->selected_ids ) );
-    $this->last_query = $wpdb->last_query;
-
-    if ( $result > 0 ) {
-      Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
-    }
+    $delete_files = filter_input( INPUT_POST, delete::file_delete_preference, FILTER_VALIDATE_BOOLEAN );
+    \PDb_List_Admin::set_admin_user_setting(delete::file_delete_preference, $delete_files );
+    delete::delete_records( $this->selected_ids, $delete_files);
   }
 
   /**
