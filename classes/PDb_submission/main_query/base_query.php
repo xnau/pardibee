@@ -215,10 +215,9 @@ abstract class base_query {
     // run the query
     $result = $wpdb->query( $this->sanitized_query() );
 
-    if ( !$result ) {
-      
-      PDB::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error );
-    } else {
+    if ( $result === false ) {
+      PDB::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error . ' for query: '.$wpdb->last_query );
+    } elseif ( $result > 0 ) {
       
       PDB::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
     }
