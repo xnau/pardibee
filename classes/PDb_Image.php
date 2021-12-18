@@ -183,9 +183,6 @@ class PDb_Image extends xnau_Image_Handler {
    */
   protected function set_up_file_props($filename = '')
   {
-
-    //error_log(__METHOD__.' testing:'.$filename.' getting:'.($this->_file_exists($filename)?'yes':'no'));
-
     $filename = empty($filename) ? $this->image_file : $filename;
 
     $filepath = $this->concatenate_directory_path($this->image_directory, $filename, false);
