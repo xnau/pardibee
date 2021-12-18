@@ -199,14 +199,14 @@ class PDb_Session {
     if ( $this->alt_session_setting() ) {
       $sessid = $this->get_alt_session_id();
 
-      Participants_Db::debug_log( __METHOD__ . ' using alt method, got: ' . $sessid, 3 );
+      Participants_Db::debug_log( __METHOD__ . ' using alt method, got: ' . $sessid, 4 );
     }
 
 
     if ( $sessid === '' ) {
       $sessid = $this->get_php_session_id();
 
-      Participants_Db::debug_log( __METHOD__ . ' using php method, got: ' . $sessid, 3 );
+      Participants_Db::debug_log( __METHOD__ . ' using php method, got: ' . $sessid, 4 );
     }
 
     // if we still don't have the session ID, switch to the alternate method
@@ -248,7 +248,7 @@ class PDb_Session {
     if ( $started_here ) {
       session_write_close();
 
-      Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 3 );
+      Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 4 );
     }
 
     return $sessid;
