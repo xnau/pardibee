@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.9
+ * @version 1.0
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -51,15 +51,24 @@ var PDbListAdmin = (function ($) {
   var taskSelect = function (e) {
     var el = e.target ? $(e.target) : $(e);
     var edit_control = el.closest('.list-controls').find('.mass-edit-control');
-    if (el.val() === mass_editL10n.edit_action) {
-      edit_control.show(speed);
-      set_input(el);
-    } else {
-      edit_control.hide(speed);
+    var delete_control = el.closest('.list-controls').find('.file-delete-preference-selector');
+    var hide_all = function (){
+        edit_control.hide(speed);
+        delete_control.hide(speed)
+      }
+    hide_all();
+    switch(el.val()){
+      case mass_editL10n.edit_action:
+        edit_control.show(speed);
+        set_mass_edit_input(el);
+        break;
+      case 'delete':
+        delete_control.show(speed)
+      default:
     }
   }
   // provides the field-specific input for the mass edit control
-  var set_input = function (e) {
+  var set_mass_edit_input = function (e) {
     var el = e.target ? $(e.target) : $(e);
     var control = el.closest('.list-controls');
     var input = control.find('.mass-edit-input');
@@ -119,7 +128,7 @@ var PDbListAdmin = (function ($) {
       spinner = mass_editL10n.spinner;
       task_selector.on('change', taskSelect);
       taskSelect(task_selector);
-      $('[name="' + mass_editL10n.selector + '"]').on('change',set_input);
+      $('[name="' + mass_editL10n.selector + '"]').on('change',set_mass_edit_input);
 
       checkall.click(checkAll);
 
