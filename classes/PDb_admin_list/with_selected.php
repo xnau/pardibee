@@ -174,19 +174,70 @@ class with_selected {
     
     list ( $yes, $no ) = $approval_field->option_values();
     $set_value = $selected_action === 'approve' ? $yes : $no;
-
-    $pattern = $this->id_count() > 1 ? 'IN ( ' . trim( str_repeat( '%s,', $this->id_count() ), ',' ) . ' )' : '= "%s"';
-
-    $sql = "UPDATE " . Participants_Db::$participants_table . " SET `$approval_field_name` = '$set_value' WHERE id $pattern";
-    $result = $wpdb->query( $wpdb->prepare( $sql, $this->selected_ids ) );
-    $last_query = $wpdb->last_query;
     
-    if ( $result > 0 ) {
-      do_action( 'pdb-list_admin_with_selected_' . $selected_action, $this->selected_ids );
-      Participants_Db::set_admin_message( Participants_Db::apply_filters( 'admin_list_action_feedback', sprintf( _x( 'Approval status for %d records has been updated.', 'number of records with approval statuses set', 'participants-database' ), $this->id_count() ) ), 'updated' );
+    // get a list of ids that will be changed
+    $ids_to_update = $this->id_set_to_change( $approval_field_name, $set_value, $this->selected_ids );
+
+    $result = false;
+    
+    if ( count( $ids_to_update ) > 0 ) {
+      $pattern = count( $ids_to_update ) > 1 ? 'IN ( ' . trim( str_repeat( '%s,', count( $ids_to_update ) ), ',' ) . ' )' : '= "%s"';
+
+      $sql = "UPDATE " . Participants_Db::$participants_table . " SET `$approval_field_name` = '$set_value' WHERE id $pattern";
+      $result = $wpdb->query( $wpdb->prepare( $sql, $ids_to_update ) );
+      $last_query = $wpdb->last_query;
+    } else {
+      $result = 0;
+      $last_query = '';
+    }
+    
+    if ( $result !== false ) {
+      
+      do_action( 'pdb-list_admin_with_selected_' . $selected_action, $ids_to_update );
+      
+      $unchanged = $this->id_count() - $result;
+      $message = array();
+      if ( $result > 0 ) {
+        $message[] = sprintf( _nx( 'Approval status for %d record has been updated.', 'Approval status for %d records has been updated.', $result, 'number of records with approval statuses set', 'participants-database' ), $result );
+      }
+      if ( $unchanged > 0 ) {
+        $message[] = ' ' . sprintf( _n( 'Approval status for %d record was unchanged.', 'Approval status for %d records was unchanged.', $unchanged, 'participants-database' ), $unchanged );
+      }
+      
+      Participants_Db::set_admin_message( implode( ' ', $message ), 'updated' );
+      
+      /**
+       * this posts any additional messages added by other plugins
+       */
+      $added_message = Participants_Db::apply_filters( 'admin_list_action_feedback', '' );
+      if ( !empty( $added_message ) ) {
+        Participants_Db::set_admin_message( $added_message, 'updated' );
+      }
     }
     
     return $last_query;
+  }
+  
+  /**
+   * provides a set of record ids from a set with the specified column value
+   * 
+   * this is designed to remove record ids from the set if they won't be changed
+   * 
+   * @global \wpdb $wpdb
+   * @param string $column name of the column to check
+   * @param string $test_value value to look for
+   * @param array $set of record ids to check
+   * @return number of records with the tested value
+   */
+  private function id_set_to_change( $column, $test_value, $set )
+  {
+    global $wpdb;
+    
+    $sql = 'SELECT p.id FROM ' . Participants_Db::$participants_table . ' p WHERE p.id IN (' . implode( ', ', $set ) . ') AND p.' . $column . ' <> %s';
+    
+    $result = $wpdb->get_col( $wpdb->prepare( $sql, $test_value ) );
+    
+    return $result;
   }
 
   /**
@@ -212,6 +263,7 @@ class with_selected {
      * @param string feedback to show after the action has been performed
      */
     $message = Participants_Db::apply_filters( 'admin_list_action_feedback', '' );
+    
     if ( !empty( $message ) ) {
       Participants_Db::set_admin_message( $message, 'updated' );
     }
