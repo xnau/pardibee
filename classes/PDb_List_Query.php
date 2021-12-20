@@ -848,12 +848,23 @@ class PDb_List_Query {
     /*
      * convert curly quote entities to straight quotes and converts curly quotes to straight quotes #2454
      */
-    $filter_string = str_replace( array('&#8221;','&#8220;','&#8217;','&#8216;',chr(145),chr(146),chr(147),chr(148),'‘','’'.'“','”'), array( '"','"'."'","'","'","'",'"','"',"'","'",'"','"' ), $filter_string );
+    $filter_string = self::straighten_quotes( $filter_string );
     
     // unquote the string
     preg_match( '/^[\'"]?(.+?)[\'"]?$/', html_entity_decode( $filter_string ), $matches );
     
     return $matches[1];
+  }
+  
+  /**
+   * straightens curly quotes
+   * 
+   * @param string $input
+   * @return string with curly quotes converted to straight quotes
+   */
+  public static function straighten_quotes( $input )
+  {
+    return str_replace( array('&#8221;','&#8220;','&#8217;','&#8216;',chr(145),chr(146),chr(147),chr(148),'‘','’','“','”'), array( '"','"',"'","'","'","'",'"','"',"'","'",'"','"' ), $input );
   }
 
   /**
