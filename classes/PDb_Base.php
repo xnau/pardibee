@@ -1703,7 +1703,7 @@ class PDb_Base {
   }
 
   /**
-   * sets an admin area error message
+   * adds an admin area error message
    * 
    * @param string $message the message to be dislayed
    * @param string $type the type of message:
@@ -1714,14 +1714,24 @@ class PDb_Base {
    */
   public static function set_admin_message( $message, $type = 'error' )
   {
-    if ( is_admin() ) {
+    if ( self::is_admin() ) {
+      
+      if ( empty( $message ) ) {
+        Participants_Db::debug_log(__METHOD__.' adding empty message '. print_r(wp_debug_backtrace_summary(),1), 3 );
+        return null;
+      }
+      
+      $messages = Participants_Db::$session->get( 'admin_message' );
+      
       switch ( $type ) {
         // this is to translate some legacy values
         case 'updated':
           $type = 'success';
       }
       
-      Participants_Db::$session->set( 'admin_message', array($message, $type) );
+      $messages[] = array($message, $type);
+      
+      Participants_Db::$session->set( 'admin_message', $messages );
     }
   }
   
@@ -1737,32 +1747,42 @@ class PDb_Base {
    * prints the admin message
    */
   public static function admin_message()
-  {    
-    $class = self::admin_message_type() === 'error' ? 'notice notice-error' : 'notice notice-success';
-    if ( !empty( self::admin_message_content() ) ) {
-      printf( '<div class="%s is-dismissible"><p>%s</p></div>', $class, self::admin_message_content() );
-      self::clear_admin_message();
+  {   
+    if ( self::has_admin_message() ) {
+      
+      $messages = Participants_Db::$session->get( 'admin_message' );
+      
+      foreach( $messages as $message ) {
+        printf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $message[1], $message[0] );
+        self::clear_admin_message(); 
+      }
     }
   }
   
   /**
-   * provides the current admin message
+   * provides the current admin message as a plain string
    * 
    * @return string
    */
   public static function admin_message_content()
   {
-    $message = Participants_Db::$session->get( 'admin_message' );
+    $messages = Participants_Db::$session->get( 'admin_message' );
     
-    if ( is_array( $message ) ) {
-      return $message[0];
+    if ( self::has_admin_message() ) {
+      
+      $message_text = '';
+      
+      foreach( $messages as $message ) {
+        $message_text .= $message[0];
+      }
+      return $message_text;
     }
     
     return '';
   }
   
   /**
-   * provides the current admin message
+   * provides the current admin message type
    * 
    * @return string
    */
@@ -1770,11 +1790,23 @@ class PDb_Base {
   {
     $message = Participants_Db::$session->get( 'admin_message' );
     
-    if ( is_array( $message ) ) {
-      return $message[1];
+    if ( self::has_admin_message() ) {
+      return current($message)[1];
     }
     
     return '';
+  }
+  
+  /**
+   * tells if there is an admin message
+   * 
+   * @return bool
+   */
+  public static function has_admin_message()
+  {
+    $messages = Participants_Db::$session->get( 'admin_message' );
+    
+    return is_array( $messages ) && ! empty( current($messages) ); 
   }
   
   /**
