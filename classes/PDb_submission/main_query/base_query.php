@@ -224,7 +224,8 @@ abstract class base_query {
 
     $db_error_message = '';
     if ( $result === 0 ) {
-      if ( !$this->is_import ) {
+      
+      if ( !$this->is_import && !$this->is_func_call ) {
         $db_error_message = sprintf( PDB::$i18n[ 'zero_rows_error' ], $wpdb->last_query );
       }
       PDB::$insert_status = 'skip';
@@ -253,10 +254,11 @@ abstract class base_query {
      * set up user feedback
      */
     if ( PDB::is_admin() ) {
-      if ( !$this->is_import && $result ) {
+      if ( !$this->is_import && !$this->is_func_call && $result ) {
         PDB::set_admin_message( ($this->query_mode() === 'insert' ? PDB::$i18n[ 'added' ] : PDB::$i18n[ 'updated' ] ), 'updated' );
-      } elseif ( !empty( $db_error_message ) ) {
-        PDB::set_admin_message( PDB::db_error_message( $db_error_message ), 'record-insert error' );
+      }
+      if ( !empty( $db_error_message ) ) {
+        PDB::set_admin_message( PDB::db_error_message( $db_error_message ), 'error' );
       }
     }
 
@@ -303,7 +305,7 @@ abstract class base_query {
 //      error_log( __METHOD__.' errors exist; returning: '.print_r(self::$validation_errors->get_validation_errors(),1));
 
       $has_errors = true;
-    } elseif ( !empty( PDB::admin_message_content() ) and 'error' == PDB::admin_message_type() ) {
+    } elseif ( PDB::has_admin_message() && 'error' === PDB::admin_message_type() ) {
       PDB::debug_log( __METHOD__ . ' admin error message set; returning: ' . PDB::admin_message_content(), 3 );
       $has_errors = true;
     }
