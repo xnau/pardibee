@@ -326,7 +326,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array(
             'type' => 'text',
             'help_text' => __( "the message shown when the CAPTCHA (verify human) test failed", 'participants-database' ),
-            'value' => __( 'Pleast try the %s question again.', 'participants-database' ),
+            'value' => __( 'Please try the %s question again.', 'participants-database' ),
         )
     );
 
