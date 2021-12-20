@@ -41,6 +41,10 @@ class PDb_Localization {
    */
   public static function display_number( $number, $field )
   {
+    if ( ! is_numeric( $number ) ) {
+      return $number;
+    }
+    
     $display = Participants_Db::apply_filters('number_display', $number, $field );
     
     $localization = new self;
@@ -73,6 +77,10 @@ class PDb_Localization {
    */
   public static function display_currency( $number, $field )
   {
+    if ( ! is_numeric( $number ) ) {
+      return $number;
+    }
+    
     $display = Participants_Db::apply_filters('number_display', $number, $field );
     
     $localization = new self;
