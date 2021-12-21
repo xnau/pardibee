@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -165,9 +165,7 @@ class PDb_List_Admin {
     $current_user = wp_get_current_user();
 
     // set up the user settings options
-    self::$user_settings = Participants_Db::$prefix . self::$user_setting_name . '-' . $current_user->ID;
-
-//    error_log(__METHOD__.' session: '.print_r(Participants_Db::$session,1));
+    self::setup_option_name();
 
     self::set_list_limit();
 
@@ -946,17 +944,30 @@ class PDb_List_Admin {
     }
     return $display_columns;
   }
+  
+  /**
+   * sets up the admin user settings option name
+   */
+  protected static function setup_option_name()
+  {
+    if ( empty( self::$user_settings ) ) {
+      $current_user = wp_get_current_user();
+      self::$user_settings = Participants_Db::$prefix . self::$user_setting_name . '-' . $current_user->ID;
+    }
+  }
 
   /**
    * gets a user preference
    * 
    * @param string $name name of the setting to get
-   * @param string|bool $setting if there is no setting, supply this value instead
+   * @param string|bool $default if there is no setting, supply this value instead
    * @return string|bool the setting value or false if not found
    */
-  public static function get_admin_user_setting( $name, $setting = false )
+  public static function get_admin_user_setting( $name, $default = false )
   {
-    return self::get_user_setting( $name, $setting, self::$user_settings );
+    self::setup_option_name();
+    
+    return self::get_user_setting( $name, $default, self::$user_settings );
   }
 
   /**
@@ -968,6 +979,8 @@ class PDb_List_Admin {
    */
   public static function set_admin_user_setting( $name, $value )
   {
+    self::setup_option_name();
+    
     self::set_user_setting( $name, $value, self::$user_settings );
   }
 
