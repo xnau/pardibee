@@ -1372,7 +1372,7 @@ abstract class xnau_FormElement {
   protected function _attributes( $attributes_array = false )
   {
 
-    $attributes_array = $attributes_array ? $attributes_array : $this->attributes;
+    $attributes_array = is_array( $attributes_array ) ? $attributes_array : $this->attributes;
 
     if ( empty( $attributes_array ) )
       return '';
