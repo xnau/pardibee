@@ -409,7 +409,7 @@ class PDb_FormElement extends xnau_FormElement {
 
       // add the delete checkbox if there is a file defined
       if ( $this->value !== $field_default && $this->module !== 'signup' ) {
-        unset($this->attributes['id']);
+        unset( $this->attributes['id'] );
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
       }
     }
