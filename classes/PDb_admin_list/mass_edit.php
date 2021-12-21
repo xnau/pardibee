@@ -281,14 +281,4 @@ class mass_edit {
     return "'" . implode( "','", $included ) . "'";
   }
 
-  /**
-   * selector field name
-   * 
-   * @return string
-   */
-  private function selector_name()
-  {
-    return 'mass_edit_field';
-  }
-
 }
