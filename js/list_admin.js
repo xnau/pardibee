@@ -77,7 +77,9 @@ var PDbListAdmin = (function ($) {
     });
     input.append(spinner);
     var data = {action: mass_editL10n.action};
-    data[mass_editL10n.selector] = control.find('[name="' + mass_editL10n.selector + '"]').val();
+    var editField = control.find('[name="' + mass_editL10n.selector + '"]').val();
+    data[mass_editL10n.selector] = editField;
+    data[editField] = $('.mass-edit-input [name='+editField+']').val(); 
     $.post(ajaxurl,
             data,
             function (response) {
