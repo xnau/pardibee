@@ -409,7 +409,7 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
-    if ( Participants_Db::is_dynamic_value( $this->default ) ) {
+    if ( $this->is_dynamic_field() || ( $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default ) ) ) {
       return htmlspecialchars_decode( $this->default );
     }
     return Participants_Db::apply_filters( 'translate_string', $this->default );
@@ -700,7 +700,10 @@ class PDb_Form_Field_Def {
    */
   public function is_dynamic_hidden_field()
   {
-    return $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default );
+    if ( ! $this->is_hidden_field() ) {
+      return false;
+    }
+    return  Participants_Db::is_dynamic_value( $this->default );
   }
 
   /**
