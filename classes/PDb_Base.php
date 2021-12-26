@@ -958,7 +958,7 @@ class PDb_Base {
     /**
      * @filter pdb-dynamic_value
      * 
-     * this filter is duplicated here so we can test the dynamic con_
+     * this filter is duplicated here so we can test the dynamic content
      * 
      * @param string the initial result; empty string
      * @param string the dynamic value key
