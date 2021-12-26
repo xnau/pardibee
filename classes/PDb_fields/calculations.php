@@ -318,6 +318,10 @@ trait calculations {
    */
   private function format( $value, $format_tag, $sum_count )
   {
+    if ( is_null( $value ) || $value === '' ) {
+      return '';
+    }
+    
     // remove the leading ? and brackets
     $format_tag = str_replace( array('?', ']','['), '', $format_tag );
 
@@ -326,9 +330,9 @@ trait calculations {
       $numeric = $matches[ 2 ];
       $format_tag = $matches[ 1 ] . 'n';
     }
-
-    if ( !is_numeric( $value ) ) {
-      $format_tag = 'unformatted';
+    
+    if ( $format_tag === 'unformatted' && $this->is_numeric_field() && is_numeric( $value ) ) {
+      $format_tag = 'auto_numeric';
     }
 
     switch ( $format_tag ) {
@@ -369,6 +373,10 @@ trait calculations {
       case 'date':
         $formatted = \PDb_Date_Display::get_date( $value );
         break;
+      
+      case 'auto_numeric':
+        $formatted = $this->format_number( $value, \PDb_Localization::place_count( $value ) );
+        break;
 
       case 'unformatted':
       default:
@@ -388,6 +396,8 @@ trait calculations {
    */
   public function is_display_only_format( $format_tag )
   {
+    $is_numeric = $this->is_numeric_field();
+    
     // remove the leading ? and brackets
     $format_tag = str_replace( array('?', ']','['), '', $format_tag );
     
@@ -419,15 +429,25 @@ trait calculations {
       case 'day_of_month':
       case 'day_of_week':
       case 'day_of_year':
-        return true;
+        return $is_numeric;
 
       case 'date':
-        return true;
+        return $is_numeric;
 
       case 'unformatted':
       default:
         return false;
     }
+  }
+  
+  /**
+   * tells if the current field stores its value as a numeric
+   * 
+   * @return bool true if the value is stores as a numeric value
+   */
+  protected function is_numeric_field()
+  {
+    return apply_filters( sprintf( 'pdb-%s_is_numeric', $this->field->form_element() ), false );
   }
 
   /**
@@ -475,6 +495,12 @@ trait calculations {
    */
   private function partial_date( $timestamp, $format_tag )
   {
+    ob_start();
+    var_dump( $timestamp );
+    error_log(__METHOD__.' input: '.ob_get_clean());
+    
+    
+    
     $format = false;
     
     switch ( $format_tag ) {
@@ -541,13 +567,7 @@ trait calculations {
    */
   private function format_number( $number, $places = 0 )
   {
-    if ( class_exists( '\NumberFormatter' ) ) {
-      $formatter = new \NumberFormatter( get_locale(), \NumberFormatter::DECIMAL );
-      $formatter->setAttribute( \NumberFormatter::MAX_FRACTION_DIGITS, $places );
-      return $formatter->format( $number );
-    } else {
-      return number_format( $number, $places );
-    }
+    return \PDb_Localization::format_number($number, $places);
   }
 
 }
