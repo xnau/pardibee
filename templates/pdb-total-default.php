@@ -38,6 +38,6 @@ if (empty($this->shortcode_atts['fields'])) {
       
   endwhile;
 
-  echo $total;
+  echo PDb_Localization::auto_format_number($total);
   
 }
