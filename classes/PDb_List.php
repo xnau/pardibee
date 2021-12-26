@@ -121,7 +121,6 @@ class PDb_List extends PDb_Shortcode {
   {
     $this->set_instance_index();
 
-
     // run the parent class initialization to set up the parent methods 
     parent::__construct( $shortcode_atts, $this->default_attributes() );
     
