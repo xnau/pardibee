@@ -118,14 +118,9 @@ abstract class base_column {
   }
 
   /**
-   * determines the column value
-   * 
-   * @return string|int|bool
+   * sets the value property
    */
-  protected function setup_value()
-  {
-    
-  }
+  protected abstract function setup_value();
 
   /**
    * checks for a readonly exception
