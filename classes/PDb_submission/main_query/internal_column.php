@@ -21,9 +21,7 @@ use \Participants_Db,
 class internal_column extends base_column {
 
   /**
-   * determines the column value
-   * 
-   * @return string|int|bool
+   * sets the value property
    */
   protected function setup_value()
   {
