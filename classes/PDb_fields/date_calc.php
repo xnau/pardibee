@@ -34,7 +34,7 @@ class date_calc extends calculated_field {
    */
   protected function field_title()
   {
-    return _x( 'Date Calculation', 'name of a field type that shows the result of a date calculation', 'participants-database' );
+    return _x( 'Date Calculation', 'name of a field type that saves a date as a searchable string', 'participants-database' );
   }
 
   /**
@@ -115,7 +115,7 @@ class date_calc extends calculated_field {
    */
   protected function element_datatype()
   {
-    return 'BIGINT(20)';
+    return 'TEXT';
   }
   
   /**
@@ -125,7 +125,7 @@ class date_calc extends calculated_field {
    */
   protected function is_numeric_field()
   {
-    return true;
+    return false;
   }
   
   /**
