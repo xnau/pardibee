@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -21,9 +21,7 @@ use \Participants_Db,
 class user_column extends base_column {
 
   /**
-   * provides the column value
-   * 
-   * @return string|int|bool
+   * sets the value property
    */
   protected function setup_value()
   {
@@ -58,12 +56,12 @@ class user_column extends base_column {
         break;
 
       case 'rich-text':
+        
         global $allowedposttags;
         $this->value = wp_kses( stripslashes( $initialvalue ), $allowedposttags );
         break;
 
       case 'date':
-      case 'date-calc':
 
         if ( $initialvalue !== '' ) {
           
@@ -122,6 +120,7 @@ class user_column extends base_column {
             }
           }
         }
+        
         $this->value = Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
         break;
 
