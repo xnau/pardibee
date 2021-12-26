@@ -55,6 +55,10 @@ abstract class calculated_field extends dynamic_db_field {
     add_filter( 'pdb-before_submit_signup', array( $this, 'set_submission_value' ) );
     
     add_filter( 'pdb-new_field_params', array( $this, 'new_field_defaults' ) );
+    
+    add_filter( sprintf( 'pdb-%s_is_numeric', $class::element_name ), function(){
+      return $this->is_numeric_field();
+    });
   }
   
   /**
