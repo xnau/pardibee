@@ -988,7 +988,7 @@ class PDb_List_Query {
     /*
      * set up special-case field types
      */
-    if ( $filter->has_search_term() && in_array( $field_def->form_element(), array( 'date', 'timestamp', 'date-calc' ) ) ) {
+    if ( $filter->has_search_term() && in_array( $field_def->form_element(), array( 'date', 'timestamp' ) ) ) {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
