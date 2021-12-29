@@ -172,8 +172,9 @@ class columns {
           break;
 
         case 'CSV':
-
-          $where .= 'AND v.CSV = 1 ';
+          
+          $where .= 'AND v.CSV = 1 AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+          
           break;
 
         case 'all':
