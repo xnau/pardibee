@@ -76,9 +76,9 @@ abstract class base_column {
    */
   public function import_value()
   {
-    $import_value = $this->value;
+    $import_value = $this->value === 'null' ? null : $this->value;
     
-    if ( $this->field->is_multi() ) {
+    if ( ! is_null( $import_value ) && $this->field->is_multi() ) {
       $import_value = serialize( \PDb_Field_Item::field_value_array( $this->value ) );
     }
     
@@ -114,7 +114,14 @@ abstract class base_column {
   public function skip_imported_value()
   {
     // don't update the value if importing a CSV and the incoming value is empty #1647
-    return $this->main_query()->is_import() && Participants_Db::apply_filters( 'allow_imported_empty_value_overwrite', false ) === false && strlen( $this->value ) === 0;
+    /**
+     * @filter pdb-allow_imported_empty_value_overwrite
+     * @param bool whether to skip or not
+     * @param mixed the importing value
+     * @param \PDb_Field_Item the current field
+     * @return bool if true, skip importing the column
+     */
+    return $this->main_query()->is_import() && Participants_Db::apply_filters( 'allow_imported_empty_value_overwrite', false, $this->value, $this->field ) === false && $this->value === '';
   }
 
   /**
