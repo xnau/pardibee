@@ -682,7 +682,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.6' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.0' );
     wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
@@ -2396,7 +2396,17 @@ class Participants_Db extends PDb_Base {
               
               $query = self::apply_filters('csv_export_query', $query );
               
-              $data += self::_prepare_CSV_rows( $wpdb->get_results( $query, ARRAY_A ) );
+              $result = $wpdb->get_results( $query, ARRAY_A );
+              
+              if ( empty( $result ) ) {
+                
+                Participants_Db::set_admin_message('CSV export failed with error:<pre>' . $wpdb->last_error . '</pre>', 'error' );
+                $filename = '';
+                
+              } else {
+              
+                $data += self::_prepare_CSV_rows( $result );
+              }
               
               if ( PDB_DEBUG ) {
                 Participants_Db::debug_log(' CSV export query: '.$query );
