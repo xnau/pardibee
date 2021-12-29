@@ -261,12 +261,11 @@ csv line= '.print_r( $csv_line, true ), 2 );
   /**
    * applies conditioning and escaping to the incoming value
    * 
-   * @global object $wpdb
    * @param type $value
    * @return string
    */
   protected function process_value($value) {
-    global $wpdb;
+    
     return esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure));
   }
 
