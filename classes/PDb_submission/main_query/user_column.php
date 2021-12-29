@@ -35,7 +35,12 @@ class user_column extends base_column {
 
         $multi_value = $initialvalue; // $this->field->get_value();
         
-        if ( is_array( $multi_value ) ) {
+        if ( is_null( $initialvalue ) ) {
+          
+          $this->value = null;
+          
+        } elseif ( is_array( $multi_value ) ) {
+          
           $this->value = Participants_Db::_prepare_array_mysql( array_values( $multi_value ) );
         }
 
@@ -45,7 +50,11 @@ class user_column extends base_column {
 
         /* translate the link markdown used in CSV files to the array format used in the database
          */
-        if ( !is_array( $initialvalue ) ) {
+        if ( is_null( $initialvalue ) ) {
+          
+          $this->value = null;
+          
+        } elseif ( !is_array( $initialvalue ) ) {
 
           $this->value = Participants_Db::_prepare_array_mysql( Participants_Db::get_link_array( $initialvalue ) );
         } else {
@@ -58,28 +67,35 @@ class user_column extends base_column {
       case 'rich-text':
         
         global $allowedposttags;
-        $this->value = wp_kses( stripslashes( $initialvalue ), $allowedposttags );
+        $this->value = is_null( $initialvalue ) ? null :  wp_kses( stripslashes( $initialvalue ), $allowedposttags );
         break;
 
       case 'date':
-
-        if ( $initialvalue !== '' ) {
+      case 'date5':
+        
+        if ( $initialvalue !== '' && !is_null( $initialvalue ) ) {
           
           $this->value = PDb_Date_Parse::timestamp( $initialvalue, array(), __METHOD__ . ' date field value' );
           
-        } else {
+        } elseif ( is_null( $initialvalue ) ) {
           $this->value = null;
+        } else {
+          $this->skip = true;
         }
         break;
 
       case 'captcha':
+        
         $this->skip = true;
         break;
 
       case 'password':
+        
         if ( !empty( $initialvalue ) && Participants_Db::is_new_password( $initialvalue ) ) {
+          
           $this->value = wp_hash_password( trim( $initialvalue ) );
         } else {
+          
           $this->skip = true;
         }
         break;
@@ -90,43 +106,53 @@ class user_column extends base_column {
       case 'numeric-calc':
         
         if ( strlen( $initialvalue ) > 0 ) {
+          
           $this->value = filter_var( $initialvalue, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
         } else {
+          
           $this->value = null;
         }
         break;
 
       case 'image-upload':
       case 'file-upload':
+        
+        $this->value = is_null( $initialvalue ) ? null : Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
+        
+        $participant_id = $this->main_query()->record_id();
 
-        if ( filter_input( INPUT_POST, $this->field->name() . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete' ) {
-
-          if ( $participant_id ) {
-
+        if ( $this->yes_delete_uploaded_file() && $participant_id ) {
+            
+            global $wpdb;
+            $record_filename = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $this->field->name() . '` FROM ' . Participants_Db::participants_table() . ' WHERE id = %s', $participant_id ) );
             $filename = '';
-            if ( array_key_exists( $this->field->name(), $_POST ) ) {
+            
+            if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the uploaded file
+              
               $post_filename = filter_input( INPUT_POST, $this->field->name(), FILTER_SANITIZE_STRING );
 
-              global $wpdb;
-              $record_filename = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $this->field->name() . '` FROM ' . Participants_Db::participants_table() . ' WHERE id = %s', $participant_id ) );
-
               if ( $post_filename === $record_filename ) {
+                
                 if ( Participants_Db::plugin_setting_is_true( 'file_delete' ) || Participants_Db::is_admin() ) {
                   Participants_Db::delete_file( $record_filename );
                 }
+                
                 unset( $_POST[ $this->field->name() ] );
-                $initialvalue = '';
+                $this->value = null;
               }
+            } else { // it's an import deleting the field value
+              
+              Participants_Db::delete_file( $record_filename );
             }
-          }
         }
-        
-        $this->value = Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
         break;
 
       default:
 
-        if ( is_array( $initialvalue ) ) {
+        if ( is_null( $initialvalue ) ) {
+          
+          $this->value = null;
+        } elseif ( is_array( $initialvalue ) ) {
 
           $this->value = Participants_Db::_prepare_array_mysql( $initialvalue );
         } else {
@@ -134,6 +160,20 @@ class user_column extends base_column {
           $this->value = Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
         }
     }
+  }
+  
+  /**
+   * tells if the uploaded file should be deleted
+   * 
+   * @return bool true to delete the uploaded file
+   */
+  private function yes_delete_uploaded_file()
+  {
+    $delete_checkbox = filter_input( INPUT_POST, $this->field->name() . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete';
+    
+    $import_null = $this->main_query()->is_import() && is_null( $this->value );
+    
+    return $delete_checkbox || $import_null;
   }
   
   
@@ -161,7 +201,7 @@ class user_column extends base_column {
    */
   private function initial_value()
   {
-    $initialvalue = $this->value;
+    $initialvalue = $this->value === 'null' ? null : $this->value;
     
     if ( ! $this->add_to_query( 'any' ) ) {
       
