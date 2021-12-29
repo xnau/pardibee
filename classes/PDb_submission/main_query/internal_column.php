@@ -31,6 +31,7 @@ class internal_column extends base_column {
 
       case 'id':
         $this->value = $this->main_query()->record_id();
+        $this->skip = true;
         break;
 
       case 'date_recorded':
