@@ -252,7 +252,7 @@ class query {
           $this->list_query .= ' ' . $date_column . ' ' . $operator . ' DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
         }
       }
-    } elseif ( in_array( $search_field->form_element(), array( 'date', 'date-calc' ) ) ) {
+    } elseif ( in_array( $search_field->form_element(), array( 'date' ) ) ) {
 
       $value = $filter_set[ 'value' ];
 
