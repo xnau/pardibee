@@ -61,20 +61,22 @@ endif;
           <div class="inside">
             <h3><?php _e( 'Prepare a spreadsheet file with the correct format:', 'participants-database' ) ?></h3>
             <p><?php _e( 'To properly import your membership data, the columns in your spreadsheet must match exactly the columns in the database. Currently, the CSV export columns are as follows:', 'participants-database' ) ?></p>
-            <table class="spreadsheet">
-              <tr>
+            <div class="spreadsheet-frame">
+              <table class="spreadsheet">
+                <tr>
 <?php
 foreach ( $CSV_import->column_names() as $name ) {
   echo '<th>' . $name . '</th>';
 }
 ?>
-              </tr>
-              <tr>
+                </tr>
+                <tr>
 <?php
 echo str_repeat( '<td>&nbsp;</td>', $CSV_import->column_count() );
 ?>
-              </tr>
-            </table>
+                </tr>
+              </table>
+            </div>
             <p><?php printf( __( 'This means your spreadsheet needs to have %s columns, and the heading in each of those columns needs to match exactly the names above. If there is no data for a particular column, you can include it and leave it blank, or leave it out entirely. The order of the columns doesn&#39;t matter.', 'participants-database' ), $CSV_import->column_count() ) ?></p>
             <p><?php _e( 'If the imported CSV file has a different column set, that column set will be imported and used. If a column name does not match a defined column in the database, the data from that column will be discarded', 'participants-database' ) ?></p>
             <p><input class="button button-default" type="submit" value="<?php _e( 'Get Blank CSV File', 'participants-database' ) ?>" style="float:left;margin:0 5px 5px 0" /><?php _e( 'You can download this file, then open it in Open Office, Excel or Google Docs.', 'participants-database' ) ?></p>
