@@ -424,13 +424,17 @@ input[type="checkbox"],
 body[class*='participants-database'] .selectother input[type=text] {
   width:auto;
 }
+.spreadsheet-frame {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
 table.spreadsheet {
-  width:90%;
   border-collapse:collapse;
 }
 .spreadsheet td, .spreadsheet th {
   border:1px dashed #AAAAAA;
-  padding:3px;
+  padding:3px 5px;
 }
 body[class*='participants-database'] .text-block {
   max-width: 35em;
