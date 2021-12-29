@@ -42,6 +42,7 @@ trait store {
     
     $post['match_preference'] = $settings['match_mode'];
     $post['match_field'] = $settings['match_field'];
+    $post['csv_file_upload'] = true;
     
     $result = $this->import_record( $post );
     
@@ -102,8 +103,6 @@ trait store {
       do_action( 'pdb-process_form_submission_column_' . $column->name, $column, $post );
       
       $column_object = \PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
-
-//      $main_query->validate_column( $column_object->value(), $column );
       
       if ( $column_object->add_to_query( $action ) ) {
         
