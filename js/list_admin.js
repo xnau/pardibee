@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 1.0
+ * @version 1.1
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -54,17 +54,18 @@ var PDbListAdmin = (function ($) {
     var delete_control = el.closest('.list-controls').find('.file-delete-preference-selector');
     var hide_all = function (){
         edit_control.hide(speed);
-        delete_control.hide(speed)
+        delete_control.hide(speed);
       }
-    hide_all();
     switch(el.val()){
       case mass_editL10n.edit_action:
-        edit_control.show(speed);
         set_mass_edit_input(el);
+        edit_control.show(speed);
         break;
       case 'delete':
-        delete_control.show(speed)
+        delete_control.show(speed);
+        break;
       default:
+        hide_all();
     }
   }
   // provides the field-specific input for the mass edit control
