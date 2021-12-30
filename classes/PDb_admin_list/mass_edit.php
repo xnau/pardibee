@@ -129,7 +129,7 @@ class mass_edit {
         'options' => $this->editable_field_list() + array( 'null_select' => false ),
     );
     
-    $html = array( '<span class="mass-edit-control">' );
+    $html = array( '<span class="mass-edit-control" style="display:none">' );
     
     $html[] = '<label>' . __('Field','participants-database') . ':';
     
