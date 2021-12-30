@@ -204,7 +204,7 @@ abstract class xnau_CSV_Import {
      */
     $this->CSV->delimiter = $this->_detect_delimiter($src_file);
     $this->CSV->enclosure = $this->_detect_enclosure($src_file);
-    $this->CSV->parse($src_file);
+    $this->CSV->parseFile($src_file);
 
     if ( $this->CSV->error ) {
       Participants_Db::debug_log(__METHOD__ . ' CSV parse error:' . print_r($this->CSV->error_info, 1));
