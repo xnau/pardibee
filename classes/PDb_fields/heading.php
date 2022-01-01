@@ -83,17 +83,21 @@ class heading extends utility {
     if ( $field->form_element() !== self::element_name ) {
       return true;
     }
-    
     $this->setup_field($field);
+    
     switch ( $field->module() ) {
+      
       case 'email-template':
       case 'tag-template':
       case 'single';
         return $this->show_in_display_context();
-        break;
+        
       case 'record':
         return $this->show_in_write_context();
-        break;
+        
+      case 'signup':
+        return $this->field->is_signup();
+        
       default:
         return true;
     }
@@ -106,7 +110,7 @@ class heading extends utility {
    */
   private function show_in_write_context()
   {
-    return isset( $this->field->attributes()[ 'show_in_form' ] );
+    return isset( $this->field->attributes()[ 'pdb_record' ] );
   }
 
   /**
@@ -116,10 +120,8 @@ class heading extends utility {
    */
   private function show_in_display_context()
   {
-    return ! isset( $this->field->attributes()[ 'form_only' ] );
+    return ! ( $this->field->is_signup() && ! isset( $this->field->attributes()[ 'pdb_single' ] ) ) || isset( $this->field->attributes()[ 'pdb_single' ] );
   }
-
-
   /**
    *  provides the field editor configuration switches array
    * 
