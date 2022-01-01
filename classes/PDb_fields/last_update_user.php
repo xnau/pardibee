@@ -70,7 +70,7 @@ class last_update_user {
   {
     $this->_update_record( $post['id'] );
     
-    remove_action( 'pdb-after_submit_update', array( $this, 'update_last_user_id_db' ) );
+    remove_action( 'pdb-after_submit_update', array( $this, 'update_record' ) );
   }
   
   /**
