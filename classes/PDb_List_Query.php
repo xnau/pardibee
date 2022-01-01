@@ -919,12 +919,9 @@ class PDb_List_Query {
     }
 
     /*
-     * internal filters on this value:
-     * 
-     * string "current_date" is converted to timestamp
+     * possibly convert a date key
      */
-
-    $search_term = Participants_Db::apply_filters( 'raw_search_term', trim( rawurldecode( $search_term ) ) );
+    $search_term = $operator === '~' ? Participants_Db::date_key_string( $search_term ) : Participants_Db::date_key( $search_term );
 
     /**
      * if the search term is empty and it's not allowed in settings and not a shortcode 
@@ -940,6 +937,9 @@ class PDb_List_Query {
      * check if we have a valid column name
      */
     if ( !PDb_Form_Field_Def::is_field( $field_name ) ) {
+      
+      Participants_Db::debug_log('Undefined field "' . $field_name . '" in list filter', 1 );
+      
       return false;
     }
 
