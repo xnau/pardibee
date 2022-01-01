@@ -1456,6 +1456,45 @@ class PDb_Base {
     
     return $value;
   }
+  
+  
+
+  /**
+   * processes the search term keys for use in shortcode filters as a partial date string
+   * 
+   * unrecognized keys are processed through self::date_key
+   * 
+   * @param string  $key the search term
+   * @return string the search term to use
+   */
+  public static function date_key_string( $key )
+  {
+    $value = $key;
+
+    // get the numeric part, if included
+    if ( $numeric = self::search_key_numeric_value( $key ) ) {
+      $key = preg_replace( '/^[+-]?\d+/', 'n', $key );
+    }
+
+    switch ( $key ) {
+      case 'current_month':
+        $value = wp_date( 'F' );
+        break;
+      case 'current_year':
+        $value = wp_date( 'Y' );
+        break;
+      case 'n_months':
+        $value = wp_date( 'F', strtotime( $numeric . ' months' ) );
+        break;
+      case 'n_years':
+        $value = wp_date( 'Y', strtotime( $numeric . ' years' ) );
+        break;
+      default:
+        $value = self::date_key($key);
+    }
+    
+    return $value;
+  }
 
   /**
    * provides the search term key numeric value
