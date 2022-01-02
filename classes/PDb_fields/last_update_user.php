@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -20,9 +20,9 @@ class last_update_user {
   const fieldname = 'last_update_user';
   
   /**
-   * @var int the ID of the current user
+   * @var string the username of the current user
    */
-  private $user_id = 0;
+  private $user_login;
   
   /**
    * sets up the field
@@ -49,7 +49,7 @@ class last_update_user {
     if ( $this->yes_log_user_id() ) {
       if ( array_key_exists( self::fieldname, $post ) ) {
 
-        $post[self::fieldname] = $this->user_id;
+        $post[self::fieldname] = $this->user_login;
       } else {
         
         add_action( 'pdb-after_submit_update', array( $this, 'update_record' ) );
@@ -83,7 +83,7 @@ class last_update_user {
   {
     global $wpdb;
     
-    $wpdb->update( \Participants_Db::participants_table(), array( self::fieldname => $this->user_id ), array( 'id' => $record_id ) );
+    $wpdb->update( \Participants_Db::participants_table(), array( self::fieldname => $this->user_login ), array( 'id' => $record_id ) );
   }
   
   /**
@@ -93,9 +93,10 @@ class last_update_user {
    */
   private function yes_log_user_id()
   {
-    $this->user_id = get_current_user_id();
+    $user = wp_get_current_user();
+    $this->user_login = $user->user_login;
     
-    return $this->user_id ? $this->user_is_logged() : false;
+    return $this->user_login ? $this->user_is_logged() : false;
   }
   
   /**
@@ -108,9 +109,9 @@ class last_update_user {
     $field = \Participants_Db::$fields[self::fieldname];
     /** @var \PDb_Form_Field_Def $field */
     
-    $exceptions = explode( '|', $field->get_attribute('dont_log') );
+    $exceptions = explode( '|', $field->get_attribute('do_not_log') );
     
-    if ( ! empty( $exceptions ) && in_array( $this->user_id, $exceptions ) ) {
+    if ( ! empty( $exceptions ) && in_array( $this->user_login, $exceptions ) ) {
       return false;
     }
     
@@ -124,7 +125,7 @@ class last_update_user {
    */
   public static function title()
   {
-    return __( 'Last Updater ID', 'participants-database' );
+    return __( 'Last Updater', 'participants-database' );
   }
   
   /**
