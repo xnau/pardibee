@@ -554,7 +554,7 @@ class PDb_Base {
    */
   public static function get_record_id( $id = '' )
   {
-    if ( empty( $id ) ) {
+    if ( empty( $id ) && ! Participants_Db::plugin_setting_is_true('use_single_record_pid', false ) ) {
       // this is for backward compatibility
       $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT );
     }
