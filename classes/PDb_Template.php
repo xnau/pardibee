@@ -312,7 +312,7 @@ class PDb_Template {
   public function get_detail_link( $page = '' )
   {
     $detail_page = empty( $page ) ? $this->detail_page : Participants_Db::find_permalink( $page );
-    return Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $detail_page, Participants_Db::$single_query, $this->_value( 'id' ) ), $this->_value( 'id' ) );
+    return Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $detail_page, PDb_Single::single_query_var(), $this->_value( PDb_Single::single_query_id_field() ) ), $this->_value( 'id' ) );
   }
 
   /**
@@ -568,7 +568,7 @@ class PDb_Template {
     $this->module = $this->shortcode_object->module;
     $this->id = isset( $this->values['id'] ) ? $this->values['id'] : '';
     $this->edit_link = Participants_Db::apply_filters( 'record_edit_url', $this->cat_url_var( $this->edit_page, Participants_Db::$record_query, $this->values['private_id'] ), $this->values['private_id'] );
-    $this->detail_link = Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $this->detail_page, Participants_Db::$single_query, $this->id ), $this->id );
+    $this->detail_link = Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $this->detail_page, PDb_Single::single_query_var(), $this->values[ PDb_Single::single_query_id_field() ] ), $this->id );
     $this->fields = new stdClass();
     $this->groups = array();
     switch ( $this->base_type ) {
