@@ -92,6 +92,8 @@ class PDb_Session {
    */
   public function record_id( $pid_only = false )
   {
+    $pid_only = $pid_only ? : Participants_Db::plugin_setting_is_true('use_single_record_pid', false);
+    
     if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
       $record_id = 0;
       if ( !$pid_only && array_key_exists( Participants_Db::$single_query, $_GET ) ) {
