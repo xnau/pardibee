@@ -831,7 +831,11 @@ class Participants_Db extends PDb_Base {
    */
   public static function single_record_url( $id )
   {
-    $page = self::add_uri_conjunction( self::single_record_page() ) . self::$single_query . '=' . $id;
+    if ( Participants_Db::plugin_setting_is_true('use_single_record_pid', false) ) {
+      $id = self::get_participant($id)['private_id'];
+    }
+    
+    $page = self::add_uri_conjunction( self::single_record_page() ) . PDb_Single::single_query_var() . '=' . $id;
     /**
      * @filter pdb-single_record_url
      * @param string  single record page complete url
