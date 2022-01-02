@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -69,8 +69,20 @@ class query {
    */
   public function result_count()
   {
-    global $wpdb;
-    return count( $wpdb->get_results( $this->query(), ARRAY_A ) );
+    $cachekey = 'admin_list_count';
+    $count = wp_cache_get( $cachekey );
+    
+    if ( $count === false ) {
+      global $wpdb;
+
+      $count_query = str_replace( '*', 'COUNT(*)', $this->query() );
+
+      $count = $wpdb->get_var( $count_query );
+      
+      wp_cache_add( $cachekey, $count );
+    }
+    
+    return $count;
   }
 
   /**
