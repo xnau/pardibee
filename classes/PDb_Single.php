@@ -37,14 +37,9 @@ class PDb_Single extends PDb_Shortcode {
       $term = PDb_Form_Field_Def::is_field( $this->shortcode_atts[ 'term' ] ) ? $this->shortcode_atts[ 'term' ] : 'id';
       $record_id = Participants_Db::get_record_id_by_term( $term, $this->shortcode_atts[ 'record_id' ] );
       
-    } elseif ( array_key_exists( Participants_Db::$single_query, $_GET )) {
+    } else {
       
-      $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
-      
-    } elseif ( array_key_exists( Participants_Db::$record_query, $_GET )) {
-      
-      $private_id = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
-      $record_id = Participants_Db::get_participant_id( $private_id );
+      $record_id = self::get_single_record_id_from_url();
     }
 
     if ( false === $record_id && version_compare( $this->template_version, '0.2', '<' ) ) {
@@ -97,6 +92,47 @@ class PDb_Single extends PDb_Shortcode {
     self::$instance = new PDb_Single( $params );
 
     return self::$instance->output;
+  }
+  
+  /**
+   * provides the record ID from the URL
+   * 
+   * @return int record id
+   */
+  public static function get_single_record_id_from_url()
+  {
+    $use_pid = Participants_Db::plugin_setting_is_true('use_single_record_pid', false);
+    
+    $validation = $use_pid ? FILTER_SANITIZE_STRING : FILTER_SANITIZE_NUMBER_INT;
+    
+    $get_value = filter_input( INPUT_GET, self::single_query_var(), $validation, FILTER_NULL_ON_FAILURE );
+    
+    return $use_pid ? (int) Participants_Db::get_participant_id( $get_value ) : $get_value;
+  }
+  
+  /**
+   * provides the single record query var name
+   * 
+   * @return string
+   */
+  public static function single_query_var()
+  {
+    return Participants_Db::plugin_setting_is_true('use_single_record_pid', false) ? Participants_Db::$record_query : Participants_Db::$single_query;
+  }
+  
+  /**
+   * provides the field name to use for the single record query var
+   * 
+   * @return string fieldname
+   */
+  public static function single_query_id_field()
+  {
+    /**
+     * @filter pdb-single_record_id_field
+     * @param name of the field to use to identify the record for the single record shortcode
+     * @return string fieldname
+     */
+    return Participants_Db::apply_filters( 'single_record_id_field', Participants_Db::plugin_setting_is_true('use_single_record_pid', false) ? 'private_id' : 'id' );
   }
 
   /**
