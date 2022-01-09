@@ -157,11 +157,6 @@ class PDb_List_Admin {
     add_action( 'wp_mail_failed', array( __CLASS__, 'get_email_error_feedback' ) );
     add_action( 'pdb-list_admin_head', array( __CLASS__, 'show_email_error_feedback' ) );
 
-    // delete images and files when record is deleted
-    if ( Participants_Db::plugin_setting_is_true( 'delete_uploaded_files', false ) ) {
-      add_action( 'pdb-list_admin_with_selected_delete', array( 'PDb_submission\delete_uploads', 'delete_record_uploaded_files' ) );
-    }
-
     $current_user = wp_get_current_user();
 
     // set up the user settings options
@@ -482,20 +477,7 @@ class PDb_List_Admin {
          */
         private static function recent_field_option()
         {
-          $recents = array();
-          
-          $field_list = self::$list_filter->recents();
-          
-          if ( count( $field_list ) > 0 ) {
-            $recents[ __('Recent Fields', 'participants-database' ) ] = 'optgroup';
-            
-            foreach ( $field_list as $fieldname ) {
-              
-              $recents[ Participants_Db::$fields[$fieldname]->title() . ' ' ] = $fieldname;
-            }
-          }
-          
-          return $recents;
+          return \PDb_admin_list\filter::recent_field_option( self::$list_filter->recents() );
         }
         
 
@@ -822,22 +804,22 @@ class PDb_List_Admin {
    */
   private static function with_selected_control()
   {
-    $with_selection_actions = array();
+    $core_actions = array( 'null_select' => false );
 
     // add the approval actions
     $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
     if ( PDb_Form_Field_Def::is_field( $approval_field_name ) ) {
-      $with_selection_actions = array(
+      $core_actions = array(
           __( 'approve', 'participants-database' ) => 'approve',
           __( 'unapprove', 'participants-database' ) => 'unapprove',
-      );
+      ) + $core_actions;
     }
 
     // add the delete action
     if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
-      $with_selection_actions = array(
+      $core_actions = array(
           __( 'delete', 'participants-database' ) => 'delete'
-              ) + $with_selection_actions;
+              ) + $core_actions;
     }
 
     /**
@@ -847,8 +829,8 @@ class PDb_List_Admin {
      * @param array as $title => $action of actions to apply to selected records
      * @return array
      */
-    $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $with_selection_actions );
-    $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected' );
+    $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $core_actions );
+    $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected', 'approve' );
 
     $selector = array(
         'type' => 'dropdown',
