@@ -58,11 +58,13 @@ var PDbListAdmin = (function ($) {
       }
     switch(el.val()){
       case mass_editL10n.edit_action:
+        delete_control.hide(speed);
         set_mass_edit_input(el);
         edit_control.show(speed);
         break;
       case 'delete':
         delete_control.show(speed);
+        edit_control.hide(speed);
         break;
       default:
         hide_all();
