@@ -87,6 +87,22 @@ class mass_edit_update {
   {
     \PDb_List_Admin::set_admin_user_setting( mass_edit::field_selector, $this->field->name() );
     \PDb_List_Admin::set_admin_user_setting( $this->field->name(), $this->value );
+    $this->add_to_recents();
+  }
+  
+  
+  /**
+   * adds the last used field to the list of recently used fields
+   * 
+   */
+  private function add_to_recents()
+  {
+    $setting = mass_edit::field_selector . '_recents';
+    $recents = \PDb_List_Admin::get_admin_user_setting( $setting, array() );
+    
+    $recent_fields = filter::add_to_recents( $this->field->name(), $recents );
+    
+    \PDb_List_Admin::set_admin_user_setting( $setting, $recent_fields );
   }
   
   /**
