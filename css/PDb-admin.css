@@ -273,6 +273,7 @@ p.submit.top-bar-submit  {
   border-radius: 5px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 .mass-edit-input .field-input-label {
   margin-right: 1em;
@@ -289,6 +290,9 @@ p.submit.top-bar-submit  {
 .mass-edit-input.changeout .field-input-label, 
 .mass-edit-input.changeout .field-input {
   opacity: 0;
+}
+.mass-edit-input .field-help {
+  flex-basis: 100%;
 }
 
 
