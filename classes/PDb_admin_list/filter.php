@@ -332,7 +332,7 @@ class filter {
    * @param array $recents the array of recent fields
    * @return array
    */
-  private static function add_to_recents( $fieldname, $recents )
+  public static function add_to_recents( $fieldname, $recents )
   {
     // sets the number of recent fields to keep
     $max_recents = \Participants_Db::apply_filters('pdb-admin_list_max_recent_fields', 6 );
@@ -347,6 +347,28 @@ class filter {
       array_shift( $recents );
     }
     
+    return $recents;
+  }
+        
+  /**
+   * provides the recent fields option
+   * 
+   * @param array $field_list list of fieldnames
+   * @return array
+   */
+  public static function recent_field_option( $field_list )
+  {
+    $recents = array();
+
+    if ( count( $field_list ) > 0 ) {
+      $recents[ __('Recent Fields', 'participants-database' ) ] = 'optgroup';
+
+      foreach ( $field_list as $fieldname ) {
+
+        $recents[ Participants_Db::$fields[$fieldname]->title() . ' ' ] = $fieldname;
+      }
+    }
+
     return $recents;
   }
 
