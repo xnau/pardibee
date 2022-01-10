@@ -204,7 +204,7 @@ class mass_edit {
     
     $result = $wpdb->get_results( $sql );
     
-    $field_list = array();
+    $field_list = $this->recent_fields();
     $group = '';
     
     foreach( $result as $field_data ) {
@@ -221,6 +221,16 @@ class mass_edit {
     }
 
     return \Participants_Db::apply_filters( 'with_selected_mass_edit_fields', $field_list );
+  }
+  
+  /**
+   * provides the list of recent fields
+   * 
+   * @return array
+   */
+  private function recent_fields()
+  {
+    return filter::recent_field_option( \PDb_List_Admin::get_admin_user_setting( self::field_selector . '_recents', array() ) );
   }
   
   /**
