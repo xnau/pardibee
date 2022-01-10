@@ -139,6 +139,9 @@ class delete {
    */
   private function file_delete_preference()
   {
-    return \PDb_List_Admin::get_admin_user_setting( self::file_delete_preference, '0' );
+    /*
+     * the 'delete_uploaded_files' setting is no longer used, but we get our initial state from it
+     */
+    return \PDb_List_Admin::get_admin_user_setting( self::file_delete_preference, \Participants_Db::plugin_setting_is_true( 'delete_uploaded_files', false ) ? '1':'0' );
   }
 }
