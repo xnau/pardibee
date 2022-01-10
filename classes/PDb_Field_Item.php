@@ -603,7 +603,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     // remove empty elements
     return array_filter( $multivalues, function ($v) {
-      return $v !== '' && ! is_null( $v  );
+      return $v !== '' && ! is_null( $v );
     } );
   }
 
