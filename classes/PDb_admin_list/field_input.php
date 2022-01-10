@@ -81,9 +81,9 @@ class field_input {
       return '';
     }
     
-    $template = $show_label ? '<span class="field-input-label">%1$s:</span>%2$s' : '%2$s';
+    $template = $show_label ? '<span class="field-input-label">%1$s:</span>%2$s%3$s' : '%2$s';
     
-    return sprintf( $template, $this->field->title(), $this->field->get_element() );
+    return sprintf( $template, $this->field->title(), $this->field->get_element(), $this->field_help_text() );
   }
   
   /**
@@ -113,6 +113,32 @@ class field_input {
     
     $this->field->attributes['id'] = 'mass_edit_' . $this->field->name();
     $this->field->add_class('field-input');
+  }
+  
+  /**
+   * provides the field help text
+   * 
+   * @return string
+   */
+  private function field_help_text()
+  {
+    switch ( $this->field->form_element() ) {
+      
+      case 'timestamp':
+        
+        $datetime = date( get_option('date_format') . ' ' . get_option( 'time_format' ) );
+        $helptext = sprintf( __('Timestamp values must be entered using this format: %s', 'participants-database' ), $datetime );
+        break;
+      
+      default:
+        $helptext = '';
+    }
+    
+    if ( $helptext !== '' ) {
+      $helptext = sprintf( '<p class="field-help">%s</p>', $helptext );
+    }
+    
+    return $helptext;
   }
   
   /**
