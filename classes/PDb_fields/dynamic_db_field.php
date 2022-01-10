@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -211,8 +211,9 @@ abstract class dynamic_db_field extends core {
    * 
    * @global \wpdb $wpdb
    * @param array $record_id_list list of record ids to update, updates all records if omitted
+   * @param bool $dispatch_now if true, dispatches the background queue immediately
    */
-  protected function update_record_list( $record_id_list = false )
+  protected function update_record_list( $record_id_list = false, $dispatch_now = true )
   {
     global $wpdb;
 
@@ -232,8 +233,30 @@ abstract class dynamic_db_field extends core {
    
       $this->process->push_to_queue( $packet );
     }
+    
+    if ( $dispatch_now ) {
+      $this->save_and_dispatch();
+    }
+  }
+  
+  /**
+   * dispatches the process
+   * 
+   */
+  public function save_and_dispatch()
+  {
+    $this->process->save();
 
-    $this->process->save()->dispatch();
+//    global $wpdb;
+//    $result = $wpdb->get_results('SELECT option_value,option_name FROM ' . $wpdb->options . ' WHERE option_name LIKE "%' . $this->process->action . '%"' );
+//    $queue = current($result);
+//    error_log(__METHOD__.'
+//      
+//queue name: '.$queue->option_name.'
+//  
+//queue: '. print_r( maybe_unserialize( $queue->option_value ),1));
+    
+    $this->process->dispatch();
   }
 
   /**
@@ -272,15 +295,35 @@ abstract class dynamic_db_field extends core {
    */
   public function admin_update_all( $hook )
   {
-    if ( strpos( $hook, 'participants-database' ) !== false && array_key_exists( 'pdb-regenerate-dynamic-fields', $_GET ) ) {
+    $getkey = 'pdb-regenerate-dynamic-fields';
+    if ( strpos( $hook, 'participants-database' ) !== false && array_key_exists( $getkey, $_GET ) ) {
 
-      $rebuild_field = filter_input( INPUT_GET, 'pdb-regenerate-dynamic-fields', FILTER_SANITIZE_STRING . FILTER_NULL_ON_FAILURE );
-      $field_list = \PDb_Form_Field_Def::is_field( $rebuild_field ) ? array( new \PDb_Form_Field_Def( $rebuild_field ) ) : $this->field_list();
+      $rebuild_field = filter_input( INPUT_GET, $getkey, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+      
+      if ( empty( $rebuild_field ) ) {
+        
+        $field_list = $this->field_list();
+        
+      } elseif ( \PDb_Form_Field_Def::is_field( $rebuild_field ) ) {
+        
+        $field = new \PDb_Form_Field_Def( $rebuild_field );
+        
+        if ( $field->form_element() !== $this->name ) {
+          return;
+        }
+        $field_list = array( $field );
+        
+      } else {
+        
+        return;
+      }
 
       foreach ( $field_list as $field ) {
         $this->set_field( $field->name() );
-        $this->update_all_records();
+        $this->update_record_list( false, false );
       }
+      
+      $this->save_and_dispatch();
     }
   }
 
@@ -303,9 +346,14 @@ abstract class dynamic_db_field extends core {
 
         foreach ( $this->field_list() as $field ) {
           $this->set_field( $field->name() );
-          $this->update_record_list( $id_list );
+          $this->update_record_list( $id_list, false );
         }
-      } );
+        
+      }, 1 );
+      
+      if ( ! has_action( 'pdb-admin_list_with_selected_complete', array( $this, 'dispatch_process' ) ) ) {
+        add_action( 'pdb-admin_list_with_selected_complete', array( $this, 'dispatch_process' ), 100 );
+      }
     }
 
     return $selected_ids;
