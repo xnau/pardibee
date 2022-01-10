@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -20,7 +20,7 @@ class dynamic_value_update extends \WP_Background_Process {
   /**
    * @var string stem name for the action
    */
-  protected $action = 'pdb_dynamic_value_update_';
+  public $action = 'pdb_dynamic_value_update_';
   
   /**
    * @var \PDb_fields\dynamic_db_field the current field type object 
