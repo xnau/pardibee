@@ -1470,18 +1470,18 @@ class PDb_Settings extends xnau_Plugin_Settings {
         )
     );
     
-    $this->plugin_settings[] = array(
-        'name' => 'delete_uploaded_files',
-        'title' => __( 'Delete Uploaded Files with Record', 'participants-database' ),
-        'group' => 'pdb-admin',
-        'options' => array
-            (
-            'type' => 'checkbox',
-            'help_text' => __( 'when a record is deleted, delete all images and files uploaded with the record', 'participants-database' ),
-            'value' => 0,
-            'options' => array(1, 0),
-        ),
-    );
+//    $this->plugin_settings[] = array(
+//        'name' => 'delete_uploaded_files',
+//        'title' => __( 'Delete Uploaded Files with Record', 'participants-database' ),
+//        'group' => 'pdb-admin',
+//        'options' => array
+//            (
+//            'type' => 'checkbox',
+//            'help_text' => __( 'when a record is deleted, delete all images and files uploaded with the record', 'participants-database' ),
+//            'value' => 0,
+//            'options' => array(1, 0),
+//        ),
+//    );
     
 
     $this->plugin_settings[] = array(
