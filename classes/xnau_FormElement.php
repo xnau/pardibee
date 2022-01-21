@@ -1106,7 +1106,7 @@ abstract class xnau_FormElement {
     $html = sprintf( '<input name="%s" %s %s %s type="%s" value="%s" />', 
             esc_attr( $this->name . ( $this->group ? '[]' : '' ) ), 
             $select_att, 
-            $this->_attributes(), 
+            $this->_attributes() , 
             $this->_class(),
             esc_attr( $type ),
             $value_att  );
