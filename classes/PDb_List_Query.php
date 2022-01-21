@@ -859,12 +859,17 @@ class PDb_List_Query {
   /**
    * straightens curly quotes
    * 
+   * also converts single and double prime ticks
+   * 
    * @param string $input
    * @return string with curly quotes converted to straight quotes
    */
   public static function straighten_quotes( $input )
   {
-    return str_replace( array('&#8221;','&#8220;','&#8217;','&#8216;',chr(145),chr(146),chr(147),chr(148),'‘','’','“','”'), array( '"','"',"'","'","'","'",'"','"',"'","'",'"','"' ), $input );
+    return str_replace( 
+            array( '&#8221;','&#8220;','&#8217;','&#8216;','&#8242;','&#8243;',chr(145),chr(146),chr(147),chr(148),'‘','’','“','”' ), 
+            array( '"',      '"',      "'",      "'",      "'",      '"',     "'",    "'",     '"',     '"',      "'","'",'"','"' ), 
+            $input );
   }
 
   /**
