@@ -1776,7 +1776,7 @@ class Participants_Db extends PDb_Base {
   {
     global $wpdb;
     
-    self::debug_log(__METHOD__.' using fallback method to get record ' . $id, 3);
+    self::debug_log(__METHOD__.' cache missed, using fallback method for record: ' . $id, 3);
 
     $sql = 'SELECT p.' . implode( ',p.', self::db_field_list() ) . ' FROM ' . self::participants_table() . ' p WHERE p.id = %d';
 
