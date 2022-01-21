@@ -358,10 +358,7 @@ class Participants_Db extends PDb_Base {
       add_shortcode( $tag, array(__CLASS__, 'print_shortcode') );
     }
     
-    // if we have a PDB shortcode in the content, set up a filter
-    add_action( 'pdb-shortcode_present', function () {
-      add_filter( 'the_content', array( 'Participants_Db', 'fix_shortcode_special_chars' ), 5 );
-    } );
+    add_filter( 'pre_do_shortcode_tag', array( __CLASS__, 'fix_shortcode_special_chars' ), 10, 3);
     
     // action for handling the list columns UI
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
@@ -417,21 +414,29 @@ class Participants_Db extends PDb_Base {
    * @see https://core.trac.wordpress.org/ticket/29608
    * @see https://codex.wordpress.org/Shortcode_API#HTML
    * 
-   * @param string  $content_page content
-   * @return string
+   * called on the pre_do_shortcode_tag filter
+   * @see https://developer.wordpress.org/reference/hooks/pre_do_shortcode_tag/
+   * 
+   * @param bool $return the return flag
+   * @param string $tag the shortcode tag
+   * @param array $atts the shortcode attributes
+   * @return bool false to show the shortcode
    */
-  public static function fix_shortcode_special_chars( $content )
+  public static function fix_shortcode_special_chars( $return, $tag, $atts )
   {
-    if ( self::has_shortcode( $content ) ) {
-      // one of the two shortcodes are present, now do the replacements
-      $content = preg_replace_callback( 
-              '/\[pdb_(?:list|total)(.+)\]/', 
-              function ($atts) { 
-        return str_replace( array('<','>'), array('&lt;', '&gt;'), $atts[0] );
-              }, 
-                              $content );
+    if ( in_array( $tag, array( 'pdb_list','pdb_total' ) ) && isset( $atts['filter'] ) ) {
+      
+        // hide angle brackets
+        $atts['filter'] = str_replace( array('<','>'), array('&lt;', '&gt;'), $atts['filter'] );
+        
+        // straighten quotes
+        $atts['filter'] = PDb_List_Query::straighten_quotes( $atts['filter'] );
+        
+        // remove enclosing quotes
+        $atts['filter'] = trim( $atts['filter'], '"'."'" );
     }
-    return $content;
+    
+    return $return;
   }
 
   /**
@@ -935,7 +940,7 @@ class Participants_Db extends PDb_Base {
   /**
    * common function for printing all shortcodes
    * 
-   * @param array $params array of paramters passed in from the shortcode
+   * @param array $params array of parameters passed in from the shortcode
    * @param string $content the content of the enclosure
    * @param string $tag the shortcode identification string
    * @return null 
