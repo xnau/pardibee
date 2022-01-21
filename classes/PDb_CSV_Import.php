@@ -81,7 +81,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   /**
    * supplies the import error messages
    * 
-   * @return array
+   * @return bool
    */
   public function has_errors()
   {
@@ -109,20 +109,35 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   {
     return $this->column_count;
   }
-
+  
   /**
-   * sets up the column name array
-   *
+   * provides the configured export columns
+   * 
+   * @return array of field names
    */
-  protected function set_column_array()
+  public function export_columns()
   {
     $columns = Participants_Db::get_column_atts( 'all' );
+    $export_columns = array();
 
     foreach ( $columns as $column ) {
 
       if ( $column->CSV )
-        $this->column_names[] = $column->name;
+        $export_columns[] = $column->name;
     }
+    
+    return $export_columns;
+  }
+
+  /**
+   * sets up the column name array
+   * 
+   * the defaults to the configured export columns
+   *
+   */
+  protected function set_column_array()
+  {
+    $this->column_names = $this->export_columns();
 
     $this->column_count = count( $this->column_names );
   }
@@ -137,9 +152,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     // build the column names from the CSV if it's there
     if ( is_array( $this->CSV->titles ) && $this->column_names != $this->CSV->titles ) {
 
-      $this->column_names = $this->CSV->titles;
-
-//      $this->errors[] = __( 'New columns imported from the CSV file.', 'participants-database' );
+      $this->column_names = $this->get_column_names();
 
       // remove enclosure characters
       array_walk( $this->column_names, array( $this, '_enclosure_trim' ), $this->CSV->enclosure );
@@ -148,6 +161,33 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     }
     
     $this->process->setup( $this->column_names, $this->match_preference, $this->match_field );
+  }
+  
+  /**
+   * provides the set of validated import columns
+   * 
+   * @return array of column names
+   */
+  protected function get_column_names()
+  {
+    $columns = array();
+    $bad_columns = array();
+    
+    foreach ( $this->CSV->titles as $fieldname ) {
+      
+      if ( PDb_Form_Field_Def::is_field( $fieldname ) ) {
+        $columns[] = $fieldname;
+      } else {
+        $bad_columns[] = $fieldname;
+      }
+    }
+    
+    if ( count( $bad_columns ) > 0 ) {
+
+      $this->errors['incorrect_column'] = _n( 'Incorrect column name found in CSV:', 'Incorrect column names found in CSV:', count($bad_columns), 'participants-database' ) . ' ' . implode( ', ', $bad_columns );
+    }
+    
+    return $columns;
   }
 
   /**
