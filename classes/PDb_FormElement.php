@@ -404,6 +404,10 @@ class PDb_FormElement extends xnau_FormElement {
     $this->_addline( $this->print_hidden_fields( array('MAX_FILE_SIZE' => $max_size, $this->name => $this->value), false ) );
 
     if ( !isset( $this->attributes['readonly'] ) ) {
+      
+      if ( !empty( $this->value ) ) {
+        unset( $this->attributes['required'] );
+      }
 
       $this->_addline( $this->_input_tag( 'file' ) );
 
