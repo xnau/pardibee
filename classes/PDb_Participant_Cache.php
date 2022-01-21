@@ -217,7 +217,7 @@ class PDb_Participant_Cache {
   /**
    * provides the stored staleness record
    * 
-   * @return array as $id => $staleness
+   * @return array as $group_id => $staleness
    */
   private function get_staleness()
   {
