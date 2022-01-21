@@ -191,9 +191,19 @@ abstract class dynamic_db_field extends core {
    */
   private function get_field_default( $fieldname )
   {
-    global $wpdb;
+    $cachekey = 'pdb-field_default';
     
-    return $wpdb->get_var( $wpdb->prepare( 'SELECT f.default FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name = %s', $fieldname ) );
+    $default_value = wp_cache_get( $fieldname, $cachekey );
+    
+    if ( $default_value === false ) {
+      global $wpdb;
+
+      $default_value = $wpdb->get_var( $wpdb->prepare( 'SELECT f.default FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name = %s', $fieldname ) );
+      
+      wp_cache_set( $fieldname, $default_value, $cachekey );
+    }
+    
+    return $default_value;
   }
 
   /**
