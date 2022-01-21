@@ -215,6 +215,12 @@ abstract class xnau_CSV_Import {
      * the CSV columns defined by the database
      */
     $this->setup_import_columns();
+    
+    if ( isset($this->errors['incorrect_column']) ) {
+      
+      $this->set_error( __( 'Cannot import data. Make sure all field names are correct in the CSV header.', 'participants-database' ) );
+      return false;
+    }
 
     $this->lines = 0;
 
