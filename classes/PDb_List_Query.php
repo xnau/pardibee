@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.2
+ * @version    2.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -1093,6 +1093,7 @@ class PDb_List_Query {
       }
 
       $delimiter = array( '"', '"' );
+      $clause_pattern = 'p.%s %s %s%s%s';
 
       /*
        * set the operator and delimiters
@@ -1131,7 +1132,8 @@ class PDb_List_Query {
         case '!=':
         case '<>':
 
-          $operator = '<>';
+          $clause_pattern = 'NOT p.%s %s %s%s%s';
+          $operator = '<=>';
           break;
 
         case 'eq':
@@ -1190,7 +1192,7 @@ class PDb_List_Query {
           return false;
       }
 
-      $statement = sprintf( 'p.%s %s %s%s%s', $field_def->name(), $operator, $delimiter[ 0 ], $filter->get_term(), $delimiter[ 1 ] );
+      $statement = sprintf( $clause_pattern, $field_def->name(), $operator, $delimiter[ 0 ], $filter->get_term(), $delimiter[ 1 ] );
     }
 
     if ( $statement ) {
