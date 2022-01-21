@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -306,6 +306,12 @@ class query {
     } elseif ( $filter_set[ 'value' ] === 'null' ) {
 
       $this->list_query .= $this->empty_value_where_clause( $filter_set[ 'operator' ], $search_field );
+      
+    } elseif ( $operator === '!=' ) {
+
+      $operator = '<=>';
+      $this->list_query .= ' NOT ' . $this->name_clause( $search_field ) . ' ' . $operator . " " . $delimiter[ 0 ] . esc_sql( $value ) . $delimiter[ 1 ];
+      
     } else {
 
       $this->list_query .= ' ' . $this->name_clause( $search_field ) . ' ' . $operator . " " . $delimiter[ 0 ] . esc_sql( $value ) . $delimiter[ 1 ];
