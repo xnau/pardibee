@@ -126,8 +126,8 @@ class PDb_List_Admin {
                     )
     );
 
-    wp_localize_script(
-            Participants_Db::$prefix . 'list-admin', 'list_adminL10n', array(
+    wp_add_inline_script(
+            Participants_Db::$prefix . 'list-admin', Participants_Db::inline_js_data( 'list_adminL10n', array(
         'delete' => self::$i18n[ 'delete_checked' ],
         'cancel' => self::$i18n[ 'change' ],
         'apply' => self::$i18n[ 'apply' ],
@@ -139,16 +139,16 @@ class PDb_List_Admin {
          * @return array
          */
         'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove', PDb_admin_list\mass_edit::edit_action ) ),
-            )
+            ))
     );
     
     
-    wp_localize_script( 'pdb-list-admin', 'mass_editL10n', array(
+    wp_add_inline_script( 'pdb-list-admin', Participants_Db::inline_js_data( 'mass_editL10n', array(
         'edit_action' => PDb_admin_list\mass_edit::edit_action,
         'action' => PDb_admin_list\mass_edit::action,
         'selector' => PDb_admin_list\mass_edit::field_selector,
         'spinner' => Participants_Db::get_loading_spinner(),
-    ) );
+    ) ) );
     
     wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
