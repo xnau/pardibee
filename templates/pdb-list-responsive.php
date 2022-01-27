@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * @version 0.2
+ * @version 0.3
  * 
  * template for participants list shortcode output
  * 
@@ -52,7 +52,7 @@
           </div>
         </div>
       <?php endif ?>
-
+      </form>
     </div>
   <?php endif ?>
 

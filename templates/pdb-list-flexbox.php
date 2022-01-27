@@ -2,7 +2,7 @@
 /**
  * template for a responsive list layout using CSS3 flexbox
  * 
- * @version 0.3
+ * @version 0.4
  */
 ?>
 <div class="wrap <?php echo $this->wrap_class ?> pdb-flexbox-list" id="<?php echo $this->list_anchor ?>">
@@ -49,7 +49,7 @@
           </div>
         </div>
       <?php endif ?>
-
+      </form>
     </div>
   <?php endif ?>
 

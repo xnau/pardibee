@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 0.3
+ * @version 0.4
  * 
  * template for participants list shortcode output
  * 
@@ -68,7 +68,7 @@ $this->pagination->set_props( array(
           </div>
         </div>
       <?php endif ?>
-
+    </form>
     </div>
   <?php endif ?>
 
