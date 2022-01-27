@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -143,9 +143,7 @@ class PDb_List extends PDb_Shortcode {
 
     $this->_set_single_record_url();
 
-    $this->suppress= $this->attribute_true('suppress');
-
-    wp_localize_script( Participants_Db::$prefix . 'list-filter', 'PDb_ajax', $this->ajax_params() );
+    $this->suppress = $this->attribute_true('suppress');
 
     // enqueue the filter/sort AJAX script
     if ( Participants_Db::plugin_setting_is_true( 'ajax_search' ) ) {
@@ -200,7 +198,7 @@ class PDb_List extends PDb_Shortcode {
   public static function get_list( $shortcode_atts )
   {
     self::$instance = new PDb_List( $shortcode_atts );
-
+    
     return self::$instance->output;
   }
 
@@ -522,7 +520,8 @@ class PDb_List extends PDb_Shortcode {
    * @param string $target set the action attribute of the search form to another 
    *                       page, giving the ability to have the search on a 
    *                       different page than the list, defaults to the same page
-   * @global object $post
+   * @param string $class a class attribute to use for the form
+   * @global WP_Post $post
    */
   public function search_sort_form_top( $target = false, $class = false, $print = true )
   {
@@ -534,7 +533,6 @@ class PDb_List extends PDb_Shortcode {
     }
 
     global $post;
-    /** @var WP_Post $post */
 
     $output = array();
 
@@ -546,18 +544,18 @@ class PDb_List extends PDb_Shortcode {
       $ref = 'remote';
     }
 
-    $action = $target !== false ? $target : get_permalink( $post->ID ) . '#' . $this->list_anchor;
+    $action = ( $target !== false ? $target : get_permalink( $post->ID ) . '#' . $this->list_anchor );
 
-    $class_att = $class ? 'class="' . $class . '"' : '';
+    $class_att = 'sort_filter_form' . ( $class ? ' ' . $class : '' );
 
-    $output[] = '<form method="post" class="sort_filter_form" action="' . $action . '"' . $class_att . ' data-ref="' . $ref . '" >';
+    $output[] = '<form method="post" class="' . esc_attr( $class_att ) . '" action="' . esc_attr( $action ) . '" data-ref="' . esc_attr( $ref ) . '" >';
     
     $hidden_fields = array();
     
     if ( $this->module === 'search' && $ref !== 'remote' ) {
       // this should provide a working target instance value if it was not included in the shortcode
       if ( $this->shortcode_atts['target_instance'] == '1' && strpos( $post->post_content, '[pdb_list' ) !== false  ) {
-        $this->shortcode_atts['target_instance'] = 2;
+        $this->shortcode_atts['target_instance'] = '2';
       }
     }
     
@@ -1382,7 +1380,7 @@ class PDb_List extends PDb_Shortcode {
    * @global WP_Query $wp_query
    * @return array
    */
-  protected function ajax_params()
+  public static function ajax_params()
   {
     global $wp_query;
 
