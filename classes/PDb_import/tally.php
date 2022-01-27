@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -36,6 +36,11 @@ class tally {
    * @var string holds the last status added
    */
   private $last_status;
+  
+  /**
+   * @var bool flags the tally as complete
+   */
+  private $complete = false;
   
   /**
    * provides the current instance
@@ -123,7 +128,10 @@ class tally {
    */
   public function complete()
   {
+    $this->complete = true;
+    
     $params = array(
+        'type' => 'success',
         'persistent' => false,
     );
     \PDb_Admin_Notices::post_admin_notice( '<p>' . $this->report() . '</p>', $params );
@@ -210,7 +218,11 @@ class tally {
    */
   private function context_string()
   {
-    return __('Import Report', 'participants-database' );
+    if ( $this->complete ) {
+      return __('Import Complete', 'participants-database' );
+    } else {
+      return __('Import in Progress', 'participants-database' );
+    }
   }
 
 
