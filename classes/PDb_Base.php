@@ -154,6 +154,18 @@ class PDb_Base {
   }
   
   /**
+   * prepares data for inline javascript
+   * 
+   * @param string $obj_name name of the js object to inline
+   * @param array $obj_data array of property values for the object
+   * @return string the js to inline
+   */
+  public static function inline_js_data( $obj_name, $obj_data )
+  {
+    return 'var ' . esc_js( $obj_name ) . '=' . json_encode( $obj_data );
+  }
+  
+  /**
    * tells if the ID is in the main DB
    * 
    * @global \wpdb $wpdb
