@@ -361,8 +361,8 @@ abstract class dynamic_db_field extends core {
         
       }, 1 );
       
-      if ( ! has_action( 'pdb-admin_list_with_selected_complete', array( $this, 'dispatch_process' ) ) ) {
-        add_action( 'pdb-admin_list_with_selected_complete', array( $this, 'dispatch_process' ), 100 );
+      if ( ! has_action( 'pdb-admin_list_with_selected_complete', array( $this, 'save_and_dispatch' ) ) ) {
+        add_action( 'pdb-admin_list_with_selected_complete', array( $this, 'save_and_dispatch' ), 100 );
       }
     }
 
