@@ -1062,19 +1062,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
      *
      * **************************************************** */
     
-    
-    $this->plugin_settings[] = array(
-        'name' => 'use_single_record_pid',
-        'title' => __( 'Use the Private ID for the Single Record Link', 'participants-database' ),
-        'group' => 'pdb-advanced',
-        'options' => array
-            (
-            'type' => 'checkbox',
-            'help_text' => __( 'use the Private ID instead of the Record ID in single record links', 'participants-database' ) . $this->settings_help( 'single_record_private_id' ),
-            'value' => 0,
-            'options' => array(1, 0),
-        ),
-    );
 
     $this->plugin_settings[] = array(
         'name' => 'use_plugin_css',
@@ -1134,6 +1121,22 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'checkbox',
             'help_text' => __( 'when a form validation error is shown, scroll to the error message', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+    
+    /**
+     * @version 2.0
+     */
+    $this->plugin_settings[] = array(
+        'name' => 'use_single_record_pid',
+        'title' => __( 'Use the Private ID for the Single Record Link', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'use the Private ID instead of the Record ID in single record links', 'participants-database' ) . $this->settings_help( 'single_record_private_id' ),
             'value' => 0,
             'options' => array(1, 0),
         ),
