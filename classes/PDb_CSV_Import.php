@@ -64,7 +64,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     $tally = \PDb_import\tally::get_instance();
     
     if ( $tally->has_report() ) {
-      $this->errors[] = $tally->report();
+      $this->set_error( $tally->report(), false, 'progress_report' );
     }
   }
   
@@ -183,8 +183,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     }
     
     if ( count( $bad_columns ) > 0 ) {
-
-      $this->errors['incorrect_column'] = _n( 'Incorrect column name found in CSV:', 'Incorrect column names found in CSV:', count($bad_columns), 'participants-database' ) . ' ' . implode( ', ', $bad_columns );
+      
+      $this->set_error( _n( 'Incorrect column name found in CSV:', 'Incorrect column names found in CSV:', count($bad_columns), 'participants-database' ) . ' ' . implode( ', ', $bad_columns ), true, 'incorrect_column' );
     }
     
     return $columns;
