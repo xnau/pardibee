@@ -226,6 +226,8 @@ abstract class xnau_CSV_Import {
 
     foreach ($this->CSV->data as $csv_line) {
 
+      $this->lines++;
+
       Participants_Db::debug_log( __METHOD__.'
         
 columns:'.implode(', ',$this->column_names).'
@@ -241,24 +243,19 @@ csv line= '.print_r( $csv_line, true ), 2 );
 
       if (count($column_values) != $this->column_count) {
 
-        $this->set_error(sprintf(
-                        __('The number of items in line %s is incorrect.<br />There are %s and there should be %s.', 'participants-database'), $this->lines, count($column_values), $this->column_count
-                )
-        );
+        $this->set_error( sprintf( __('The number of items in line %s is incorrect.<br />There are %s and there should be %s.', 'participants-database'), $this->lines + 1, count($column_values), $this->column_count ), true, 'column_value_mismatch' );
 
         return false;
       }
 
       // put the keys and the values together into the $post array
       if ( !$post = array_combine( $this->column_names, $column_values ) ) {
-        $this->set_error(__('Number of values does not match number of columns', 'participants-database'));
+        $this->set_error( __('Number of values does not match number of columns', 'participants-database'), true, 'column_value_mismatch' );
       } else {
 
         // store the record
         $this->store_record( $post );
       }
-
-      $this->lines++;
     }
 
     return true;
@@ -355,13 +352,17 @@ csv line= '.print_r( $csv_line, true ), 2 );
    *
    * @param string $message      the message to add
    * @param bool   $error_status true for error, false for non-error message
+   * @param string $label string label for the error message
    * 
    */
-  protected function set_error($message, $error_status = true) {
+  protected function set_error($message, $error_status = true, $label = false ) {
 
-    if (!empty($message)) {
+    if ( $label ) {
+      $this->errors[$label] = $message;
+    } else {
       $this->errors[] = $message;
     }
+    
     if ($error_status) {
       $this->error_status = 'error';
     }
