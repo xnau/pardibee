@@ -616,7 +616,10 @@ class Participants_Db extends PDb_Base {
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
     wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.5' );
-    wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '1.7.5' );
+
+    wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '2.0' );
+    wp_add_inline_script( self::$prefix . 'list-filter', self::inline_js_data( 'PDb_ajax', PDb_List::ajax_params() ), false );
+    
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery'), '0.5' );
   }
 
@@ -658,8 +661,10 @@ class Participants_Db extends PDb_Base {
      * register admin scripts and stylesheets
      */
     $presuffix = self::use_minified_assets() ? '.min' : '';
+    $manage_fields_handle = self::$prefix . 'manage_fields';
+    
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
-    wp_register_script( self::$prefix . 'manage_fields', self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.5', true );
+    wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.5', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
@@ -681,14 +686,14 @@ class Participants_Db extends PDb_Base {
     // jquery UI theme
     wp_register_style( self::$prefix . 'jquery-ui', self::asset_url( "css/jquery-ui-theme/jquery-ui.min.css" ) );
     wp_register_style(self::$prefix . 'jquery-ui-structure', self::asset_url( "css/jquery-ui-theme/jquery-ui.structure.min.css" ) );
-    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '1.9' );
+    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '2.0' );
     
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
-    wp_register_style( self::$prefix . 'manage_fields', plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
+    wp_register_style( $manage_fields_handle, plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
       
@@ -723,9 +728,9 @@ class Participants_Db extends PDb_Base {
     
     if ( false !== stripos( $hook, 'participants-database-manage_fields' ) || false !== stripos( $hook, 'pdb-participant_log_settings' ) ) {
       
-      wp_localize_script( self::$prefix . 'manage_fields', 'manageFields', array('uri' => $_SERVER['REQUEST_URI']) );
+      wp_add_inline_script( $manage_fields_handle, Participants_Db::inline_js_data( 'manageFields', array('uri' => $_SERVER['REQUEST_URI']) ) );
       
-      wp_localize_script( self::$prefix . 'manage_fields', 'PDb_L10n', array(
+      wp_add_inline_script( $manage_fields_handle, Participants_Db::inline_js_data( 'PDb_L10n', array(
           '_wpnonce' => wp_create_nonce(PDb_Manage_Fields_Updates::action_key),
           'action' => PDb_Manage_Fields_Updates::action_key,
           PDb_Session::id_var => self::$session->session_id(),
@@ -741,9 +746,9 @@ class Participants_Db extends PDb_Base {
           'datatype_confirm' => '<h4 class="dashicons-before dashicons-info warning">' . __( 'Changing the form element on a field that has stored data can result in data loss.', 'participants-database' ) .'</h4><p><a href="https://wp.me/p48Sj5-Zb" target="_blank">' . __( 'More information here…', 'participants-database' ) . '</a></p>',
           'datatype_confirm_button' => __( 'Yes, change the form element', 'participants-database' ),
           'datatype_cancel_button' => __( 'No, don\'t change the form element', 'participants-database' ),
-      ) );
-      wp_enqueue_script( self::$prefix . 'manage_fields' );
-      wp_enqueue_style( self::$prefix . 'manage_fields' );
+      ) ) );
+      wp_enqueue_script( $manage_fields_handle );
+      wp_enqueue_style( $manage_fields_handle );
     }
 
     // global admin enqueues
