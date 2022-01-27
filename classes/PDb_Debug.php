@@ -77,13 +77,14 @@ class PDb_Debug {
   public function assets( $hook )
   {
     if ( strpos( $hook, 'participants-database-pdb_debugging' ) !== false ) {
+      
+      $handle = Participants_Db::$prefix . 'debug';
 
-      wp_localize_script( Participants_Db::$prefix . 'debug', 'PDb_Debug', array(
+      wp_add_inline_script( $handle, Participants_Db::inline_js_data( 'PDb_Debug', array(
           'action' => $this->action,
           'spinner' => Participants_Db::get_loading_spinner(),
-              )
-      );
-      wp_enqueue_script( Participants_Db::$prefix . 'debug' );
+              ) ), false );
+      wp_enqueue_script( $handle );
     }
   }
 
