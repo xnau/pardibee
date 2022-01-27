@@ -178,10 +178,10 @@ class PDb_Admin_Notices {
    */
   public function action_admin_enqueue_scripts()
   {
-    wp_localize_script(Participants_Db::$prefix . 'admin-notices', 'PDb_Notices', array(
+    wp_add_inline_script(Participants_Db::$prefix . 'admin-notices', Participants_Db::inline_js_data( 'PDb_Notices', array(
         'action' => self::get_key,
         'nonce' => wp_create_nonce( self::pdb_admin_notice ),
-    ));
+    )));
     wp_enqueue_script( Participants_Db::$prefix . 'admin-notices' );
   }
 
