@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 1.9
+ * version: 2.0
  * 
  * xnau webdesign xnau.com
  * 
@@ -10,13 +10,8 @@
 PDbListFilter = (function ($) {
   "use strict";
   var isError = false;
-  var errormsg = $('.pdb-searchform .pdb-error');
-  var filterform = $('.sort_filter_form[data-ref="update"]');
-  var remoteform = $('.sort_filter_form[data-ref="remote"]');
-  var submission = {
-      filterNonce : PDb_ajax.filterNonce,
-      postID : PDb_ajax.postID
-  }
+  var errormsg, filterform, remoteform, submission;
+
   var submit_search = function (event, remote) {
     remote = remote || false;
     if (event.preventDefault) {
@@ -72,9 +67,9 @@ PDbListFilter = (function ($) {
         return;
     }
     if (remote) {
-      if (submission.submit !== 'clear' ) {
+      if (submission.submit !== 'clear') {
         // add the submit value to the form (#2409), then submit
-        $submitButton.closest('form').append($('<input>',{type:'hidden',name:'submit_button',value:$submitButton.val()}));
+        $submitButton.closest('form').append($('<input>', {type: 'hidden', name: 'submit_button', value: $submitButton.val()}));
         $submitButton.closest('form').submit();
       }
       return;
@@ -84,29 +79,35 @@ PDbListFilter = (function ($) {
     // this does not wait for the ajax to complete
     $('html').trigger('pdbListFilterComplete');
   };
+
   var get_page_button = function (target) {
     var $button = $(target);
     if ($button.is('a'))
       return $button;
     return $button.closest('a');
   };
+
   var submit_remote_search = function (event) {
     submit_search(event, true);
   };
+
   var get_page = function (event) {
     $(event.target).data('submit', 'page');
     find_instance_index($(event.target));
     submit_search(event);
   };
+
   var find_instance_index = function (el) {
     var classes = el.closest('.wrap.pdb-list').prop('class');
     var match = classes.match(/pdb-instance-(\d+)/);
     submission.instance_index = match[1];
   };
+
   var clear_error_messages = function () {
     errormsg.hide().children().hide();
     isError = false;
   };
+
   var clear_search = function () {
     $('select[name^="search_field"]').PDb_clearInputs('none');
     $('input[name^="value"]').PDb_clearInputs('');
@@ -119,17 +120,19 @@ PDbListFilter = (function ($) {
     }
     $('.wrap.pdb-list').PDb_idFix();
   };
+
   var scroll_to_top = function () {
-    
-    var listinstance = $("#participants-list-" + submission.instance_index); 
-    
+
+    var listinstance = $("#participants-list-" + submission.instance_index);
+
     // if the list is taller than the window, scroll after paginating
-    if ( listinstance.length && listinstance.height() > $(window).innerHeight() ) {
+    if (listinstance.length && listinstance.height() > $(window).innerHeight()) {
       $('html, body').animate({
-        scrollTop : listinstance.offset().top
+        scrollTop: listinstance.offset().top
       }, 500);
     }
   }
+
   var add_value_to_submission = function (el, submission) {
     var value = encodeURI(el.val());
     var fieldname = el.attr('name');
@@ -144,6 +147,7 @@ PDbListFilter = (function ($) {
       submission[fieldname] = value;
     }
   };
+
   var post_submission = function (button) {
     var target_instance = $('.pdb-list.pdb-instance-' + submission.instance_index);
     var container = target_instance.length ? target_instance : $('.pdb-list').first();
@@ -151,14 +155,14 @@ PDbListFilter = (function ($) {
     var buttonParent = button.closest('fieldset, div');
     var spinner = $(PDb_ajax.loading_indicator).clone();
     $.ajax({
-      type : "POST",
-      url : PDb_ajax.ajaxurl,
-      data : submission,
-      beforeSend : function () {
-        pagination.find('a').prop('disabled',true);
+      type: "POST",
+      url: PDb_ajax.ajaxurl,
+      data: submission,
+      beforeSend: function () {
+        pagination.find('a').prop('disabled', true);
         buttonParent.append(spinner);
       },
-      success : function (html, status) {
+      success: function (html, status) {
         if (/^failed/.test(html)) {
           // if the call fails, submit synchronously to reset form
           switch (submission.submit) {
@@ -187,20 +191,22 @@ PDbListFilter = (function ($) {
           });
         }
         spinner.remove();
-        pagination.find('a').prop('disabled',false);
+        pagination.find('a').prop('disabled', false);
         // trigger a general-purpose event
         $('html').trigger('pdbListAjaxComplete');
       },
-      error : function (jqXHR, status, errorThrown) {
+      error: function (jqXHR, status, errorThrown) {
         console.log('Participants Database JS error status:' + status + ' error:' + errorThrown);
       }
     });
   };
+
   $.fn.PDb_idFix = function () {
     var el = this;
     el.find('#pdb-list').addClass('list-container').removeAttr('id');
     el.find('#sort_filter_form').addClass('sort_filter_form').removeAttr('id');
   };
+
   $.fn.PDb_checkInputs = function (check) {
     var el = this;
     var number = el.length;
@@ -212,11 +218,13 @@ PDbListFilter = (function ($) {
     });
     return count === number;
   };
+
   $.fn.PDb_clearInputs = function (value) {
     this.each(function () {
       $(this).val(value);
     });
   };
+
   $.fn.PDb_processSubmission = function () {
     // collect the form values and add them to the submission
     var $thisform = this.closest('form');
@@ -231,8 +239,17 @@ PDbListFilter = (function ($) {
     });
     post_submission(this);
   };
+
   return {
-    run : function () {
+    run: function () {
+
+      errormsg = $('.pdb-searchform .pdb-error');
+      filterform = $('.sort_filter_form[data-ref="update"]');
+      remoteform = $('.sort_filter_form[data-ref="remote"]');
+      submission = {
+        filterNonce: PDb_ajax.filterNonce,
+        postID: PDb_ajax.postID
+      }
 
       compatibility_fix();
 
