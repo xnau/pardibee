@@ -596,7 +596,7 @@ class PDb_Template {
       case 'PDb_Record':
       default:
         if ( !isset( $this->shortcode_object->record ) ) {
-          error_log( __METHOD__ . ' cannot instantiate ' . __CLASS__ . ' object. Class must be instantiated with full module object.' );
+          Participants_Db::debug_log( __METHOD__ . ' cannot instantiate ' . __CLASS__ . ' object. Class must be instantiated with full module object.' );
           break;
         }
         $this->record = clone $this->shortcode_object->record;
