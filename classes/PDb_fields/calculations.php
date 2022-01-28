@@ -495,12 +495,6 @@ trait calculations {
    */
   private function partial_date( $timestamp, $format_tag )
   {
-    ob_start();
-    var_dump( $timestamp );
-    error_log(__METHOD__.' input: '.ob_get_clean());
-    
-    
-    
     $format = false;
     
     switch ( $format_tag ) {
