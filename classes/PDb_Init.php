@@ -13,8 +13,7 @@
  * point and complete the series to bring the database up to date.
  *
  */
-if ( !defined( 'ABSPATH' ) )
-  die;
+defined( 'ABSPATH' ) || exit;
 
 class PDb_Init {
 
