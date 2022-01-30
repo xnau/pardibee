@@ -11,8 +11,7 @@
  * @version    1.11
  * @link       http://xnau.com/wordpress-plugins/
  */
-if ( !defined( 'ABSPATH' ) )
-  die;
+defined( 'ABSPATH' ) || exit;
 
 class PDb_Base {
 
