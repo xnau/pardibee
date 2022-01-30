@@ -47,7 +47,14 @@ class user_column extends base_column {
         break;
 
       case 'link':
-
+        
+        // don't allow the user to change the clickable text if the hide_clickable attribute is set
+        if ( $this->field->has_attribute( 'hide_clickable' ) ) {
+          if ( is_array( $initialvalue ) && isset( $initialvalue[1] ) ) {
+            $initialvalue[1] = '';
+          }
+        }
+        
         /* translate the link markdown used in CSV files to the array format used in the database
          */
         if ( is_null( $initialvalue ) ) {
