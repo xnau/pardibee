@@ -30,8 +30,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-if ( !defined( 'ABSPATH' ) )
-  exit;
+defined( 'ABSPATH' ) || exit;
+
 // register the class autoloading
 spl_autoload_register( 'PDb_class_loader' );
 
