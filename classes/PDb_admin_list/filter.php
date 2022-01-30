@@ -12,7 +12,6 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
-
 namespace PDb_admin_list;
 
 use \Participants_Db;
@@ -362,10 +361,22 @@ class filter {
 
     if ( count( $field_list ) > 0 ) {
       $recents[ __('Recent Fields', 'participants-database' ) ] = 'optgroup';
-
+      
+      $group_fields = search_field_group::group_display_list();
+      
       foreach ( $field_list as $fieldname ) {
 
-        $recents[ Participants_Db::$fields[$fieldname]->title() . ' ' ] = $fieldname;
+        switch (true) {
+          
+          case \PDb_Form_Field_Def::is_field($fieldname):
+            
+            $recents[ Participants_Db::$fields[$fieldname]->title() . ' ' ] = $fieldname;
+            break;
+          
+          case isset( $group_fields[$fieldname] ):
+            
+            $recents[ $group_fields[$fieldname] . ' ' ] = $fieldname;
+        }
       }
     }
 
