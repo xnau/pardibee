@@ -11,8 +11,8 @@
  * @version    1.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
-if ( !defined( 'ABSPATH' ) )
-  die;
+defined( 'ABSPATH' ) || exit;
+
 
 class PDb_List_Admin {
 
@@ -208,10 +208,8 @@ class PDb_List_Admin {
     // get the records for this page, adding the pagination limit clause
     self::$participants = $wpdb->get_results( self::$query->query() . ' ' . self::$pagination->getLimitSql(), ARRAY_A );
 
-    if ( PDB_DEBUG ) {
-      Participants_Db::debug_log( __METHOD__ . '
-  list query: ' . $wpdb->last_query );
-    }
+    // log the list query used
+    Participants_Db::debug_log( __METHOD__ . ' list query: ' . $wpdb->last_query );
 
     // ok, setup finished, start outputting the form
     // add the top part of the page for the admin
