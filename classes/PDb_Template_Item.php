@@ -13,6 +13,7 @@
  *
  */
 if ( ! defined( 'ABSPATH' ) ) die;
+
 class PDb_Template_Item {
   
   /**
