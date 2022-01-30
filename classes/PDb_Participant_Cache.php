@@ -16,6 +16,7 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
+defined( 'ABSPATH' ) || exit;
 
 class PDb_Participant_Cache {
 
