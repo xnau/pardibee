@@ -12,8 +12,7 @@
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
-if ( !defined( 'ABSPATH' ) )
-  die;
+defined( 'ABSPATH' ) || exit;
 
 class PDb_FormElement extends xnau_FormElement {
 
