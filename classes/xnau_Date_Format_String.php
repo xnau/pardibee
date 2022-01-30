@@ -12,6 +12,8 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
+defined( 'ABSPATH' ) || exit;
+
 
 class xnau_Date_Format_String {
   /**
