@@ -14,7 +14,8 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
-if ( ! defined( 'ABSPATH' ) ) die;
+defined( 'ABSPATH' ) || exit;
+
 class PDb_CAPTCHA {
   /**
    * @var life of the captcha key in seconds
