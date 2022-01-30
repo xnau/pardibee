@@ -12,34 +12,60 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( ! defined( 'ABSPATH' ) ) die;
+
 class xnau_FormValidation {
 
-  // this array collects validation errors for each field
-  var $errors;
-  // holds the error messages
-  var $error_messages = array();
-  // holds the CSS for an error indication as defined in the options
-  var $error_style;
-  var $error_CSS;
-  var $error_html_wrap;
-  // holds the class name we give the container: error or message
-  var $error_class;
-  // holdes an array of all the submitted values
-  var $post_array;
+  /**
+   * @var array collects validation errors for each field
+   */
+  protected $errors;
+  
+  /**
+   * @var array holds the error messages
+   */
+  protected $error_messages = array();
+  
+  /**
+   * @var string holds the CSS for an error indication as defined in the options
+   */
+  protected $error_style;
+  
+  /**
+   *
+   * @var array of field error CSS rules
+   */
+  protected $error_CSS;
+  
+  /**
+   *
+   * @var array holding the open and close tags of the error html 
+   */
+  protected $error_html_wrap;
+  
+  /**
+   *
+   * @var string holds the class name we give the container: error or message
+   */
+  protected $error_class;
+  
+  /**
+   *
+   * @var array holds an array of all the submitted values
+   */
+  protected $post_array;
 
-  /*
+  /**
    * instantiates the form validation object
+   * 
    * this is meant to be instantiated once per form submission
    *
    */
-
   public function __construct()
   {
-
     $this->post_array = $_POST;
 
     // clear the array
@@ -161,6 +187,24 @@ class xnau_FormValidation {
    */
   public function clear_field_error($field) {
     unset($this->errors[$field]);
+  }
+  
+  /**
+   * provides access to protected property values
+   * 
+   * @param string $name if the property
+   * @return mixed the property value
+   */
+  public function __get( $name )
+  {
+    if ( property_exists( get_class($this), $name ) ) {
+      
+      error_log(__METHOD__ . ' ' . sprintf(' getting protected property "%s" outside of class', $name ) );
+      
+      return $this->$name;
+    }
+    
+    return null;
   }
 
   /**
@@ -284,7 +328,7 @@ class xnau_FormValidation {
          * legacy databases. We test for that by looking for a field named 'email' 
          * in the incoming values.
          */
-        case ( $field->validation == 'email-regex' || ( $field->validation == 'email' && $field->name == 'email' ) ) :
+        case ( $field->validation === 'email-regex' || ( $field->validation === 'email' && $field->name === 'email' ) ) :
 
           $regex = '#^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$#i';
           break;
@@ -293,17 +337,21 @@ class xnau_FormValidation {
 
           $regex = $field->validation;
           break;
+        
+        case (is_bool($field->validation)) :
+          $regex = $field->validation ? '#.*#' : '#\Zx\A#';
+          break;
 
         /*
          * if it's not a regex, test to see if it's a valid field name for a match test
          */
-        case ( isset($this->post_array[strtolower($field->validation)]) ) :
+        case ( isset( $this->post_array[ $field->validation ] ) ) :
 
-          $test_value = $this->post_array[strtolower($field->validation)];
-          break;
-        
-        case (is_bool($field->validation)) :
-          $regex = $field->validation ? '#.*#' : '#\Zx\A#';
+          if ( is_array( $this->post_array[ $field->validation ] ) ) {
+            $test_value = filter_var_array( $this->post_array[ $field->validation ], FILTER_SANITIZE_STRING );
+          } else {
+            $test_value = filter_var( $this->post_array[ $field->validation ], FILTER_SANITIZE_STRING );
+          }
           break;
 
         default:
