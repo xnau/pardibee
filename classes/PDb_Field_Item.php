@@ -12,8 +12,7 @@
  * @version    2.9
  * @link       http://xnau.com/wordpress-plugins/
  */
-if ( !defined( 'ABSPATH' ) )
-  die;
+defined( 'ABSPATH' ) || exit;
 
 class PDb_Field_Item extends PDb_Form_Field_Def {
 
@@ -1239,7 +1238,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
             }
           }
           
-          $return = $this->make_link( $value, $url );
+          $return = empty( $url ) ? '' : $this->make_link( $value, $url );
           break;
 
         case 'text-line' :
@@ -1283,7 +1282,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
             
             $temp = $this->value();
             $this->set_value( $this->display_array_value() );
-            $return = sprintf( '<span %s>%s</span>', PDb_FormElement::class_attribute( $this->form_element() ), $this->make_link() );
+            $return = $this->make_link(); // sprintf( '<span %s>%s</span>', PDb_FormElement::class_attribute( $this->form_element() ), $this->make_link() );
             $this->set_value( $temp );
           } else {
             $return = $this->display_array_value();
