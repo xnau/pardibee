@@ -12,6 +12,8 @@
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
+defined( 'ABSPATH' ) || exit;
+
 class PDb_Form_Field_Def {
   
   /**
@@ -569,8 +571,18 @@ class PDb_Form_Field_Def {
    */
   public function get_attribute( $name )
   {
-    $attributes = $this->attributes();
-    return isset( $attributes[$name] ) ? $attributes[$name] : '';
+    return $this->has_attribute( $name ) ? $this->attributes[$name] : '';
+  }
+  
+  /**
+   * tells if the field has the named attribute value
+   * 
+   * @param string $name name of the attribute to get
+   * @return bool
+   */
+  public function has_attribute( $name )
+  {
+    return isset( $this->attributes[$name] );
   }
   
   /**
