@@ -19,6 +19,7 @@
  *
  */
 if ( ! defined( 'ABSPATH' ) ) die;
+
 abstract class xnau_CSV_Import {
 
   /**
