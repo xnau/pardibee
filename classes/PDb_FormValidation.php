@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -259,9 +259,15 @@ class PDb_FormValidation extends xnau_FormValidation {
         /*
          * if it's not a regex, test to see if it's a valid field name for a match test
          */
-        case ( isset( $this->post_array[strtolower( $validating_field->validation )] ) ) :
+        case ( isset( $this->post_array[ $validating_field->validation ] ) ) :
 
-          $test_value = $this->post_array[strtolower( $validating_field->validation )];
+          $fieldname = $validating_field->validation;
+          
+          if ( is_array( $this->post_array[ $fieldname ] ) ) {
+            $test_value = filter_var_array( $this->post_array[ $fieldname ], FILTER_SANITIZE_STRING );
+          } else {
+            $test_value = filter_var( $this->post_array[ $fieldname ], FILTER_SANITIZE_STRING );
+          }
           break;
 
         default:
