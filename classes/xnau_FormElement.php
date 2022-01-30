@@ -37,8 +37,7 @@
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
-if ( !defined( 'ABSPATH' ) )
-  die;
+defined( 'ABSPATH' ) || exit;
 
 abstract class xnau_FormElement {
 
@@ -937,10 +936,13 @@ abstract class xnau_FormElement {
     }
 
     list( $url, $title ) = $parts;
+    
+    $hide_clickable = isset( $this->attributes['hide_clickable'] );
+    unset( $this->attributes['hide_clickable'] );
 
     $this->_addline( '<div class="link-element">' );
 
-    $title = empty( $title ) ? '' : $title;
+    $title = strip_tags( empty( $title ) ? '' : $title );
 
     $this->attributes[ 'placeholder' ] = $link_placeholder;
 
@@ -951,7 +953,17 @@ abstract class xnau_FormElement {
     $this->attributes[ 'placeholder' ] = $linktext_placeholder;
 
     $this->attributes[ 'id' ] = $id . '-text';
-    $this->_addline( $this->_input_tag( 'text', htmlspecialchars( $title, ENT_QUOTES, 'UTF-8', false ), false ) . '</div>' );
+    
+    if ( $hide_clickable ) {
+      
+      unset( $this->attributes[ 'placeholder' ] );
+      $this->_addline( $this->_input_tag( 'hidden', '' ) . '</div>' );
+      
+    } else {
+      
+      $this->_addline( $this->_input_tag( 'text', htmlspecialchars( $title, ENT_QUOTES, 'UTF-8', false ), false ) . '</div>' ); 
+    }
+    
     $this->attributes[ 'id' ] = $id;
   }
 
