@@ -13,7 +13,7 @@
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
-defined( 'ABSPATH' ) || die( '-1' );
+defined( 'ABSPATH' ) || exit;
 
 class PDb_Admin_Notices {
 
