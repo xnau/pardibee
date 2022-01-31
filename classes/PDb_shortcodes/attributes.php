@@ -15,6 +15,8 @@
 
 namespace PDb_shortcodes;
 
+defined( 'ABSPATH' ) || exit;
+
 class attributes {
   
   /**
