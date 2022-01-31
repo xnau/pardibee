@@ -15,6 +15,8 @@
 
 namespace PDb_fields;
 
+defined( 'ABSPATH' ) || exit;
+
 class dynamic_value_update extends \WP_Background_Process {
 
   /**

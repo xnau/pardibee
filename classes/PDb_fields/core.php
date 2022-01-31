@@ -15,6 +15,8 @@
 
 namespace PDb_fields;
 
+defined( 'ABSPATH' ) || exit;
+
 abstract class core {
 
   /**

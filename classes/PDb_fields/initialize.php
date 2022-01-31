@@ -15,6 +15,8 @@
 
 namespace PDb_fields;
 
+defined( 'ABSPATH' ) || exit;
+
 class initialize {
 
   function __construct()

@@ -15,6 +15,8 @@
 
 namespace PDb_fields;
 
+defined( 'ABSPATH' ) || exit;
+
 class date_calc extends calculated_field {
 
   /**

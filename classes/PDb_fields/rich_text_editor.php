@@ -16,6 +16,8 @@ namespace PDb_fields;
 
 use Participants_Db;
 
+defined( 'ABSPATH' ) || exit;
+
 class rich_text_editor {
 
   /**

@@ -15,6 +15,8 @@
 
 namespace PDb_fields;
 
+defined( 'ABSPATH' ) || exit;
+
 abstract class calculated_field extends dynamic_db_field {
   
   use calculations;

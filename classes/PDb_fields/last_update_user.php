@@ -15,6 +15,8 @@
 
 namespace PDb_fields;
 
+defined( 'ABSPATH' ) || exit;
+
 class last_update_user {
   
   const fieldname = 'last_update_user';
