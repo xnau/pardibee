@@ -15,6 +15,8 @@
 
 namespace PDb_import;
 
+defined( 'ABSPATH' ) || exit;
+
 class process extends \WP_Background_Process {
 
   use store;

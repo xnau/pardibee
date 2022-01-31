@@ -15,6 +15,8 @@
 
 namespace PDb_import;
 
+defined( 'ABSPATH' ) || exit;
+
 class tally {
   
   /**
