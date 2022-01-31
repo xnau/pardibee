@@ -15,6 +15,8 @@
 
 namespace PDb_admin_list;
 
+defined( 'ABSPATH' ) || exit;
+
 class all_fields extends search_field_group {
   
   /**

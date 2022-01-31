@@ -17,6 +17,8 @@ namespace PDb_admin_list;
 use \PDb_List_Admin;
 use \Participants_Db;
 
+defined( 'ABSPATH' ) || exit;
+
 class process {
 
   /**

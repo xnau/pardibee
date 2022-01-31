@@ -17,6 +17,8 @@
 namespace PDb_admin_list;
 use \Participants_Db;
 
+defined( 'ABSPATH' ) || exit;
+
 class text_fields extends search_field_group {
   
   /**

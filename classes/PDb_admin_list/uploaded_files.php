@@ -15,6 +15,8 @@
 
 namespace PDb_admin_list;
 
+defined( 'ABSPATH' ) || exit;
+
 class uploaded_files {
 
   /**
