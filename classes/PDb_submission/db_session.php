@@ -15,6 +15,8 @@
 
 namespace PDb_submission;
 
+defined( 'ABSPATH' ) || exit;
+
 class db_session {
   
   /**

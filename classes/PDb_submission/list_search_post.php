@@ -15,6 +15,8 @@
 
 namespace PDb_submission;
 
+defined( 'ABSPATH' ) || exit;
+
 class list_search_post extends list_search_submission {
   
   /**

@@ -15,6 +15,9 @@
 
 namespace PDb_submission;
 
+defined( 'ABSPATH' ) || exit;
+
+
 class validation_error_message {
 
   /**

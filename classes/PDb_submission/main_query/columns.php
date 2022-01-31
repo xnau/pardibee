@@ -16,6 +16,8 @@
 namespace PDb_submission\main_query;
 use Participants_Db;
 
+defined( 'ABSPATH' ) || exit;
+
 class columns {
   
   /**

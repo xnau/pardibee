@@ -15,6 +15,8 @@
 
 namespace PDb_submission\main_query;
 
+defined( 'ABSPATH' ) || exit;
+
 class insert_query extends base_query {
 
   /**

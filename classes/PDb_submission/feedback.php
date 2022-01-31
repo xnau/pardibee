@@ -17,6 +17,8 @@
 
 namespace PDb_submission;
 
+defined( 'ABSPATH' ) || exit;
+
 class feedback {
   
   /**

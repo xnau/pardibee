@@ -18,6 +18,8 @@ namespace PDb_submission\main_query;
 use \Participants_Db,
     \PDb_Date_Parse;
 
+defined( 'ABSPATH' ) || exit;
+
 abstract class base_column {
 
   /**

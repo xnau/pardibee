@@ -16,6 +16,8 @@
 namespace PDb_submission;
 use Participants_Db;
 
+defined( 'ABSPATH' ) || exit;
+
 class list_search_submission {
    /**
    * @array holds the post input

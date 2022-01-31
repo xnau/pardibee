@@ -15,6 +15,8 @@
 
 namespace PDb_submission\match;
 
+defined( 'ABSPATH' ) || exit;
+
 abstract class record {
 
   /**

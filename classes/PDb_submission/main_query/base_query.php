@@ -15,6 +15,8 @@
 
 namespace PDb_submission\main_query;
 
+defined( 'ABSPATH' ) || exit;
+
 use \Participants_Db as PDB;
 
 if ( !defined( 'ABSPATH' ) )
