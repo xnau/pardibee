@@ -128,22 +128,17 @@ class xnau_Template_Email {
   protected function _mail( $recipients, $subject, $body )
   {
     if ( PDB_DEBUG ) {
-      Participants_Db::debug_log( __METHOD__ . '
-      
-context: '. $this->context . '
-header: ' . $this->email_header() . '
-to: ' . $recipients . ' 
-attachments: ' . print_r(  $this->attachments,1 ) . '
-subj.: ' . $subject . ' 
-message:
-' . $body
-            );
+      $attachments = 'attachments: ' . ( empty( $this->attachments ) ? 'none' : print_r(  $this->attachments,1 ) );
+      $log = array( __METHOD__ . ' ', 'context: '. $this->context, $this->email_header(), 'to: ' . $recipients, $attachments, 'subj.: ' . $subject, 'message:', $body );
+      Participants_Db::debug_log( implode( "\r\n", $log ) );
     }
 
     $sent = wp_mail( $recipients, $subject, $body, $this->email_header(), $this->attachments );
 
-    if ( false === $sent )
+    if ( false === $sent ) {
       Participants_Db::debug_log( __METHOD__ . ' sending failed for: ' . $recipients . ' while doing: ' . $this->context );
+    }
+    
     return $sent;
   }
 
