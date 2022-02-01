@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 5.8.1
+Tested up to: 5.9
 Requires PHP: 5.6
 Stable tag: 1.9.7.8
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -290,14 +290,20 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
-= 1.9.8 =
+= 2.0 =
 New Features:
 * "Mass Edit" on the admin list participants page
 * new field types: Numeric Calculation and Date Calculation
 * CSV imports in the background, avoids timeouts on very large imports
+* option to delete the associated uploaded files when record deleted
+* CSV import with "null" value in a field clears the field's db value
+* uploaded files deleted on CSV import when upload field value cleared
 * recently used fields convenience list in the admin list filter selector
 * new Last Updater ID field records the id of the last user to update a record
 * hidden field value can be determined by literal string in the shortcode
+* numeric value displays now localized
+* new setting to use the private ID to display single records
+* compatibility with block-based WP themes
 
 Also:
 * many minor bug fixes and code optimizations
@@ -1435,7 +1441,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-1.9.8 is a new feature and bug fix release
+2.0 is a major feature upgrade release. We recommend you back up your files and database before upgrading.
 
 == Plugin Support ==
 
