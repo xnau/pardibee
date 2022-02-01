@@ -14,7 +14,6 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-
 class PDb_Tag_Template {
 
   /**
