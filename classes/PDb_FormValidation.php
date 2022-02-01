@@ -231,10 +231,8 @@ class PDb_FormValidation extends xnau_FormValidation {
         case ( 'captcha' === strtolower( $validating_field->validation ) ) :
 
           $validating_field->value = isset( $validating_field->value[1] ) ? $validating_field->value[1] : '';
-
-          // grab the value and the validation key
-          list($info, $v) = (isset( $this->post_array[$validating_field->name][1] ) ? $this->post_array[$validating_field->name] : array($this->post_array[$validating_field->name][0], $validating_field->value));
-          $info = json_decode( urldecode( $info ) );
+          
+          $info = json_decode( urldecode( filter_var( $this->post_array[$validating_field->name][0], FILTER_SANITIZE_STRING ) ) );
 
           /**
            * @since 1.6.3
