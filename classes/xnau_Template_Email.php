@@ -128,7 +128,7 @@ class xnau_Template_Email {
   protected function _mail( $recipients, $subject, $body )
   {
     if ( PDB_DEBUG ) {
-      $attachments = 'attachments: ' . ( empty( $this->attachments ) ? 'none' : print_r(  $this->attachments,1 ) );
+      $attachments = 'attachments: ' . ( count( array_filter( $this->attachments ) ) === 0 ? 'none' : print_r(  $this->attachments,1 ) );
       $log = array( __METHOD__ . ' ', 'context: '. $this->context, $this->email_header(), 'to: ' . $recipients, $attachments, 'subj.: ' . $subject, 'message:', $body );
       Participants_Db::debug_log( implode( "\r\n", $log ) );
     }
