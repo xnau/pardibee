@@ -1887,6 +1887,19 @@ class PDb_Base {
     $php_timezone = ini_get( 'date.timezone' );
     return empty( $php_timezone ) ? 'UTC' : $php_timezone;
   }
+  
+  /**
+   * provides a UTC timestamp string for db queries
+   * 
+   * @see issue #2754
+   * @return string mysql timestamp
+   */
+  public static function timestamp_now()
+  {
+    $use_utc_tz = Participants_Db::plugin_setting_is_true('db_timestamps_use_local_tz', false ) === false;
+    
+    return Participants_Db::apply_filters( 'timestamp_now', current_time( 'mysql', $use_utc_tz ) );
+  }
 
   /**
    * collect a list of all the plugin shortcodes present in the content
@@ -2221,6 +2234,18 @@ class PDb_Base {
       Participants_Db::update_plugin_setting('registration_page', self::get_id_by_slug( $regpage ) );
 
       Participants_Db::$plugin_options['registration_page'] = self::get_id_by_slug( $regpage );
+    }
+  }
+  
+  /**
+   * checks to make sure the plugin uploads directory is writable 
+   */
+  protected static function check_uploads_directory()
+  {
+    if ( !is_writable( Participants_Db::files_path() ) ) {
+      self::debug_log( ' The configured uploads directory is not writable: ' . Participants_Db::files_path() );
+      
+      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '</p>', '', false);
     }
   }
 
