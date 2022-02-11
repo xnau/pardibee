@@ -47,18 +47,25 @@ trait calculations {
      */
     $this->result = \Participants_Db::apply_filters( 'calculated_field_calc_value', false, $replacement_data, $this->field );
 
-    if ( $this->result === false ) {
+    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
+      \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->template->calc_body(), 3 );
+      ob_start();
+      var_dump( $replacement_data );
+      \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
+    }
 
-      if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
-        \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->template->calc_body(), 3 );
-        ob_start();
-        var_dump( $replacement_data );
-        \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
-      }
+    if ( $this->result === false ) {
       
       $this->complete = true;
 
-      $this->build_calc_list( $replacement_data );
+      /**
+       * @filter pdb-calculated_field_replacement_data
+       * 
+       * @param array $replacement_data the array of data for use in replacing the template tags
+       * @param \PDb_Field_Item $field the current field
+       * @return array the replacement data array
+       */
+      $this->build_calc_list( \Participants_Db::apply_filters( 'calculated_field_replacement_data', $replacement_data, $this->field ) );
 
       $this->result = $this->complete ? $this->get_calculated_value() : '';
 
