@@ -609,7 +609,7 @@ abstract class xnau_FormElement {
   {
 
     $this->add_class( 'timestamp_field' );
-
+    
     // test for a timestamp
     if ( is_int( $this->value ) or ( (string) (int) $this->value === $this->value) ) {
       $this->value = $this->format_date( $this->value, true );
@@ -1708,21 +1708,21 @@ abstract class xnau_FormElement {
    */
   public static function format_date( $timestamp, $time = false )
   {
-    // if it's not a timestamp, we attempt to convert it to one
-    if ( !preg_match( '#^[0-9-]+$#', $timestamp ) )
-      $timestamp = strtotime( $timestamp );
-
-    if ( preg_match( '#^[0-9-]+$#', $timestamp ) ) {
-      $format = get_option( 'date_format' );
-
-      if ( $time ) {
-        $format .= ' ' . get_option( 'time_format' );
-      }
-
-      return date_i18n( $format, $timestamp );
-    } else {
-      // not a timestamp: return unchanged
+    $uts = PDb_Date_Parse::timestamp($timestamp);
+    
+    if ( $uts === false ) {
+      
+      Participants_Db::debug_log( __METHOD__ . ' unable to parse date: ' . $timestamp, 1 );
       return $timestamp;
+    }
+    
+    if ( $time ) {
+      
+      return PDb_Date_Display::get_date_time( $uts );
+    
+    } else {
+      
+      return PDb_Date_Display::get_date( $uts );
     }
   }
 
