@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database - 1.7.1.12\n"
-"POT-Creation-Date: 2020-03-04 14:42-1000\n"
-"PO-Revision-Date: 2020-10-17 20:40-1000\n"
+"POT-Creation-Date: 2022-01-31 18:15-1000\n"
+"PO-Revision-Date: 2022-01-31 18:58-1000\n"
 "Last-Translator: \n"
 "Language-Team: CodHa - Mohsen Azarteymoor <info@codha.ir>\n"
 "Language: fa_IR\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-WPHeader: participants-database.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -20,27 +20,27 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: classes/PDb_Aux_Plugin.php:390
+#: classes/PDb_Aux_Plugin.php:369
 msgid "Support"
 msgstr "پشتیبانی"
 
-#: classes/PDb_Aux_Plugin.php:401
+#: classes/PDb_Aux_Plugin.php:380
 #, php-format
 msgctxt "displays the name and version of the plugin"
 msgid "%s version %s"
 msgstr "%s نگارش  %s"
 
-#: classes/PDb_Aux_Plugin.php:402
+#: classes/PDb_Aux_Plugin.php:381
 #, php-format
 msgctxt "displays the plugin author name"
 msgid "Authored by %s"
 msgstr "نگارش یافته توسط %s"
 
-#: classes/PDb_Aux_Plugin.php:421 classes/PDb_Settings.php:32
+#: classes/PDb_Aux_Plugin.php:400 classes/PDb_Settings.php:32
 msgid "General Settings"
 msgstr "تنظیمات عمومی"
 
-#: classes/PDb_Base.php:1599
+#: classes/PDb_Base.php:1872
 #, fuzzy, php-format
 #| msgid ""
 #| "Participants Database requires PHP version %s to function properly, you "
@@ -55,91 +55,73 @@ msgstr ""
 "PHP شما %s می باشد، لطفا نسخه PHP خود را ارتقاء دهید. افزونه به طور خودکار "
 "غیر فعال شده است."
 
-#: classes/PDb_CSV_Import.php:75
-msgid "New columns imported from the CSV file."
-msgstr "ستون های تازه ای از فایل CSV درون ریزی شد."
+#: classes/PDb_CSV_Import.php:187
+msgid "Incorrect column name found in CSV:"
+msgid_plural "Incorrect column names found in CSV:"
+msgstr[0] ""
 
-#: classes/PDb_Debug.php:52
+#: classes/PDb_Debug.php:54
 msgid "Debugging Log"
 msgstr ""
 
-#: classes/PDb_Debug.php:203
+#: classes/PDb_Debug.php:217
 #, fuzzy
 #| msgctxt "submit button label"
 #| msgid "Clear"
 msgid "Clear"
 msgstr "پاک کردن"
 
-#: classes/PDb_Debug.php:204
+#: classes/PDb_Debug.php:218
 msgid "Refresh"
 msgstr ""
 
-#: classes/PDb_Debug.php:208
+#: classes/PDb_Debug.php:222
 #, php-format
 msgid "Log file: %s"
 msgstr ""
 
-#: classes/PDb_Debug.php:246
+#: classes/PDb_Debug.php:260
 #, php-format
 msgid ""
 "Unable to open the debugging log file: %s Check the \"File Upload Location\" "
 "setting."
 msgstr ""
 
-#: classes/PDb_Debug.php:248
+#: classes/PDb_Debug.php:262
 msgid "Debugging"
 msgstr ""
 
-#: classes/PDb_Debug.php:421
+#: classes/PDb_Debug.php:435
 #, php-format
 msgid "Log file initiated at: %s"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:125
+#: classes/PDb_Field_Editor.php:154
 msgctxt "label for a \"close\" control"
 msgid "Close"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:126
+#: classes/PDb_Field_Editor.php:155
 msgctxt "label for an \"open\" control"
 msgid "Open for editing"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:287
+#: classes/PDb_Field_Editor.php:335
 msgid "You must define options for this field"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:686
+#: classes/PDb_Field_Editor.php:761
 msgid "Select this field"
 msgstr ""
 
-#: classes/PDb_Field_Editor.php:704
+#: classes/PDb_Field_Editor.php:780
 #, fuzzy
 #| msgctxt "submit button label"
 #| msgid "Delete Checked"
 msgid "Delete this field"
 msgstr "حذف انتخاب"
 
-#: classes/PDb_File_Uploads.php:65
-msgid ""
-"There is something wrong with the file you tried to upload. Try another."
-msgstr ""
-"مشکلی در زمان آپلود فایل انتخابی شما رخ داده است. لطفا فایل دیگری را امتحان "
-"کنید."
-
-#: classes/PDb_File_Uploads.php:80 classes/PDb_File_Uploads.php:117
-#, php-format
-msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
-msgstr ""
-"برای \"%s\", شما تنها می توانید فایل هایی شبیه به JPEGs, GIFs یا PNGs آپلود "
-"نمایید."
-
-#: classes/PDb_File_Uploads.php:82
-#, php-format
-msgid "The file selected for \"%s\" must be one of these types: %s. "
-msgstr "فایل انتخاب شده برای \"%s\" باید یکی از این نوع فایل ها باشد: %s. "
-
-#: classes/PDb_File_Uploads.php:129
+#: classes/PDb_File_Uploads.php:103 classes/PDb_File_Uploads.php:168
 #, php-format
 msgid ""
 "The file you tried to upload is too large. The file must be smaller than %sK."
@@ -147,101 +129,116 @@ msgstr ""
 "فایل آپلودی مورد نظر شما بزرگ است. اندازه فایل باید کوچتر از %s کیلوبایت "
 "باشد."
 
-#: classes/PDb_File_Uploads.php:140
+#: classes/PDb_File_Uploads.php:110
+msgid ""
+"There is something wrong with the file you tried to upload. Try another."
+msgstr ""
+"مشکلی در زمان آپلود فایل انتخابی شما رخ داده است. لطفا فایل دیگری را امتحان "
+"کنید."
+
+#: classes/PDb_File_Uploads.php:123 classes/PDb_File_Uploads.php:158
+#, php-format
+msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
+msgstr ""
+"برای \"%s\", شما تنها می توانید فایل هایی شبیه به JPEGs, GIFs یا PNGs آپلود "
+"نمایید."
+
+#: classes/PDb_File_Uploads.php:125
+#, php-format
+msgid "The file selected for \"%s\" must be one of these types: %s. "
+msgstr "فایل انتخاب شده برای \"%s\" باید یکی از این نوع فایل ها باشد: %s. "
+
+#: classes/PDb_File_Uploads.php:177
 msgid "The file could not be saved."
 msgstr "فایل ذخیره نمی شود."
 
-#: classes/PDb_FormElement.php:390 classes/PDb_List_Admin.php:1015
-#: classes/PDb_List_Admin.php:1535 classes/xnau_FormElement.php:1080
+#: classes/PDb_FormElement.php:415 classes/PDb_List_Admin.php:819
+#: classes/PDb_List_Admin.php:1024 classes/xnau_FormElement.php:1065
 msgid "delete"
 msgstr "حذف"
 
-#: classes/PDb_FormElement.php:713
+#: classes/PDb_FormElement.php:794
 msgid "Text-line"
 msgstr ""
 
-#: classes/PDb_FormElement.php:714
+#: classes/PDb_FormElement.php:795
 msgid "Text Area"
 msgstr ""
 
-#: classes/PDb_FormElement.php:715
+#: classes/PDb_FormElement.php:796
 msgid "Rich Text"
 msgstr ""
 
-#: classes/PDb_FormElement.php:716
+#: classes/PDb_FormElement.php:797
 msgid "Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:717
+#: classes/PDb_FormElement.php:798
 msgid "Radio Buttons"
 msgstr ""
 
-#: classes/PDb_FormElement.php:718
+#: classes/PDb_FormElement.php:799
 msgid "Dropdown List"
 msgstr ""
 
-#: classes/PDb_FormElement.php:719
+#: classes/PDb_FormElement.php:800
 msgid "Date Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:720
+#: classes/PDb_FormElement.php:801
 msgid "Numeric"
 msgstr ""
 
-#: classes/PDb_FormElement.php:721
+#: classes/PDb_FormElement.php:802
 msgid "Decimal"
 msgstr ""
 
-#: classes/PDb_FormElement.php:722
+#: classes/PDb_FormElement.php:803
 msgid "Currency"
 msgstr ""
 
-#: classes/PDb_FormElement.php:723
+#: classes/PDb_FormElement.php:804
 msgid "Dropdown/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:724
+#: classes/PDb_FormElement.php:805
 msgid "Multiselect Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:725
+#: classes/PDb_FormElement.php:806
 msgid "Multiselect Dropdown"
 msgstr ""
 
-#: classes/PDb_FormElement.php:726
+#: classes/PDb_FormElement.php:807
 msgid "Radio Buttons/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:727
+#: classes/PDb_FormElement.php:808
 msgid "Multiselect/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:728
+#: classes/PDb_FormElement.php:809
 msgid "Link Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:729
+#: classes/PDb_FormElement.php:810
 msgid "Image Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:730
+#: classes/PDb_FormElement.php:811
 msgid "File Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:731
+#: classes/PDb_FormElement.php:812
 msgid "Hidden Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:732
+#: classes/PDb_FormElement.php:813
 msgid "Password Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:733
+#: classes/PDb_FormElement.php:814
 msgid "CAPTCHA"
-msgstr ""
-
-#: classes/PDb_FormElement.php:734
-msgid "Placeholder"
 msgstr ""
 
 #: classes/PDb_FormValidation.php:53
@@ -260,150 +257,150 @@ msgstr "ایمیل"
 msgid "regex/match"
 msgstr ""
 
-#: classes/PDb_Init.php:1139
+#: classes/PDb_Init.php:1200
 msgid "Participant Info"
 msgstr "اطلاعات مشترک"
 
-#: classes/PDb_Init.php:1140
+#: classes/PDb_Init.php:1201
 msgid "Personal Info"
 msgstr "اطلاعات شخصی"
 
-#: classes/PDb_Init.php:1141
+#: classes/PDb_Init.php:1202
 msgid "Administrative Info"
 msgstr "اطلاعات مدیریتی"
 
-#: classes/PDb_Init.php:1142
+#: classes/PDb_Init.php:1203
 msgid "Record Info"
 msgstr "اطلاعات رکورد"
 
-#: classes/PDb_List.php:440 templates/pdb-list-bootstrap.php:35
+#: classes/PDb_List.php:475 templates/pdb-list-bootstrap.php:35
 #: templates/pdb-list-detailed.php:32 templates/pdb-list-flexbox.php:15
 #: templates/pdb-list-responsive.php:18 templates/pdb-search-default.php:22
 msgid "Please select a column to search in."
 msgstr "لطفا یک ستون را برای جستجو در آن انتخاب کنید."
 
-#: classes/PDb_List.php:441 templates/pdb-list-bootstrap.php:36
+#: classes/PDb_List.php:476 templates/pdb-list-bootstrap.php:36
 #: templates/pdb-list-detailed.php:33 templates/pdb-list-flexbox.php:16
 #: templates/pdb-list-responsive.php:19 templates/pdb-search-default.php:23
 msgid "Please type in something to search for."
 msgstr "لطفا چیزی را برای جستجو تایپ کنید."
 
-#: classes/PDb_List.php:449 templates/pdb-list-bootstrap.php:46
+#: classes/PDb_List.php:484 templates/pdb-list-bootstrap.php:46
 #: templates/pdb-list-detailed.php:49 templates/pdb-list-flexbox.php:24
 #: templates/pdb-list-responsive.php:27 templates/pdb-search-default.php:35
 msgid "Search"
 msgstr "جستجو"
 
-#: classes/PDb_List.php:463 classes/PDb_List_Admin.php:948
+#: classes/PDb_List.php:498 classes/PDb_List_Admin.php:442
 #: templates/pdb-list-bootstrap.php:63 templates/pdb-list-detailed.php:98
 #: templates/pdb-list-flexbox.php:44 templates/pdb-list-responsive.php:47
 #: templates/pdb-search-default.php:63
 msgid "Sort by"
 msgstr "مرتب سازی بر اساس"
 
-#: classes/PDb_List.php:572
+#: classes/PDb_List.php:636
 msgid "select"
 msgstr "انتخاب"
 
-#: classes/PDb_List.php:745 classes/PDb_List_Admin.php:963
-#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
+#: classes/PDb_List.php:821 classes/PDb_List_Admin.php:457
+#: classes/PDb_Settings.php:836 classes/PDb_Settings.php:1383
 msgid "Ascending"
 msgstr "صعودی"
 
-#: classes/PDb_List.php:746 classes/PDb_List_Admin.php:964
-#: classes/PDb_Settings.php:837 classes/PDb_Settings.php:1352
+#: classes/PDb_List.php:822 classes/PDb_List_Admin.php:458
+#: classes/PDb_Settings.php:836 classes/PDb_Settings.php:1383
 msgid "Descending"
 msgstr "نزولی"
 
-#: classes/PDb_List.php:1234
+#: classes/PDb_List.php:1264
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms."
 msgstr ""
 
-#: classes/PDb_List.php:1235 classes/PDb_List_Admin.php:1251
+#: classes/PDb_List.php:1265 classes/PDb_List_Admin.php:725
 msgid "Download CSV for this list"
 msgstr "دانلود فایل CSV"
 
-#: classes/PDb_List.php:1240 classes/PDb_List_Admin.php:1252
+#: classes/PDb_List.php:1270 classes/PDb_List_Admin.php:726
 msgid "Include field titles"
 msgstr "شامل عناوین فیلد ها شود"
 
-#: classes/PDb_List.php:1258 classes/PDb_List_Admin.php:1249
+#: classes/PDb_List.php:1289 classes/PDb_List_Admin.php:723
 msgid "File Name"
 msgstr "نام فایل"
 
-#: classes/PDb_List.php:1357 classes/PDb_List_Admin.php:1632
+#: classes/PDb_List.php:1404 classes/PDb_List_Admin.php:1106
 msgctxt "submit button label"
 msgid "Delete Checked"
 msgstr "حذف انتخاب"
 
-#: classes/PDb_List.php:1358 classes/PDb_List_Admin.php:1633
+#: classes/PDb_List.php:1405 classes/PDb_List_Admin.php:1107
 msgctxt "submit button label"
 msgid "Change"
 msgstr "تغییر دادن"
 
-#: classes/PDb_List.php:1359 classes/PDb_List_Admin.php:1634
+#: classes/PDb_List.php:1406 classes/PDb_List_Admin.php:1108
 msgctxt "submit button label"
 msgid "Sort"
 msgstr "مرتب سازی"
 
-#: classes/PDb_List.php:1360 classes/PDb_List_Admin.php:1635
+#: classes/PDb_List.php:1407 classes/PDb_List_Admin.php:1109
 msgctxt "submit button label"
 msgid "Filter"
 msgstr "فیلتر"
 
-#: classes/PDb_List.php:1361 classes/PDb_List_Admin.php:1636
+#: classes/PDb_List.php:1408 classes/PDb_List_Admin.php:1110
 msgctxt "submit button label"
 msgid "Clear"
 msgstr "پاک کردن"
 
-#: classes/PDb_List.php:1362 classes/PDb_List_Admin.php:1637
+#: classes/PDb_List.php:1409 classes/PDb_List_Admin.php:1111
 msgctxt "search button label"
 msgid "Search"
 msgstr "جستجو"
 
-#: classes/PDb_List_Admin.php:135
+#: classes/PDb_List_Admin.php:106
 msgid "Do you really want to delete the selected record?"
 msgstr "آیا واقعا می خواهید رکورد انتخاب شده حذف گردد؟"
 
-#: classes/PDb_List_Admin.php:136
+#: classes/PDb_List_Admin.php:107
 msgid "Do you really want to delete the selected records?"
 msgstr "آیا واقعا می خواهید رکورد های انتخاب شده حذف گردند؟"
 
-#: classes/PDb_List_Admin.php:139
+#: classes/PDb_List_Admin.php:110
 msgid "Approve the selected record?"
 msgstr "آیا رکورد انتخاب شده را تایید می کنید؟"
 
-#: classes/PDb_List_Admin.php:140
+#: classes/PDb_List_Admin.php:111
 msgid "Approve the selected records?"
 msgstr "آیا رکورد های انتخاب شده را تایید می کنید؟"
 
-#: classes/PDb_List_Admin.php:143
+#: classes/PDb_List_Admin.php:114
 msgid "Unapprove the selected record?"
 msgstr "آیا رکورد انتخاب شده را تایید نمی کنید؟"
 
-#: classes/PDb_List_Admin.php:144
+#: classes/PDb_List_Admin.php:115
 msgid "Unapprove the selected records?"
 msgstr "آیا رکورد های انتخاب شده را تایید نمی کنید؟"
 
-#: classes/PDb_List_Admin.php:147
+#: classes/PDb_List_Admin.php:118
 msgid "Send the signup email to the selected record?"
 msgstr "آیا ایمیل ثبت نام برای رکورد انتخاب شده ارسال گردد؟"
 
-#: classes/PDb_List_Admin.php:148
+#: classes/PDb_List_Admin.php:119
 msgid "Send the signup email to the selected records?"
 msgstr "آیا ایمیل ثبت نام برای رکورد های انتخاب شده ارسال گردد؟"
 
-#: classes/PDb_List_Admin.php:151
+#: classes/PDb_List_Admin.php:122
 msgid "Send the \"resend link\" email to the selected record?"
 msgstr "آیا لینک ارسال مجدد برای رکورد انتخاب شده ارسال گردد؟"
 
-#: classes/PDb_List_Admin.php:152
+#: classes/PDb_List_Admin.php:123
 msgid "Send the \"resend link\" email to the selected records?"
 msgstr "آیا لینک ارسال مجدد برای رکورد های انتخاب شده ارسال گردد؟"
 
-#: classes/PDb_List_Admin.php:154
+#: classes/PDb_List_Admin.php:125
 #, php-format
 msgid ""
 "The number of selected records exceeds the %s email send limit.%s Only the "
@@ -412,100 +409,67 @@ msgstr ""
 "تعداد رکورد های انتخابی بیش از حد مجاز %s ایمیل می باشد.%s تنها %s ایمیل اول "
 "ارسال می شود."
 
-#: classes/PDb_List_Admin.php:487
-msgid "Record delete successful."
-msgstr "رکورد با موفقیت حذف شد."
-
-#: classes/PDb_List_Admin.php:508
-#, php-format
-msgctxt "number of records with approval statuses set"
-msgid "Approval status for %d records has been updated."
-msgstr "وضعیت تایید برای %d رکورد بروز رسانی شد."
-
-#: classes/PDb_List_Admin.php:533 classes/PDb_List_Admin.php:555
-#, fuzzy, php-format
-#| msgctxt "number of emails sent"
-#| msgid "%d emails were sent."
-msgctxt "number of emails sent"
-msgid "%d email was sent."
-msgid_plural "%d emails were sent."
-msgstr[0] "%d ایمیل ارسال شد."
-
-#: classes/PDb_List_Admin.php:886
+#: classes/PDb_List_Admin.php:374
 msgid "Show only records with"
 msgstr "نمایش فقط رکورد هایی با"
 
-#: classes/PDb_List_Admin.php:897
+#: classes/PDb_List_Admin.php:390
 msgctxt ""
 "joins two search terms, such as in \"Show only records with last name that "
 "is Smith\""
 msgid "that"
 msgstr "که"
 
-#: classes/PDb_List_Admin.php:904
+#: classes/PDb_List_Admin.php:397
 msgid "is"
 msgstr "هست"
 
-#: classes/PDb_List_Admin.php:905
+#: classes/PDb_List_Admin.php:398
 msgid "is not"
 msgstr "نیست"
 
-#: classes/PDb_List_Admin.php:906
+#: classes/PDb_List_Admin.php:399
 msgid "contains"
 msgstr "شامل می شود"
 
-#: classes/PDb_List_Admin.php:907
+#: classes/PDb_List_Admin.php:400
 msgid "doesn&#39;t contain"
 msgstr "شامل نمی شود"
 
-#: classes/PDb_List_Admin.php:908
+#: classes/PDb_List_Admin.php:401
 msgid "is greater than"
 msgstr "بزرگتر است از"
 
-#: classes/PDb_List_Admin.php:909
+#: classes/PDb_List_Admin.php:402
 msgid "is less than"
 msgstr "کوچکتر است از"
 
-#: classes/PDb_List_Admin.php:923
+#: classes/PDb_List_Admin.php:417
 msgid "and"
 msgstr "و"
 
-#: classes/PDb_List_Admin.php:924
+#: classes/PDb_List_Admin.php:418
 msgid "or"
 msgstr "یا"
 
-#: classes/PDb_List_Admin.php:943
+#: classes/PDb_List_Admin.php:437
 msgid "Number of filters to use: "
 msgstr "تعداد فیلتر های مورد استفاده:"
 
-#: classes/PDb_List_Admin.php:975
-#, php-format
-msgid "%s record found, sorted by: %s."
-msgid_plural "%s records found, sorted by: %s."
-msgstr[0] "%s رکورد یافت شد, مرتب سازی بر اساس %s."
-
-#: classes/PDb_List_Admin.php:1007 classes/PDb_List_Admin.php:1536
-msgid "approve"
-msgstr "تایید کردن"
-
-#: classes/PDb_List_Admin.php:1008 classes/PDb_List_Admin.php:1537
-msgid "unapprove"
-msgstr "تایید نکردن"
-
-#: classes/PDb_List_Admin.php:1060
+#: classes/PDb_List_Admin.php:521
 #, php-format
 msgid "Show %s items per page."
 msgstr "نمایش %s آیتم در هر صفحه."
 
-#: classes/PDb_List_Admin.php:1119
+#: classes/PDb_List_Admin.php:593
 msgid "Edit"
 msgstr "ویرایش"
 
-#: classes/PDb_List_Admin.php:1213
+#: classes/PDb_List_Admin.php:687
 msgid "No records found"
 msgstr "هیچ رکوردی یافت نشد"
 
-#: classes/PDb_List_Admin.php:1255
+#: classes/PDb_List_Admin.php:729
 msgid ""
 "This will download the whole list of participants that match your search "
 "terms, and in the order specified by the sort. The export will include "
@@ -517,30 +481,44 @@ msgstr ""
 "رکورد های موجود در تمامی صفحات لیست می شود. فیلد های مورد لحاظ شده در این "
 "فایل در ستون \"CSV\" در بخش مدیریت فیلد های دیتابیس تعریف شده است."
 
-#: classes/PDb_List_Admin.php:1533
+#: classes/PDb_List_Admin.php:784
+#, php-format
+msgid "%s record found, sorted by: %s."
+msgid_plural "%s records found, sorted by: %s."
+msgstr[0] "%s رکورد یافت شد, مرتب سازی بر اساس %s."
+
+#: classes/PDb_List_Admin.php:811 classes/PDb_List_Admin.php:1025
+msgid "approve"
+msgstr "تایید کردن"
+
+#: classes/PDb_List_Admin.php:812 classes/PDb_List_Admin.php:1026
+msgid "unapprove"
+msgstr "تایید نکردن"
+
+#: classes/PDb_List_Admin.php:1022
 msgid "PDb Admin List With Selected: "
 msgstr "لیست مدیریت دیتابیس مشترکین انتخاب شده با:"
 
-#: classes/PDb_List_Admin.php:1538
+#: classes/PDb_List_Admin.php:1027
 msgid "send signup email"
 msgstr "ارسال ایمیل ثبت نام"
 
-#: classes/PDb_List_Admin.php:1638 participants-database.php:3479
+#: classes/PDb_List_Admin.php:1112 participants-database.php:3110
 msgid "Apply"
 msgstr "اعمال"
 
-#: classes/PDb_List_Admin.php:1639
+#: classes/PDb_List_Admin.php:1113
 msgctxt ""
 "phrase used just before naming the action to perform on the selected items"
 msgid "With selected"
 msgstr "با انتخاب"
 
-#: classes/PDb_Manage_Fields.php:74 participants-database.php:3675
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3320
 msgid "Manage Database Fields"
 msgstr "مدیریت فیلد های دیتابیس"
 
 #: classes/PDb_Manage_Fields.php:76 classes/PDb_Manage_Fields.php:84
-#: classes/PDb_Manage_Fields.php:194
+#: classes/PDb_Manage_Fields.php:217
 msgid "Field Groups"
 msgstr "گروه های فیلد"
 
@@ -560,217 +538,217 @@ msgstr "فیلد ها"
 msgid "No fields in this group"
 msgstr "هیچ فیلدی در این گروه موجود نمی باشد"
 
-#: classes/PDb_Manage_Fields.php:200
+#: classes/PDb_Manage_Fields.php:223
 msgid "Edit / Add / Remove Field Groups"
 msgstr "ویرایش / افزودن / حذف گروه های فیلد"
 
-#: classes/PDb_Manage_Fields.php:231 classes/PDb_Manage_Fields.php:614
+#: classes/PDb_Manage_Fields.php:254 classes/PDb_Manage_Fields.php:646
 msgid "group"
 msgstr "گروه"
 
-#: classes/PDb_Manage_Fields.php:233
+#: classes/PDb_Manage_Fields.php:256
 #, fuzzy
 #| msgid "field"
 msgid "field count"
 msgstr "فیلد"
 
-#: classes/PDb_Manage_Fields.php:380
+#: classes/PDb_Manage_Fields.php:412
 msgid "Cancel"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:428 classes/PDb_Manage_Fields.php:441
+#: classes/PDb_Manage_Fields.php:460 classes/PDb_Manage_Fields.php:473
 msgid "Add to CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:429 classes/PDb_Manage_Fields.php:442
+#: classes/PDb_Manage_Fields.php:461 classes/PDb_Manage_Fields.php:474
 msgid "Remove from CSV"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:440
+#: classes/PDb_Manage_Fields.php:472
 #, fuzzy
 #| msgid "Add Group"
 msgid "Assign Group"
 msgstr "افزودن گروه"
 
-#: classes/PDb_Manage_Fields.php:443
+#: classes/PDb_Manage_Fields.php:475
 #, fuzzy
 #| msgid "Add Group"
 msgid "Add to Signup"
 msgstr "افزودن گروه"
 
-#: classes/PDb_Manage_Fields.php:444
+#: classes/PDb_Manage_Fields.php:476
 msgid "Remove from Signup"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:537
+#: classes/PDb_Manage_Fields.php:569
 msgid "Public"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:538
+#: classes/PDb_Manage_Fields.php:570
 msgid "Private"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:539
+#: classes/PDb_Manage_Fields.php:571
 #, fuzzy
 #| msgid "Admin"
 msgctxt "short form of \"administrator\""
 msgid "Admin"
 msgstr "مدیریت"
 
-#: classes/PDb_Manage_Fields.php:610
+#: classes/PDb_Manage_Fields.php:642
 msgid "Update Fields"
 msgstr "بروز رسانی فیلد ها"
 
-#: classes/PDb_Manage_Fields.php:611
+#: classes/PDb_Manage_Fields.php:643
 msgid "Update Groups"
 msgstr "بروز رسانی گروه ها"
 
-#: classes/PDb_Manage_Fields.php:612
+#: classes/PDb_Manage_Fields.php:644
 msgid "Add Field"
 msgstr "افزودن فیلد"
 
-#: classes/PDb_Manage_Fields.php:613
+#: classes/PDb_Manage_Fields.php:645
 msgid "Add Group"
 msgstr "افزودن گروه"
 
-#: classes/PDb_Manage_Fields.php:615
+#: classes/PDb_Manage_Fields.php:647
 msgid "field"
 msgstr "فیلد"
 
-#: classes/PDb_Manage_Fields.php:616
+#: classes/PDb_Manage_Fields.php:648
 msgid "new field title"
 msgstr "عنوان فیلد جدید"
 
-#: classes/PDb_Manage_Fields.php:617
+#: classes/PDb_Manage_Fields.php:649
 #, fuzzy
 #| msgid "new field title"
 msgid "new field form element"
 msgstr "عنوان فیلد جدید"
 
-#: classes/PDb_Manage_Fields.php:618
+#: classes/PDb_Manage_Fields.php:650
 msgid "new group title"
 msgstr "عنوان گروه جدید"
 
-#: classes/PDb_Manage_Fields.php:619
+#: classes/PDb_Manage_Fields.php:651
 msgctxt "column name"
 msgid "Fields"
 msgstr "فیلد ها"
 
-#: classes/PDb_Manage_Fields.php:620
+#: classes/PDb_Manage_Fields.php:652
 msgctxt "column name"
 msgid "Group"
 msgstr "گروه"
 
-#: classes/PDb_Manage_Fields.php:621
+#: classes/PDb_Manage_Fields.php:653
 msgctxt "column name"
 msgid "Order"
 msgstr "مرتب سازی"
 
-#: classes/PDb_Manage_Fields.php:622
+#: classes/PDb_Manage_Fields.php:654
 msgctxt "column name"
 msgid "Name"
 msgstr "نام"
 
-#: classes/PDb_Manage_Fields.php:623
+#: classes/PDb_Manage_Fields.php:655
 msgctxt "column name"
 msgid "Title"
 msgstr "عنوان"
 
-#: classes/PDb_Manage_Fields.php:624
+#: classes/PDb_Manage_Fields.php:656
 #, fuzzy
 #| msgid "Default Image"
 msgctxt "column name"
 msgid "Default Value"
 msgstr "تصویر پیش فرض"
 
-#: classes/PDb_Manage_Fields.php:625
+#: classes/PDb_Manage_Fields.php:657
 msgctxt "column name"
 msgid "Help Text"
 msgstr "متن راهنما"
 
-#: classes/PDb_Manage_Fields.php:626
+#: classes/PDb_Manage_Fields.php:658
 msgctxt "column name"
 msgid "Form Element"
 msgstr "عنصر فرم"
 
-#: classes/PDb_Manage_Fields.php:627
+#: classes/PDb_Manage_Fields.php:659
 msgctxt "column name"
 msgid "Values"
 msgstr "مقادیر"
 
-#: classes/PDb_Manage_Fields.php:628
+#: classes/PDb_Manage_Fields.php:660
 msgctxt "column name"
 msgid "Validation"
 msgstr "اعتبار سنجی"
 
-#: classes/PDb_Manage_Fields.php:629
+#: classes/PDb_Manage_Fields.php:661
 msgctxt "column name"
 msgid "Display Column"
 msgstr "ستون نمایش"
 
-#: classes/PDb_Manage_Fields.php:630
+#: classes/PDb_Manage_Fields.php:662
 msgctxt "column name"
 msgid "Admin Column"
 msgstr "ستون مدیریت"
 
-#: classes/PDb_Manage_Fields.php:631
+#: classes/PDb_Manage_Fields.php:663
 msgctxt "column name"
 msgid "Sortable"
 msgstr "مرتب پذیری"
 
-#: classes/PDb_Manage_Fields.php:632
+#: classes/PDb_Manage_Fields.php:664
 msgctxt "column name, acronym for \"comma separated values\""
 msgid "CSV"
 msgstr "CSV"
 
-#: classes/PDb_Manage_Fields.php:633
+#: classes/PDb_Manage_Fields.php:665
 msgctxt "column name"
 msgid "Persistent"
 msgstr "ماندگاری"
 
-#: classes/PDb_Manage_Fields.php:634
+#: classes/PDb_Manage_Fields.php:666
 msgctxt "column name"
 msgid "Signup"
 msgstr "ثبت نام"
 
-#: classes/PDb_Manage_Fields.php:635
+#: classes/PDb_Manage_Fields.php:667
 msgctxt "column name"
 msgid "Read Only"
 msgstr "فقط خواندنی"
 
-#: classes/PDb_Manage_Fields.php:636
+#: classes/PDb_Manage_Fields.php:668
 msgctxt "column name"
 msgid "Admin"
 msgstr "مدیریت"
 
-#: classes/PDb_Manage_Fields.php:637
+#: classes/PDb_Manage_Fields.php:669
 msgctxt "column name"
 msgid "Delete"
 msgstr "حذف"
 
-#: classes/PDb_Manage_Fields.php:638
+#: classes/PDb_Manage_Fields.php:670
 msgctxt "column name"
 msgid "Display"
 msgstr "نمایش"
 
-#: classes/PDb_Manage_Fields.php:639
+#: classes/PDb_Manage_Fields.php:671
 msgctxt "column name"
 msgid "Description"
 msgstr "توضیحات"
 
-#: classes/PDb_Manage_Fields.php:640
+#: classes/PDb_Manage_Fields.php:672
 #, fuzzy
 #| msgid "contribute"
 msgctxt "column name"
 msgid "Attributes"
 msgstr "حمایت از ما"
 
-#: classes/PDb_Manage_Fields.php:641
+#: classes/PDb_Manage_Fields.php:673
 msgctxt "column name"
 msgid "Options"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:642
+#: classes/PDb_Manage_Fields.php:674
 #, fuzzy
 #| msgctxt "column name"
 #| msgid "Validation"
@@ -778,7 +756,7 @@ msgctxt "column name"
 msgid "Validation Message"
 msgstr "اعتبار سنجی"
 
-#: classes/PDb_Manage_Fields.php:643
+#: classes/PDb_Manage_Fields.php:675
 #, fuzzy
 #| msgctxt ""
 #| "phrase used just before naming the action to perform on the selected items"
@@ -787,97 +765,110 @@ msgctxt "button label"
 msgid "With Selected"
 msgstr "با انتخاب"
 
-#: classes/PDb_Manage_Fields.php:644
+#: classes/PDb_Manage_Fields.php:676
 #, fuzzy
 #| msgid "Apply"
 msgctxt "button label"
 msgid "Apply"
 msgstr "اعمال"
 
-#: classes/PDb_Manage_Fields.php:645
+#: classes/PDb_Manage_Fields.php:677
 msgctxt "select all button label"
 msgid "All"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:646
+#: classes/PDb_Manage_Fields.php:678
 msgctxt "label for the view mode selector"
 msgid "View Mode"
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:164
+#: classes/PDb_Manage_Fields_Updates.php:108
+#, php-format
+msgid ""
+"The validation setting for the \"%s\" field is not a valid regex or field "
+"name."
+msgstr ""
+
+#: classes/PDb_Manage_Fields_Updates.php:204
 #, fuzzy
 #| msgid "Last Updated:"
 msgid "Fields Updated"
 msgstr "آخرین بروز رسانی:"
 
-#: classes/PDb_Manage_Fields_Updates.php:203
-#: classes/PDb_Manage_Fields_Updates.php:212
+#: classes/PDb_Manage_Fields_Updates.php:216
+#, fuzzy
+#| msgid "Last Updated:"
+msgid "Field update error:"
+msgstr "آخرین بروز رسانی:"
+
+#: classes/PDb_Manage_Fields_Updates.php:256
+#: classes/PDb_Manage_Fields_Updates.php:265
 msgid "Cannot add a field with that name"
 msgstr "امکان اضافه کردن یک فیلد با این نام وجود ندارد."
 
-#: classes/PDb_Manage_Fields_Updates.php:203
+#: classes/PDb_Manage_Fields_Updates.php:256
 msgid "This name is reserved; please choose another. Reserved names are"
 msgstr ""
 "این نام قبلا رزرو شده است، لطفا نام دیگری انتخاب کنید. نام های رزرو شامل"
 
-#: classes/PDb_Manage_Fields_Updates.php:212
+#: classes/PDb_Manage_Fields_Updates.php:265
 msgid ""
 "The name must be unique: a field with that name has been previously defined."
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:221
+#: classes/PDb_Manage_Fields_Updates.php:274
 msgid "The name cannot begin with a number"
 msgstr "نام نمی تواند با مقدار عددی آغاز گردد."
 
-#: classes/PDb_Manage_Fields_Updates.php:221
+#: classes/PDb_Manage_Fields_Updates.php:274
 msgid "Please choose another."
 msgstr "لطفا نام دیگری انتخاب کنید."
 
-#: classes/PDb_Manage_Fields_Updates.php:229
+#: classes/PDb_Manage_Fields_Updates.php:284
 #, fuzzy
 #| msgid "The new record has been added."
 msgid "The new field was added."
 msgstr "رکورد جدید اضافه شد."
 
-#: classes/PDb_Manage_Fields_Updates.php:231
+#: classes/PDb_Manage_Fields_Updates.php:286
 msgid "Remember to define the \"options\" for your new field."
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:234
+#: classes/PDb_Manage_Fields_Updates.php:289
 #, fuzzy
 #| msgid "The file could not be saved."
 msgid "The field could not be added."
 msgstr "فایل ذخیره نمی شود."
 
-#: classes/PDb_Manage_Fields_Updates.php:267
+#: classes/PDb_Manage_Fields_Updates.php:322
 #, fuzzy
 #| msgid "The new record has been added."
 msgid "The new group was added."
 msgstr "رکورد جدید اضافه شد."
 
-#: classes/PDb_Manage_Fields_Updates.php:304
+#: classes/PDb_Manage_Fields_Updates.php:363
 msgid "There was an error; the settings were not saved."
 msgstr "خطایی رخ داد. تنظیمات به درستی ذخیره نشد."
 
-#: classes/PDb_Manage_Fields_Updates.php:313
+#: classes/PDb_Manage_Fields_Updates.php:372
 #, fuzzy
 #| msgid "Your information has been updated"
 msgid "Your groups have been updated"
 msgstr "اطلاعات شما بروز رسانی شد"
 
-#: classes/PDb_Manage_Fields_Updates.php:361
+#: classes/PDb_Manage_Fields_Updates.php:422
 msgid "Selected fields deleted"
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:381
+#: classes/PDb_Manage_Fields_Updates.php:442
 msgid "Selected group deleted"
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:408
+#: classes/PDb_Manage_Fields_Updates.php:469
 msgid "Field settings updated."
 msgstr ""
 
-#: classes/PDb_Manage_Fields_Updates.php:932
+#: classes/PDb_Manage_Fields_Updates.php:1097
 #, php-format
 msgid ""
 "The %1$s was not added. There is already a %1$s with that name, please "
@@ -886,18 +877,18 @@ msgstr ""
 "%1$s ذخیره نشد. یک نمونه از %1$s با این نام وجود دارد. لطفا نام دیگری انتخاب "
 "کنید."
 
-#: classes/PDb_Manage_List_Columns.php:232
+#: classes/PDb_Manage_List_Columns.php:262
 msgid ""
 "Drag the fields you want shown from the \"Available Fields\" area to the "
 "\"List Columns\" area below. The fields can be re-ordered or removed from "
 "the List Columns area."
 msgstr ""
 
-#: classes/PDb_Manage_List_Columns.php:235
+#: classes/PDb_Manage_List_Columns.php:265
 msgid "Public List Column Setup"
 msgstr ""
 
-#: classes/PDb_Manage_List_Columns.php:236
+#: classes/PDb_Manage_List_Columns.php:266
 #, fuzzy
 #| msgid ""
 #| "Show the list count on list displays. Can also be set in the shortcode."
@@ -906,27 +897,27 @@ msgstr ""
 "نمایش تعداد در صفحه نمایش لیست. می توان با استفاده از شورتکد این گزینه را "
 "مشخص کرد."
 
-#: classes/PDb_Manage_List_Columns.php:238
-#: classes/PDb_Manage_List_Columns.php:262
+#: classes/PDb_Manage_List_Columns.php:268
+#: classes/PDb_Manage_List_Columns.php:298
 #, fuzzy
 #| msgid "Update Fields"
 msgid "Available Fields:"
 msgstr "بروز رسانی فیلد ها"
 
-#: classes/PDb_Manage_List_Columns.php:248
-#: classes/PDb_Manage_List_Columns.php:272
+#: classes/PDb_Manage_List_Columns.php:284
+#: classes/PDb_Manage_List_Columns.php:314
 #, fuzzy
 #| msgid "Display Column"
 msgid "List Columns"
 msgstr "ستون نمایش"
 
-#: classes/PDb_Manage_List_Columns.php:259
+#: classes/PDb_Manage_List_Columns.php:295
 #, fuzzy
 #| msgid "Admin Column"
 msgid "Admin List Column Setup"
 msgstr "ستون مدیریت"
 
-#: classes/PDb_Manage_List_Columns.php:260
+#: classes/PDb_Manage_List_Columns.php:296
 msgid ""
 "Set up the columns for list displays on the List Participants admin page."
 msgstr ""
@@ -935,11 +926,11 @@ msgstr ""
 msgid "First"
 msgstr "اولین"
 
-#: classes/PDb_Pagination.php:377 participants-database.php:3481
+#: classes/PDb_Pagination.php:377 participants-database.php:3113
 msgid "Previous"
 msgstr "قبلی"
 
-#: classes/PDb_Pagination.php:396 participants-database.php:3480
+#: classes/PDb_Pagination.php:396 participants-database.php:3111
 msgid "Next"
 msgstr "بعدی"
 
@@ -947,12 +938,12 @@ msgstr "بعدی"
 msgid "Last"
 msgstr "آخرین"
 
-#: classes/PDb_Path.php:159 participants-database.php:3281
+#: classes/PDb_Path.php:161 participants-database.php:2912
 #, php-format
 msgid "The uploads directory (%s) could not be created."
 msgstr "محل ذخیره فایل های آپلودی (%s) نمی تواند ایجاد شود."
 
-#: classes/PDb_Record.php:153
+#: classes/PDb_Record.php:225
 msgid "back"
 msgstr "بازگشت"
 
@@ -1035,15 +1026,15 @@ msgstr ""
 "هستید این آموزش به شما کمک خواهد کرد: <a target=\"_blank\" href=\"http://"
 "shrsl.com/?dnf8\">استفاده از Firebug برای ویرایش قالب های وردپرس</a></p>"
 
-#: classes/PDb_Settings.php:58
+#: classes/PDb_Settings.php:57
 msgid "Save Plugin Settings"
 msgstr "ذخیره تنظیمات افزونه"
 
-#: classes/PDb_Settings.php:167
+#: classes/PDb_Settings.php:166
 msgid "File Upload Location"
 msgstr "محل آپلود فایل"
 
-#: classes/PDb_Settings.php:171
+#: classes/PDb_Settings.php:170
 #, fuzzy, php-format
 #| msgid ""
 #| "This defines where the uploaded files will go, relative to the WordPress "
@@ -1060,19 +1051,19 @@ msgstr ""
 "database' می باشد <br /> هرگز پوشه افزونه را برای این مسیر انتخاب نکنید زیرا "
 "با بروزرسانی افزونه، تصاویر و فایل ها حذف می شوند."
 
-#: classes/PDb_Settings.php:178
+#: classes/PDb_Settings.php:177
 msgid "File Upload Limit"
 msgstr "محدودیت آپلود فایل"
 
-#: classes/PDb_Settings.php:182
+#: classes/PDb_Settings.php:181
 msgid "the maximum allowed file size (in kilobytes) for an uploaded file"
 msgstr "حداکثر سایز مجاز برای یک فایل آپلود شده (بر حسب کیلوبایت)"
 
-#: classes/PDb_Settings.php:190
+#: classes/PDb_Settings.php:189
 msgid "Allowed File Types"
 msgstr "فرمت های مجاز فایل"
 
-#: classes/PDb_Settings.php:194
+#: classes/PDb_Settings.php:193
 msgid ""
 "list of allowed file types by file extension. Please be aware that there are "
 "security risks in allowing file uploads."
@@ -1080,11 +1071,11 @@ msgstr ""
 "لیستی از فرمت های مجاز فایل که بر اساس پسوند فایل می باشد. آگاه باشید که "
 "ریسک امنیتی برای اجازه دادن به آپلود فایل های مختلف وجود دارد."
 
-#: classes/PDb_Settings.php:201
+#: classes/PDb_Settings.php:200
 msgid "Default Image"
 msgstr "تصویر پیش فرض"
 
-#: classes/PDb_Settings.php:205
+#: classes/PDb_Settings.php:204
 #, fuzzy, php-format
 #| msgid ""
 #| "Path (relative to WP root) of an image file to show if no image has been "
@@ -1096,22 +1087,22 @@ msgstr ""
 "مسیر یک تصویر پیش فرض برای نمایش در زمانی که تصویری برای یک فیلد تصویر مشخص "
 "نشده است. برای قرار ندادن تصویر پیش فرض این گزینه را خالی بگذارید."
 
-#: classes/PDb_Settings.php:213 classes/PDb_Settings.php:873
+#: classes/PDb_Settings.php:212 classes/PDb_Settings.php:887
 msgid "Image Size"
 msgstr ""
 
-#: classes/PDb_Settings.php:217
+#: classes/PDb_Settings.php:216
 msgid ""
 "Sets the default height of images displayed in single record and record edit "
 "displays. Defaults to pixels, but any valid CSS size value can be used. "
 "Default size for the list display is under the list display tab."
 msgstr ""
 
-#: classes/PDb_Settings.php:225
+#: classes/PDb_Settings.php:224
 msgid "Link Image to Fullsize"
 msgstr "پیوند تصویر به سایز اصلی"
 
-#: classes/PDb_Settings.php:230
+#: classes/PDb_Settings.php:229
 msgid ""
 "place a link to the full-size image on images. This link will work with most "
 "\"lightbox\" plugins."
@@ -1119,11 +1110,11 @@ msgstr ""
 "قرار دادن یک پیوند به تصویر با سایز اصلی. این لینک با اکثر افزونه های لایت "
 "باکس وردپرس سازگار است."
 
-#: classes/PDb_Settings.php:238
+#: classes/PDb_Settings.php:237
 msgid "Allow File Delete"
 msgstr "مجوز حذف فایل"
 
-#: classes/PDb_Settings.php:243
+#: classes/PDb_Settings.php:242
 msgid ""
 "if checked, allows uploaded files and images to be deleted from storage when "
 "deleted from a record by a user"
@@ -1131,19 +1122,19 @@ msgstr ""
 "اگر این گزینه انتخاب شود، اجازه می دهید تا فایل ها و تصاویر آپلود شده پس از "
 "حذف یک رکورد توسط کاربر،از حافظه نیز حذف گردند."
 
-#: classes/PDb_Settings.php:252
+#: classes/PDb_Settings.php:251
 msgid "Allow HTML Tags in Text Fields"
 msgstr ""
 
-#: classes/PDb_Settings.php:257
+#: classes/PDb_Settings.php:256
 msgid "if checked, limited HTML tags are allowed in \"text-line\" fields."
 msgstr ""
 
-#: classes/PDb_Settings.php:265
+#: classes/PDb_Settings.php:264
 msgid "Make Links Clickable"
 msgstr "قابلیت کلیک شدن لینک ها"
 
-#: classes/PDb_Settings.php:270
+#: classes/PDb_Settings.php:269
 msgid ""
 "if a \"text-line\" field looks like a link (begins with \"http\" or is an "
 "email address) make it clickable"
@@ -1151,19 +1142,19 @@ msgstr ""
 "اگر مقدار یک فیلد \"text-line\" شبیه یک پیوند اینترنتی باشد ( با \"http\" "
 "شروع شود یا یک آدرس ایمیل باشد ) آن را قابل کلیک می کند."
 
-#: classes/PDb_Settings.php:278
+#: classes/PDb_Settings.php:277
 msgid "Protect Email Addresses"
 msgstr "محافظت از آدرس های ایمیل"
 
-#: classes/PDb_Settings.php:283
+#: classes/PDb_Settings.php:282
 msgid "protect email addresses in text-line fields with Javascript"
 msgstr "محافظت از آدرس های ایمیل در فیلد های text-line به وسیله جاوا اسکریپت"
 
-#: classes/PDb_Settings.php:291
+#: classes/PDb_Settings.php:290
 msgid "Missing Field Error Message"
 msgstr "پیغام خطای فراموش کردن فیلد"
 
-#: classes/PDb_Settings.php:295
+#: classes/PDb_Settings.php:294
 #, php-format
 msgid ""
 "the message shown when a field is required, but left empty (the %s is "
@@ -1172,30 +1163,30 @@ msgstr ""
 "پیغام خطایی که در زمان خالی گذاشتن فیلد اجباری نمایش می یابد. (نام فیلد با "
 "مقدار %s جایگزین می شود)"
 
-#: classes/PDb_Settings.php:296
+#: classes/PDb_Settings.php:295
 #, php-format
 msgid "The %s field is required."
 msgstr "تکمیل فیلد %s اجباری است."
 
-#: classes/PDb_Settings.php:302
+#: classes/PDb_Settings.php:301
 msgid "Invalid Field Error Message"
 msgstr "پیغام خطای فیلد نامعتبر"
 
-#: classes/PDb_Settings.php:306
+#: classes/PDb_Settings.php:305
 msgid ""
 "the message shown when a field's value does not pass the validation test"
 msgstr "پیغام خطایی که در زمان نامعتبر بودن مقدار فیلد نمایش می یابد"
 
-#: classes/PDb_Settings.php:307
+#: classes/PDb_Settings.php:306
 #, php-format
 msgid "The %s field appears to be incorrect."
 msgstr "مقدار فیلد %s به نظر اشتباه می باشد."
 
-#: classes/PDb_Settings.php:313
+#: classes/PDb_Settings.php:312
 msgid "Non-Matching Field Error Message"
 msgstr "پیغام خطای عدم تطابق فیلد"
 
-#: classes/PDb_Settings.php:317
+#: classes/PDb_Settings.php:316
 #, php-format
 msgid ""
 "the message shown when a field's value does match the value of another "
@@ -1206,29 +1197,30 @@ msgstr ""
 "اولین علامت %s نام فیلد را نمایش میدهد و دومی نام فیلدی را که بایستی مطابق "
 "باشد."
 
-#: classes/PDb_Settings.php:318
+#: classes/PDb_Settings.php:317
 #, php-format
 msgid "The %s field must match the %s field."
 msgstr "مقدار فیلد %s باید با مقدار فیلد %s مطابقت داشته باشد."
 
-#: classes/PDb_Settings.php:325
+#: classes/PDb_Settings.php:324
 msgid "Failed CAPTCHA Message"
 msgstr "پیغام خطای CAPTCHA اشتباه"
 
-#: classes/PDb_Settings.php:329
+#: classes/PDb_Settings.php:328
 msgid "the message shown when the CAPTCHA (verify human) test failed"
 msgstr "پیغامی که در زمان وارد کردن CAPTCHA اشتباه توسط کاربر، نمایش می یابد."
 
-#: classes/PDb_Settings.php:330
-#, php-format
-msgid "Pleast try the %s question again."
+#: classes/PDb_Settings.php:329
+#, fuzzy, php-format
+#| msgid "Pleast try the %s question again."
+msgid "Please try the %s question again."
 msgstr "لطفا سوال امنیتی %s را دوباره تکمیل کنید."
 
-#: classes/PDb_Settings.php:336
+#: classes/PDb_Settings.php:335
 msgid "Field Error Style"
 msgstr "استایل فیلد پیغام خطا"
 
-#: classes/PDb_Settings.php:340
+#: classes/PDb_Settings.php:339
 msgid ""
 "the CSS style applied to an input or text field that is missing or has not "
 "passed validation. This must be a valid CSS rule"
@@ -1236,19 +1228,19 @@ msgstr ""
 "استایل CSS که به یک input یا text field که خالی رها شده اند یا نا معتبر می "
 "باشد، اعمال می شود. بایستی از دستورات معتبر CSS استفاده شود."
 
-#: classes/PDb_Settings.php:347
+#: classes/PDb_Settings.php:346
 msgid "Mark Required Fields"
 msgstr "علامت گذاری فیلد های اجباری"
 
-#: classes/PDb_Settings.php:352
+#: classes/PDb_Settings.php:351
 msgid "mark the title of required fields?"
 msgstr "آیا عنوان فیلد های اجباری علامت گذاری شود؟"
 
-#: classes/PDb_Settings.php:360
+#: classes/PDb_Settings.php:359
 msgid "Required Field Marker"
 msgstr "نشانگر فیلد اجباری"
 
-#: classes/PDb_Settings.php:364
+#: classes/PDb_Settings.php:363
 #, php-format
 msgid ""
 "html added to field title for required fields if selected above (the %s is "
@@ -1257,24 +1249,24 @@ msgstr ""
 "کد html اضافه شده به عنوان فیلد، برای فیلد های اجباری در صورتی که گزینه بالا "
 "انتخاب شده باشد. (نام فیلد با مقدار %s جایگزین می شود.)"
 
-#: classes/PDb_Settings.php:389
+#: classes/PDb_Settings.php:388
 msgid "Signup Button Text"
 msgstr "متن دکمه ثبت نام"
 
-#: classes/PDb_Settings.php:393
+#: classes/PDb_Settings.php:392
 msgid "text shown on the button to sign up"
 msgstr "متنی که بر روی دکمه ثبت نام نمایش می یابد"
 
-#: classes/PDb_Settings.php:394
+#: classes/PDb_Settings.php:393
 msgctxt "the text on a button to submit a signup form"
 msgid "Sign Up"
 msgstr "ثبت نام"
 
-#: classes/PDb_Settings.php:400
+#: classes/PDb_Settings.php:399
 msgid "Signup Thanks Page"
 msgstr "صفحه تشکر از ثبت نام"
 
-#: classes/PDb_Settings.php:404
+#: classes/PDb_Settings.php:403
 msgid ""
 "after they register, send them to this page for a thank you message. This "
 "page is where you put the [pdb_signup_thanks] shortcode, but you don&#39;t "
@@ -1287,19 +1279,19 @@ msgstr ""
 "همان صفحه بازگشت داده شوند. همچنین شما می توانید از یک PostID برای استفاده "
 "از پست های سایت استفاده کنید."
 
-#: classes/PDb_Settings.php:413
+#: classes/PDb_Settings.php:412
 msgid "Show Field Groups"
 msgstr "نمایش گروه های فیلد"
 
-#: classes/PDb_Settings.php:418
+#: classes/PDb_Settings.php:417
 msgid "Show groups and group descriptions in the signup form."
 msgstr "توضیحات گروه یا گروه ها را در فرم ثبت نام نمایش می دهد."
 
-#: classes/PDb_Settings.php:426 upload_csv.php:158
+#: classes/PDb_Settings.php:425 upload_csv.php:166
 msgid "Duplicate Record Check Field"
 msgstr "فیلد بررسی رکورد تکراری"
 
-#: classes/PDb_Settings.php:431
+#: classes/PDb_Settings.php:430
 msgid ""
 "when a signup is submitted or CSV record is imported, this field is checked "
 "for a duplicate"
@@ -1307,11 +1299,11 @@ msgstr ""
 "زمانی که یک درخواست ثبت نام ارسال می شود و رکوردی درون ریزی می گردد این فیلد "
 "برای عدم تکراری بودن رکورد بررسی می شود."
 
-#: classes/PDb_Settings.php:438 upload_csv.php:139
+#: classes/PDb_Settings.php:437 upload_csv.php:147
 msgid "Duplicate Record Preference"
 msgstr "اولویت رکورد تکراری"
 
-#: classes/PDb_Settings.php:443
+#: classes/PDb_Settings.php:442
 msgid ""
 "when the submission matches the Duplicate Record Check Field of an existing "
 "record. This also applies to importing records from a CSV file."
@@ -1319,23 +1311,23 @@ msgstr ""
 "هنگامی که فیلد بررسی رکورد تکراری با یک رکورد موجود مطابقت داده می شود. "
 "همچنین از بخش درون ریزی فایل CSV نیز می توان این گزینه را اعمال کرد."
 
-#: classes/PDb_Settings.php:446 upload_csv.php:145
+#: classes/PDb_Settings.php:445 upload_csv.php:153
 msgid "Create a new record with the submission"
 msgstr "ایجاد یک رکورد جدید با واگذاری"
 
-#: classes/PDb_Settings.php:447
+#: classes/PDb_Settings.php:446
 msgid "Overwrite matching record with new data"
 msgstr "بازنویسی رکورد مطابقت داده شده با اطلاعات جدید"
 
-#: classes/PDb_Settings.php:448
+#: classes/PDb_Settings.php:447
 msgid "Show a validation error message"
 msgstr "نمایش یک پیغام خطای اعتبار سنجی"
 
-#: classes/PDb_Settings.php:456
+#: classes/PDb_Settings.php:455
 msgid "Duplicate Record Error Message"
 msgstr "پیغام خطای رکورد تکراری"
 
-#: classes/PDb_Settings.php:460
+#: classes/PDb_Settings.php:459
 msgid ""
 "If \"Show a validation error message\" is selected above, this message will "
 "be shown if a signup is made with a \"check field\" that matches an existing "
@@ -1345,24 +1337,24 @@ msgstr ""
 "زمانی نمایش می یابد که یک فرم ثبت نام با یک \"check field\" ایجاد شده با "
 "رکورد موجود مطابقت داشته باشد."
 
-#: classes/PDb_Settings.php:461
+#: classes/PDb_Settings.php:460
 #, php-format
 msgid "A record with that %s already exists. Please choose another."
 msgstr "یک رکورد با مقدار %s موجود می باشد. لطفا مقدار دیگری انتخاب نمایید."
 
-#: classes/PDb_Settings.php:467
+#: classes/PDb_Settings.php:466
 msgid "Send Signup Response Email"
 msgstr "ارسال پاسخ ایمیل ثبت نام"
 
-#: classes/PDb_Settings.php:471
+#: classes/PDb_Settings.php:470
 msgid "Send a receipt email to people who sign up"
 msgstr "ارسال یک ایمیل دریافت برای افرادی که ثبت نام کرده اند"
 
-#: classes/PDb_Settings.php:479
+#: classes/PDb_Settings.php:478
 msgid "Signup Email From Address"
 msgstr "آدرس ایمیل برای ارسال ایمیل تایید ثبت نام"
 
-#: classes/PDb_Settings.php:483
+#: classes/PDb_Settings.php:482
 msgid ""
 "the \"From\" address on signup receipt emails. If the recipient hits \"reply"
 "\", their reply will go to this address. It is a good idea to use an email "
@@ -1371,19 +1363,19 @@ msgstr ""
 "ایمیل تایید ثبت نام افراد از این آدرس ارسال می گردد. بهتر است از یک ایمیل با "
 "آدرس دامنه این وب سایت استفاده شود."
 
-#: classes/PDb_Settings.php:490
+#: classes/PDb_Settings.php:489
 msgid "Signup Email From Name"
 msgstr "نام برای ارسال ایمیل تایید ثبت نام"
 
-#: classes/PDb_Settings.php:494
+#: classes/PDb_Settings.php:493
 msgid "the \"From\" name on signup receipt emails."
 msgstr "نامی که برای بخش \"From\" ایمیل تایید ثبت نام مشخص می گردد."
 
-#: classes/PDb_Settings.php:501
+#: classes/PDb_Settings.php:500
 msgid "Signup Response Email Subject"
 msgstr "موضوع ایمیل تایید ثبت نام"
 
-#: classes/PDb_Settings.php:505
+#: classes/PDb_Settings.php:504
 msgid ""
 "subject line for the signup response email; placeholder tags can be used "
 "(see below)"
@@ -1391,16 +1383,16 @@ msgstr ""
 "بخش موضوع برای ایمیل تایید ثبت نام افراد. می توان تگ های placeholder به کار "
 "برد."
 
-#: classes/PDb_Settings.php:506
+#: classes/PDb_Settings.php:505
 #, php-format
 msgid "You've just signed up on %s"
 msgstr "شما به تازگی در %s ثبت نام کرده اید"
 
-#: classes/PDb_Settings.php:512
+#: classes/PDb_Settings.php:511
 msgid "Signup Response Email"
 msgstr "ایمیل تایید ثبت نام"
 
-#: classes/PDb_Settings.php:516
+#: classes/PDb_Settings.php:515
 msgid ""
 "Body of the email a visitor gets when they sign up. It includes a link "
 "([record_link]) back to their record so they can fill it out. Can include "
@@ -1414,7 +1406,7 @@ msgstr ""
 "[email],[record_link] استفاده کرد. شما می توانید تنها از placeholder ها برای "
 "فیلد هایی که در فرم ثبت نام موجود است،بغیر از فیلد های پنهان، استفاده کنید."
 
-#: classes/PDb_Settings.php:518
+#: classes/PDb_Settings.php:517
 #, php-format
 msgid ""
 "<p>Thank you, [first_name], for signing up with %s.</p><p>You may complete "
@@ -1426,11 +1418,11 @@ msgstr ""
 "این لینک اختصاصی در هر زمانی، اطلاعات خود را تکمیل یا بروز رسانی کنید: <a "
 "href=\"[record_link]\">[record_link]</a>.</p>"
 
-#: classes/PDb_Settings.php:524
+#: classes/PDb_Settings.php:523
 msgid "Signup Thanks Message"
 msgstr "پیغام تشکر ثبت نام"
 
-#: classes/PDb_Settings.php:528
+#: classes/PDb_Settings.php:527
 msgid ""
 "Note to display on the web page after someone has submitted a signup form. "
 "Can include HTML and placeholders (see above)"
@@ -1438,7 +1430,7 @@ msgstr ""
 "نوشته ای برای نمایش در صفحه،بعد از اینکه افراد یک فرم ثبت نام را ارسال می "
 "کنند. می تواند شامل کدهای HTML شود."
 
-#: classes/PDb_Settings.php:529
+#: classes/PDb_Settings.php:528
 msgid ""
 "<p>Thank you, [first_name] for signing up!</p><p>You will receive an email "
 "acknowledgement shortly. You may complete your registration with additional "
@@ -1449,45 +1441,45 @@ msgstr ""
 "تایید اطلاعات دریافت خواهید کرد. می توانید از طریق لینک اختصاصی که در ایمیل "
 "قرار دارد اطلاعات خود را تکمیل کرده یا آن ها بروز رسانی کنید.</p>"
 
-#: classes/PDb_Settings.php:535
+#: classes/PDb_Settings.php:534
 msgid "Send Signup Notification Email"
 msgstr "ارسال ایمیل اطلاع رسانی ثبت نام"
 
-#: classes/PDb_Settings.php:540
+#: classes/PDb_Settings.php:539
 msgid "Send an email notification that a signup has occurred."
 msgstr "یک ایمیل اطلاع رسانی از ثبت نامی که اتفاق افتاده است، ارسال می کند."
 
-#: classes/PDb_Settings.php:549
+#: classes/PDb_Settings.php:548
 msgid "Signup Notification Recipients"
 msgstr "گیرندگان پیغام اطلاع رسانی ثبت نام"
 
-#: classes/PDb_Settings.php:553
+#: classes/PDb_Settings.php:552
 msgid "comma-separated list of email addresses to send signup notifications to"
 msgstr ""
 "لیستی از آدرس های ایمیل برای ارسال پیغام های اطلاع رسانی ثبت نام به آن ها که "
 "با کاما از یکدیگر جدا می شوند"
 
-#: classes/PDb_Settings.php:560
+#: classes/PDb_Settings.php:559
 msgid "Signup Notification Email Subject"
 msgstr "موضوع ایمیل اطلاع رسانی ثبت نام"
 
-#: classes/PDb_Settings.php:564 classes/PDb_Settings.php:1015
+#: classes/PDb_Settings.php:563 classes/PDb_Settings.php:1029
 msgid ""
 "subject of the notification email; placeholder tags can be used (see above)"
 msgstr ""
 "موضوع ایمیل اطلاع رسانی ثبت نام است. می توان از تگ های placeholder استفاده "
 "کرد."
 
-#: classes/PDb_Settings.php:566
+#: classes/PDb_Settings.php:565
 #, php-format
 msgid "New signup on %s"
 msgstr "ثبت نام جدید در %s"
 
-#: classes/PDb_Settings.php:572
+#: classes/PDb_Settings.php:571
 msgid "Signup Notification Email"
 msgstr "ایمیل اطلاع رسانی ثبت نام"
 
-#: classes/PDb_Settings.php:576
+#: classes/PDb_Settings.php:575
 msgid ""
 "notification email body. The [admin_record_link] tag will supply the URL for "
 "editing the record in the admin."
@@ -1495,7 +1487,7 @@ msgstr ""
 "محتوای اصلی ایمیل اطلاع رسانی است. تگ [admin_record_link] یک پیوند اینترنتی "
 "برای ویرایش رکورد در مدیریت ارایه می دهد."
 
-#: classes/PDb_Settings.php:577
+#: classes/PDb_Settings.php:576
 msgid ""
 "<p>A new signup has been submitted</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul><p>Edit this new record here: <a "
@@ -1505,11 +1497,11 @@ msgstr ""
 "[last_name]</li><li>ایمیل: [email]</li></ul><p>ویرایش این رکورد جدید: <a "
 "href=\"[admin_record_link]\">[admin_record_link]</a></p>"
 
-#: classes/PDb_Settings.php:602
+#: classes/PDb_Settings.php:601
 msgid "Participant Record Page"
 msgstr "صفحه رکورد مشترک"
 
-#: classes/PDb_Settings.php:607
+#: classes/PDb_Settings.php:606
 msgid ""
 "The page where your participant record ([pdb_record] shortcode) is "
 "displayed. You can use a Post ID for posts and custom post types."
@@ -1517,13 +1509,13 @@ msgstr ""
 "صفحه ای است که رکورد مشترک شما ( شورتکد [pdb_record]) نمایش می یابد. شما می "
 "توانید از یک Post ID برای نمایش پست ها یا پست های سفارشی استفاده کنید."
 
-#: classes/PDb_Settings.php:615
+#: classes/PDb_Settings.php:614
 #, fuzzy
 #| msgid "Show Field Groups"
 msgid "Show Groups"
 msgstr "نمایش گروه های فیلد"
 
-#: classes/PDb_Settings.php:620
+#: classes/PDb_Settings.php:619
 #, fuzzy
 #| msgid ""
 #| "Show the group description under each group title in the record form."
@@ -1532,48 +1524,48 @@ msgid ""
 "record form."
 msgstr "نمایش توضیحات گروه زیر عنوان هر گروه در فرم رکورد"
 
-#: classes/PDb_Settings.php:628
+#: classes/PDb_Settings.php:627
 msgid "Save Changes Label"
 msgstr "برچسب ذخیره تغییرات"
 
-#: classes/PDb_Settings.php:633
+#: classes/PDb_Settings.php:632
 msgid "label for the save changes button on the record form"
 msgstr "برچسبی برای دکمه ذخیره تغییرات در فرم رکورد"
 
-#: classes/PDb_Settings.php:634
+#: classes/PDb_Settings.php:633
 msgid "Save Your Changes"
 msgstr "ذخیره تغییرات"
 
-#: classes/PDb_Settings.php:640
+#: classes/PDb_Settings.php:639
 msgid "Save Button Text"
 msgstr "متن دکمه ذخیره"
 
-#: classes/PDb_Settings.php:645
+#: classes/PDb_Settings.php:644
 msgid "text on the \"save\" button"
 msgstr "متن روی دکمه ذخیره"
 
-#: classes/PDb_Settings.php:646
+#: classes/PDb_Settings.php:645
 msgctxt "a label for a button to save a form"
 msgid "Save"
 msgstr "ذخیره"
 
-#: classes/PDb_Settings.php:652
+#: classes/PDb_Settings.php:651
 msgid "Record Updated Message"
 msgstr "پیغام بروزرسانی رکورد"
 
-#: classes/PDb_Settings.php:656
+#: classes/PDb_Settings.php:655
 msgid "the message shown when a record form has been successfully submitted"
 msgstr "پیغامی که در زمان بروز رسانی موفق یک رکورد نمایش می یابد."
 
-#: classes/PDb_Settings.php:657
+#: classes/PDb_Settings.php:656
 msgid "Your information has been updated"
 msgstr "اطلاعات شما بروز رسانی شد"
 
-#: classes/PDb_Settings.php:663
+#: classes/PDb_Settings.php:662
 msgid "Record Not Found Error Message"
 msgstr "پیغام خطای عدم یافتن رکورد"
 
-#: classes/PDb_Settings.php:667
+#: classes/PDb_Settings.php:666
 msgid ""
 "message to show if the record page was accessed without a valid identifier. "
 "Leave this empty if you want nothing at all to show."
@@ -1581,15 +1573,15 @@ msgstr ""
 "پیغام خطایی که هنگام دسترسی به صفحه رکورد بدون داشتن هویت معتبر نمایش می "
 "یابد. برای اینکه چیزی نمایش نیابد این گزینه را خالی بگذارید."
 
-#: classes/PDb_Settings.php:668
+#: classes/PDb_Settings.php:667
 msgid "No record was found."
 msgstr "هیچ رکوردی یافت نشد."
 
-#: classes/PDb_Settings.php:674
+#: classes/PDb_Settings.php:673
 msgid "Use Template for No Record Message"
 msgstr "استفاده از قالب برای نمایش پیغام عدم یافتن رکورد"
 
-#: classes/PDb_Settings.php:679
+#: classes/PDb_Settings.php:678
 msgid ""
 "If checked, use the record template to show the \"Record Not Found\" "
 "message. If unchecked, the message is shown without using the template."
@@ -1597,11 +1589,11 @@ msgstr ""
 "اگر این گزینه انتخاب شده باشد، از یک قالب برای نمایش پیغام \"عدم یافتن رکورد"
 "\" استفاده می شود. اگر انتخاب نشده باشد، پیغام بدون قالب خاص نمایش می یابد."
 
-#: classes/PDb_Settings.php:687
+#: classes/PDb_Settings.php:686
 msgid "Send Record Form Update Notification Email"
 msgstr "ارسال ایمیل اطلاع رسانی برای بروز رسانی رکورد"
 
-#: classes/PDb_Settings.php:692
+#: classes/PDb_Settings.php:691
 msgid ""
 "Send an email notification that a record has been updated. These will be "
 "sent to the email addresses listed in the \"Signup Notification Recipients\" "
@@ -1611,11 +1603,11 @@ msgstr ""
 "آدرس های ایمیلی که در بخش \"گیرندگان پیغام اطلاع رسانی ثبت نام\" تنظیم شده، "
 "ارسال می شود."
 
-#: classes/PDb_Settings.php:700
+#: classes/PDb_Settings.php:699
 msgid "Record Update Email Subject"
 msgstr "موضوع ایمیل بروز رسانی رکورد"
 
-#: classes/PDb_Settings.php:704
+#: classes/PDb_Settings.php:703
 msgid ""
 "subject line for the record update notification email; placeholders can be "
 "used."
@@ -1623,16 +1615,16 @@ msgstr ""
 "موضوعی برای ایمیل اطلاع رسانی بروز رسانی رکورد است. از placeholder می توان "
 "استفاده کرد."
 
-#: classes/PDb_Settings.php:705
+#: classes/PDb_Settings.php:704
 #, php-format
 msgid "A record has just been updated on %s"
 msgstr "یک رکورد به تازگی در %s بروز رسانی شده است"
 
-#: classes/PDb_Settings.php:711
+#: classes/PDb_Settings.php:710
 msgid "Record Update Notification Email"
 msgstr "ایمیل اطلاع رسانی برای بروز رسانی رکورد"
 
-#: classes/PDb_Settings.php:716
+#: classes/PDb_Settings.php:715
 msgid ""
 "Body of the the email sent when a user updates their record. Any field from "
 "the form can be included by using a replacement code of the form: "
@@ -1648,7 +1640,7 @@ msgstr ""
 "رسانی می توان از  [date] استفاده کرد . تگ  [admin_record_link] به منظور "
 "ویرایش رکورد در بخش مدیریت استفاده می شود."
 
-#: classes/PDb_Settings.php:717
+#: classes/PDb_Settings.php:716
 msgid ""
 "<p>The following record was updated on [date]:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Address: [address]</li><li>[city], [state], [country]</"
@@ -1661,19 +1653,19 @@ msgstr ""
 "ul><p>این رکورد را از <a href=\"[admin_record_link]\">اینجا</a> ویرایش کنید."
 "</p>"
 
-#: classes/PDb_Settings.php:743
+#: classes/PDb_Settings.php:742
 msgid "Records per Page"
 msgstr "رکورد های هر صفحه"
 
-#: classes/PDb_Settings.php:747
+#: classes/PDb_Settings.php:746
 msgid "the number of records to show on each page"
 msgstr "تعداد رکورد هایی که در هر صفحه نمایش می یابد"
 
-#: classes/PDb_Settings.php:755
+#: classes/PDb_Settings.php:754
 msgid "Single Record Link Field"
 msgstr "فیلد لینک رکورد فردی"
 
-#: classes/PDb_Settings.php:760
+#: classes/PDb_Settings.php:759
 msgid ""
 "select the field on which to put a link to the [pdb_single] shortcode. Leave "
 "blank or set to \"none\" for no link."
@@ -1682,11 +1674,11 @@ msgstr ""
 "انتخاب کنید. برای عدم پیوند گزینه \"هیچ\" را انتخاب کرده و یا مقدار را خالی "
 "بگذارید."
 
-#: classes/PDb_Settings.php:767
+#: classes/PDb_Settings.php:766
 msgid "Single Record Page"
 msgstr "صفحه رکورد فردی"
 
-#: classes/PDb_Settings.php:773
+#: classes/PDb_Settings.php:772
 msgid ""
 "this is the page where the [pdb_single] shortcode is located. If you want to "
 "assign a post or custom post type, select \"Post ID\" and enter the post ID "
@@ -1696,33 +1688,33 @@ msgstr ""
 "می خواهید یک پست یا پست سفارشی را اختصاص دهید، گزینه \"PostID\" را انتخاب "
 "کرده و آیدی پست را در باکس دیگر قرار دهید."
 
-#: classes/PDb_Settings.php:780
+#: classes/PDb_Settings.php:779
 msgid "No Records Message"
 msgstr "پیغام نیافتن رکورد"
 
-#: classes/PDb_Settings.php:784
+#: classes/PDb_Settings.php:783
 msgid "Message shown when no records are found."
 msgstr "پیغام نمایش داده شده زمانی که هیپ رکوردی یافت نشده است."
 
-#: classes/PDb_Settings.php:785
+#: classes/PDb_Settings.php:784
 msgid "No Records Found"
 msgstr "هیچ پیغامی یافت نشد"
 
-#: classes/PDb_Settings.php:790
+#: classes/PDb_Settings.php:789
 msgid "Show Count"
 msgstr "نمایش تعداد"
 
-#: classes/PDb_Settings.php:795
+#: classes/PDb_Settings.php:794
 msgid "Show the list count on list displays. Can also be set in the shortcode."
 msgstr ""
 "نمایش تعداد در صفحه نمایش لیست. می توان با استفاده از شورتکد این گزینه را "
 "مشخص کرد."
 
-#: classes/PDb_Settings.php:803
+#: classes/PDb_Settings.php:802
 msgid "List Count Template"
 msgstr "قالب نمایش تعداد در لیست"
 
-#: classes/PDb_Settings.php:807
+#: classes/PDb_Settings.php:806
 #, php-format
 msgid ""
 "template for displaying the list count. %1$s - total number of records "
@@ -1733,16 +1725,16 @@ msgstr ""
 "تعداد رکورد های نمایش داده شده در هر صفحه, %3$s - شماره رکورد شروع, %4$s - "
 "شماره رکورد پایان, %5$s - شماره صفحه جاری"
 
-#: classes/PDb_Settings.php:808
+#: classes/PDb_Settings.php:807
 #, php-format
 msgid "Total Records Found: %1$s, showing %2$s per page"
 msgstr "مجموع رکورد های یافت شده: %1$s رکورد, نمایش  %2$s رکورد در هر صفحه"
 
-#: classes/PDb_Settings.php:818
+#: classes/PDb_Settings.php:817
 msgid "List Default Sort"
 msgstr "مرتب سازی پیش فرض لیست"
 
-#: classes/PDb_Settings.php:824
+#: classes/PDb_Settings.php:823
 msgid ""
 "The record list shown by the list shortcode will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -1751,28 +1743,28 @@ msgstr ""
 "مرتب سازی می گردند. (گزینه \"مرتب پذیری\" برای فیلد مورد نظر باید انتخاب شده "
 "باشد("
 
-#: classes/PDb_Settings.php:831
+#: classes/PDb_Settings.php:830
 msgid "List Default Sort Order"
 msgstr "نحوه مرتب سازی پیش فرض لیست"
 
-#: classes/PDb_Settings.php:835
+#: classes/PDb_Settings.php:834
 msgid "Sets the default order of the records shown by the list shortcode."
 msgstr "نحوه مرتب سازی رکورد های نمایش داده لیست را بطور پیش فرض مشخص می کند."
 
-#: classes/PDb_Settings.php:844
+#: classes/PDb_Settings.php:843
 msgid "Allow Empty Search"
 msgstr "مجوز جستجوی فیلد خالی"
 
-#: classes/PDb_Settings.php:849
+#: classes/PDb_Settings.php:848
 msgid ""
 "This allows frontend searches to find records with missing or blank data."
 msgstr "این گزینه اجازه می دهد جستجوی رکورد های خالی یا فراموش شده فعال باشد."
 
-#: classes/PDb_Settings.php:859
+#: classes/PDb_Settings.php:858
 msgid "Strict User Searching"
 msgstr "جستجوی سختگیرانه کاربر"
 
-#: classes/PDb_Settings.php:864
+#: classes/PDb_Settings.php:863
 msgid ""
 "When checked, the frontend list search must match the whole field exactly. "
 "If unchecked, the search will match if the search term is found in part of "
@@ -1782,17 +1774,26 @@ msgstr ""
 "فیلد مطابقت داشته باشد. اگر غیر فعال باشد، جستجو مطابقت داده خواهد شد اگر "
 "متن جستجو در بخشی از فیلد یافت شود."
 
-#: classes/PDb_Settings.php:877
+#: classes/PDb_Settings.php:873
+msgid "Split Search Phrases"
+msgstr ""
+
+#: classes/PDb_Settings.php:878
+msgid ""
+"When checked, words separated by spaces will each be searched for separately."
+msgstr ""
+
+#: classes/PDb_Settings.php:891
 msgid ""
 "Sets the default height of images displayed in the list. Defaults to pixels, "
 "but any valid CSS size value can be used."
 msgstr ""
 
-#: classes/PDb_Settings.php:891
+#: classes/PDb_Settings.php:905
 msgid "Enable Lost Private Link"
 msgstr "فعال سازی قابلیت فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:896
+#: classes/PDb_Settings.php:910
 msgid ""
 "Show a link on the signup form allowing users to have their private link "
 "emailed to them."
@@ -1800,33 +1801,33 @@ msgstr ""
 "نمایش یک لینک در فرم ثبت نام که به کاربران اجازه می دهد تا ارسال لینک "
 "اختصاصی خود را به ایمیلشان درخواست دهند."
 
-#: classes/PDb_Settings.php:904
+#: classes/PDb_Settings.php:918
 msgid "Lost Private Link Text"
 msgstr "متن فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:908
+#: classes/PDb_Settings.php:922
 msgid "clickable text shown in the signup form"
 msgstr "متن با قابلیت کلیک شدن که در فرم ثبت نام نمایش می یابد"
 
-#: classes/PDb_Settings.php:909
+#: classes/PDb_Settings.php:923
 msgid "Forget your private link? Click here to have it emailed to you."
 msgstr ""
 "آیا لینک اختصاصی خود را فراموش کرده اید؟ برای ارسال این مشخصات به ایمیلتان "
 "اینجا کلیک کنید."
 
-#: classes/PDb_Settings.php:914
+#: classes/PDb_Settings.php:928
 msgid "Lost Private Link Page"
 msgstr "صفحه فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:919
+#: classes/PDb_Settings.php:933
 msgid "send people to this page to request their private link."
 msgstr "انتقال افراد به این صفحه برای درخواست دریافت لینک اختصاصی خود می باشد."
 
-#: classes/PDb_Settings.php:928
+#: classes/PDb_Settings.php:942
 msgid "Lost Private Link ID Field"
 msgstr "فیلد شناسایی برای فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:932
+#: classes/PDb_Settings.php:946
 msgid ""
 "The field used to identify the user&#39;s account. This must be a unique "
 "identifier for the record"
@@ -1834,83 +1835,83 @@ msgstr ""
 "این فیلد برای شناسایی اکانت کاربر مورد استفاده قرار می گیرد. این فیلد بایستی "
 "یک شناسه منحصر به فرد برای رکورد باشد."
 
-#: classes/PDb_Settings.php:941
+#: classes/PDb_Settings.php:955
 #, fuzzy
 #| msgid "Lost Private Link Email"
 msgid "Lost Private Link Form Title"
 msgstr "محتوای ایمیل فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:945
+#: classes/PDb_Settings.php:959
 msgid "the title shown above the link request form"
 msgstr ""
 
-#: classes/PDb_Settings.php:946 templates/pdb-retrieve-bootstrap.php:10
+#: classes/PDb_Settings.php:960 templates/pdb-retrieve-bootstrap.php:10
 #: templates/pdb-retrieve-default.php:10
 msgid "Request your Private Link"
 msgstr "درخواست لینک اختصاصی شما"
 
-#: classes/PDb_Settings.php:953
+#: classes/PDb_Settings.php:967
 #, fuzzy
 #| msgid "Lost Private Link Page"
 msgid "Lost Private Link Success Message"
 msgstr "صفحه فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:957
+#: classes/PDb_Settings.php:971
 #, fuzzy
 #| msgid "the message shown when a record form has been successfully submitted"
 msgid "the message shown when a private link is successfully sent"
 msgstr "پیغامی که در زمان بروز رسانی موفق یک رکورد نمایش می یابد."
 
-#: classes/PDb_Settings.php:958 templates/pdb-retrieve-bootstrap.php:19
+#: classes/PDb_Settings.php:972 templates/pdb-retrieve-bootstrap.php:19
 #: templates/pdb-retrieve-default.php:17
 msgid "Success: your private link has been emailed to you."
 msgstr "موفقیت آمیز بود: لینک اختصاصی شما برایتان ایمیل شد."
 
-#: classes/PDb_Settings.php:964
+#: classes/PDb_Settings.php:978
 msgid "ID Field Help Text"
 msgstr "متن راهنما فیلد شناسه"
 
-#: classes/PDb_Settings.php:968
+#: classes/PDb_Settings.php:982
 msgid "help text for the record identification field"
 msgstr "متن راهنما برای فیلد شناسایی کننده رکورد"
 
-#: classes/PDb_Settings.php:969
+#: classes/PDb_Settings.php:983
 #, php-format
 msgid "Type in your %s, your private link will be emailed to you."
 msgstr "لطفا %s خود را تایپ کنید تا اطلاعات لینک اختصاصی برای شما ایمیل شود."
 
-#: classes/PDb_Settings.php:975
+#: classes/PDb_Settings.php:989
 msgid "Lost Private Link Email Subject"
 msgstr "موضوع ایمیل فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:979
+#: classes/PDb_Settings.php:993
 msgid "subject line for the lost private link email"
 msgstr "موضوع ایمیل فراموش کردن لینک اختصاصی را مشخص می کند"
 
-#: classes/PDb_Settings.php:980
+#: classes/PDb_Settings.php:994
 #, php-format
 msgid "Here is your private link on %s"
 msgstr "این لینک اختصاصی شما در %s می باشد"
 
-#: classes/PDb_Settings.php:986
+#: classes/PDb_Settings.php:1000
 msgid "Lost Private Link Email"
 msgstr "محتوای ایمیل فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:990
+#: classes/PDb_Settings.php:1004
 msgid "Body of the email sent when a lost private link is requested."
 msgstr ""
 "محتوای ایمیلی که در زمان درخواست فراموش کردن یک لینک اختصاصی ارسال می گردد."
 
-#: classes/PDb_Settings.php:992
+#: classes/PDb_Settings.php:1006
 #, php-format
 msgid "Here is the private link you requested from %s:"
 msgstr "این لینک اختصاصی می باشد که شما از %s درخواست کرده اید:"
 
-#: classes/PDb_Settings.php:998
+#: classes/PDb_Settings.php:1012
 msgid "Send Lost Private Link Notification Email"
 msgstr "ارسال ایمیل اطلاع رسانی فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:1003
+#: classes/PDb_Settings.php:1017
 msgid ""
 "Send an email notification that a lost private link has been requested. This "
 "email will go to the \"Signup Notification Recipients.\""
@@ -1919,24 +1920,24 @@ msgstr ""
 "صورت می گیرد. این ایمیل به \"گیرندگان پیغام اطلاع رسانی ثبت نام\" ارسال می "
 "شود."
 
-#: classes/PDb_Settings.php:1011
+#: classes/PDb_Settings.php:1025
 msgid "Lost Private Link Notification Email Subject"
 msgstr "موضوع ایمیل اطلاع رسانی فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:1017
+#: classes/PDb_Settings.php:1031
 #, php-format
 msgid "A Lost Private Link has been requested on %s"
 msgstr "یک در خواست فراموش کردن لینک اختصاصی برای %s "
 
-#: classes/PDb_Settings.php:1023
+#: classes/PDb_Settings.php:1037
 msgid "Lost Private Link Notification Email"
 msgstr "ایمیل اطلاع رسانی فراموش کردن لینک اختصاصی"
 
-#: classes/PDb_Settings.php:1027
+#: classes/PDb_Settings.php:1041
 msgid "notification email body"
 msgstr "محتوای اصلی ایمیل اطلاع رسانی"
 
-#: classes/PDb_Settings.php:1028
+#: classes/PDb_Settings.php:1042
 msgid ""
 "<p>A lost private link has been requested by:</p><ul><li>Name: [first_name] "
 "[last_name]</li><li>Email: [email]</li></ul>"
@@ -1945,11 +1946,11 @@ msgstr ""
 "p><ul><li>نام و نام خانوادگی: [first_name] [last_name]</li><li>ایمیل: "
 "[email]</li></ul>"
 
-#: classes/PDb_Settings.php:1034
+#: classes/PDb_Settings.php:1048
 msgid "Retrieve Private Link Error Message"
 msgstr "پیغام خطای بازیابی لینک اختصاصی"
 
-#: classes/PDb_Settings.php:1038
+#: classes/PDb_Settings.php:1052
 #, fuzzy, php-format
 #| msgid ""
 #| "Message shown when a record matching the retrieve link idenifier cannot "
@@ -1962,24 +1963,24 @@ msgstr ""
 "این پیام زمانی که یک تطابق رکورد برای بازیابی لینک اختصاصی یافت نشود، نمایش "
 "می یابد."
 
-#: classes/PDb_Settings.php:1039
+#: classes/PDb_Settings.php:1053
 #, php-format
 msgid "A record matching that %s cannot be found."
 msgstr "یک تطابق رکورد %s یافت نشد"
 
-#: classes/PDb_Settings.php:1053
+#: classes/PDb_Settings.php:1068
 msgid "Use the Plugin CSS"
 msgstr "استفاده از CSS افزونه"
 
-#: classes/PDb_Settings.php:1058
+#: classes/PDb_Settings.php:1073
 msgid "use the plugin's CSS to style the output of shortcodes"
 msgstr "استفاده از CSS افزونه برای استایل دهی خروجی شورتکد ها"
 
-#: classes/PDb_Settings.php:1066
+#: classes/PDb_Settings.php:1081
 msgid "Use Rich Text Editor"
 msgstr "ویرایشگر متن قدرتمند"
 
-#: classes/PDb_Settings.php:1071
+#: classes/PDb_Settings.php:1086
 msgid ""
 "enable the rich text editor on \"rich-text\" fields for front-end users. If "
 "deselected, \"rich-text\" fields will appear as text-area fields. This does "
@@ -1990,56 +1991,64 @@ msgstr ""
 "area نمایش می دهد. این گزینه برای مدیران تاثیری ندارد، برای آن ها همیشه به "
 "شکل ویرایشگر قدرتمند متن نمایش می یابد."
 
-#: classes/PDb_Settings.php:1084
+#: classes/PDb_Settings.php:1099
 msgid "Use WordPress Auto Formatting"
 msgstr "استفاده از قالب بندی خودکار وردپرس"
 
-#: classes/PDb_Settings.php:1089
+#: classes/PDb_Settings.php:1104
 msgid ""
 "Select the filter mode for all rich text outputs, including HTML emails."
 msgstr ""
 
-#: classes/PDb_Settings.php:1093
+#: classes/PDb_Settings.php:1108
 msgid "global content filter"
 msgstr ""
 
-#: classes/PDb_Settings.php:1094
+#: classes/PDb_Settings.php:1109
 #, fuzzy
 #| msgid "Use WordPress Auto Formatting"
 msgid "WordPress auto paragraphs"
 msgstr "استفاده از قالب بندی خودکار وردپرس"
 
-#: classes/PDb_Settings.php:1095
+#: classes/PDb_Settings.php:1110
 msgid "auto paragraphs + shortcodes"
 msgstr ""
 
-#: classes/PDb_Settings.php:1096
+#: classes/PDb_Settings.php:1111
 msgid "none"
 msgstr ""
 
-#: classes/PDb_Settings.php:1103
+#: classes/PDb_Settings.php:1118
 #, fuzzy
 #| msgid "Record Not Found Error Message"
 msgid "Scroll to Error Message"
 msgstr "پیغام خطای عدم یافتن رکورد"
 
-#: classes/PDb_Settings.php:1108
+#: classes/PDb_Settings.php:1123
 msgid "when a form validation error is shown, scroll to the error message"
 msgstr ""
 
-#: classes/PDb_Settings.php:1119
+#: classes/PDb_Settings.php:1134
+msgid "Use the Private ID for the Single Record Link"
+msgstr ""
+
+#: classes/PDb_Settings.php:1139
+msgid "use the Private ID instead of the Record ID in single record links"
+msgstr ""
+
+#: classes/PDb_Settings.php:1150
 msgid "Remove Line Breaks"
 msgstr "حذف شکستن خط"
 
-#: classes/PDb_Settings.php:1124
+#: classes/PDb_Settings.php:1155
 msgid "Remove line breaks from all plugin shortcode ouput."
 msgstr "تمامی شکستن خطوط را از خروجی شورتکد های افزونه حذف می کند"
 
-#: classes/PDb_Settings.php:1136
+#: classes/PDb_Settings.php:1167
 msgid "Use Pagination Scroll Anchors"
 msgstr "استفاده از پیمایش Anchor صفحه بندی"
 
-#: classes/PDb_Settings.php:1141
+#: classes/PDb_Settings.php:1172
 msgid ""
 "Uncheck this if your theme prevents pagination links with scroll anchors "
 "from working."
@@ -2047,19 +2056,19 @@ msgstr ""
 "این گزینه را در صورتی که قالب شما از لینک های صفحه بندی با پیمایش anchor "
 "جلوگیری می کند، غیر فعال کنید."
 
-#: classes/PDb_Settings.php:1149
+#: classes/PDb_Settings.php:1180
 msgid "Primary Email Address Field"
 msgstr "فیلد آدرس ایمیل اصلی"
 
-#: classes/PDb_Settings.php:1154
+#: classes/PDb_Settings.php:1185
 msgid "this field is the primary email address for the record"
 msgstr "این فیلد آدرس ایمیل اصلی برای رکورد را مشخص می کند."
 
-#: classes/PDb_Settings.php:1162
+#: classes/PDb_Settings.php:1193
 msgid "Send HTML Email"
 msgstr "ارسال ایمیل HTML"
 
-#: classes/PDb_Settings.php:1167
+#: classes/PDb_Settings.php:1198
 msgid ""
 "use rich text in plugin emails? If you turn this off, be sure to remove all "
 "HTML tags from the email body settings for the plugin."
@@ -2068,11 +2077,11 @@ msgstr ""
 "را غیر فعال کرده اید، از پاک کردن تمام تگ های HTML از تنظیمات بدنه ایمیل در "
 "این افزونه، اطمینان حاصل کنید."
 
-#: classes/PDb_Settings.php:1176
+#: classes/PDb_Settings.php:1207
 msgid "Strict Date Format"
 msgstr "قالب تاریخ دقیق"
 
-#: classes/PDb_Settings.php:1182
+#: classes/PDb_Settings.php:1213
 #, php-format
 msgid ""
 "This forces date inputs to be interpreted strictly according to the \"Input "
@@ -2086,15 +2095,15 @@ msgstr ""
 "انتظار دارید تا آن ها بکار ببرند. تاریخ فعلی بر اساس تنظیمات جاری شما شبیه "
 "روبرو می باشد: <strong>%s</strong> %s"
 
-#: classes/PDb_Settings.php:1182
+#: classes/PDb_Settings.php:1213
 msgid "Your current PHP installation does not support this setting."
 msgstr "نسخه PHP نصب شده شما از این تنظیمات پشتیبانی نمی کند."
 
-#: classes/PDb_Settings.php:1191
+#: classes/PDb_Settings.php:1222
 msgid "Input Date Format"
 msgstr "قالب تاریخ ورودی"
 
-#: classes/PDb_Settings.php:1196
+#: classes/PDb_Settings.php:1227
 msgid ""
 "date formatting string for all plugin date inputs when \"Strict Date Format"
 "\" is enabled. You should use this for all localized (non-American English) "
@@ -2104,11 +2113,11 @@ msgstr ""
 "\"قالب تاریخ دقیق\" فعال باشد، مشخص می کند. شما بایستی از این گزینه محلی "
 "کردن قالب های تاریخ غیر انگلیسی استفاده کنید."
 
-#: classes/PDb_Settings.php:1203
+#: classes/PDb_Settings.php:1234
 msgid "Enable AJAX Search Functionality"
 msgstr "فعال سازی عملکرد جستجوی AJAX"
 
-#: classes/PDb_Settings.php:1208
+#: classes/PDb_Settings.php:1239
 msgid ""
 "This enables list search results that are updated without reloading the "
 "page. It requires Javascript, but search will still work if Javascript is "
@@ -2118,82 +2127,82 @@ msgstr ""
 "این قابلیت نیاز به جاوا اسکریپت دارد، البته اگر جاوا اسکریپت هم غیر فعال "
 "باشد، جستجو در مرورگر کاربر عمل می کند."
 
-#: classes/PDb_Settings.php:1216
+#: classes/PDb_Settings.php:1247
 msgid "Use Alternate Session Method"
 msgstr ""
 
-#: classes/PDb_Settings.php:1221
+#: classes/PDb_Settings.php:1252
 msgid "use this if you are having problems with sessions."
 msgstr ""
 
-#: classes/PDb_Settings.php:1254
+#: classes/PDb_Settings.php:1285
 msgid "Disable Backend Developer Ads"
 msgstr "غیر فعال کردن تبلیغات توسعه دهنده"
 
-#: classes/PDb_Settings.php:1259
+#: classes/PDb_Settings.php:1290
 msgid "select this to disable developer ads in the admin."
 msgstr ""
 "برای غیر فعال کردن تبلیغات توسعه دهنده در بخش مدیریت، این گزینه را انتخاب "
 "کنید."
 
-#: classes/PDb_Settings.php:1267
+#: classes/PDb_Settings.php:1298
 msgid "File and Image Uploads Use WP Content Path"
 msgstr ""
 
-#: classes/PDb_Settings.php:1272
+#: classes/PDb_Settings.php:1303
 msgid ""
 "when selected, the base path for file and image uploads will be the site's "
 "content directory."
 msgstr ""
 
-#: classes/PDb_Settings.php:1280
+#: classes/PDb_Settings.php:1311
 msgid "Allow Record Timestamps to be Edited"
 msgstr ""
 
-#: classes/PDb_Settings.php:1285
+#: classes/PDb_Settings.php:1316
 msgid ""
 "normally, record timestamps (date_recorded, date_updated, last_accessed) are "
 "not editable, checking this allows them to be edited."
 msgstr ""
 
-#: classes/PDb_Settings.php:1294
+#: classes/PDb_Settings.php:1325
 msgid "Sync php Timezone"
 msgstr ""
 
-#: classes/PDb_Settings.php:1299
+#: classes/PDb_Settings.php:1330
 msgid "when checked, the php timezone will be set to the WordPress timezone."
 msgstr ""
 
-#: classes/PDb_Settings.php:1307
+#: classes/PDb_Settings.php:1338
 msgid "Enable Debugging"
 msgstr ""
 
-#: classes/PDb_Settings.php:1312
+#: classes/PDb_Settings.php:1343
 #, php-format
 msgid "this will enable writing to the %s debugging log."
 msgstr ""
 
-#: classes/PDb_Settings.php:1316
+#: classes/PDb_Settings.php:1347
 msgid "off"
 msgstr ""
 
-#: classes/PDb_Settings.php:1317
+#: classes/PDb_Settings.php:1348
 msgid "plugin debug"
 msgstr ""
 
-#: classes/PDb_Settings.php:1318
+#: classes/PDb_Settings.php:1349
 msgid "all errors"
 msgstr ""
 
-#: classes/PDb_Settings.php:1319
+#: classes/PDb_Settings.php:1350
 msgid "verbose"
 msgstr ""
 
-#: classes/PDb_Settings.php:1333
+#: classes/PDb_Settings.php:1364
 msgid "Admin List Default Sort"
 msgstr "مرتب سازی پیش فرض لیست مدیریت"
 
-#: classes/PDb_Settings.php:1339
+#: classes/PDb_Settings.php:1370
 msgid ""
 "The record list shown in the admin section will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
@@ -2201,41 +2210,41 @@ msgstr ""
 "لیست رکورد نمایش داده شده در بخش مدیریت بر اساس این فیلد بطور پیش فرض مرتب "
 "سازی می شوند. (باید گزینه \"مرتب پذیری\" فیلد انتخاب شده باشد)"
 
-#: classes/PDb_Settings.php:1346
+#: classes/PDb_Settings.php:1377
 msgid "Admin List Default Sort Order"
 msgstr "نحوه مرتب سازی پیش فرض لیست مدیریت"
 
-#: classes/PDb_Settings.php:1350
+#: classes/PDb_Settings.php:1381
 msgid "Sets the default order of the record list in the admin."
 msgstr ""
 "نحوه مرتب سازی پیش فرض برای لیست رکورد ها در بخش مدیریت را مشخص می کند."
 
-#: classes/PDb_Settings.php:1358
+#: classes/PDb_Settings.php:1389
 msgid "Show Image Thumbnails in Admin List"
 msgstr "نمایش عکس بند انگشتی در لیست مدیریت"
 
-#: classes/PDb_Settings.php:1373
+#: classes/PDb_Settings.php:1404
 msgid "Plugin Admin Horizontal Scrolling"
 msgstr "پیمایش افقی مدیریت افزونه"
 
-#: classes/PDb_Settings.php:1378
+#: classes/PDb_Settings.php:1409
 msgid "use horizontal scrolling on list and fields management screens"
 msgstr "از پیمایش افقی در نمایش مدیریت لیست و فیلد ها استفاده می کند"
 
-#: classes/PDb_Settings.php:1386
+#: classes/PDb_Settings.php:1417
 msgid "Record Edit Access Level"
 msgstr "سطح دسترسی ویرایش رکورد"
 
-#: classes/PDb_Settings.php:1390
+#: classes/PDb_Settings.php:1421
 msgid "sets the user access level for adding, editing and listing records."
 msgstr ""
 "سطح دسترسی کاربر به منظور افزودن، ویرایش و لیست کردن رکوردها را مشخص می کند."
 
-#: classes/PDb_Settings.php:1398
+#: classes/PDb_Settings.php:1429
 msgid "Plugin Admin Access Level"
 msgstr "سطح دسترسی مدیریت افزونه"
 
-#: classes/PDb_Settings.php:1402
+#: classes/PDb_Settings.php:1433
 msgid ""
 "sets the user access level for fields management, plugin settings, deleting "
 "records and CSV operations."
@@ -2243,66 +2252,56 @@ msgstr ""
 "سطح دسترسی کاربر به منظور مدیریت، تنظیمات افزونه، حذف رکورد ها و عملیات CSV "
 "را مشخص می کند"
 
-#: classes/PDb_Settings.php:1410
+#: classes/PDb_Settings.php:1441
 msgid "Top Settings Submit"
 msgstr ""
 
-#: classes/PDb_Settings.php:1414
+#: classes/PDb_Settings.php:1445
 msgid ""
 "show a submit button at the top of admin settings and configuration pages"
 msgstr ""
 
-#: classes/PDb_Settings.php:1422
+#: classes/PDb_Settings.php:1453
 msgid "Admin Record Edits are Validated"
 msgstr ""
 
-#: classes/PDb_Settings.php:1427
+#: classes/PDb_Settings.php:1458
 msgid "When checked, admin record edits and new records must pass validation."
 msgstr ""
 
-#: classes/PDb_Settings.php:1435
+#: classes/PDb_Settings.php:1466
 msgid "Editor can Export CSV Files"
 msgstr "ویرایشگر می تواند فایل های CSV را برون بری کند"
 
-#: classes/PDb_Settings.php:1439
+#: classes/PDb_Settings.php:1470
 msgid "If checked, users with the plugin editor role can export a CSV."
 msgstr ""
 "اگر این گزینه انتخاب شده باشد، کاربران با سطح دسترسی ویرایشگر می توانند یک "
 "فایل CSV را برون بری کنند."
 
-#: classes/PDb_Settings.php:1447
-msgid "Delete Uploaded Files with Record"
-msgstr ""
-
-#: classes/PDb_Settings.php:1452
-msgid ""
-"when a record is deleted, delete all images and files uploaded with the "
-"record"
-msgstr ""
-
-#: classes/PDb_Settings.php:1461
+#: classes/PDb_Settings.php:1492
 msgid "Show Timestamp Time"
 msgstr "نمایش برچسب زمان"
 
-#: classes/PDb_Settings.php:1466
+#: classes/PDb_Settings.php:1497
 msgid "Show time with timestamp dates"
 msgstr "نمایش زمان همراه با برچسب های تاریخ"
 
-#: classes/PDb_Settings.php:1475
+#: classes/PDb_Settings.php:1506
 #, fuzzy
 #| msgid "Plugin Admin Access Level"
 msgid "Clear Plugin Admin Notices"
 msgstr "سطح دسترسی مدیریت افزونه"
 
-#: classes/PDb_Settings.php:1479
+#: classes/PDb_Settings.php:1510
 msgid "If checked, all plugin-generated admin notices will be cleared."
 msgstr ""
 
-#: classes/PDb_Settings.php:1493
+#: classes/PDb_Settings.php:1524
 msgid "Custom Plugin Stylesheet"
 msgstr "استایل سفارشی افزونه"
 
-#: classes/PDb_Settings.php:1498
+#: classes/PDb_Settings.php:1529
 msgid ""
 "use this to add your own styles or override styles applied to the output of "
 "all plugin shortcodes"
@@ -2310,73 +2309,73 @@ msgstr ""
 "از این بخش برای اضافه کردن استایل شخصی خود و یا بازنویسی استایل های اعمال "
 "شده به تمامی شورتکد های افزونه استفاده کنید."
 
-#: classes/PDb_Settings.php:1508
+#: classes/PDb_Settings.php:1539
 msgid "Plugin Print Stylesheet"
 msgstr "استایل پرینت افزونه"
 
-#: classes/PDb_Settings.php:1513
+#: classes/PDb_Settings.php:1544
 msgid "use this to format the printed output of all plugin shortcodes"
 msgstr ""
 "از این بخش برای قالب بندی خروجی پرینت شده از تمامی شورتکد های افزونه، "
 "استفاده کنید."
 
-#: classes/PDb_Settings.php:1523
+#: classes/PDb_Settings.php:1554
 #, fuzzy
 #| msgid "Custom Plugin Stylesheet"
 msgid "Custom Admin Stylesheet"
 msgstr "استایل سفارشی افزونه"
 
-#: classes/PDb_Settings.php:1528
+#: classes/PDb_Settings.php:1559
 msgid ""
 "use this to add or modify CSS rules that are applied on all plugin pages in "
 "the WordPress backend."
 msgstr ""
 
-#: classes/PDb_Settings.php:1549
+#: classes/PDb_Settings.php:1580
 msgid "Same Page"
 msgstr "همان صفحه"
 
-#: classes/PDb_Settings.php:1592
+#: classes/PDb_Settings.php:1623
 msgid "None"
 msgstr "هیچ"
 
-#: classes/PDb_Settings.php:1714
+#: classes/PDb_Settings.php:1746
 msgid "Contributor"
 msgstr "مولف"
 
-#: classes/PDb_Settings.php:1715
+#: classes/PDb_Settings.php:1747
 msgid "Author"
 msgstr "نویسنده"
 
-#: classes/PDb_Settings.php:1716
+#: classes/PDb_Settings.php:1748
 msgid "Editor"
 msgstr "ویرایشگر"
 
-#: classes/PDb_Settings.php:1717
+#: classes/PDb_Settings.php:1749
 msgid "Admin"
 msgstr "مدیریت"
 
-#: classes/PDb_Settings.php:1794 participants-database.php:3677
-#: participants-database.php:3739
+#: classes/PDb_Settings.php:1832 participants-database.php:3322
+#: participants-database.php:3380
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: classes/PDb_Settings.php:1886 classes/PDb_Settings.php:1892
+#: classes/PDb_Settings.php:1927 classes/PDb_Settings.php:1933
 #, php-format
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr "تنها از مقادیر عددی می توان برای تنظیم \"%s\" استفاده کرد."
 
-#: classes/PDb_Settings.php:1941
+#: classes/PDb_Settings.php:1982
 msgid "Content Directory"
 msgstr ""
 
-#: classes/PDb_Settings.php:1941
+#: classes/PDb_Settings.php:1982
 #, fuzzy
 #| msgid "WordPress Plugin"
 msgid "WordPress root"
 msgstr "افزونه وردپرس"
 
-#: classes/PDb_Shortcode.php:334
+#: classes/PDb_Shortcode.php:344
 #, php-format
 msgctxt "message to show if the plugin cannot find the template"
 msgid ""
@@ -2386,213 +2385,244 @@ msgstr ""
 "<%1$s>قالب %2$s یافت نشد.</%1$s> لطفا مطمئن شوید نام صحیح است و فایل قالب در "
 "مسیر درستی قرار دارد."
 
-#: classes/PDb_Shortcode.php:1351
+#: classes/PDb_Shortcode.php:1389
 msgid "next"
 msgstr "بعدی"
 
-#: classes/PDb_Update_Notices.php:218
-msgctxt "Plugin installer section title"
-msgid "Description"
-msgstr "توضیحات"
+#: classes/PDb_admin_list/delete.php:47
+#, php-format
+msgid "Orphan uploaded files cleared. %s files deleted"
+msgstr ""
 
-#: classes/PDb_Update_Notices.php:219
-msgctxt "Plugin installer section title"
-msgid "Installation"
+#: classes/PDb_admin_list/delete.php:95
+msgid "Record delete successful."
+msgstr "رکورد با موفقیت حذف شد."
+
+#: classes/PDb_admin_list/delete.php:131
+msgid "delete uploaded files with record?"
+msgstr ""
+
+#: classes/PDb_admin_list/field_input.php:132
+#, php-format
+msgid "Timestamp values must be entered using this format: %s"
+msgstr ""
+
+#: classes/PDb_admin_list/filter.php:365
+#, fuzzy
+#| msgctxt "column name"
+#| msgid "Fields"
+msgid "Recent Fields"
+msgstr "فیلد ها"
+
+#: classes/PDb_admin_list/mass_edit.php:60
+msgid "mass edit"
+msgstr ""
+
+#: classes/PDb_admin_list/mass_edit.php:95
+#, fuzzy
+#| msgid "Send the signup email to the selected record?"
+msgid "Apply the field edit to the selected record?"
+msgstr "آیا ایمیل ثبت نام برای رکورد انتخاب شده ارسال گردد؟"
+
+#: classes/PDb_admin_list/mass_edit.php:96
+#, fuzzy
+#| msgid "Send the signup email to the selected records?"
+msgid "Apply the field edit to the selected records?"
+msgstr "آیا ایمیل ثبت نام برای رکورد های انتخاب شده ارسال گردد؟"
+
+#: classes/PDb_admin_list/mass_edit.php:136
+#, fuzzy
+#| msgctxt "column name"
+#| msgid "Fields"
+msgid "Field"
+msgstr "فیلد ها"
+
+#: classes/PDb_admin_list/mass_edit_update.php:78
+#, fuzzy
+#| msgid "Admin List Default Sort"
+msgid "Admin List Mass Edit"
+msgstr "مرتب سازی پیش فرض لیست مدیریت"
+
+#: classes/PDb_admin_list/mass_edit_update.php:79
+#, fuzzy, php-format
+#| msgid "The record has been updated."
+msgid "%s Record was updated"
+msgid_plural "%s Records were updated"
+msgstr[0] "رکورد بروزرسانی شد."
+
+#: classes/PDb_admin_list/search_field_group.php:36
+#, fuzzy
+#| msgid "Add Field"
+msgid "Any Text Field"
+msgstr "افزودن فیلد"
+
+#: classes/PDb_admin_list/search_field_group.php:37
+#, fuzzy
+#| msgid "Add Field"
+msgid "Any Field"
+msgstr "افزودن فیلد"
+
+#: classes/PDb_admin_list/search_field_group.php:58
+msgid "Multi-Field"
+msgstr ""
+
+#: classes/PDb_admin_list/with_selected.php:131
+#: classes/PDb_admin_list/with_selected.php:158
+#, fuzzy, php-format
+#| msgctxt "number of emails sent"
+#| msgid "%d emails were sent."
+msgctxt "number of emails sent"
+msgid "%d email was sent."
+msgid_plural "%d emails were sent."
+msgstr[0] "%d ایمیل ارسال شد."
+
+#: classes/PDb_admin_list/with_selected.php:203
+#, fuzzy, php-format
+#| msgctxt "number of records with approval statuses set"
+#| msgid "Approval status for %d records has been updated."
+msgctxt "number of records with approval statuses set"
+msgid "Approval status for %d record has been updated."
+msgid_plural "Approval status for %d records has been updated."
+msgstr[0] "وضعیت تایید برای %d رکورد بروز رسانی شد."
+
+#: classes/PDb_admin_list/with_selected.php:206
+#, fuzzy, php-format
+#| msgctxt "number of records with approval statuses set"
+#| msgid "Approval status for %d records has been updated."
+msgid "Approval status for %d record was unchanged."
+msgid_plural "Approval status for %d records was unchanged."
+msgstr[0] "وضعیت تایید برای %d رکورد بروز رسانی شد."
+
+#: classes/PDb_fields/calculated_field.php:52
+msgid "Template"
+msgstr ""
+
+#: classes/PDb_fields/date_calc.php:39
+#, fuzzy
+#| msgctxt "Plugin installer section title"
+#| msgid "Installation"
+msgctxt "name of a field type that saves a date as a searchable string"
+msgid "Date Calculation"
 msgstr "نصب و راه اندازی"
 
-#: classes/PDb_Update_Notices.php:220
-msgctxt "Plugin installer section title"
-msgid "FAQ"
-msgstr "سوالات متداول"
+#: classes/PDb_fields/heading.php:32
+#, fuzzy
+#| msgid "Ascending"
+msgctxt "name of a field type that shows a text heading"
+msgid "Heading"
+msgstr "صعودی"
 
-#: classes/PDb_Update_Notices.php:221
-msgctxt "Plugin installer section title"
-msgid "Screenshots"
-msgstr "تصاویر"
+#: classes/PDb_fields/heading.php:36
+#, fuzzy
+#| msgid "Ascending"
+msgid "Heading"
+msgstr "صعودی"
 
-#: classes/PDb_Update_Notices.php:222
-msgctxt "Plugin installer section title"
-msgid "Changelog"
-msgstr "ثبت تغییرات"
-
-#: classes/PDb_Update_Notices.php:223
-msgctxt "Plugin installer section title"
-msgid "Reviews"
-msgstr "بررسی ها"
-
-#: classes/PDb_Update_Notices.php:224
-msgctxt "Plugin installer section title"
-msgid "Support"
-msgstr "پشتیبانی"
-
-#: classes/PDb_Update_Notices.php:246
-msgid "Plugin Install"
-msgstr "نصب افزونه"
-
-#: classes/PDb_Update_Notices.php:296
-msgid "Version:"
-msgstr "نگارش:"
-
-#: classes/PDb_Update_Notices.php:298
-msgid "Author:"
-msgstr "نویسنده:"
-
-#: classes/PDb_Update_Notices.php:300
-msgid "Last Updated:"
+#: classes/PDb_fields/last_update_user.php:130
+#, fuzzy
+#| msgid "Last Updated:"
+msgid "Last Updater"
 msgstr "آخرین بروز رسانی:"
 
-#: classes/PDb_Update_Notices.php:303
-#, php-format
-msgid "%s ago"
-msgstr "%s قبل"
-
-#: classes/PDb_Update_Notices.php:308
-msgid "Requires WordPress Version:"
-msgstr "به این نگارش وردپرس نیازمند است:"
-
-#: classes/PDb_Update_Notices.php:311
-#, php-format
-msgid "%s or higher"
-msgstr "%s یا بالاتر"
-
-#: classes/PDb_Update_Notices.php:315
-msgid "Compatible up to:"
-msgstr "سازگار تا:"
-
-#: classes/PDb_Update_Notices.php:317
-msgid "Active Installs:"
-msgstr "نصب های فعال:"
-
-#: classes/PDb_Update_Notices.php:319
-msgctxt "Active plugin installs"
-msgid "1+ Million"
-msgstr "1+ میلیون"
-
-#: classes/PDb_Update_Notices.php:325
-msgid "WordPress.org Plugin Page &#187;"
-msgstr "صفحه افزونه WordPress.org &#187;"
-
-#: classes/PDb_Update_Notices.php:327
-msgid "Plugin Homepage &#187;"
-msgstr "صفحه اصلی افزونه &#187;"
-
-#: classes/PDb_Update_Notices.php:329
-msgid "Add-Ons &amp; Extras &#187;"
-msgstr "افزودنی ها &amp; پیشنهادی &#187;"
-
-#: classes/PDb_Update_Notices.php:331 classes/PDb_Update_Notices.php:386
-msgid "Donate to this plugin &#187;"
-msgstr "این افزونه را حمایت کنید &#187;"
-
-#: classes/PDb_Update_Notices.php:335
-msgid "Average Rating"
-msgstr "میانگین امتیاز"
-
-#: classes/PDb_Update_Notices.php:337
-#, php-format
-msgid "(based on %s rating)"
-msgid_plural "(based on %s ratings)"
-msgstr[0] ""
-
-#: classes/PDb_Update_Notices.php:343
-msgid "Reviews"
-msgstr "بررسی"
-
-#: classes/PDb_Update_Notices.php:344
-msgid "Read all reviews on WordPress.org or write your own!"
-msgstr "تمام بررسی ها را در WordPress.org بخوانید یا بررسی خود را بنویسید!"
-
-#: classes/PDb_Update_Notices.php:350
-#, php-format
-msgid "Reviews with %1$d star: %2$s. Opens in a new window."
-msgid_plural "Reviews with %1$d stars: %2$s. Opens in a new window."
-msgstr[0] ""
-
-#: classes/PDb_Update_Notices.php:355
-#, php-format
-msgid "%d star"
-msgid_plural "%d stars"
-msgstr[0] ""
-
-#: classes/PDb_Update_Notices.php:366
-msgid "Contributors"
-msgstr "همکاران"
-
-#: classes/PDb_Update_Notices.php:393
-msgid ""
-"<strong>Warning:</strong> This plugin has <strong>not been tested</strong> "
-"with your current version of WordPress."
+#: classes/PDb_fields/media_embed.php:32
+msgctxt "name of a field type that shows embedded media"
+msgid "Media Embed"
 msgstr ""
 
-#: classes/PDb_Update_Notices.php:395
-msgid ""
-"<strong>Warning:</strong> This plugin has <strong>not been marked as "
-"compatible</strong> with your version of WordPress."
+#: classes/PDb_fields/numeric_calc.php:37
+msgctxt "name of a field type that shows the result of a calculation"
+msgid "Numeric Calculation"
 msgstr ""
 
-#: classes/PDb_Update_Notices.php:424
-msgid "Install Now"
-msgstr "نصب کن"
+#: classes/PDb_fields/placeholder.php:32
+msgctxt "name of a field type that shows placeholder text"
+msgid "Placeholder"
+msgstr ""
 
-#: classes/PDb_Update_Notices.php:429
-msgid "Install Update Now"
-msgstr "همین حالا بروز رسانی را نصب کن"
+#: classes/PDb_fields/shortcode.php:32
+msgctxt "name of a field type that shows a shortcode"
+msgid "Shortcode"
+msgstr ""
 
-#: classes/PDb_Update_Notices.php:434
-#, php-format
-msgid "Newer Version (%s) Installed"
-msgstr "نگارش تازه (%s) نصب شد"
+#: classes/PDb_fields/shortcode.php:185
+msgid "Shortcode"
+msgstr ""
 
-#: classes/PDb_Update_Notices.php:437
-msgid "Latest Version Installed"
-msgstr "آخرین نگارش نصب شد"
+#: classes/PDb_fields/string_combine.php:34
+msgctxt "name of a field type that shows a combined string"
+msgid "String Combine"
+msgstr ""
 
-#: classes/xnau_CSV_Import.php:94
-#, php-format
-msgid "The file %s has been uploaded."
-msgstr "فایل %s آپلود شد."
+#: classes/PDb_fields/utility.php:35
+#, fuzzy
+#| msgctxt "column name"
+#| msgid "Display"
+msgid "Display"
+msgstr "نمایش"
 
-#: classes/xnau_CSV_Import.php:100
+#: classes/PDb_import/tally.php:213
+#, fuzzy, php-format
+#| msgid "Zero records imported"
+msgid "%s record imported."
+msgid_plural "%s records imported"
+msgstr[0] "هیچ رکوردی درون ریزی نشد."
+
+#: classes/PDb_import/tally.php:224
+#, fuzzy
+#| msgid "Import CSV File"
+msgid "Import Complete"
+msgstr "درون ریزی فایل CSV"
+
+#: classes/PDb_import/tally.php:226
+msgid "Import in Progress"
+msgstr ""
+
+#: classes/PDb_import/tally.php:275
 #, php-format
 msgid "%s record added"
 msgid_plural "%s records added"
 msgstr[0] ""
 
-#: classes/xnau_CSV_Import.php:104
+#: classes/PDb_import/tally.php:279
 #, php-format
 msgid "%s matching record updated"
 msgid_plural "%s matching records updated"
 msgstr[0] ""
 
-#: classes/xnau_CSV_Import.php:109
+#: classes/PDb_import/tally.php:283
 #, php-format
 msgid "%s duplicate record skipped"
 msgid_plural "%s duplicate records skipped"
 msgstr[0] ""
 
-#: classes/xnau_CSV_Import.php:114
+#: classes/PDb_import/tally.php:287
 #, php-format
 msgid "%s record skipped due to errors"
 msgid_plural "%s records skipped due to errors"
 msgstr[0] ""
 
-#: classes/xnau_CSV_Import.php:118
-msgid "Zero records imported"
-msgstr "هیچ رکوردی درون ریزی نشد."
+#: classes/xnau_CSV_Import.php:86
+#, php-format
+msgid "The file %s has been uploaded."
+msgstr "فایل %s آپلود شد."
 
-#: classes/xnau_CSV_Import.php:123
+#: classes/xnau_CSV_Import.php:96
+#, fuzzy
+#| msgid ""
+#| "There was an error uploading the file. This could be a problem with "
+#| "permissions on the uploads directory."
 msgid ""
-"There was an error uploading the file. This could be a problem with "
-"permissions on the uploads directory."
+"There was an error uploading the file. This is often because the file is "
+"larger than the server configuration will allow."
 msgstr ""
 "خطایی در آپلود فایل رخ داد. این مشکل می تواند از مجوز های دسترسی در "
 "دایرکتوری آپلود ها باشد."
 
-#: classes/xnau_CSV_Import.php:123 classes/xnau_CSV_Import.php:129
+#: classes/xnau_CSV_Import.php:96 classes/xnau_CSV_Import.php:102
 msgid "Destination"
 msgstr "مقصد"
 
-#: classes/xnau_CSV_Import.php:129
+#: classes/xnau_CSV_Import.php:102
 msgid ""
 "Target directory does not exist and could not be created. Try creating it "
 "manually."
@@ -2600,21 +2630,44 @@ msgstr ""
 "دایرکتوری مورد نظر وجود ندارد و نمی تواند ایجاد شود. سعی کنید آن را بطور "
 "دستی ایجاد کنید."
 
-#: classes/xnau_CSV_Import.php:155
+#: classes/xnau_CSV_Import.php:121
+#, fuzzy
+#| msgid "File Upload Limit"
+msgid "File upload complete"
+msgstr "محدودیت آپلود فایل"
+
+#: classes/xnau_CSV_Import.php:123
+#, php-format
+msgid "%d line received."
+msgid_plural "%d lines received."
+msgstr[0] ""
+
+#: classes/xnau_CSV_Import.php:125
+msgid ""
+"The data is importing in the background, refresh the page to get the current "
+"status of the import."
+msgstr ""
+
+#: classes/xnau_CSV_Import.php:148
 msgid "Invalid file for import."
 msgstr ""
 
-#: classes/xnau_CSV_Import.php:198
+#: classes/xnau_CSV_Import.php:189
 msgid "Error occured while trying to add the data to the database"
 msgstr "خطایی در هنگام افزودن اطلاعات به دیتابیس رخ داده است"
 
-#: classes/xnau_CSV_Import.php:198
+#: classes/xnau_CSV_Import.php:189
 #, php-format
 msgid ""
 "Input file does not exist or path is incorrect.<br />Attempted to load: %s"
 msgstr "فایل ورودی موجود نیست ویا مسیر اشتباه است.<br />تلاش برای بارگذاری: %s"
 
-#: classes/xnau_CSV_Import.php:248
+#: classes/xnau_CSV_Import.php:222
+msgid ""
+"Cannot import data. Make sure all field names are correct in the CSV header."
+msgstr ""
+
+#: classes/xnau_CSV_Import.php:247
 #, php-format
 msgid ""
 "The number of items in line %s is incorrect.<br />There are %s and there "
@@ -2622,48 +2675,60 @@ msgid ""
 msgstr ""
 "تعداد آیتم ها در خط %s صحیح نمی باشد.<br /> %s وجود دارد و باید %s باشد."
 
-#: classes/xnau_CSV_Import.php:257
+#: classes/xnau_CSV_Import.php:254
 msgid "Number of values does not match number of columns"
 msgstr "تعداد مقادیر با تعداد ستون ها مطابقت ندارد"
 
-#: classes/xnau_FormElement.php:247
+#: classes/xnau_FormElement.php:225
 msgctxt "indicates a write-in choice"
 msgid "other"
 msgstr ""
 
-#: classes/xnau_FormElement.php:248
+#: classes/xnau_FormElement.php:226
 msgctxt "indicates the text to be clicked to go to another web page"
 msgid "Link Text"
 msgstr ""
 
-#: edit_participant.php:79 edit_participant.php:272
+#: edit_participant.php:87 edit_participant.php:299
 msgid "Save the Record"
 msgstr "ذخیره رکورد"
 
-#: edit_participant.php:137
+#: edit_participant.php:153
 #, fuzzy
 #| msgid "hidden"
 msgctxt "label for a hidden field"
 msgid "hidden"
 msgstr "پنهان"
 
-#: edit_participant.php:164
+#: edit_participant.php:180
 msgid "read only"
 msgstr "فقط خواندنی"
 
-#: edit_participant.php:286
-msgid ""
-"<strong>Submit:</strong> save record and return to list<br><strong>Apply:</"
-"strong> save record and continue with same record<br><strong>Next:</strong> "
-"save record and then start a new one"
+#: edit_participant.php:316
+#, php-format
+msgid "<%1$s>Submit:</%1$s> save record and return to list"
 msgstr ""
-"<strong>ارسال:</strong> ذخیره رکورد و بازگشت به لیست<br><strong>اعمال:</"
-"strong> ذخیره رکورد و ادامه دادن با رکورد جاری<br><strong>بعدی:</strong> "
-"ذخیره رکورد و پرش به رکورد دیگر"
 
-#: edit_participant.php:290
-msgid "<strong>Previous:</strong> save and move to previous record"
+#: edit_participant.php:317
+#, php-format
+msgid "<%1$s>Apply:</%1$s> save record and continue with same record"
+msgstr ""
+
+#: edit_participant.php:319
+#, php-format
+msgid "<%1$s>Next:</%1$s> save record and go to the next record"
+msgstr ""
+
+#: edit_participant.php:320
+#, fuzzy, php-format
+#| msgid "<strong>Previous:</strong> save and move to previous record"
+msgid "<%1$s>Previous:</%1$s> save and move to previous record"
 msgstr "<strong>قبلی:</strong> ذخیره و پرش به رکورد قبلی"
+
+#: edit_participant.php:322
+#, php-format
+msgid "<%1$s>New:</%1$s> save record and then start a new one"
+msgstr ""
 
 #: manage_fields_help.php:4
 msgid "Manage Fields Help"
@@ -2712,102 +2777,126 @@ msgid ""
 "information on using this plugin."
 msgstr ""
 
+#: participants-database.php:369
+#, fuzzy
+#| msgid "Single Record Page"
+msgid "View Single Record"
+msgstr "صفحه رکورد فردی"
+
+#: participants-database.php:370
+msgid "Open Edit Record Form"
+msgstr ""
+
+#: participants-database.php:371
+#, fuzzy
+#| msgid "Request your Private Link"
+msgid "Record Accessed with Private Link"
+msgstr "درخواست لینک اختصاصی شما"
+
+#: participants-database.php:372
+msgid "Record Accessed First Time with Private Link"
+msgstr ""
+
 #. Plugin Name of the plugin/theme
-#: participants-database.php:539
+#: participants-database.php:544
 msgid "Participants Database"
 msgstr "دیتابیس مشترکین"
 
-#: participants-database.php:706
+#: participants-database.php:740
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr "شما باید تمامی فیلد های گروه {name} را قبل از حذف آن، پاک کنید."
 
-#: participants-database.php:708
+#: participants-database.php:742
 #, fuzzy
 #| msgid "Delete the \"{name}\" {thing}?"
 msgid "Delete the {name} {thing}?"
 msgstr "آیا \"{name}\" {thing} حذف شود?"
 
-#: participants-database.php:709
+#: participants-database.php:743
 #, fuzzy
 #| msgid "Approve the selected record?"
 msgid "Delete the selected field?"
 msgstr "آیا رکورد انتخاب شده را تایید می کنید؟"
 
-#: participants-database.php:710
+#: participants-database.php:744
 #, fuzzy
 #| msgid "Approve the selected records?"
 msgid "Delete the selected fields?"
 msgstr "آیا رکورد های انتخاب شده را تایید می کنید؟"
 
-#: participants-database.php:711
+#: participants-database.php:745
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 "تغییرات اعمال شده شما در صورتی که از این صفحه خارج شوید، از بین خواهد رفت."
 
-#: participants-database.php:712
+#: participants-database.php:746
 msgid ""
 "Changing the form element on a field that has stored data can result in data "
 "loss."
 msgstr ""
 
-#: participants-database.php:712
+#: participants-database.php:746
 #, fuzzy
 #| msgid "Your information has been updated"
 msgid "More information here…"
 msgstr "اطلاعات شما بروز رسانی شد"
 
-#: participants-database.php:713
+#: participants-database.php:747
 msgid "Yes, change the form element"
 msgstr ""
 
-#: participants-database.php:714
+#: participants-database.php:748
 msgid "No, don't change the form element"
 msgstr ""
 
-#: participants-database.php:3478 templates/pdb-retrieve-bootstrap.php:70
+#: participants-database.php:3109 templates/pdb-retrieve-bootstrap.php:70
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr "ارسال"
 
-#: participants-database.php:3482
+#: participants-database.php:3112
+msgid "New"
+msgstr ""
+
+#: participants-database.php:3114
 msgid "The record has been updated."
 msgstr "رکورد بروزرسانی شد."
 
-#: participants-database.php:3483
+#: participants-database.php:3115
 msgid "The new record has been added."
 msgstr "رکورد جدید اضافه شد."
 
-#: participants-database.php:3484
+#: participants-database.php:3116
 #, php-format
 msgid "No record was added on query: %s"
 msgstr "هیچ رکوردی با این دستور اضافه نشد: %s"
 
-#: participants-database.php:3485
+#: participants-database.php:3117
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr "خطای دیتابیس: %2$s در دستور: %1$s"
 
-#: participants-database.php:3643
+#: participants-database.php:3288
 msgid "WordPress Plugin"
 msgstr "افزونه وردپرس"
 
-#: participants-database.php:3644
+#: participants-database.php:3289
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr "کمک به سازمان ها برای مدیریت اعضا و مشترکین آن ها"
 
-#: participants-database.php:3647
+#: participants-database.php:3292
 msgid "Developed by"
 msgstr "توسعه یافته توسط"
 
-#: participants-database.php:3648
+#: participants-database.php:3293
 msgid ""
 "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr ""
 "آیا پیشنهاد و یا انتقادی از این پلاگین دارید؟ با کمال میل مایل به شنیدن آن "
 "ها هستم: ایمیل "
 
-#: participants-database.php:3651
+#: participants-database.php:3296
 #, php-format
 msgid ""
 "Please consider contributing to the continued support and development of "
@@ -2820,39 +2909,39 @@ msgstr ""
 "آن و یا ارایه چیزی در %1$sاین لینک%3$s اعلام فرمایید. سپاسگزاریم <br /> "
 "<strong> ویرایش و ترجمه به زبان فارسی: </strong>محسن آذرتیمور | کـدهــا "
 
-#: participants-database.php:3673
+#: participants-database.php:3318
 msgid "Add Participant"
 msgstr "افزودن مشترک"
 
-#: participants-database.php:3674 participants-database.php:3681
+#: participants-database.php:3319 participants-database.php:3326
 msgid "List Participants"
 msgstr "لیست مشترکین"
 
-#: participants-database.php:3676 upload_csv.php:41
+#: participants-database.php:3321 upload_csv.php:44
 msgid "Import CSV File"
 msgstr "درون ریزی فایل CSV"
 
-#: participants-database.php:3678
+#: participants-database.php:3323
 msgid "Setup Guide"
 msgstr "راهنمای راه اندازی"
 
-#: participants-database.php:3679
+#: participants-database.php:3324
 msgid "Add New Participant Record"
 msgstr "افزودن رکورد مشترک جدید"
 
-#: participants-database.php:3680
+#: participants-database.php:3325
 msgid "Edit Existing Participant Record"
 msgstr "ویرایش رکورد مشترک"
 
-#: participants-database.php:3682
+#: participants-database.php:3327
 msgid "Export CSV"
 msgstr "برون بری فایل CSV"
 
-#: participants-database.php:3683
+#: participants-database.php:3328
 msgid "Manage List Columns"
 msgstr ""
 
-#: participants-database.php:3819
+#: participants-database.php:3460
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
@@ -2862,11 +2951,11 @@ msgstr ""
 "PHP شما %s می باشد، لطفا نسخه PHP خود را ارتقاء دهید. افزونه به طور خودکار "
 "غیر فعال شده است."
 
-#: upload_csv.php:62
+#: upload_csv.php:65
 msgid "Prepare a spreadsheet file with the correct format:"
 msgstr "آماده کردن یک فایل صفحه گسترده با قالب صحیح:"
 
-#: upload_csv.php:63
+#: upload_csv.php:66
 msgid ""
 "To properly import your membership data, the columns in your spreadsheet "
 "must match exactly the columns in the database. Currently, the CSV export "
@@ -2876,7 +2965,7 @@ msgstr ""
 "دقیقا با ستون های موجود در دیتابیس مطابقت داشته باشد. اکنون، ستون های فایل "
 "CSV درون ریزی به شرح زیر است:"
 
-#: upload_csv.php:78
+#: upload_csv.php:83
 #, php-format
 msgid ""
 "This means your spreadsheet needs to have %s columns, and the heading in "
@@ -2889,21 +2978,27 @@ msgstr ""
 "ستونی خاص موجود نمی باشد شما می توانید آن را خالی بگذارید یا در نظر نگیرید. "
 "ترتیب ستون ها اهمیتی ندارد."
 
-#: upload_csv.php:79
+#: upload_csv.php:84
+#, fuzzy
+#| msgid ""
+#| "If the imported CSV file has a different column set, that column set will "
+#| "be imported and used. If a column name does not match a defined column in "
+#| "the database, the data from that column will be discarded"
 msgid ""
 "If the imported CSV file has a different column set, that column set will be "
 "imported and used. If a column name does not match a defined column in the "
-"database, the data from that column will be discarded"
+"database, the import will be aborted and a list of the incorrect column "
+"names will be displayed."
 msgstr ""
 "اگر فایل CSV درون ریزی شده مجموعه ستون متفاوتی دارد، آن مجموعه ستون درون "
 "ریزی خواهد شد و مورد استفاده قرار می گیرد. اگر یک نام ستون با ستون تعریف شده "
 "در دیتابیس مطابقت داده نشود آن ستون حذف می گردد."
 
-#: upload_csv.php:80
+#: upload_csv.php:85
 msgid "Get Blank CSV File"
 msgstr "دریافت فایل CSV خام"
 
-#: upload_csv.php:80
+#: upload_csv.php:85
 msgid ""
 "You can download this file, then open it in Open Office, Excel or Google "
 "Docs."
@@ -2911,11 +3006,11 @@ msgstr ""
 "شما می توانید این فایل را دانلود کرده و با برنامه های Open Office, Excel یا "
 "Google Docs آن را اجرا کنید"
 
-#: upload_csv.php:86
+#: upload_csv.php:91
 msgid "Export the .csv file"
 msgstr "برون بری فایل .csv"
 
-#: upload_csv.php:87
+#: upload_csv.php:92
 msgid ""
 "When you have your spreadsheet properly set up and filled with data, export "
 "it as any of the following: \"comma-delimited csv\", or just \"csv\". Save "
@@ -2925,7 +3020,7 @@ msgstr ""
 "را با فرمت فایل های \"comma-delimited csv\" یا \"csv\" برون بری کرده و در "
 "کامپیوتر خود ذخیره کنید، سپس آن را در اینجا آپلود نمایید."
 
-#: upload_csv.php:88
+#: upload_csv.php:93
 msgid ""
 "Exported CSV files should be comma-delimited and enclosed with double-quotes "
 "(\"). Encoding should be \"UTF-8.\""
@@ -2933,35 +3028,35 @@ msgstr ""
 "فایل CSV برون بری شده بایستی با کاما جدا شده باشد و بین دابل کوتیشن (\") "
 "قرار گرفته و همچنین باید با \"UTF-8\" رمز گذاری شده باشد."
 
-#: upload_csv.php:93
+#: upload_csv.php:98
 msgid "Upload the .csv file"
 msgstr "آپلود فایل .csv"
 
-#: upload_csv.php:101
+#: upload_csv.php:105
 msgid "Enclosure character"
 msgstr "کاراکتر محصور کننده"
 
-#: upload_csv.php:107 upload_csv.php:123
+#: upload_csv.php:114 upload_csv.php:131
 msgid "Auto"
 msgstr "بطور خودکار"
 
-#: upload_csv.php:117
+#: upload_csv.php:123
 msgid "Delimiter character"
 msgstr "کاراکتر جدا کننده"
 
-#: upload_csv.php:126
+#: upload_csv.php:134
 msgid "tab"
 msgstr "تب"
 
-#: upload_csv.php:146
+#: upload_csv.php:154
 msgid "Update matching record with new data"
 msgstr "بروزرسانی رکورد های مطابقت داده شده با اطلاعات جدید"
 
-#: upload_csv.php:147
+#: upload_csv.php:155
 msgid "Don't import the record"
 msgstr "رکورد درون ریزی نشود"
 
-#: upload_csv.php:170
+#: upload_csv.php:178
 msgid ""
 "<strong>Note:</strong> Depending on the \"Duplicate Record Preference\" "
 "setting, imported records are checked against existing records by the field "
@@ -2975,11 +3070,11 @@ msgstr ""
 "موجود، درون ریزی شود، یکی از سه حالت اتفاق خواهد افتاد که بستگی به تنظیم "
 "گزینه \"اولویت رکورد تکراری\" دارد."
 
-#: upload_csv.php:171
+#: upload_csv.php:179
 msgid "Current Setting"
 msgstr "تنظیمات جاری"
 
-#: upload_csv.php:174
+#: upload_csv.php:182
 #, php-format
 msgid ""
 "%sCreate New%s adds all imported records as new records without checking for "
@@ -2988,7 +3083,7 @@ msgstr ""
 "%sایجاد کردن رکورد های جدید %s اضافه کردن تمامی رکورد های درون ریزی شده "
 "بعنوان رکورد های جدید بدون بررسی برای مطابقت داشتن"
 
-#: upload_csv.php:175
+#: upload_csv.php:183
 #, php-format
 msgid ""
 "%sOverwrite%s an existing record with a matching %s will be updated with the "
@@ -2999,7 +3094,7 @@ msgstr ""
 "شده، بروز رسانی خواهد شد. فیلدهای خالی یا فراموش شده بر روی اطلاعات موجود "
 "بازنویسی نخواهد شد."
 
-#: upload_csv.php:176
+#: upload_csv.php:184
 #, php-format
 msgid ""
 "%sDon&#39;t Import%s does not import the new record if it matches the %s of "
@@ -3008,45 +3103,61 @@ msgstr ""
 "%sدرون ریزی نشود%s  رکورد جدید را درون ریزی نمی کند در صورتی که اطلاعات آن "
 "با فیلد %s یکی از رکورد های موجود مطابقت داشته باشد."
 
-#: upload_csv.php:185
+#: upload_csv.php:193
 msgid "Choose .csv file to import:"
 msgstr "فایل .csv را برای درون ریزی انتخاب کنید:"
 
-#: upload_csv.php:186
+#: upload_csv.php:194
 msgid "Upload File"
 msgstr "آپلود فایل"
 
-#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:358
+#: vendor/deliciousbrains/wp-background-processing/classes/wp-background-process.php:425
+#, php-format
+msgid "Every %d Minutes"
+msgstr ""
+
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:77
+#, fuzzy, php-format
+#| msgid "Your information has been updated"
+msgid "More information about %s"
+msgstr "اطلاعات شما بروز رسانی شد"
+
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:128
 msgid "Check for updates"
 msgstr "بررسی بروز رسانی ها"
 
-#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:405
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:214
 #, fuzzy, php-format
 #| msgid "This plugin is up to date."
 msgctxt "the plugin title"
 msgid "The %s plugin is up to date."
 msgstr "این افزونه بروز می باشد."
 
-#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:407
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:216
 #, fuzzy, php-format
 #| msgid "A new version of this plugin is available."
 msgctxt "the plugin title"
 msgid "A new version of the %s plugin is available."
 msgstr "نگارش تازه ای از این افزونه در دسترس می باشد."
 
-#: vendor/aux-plugin-update/Puc/v4p1/Plugin/UpdateChecker.php:409
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:218
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:224
 #, php-format
 msgid "Unknown update checker status \"%s\""
 msgstr "وضعیت بررسی بروز رسانی نامشخص \"%s\""
 
-#: vendor/aux-plugin-update/Puc/v4p1/Vcs/PluginUpdateChecker.php:83
+#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Vcs/PluginUpdateChecker.php:98
 msgid "There is no changelog available."
 msgstr "ثبت تغییرات در دسترسی موجود نمی باشد."
-
-#: vendor/wp-background-process/wp-background-process.php:427
-#, php-format
-msgid "Every %d Minutes"
-msgstr ""
 
 #. Plugin URI of the plugin/theme
 msgid "https://xnau.com/wordpress-plugins/participants-database"
@@ -3065,6 +3176,109 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://xnau.com"
 msgstr ""
+
+#~ msgid "New columns imported from the CSV file."
+#~ msgstr "ستون های تازه ای از فایل CSV درون ریزی شد."
+
+#~ msgctxt "Plugin installer section title"
+#~ msgid "Description"
+#~ msgstr "توضیحات"
+
+#~ msgctxt "Plugin installer section title"
+#~ msgid "FAQ"
+#~ msgstr "سوالات متداول"
+
+#~ msgctxt "Plugin installer section title"
+#~ msgid "Screenshots"
+#~ msgstr "تصاویر"
+
+#~ msgctxt "Plugin installer section title"
+#~ msgid "Changelog"
+#~ msgstr "ثبت تغییرات"
+
+#~ msgctxt "Plugin installer section title"
+#~ msgid "Reviews"
+#~ msgstr "بررسی ها"
+
+#~ msgctxt "Plugin installer section title"
+#~ msgid "Support"
+#~ msgstr "پشتیبانی"
+
+#~ msgid "Plugin Install"
+#~ msgstr "نصب افزونه"
+
+#~ msgid "Version:"
+#~ msgstr "نگارش:"
+
+#~ msgid "Author:"
+#~ msgstr "نویسنده:"
+
+#, php-format
+#~ msgid "%s ago"
+#~ msgstr "%s قبل"
+
+#~ msgid "Requires WordPress Version:"
+#~ msgstr "به این نگارش وردپرس نیازمند است:"
+
+#, php-format
+#~ msgid "%s or higher"
+#~ msgstr "%s یا بالاتر"
+
+#~ msgid "Compatible up to:"
+#~ msgstr "سازگار تا:"
+
+#~ msgid "Active Installs:"
+#~ msgstr "نصب های فعال:"
+
+#~ msgctxt "Active plugin installs"
+#~ msgid "1+ Million"
+#~ msgstr "1+ میلیون"
+
+#~ msgid "WordPress.org Plugin Page &#187;"
+#~ msgstr "صفحه افزونه WordPress.org &#187;"
+
+#~ msgid "Plugin Homepage &#187;"
+#~ msgstr "صفحه اصلی افزونه &#187;"
+
+#~ msgid "Add-Ons &amp; Extras &#187;"
+#~ msgstr "افزودنی ها &amp; پیشنهادی &#187;"
+
+#~ msgid "Donate to this plugin &#187;"
+#~ msgstr "این افزونه را حمایت کنید &#187;"
+
+#~ msgid "Average Rating"
+#~ msgstr "میانگین امتیاز"
+
+#~ msgid "Reviews"
+#~ msgstr "بررسی"
+
+#~ msgid "Read all reviews on WordPress.org or write your own!"
+#~ msgstr "تمام بررسی ها را در WordPress.org بخوانید یا بررسی خود را بنویسید!"
+
+#~ msgid "Contributors"
+#~ msgstr "همکاران"
+
+#~ msgid "Install Now"
+#~ msgstr "نصب کن"
+
+#~ msgid "Install Update Now"
+#~ msgstr "همین حالا بروز رسانی را نصب کن"
+
+#, php-format
+#~ msgid "Newer Version (%s) Installed"
+#~ msgstr "نگارش تازه (%s) نصب شد"
+
+#~ msgid "Latest Version Installed"
+#~ msgstr "آخرین نگارش نصب شد"
+
+#~ msgid ""
+#~ "<strong>Submit:</strong> save record and return to list<br><strong>Apply:"
+#~ "</strong> save record and continue with same record<br><strong>Next:</"
+#~ "strong> save record and then start a new one"
+#~ msgstr ""
+#~ "<strong>ارسال:</strong> ذخیره رکورد و بازگشت به لیست<br><strong>اعمال:</"
+#~ "strong> ذخیره رکورد و ادامه دادن با رکورد جاری<br><strong>بعدی:</strong> "
+#~ "ذخیره رکورد و پرش به رکورد دیگر"
 
 #~ msgid "Submit a rating or review"
 #~ msgstr "ارسال یک نظر یا امتیاز"
