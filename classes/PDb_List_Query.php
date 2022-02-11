@@ -890,7 +890,6 @@ class PDb_List_Query {
 
     if ( $operator === 0 )
       return false; // no valid operator; skip to the next statement
-
       
 // get the parts
     list( $string, $column, $op_char, $search_term ) = $matches;
