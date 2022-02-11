@@ -82,9 +82,6 @@ trait store {
     // get the record id to use in the query
     $record_id = $record_match->record_id();
     
-    // tally the status
-    $this->tally->add( $action );
-    
     $main_query = \PDb_submission\main_query\base_query::get_instance( $action, $post, $record_id, false );
     /** @var \PDb_submission\main_query\base_query $main_query */
     
@@ -122,6 +119,9 @@ trait store {
     }
     
     $updated_record_id = $main_query->execute_query();
+    
+    // tally the status
+    $this->tally->add( $action );
     
     \PDb_Participant_Cache::is_now_stale( $updated_record_id );
 
