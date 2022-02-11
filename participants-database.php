@@ -358,7 +358,9 @@ class Participants_Db extends PDb_Base {
       add_shortcode( $tag, array(__CLASS__, 'print_shortcode') );
     }
     
-    add_filter( 'pre_do_shortcode_tag', array( __CLASS__, 'fix_shortcode_special_chars' ), 10, 3);
+    // #2755
+    //add_filter( 'pre_do_shortcode_tag', array( __CLASS__, 'fix_shortcode_special_chars' ), 10, 3);
+    add_filter('the_content', 'Participants_Db::fix_shortcode_special_chars_content', 10 );
     
     // action for handling the list columns UI
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
@@ -410,33 +412,43 @@ class Participants_Db extends PDb_Base {
    * 
    * this is to prevent wptexturize from thinking the < or > characters designate an HTML tag
    * 
-   * @version 1.7.5
-   * @see https://core.trac.wordpress.org/ticket/29608
-   * @see https://codex.wordpress.org/Shortcode_API#HTML
-   * 
-   * called on the pre_do_shortcode_tag filter
-   * @see https://developer.wordpress.org/reference/hooks/pre_do_shortcode_tag/
-   * 
-   * @param bool $return the return flag
-   * @param string $tag the shortcode tag
-   * @param array $atts the shortcode attributes
-   * @return bool false to show the shortcode
+   * @param string $att_string the shortcode attributes string
+   * @return string the fixed attribute string
    */
-  public static function fix_shortcode_special_chars( $return, $tag, $atts )
+  public static function fix_shortcode_special_chars( $att_string )
   {
-    if ( in_array( $tag, array( 'pdb_list','pdb_total' ) ) && isset( $atts['filter'] ) ) {
+    // hide angle brackets
+    $att_string = str_replace( array('<','>'), array('&lt;', '&gt;'), $att_string );
+
+    // straighten quotes
+    $att_string = PDb_List_Query::straighten_quotes( $att_string );
+    
+    return $att_string;
+  }
+  
+  /**
+   * filters the content to fix issues with quotes and angle brackets in shortcodes
+   * 
+   * @param string $content
+   * @return string
+   */
+  public static function fix_shortcode_special_chars_content( $content )
+  {
+    if ( strpos( $content, '[pdb_list' ) !== false || strpos( $content, '[pdb_total' ) !== false ) {
       
-        // hide angle brackets
-        $atts['filter'] = str_replace( array('<','>'), array('&lt;', '&gt;'), $atts['filter'] );
+      preg_match_all('/\[(pdb_list|pdb_total)(.*?)\]/m', $content, $matches );
         
-        // straighten quotes
-        $atts['filter'] = PDb_List_Query::straighten_quotes( $atts['filter'] );
+      $replace_content = array();
+      
+      foreach ( $matches[2] as $match_string ) {
+        $replace_content[] = self::fix_shortcode_special_chars( $match_string );
+      }
+      
+      $content = str_replace( $matches[2], $replace_content, $content );
         
-        // remove enclosing quotes
-        $atts['filter'] = trim( $atts['filter'], '"'."'" );
     }
     
-    return $return;
+    return $content;
   }
 
   /**
@@ -497,6 +509,7 @@ class Participants_Db extends PDb_Base {
     // check the php version for possible warning
     self::php_version_warning();
     
+    self::check_uploads_directory();
     
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
@@ -918,18 +931,16 @@ class Participants_Db extends PDb_Base {
   /**
    * updates the "last_accessed" field in the database
    * 
-   * @ver 1.5 added $wpdb->prepare()
-   * 
    * @param int $id the record to update
-   * @global $wpdb
+   * @global \wpdb $wpdb
    */
   private static function _record_access( $id )
   {
     global $wpdb;
 
-    $sql = 'UPDATE ' . self::$participants_table . ' SET `last_accessed` = NOW() WHERE `id` = %s';
+    $sql = 'UPDATE ' . self::$participants_table . ' SET `last_accessed` = "' . self::timestamp_now() . '" WHERE `id` = %s';
 
-    return $wpdb->query( $wpdb->prepare( $sql, $id ) );
+    $wpdb->query( $wpdb->prepare( $sql, $id ) );
   }
 
   /**
