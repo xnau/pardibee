@@ -1318,6 +1318,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+
+    $this->plugin_settings[] = array(
+        'name' => 'db_timestamps_use_local_tz',
+        'title' => __( 'Record Timestamps Use Local Time Zone', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'when checked, the locally configured timezone will used for database timestamps. If unchecked, timestamps will use the UTC timezone.', 'participants-database' ) . $this->settings_help( 'timestamp-timezone'),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
     
 
     $this->plugin_settings[] = array(
