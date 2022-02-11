@@ -30,7 +30,7 @@ if ( ! $participant_id ) {
   $participant_values = Participants_Db::get_default_record();
 } else {
   
-  PDb_Participant_Cache::clear_cache($participant_id);
+  PDb_Participant_Cache::is_now_stale($participant_id);
 
   $action = 'update';
   $page_title = Participants_Db::plugin_label( 'edit_record_title' );
