@@ -46,6 +46,7 @@ class PDb_Date_Display {
    * 
    * @param string|int $timestamp
    * @param string $context
+   * @return string
    */
   public static function get_date( $timestamp = '', $context = '' )
   {
@@ -59,6 +60,7 @@ class PDb_Date_Display {
    * @param string|int $timestamp
    * @param string $format
    * @param string $context
+   * @return string
    */
   public static function get_date_with_format( $timestamp, $format, $context = '' )
   {
