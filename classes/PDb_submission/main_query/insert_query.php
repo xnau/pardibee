@@ -29,10 +29,10 @@ class insert_query extends base_query {
     $sql = 'INSERT INTO ' . \Participants_Db::participants_table() . ' SET ';
 
     if ( $this->needs_timestamp( 'date_recorded' ) ) {
-      $sql .= ' `date_recorded` = NOW(), ';
+      $sql .= ' `date_recorded` = "' . \Participants_Db::timestamp_now() . '", ';
     }
     if ( $this->needs_timestamp( 'date_updated' ) ) {
-      $sql .= ' `date_updated` = NOW(), ';
+      $sql .= ' `date_updated` = "' . \Participants_Db::timestamp_now() . '", ';
     }
     
     return $sql;
