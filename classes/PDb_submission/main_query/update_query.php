@@ -29,7 +29,7 @@ class update_query extends base_query {
     $sql = 'UPDATE ' . \Participants_Db::participants_table() . ' SET ';
 
     if ( $this->needs_date_updated_timestamp() ) {
-      $sql .= ' `date_updated` = NOW(), ';
+      $sql .= ' `date_updated` = "' . \Participants_Db::timestamp_now() . '", ';
     }
     
     return $sql;
