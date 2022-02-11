@@ -148,6 +148,10 @@ class PDb_Participant_Cache {
     
     if ( ! $participant_data && $this->id !== 0 ) {
       Participants_Db::debug_log(__METHOD__ . ' cache missed for participant id ' . $this->id );
+      
+      $this->refresh_cache();
+      
+      $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
     }
     
     return $participant_data;
