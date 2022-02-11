@@ -162,12 +162,13 @@ class PDb_FormElement extends xnau_FormElement {
     /**
      * we pass the object to an external function with 
      * a filter handle that includes the name of the custom form element. The 
-     * filter callback is expected to fill the output property
+     * hook handler is expected to fill the output property of the field object,
+     * but this hook can be used to modify the field object before output
      * 
      * @action pdb-form_element_build_{$type}
      */
     Participants_Db::do_action( 'form_element_build_' . $this->form_element, $this );
-
+    
     if ( empty( $this->output ) ) {
       $this->call_element_method();
     }
@@ -259,6 +260,8 @@ class PDb_FormElement extends xnau_FormElement {
       $in_optgroup = false;
     }
     if ( $otherlabel ) {
+      
+      $otherlabel = Participants_Db::apply_filters('translate_string', $otherlabel );
 
       $value = $type == 'checkbox' ? (isset( $this->value['other'] ) ? $this->value['other'] : '') : $this->value;
       $this->_addline( '<div class="othercontrol">' );
