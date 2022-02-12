@@ -290,6 +290,12 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.0.1 =
+* fixed issue with image uploads in the signup form
+* timestamps may now be set to use local timezone instead of UTC
+* new setting to allow editor users to access administrative fields
+* several minor bug fixes
+
 = 2.0 =
 New Features:
 * "Mass Edit" on the admin list participants page
@@ -1442,6 +1448,7 @@ Taking defensive precautions against other plugins in the admin:
 == Upgrade Notice ==
 
 2.0 is a major feature upgrade release. We recommend you back up your files and database before upgrading.
+2.0.1 is a bug fix update
 
 == Plugin Support ==
 
