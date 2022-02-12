@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Participants Database\n"
-"POT-Creation-Date: 2022-01-31 18:15-1000\n"
+"POT-Creation-Date: 2022-02-12 09:19-1000\n"
 "PO-Revision-Date: 2016-08-13 08:51-1000\n"
 "Last-Translator: Roland Barker <webdesign@xnau.com>\n"
 "Language-Team: Roland Barker <webdesign@xnau.com>\n"
@@ -46,6 +46,14 @@ msgid ""
 "Participants Database will require PHP version %1$s in future releases, you "
 "have PHP version %2$s. Please update your php version, future versions of "
 "Participants Database may not run without minimum php version %1$s"
+msgstr ""
+
+#: classes/PDb_Base.php:2248
+#, php-format
+msgid ""
+"The configured uploads directory \"%s\" for Participants Database is not "
+"writable. This means that plugins file uploads will fail, check the "
+"Participants Database \"File Upload Location\" setting for the correct path."
 msgstr ""
 
 #: classes/PDb_CSV_Import.php:187
@@ -109,117 +117,117 @@ msgstr ""
 msgid "Delete this field"
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:103 classes/PDb_File_Uploads.php:168
+#: classes/PDb_File_Uploads.php:104 classes/PDb_File_Uploads.php:169
 #, php-format
 msgid ""
 "The file you tried to upload is too large. The file must be smaller than %sK."
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:110
+#: classes/PDb_File_Uploads.php:111
 msgid ""
 "There is something wrong with the file you tried to upload. Try another."
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:123 classes/PDb_File_Uploads.php:158
+#: classes/PDb_File_Uploads.php:124 classes/PDb_File_Uploads.php:159
 #, php-format
 msgid "For \"%s\", you may only upload image files like JPEGs, GIFs or PNGs."
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:125
+#: classes/PDb_File_Uploads.php:126
 #, php-format
 msgid "The file selected for \"%s\" must be one of these types: %s. "
 msgstr ""
 
-#: classes/PDb_File_Uploads.php:177
+#: classes/PDb_File_Uploads.php:178
 msgid "The file could not be saved."
 msgstr ""
 
-#: classes/PDb_FormElement.php:415 classes/PDb_List_Admin.php:819
+#: classes/PDb_FormElement.php:418 classes/PDb_List_Admin.php:819
 #: classes/PDb_List_Admin.php:1024 classes/xnau_FormElement.php:1065
 msgid "delete"
 msgstr ""
 
-#: classes/PDb_FormElement.php:794
+#: classes/PDb_FormElement.php:797
 msgid "Text-line"
 msgstr ""
 
-#: classes/PDb_FormElement.php:795
+#: classes/PDb_FormElement.php:798
 msgid "Text Area"
 msgstr ""
 
-#: classes/PDb_FormElement.php:796
+#: classes/PDb_FormElement.php:799
 msgid "Rich Text"
 msgstr ""
 
-#: classes/PDb_FormElement.php:797
+#: classes/PDb_FormElement.php:800
 msgid "Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:798
+#: classes/PDb_FormElement.php:801
 msgid "Radio Buttons"
 msgstr ""
 
-#: classes/PDb_FormElement.php:799
+#: classes/PDb_FormElement.php:802
 msgid "Dropdown List"
 msgstr ""
 
-#: classes/PDb_FormElement.php:800
+#: classes/PDb_FormElement.php:803
 msgid "Date Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:801
+#: classes/PDb_FormElement.php:804
 msgid "Numeric"
 msgstr ""
 
-#: classes/PDb_FormElement.php:802
+#: classes/PDb_FormElement.php:805
 msgid "Decimal"
 msgstr ""
 
-#: classes/PDb_FormElement.php:803
+#: classes/PDb_FormElement.php:806
 msgid "Currency"
 msgstr ""
 
-#: classes/PDb_FormElement.php:804
+#: classes/PDb_FormElement.php:807
 msgid "Dropdown/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:805
+#: classes/PDb_FormElement.php:808
 msgid "Multiselect Checkbox"
 msgstr ""
 
-#: classes/PDb_FormElement.php:806
+#: classes/PDb_FormElement.php:809
 msgid "Multiselect Dropdown"
 msgstr ""
 
-#: classes/PDb_FormElement.php:807
+#: classes/PDb_FormElement.php:810
 msgid "Radio Buttons/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:808
+#: classes/PDb_FormElement.php:811
 msgid "Multiselect/Other"
 msgstr ""
 
-#: classes/PDb_FormElement.php:809
+#: classes/PDb_FormElement.php:812
 msgid "Link Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:810
+#: classes/PDb_FormElement.php:813
 msgid "Image Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:811
+#: classes/PDb_FormElement.php:814
 msgid "File Upload Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:812
+#: classes/PDb_FormElement.php:815
 msgid "Hidden Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:813
+#: classes/PDb_FormElement.php:816
 msgid "Password Field"
 msgstr ""
 
-#: classes/PDb_FormElement.php:814
+#: classes/PDb_FormElement.php:817
 msgid "CAPTCHA"
 msgstr ""
 
@@ -285,12 +293,12 @@ msgid "select"
 msgstr ""
 
 #: classes/PDb_List.php:821 classes/PDb_List_Admin.php:457
-#: classes/PDb_Settings.php:836 classes/PDb_Settings.php:1383
+#: classes/PDb_Settings.php:836 classes/PDb_Settings.php:1396
 msgid "Ascending"
 msgstr ""
 
 #: classes/PDb_List.php:822 classes/PDb_List_Admin.php:458
-#: classes/PDb_Settings.php:836 classes/PDb_Settings.php:1383
+#: classes/PDb_Settings.php:836 classes/PDb_Settings.php:1396
 msgid "Descending"
 msgstr ""
 
@@ -480,7 +488,7 @@ msgstr ""
 msgid "send signup email"
 msgstr ""
 
-#: classes/PDb_List_Admin.php:1112 participants-database.php:3110
+#: classes/PDb_List_Admin.php:1112 participants-database.php:3124
 msgid "Apply"
 msgstr ""
 
@@ -490,7 +498,7 @@ msgctxt ""
 msgid "With selected"
 msgstr ""
 
-#: classes/PDb_Manage_Fields.php:74 participants-database.php:3320
+#: classes/PDb_Manage_Fields.php:74 participants-database.php:3334
 msgid "Manage Database Fields"
 msgstr ""
 
@@ -852,11 +860,11 @@ msgstr ""
 msgid "First"
 msgstr ""
 
-#: classes/PDb_Pagination.php:377 participants-database.php:3113
+#: classes/PDb_Pagination.php:377 participants-database.php:3127
 msgid "Previous"
 msgstr ""
 
-#: classes/PDb_Pagination.php:396 participants-database.php:3111
+#: classes/PDb_Pagination.php:396 participants-database.php:3125
 msgid "Next"
 msgstr ""
 
@@ -864,7 +872,7 @@ msgstr ""
 msgid "Last"
 msgstr ""
 
-#: classes/PDb_Path.php:161 participants-database.php:2912
+#: classes/PDb_Path.php:161 participants-database.php:2926
 #, php-format
 msgid "The uploads directory (%s) could not be created."
 msgstr ""
@@ -1914,195 +1922,215 @@ msgid ""
 "not editable, checking this allows them to be edited."
 msgstr ""
 
-#: classes/PDb_Settings.php:1325
-msgid "Sync php Timezone"
+#: classes/PDb_Settings.php:1324
+msgid "Record Timestamps Use Local Time Zone"
 msgstr ""
 
-#: classes/PDb_Settings.php:1330
-msgid "when checked, the php timezone will be set to the WordPress timezone."
+#: classes/PDb_Settings.php:1329
+msgid ""
+"when checked, the locally configured timezone will used for database "
+"timestamps. If unchecked, timestamps will use the UTC timezone."
 msgstr ""
 
 #: classes/PDb_Settings.php:1338
-msgid "Enable Debugging"
+msgid "Sync php Timezone"
 msgstr ""
 
 #: classes/PDb_Settings.php:1343
+msgid "when checked, the php timezone will be set to the WordPress timezone."
+msgstr ""
+
+#: classes/PDb_Settings.php:1351
+msgid "Enable Debugging"
+msgstr ""
+
+#: classes/PDb_Settings.php:1356
 #, php-format
 msgid "this will enable writing to the %s debugging log."
 msgstr ""
 
-#: classes/PDb_Settings.php:1347
+#: classes/PDb_Settings.php:1360
 msgid "off"
 msgstr ""
 
-#: classes/PDb_Settings.php:1348
+#: classes/PDb_Settings.php:1361
 msgid "plugin debug"
 msgstr ""
 
-#: classes/PDb_Settings.php:1349
+#: classes/PDb_Settings.php:1362
 msgid "all errors"
 msgstr ""
 
-#: classes/PDb_Settings.php:1350
+#: classes/PDb_Settings.php:1363
 msgid "verbose"
 msgstr ""
 
-#: classes/PDb_Settings.php:1364
+#: classes/PDb_Settings.php:1377
 msgid "Admin List Default Sort"
 msgstr ""
 
-#: classes/PDb_Settings.php:1370
+#: classes/PDb_Settings.php:1383
 msgid ""
 "The record list shown in the admin section will be sorted by this field by "
 "default. (Field must be checked \"sortable.\")"
 msgstr ""
 
-#: classes/PDb_Settings.php:1377
+#: classes/PDb_Settings.php:1390
 msgid "Admin List Default Sort Order"
 msgstr ""
 
-#: classes/PDb_Settings.php:1381
+#: classes/PDb_Settings.php:1394
 msgid "Sets the default order of the record list in the admin."
 msgstr ""
 
-#: classes/PDb_Settings.php:1389
+#: classes/PDb_Settings.php:1402
 msgid "Show Image Thumbnails in Admin List"
 msgstr ""
 
-#: classes/PDb_Settings.php:1404
+#: classes/PDb_Settings.php:1417
 msgid "Plugin Admin Horizontal Scrolling"
 msgstr ""
 
-#: classes/PDb_Settings.php:1409
+#: classes/PDb_Settings.php:1422
 msgid "use horizontal scrolling on list and fields management screens"
 msgstr ""
 
-#: classes/PDb_Settings.php:1417
+#: classes/PDb_Settings.php:1430
 msgid "Record Edit Access Level"
 msgstr ""
 
-#: classes/PDb_Settings.php:1421
+#: classes/PDb_Settings.php:1434
 msgid "sets the user access level for adding, editing and listing records."
 msgstr ""
 
-#: classes/PDb_Settings.php:1429
+#: classes/PDb_Settings.php:1442
 msgid "Plugin Admin Access Level"
 msgstr ""
 
-#: classes/PDb_Settings.php:1433
+#: classes/PDb_Settings.php:1446
 msgid ""
 "sets the user access level for fields management, plugin settings, deleting "
 "records and CSV operations."
 msgstr ""
 
-#: classes/PDb_Settings.php:1441
+#: classes/PDb_Settings.php:1454
 msgid "Top Settings Submit"
 msgstr ""
 
-#: classes/PDb_Settings.php:1445
+#: classes/PDb_Settings.php:1458
 msgid ""
 "show a submit button at the top of admin settings and configuration pages"
 msgstr ""
 
-#: classes/PDb_Settings.php:1453
+#: classes/PDb_Settings.php:1466
 msgid "Admin Record Edits are Validated"
 msgstr ""
 
-#: classes/PDb_Settings.php:1458
+#: classes/PDb_Settings.php:1471
 msgid "When checked, admin record edits and new records must pass validation."
 msgstr ""
 
-#: classes/PDb_Settings.php:1466
+#: classes/PDb_Settings.php:1479
+msgid "Editor can Edit Administrative Fields"
+msgstr ""
+
+#: classes/PDb_Settings.php:1483
+msgid ""
+"If checked, users with the plugin editor role can edit fields in an admin "
+"group."
+msgstr ""
+
+#: classes/PDb_Settings.php:1491
 msgid "Editor can Export CSV Files"
 msgstr ""
 
-#: classes/PDb_Settings.php:1470
+#: classes/PDb_Settings.php:1495
 msgid "If checked, users with the plugin editor role can export a CSV."
 msgstr ""
 
-#: classes/PDb_Settings.php:1492
+#: classes/PDb_Settings.php:1517
 msgid "Show Timestamp Time"
 msgstr ""
 
-#: classes/PDb_Settings.php:1497
+#: classes/PDb_Settings.php:1522
 msgid "Show time with timestamp dates"
 msgstr ""
 
-#: classes/PDb_Settings.php:1506
+#: classes/PDb_Settings.php:1531
 msgid "Clear Plugin Admin Notices"
 msgstr ""
 
-#: classes/PDb_Settings.php:1510
+#: classes/PDb_Settings.php:1535
 msgid "If checked, all plugin-generated admin notices will be cleared."
 msgstr ""
 
-#: classes/PDb_Settings.php:1524
+#: classes/PDb_Settings.php:1549
 msgid "Custom Plugin Stylesheet"
 msgstr ""
 
-#: classes/PDb_Settings.php:1529
+#: classes/PDb_Settings.php:1554
 msgid ""
 "use this to add your own styles or override styles applied to the output of "
 "all plugin shortcodes"
 msgstr ""
 
-#: classes/PDb_Settings.php:1539
+#: classes/PDb_Settings.php:1564
 msgid "Plugin Print Stylesheet"
 msgstr ""
 
-#: classes/PDb_Settings.php:1544
+#: classes/PDb_Settings.php:1569
 msgid "use this to format the printed output of all plugin shortcodes"
 msgstr ""
 
-#: classes/PDb_Settings.php:1554
+#: classes/PDb_Settings.php:1579
 msgid "Custom Admin Stylesheet"
 msgstr ""
 
-#: classes/PDb_Settings.php:1559
+#: classes/PDb_Settings.php:1584
 msgid ""
 "use this to add or modify CSS rules that are applied on all plugin pages in "
 "the WordPress backend."
 msgstr ""
 
-#: classes/PDb_Settings.php:1580
+#: classes/PDb_Settings.php:1605
 msgid "Same Page"
 msgstr ""
 
-#: classes/PDb_Settings.php:1623
+#: classes/PDb_Settings.php:1648
 msgid "None"
 msgstr ""
 
-#: classes/PDb_Settings.php:1746
+#: classes/PDb_Settings.php:1771
 msgid "Contributor"
 msgstr ""
 
-#: classes/PDb_Settings.php:1747
+#: classes/PDb_Settings.php:1772
 msgid "Author"
 msgstr ""
 
-#: classes/PDb_Settings.php:1748
+#: classes/PDb_Settings.php:1773
 msgid "Editor"
 msgstr ""
 
-#: classes/PDb_Settings.php:1749
+#: classes/PDb_Settings.php:1774
 msgid "Admin"
 msgstr ""
 
-#: classes/PDb_Settings.php:1832 participants-database.php:3322
-#: participants-database.php:3380
+#: classes/PDb_Settings.php:1857 participants-database.php:3336
+#: participants-database.php:3394
 msgid "Settings"
 msgstr ""
 
-#: classes/PDb_Settings.php:1927 classes/PDb_Settings.php:1933
+#: classes/PDb_Settings.php:1952 classes/PDb_Settings.php:1958
 #, php-format
 msgid "Only numeric values can be used for the \"%s\" setting."
 msgstr ""
 
-#: classes/PDb_Settings.php:1982
+#: classes/PDb_Settings.php:2007
 msgid "Content Directory"
 msgstr ""
 
-#: classes/PDb_Settings.php:1982
+#: classes/PDb_Settings.php:2007
 msgid "WordPress root"
 msgstr ""
 
@@ -2462,111 +2490,111 @@ msgid ""
 "information on using this plugin."
 msgstr ""
 
-#: participants-database.php:369
+#: participants-database.php:371
 msgid "View Single Record"
 msgstr ""
 
-#: participants-database.php:370
+#: participants-database.php:372
 msgid "Open Edit Record Form"
 msgstr ""
 
-#: participants-database.php:371
+#: participants-database.php:373
 msgid "Record Accessed with Private Link"
 msgstr ""
 
-#: participants-database.php:372
+#: participants-database.php:374
 msgid "Record Accessed First Time with Private Link"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-#: participants-database.php:544
+#: participants-database.php:557
 msgid "Participants Database"
 msgstr ""
 
-#: participants-database.php:740
+#: participants-database.php:753
 msgid "You must remove all fields from the {name} group before deleting it."
 msgstr ""
 
-#: participants-database.php:742
+#: participants-database.php:755
 msgid "Delete the {name} {thing}?"
 msgstr ""
 
-#: participants-database.php:743
+#: participants-database.php:756
 msgid "Delete the selected field?"
 msgstr ""
 
-#: participants-database.php:744
+#: participants-database.php:757
 msgid "Delete the selected fields?"
 msgstr ""
 
-#: participants-database.php:745
+#: participants-database.php:758
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: participants-database.php:746
+#: participants-database.php:759
 msgid ""
 "Changing the form element on a field that has stored data can result in data "
 "loss."
 msgstr ""
 
-#: participants-database.php:746
+#: participants-database.php:759
 msgid "More information here…"
 msgstr ""
 
-#: participants-database.php:747
+#: participants-database.php:760
 msgid "Yes, change the form element"
 msgstr ""
 
-#: participants-database.php:748
+#: participants-database.php:761
 msgid "No, don't change the form element"
 msgstr ""
 
-#: participants-database.php:3109 templates/pdb-retrieve-bootstrap.php:70
+#: participants-database.php:3123 templates/pdb-retrieve-bootstrap.php:70
 #: templates/pdb-retrieve-default.php:60
 msgid "Submit"
 msgstr ""
 
-#: participants-database.php:3112
+#: participants-database.php:3126
 msgid "New"
 msgstr ""
 
-#: participants-database.php:3114
+#: participants-database.php:3128
 msgid "The record has been updated."
 msgstr ""
 
-#: participants-database.php:3115
+#: participants-database.php:3129
 msgid "The new record has been added."
 msgstr ""
 
-#: participants-database.php:3116
+#: participants-database.php:3130
 #, php-format
 msgid "No record was added on query: %s"
 msgstr ""
 
-#: participants-database.php:3117
+#: participants-database.php:3131
 #, php-format
 msgid "Database Error: %2$s on query: %1$s"
 msgstr ""
 
-#: participants-database.php:3288
+#: participants-database.php:3302
 msgid "WordPress Plugin"
 msgstr ""
 
-#: participants-database.php:3289
+#: participants-database.php:3303
 msgid ""
 "Helping organizations manage their volunteers, members and participants."
 msgstr ""
 
-#: participants-database.php:3292
+#: participants-database.php:3306
 msgid "Developed by"
 msgstr ""
 
-#: participants-database.php:3293
+#: participants-database.php:3307
 msgid ""
 "Suggestions or criticisms of this plugin? I&#39;d love to hear them: email "
 msgstr ""
 
-#: participants-database.php:3296
+#: participants-database.php:3310
 #, php-format
 msgid ""
 "Please consider contributing to the continued support and development of "
@@ -2575,39 +2603,39 @@ msgid ""
 "Thanks!"
 msgstr ""
 
-#: participants-database.php:3318
+#: participants-database.php:3332
 msgid "Add Participant"
 msgstr ""
 
-#: participants-database.php:3319 participants-database.php:3326
+#: participants-database.php:3333 participants-database.php:3340
 msgid "List Participants"
 msgstr ""
 
-#: participants-database.php:3321 upload_csv.php:44
+#: participants-database.php:3335 upload_csv.php:44
 msgid "Import CSV File"
 msgstr ""
 
-#: participants-database.php:3323
+#: participants-database.php:3337
 msgid "Setup Guide"
 msgstr ""
 
-#: participants-database.php:3324
+#: participants-database.php:3338
 msgid "Add New Participant Record"
 msgstr ""
 
-#: participants-database.php:3325
+#: participants-database.php:3339
 msgid "Edit Existing Participant Record"
 msgstr ""
 
-#: participants-database.php:3327
+#: participants-database.php:3341
 msgid "Export CSV"
 msgstr ""
 
-#: participants-database.php:3328
+#: participants-database.php:3342
 msgid "Manage List Columns"
 msgstr ""
 
-#: participants-database.php:3460
+#: participants-database.php:3474
 #, php-format
 msgid ""
 "Participants Database requires PHP version %s to function properly, you have "
