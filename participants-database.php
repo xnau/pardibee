@@ -2346,7 +2346,7 @@ class Participants_Db extends PDb_Base {
           default :
             $redirect = get_admin_url() . 'admin.php?page=' . self::PLUGIN_NAME;
         }
-        wp_redirect( $redirect );
+        wp_safe_redirect( $redirect );
         exit;
 
       case 'output CSV':
@@ -2496,6 +2496,9 @@ class Participants_Db extends PDb_Base {
          * filter: pdb-before_submit_signup
          */
         $post_data = self::apply_filters( 'before_submit_signup', $_POST );
+        
+        // sets the blank id for the new record
+        $post_data['id'] = 0;
         
         /*
          * the signup form should update the current record if it is revisited during a multipage form session
