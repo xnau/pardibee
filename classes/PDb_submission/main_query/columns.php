@@ -206,10 +206,10 @@ class columns {
           $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder','heading') );
           $where .= 'AND v.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
           
-          if ( !current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) ) {
+          if ( ! self::editor_can_edit_admin_fields() ) {
             // don't show non-displaying groups to non-admin users
-            // the "approved" field is an exception; it should be visible to editor users
-            $where .= 'AND g.mode <> "admin" OR v.name = "approved"';
+            // the approval field is an exception; it should always be visible to editor users
+            $where .= 'AND g.mode <> "admin" OR v.name = "' . \Participants_Db::apply_filters( 'approval_field', 'approved' ) . '"';
           }
           break;
 
@@ -245,5 +245,15 @@ class columns {
     $list = $wpdb->get_col( $sql );
     
     return $list;
+  }
+  
+  /**
+   * tells if a plugin editor can edit administrative fields
+   * 
+   * @return bool
+   */
+  private static function editor_can_edit_admin_fields()
+  {
+    return current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) || \Participants_Db::plugin_setting_is_true( 'editor_allowed_edit_admin_fields', false );
   }
 }
