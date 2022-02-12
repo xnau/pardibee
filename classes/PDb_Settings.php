@@ -1475,6 +1475,18 @@ class PDb_Settings extends xnau_Plugin_Settings {
     );
 
     $this->plugin_settings[] = array(
+        'name' => 'editor_allowed_edit_admin_fields',
+        'title' => __( 'Editor can Edit Administrative Fields', 'participants-database' ),
+        'group' => 'pdb-admin',
+        'options' => array(
+            'type' => 'checkbox',
+            'help_text' => __( 'If checked, users with the plugin editor role can edit fields in an admin group.', 'participants-database' ),
+            'value' => '0',
+            'options' => array(1, 0),
+        )
+    );
+
+    $this->plugin_settings[] = array(
         'name' => 'editor_allowed_csv_export',
         'title' => __( 'Editor can Export CSV Files', 'participants-database' ),
         'group' => 'pdb-admin',
