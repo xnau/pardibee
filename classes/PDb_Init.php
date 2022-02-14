@@ -433,8 +433,8 @@ class PDb_Init {
           INDEX  ( `group` ),
           PRIMARY KEY  ( `id` )
           )
-          DEFAULT CHARACTER SET utf8
-          COLLATE utf8_unicode_ci
+          DEFAULT CHARACTER SET utf8mb4
+          COLLATE utf8mb4_unicode_ci
           AUTO_INCREMENT = 0
           ';
     $wpdb->query( $sql );
@@ -452,8 +452,8 @@ class PDb_Init {
           UNIQUE KEY ( `name` ),
           PRIMARY KEY ( `id` )
           )
-          DEFAULT CHARACTER SET utf8
-          COLLATE utf8_unicode_ci
+          DEFAULT CHARACTER SET utf8mb4
+          COLLATE utf8mb4_unicode_ci
           AUTO_INCREMENT = 1
           ';
     $wpdb->query( $sql );
@@ -485,8 +485,8 @@ class PDb_Init {
           `last_accessed` TIMESTAMP NULL DEFAULT NULL,
           PRIMARY KEY  (`id`)
           )
-          DEFAULT CHARACTER SET utf8
-          COLLATE utf8_unicode_ci
+          DEFAULT CHARACTER SET utf8mb4
+          COLLATE utf8mb4_unicode_ci
           ;';
 
     $wpdb->query( $sql );
