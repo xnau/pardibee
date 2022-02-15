@@ -20,7 +20,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.1
+ * @version    3.0
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -84,9 +84,14 @@ abstract class PDb_Shortcode {
    * holds the field groups array which will contain all the groups info and their fields
    *
    * this will be the main object the template iterates through
-   * @var array
+   * @var \PDb_Record_Item
    */
   public $record;
+  
+  /**
+   * @var array of group data objects
+   */
+  public $groups = array();
 
   /**
    * an array of all the hidden fields in a record, name=>value pairs
@@ -129,17 +134,12 @@ abstract class PDb_Shortcode {
   const emptyclass = 'blank-field';
 
   /**
-   * @var object the pagination object
-   */
-  public $pagination;
-
-  /**
    * @var array groups to be displayed
    */
   public $display_groups;
 
   /**
-   * @var object the current Field_Group object
+   * @var \PDb_Field_Group_Item the current Field_Group object
    */
   public $group;
 
@@ -598,9 +598,9 @@ abstract class PDb_Shortcode {
   {
     // the first time through, use current()
     if ( $this->current_group_pointer == 1 )
-      $this->group = new PDb_Field_Group_Item( current( $this->record ), $this->module );
+      $this->group = new PDb_Field_Group_Item( current( $this->groups ), $this->module );
     else
-      $this->group = new PDb_Field_Group_Item( next( $this->record ), $this->module );
+      $this->group = new PDb_Field_Group_Item( next( $this->groups ), $this->module );
 
     $this->reset_field_counter();
 
@@ -670,23 +670,6 @@ abstract class PDb_Shortcode {
   }
 
   /**
-   * checks for additional records to show
-   */
-  public function have_records()
-  {
-    // for the total shortcode, we don't use the list limit, so set it to the maximum number
-    if ( $this->shortcode_atts['list_limit'] == '-1' ) {
-      $this->shortcode_atts['list_limit'] = $this->num_records;
-    }
-
-    $remaining = $this->num_records - ( ( $this->pagination->page - 1 ) * $this->shortcode_atts['list_limit'] );
-
-    $records_this_page = $remaining < $this->shortcode_atts['list_limit'] ? $remaining : $this->shortcode_atts['list_limit'];
-
-    return $this->current_record_pointer <= $records_this_page;
-  }
-
-  /**
    * gets the next record
    *
    * increments the record pointer
@@ -720,16 +703,14 @@ abstract class PDb_Shortcode {
   {
     $this->_setup_hidden_fields();
 
-    $this->record = new stdClass;
-
     $groups = Participants_Db::get_groups();
 
     foreach ( $this->display_groups as $group_name ) {
 
       $group_fields = $this->_get_group_fields( $group_name );
 
-      $this->record->$group_name = (object) $groups[$group_name];
-      $this->record->$group_name->fields = new stdClass();
+      $this->groups[$group_name] = (object) $groups[$group_name];
+      $this->groups[$group_name]->fields = new stdClass();
 
       $field_count = 0;
       $all_empty_fields = true;
@@ -773,20 +754,20 @@ abstract class PDb_Shortcode {
              */
             do_action( 'pdb-before_field_added_to_iterator', $field );
     
-            $this->record->$group_name->fields->{$field->name()} = $field;
+            $this->groups[$group_name]->fields->{$field->name()} = $field;
           }
         }
       }
     }
     if ( $field_count === 0 ) {
       // remove the empty group from the iterator
-      unset( $this->record->$group_name );
+      unset( $this->groups[$group_name] );
     } elseif ( $all_empty_fields ) {
-      $this->record->$group_name->class[] = 'empty-field-group';
+      $this->groups[$group_name]->class[] = 'empty-field-group';
     }
 
     // save the number of groups
-    $this->group_count = count( (array) $this->record );
+    $this->group_count = count( $this->groups );
   }
   
   /**
