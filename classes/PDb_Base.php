@@ -1873,7 +1873,6 @@ class PDb_Base {
       
       // mark the option as shown
       update_option(Participants_Db::one_time_notice_flag, true);
-      
     }
   }
 
