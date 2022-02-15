@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    2.0
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -72,6 +72,11 @@ class PDb_List extends PDb_Shortcode {
    * @var string holds the search error style statement
    */
   public $search_error_style = '';
+
+  /**
+   * @var \PDb_Paginationt the pagination object
+   */
+  public $pagination;
 
   /**
    * the wrapper HTML for the pagination control
@@ -379,6 +384,23 @@ class PDb_List extends PDb_Shortcode {
             'name' => $fieldname,
             'module' => $this->module,
                 ), $record_id );
+  }
+
+  /**
+   * checks for additional records to show
+   */
+  public function have_records()
+  {
+    // for the total shortcode, we don't use the list limit, so set it to the maximum number
+    if ( $this->shortcode_atts['list_limit'] == '-1' ) {
+      $this->shortcode_atts['list_limit'] = $this->num_records;
+    }
+
+    $remaining = $this->num_records - ( ( $this->pagination->page - 1 ) * $this->shortcode_atts['list_limit'] );
+
+    $records_this_page = $remaining < $this->shortcode_atts['list_limit'] ? $remaining : $this->shortcode_atts['list_limit'];
+
+    return $this->current_record_pointer <= $records_this_page;
   }
   
   /**
