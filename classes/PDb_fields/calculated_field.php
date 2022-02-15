@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -209,7 +209,29 @@ abstract class calculated_field extends dynamic_db_field {
   {
     $formatted_value = $this->format( $this->field->value, $this->display_format(), 0 );
     
-    return $formatted_value === '' ? '' : $this->template->front_text() . $formatted_value . $this->template->back_text();
+    return $formatted_value === '' ? '' : $this->combined_display( $formatted_value );
+  }
+  
+  /**
+   * concatenates the display components
+   * 
+   * @param string $formatted_value
+   * @return string
+   */
+  protected function combined_display( $formatted_value )
+  {
+    $pretext = '';
+    $postext = '';
+    
+    if ( $this->field->has_attribute( 'data-before' ) ) {
+      $pretext = '<span class="pdb-precontent">' . esc_html( $this->field->get_attribute('data-before') ) . '</span>';
+    }
+    if ( $this->field->has_attribute( 'data-after' ) ) {
+      $postext = '<span class="pdb-postcontent">' . esc_html( $this->field->get_attribute('data-after') ) . '</span>';
+    }
+    
+    
+    return $pretext . $this->template->front_text() . $formatted_value . $this->template->back_text() . $postext;
   }
   
   /**
