@@ -1248,6 +1248,9 @@ abstract class xnau_FormElement {
     }
     // add the "other" option
     if ( $otherlabel !== false ) {
+      if ( in_array( 'optgroup', $this->options ) ) {
+        $this->_add_options_divider( $this->i18n[ 'other' ] );
+      }
       $this->_addline( '<option ' . ( $this->value !== '' ? $this->_set_selected( $this->options, $this->value, 'selected', false ) : '' ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
     }
 
