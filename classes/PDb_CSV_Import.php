@@ -43,8 +43,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   {
     $this->set_column_array();
 
-    $this->match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_STRING );
-    $this->match_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_STRING);
+    $this->match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_SPECIAL_CHARS );
+    $this->match_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_SPECIAL_CHARS);
 
     Participants_Db::$session->set( 'form_status', 'normal' ); // CSV import is a normal status
     
@@ -261,7 +261,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    */
   protected function _detect_enclosure( $csv_file )
   {
-    $post_enclosure = filter_input( INPUT_POST, 'enclosure_character', FILTER_SANITIZE_STRING );
+    $post_enclosure = filter_input( INPUT_POST, 'enclosure_character', FILTER_SANITIZE_SPECIAL_CHARS );
 
     if ( !empty( $post_enclosure ) && $post_enclosure !== 'auto' ) {
       switch ( $post_enclosure ) {
@@ -284,7 +284,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
    */
   protected function _detect_delimiter( $csv_file )
   {
-    $post_delimiter = filter_input( INPUT_POST, 'delimiter_character', FILTER_SANITIZE_STRING );
+    $post_delimiter = filter_input( INPUT_POST, 'delimiter_character', FILTER_SANITIZE_SPECIAL_CHARS );
     if ( !empty( $post_delimiter ) && $post_delimiter !== 'auto' ) {
       return $post_delimiter;
     } else {
