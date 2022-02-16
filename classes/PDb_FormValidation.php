@@ -232,7 +232,7 @@ class PDb_FormValidation extends xnau_FormValidation {
 
           $validating_field->value = isset( $validating_field->value[1] ) ? $validating_field->value[1] : '';
           
-          $info = json_decode( urldecode( filter_var( $this->post_array[$validating_field->name][0], FILTER_SANITIZE_STRING ) ) );
+          $info = json_decode( urldecode( filter_var( $this->post_array[$validating_field->name][0], FILTER_SANITIZE_SPECIAL_CHARS ) ) );
 
           /**
            * @since 1.6.3
@@ -262,9 +262,9 @@ class PDb_FormValidation extends xnau_FormValidation {
           $fieldname = $validating_field->validation;
           
           if ( is_array( $this->post_array[ $fieldname ] ) ) {
-            $test_value = filter_var_array( $this->post_array[ $fieldname ], FILTER_SANITIZE_STRING );
+            $test_value = filter_var_array( $this->post_array[ $fieldname ], FILTER_SANITIZE_SPECIAL_CHARS );
           } else {
-            $test_value = filter_var( $this->post_array[ $fieldname ], FILTER_SANITIZE_STRING );
+            $test_value = filter_var( $this->post_array[ $fieldname ], FILTER_SANITIZE_SPECIAL_CHARS );
           }
           break;
 
