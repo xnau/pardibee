@@ -162,7 +162,7 @@ class PDb_Date_Parse {
     if ( self::is_mysql_timestamp( $this->input ) ) {
       if ( function_exists( 'strptime' ) ) {
         $this->input_format = 'Y-m-d H:i:s';
-        $this->strptime_parse();
+        $this->datetime_parse();
       } else {
         $this->strtotime_parse();
       }
@@ -173,12 +173,11 @@ class PDb_Date_Parse {
      * now go through a series of possible methods
      */
     $this->intl_parse();
+    
     if ( $this->timestamp_not_found() ) {
       $this->datetime_parse();
     }
-    if ( $this->timestamp_not_found() && function_exists( 'strptime' ) ) {
-      $this->strptime_parse();
-    }
+    
     if ( $this->timestamp_not_found() ) {
       $this->strtotime_parse();
     }
@@ -191,20 +190,6 @@ class PDb_Date_Parse {
   {
     $this->timestamp = xnau_strtotime::get_timestamp( $this->input, $this->input_format, $this->europen_order );
     $this->parse_mode = 'strtotime';
-  }
-
-  /**
-   * parses the input using strptime
-   */
-  private function strptime_parse()
-  {
-    $date_array = strptime( $this->input, $this->strftime_format() );
-    if ( is_array( $date_array ) ) {
-      $this->timestamp = mktime(
-              $date_array['tm_hour'], $date_array['tm_min'], $date_array['tm_sec'], $date_array['tm_mon'] + 1, $date_array['tm_mday'], $date_array['tm_year'] + 1900
-      );
-      $this->parse_mode = 'strptime';
-    }
   }
 
   /**
@@ -249,11 +234,11 @@ class PDb_Date_Parse {
    */
   private function datetime_parse()
   {
-    $the_Date = DateTime::createFromFormat( $this->input_format, $this->input );
+    $Date = DateTime::createFromFormat( $this->input_format, $this->input );
     
-    if ( is_a( $the_Date, 'DateTime' ) ) {
+    if ( is_a( $Date, 'DateTime' ) ) {
       
-      $errors = $the_Date->getLastErrors();
+      $errors = $Date->getLastErrors();
       if ( $errors['warning_count'] === 0 && $errors['error_count'] === 0 ) {
         $errors = false;
       }
@@ -265,7 +250,7 @@ class PDb_Date_Parse {
         return;
       }
       
-      $this->set_timestamp_from_datetime( $the_Date );
+      $this->set_timestamp_from_datetime( $Date );
       
       $this->parse_mode = 'datetime';
     }
