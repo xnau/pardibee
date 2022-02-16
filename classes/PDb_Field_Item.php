@@ -1065,7 +1065,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function prepare_value( $value )
   {
-    return $value; // filter_var( $value, FILTER_SANITIZE_STRING );
+    return $value;
   }
 
   /**
