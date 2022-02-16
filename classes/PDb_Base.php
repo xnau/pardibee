@@ -570,7 +570,7 @@ class PDb_Base {
       $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT );
     }
     if ( empty( $id ) ) {
-      $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING ) );
+      $id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS ) );
     }
     if ( empty( $id ) && is_admin() ) {
       $id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
@@ -937,13 +937,7 @@ class PDb_Base {
       }
     }
 
-    /*
-     * note: we need to sanitize the value, but we don't know what kind of value 
-     * it will be so we're just going to treat them all as strings. It shouldn't 
-     * be object or array anyway, so if a number is represented as a string, it's 
-     * not a big deal.
-     */
-    return filter_var( $dynamic_value, FILTER_SANITIZE_STRING );
+    return filter_var( $dynamic_value, FILTER_SANITIZE_SPECIAL_CHARS );
   }
   
   /**
@@ -1071,7 +1065,7 @@ class PDb_Base {
    */
   public static function csv_export_allowed()
   {
-    $nonce = array_key_exists( '_wpnonce', $_POST ) ? filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING ) : false;
+    $nonce = array_key_exists( '_wpnonce', $_POST ) ? filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_SPECIAL_CHARS ) : false;
     if ( $nonce && wp_verify_nonce( $nonce, self::csv_export_nonce() ) ) {
       return true;
     }
@@ -2070,24 +2064,24 @@ class PDb_Base {
   public static function search_post_filter( $multi = false )
   {
     $array_filter = array(
-        'filter' => FILTER_SANITIZE_STRING,
+        'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
         'flags' => FILTER_FORCE_ARRAY
     );
-    $multi_validation = $multi ? $array_filter : FILTER_SANITIZE_STRING;
+    $multi_validation = $multi ? $array_filter : FILTER_SANITIZE_SPECIAL_CHARS;
     return array(
-        'filterNonce' => FILTER_SANITIZE_STRING,
+        'filterNonce' => FILTER_SANITIZE_SPECIAL_CHARS,
         'postID' => FILTER_VALIDATE_INT,
-        'submit' => FILTER_SANITIZE_STRING,
-        'action' => FILTER_SANITIZE_STRING,
+        'submit' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'action' => FILTER_SANITIZE_SPECIAL_CHARS,
         'instance_index' => FILTER_VALIDATE_INT,
         'target_instance' => FILTER_VALIDATE_INT,
-        'pagelink' => FILTER_SANITIZE_STRING,
+        'pagelink' => FILTER_SANITIZE_SPECIAL_CHARS,
         'search_field' => $multi_validation,
         'operator' => $multi_validation,
         'value' => $multi_validation,
         'logic' => $multi_validation,
-        'sortBy' => FILTER_SANITIZE_STRING,
-        'ascdesc' => FILTER_SANITIZE_STRING,
+        'sortBy' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'ascdesc' => FILTER_SANITIZE_SPECIAL_CHARS,
         Participants_Db::$list_page => FILTER_VALIDATE_INT,
     );
   }
