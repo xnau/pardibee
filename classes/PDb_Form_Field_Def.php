@@ -411,6 +411,9 @@ class PDb_Form_Field_Def {
    */
   public function default_value()
   {
+    if ( ! $this->has_default() ) {
+      return '';
+    }
     if ( $this->is_dynamic_field() || ( $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default ) ) ) {
       return htmlspecialchars_decode( $this->default );
     }
