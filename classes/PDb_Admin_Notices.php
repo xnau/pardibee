@@ -231,10 +231,10 @@ class PDb_Admin_Notices {
    */
   public function dismiss_notice()
   {
-    if ( !wp_verify_nonce( filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING ), self::pdb_admin_notice ) ) {
+    if ( !wp_verify_nonce( filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), self::pdb_admin_notice ) ) {
       wp_die();
     }
-    $this->dismiss( filter_input( INPUT_GET, 'msgid', FILTER_SANITIZE_STRING ) );
+    $this->dismiss( filter_input( INPUT_GET, 'msgid', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
     
     wp_die();
   }
@@ -329,7 +329,7 @@ class PDb_Admin_Notices {
    */
   public function check_for_message_purge()
   {
-    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || ( array_key_exists( Participants_Db::$participants_db_options,$_POST ) && filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_STRING ) == '1' )  ) {
+    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || ( array_key_exists( Participants_Db::$participants_db_options,$_POST ) && filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_SPECIAL_CHARS ) == '1' )  ) {
       $this->purge_all_notices();
     }
   }
