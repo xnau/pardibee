@@ -148,10 +148,10 @@ class PDb_Debug {
    */
   public function handle_refresh()
   {
-    if ( !wp_verify_nonce( filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING ), $this->action ) ) {
+    if ( !wp_verify_nonce( filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_SPECIAL_CHARS ), $this->action ) ) {
       wp_die( 'nonce failed' );
     }
-    switch ( filter_input( INPUT_POST, 'command', FILTER_SANITIZE_STRING ) ) {
+    switch ( filter_input( INPUT_POST, 'command', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
       case 'clear':
         $this->clear_log();
       case 'refresh':
