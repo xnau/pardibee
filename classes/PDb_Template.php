@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.1
+ * @version    2.2
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -569,8 +569,10 @@ class PDb_Template {
     $this->id = isset( $this->values['id'] ) ? $this->values['id'] : '';
     $this->edit_link = Participants_Db::apply_filters( 'record_edit_url', $this->cat_url_var( $this->edit_page, Participants_Db::$record_query, $this->values['private_id'] ), $this->values['private_id'] );
     $this->detail_link = Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $this->detail_page, PDb_Single::single_query_var(), $this->values[ PDb_Single::single_query_id_field() ] ), $this->id );
+    
     $this->fields = new stdClass();
     $this->groups = array();
+    
     switch ( $this->base_type ) {
       case 'PDb_List':
         foreach ( $this->shortcode_object->record->fields as $field_object ) {
@@ -595,11 +597,14 @@ class PDb_Template {
       case 'PDb_Single':
       case 'PDb_Record':
       default:
-        if ( !isset( $this->shortcode_object->record ) ) {
+        
+        if ( !isset( $this->shortcode_object->groups ) ) {
           Participants_Db::debug_log( __METHOD__ . ' cannot instantiate ' . __CLASS__ . ' object. Class must be instantiated with full module object.' );
           break;
         }
-        $this->record = clone $this->shortcode_object->record;
+        
+        $this->record = $this->shortcode_object->groups;
+        
         foreach ( Participants_Db::field_defs() as $name => $field ) {
           /* @var $field PDb_Form_Field_Def */
           $this->fields->{$name} = new PDb_Field_Item( $field );
