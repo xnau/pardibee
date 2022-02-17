@@ -20,7 +20,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    3.0
+ * @version    3.1
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -86,7 +86,7 @@ abstract class PDb_Shortcode {
    * this will be the main object the template iterates through
    * @var \PDb_Record_Item
    */
-  public $record;
+  private $record;
   
   /**
    * @var array of group data objects
@@ -1311,6 +1311,18 @@ abstract class PDb_Shortcode {
   {
     if ( $name === 'fields' ) {
       return Participants_Db::field_defs();
+    }
+    
+    // backward compatibility #2769
+    if ( $name === 'record' ) {
+      
+      if ( is_null( $this->record ) ) {
+        
+        return $this->groups;
+      } else {
+        return $this->record;
+      }
+      
     }
     return null;
   }
