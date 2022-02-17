@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -289,6 +289,9 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.0.3 =
+fixed setup issue with the PDb_Template class, affecting Field Group Tabs
 
 = 2.0.2 =
 * fixed display issues with some multibyte characters
@@ -1452,7 +1455,7 @@ Taking defensive precautions against other plugins in the admin:
 == Upgrade Notice ==
 
 2.0 is a major feature upgrade release. We recommend you back up your files and database before upgrading.
-2.0.2 is a bug fix update
+2.0.3 is a bug fix update
 
 == Plugin Support ==
 
