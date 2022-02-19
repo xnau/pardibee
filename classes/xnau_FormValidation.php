@@ -199,7 +199,9 @@ class xnau_FormValidation {
   {
     if ( property_exists( get_class($this), $name ) ) {
       
-      error_log(__METHOD__ . ' ' . sprintf(' getting protected property "%s" outside of class', $name ) );
+      Participants_Db::debug_log(__METHOD__ . ' ' . sprintf(' getting protected property "%s" outside of class', $name ) . ' 
+
+TRACE: ' .print_r( wp_debug_backtrace_summary(),1 ), 4 );
       
       return $this->$name;
     }
