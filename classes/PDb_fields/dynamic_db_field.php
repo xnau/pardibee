@@ -71,9 +71,11 @@ abstract class dynamic_db_field extends core {
   public function update_db_value( $post )
   {
     foreach ( $this->field_list() as $dynamic_db_field ) {
-
+      
       /** @var \PDb_Form_Field_Def $dynamic_db_field */
-      if ( isset( $post[ $dynamic_db_field->name() ] ) ) {
+      $fieldname = $dynamic_db_field->name();
+
+      if ( isset( $post[ $fieldname ] ) ) {
 
         $field = new \PDb_Field_Item( $dynamic_db_field );
         $field->set_record_id( $post[ 'id' ] );
@@ -81,9 +83,14 @@ abstract class dynamic_db_field extends core {
 
         $this->template = new calc_template( $field, $this->default_format_tag() );
 
-        $post[ $dynamic_db_field->name() ] = $this->dynamic_value( $post );
+        $post[ $fieldname ] = $this->dynamic_value( $post );
+        
+        if ( isset( $_POST[ $fieldname ] ) ) {
+          $_POST[ $fieldname ] = $post[ $fieldname ];
+        }
       }
     }
+    
     return $post;
   }
 
