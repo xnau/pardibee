@@ -219,7 +219,13 @@ class mass_edit {
       }
       
       $label = $this->filter_title( $field_data->fieldtitle );
+      
+      if ( isset( $field_list[ $label ] ) ) {
+        $label = $label . ' (' . $field_data->name . ')';
+      }
+      
       $field_list[ $label === '' ? $field_data->name : $label  ] = $field_data->name;
+      
     }
 
     return \Participants_Db::apply_filters( 'with_selected_mass_edit_fields', $field_list );
@@ -259,7 +265,7 @@ class mass_edit {
    */
   private function filter_title( $title )
   {
-    return \Participants_Db::apply_filters('translate_string', $title );
+    return $title === '' ? '' : \Participants_Db::apply_filters('translate_string', $title );
   }
 
   /**
