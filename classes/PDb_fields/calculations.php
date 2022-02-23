@@ -271,6 +271,7 @@ trait calculations {
     $sum_count = 0;
     $product = 0;
     $op = false;
+    $format_tag = '?unformatted';
 
     foreach ( $this->calc_list as $i => $item ) {
 
@@ -309,7 +310,7 @@ trait calculations {
                 break;
 
               case '/':
-                $product = $item == 0 ? 0 : ($product / $item);
+                $product = empty( $item ) ? 0 : ( $product / $item );
                 break;
             }
           } else {
