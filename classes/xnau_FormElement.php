@@ -1251,7 +1251,7 @@ abstract class xnau_FormElement {
       if ( in_array( 'optgroup', $this->options ) ) {
         $this->_add_options_divider( $this->i18n[ 'other' ] );
       }
-      $this->_addline( '<option ' . ( $this->value !== '' ? $this->_set_selected( $this->options, $this->value, 'selected', false ) : '' ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
+      $this->_addline( '<option ' . ( $this->value_is_unset() ? '' : $this->_set_selected( $this->options, $this->value, 'selected', false ) ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
     }
 
     if ( $this->inside ) {
@@ -1508,12 +1508,14 @@ abstract class xnau_FormElement {
     $element_value = $this->_prep_comp_array( $element_value );
 
     switch ( true ) {
+      
       case ($element_value === true and $selected_value === true):
       case (is_array( $element_value ) and ( $state === in_array( $selected_value, $element_value ))):
       case ($element_value == $selected_value):
+        
         $add_attribute = true;
         break;
-      default:
+      
     }
 
     return $add_attribute ? sprintf( ' %1$s="%1$s" ', $attribute ) : '';
@@ -1544,13 +1546,15 @@ abstract class xnau_FormElement {
   protected function _prep_comp_array( $array )
   {
 
-    if ( !is_array( $array ) )
+    if ( !is_array( $array ) ) {
       return $this->_prep_comp_string( $array );
+    }
 
     $output = array();
 
-    foreach ( $array as $item )
+    foreach ( $array as $item ) {
       $output[] = $this->_prep_comp_string( $item );
+    }
 
     return $output;
   }
@@ -1599,9 +1603,20 @@ abstract class xnau_FormElement {
     }
 
     if ( $null_select !== false ) {
-      $selected = $this->value === '' ? $this->_set_selected( true, true, 'selected' ) : '';
+      
+      $selected = $this->value_is_unset() ? $this->_set_selected( true, true, 'selected' ) : '';
       $this->_addline( '<option value="" ' . $selected . '  >' . esc_html( $null_select_label ) . '</option>' );
     }
+  }
+  
+  /**
+   * tells if the field's value is unset
+   * 
+   * @return bool
+   */
+  public function value_is_unset()
+  {
+    return $this->value === '' || is_null( $this->value );
   }
 
   /**
