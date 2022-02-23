@@ -207,7 +207,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function formatted_display()
   {
-    $formatted_value = $this->format( $this->field->value, $this->display_format(), 0 );
+    $formatted_value = $this->format( $this->field->value, $this->display_format(), 0, true );
     
     return $formatted_value === '' ? '' : $this->combined_display( $formatted_value );
   }
@@ -380,7 +380,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   protected function form_element_html()
   {
-    return sprintf( $this->wrap_template(), $this->formatted_display(), esc_attr( $this->dynamic_value() ) );
+    return sprintf( $this->wrap_template(), $this->formatted_display(), esc_attr( $this->field->value() ) ); // $this->dynamic_value()
   }
   
   /**
