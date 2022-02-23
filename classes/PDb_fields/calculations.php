@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -23,6 +23,11 @@ trait calculations {
    * @var array of calculation steps
    */
   protected $calc_list;
+  
+  /**
+   * @var bool true if the value should be localized
+   */
+  protected $localize = false;
 
   /**
    * calculates the total
@@ -304,7 +309,7 @@ trait calculations {
                 break;
 
               case '/':
-                $product = $product / $item;
+                $product = $item == 0 ? 0 : ($product / $item);
                 break;
             }
           } else {
@@ -313,7 +318,7 @@ trait calculations {
           }
       }
     }
-
+    
     return $this->is_display_only_format($format_tag) ? $product : $this->format( $product, $format_tag, $sum_count );
   }
 
@@ -323,13 +328,16 @@ trait calculations {
    * @param int|float $value
    * @param string $format_tag the format tag
    * @param int $sum_count the number of summed items
+   * @param bool $localize if true, localize the display string
    * @return string the formatted value
    */
-  private function format( $value, $format_tag, $sum_count )
+  private function format( $value, $format_tag, $sum_count, $localize = false )
   {
     if ( is_null( $value ) || $value === '' ) {
       return '';
     }
+    
+    $this->localize = $localize;
     
     // remove the leading ? and brackets
     $format_tag = str_replace( array('?', ']','['), '', $format_tag );
@@ -570,7 +578,7 @@ trait calculations {
    */
   private function format_number( $number, $places = 0 )
   {
-    return \PDb_Localization::format_number($number, $places);
+    return $this->localize ? \PDb_Localization::format_number($number, $places) : number_format( $number, $places );
   }
 
 }
