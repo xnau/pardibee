@@ -37,7 +37,7 @@ class PDb_Localization {
    * provides the localized display number based on the field definition parameters
    * 
    * @param int|float $number raw number in mysql format
-   * @param object $field the current field
+   * @param \PDb_Field_Item $field the current field
    * @return string display
    */
   public static function display_number( $number, $field )
@@ -62,7 +62,7 @@ class PDb_Localization {
         
         if ( isset($parts[1]) ) {
           
-          $localization->formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, strlen($parts[1]) );
+          $localization->formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, strlen($parts[1]) );
         } else {
           
           $localization->formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0 );
