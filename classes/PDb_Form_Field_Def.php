@@ -824,7 +824,7 @@ class PDb_Form_Field_Def {
    */
   public function has_default()
   {
-    return strlen( $this->default ) > 0;
+    return !is_null( $this->default ) && strlen( $this->default ) > 0;
   }
 
   /**
