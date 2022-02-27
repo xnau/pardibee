@@ -176,10 +176,26 @@ abstract class dynamic_db_field extends core {
       
       if ( $stored_field_default !== $field_data[ 'default' ] ) {
         
+        $field = new \PDb_Field_Item( $info );
+        
+        $field->default = $field_data[ 'default' ];
+        
+        $calc_template = new calc_template(  $field, '[?unformatted]' );
+        
+        if ( ! $calc_template->is_valid_template() ) {
+          
+          \Participants_Db::set_admin_message( sprintf( __( 'The "Template" setting for the %s field could not be validated. Details here: %s', 'participants-database' ), $field->title(), '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/field-types/participant-database-calculation-fields/" target="_blank" >Calculation Fields</a>'  ), 'error' );
+          
+          $field_data['default'] = $stored_field_default;
+          
+          return $field_data;
+        }
+        
         \PDb_Manage_Fields_Updates::clear_field_def_cache();
 
         $this->set_field( $info[ 'name' ] );
-        $this->field->default = $field_data[ 'default' ];
+        $this->field->default = $calc_template->calc_template();
+        $field_data['default'] = $calc_template->calc_template();
 
         // do the update
         $this->update_all_records();
