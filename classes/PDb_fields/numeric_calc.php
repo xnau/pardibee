@@ -66,11 +66,7 @@ class numeric_calc extends calculated_field {
       
       if ( $template_field->form_element() === $this->name ) {
         
-        /* if we are using the value from another numeric calc field, get the 
-         * value directly from the db to avoid recursion
-         */
-        $replacement_data[$fieldname] = $this->field_db_value( $template_field->name() );
-        $replacement_data['value:'.$fieldname] = $source_data[$fieldname];
+        $replacement_data[$fieldname] = isset( $source_data[$fieldname] ) ? $source_data[$fieldname] : $this->field_db_value( $template_field->name() );
         
       } else {
       
