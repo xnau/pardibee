@@ -186,7 +186,7 @@ abstract class record {
          * try to get the record id from the incoming record data then add a new record
          * 
          */
-        $this->record_id = $record_match->matched_record_id();
+        $this->record_id = $this->matched_record_id();
         
         if ( $this->record_id !== 0 ) {
           $this->action = 'insert';
