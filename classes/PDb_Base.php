@@ -1535,10 +1535,9 @@ class PDb_Base {
     }
 
     /**
-     * @version 1.6.0
-     * filter: pdb-files_location
-     * 
-     * allows access to the "image_upload_location" plugin setting value
+     * @filter pdb-files_location
+     * @param string the files location base path
+     * @return string
      */
     return Participants_Db::apply_filters( 'files_location', $base_path );
   }
@@ -2240,6 +2239,12 @@ class PDb_Base {
       
       PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '</p>', '', false);
     }
+    
+//    if ( substr_count( Participants_Db::files_path(), 'wp-content' ) > 1 ) {
+//      
+//      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database containes a duplicate reference to the wp-content directory. Check your "File Upload Location" setting or uncheck the "File and Image Uploads Use WP Content Path" setting to correct this.', 'participants-database' ), Participants_Db::files_path() ) . '</p>', '', false);
+//      
+//    }
   }
 
   /**
