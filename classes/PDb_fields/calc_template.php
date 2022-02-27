@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -20,9 +20,9 @@ defined( 'ABSPATH' ) || exit;
 class calc_template {
   
   /**
-   * @var string the defined calc template
+   * @var \PDb_Field_Item the current field
    */
-  private $field_template;
+  private $field;
   
   /**
    * @var array of template components
@@ -35,9 +35,19 @@ class calc_template {
    */
   public function __construct( $field, $default_format )
   {
-    $this->field_template = $field->default_value();
+    $this->field = $field;
     $this->complete_template( $default_format );
     $this->extract_components();
+  }
+  
+  /**
+   * tells if the field has a valid template
+   * 
+   * @return bool true if the template parses valid
+   */
+  public function is_valid_template()
+  {
+    return count( array_filter( $this->components ) ) > 0;
   }
   
   /**
@@ -47,7 +57,17 @@ class calc_template {
    */
   public function calc_template()
   {
-    return $this->field_template;
+    return $this->field_template();
+  }
+  
+  /**
+   * provides the field template
+   * 
+   * @return string
+   */
+  private function field_template()
+  {
+    return $this->field->default_value();
   }
   
   /**
@@ -57,7 +77,7 @@ class calc_template {
    */
   private function complete_template( $default_format )
   {
-    $this->field_template = $this->completed_template( $default_format );
+    $this->field->default = $this->completed_template( $default_format );
   }
   
   /**
@@ -69,7 +89,7 @@ class calc_template {
    */
   public function field_list()
   {
-    preg_match_all('/\[([^#\?][^\]]+)\]/', $this->field_template, $matches );
+    preg_match_all('/\[([^#\?][^\]]+)\]/', $this->field_template(), $matches );
     
     return $matches[1];
   }
@@ -82,7 +102,7 @@ class calc_template {
    */
   public function prepped_template( $calc_tag )
   {
-    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1['. $calc_tag . ']$3', $this->field_template );
+    return preg_replace( '/^(.*?)(\[.+\])(.*)$/', '$1['. $calc_tag . ']$3', $this->field_template() );
   }
   
   /**
@@ -133,12 +153,12 @@ class calc_template {
   {
     $this->components = array( 'front' => '', 'body' => '', 'format' => '', 'back' => '' );
     
-    if ( preg_match( '/^(?<front>.*?)(?<body>\[.+=(?<format>\[.+\]))(?<back>.*)$/', $this->field_template, $matches ) === 1 ) {
+    if ( preg_match( '/^(?<front>.*?)(?<body>\[.+=(?<format>\[.+\]))(?<back>.*)$/', $this->field_template(), $matches ) === 1 ) {
     
       $this->components = $matches;
     } else {
       
-      \Participants_Db::debug_log(' calculation template format not recognized for template: '.$this->field_template );
+      \Participants_Db::debug_log(' calculation template format not recognized for template: '.$this->field_template() );
     }
   }
   
@@ -150,7 +170,7 @@ class calc_template {
    */
   private function completed_template( $default_format )
   {
-    $template = $this->field_template;
+    $template = $this->field_template();
     
     if ( ! $this->has_format_tag() ) {
       
@@ -168,7 +188,7 @@ class calc_template {
    */
   private function has_format_tag()
   {
-    return preg_match( '/=\[\?/', $this->field_template ) === 1;
+    return preg_match( '/=\[\?/', $this->field_template() ) === 1;
   }
   
   /**
@@ -178,7 +198,7 @@ class calc_template {
    */
   private function has_equals_sign()
   {
-    return preg_match( '/=$/', $this->field_template ) === 1;
+    return preg_match( '/=$/', $this->field_template() ) === 1;
   }
   
 }
