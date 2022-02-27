@@ -466,6 +466,7 @@ class PDb_List_Query {
     $set_logic = Participants_Db::plugin_setting_is_true( 'strict_search' ) ? 'AND' : 'OR';
 
     $this->_reset_filters();
+    
     if ( $input[ 'target_instance' ] == $this->instance_index ) {
 
       if ( is_array( $input[ 'search_field' ] ) ) {
@@ -484,6 +485,7 @@ class PDb_List_Query {
             continue;
 
           $logic = isset( $input[ 'logic' ][ $i ] ) ? $input[ 'logic' ][ $i ] : $set_logic;
+          
           $this->_add_search_field_filter( $input[ 'search_field' ][ $i ], $input[ 'operator' ][ $i ], $input[ 'value' ][ $i ], $logic );
         }
 
@@ -539,7 +541,7 @@ class PDb_List_Query {
   private function _add_search_field_filter( $search_field, $operator, $value, $logic )
   {
     $logic = $logic ? ( strtoupper( $logic ) === 'OR' ? 'OR' : 'AND' ) : 'AND';
-    $this->_add_single_statement( $search_field, $operator, $value, $logic );
+    $this->_add_single_statement( $search_field, $operator, urldecode( $value ), $logic );
     $this->is_search_result = true;
   }
 
