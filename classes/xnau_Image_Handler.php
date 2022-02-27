@@ -433,8 +433,6 @@ abstract class xnau_Image_Handler {
 
     $filename = empty( $filename ) ? $this->image_file : $filename;
 
-    //error_log(__METHOD__.' testing:'.$filename.' getting:'.($this->_file_exists($filename)?'yes':'no'));
-
     $filepath = $this->concatenate_directory_path( $this->image_directory, $filename, false );
 
     if ( $this->_file_exists( $filepath ) ) {
