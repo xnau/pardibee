@@ -54,9 +54,7 @@ trait calculations {
 
     if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
       \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->template->calc_body(), 3 );
-      ob_start();
-      var_dump( $replacement_data );
-      \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . ob_get_clean(), 3 );
+      \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . print_r( $replacement_data,1 ), 3 );
     }
 
     if ( $this->result === false ) {
@@ -74,7 +72,7 @@ trait calculations {
 
       $this->result = $this->complete ? $this->get_calculated_value() : '';
 
-      \Participants_Db::debug_log( __METHOD__ . ' calc list: ' . print_r( $this->calc_list, 1 ) ."\nresult: " . $this->result, 3 );
+      \Participants_Db::debug_log( __METHOD__ . " calc list: \n" . print_r( $this->calc_list, 1 ) ."\nresult: " . $this->result, 3 );
     }
   }
 
@@ -181,13 +179,13 @@ trait calculations {
       \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() .' field missing calculation value "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
     } else {
       
-      $value_display = '';
+      $value_display = ' calculation cannot be completed';
       if ( $value !== false ) {
         ob_start();
         var_dump( $value );
-        $value_display = ' invalid value ' . ob_get_clean();
+        $value_display = ' value can\'t be used ' . ob_get_clean();
       }
-      \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() . $value_display . ' for "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
+      \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() . $value_display . ' in "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
     }
     $this->complete = false;
   }
