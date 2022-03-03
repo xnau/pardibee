@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -65,8 +65,10 @@ abstract class dynamic_db_field extends core {
   /**
    * updates the database value for the field
    * 
-   * @param array $post
-   * @retrn array
+   * called on pdb-before_submit_add or pdb-before_submit_update
+   * 
+   * @param array $post the submission
+   * @return array
    */
   public function update_db_value( $post )
   {
@@ -77,8 +79,9 @@ abstract class dynamic_db_field extends core {
 
       if ( isset( $post[ $fieldname ] ) ) {
 
-        $field = new \PDb_Field_Item( $dynamic_db_field );
-        $field->set_record_id( $post[ 'id' ] );
+        $field = $this->field_object( $dynamic_db_field, $post['id'] );
+//        $field = new \PDb_Field_Item( $dynamic_db_field );
+//        $field->set_record_id( $post[ 'id' ] );
         $this->setup_field( $field );
 
         $this->template = new calc_template( $field, $this->default_format_tag() );
@@ -92,6 +95,20 @@ abstract class dynamic_db_field extends core {
     }
     
     return $post;
+  }
+  
+  /**
+   * provides the field item object
+   * 
+   * @param \PDb_Form_Field_Def|string|\PDb_FormElement $field object
+   * @param int $record_id
+   * @return \PDb_Field_Item object
+   */
+  private function field_object( $field, $record_id )
+  {
+    $field_obj = new \PDb_Field_Item( $field, $record_id );
+    
+    return \Participants_Db::apply_filters('dynamic_db_internal_field_object',  $field_obj );
   }
 
   /**
@@ -130,7 +147,7 @@ abstract class dynamic_db_field extends core {
    */
   protected function set_field( $field )
   {
-    $field_item = new \PDb_Field_Item( $field );
+    $field_item = $this->field_object( $field, $field->record_id );
     
     $field_item->default = $this->get_field_default( $field_item->name() );
 
@@ -410,8 +427,8 @@ abstract class dynamic_db_field extends core {
     foreach ( $this->field_list() as $dynamic_db_field ) {
 
       /** @var \PDb_Form_Field_Def $dynamic_db_field */
-      $field = new \PDb_Field_Item( $dynamic_db_field );
-      $field->set_record_id( $record_id );
+      $field = $this->field_object( $dynamic_db_field, $record_id );
+      
       $this->setup_field( $field );
 
       $this->template = new calc_template( $field, $this->default_format_tag() );
