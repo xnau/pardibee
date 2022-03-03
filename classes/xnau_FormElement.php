@@ -68,7 +68,7 @@ abstract class xnau_FormElement {
    *
    * @var array
    */
-  public $options;
+  public $options = array();
 
   /**
    * holds any other html element attributes in name=>value pairs
@@ -195,7 +195,7 @@ abstract class xnau_FormElement {
   public function __construct( $parameters )
   {
     $defaults = array(
-        'options' => NULL,
+        'options' => array(),
         'attributes' => array(),
         'class' => '',
         'indent' => 1,
@@ -1966,7 +1966,7 @@ abstract class xnau_FormElement {
    */
   protected function setup_options( $options )
   {
-    $field_options = '';
+    $field_options = array();
     if ( empty($options) && $this->is_pdb_field() ) {
       $field_options = $this->field_def->options();
     } elseif ( ! empty( $options ) ) {
