@@ -68,7 +68,7 @@ class heading extends utility {
    */
   public function form_element_html()
   {
-    return \Participants_Db::apply_filters('translate_string', $this->field->default );
+    return wpautop( \Participants_Db::apply_filters('translate_string', $this->field->default ) );
   }
 
   /**
