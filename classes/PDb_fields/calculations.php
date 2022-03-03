@@ -53,7 +53,7 @@ trait calculations {
     $this->result = \Participants_Db::apply_filters( 'calculated_field_calc_value', false, $replacement_data, $this->field );
 
     if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
-      \Participants_Db::debug_log( __METHOD__ . ' template: ' . $this->template->calc_body(), 3 );
+      \Participants_Db::debug_log( __METHOD__ . ' field: ' . $this->field->name() . ' template: ' . $this->template->calc_body(), 3 );
       \Participants_Db::debug_log( __METHOD__ . ' replacement data: ' . print_r( $replacement_data,1 ), 3 );
     }
 
