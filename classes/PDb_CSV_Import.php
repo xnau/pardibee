@@ -191,11 +191,11 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   }
 
   /**
-   * sets and verifies the uploads directory
+   * verifies the uploads directory and creates it if needed
    *
    * @return bool true if the directory can be used
    */
-  protected function set_upload_dir()
+  protected function verify_upload_dir()
   {
     $this->upload_directory = Participants_Db::files_location();
 
