@@ -104,7 +104,7 @@ abstract class dynamic_db_field extends core {
    * @param int $record_id
    * @return \PDb_Field_Item object
    */
-  private function field_object( $field, $record_id )
+  protected function field_object( $field, $record_id )
   {
     $field_obj = new \PDb_Field_Item( $field, $record_id );
     
