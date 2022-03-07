@@ -85,10 +85,10 @@ class columns {
     
     $this->column_array = self::column_atts( $column_set );
       
-    $array = [];
-    foreach( $this->column_array as $column ) {
-      $array[] = $column->name;
-    }
+//    $array = [];
+//    foreach( $this->column_array as $column ) {
+//      $array[] = $column->name;
+//    }
     
   }
   
