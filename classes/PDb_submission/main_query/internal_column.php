@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -88,17 +88,22 @@ class internal_column extends base_column {
         }
 
       case 'private_id':
-        /*
+        
+        $this->value = false;
+        
+        /**
          * supplied private ID is tested for validity and rejected if not valid
          * 
          * @filter pdb-private_id_validity
          * @param bool  test result using the regex
+         * @param string the tested value
          * @return bool true if valid
          */
-        
-        if ( Participants_Db::apply_filters( 'private_id_validity', preg_match( '#^[A-Z0-9]{5,}$#', $initialvalue ) === 1 ) && Participants_Db::get_participant_id( $initialvalue ) === false ) {
+        if ( Participants_Db::apply_filters( 'private_id_validity', preg_match( '#^[A-Z0-9]{5,}$#', $initialvalue ) === 1, $initialvalue ) && Participants_Db::get_participant_id( $initialvalue ) === false ) {
           $this->value = $initialvalue;
-        } else {
+        }
+        
+        if ( $this->value === false ) {
           $this->value = $this->main_query()->write_mode() === 'insert' ? Participants_Db::generate_pid() : false;
         }
         
