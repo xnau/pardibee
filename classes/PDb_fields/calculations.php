@@ -176,17 +176,21 @@ trait calculations {
   private function mark_as_incomplete( $tag_text, $value = false )
   {
     if ( !\PDb_Form_Field_Def::is_field($this->field->name()) ) {
+
       \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() .' field missing calculation value "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
+
     } else {
-      
-      $value_display = ' calculation cannot be completed';
+
+      $value_display = ' calculation cannot be completed, value not found in "';
       if ( $value !== false ) {
         ob_start();
         var_dump( $value );
-        $value_display = ' value can\'t be used ' . ob_get_clean();
+        $value_display = ' value can\'t be used: "' . ob_get_clean();
       }
-      \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() . $value_display . ' in "' . $tag_text . '" for record '. $this->field->record_id(), 1 );
+      \Participants_Db::debug_log(__CLASS__.': ' . $this->field->title() . $value_display . $tag_text . '" for record '. $this->field->record_id(), 1 );
+
     }
+    
     $this->complete = false;
   }
 
