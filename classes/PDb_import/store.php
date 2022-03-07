@@ -107,6 +107,8 @@ trait store {
         
         // add the column to the query
         $main_query->add_column( $column_object->import_value(), $column_object->query_clause() );
+      } else {
+        \Participants_Db::debug_log( ' CSV import: empty column skipped: '. $column->name, 2 );
       }
     } // columns
 
