@@ -902,7 +902,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         if (
                 in_array( $field->form_element(), explode( ',', str_replace( ' ', '', $allowed ) ) )
         ) {
-          $available_fields[$fieldname] = $field->title();
+          $available_fields[$fieldname] = $field->title() . ' (' . $fieldname . ')';
         }
       }
       return $available_fields;
