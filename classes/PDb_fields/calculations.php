@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -370,6 +370,10 @@ trait calculations {
         $average = $sum_count > 1 ? $value / $sum_count : $value;
         $formatted = $this->format_number( $average, $numeric );
         break;
+      
+      case 'currency':
+        $formatted = \PDb_Localization::display_currency( $value, $this->field );
+        break;
 
       case 'years':
       case 'weeks':
@@ -409,7 +413,8 @@ trait calculations {
   /**
    * tells if the format should only be applied to displaying the value
    * 
-   * this is for fields that are saved as an unformatted value, then formatted when displaying
+   * this is for fields that are saved as an unformatted value, then 
+   * formatted when displayed
    * 
    * @param string $format_tag
    * @return bool
@@ -425,6 +430,9 @@ trait calculations {
     $format_tag = preg_replace( '/_\d+$/', '_n', $format_tag );
     
     switch ( $format_tag ) {
+      
+      case 'currency':
+        return true;
 
       case 'round_n':
       case 'integer':
