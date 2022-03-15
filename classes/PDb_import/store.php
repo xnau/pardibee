@@ -107,7 +107,9 @@ trait store {
         
         // add the column to the query
         $main_query->add_column( $column_object->import_value(), $column_object->query_clause() );
-      } else {
+        
+      } elseif ( $column->name !== $record_match->match_field ) { // don't log the match field here
+        
         \Participants_Db::debug_log( ' CSV import: empty column skipped: '. $column->name, 2 );
       }
     } // columns
