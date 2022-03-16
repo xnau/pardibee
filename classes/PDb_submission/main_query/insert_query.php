@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -46,7 +46,15 @@ class insert_query extends base_query {
    */
   private function needs_timestamp( $type )
   {
-    return !isset( $this->post[ $type ] ) || !\PDb_Date_Parse::is_mysql_timestamp( $this->post[ $type ] );
+    if ( !isset( $this->post[ $type ] ) || empty( $this->post[ $type ] ) ) {
+      return true;
+    }
+    
+    if ( \PDb_Date_Parse::is_mysql_timestamp( $this->post[ $type ] ) ) {
+      return false;
+    }
+    
+    return false;
   }
 
   /**
