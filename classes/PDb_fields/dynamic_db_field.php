@@ -144,10 +144,15 @@ abstract class dynamic_db_field extends core {
    * sets the field property
    * 
    * @param string|\PDb_FormElement $field the incoming field
+   * @param int $record_id optionally supply the record id
    */
-  protected function set_field( $field )
+  protected function set_field( $field, $record_id = 0 )
   {
-    $field_item = $this->field_object( $field, $field->record_id );
+    if ( is_object( $field ) && isset( $field->record_id ) ) {
+      $record_id = $field->record_id;
+    }
+    
+    $field_item = $this->field_object( $field, $record_id );
     
     $field_item->default = $this->get_field_default( $field_item->name() );
 
@@ -319,7 +324,7 @@ abstract class dynamic_db_field extends core {
    */
   public function update_record( $packet )
   {
-    $this->set_field( $packet->field );
+    $this->set_field( $packet->field, $packet->record_id );
     $this->field->default = $packet->default;
     $this->field->set_record_id( $packet->record_id );
     
