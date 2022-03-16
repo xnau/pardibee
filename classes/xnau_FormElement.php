@@ -614,7 +614,11 @@ abstract class xnau_FormElement {
     if ( is_int( $this->value ) or ( (string) (int) $this->value === $this->value) ) {
       $this->value = $this->format_date( $this->value, true );
     } elseif ( strlen( $this->value ) > 0 ) {
-      $this->value = $this->format_date( strtotime( $this->value ), true );
+      
+      $use_utc = PDb_Date_Parse::db_timestamp_timezone() === 'UTC';
+      $ts = PDb_Date_Parse::timestamp( $this->value, array( 'utc' => $use_utc ) );
+      
+      $this->value = $this->format_date( $ts, true );
     }
 
     if ( Participants_Db::apply_filters( 'edit_record_timestamps', false ) === false ) {
