@@ -57,8 +57,6 @@ class internal_column extends base_column {
           $this->skip = true;
           
           if ( !empty( $initialvalue ) ) {
-            
-            $use_utc = PDb_Date_Parse::db_timestamp_timezone() === 'UTC';
 
             if ( PDb_Date_Parse::is_mysql_timestamp( $initialvalue ) ) {
               // record it if it is a valid mysql timestamp
@@ -67,14 +65,16 @@ class internal_column extends base_column {
               // convert the date to a mysql timestamp
               $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 
-              $timestamp = PDb_Date_Parse::timestamp( $initialvalue, array( 'input_format' => $display_format, 'utc' => $use_utc ), __METHOD__ . ' saving internal timestamp fields, standard format' );
+              $timestamp = PDb_Date_Parse::timestamp( $initialvalue, array( 'input_format' => $display_format ), __METHOD__ . ' saving internal timestamp fields, standard format' );
               
               if ( !$timestamp ) {
-                $timestamp = PDb_Date_Parse::timestamp( $initialvalue, array('utc' => $use_utc), __METHOD__ . ' saving internal timestamp fields' );
+                $timestamp = PDb_Date_Parse::timestamp( $initialvalue, array(), __METHOD__ . ' saving internal timestamp fields' );
               }
 
               if ( $timestamp ) {
-                $this->value = \PDb_Date_Display::get_mysql_timestamp( $timestamp );
+            
+                $adjusted = $timestamp - $this->tz_offset();
+                $this->value = \PDb_Date_Display::get_mysql_timestamp( $timestamp - $this->tz_offset() );
                 
                 $this->skip = false;
               }
@@ -117,5 +117,16 @@ class internal_column extends base_column {
 
         break;
     }
+  }
+  
+  /**
+   * provides the timezone offset for db timestamps
+   * 
+   * @return int
+   */
+  private function tz_offset()
+  {
+    $use_utc = PDb_Date_Parse::db_timestamp_timezone() === 'UTC';
+    return $use_utc ? get_option( 'gmt_offset' ) * HOUR_IN_SECONDS : 0;
   }
 }
