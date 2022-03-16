@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcipants_Db
  */
@@ -56,6 +56,12 @@ class PDb_Date_Parse {
    */
   private $timestamp = false;
   
+  /**
+   * @var bool if true the conversion should use UTC, false use local time
+   */
+  private $utc = false;
+
+
   /**
    * @var string context label for use in filtering, erros, etc.
    */
@@ -105,6 +111,20 @@ class PDb_Date_Parse {
   public static function is_mysql_timestamp( $timestamp )
   {
     return $timestamp !== '0000-00-00 00:00:00' && preg_match( '#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#', $timestamp ) === 1;
+  }
+  
+  /**
+   * provides the db timestamp timezone
+   * 
+   * this does not attempt to know the timezone that was in use when the timestamp 
+   * was written, it simple returns the timezone code as determined by the 
+   * "Record Timestamps Use Local Timezone" setting
+   * 
+   * @return string timezone code
+   */
+  public static function db_timestamp_timezone()
+  {
+    return Participants_Db::plugin_setting_is_true('db_timestamps_use_local_tz') ? wp_timezone_string() : 'UTC';
   }
 
   /**
@@ -160,9 +180,8 @@ class PDb_Date_Parse {
      * if it is a mysql timestamp, parse it 
      */
     if ( self::is_mysql_timestamp( $this->input ) ) {
-      if ( function_exists( 'strptime' ) ) {
-        $this->input_format = 'Y-m-d H:i:s';
-        $this->datetime_parse();
+      if ( class_exists( 'DateTime' ) ) {
+        $this->db_timestamp_parse();
       } else {
         $this->strtotime_parse();
       }
@@ -203,7 +222,7 @@ class PDb_Date_Parse {
     
     // head off problems with old timezone string values #2422
     try {
-      $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, self::time_zone_object(), NULL, $this->icu_format() );
+      $DateFormat = new IntlDateFormatter( get_locale(), IntlDateFormatter::LONG, IntlDateFormatter::NONE, self::time_zone_object($this->utc), NULL, $this->icu_format() );
     }
     catch ( Exception $e) {
       Participants_Db::debug_log(__METHOD__.' '.$e->getMessage().' TZ string: "'. get_option('timezone_string') . '"' );
@@ -228,13 +247,30 @@ class PDb_Date_Parse {
       $this->parse_mode = 'intl';
     }
   }
+  
+  /**
+   * parses a database timestamp
+   * 
+   */
+  private function db_timestamp_parse()
+  {
+    $this->input_format = 'Y-m-d H:i:s';
+    
+    $TZ = new DateTimeZone( self::db_timestamp_timezone() );
+    
+    $Date = DateTime::createFromFormat( $this->input_format, $this->input, $TZ );
+      
+    $this->set_timestamp_from_datetime( $Date );
+
+    $this->parse_mode = 'datetime';
+  }
 
   /**
    * parses the input using the DateTime class
    */
   private function datetime_parse()
   {
-    $Date = DateTime::createFromFormat( $this->input_format, $this->input );
+    $Date = DateTime::createFromFormat( $this->input_format, $this->input, self::time_zone_object( $this->utc ) );
     
     if ( is_a( $Date, 'DateTime' ) ) {
       
@@ -379,6 +415,11 @@ class PDb_Date_Parse {
         case 'european_order':
         case 'zero_time':
           $this->{$name} = (bool) ( isset( $config[$name] ) ? $config[$name] : false );
+          break;
+        case 'utc':
+          if ( isset( $config['utc'] ) ) {
+            $this->utc = (bool) $config['utc'];
+          }
           break;
       }
     }
