@@ -306,7 +306,7 @@ class PDb_Date_Parse {
     }
     
     // WP 5.3 and later
-    if ( function_exists( 'wp_timezone' ) ) {
+    if ( !$utc && function_exists( 'wp_timezone' ) ) {
       return wp_timezone();
     }
         
