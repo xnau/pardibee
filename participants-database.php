@@ -1735,10 +1735,12 @@ class Participants_Db extends PDb_Base {
 
       $default_record['private_id'] = self::generate_pid();
 
-      PDb_Date_Display::reassert_timezone();
-      $default_record['date_recorded'] = date( 'Y-m-d H:i:s' );
+      // #2797 don't include timestamps in default record
+//      PDb_Date_Display::reassert_timezone();
+//      $default_record['date_recorded'] = \Participants_Db::timestamp_now();
+//      $default_record['date_updated'] = \Participants_Db::timestamp_now();
       
-      wp_cache_add( $cachekey, $default_record );
+      wp_cache_add( $cachekey, $default_record, Participants_Db::cache_expire()  );
     }
 
     return $default_record;
