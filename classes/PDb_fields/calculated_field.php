@@ -455,10 +455,11 @@ abstract class calculated_field extends dynamic_db_field {
    * sets the field property
    * 
    * @param string|\PDb_FormElement $field the incoming field
+   * @param int $record_id optionally supply the record id
    */
-  protected function set_field( $field )
+  protected function set_field( $field, $record_id = 0 )
   {
-    parent::set_field($field);
+    parent::set_field( $field, $record_id );
     
     $this->template = new calc_template( $this->field, $this->default_format_tag() );
   }
