@@ -840,6 +840,8 @@ class PDb_Init {
       if ( $wpdb->query( $sql ) !== false ) {
         // update the stored DB version number
         $db_version = '0.65';
+      } else {
+        self::post_failure_notice( $wpdb->last_error, '0.65' );
       }
     }
     if ( '0.65' == $db_version ) {
@@ -851,7 +853,10 @@ class PDb_Init {
       if ( $wpdb->query( $sql ) !== false ) {
         // update the stored DB version number
         $db_version = '0.7';
+      } else {
+        self::post_failure_notice( $wpdb->last_error, '0.7' );
       }
+        
       $sql = "UPDATE " . Participants_Db::$groups_table . " g SET g.admin = '1' WHERE g.name ='internal'";
       $wpdb->query( $sql );
     }
@@ -884,6 +889,8 @@ class PDb_Init {
         if ( false !== $wpdb->query( $sql ) ) {
           // set the version number this step brings the db to
           $db_version = '0.8';
+        } else {
+          self::post_failure_notice( $wpdb->last_error, '0.8' );
         }
       }
     }
@@ -900,6 +907,8 @@ class PDb_Init {
         if ( false !== $wpdb->query( $sql ) ) {
           // set the version number this step brings the db to
           $db_version = '0.9';
+        } else {
+          self::post_failure_notice( $wpdb->last_error, '0.9' );
         }
       }
     }
@@ -940,7 +949,7 @@ class PDb_Init {
       }
 
       if ( $success === false ) {
-        error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
+        self::post_failure_notice( $wpdb->last_error, '1.0' );
       } else {
         $db_version = '1.0';
       }
@@ -959,7 +968,7 @@ class PDb_Init {
 
 
       if ( $success === false ) {
-        error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
+        self::post_failure_notice( $wpdb->last_error, '1.1' );
       } else {
         self::set_mode_column_values();
         self::update_field_def_values();
@@ -974,7 +983,7 @@ class PDb_Init {
       $success = $wpdb->query( "ALTER TABLE " . Participants_Db::$fields_table . " MODIFY COLUMN `default` TEXT NULL" );
 
       if ( $success === false ) {
-        error_log( __METHOD__ . ' database could not be updated: ' . $wpdb->last_error );
+        self::post_failure_notice( $wpdb->last_error, '1.2' );
       } else {
         $db_version = '1.2';
       }
@@ -982,9 +991,29 @@ class PDb_Init {
     
     update_option( Participants_Db::$db_version_option, $db_version );
 
-    if ( PDB_DEBUG && $success ) {
-      Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' plugin updated to Db version ' . $db_version );
+    if ( $success ) {
+      $update_message = 'plugin updated to database version %s';
+    } else {
+      $update_message = 'plugin failed to update database; version remains at %s';
     }
+    Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ' ' . sprintf( $update_message, $db_version ) );
+  }
+  
+  /**
+   * notifies the user in case of a database update failure
+   * 
+   * @param string $db_error the database error message
+   * @param string $error_message the message to show
+   */
+  public static function post_failure_notice( $db_error, $db_version, $error_message = false )
+  {
+    if ( $error_message === false ) {
+      $error_message = __('The database update to version %s failed with error: %s ', 'participants-database' );
+    }
+    
+    PDb_Admin_Notices::post_error( sprintf( $error_message, $db_version, $db_error ), '', true );
+    
+    Participants_Db::debug_log( Participants_Db::PLUGIN_NAME . ': ' . sprintf( $error_message, $db_version, $db_error ) );
   }
 
   /**
