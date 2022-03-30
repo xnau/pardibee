@@ -111,7 +111,7 @@ class columns {
    * 
    * @param object $column_def raw database object
    * @param string $value
-   * @return object \PDb_submission/main_query/base_column
+   * @return \PDb_submission/main_query/internal_column|\PDb_submission/main_query/user_column
    */
   public static function get_column_object( $column, $value )
   {
