@@ -298,7 +298,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( !has_filter( 'pre_update_option_' . $this->aux_plugin_settings, array($this, 'settings_callbacks') ) ) {
         add_filter( 'pre_update_option_' . $this->aux_plugin_settings, array($this, 'settings_callbacks'), 10, 2 );
       }
-      $this->plugin_options = get_option( $this->settings_name() );
+      
+      $options = get_option( $this->settings_name() );
+      $this->plugin_options = is_array( $options ) ? $options : array();
     }
 
     /**
