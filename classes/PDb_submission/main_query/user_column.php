@@ -138,7 +138,7 @@ class user_column extends base_column {
             
             if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the uploaded file
               
-              $post_filename = filter_input( INPUT_POST, $this->field->name(), FILTER_SANITIZE_STRING );
+              $post_filename = filter_input( INPUT_POST, $this->field->name(), FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
               if ( $post_filename === $record_filename ) {
                 
