@@ -550,7 +550,7 @@ class PDb_Init {
 
     Participants_Db::debug_log( 'participants database db version determined to be: ' . $db_version );
     
-    $success = false;
+    $success = true;
 
     if ( false === $db_version || '0.1' == $db_version ) {
 
@@ -1246,7 +1246,7 @@ class PDb_Init {
             'signup' => 1,
             'form_element' => 'text',
             'admin_column' => 90,
-            'default' => 'RPNE2',
+            'default' => '',
             'readonly' => 1,
         ),
         'date_recorded' => array(
