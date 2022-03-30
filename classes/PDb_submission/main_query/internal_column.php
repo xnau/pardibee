@@ -40,21 +40,21 @@ class internal_column extends base_column {
       case 'date_updated':
       case 'last_accessed':
 
+        $this->skip = true;
+        
         /*
-         *  remove the value from the post data if it is already set in the sql
+         *  don't process the imported value if it is already set in the sql
          */
         if ( strpos( $this->main_query()->query_head(), $this->field->name() ) !== false ) {
-          $this->skip = true;
           break;
         }
+        
         /*
          * always include the value if importing a CSV
          * 
          * also parses the value if "pdb-edit_record_timestamps" filter is true
          */
         if ( $this->main_query()->is_import() || Participants_Db::apply_filters( 'edit_record_timestamps', false ) ) {
-
-          $this->skip = true;
           
           if ( !empty( $initialvalue ) ) {
 
@@ -80,16 +80,9 @@ class internal_column extends base_column {
               }
             }
           }
-          break;
         }
-        /*
-         * skip the "last_accessed" field: it is set by the PDb_Record class
-         * skip the "date_recorded" field: it is either set in the query or left alone
-         */
-        if ( in_array( $this->field->name(), array( 'last_accessed', 'date_recorded' ) ) ) {
-          $this->skip = true;
-          break;
-        }
+        
+        break;
 
       case 'private_id':
         
