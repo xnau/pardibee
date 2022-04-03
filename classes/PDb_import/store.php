@@ -103,12 +103,20 @@ trait store {
       
       $column_object = \PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
       
-      if ( $column_object->add_to_query( $action ) ) {
+      $add = $column_object->add_to_query( $action );
+      
+      if ( PDB_DEBUG > 2 ) {
+        ob_start();
+        var_dump($column_object->import_value());
+        \Participants_Db::debug_log(__METHOD__.' column: '.$column->name.' import value: '. ob_get_clean() . ' add? ' . ($add?'yes':'no') );
+      }
+       
+      if ( $add ) {
         
         // add the column to the query
         $main_query->add_column( $column_object->import_value(), $column_object->query_clause() );
         
-      } elseif ( $column->name !== $record_match->match_field ) { // don't log the match field here
+      } elseif ( $column->name !== $record_match->match_field && in_array( $column->name, $this->column_names ) ) { // log only the fields that are getting data imported
         
         \Participants_Db::debug_log( ' CSV import: empty column skipped: '. $column->name, 2 );
       }
