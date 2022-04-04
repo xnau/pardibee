@@ -108,7 +108,7 @@ trait store {
       if ( PDB_DEBUG > 2 ) {
         ob_start();
         var_dump($column_object->import_value());
-        \Participants_Db::debug_log(__METHOD__.' column: '.$column->name.' import value: '. ob_get_clean() . ' add? ' . ($add?'yes':'no') );
+        \Participants_Db::debug_log(__METHOD__.' column: "'.$column->name.'" import value: '. ob_get_clean() . ' add to query? ' . ($add?'yes':'no') );
       }
        
       if ( $add ) {
