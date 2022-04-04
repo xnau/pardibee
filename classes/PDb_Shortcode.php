@@ -749,8 +749,7 @@ abstract class PDb_Shortcode {
             
             /**
              * @filter pdb-before_field_added_to_iterator
-             * @param PDb_Form_field $field
-             * @return PDb_Field_item
+             * @param PDb_Field_Item $field
              */
             do_action( 'pdb-before_field_added_to_iterator', $field );
     
@@ -758,12 +757,12 @@ abstract class PDb_Shortcode {
           }
         }
       }
-    }
-    if ( $field_count === 0 ) {
-      // remove the empty group from the iterator
-      unset( $this->groups[$group_name] );
-    } elseif ( $all_empty_fields ) {
-      $this->groups[$group_name]->class[] = 'empty-field-group';
+      if ( $field_count === 0 ) {
+        // remove the empty group from the iterator
+        unset( $this->groups[$group_name] );
+      } elseif ( $all_empty_fields ) {
+        $this->groups[$group_name]->class[] = 'empty-field-group';
+      }
     }
 
     // save the number of groups
