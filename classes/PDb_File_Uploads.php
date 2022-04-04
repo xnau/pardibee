@@ -143,11 +143,11 @@ class PDb_File_Uploads {
       $new_filename = Participants_Db::apply_filters( 'file_upload_filename', preg_replace( array( '#\.#', "/\s+/", "/[^-\.\w]+/" ), array( "-", "_", "" ), $matches[ 1 ] ), $field_def, $id ) . '.' . $matches[ 2 ];
 
       // now make sure the name is unique by adding an index if needed
-      $index = 1;
+      $index = 0;
+      $filename_parts = pathinfo( $new_filename );
       while ( file_exists( Participants_Db::files_path() . $new_filename ) ) {
-        $filename_parts = pathinfo( $new_filename );
-        $new_filename = preg_replace( array( '#_[0-9]+$#' ), array( '' ), $filename_parts[ 'filename' ] ) . '_' . $index . '.' . $filename_parts[ 'extension' ];
         $index++;
+        $new_filename = $filename_parts[ 'filename' ] . '_' . $index . '.' . $filename_parts[ 'extension' ];
       }
     }
 
