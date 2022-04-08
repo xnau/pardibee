@@ -894,7 +894,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * provides a list of fields valid for use as a list selector
      * 
      * @param string $allowed comma-separated list of form_element types to allow
-     * @retrun array of fields; 'title' => 'value'
+     * @retrun array of fields; 'title' => 'name'
      */
     protected function field_selector( $allowed )
     {
