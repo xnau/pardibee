@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -411,7 +411,6 @@ class PDb_Manage_Fields_Updates {
             $deleted_fields[] = $field_def;
           }
         }
-        do_action( Participants_Db::$prefix . 'fields_deleted', $deleted_fields );
 
         $result = $wpdb->query( '
       DELETE FROM ' . Participants_Db::$fields_table . '
@@ -419,7 +418,11 @@ class PDb_Manage_Fields_Updates {
         );
 
         if ( $result ) {
+          foreach( $deleted_fields as $field ) {
+            $this->maybe_delete_db_column($field);
+          }
           wp_send_json( array( 'status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) ) ) );
+          do_action( Participants_Db::$prefix . 'fields_deleted', $deleted_fields );
         } else {
           if ( PDB_DEBUG ) {
             Participants_Db::debug_log( __METHOD__ . ' could not delete field: ' . $wpdb->last_error );
@@ -538,6 +541,29 @@ class PDb_Manage_Fields_Updates {
          */
         do_action( Participants_Db::$prefix . 'with_selected_field_edit_action', filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ), $this->sanitize_id_list() );
     }
+  }
+  
+  /**
+   * deletes the field's db column if empty
+   * 
+   * @global \wpdb $wpdb
+   * @param \PDb_Form_Field_Def $field
+   * @return bool true if the column was deleted
+   */
+  private function maybe_delete_db_column( $field )
+  {
+    $result = false;
+    
+    if ( ! $field->has_stored_data() ) {
+      
+      global $wpdb;
+      
+      $sql = 'ALTER TABLE ' . Participants_Db::participants_table() . ' DROP COLUMN `' . $field->name() . '`';
+      
+      $result = $wpdb->query( $sql );
+    }
+    
+    return $result;
   }
 
   /**
