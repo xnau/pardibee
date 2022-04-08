@@ -679,7 +679,12 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
     wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.5', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
+    
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
+    wp_add_inline_script(self::$prefix.'record_edit_script', Participants_Db::inline_js_data( 'PDb_L10n', array(
+        'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
+    ) ));
+    
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
@@ -735,8 +740,8 @@ class Participants_Db extends PDb_Base {
       \_WP_Editors::enqueue_default_editor();
     }
 
-    if ( false !== stripos( $hook, 'participants-database-edit_participant' ) ) {
-      //wp_enqueue_script(self::$prefix.'record_edit_script');
+    if ( false !== stripos( $hook, 'participants-database-edit_participant' ) || false !== stripos( $hook, 'participants-database-add_participant' ) ) {
+      wp_enqueue_script(self::$prefix.'record_edit_script');
     }
     
     if ( false !== stripos( $hook, 'participants-database-manage_fields' ) || false !== stripos( $hook, 'pdb-participant_log_settings' ) ) {
