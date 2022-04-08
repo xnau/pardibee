@@ -1,63 +1,69 @@
 /*
- * Participants Database settings page support
+ * Participants Database Add/Edit Participant
  * 
- * sets up the tab functionality on the plugin settings page
- * 
+ * sets up the unsaved changes warning functionality on the record edit page
  * @version 0.3
  * 
  */
-PDbSettings = (function ($) {
-  var
-          tabsetup,
-          lastTab = 'pdb-settings-page-tab',
-          effect = {
-            effect : 'fadeToggle',
-            duration : 200
-          };
-  if ($.versioncompare("1.9", $.ui.version) == 1) {
-    tabsetup = {
-      fx : {
-        opacity : "show",
-        duration : "fast"
-      },
-      cookie : {
-        expires : 1
-      }
+PDbRecordEdit = (function ($) {
+  var editContainer;
+  var initState = 'initState';
+  var setChangedFlag = function () {
+    var el = $(this);
+    var initValue = el.data(initState);
+    var check = el.is('[type=checkbox]') ? el.is(':checked') : el.val();
+    if (check !== initValue) {
+      setUnsavedChangesFlag(1);
+    } else {
+      setUnsavedChangesFlag(-1);
     }
-  } else {
-    tabsetup = {
-      hide : effect,
-      show : effect,
-      active : Cookies.get(lastTab),
-      activate : function (event, ui) {
-        Cookies.set(lastTab, ui.newTab.index(), {
-          expires : 365, path : ''
-        });
-      }
+  };
+  var setUnsavedChangesFlag = function (op) {
+    var body = $('body');
+    var unsavedChangesCount = body.data('unsavedChanges') || 0;
+    if (op === 1) {
+      unsavedChangesCount++;
+    } else if (op === -1) {
+      unsavedChangesCount--;
     }
-  }
+    body.data('unsavedChanges', unsavedChangesCount);
+    if (unsavedChangesCount <= 0) {
+      clearUnsavedChangesWarning();
+    } else {
+      window.onbeforeunload = confirmOnPageExit; // set up the unsaved changes warning
+    }
+  };
+  var clearUnsavedChangesWarning = function () {
+    window.onbeforeunload = null;
+  };
+  var confirmOnPageExit = function (e) {
+    e = e || window.event;
+    var message = PDb_L10n.unsaved_changes;
+    // For IE6-8 and Firefox prior to version 4
+    if (e) {
+      e.returnValue = message;
+    }
+    // For Chrome, Safari, IE8+ and Opera 12+
+    return message;
+  };
+  var setInitState = function(){
+        var el = $(this);
+        el.data(initState, el.val());
+      };
   return {
     init : function () {
-      var wrapped = $(".pdb-admin-edit-participant.wrap .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">"),
-              wrapclass = $('.pdb-admin-edit-participant.wrap').attr('class');
-      wrapped.each(function () {
-        $(this).parent().append($(this).parent().nextUntil("div.ui-tabs-panel"));
-      });
-      $(".ui-tabs-panel").each(function (index) {
-        var str = $(this).children("a.pdb-anchor").attr('name').replace(/\s/g, "_");
-        $(this).attr("id", str.toLowerCase());
-      });
-      $(".pdb-admin-edit-participant.wrap").removeClass().addClass(wrapclass + " main");
-      $('.pdb-admin-edit-participant .ui-tabs').tabs(tabsetup).bind('tabsselect', function (event, ui) {
-        var activeclass = $(ui.tab).attr('href').replace(/^#/, '');
-        $(".pdb-admin-edit-participant.wrap").removeClass().addClass(wrapclass + " " + activeclass);
-      });
-//      if ($.browser.mozilla) {
-        $("form").attr("autocomplete", "off");
-//      }
+      editContainer = $('.pdb-admin-edit-participant');
+      // flag the row as changed for text inputs
+      editContainer.find('input, textarea').on('input', setChangedFlag).each(setInitState);
+      // flag the row as changed for dropdowns, checkboxes
+      editContainer.find('select, input[type=checkbox]').on('change', setChangedFlag).each(setInitState);
+      // flag the row as changed for rich text editors
+      editContainer.find('.rich-text').on('pdb-tinymce-change', '.mce-container', setChangedFlag).each(setInitState);
+      // clear the unsaved changes pop-up
+      editContainer.find('input[type=submit]').on('click', clearUnsavedChangesWarning);
     }
   }
 }(jQuery));
 jQuery(function () {
-  PDbSettings.init();
+  PDbRecordEdit.init();
 });
