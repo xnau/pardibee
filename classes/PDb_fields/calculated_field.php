@@ -351,26 +351,6 @@ abstract class calculated_field extends dynamic_db_field {
   {
     return $this->template->prepped_template( self::calc_tag );
   }
-  
-  /**
-   * provides the default format tag
-   * 
-   * @return string
-   */
-  protected function default_format_tag()
-  {
-    return $this->unformatted_tag();
-  }
-  
-  /**
-   * provides the default format tag
-   * 
-   * @return string
-   */
-  protected function unformatted_tag()
-  {
-    return '[?unformatted]';
-  }
 
   /**
    * displays the log in a write context
@@ -407,7 +387,7 @@ abstract class calculated_field extends dynamic_db_field {
   {
     global $wpdb;
     
-    $db_value = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $fieldname . '` FROM ' . \Participants_Db::participants_table() . ' WHERE `id` = %s', $this->field->record_id ) );
+    $db_value = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $fieldname . '` FROM ' . $this->data_table() . ' WHERE `id` = %s', $this->field->record_id ) );
     
     return is_null( $db_value ) ? '': $db_value;
   }
