@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -58,6 +58,18 @@ class calc_template {
   public function calc_template()
   {
     return $this->field_template();
+  }
+  
+  /**
+   * provides the raw template string
+   * 
+   * this removes the "unformatted" format tag from the value to be saved to the field def
+   * 
+   * @return string
+   */
+  public function raw_template_string()
+  {
+    return str_replace( '=[?unformatted]', '', $this->field->default_value() );
   }
   
   /**
