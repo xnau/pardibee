@@ -43,6 +43,16 @@ class string_combine extends calculated_field {
   }
   
   /**
+   * adds the format tag to the calculation template if it is missing
+   * 
+   * @return string calculation format
+   */
+  protected function completed_template()
+  {
+    return $this->field->default_value();
+  }
+  
+  /**
    * replaces the template with string from the data
    * 
    * @param array|bool $data associative array of data or bool false if no data
@@ -79,8 +89,9 @@ class string_combine extends calculated_field {
     
     // iterate through the fields named in the template
     foreach( $this->template_field_list() as $fieldname ) {
-      
-      $template_field = new \PDb_Field_Item( array('name' => $fieldname, 'module' => 'list' ), $this->field->record_id );
+
+      $template_field = $this->field_object( $fieldname, $this->field->record_id );
+      $template_field->set_module('list');
       
       if ( $template_field->form_element() === $this->name ) {
         
@@ -165,16 +176,6 @@ PATT;
     $split = explode( $key, $template );
     
     return $split[0];
-  }
-  
-  /**
-   * provides the default format tag
-   * 
-   * @return string
-   */
-  protected function default_format_tag()
-  {
-    return '[?unformatted]';
   }
   
   /**
