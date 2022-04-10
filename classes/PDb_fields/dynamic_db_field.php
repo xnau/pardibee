@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -61,6 +61,16 @@ abstract class dynamic_db_field extends core {
    * @return string
    */
   abstract protected function dynamic_value( $data = false );
+  
+  /**
+   * provides the name of the data table
+   * 
+   * @return string
+   */
+  protected function data_table()
+  {
+    return \Participants_Db::apply_filters( 'dynamic_db_field_database_table', \Participants_Db::participants_table(), $this->field );
+  }
 
   /**
    * updates the database value for the field
@@ -80,8 +90,6 @@ abstract class dynamic_db_field extends core {
       if ( isset( $post[ $fieldname ] ) ) {
 
         $field = $this->field_object( $dynamic_db_field, $post['id'] );
-//        $field = new \PDb_Field_Item( $dynamic_db_field );
-//        $field->set_record_id( $post[ 'id' ] );
         $this->setup_field( $field );
 
         $this->template = new calc_template( $field, $this->default_format_tag() );
@@ -202,7 +210,7 @@ abstract class dynamic_db_field extends core {
         
         $field->default = $field_data[ 'default' ];
         
-        $calc_template = new calc_template(  $field, '[?unformatted]' );
+        $calc_template = new calc_template(  $field, $this->default_format_tag() );
         
         if ( ! $calc_template->is_valid_template() ) {
           
@@ -217,14 +225,34 @@ abstract class dynamic_db_field extends core {
 
         $this->set_field( $info[ 'name' ] );
         $this->field->default = $calc_template->calc_template();
-        $field_data['default'] = $calc_template->calc_template();
-
+        $field_data['default'] = $calc_template->raw_template_string();
+        
         // do the update
         $this->update_all_records();
       }
     }
 
     return $field_data;
+  }
+  
+  /**
+   * provides the default format tag
+   * 
+   * @return string
+   */
+  protected function default_format_tag()
+  {
+    return $this->unformatted_tag();
+  }
+  
+  /**
+   * provides the default format tag
+   * 
+   * @return string
+   */
+  protected function unformatted_tag()
+  {
+    return '[?unformatted]';
   }
   
   /**
@@ -280,7 +308,7 @@ abstract class dynamic_db_field extends core {
       $where = ' WHERE p.id IN ("' . implode( '","', $record_id_list ) . '")';
     }
 
-    $record_list = $wpdb->get_results( 'SELECT p.id, p.' . $this->field->name() . ' FROM ' . \Participants_Db::$participants_table . ' p ' . $where . ' ORDER BY p.id ASC' );
+    $record_list = $wpdb->get_results( 'SELECT p.id, p.' . $this->field->name() . ' FROM ' . $this->data_table() . ' p ' . $where . ' ORDER BY p.id ASC' );
 
     status_header( 200 );
 
@@ -337,7 +365,7 @@ abstract class dynamic_db_field extends core {
     if ( $value !== false ) {
       
       global $wpdb;
-      $wpdb->update( \Participants_Db::participants_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
+      $wpdb->update( $this->data_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
 
       \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query, 3 );
     }
@@ -480,7 +508,7 @@ abstract class dynamic_db_field extends core {
   private function column_datatypes()
   {
     $cachekey = 'pdb-column-datatypes';
-    $table = \Participants_Db::participants_table();
+    $table = $this->data_table();
     $types = wp_cache_get( $table, $cachekey );
 
     if ( $types === false ) {
