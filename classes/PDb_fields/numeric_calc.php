@@ -62,7 +62,8 @@ class numeric_calc extends calculated_field {
     // iterate through the fields named in the template
     foreach( $this->template_field_list() as $fieldname ) {
       
-      $template_field = new \PDb_Field_Item( array('name' => $fieldname, 'module' => 'list' ), $this->field->record_id );
+      $template_field = $this->field_object( $fieldname, $this->field->record_id );
+      $template_field->set_module('list');
       
       if ( $template_field->form_element() === $this->name ) {
         
@@ -101,7 +102,7 @@ class numeric_calc extends calculated_field {
     
     $replacement_data[ self::calc_tag ] = $this->result;
     
-    return $replacement_data;
+    return \Participants_Db::apply_filters( $this->name . '_replacement_data', $replacement_data, $this->field );
   }
   
   /**
