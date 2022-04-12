@@ -157,11 +157,21 @@ class PDb_Base {
    * 
    * @param string $obj_name name of the js object to inline
    * @param array $obj_data array of property values for the object
+   * @param string $context optional context identification string
    * @return string the js to inline
    */
-  public static function inline_js_data( $obj_name, $obj_data )
+  public static function inline_js_data( $obj_name, $obj_data, $context = false )
   {
-    return 'var ' . esc_js( $obj_name ) . '=' . json_encode( $obj_data );
+    /**
+     * @filter pdb-inline_js_data_{$object_name}_{$context}
+     * @param array the data
+     * @return array the filtered data
+     */
+    $filter_handle = 'inline_js_data_' . $obj_name . ($context? '_' . $context:'');
+    
+    $data_array = Participants_Db::apply_filters( $filter_handle, $obj_data );
+    
+    return 'var ' . esc_js( $obj_name ) . '=' . json_encode( $data_array );
   }
   
   /**
