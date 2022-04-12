@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -148,6 +148,16 @@ class validating_field {
   public function is_not_valid()
   {
     return $this->error_type !== 'valid';
+  }
+  
+  /**
+   * provides the field form element type
+   * 
+   * @return string
+   */
+  public function form_element()
+  {
+    return $this->form_element;
   }
   
   /**
