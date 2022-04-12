@@ -353,7 +353,7 @@ class PDb_Field_Editor {
         break;
       case 'validation':
         $config = array(
-            'type' => 'dropdown-other',
+            'type' => in_array('other', $this->validation_methods() ) ? 'dropdown-other' : 'dropdown',
             'options' => $this->validation_methods(),
         );
         break;
@@ -453,11 +453,14 @@ class PDb_Field_Editor {
   protected function validation_methods()
   {
     $base_methods = array_flip( PDb_FormValidation::validation_methods() ) + array(PDb_FormElement::null_select_key() => false);
+    
     foreach ( current( $this->definition_attributes ) as $method => $switch ) {
+      
       if ( !$switch ) {
-        unset( $base_methods[$method] );
+        unset( $base_methods[ array_search( $method, $base_methods ) ] );
       }
     }
+    
     return $base_methods;
   }
 
