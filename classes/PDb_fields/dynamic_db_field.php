@@ -200,7 +200,7 @@ abstract class dynamic_db_field extends core {
    */
   public function maybe_update_database( $field_data, $info )
   {
-    if ( $field_data[ 'form_element' ] === $this->name ) {
+    if ( isset( $field_data[ 'form_element' ] ) && $field_data[ 'form_element' ] === $this->name ) {
 
       $stored_field_default = $this->get_field_default( $info[ 'name' ] );
       
