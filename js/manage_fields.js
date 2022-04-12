@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.9
+ * @version 2.10
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -49,7 +49,8 @@ PDbManageFields = (function ($) {
       });
     } else {
 
-      confirmationBox.html(PDb_L10n.delete_confirm.replace('{name}', name).replace('{thing}', thing));
+      var custom_message = PDb_L10n['delete_confirm_custom_' + parent.find('.name-attribute input').val()];
+      confirmationBox.html(custom_message || PDb_L10n.delete_confirm.replace('{name}', name).replace('{thing}', thing));
       confirmationBox.dialog(dialogOptions, {
         buttons: [{
             icon: "dashicons dashicons-yes",
@@ -415,7 +416,12 @@ PDbManageFields = (function ($) {
   }
   var delete_selected_fields = function (list, group) {
 
-    confirmationBox.html(list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field);
+    var message = list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field;
+    $.each(list, function (index, value) {
+      var name = $('#db_row_' + value).find('.name-attribute input').val();
+      message = message+('<br>'+PDb_L10n['delete_confirm_custom_' + name]+'<br>'||'');
+    });
+    confirmationBox.html(message);
     // initialize the dialog action
     confirmationBox.dialog(dialogOptions, {
       buttons: [{
@@ -557,7 +563,7 @@ PDbManageFields = (function ($) {
         if ($(this).val() === 'group') {
           $(this).next('.with-selected-group-select').show(effect_speed);
         }
-        $('.apply-with-selected').prop('disabled',$(this).val()==="");
+        $('.apply-with-selected').prop('disabled', $(this).val() === "");
       }).trigger('change');
       // field selection logic
       $('.general_fields_control_header .check-all input[type=checkbox]').click(function () {
