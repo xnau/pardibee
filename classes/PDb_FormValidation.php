@@ -113,7 +113,7 @@ class PDb_FormValidation extends xnau_FormValidation {
      * this filter sends the $field object through a filter to allow a custom 
      * validation to be inserted
      * 
-     * if a custom validation is implemented, the $field->error_type must be set 
+     * if a custom validation is implemented, the $validating_field->error_type must be set 
      * to a validation method key string. If the key string is a defined validation 
      * method, that method will be applied. If $field->validation is set to false 
      * by the filter callback, no further processing will be applied.
