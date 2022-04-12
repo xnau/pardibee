@@ -411,6 +411,7 @@ class PDb_Manage_Fields_Updates {
             $deleted_fields[] = $field_def;
           }
         }
+        do_action( Participants_Db::$prefix . 'fields_deleted', $deleted_fields );
 
         $result = $wpdb->query( '
       DELETE FROM ' . Participants_Db::$fields_table . '
@@ -422,7 +423,6 @@ class PDb_Manage_Fields_Updates {
             $this->maybe_delete_db_column($field);
           }
           wp_send_json( array( 'status' => 'success', 'feedback' => $this->dismissable_message( __( 'Selected fields deleted', 'participants-database' ) ) ) );
-          do_action( Participants_Db::$prefix . 'fields_deleted', $deleted_fields );
         } else {
           if ( PDB_DEBUG ) {
             Participants_Db::debug_log( __METHOD__ . ' could not delete field: ' . $wpdb->last_error );
@@ -554,7 +554,7 @@ class PDb_Manage_Fields_Updates {
   {
     $result = false;
     
-    if ( ! $field->has_stored_data() ) {
+    if ( $this->yes_delete_db_column( $field ) ) {
       
       global $wpdb;
       
@@ -564,6 +564,22 @@ class PDb_Manage_Fields_Updates {
     }
     
     return $result;
+  }
+  
+  /**
+   * tells if the db column should be deleted
+   * 
+   * @param \PDb_Form_Field_Def $field
+   * @return bool
+   */
+  private function yes_delete_db_column( $field )
+  {
+    /**
+     * @filter pdb-delete_column_on_field_delete
+     * @param \PDb_Form_Field_Def $field
+     * @return bool
+     */
+    return Participants_Db::apply_filters( 'delete_column_on_field_delete', ! $field->has_stored_data(), $field );
   }
 
   /**
