@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -345,11 +345,18 @@ class PDb_Field_Editor {
         );
         break;
       case 'form_element':
-        $config = array(
-            'type' => 'dropdown',
-            'options' => array_flip( $this->form_element_options() ) + array(PDb_FormElement::null_select_key() => false),
-            'attributes' => array('class' => 'form-element-select ' . ( $this->field_def->has_stored_data() ? 'column-has-values' : 'column-empty' ) ),
-        );
+        if ( array_key_exists( $this->field_def->form_element(), $this->form_element_options() ) ) {
+          $config = array(
+              'type' => 'dropdown',
+              'options' => array_flip( $this->form_element_options() ) + array(PDb_FormElement::null_select_key() => false),
+              'attributes' => array('class' => 'form-element-select ' . ( $this->field_def->has_stored_data() ? 'column-has-values' : 'column-empty' ) ),
+          );
+        } else { // don't display the form element selector if the field's form element is not in the options
+          $config = array(
+              'type' => 'hidden',
+              'attributes' => array('class' => 'form-element-select ' . ( $this->field_def->has_stored_data() ? 'column-has-values' : 'column-empty' ) ),
+          );
+        }
         break;
       case 'validation':
         $config = array(
