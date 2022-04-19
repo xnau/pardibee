@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -246,7 +246,7 @@ abstract class calculated_field extends dynamic_db_field {
   {
     $cachegroup = 'pdb-calculated_field-' . $this->field->name();
     
-    $dynamic_value = wp_cache_get( $this->field->record_id(), $cachegroup, false, $found );
+    $dynamic_value = wp_cache_get( $this->field->cache_id(), $cachegroup, false, $found );
     
     if ( $found === false ) {
       
@@ -273,7 +273,7 @@ abstract class calculated_field extends dynamic_db_field {
         $dynamic_value = preg_replace( $cleanup_expression, '', $replaced_string );
       }
       
-      wp_cache_add( $this->field->record_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
+      wp_cache_add( $this->field->cache_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
     }
     
     return $this->is_numeric_field() ? filter_var( $dynamic_value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) : $dynamic_value;
@@ -387,7 +387,15 @@ abstract class calculated_field extends dynamic_db_field {
   {
     global $wpdb;
     
-    $db_value = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $fieldname . '` FROM ' . $this->data_table() . ' WHERE `id` = %s', $this->field->record_id ) );
+    /**
+     * @filter pdb-calculated_field_template_field_value_query
+     * @param string query
+     * @param string field name
+     * @return string query
+     */
+    $sql = \Participants_Db::apply_filters('calculated_field_template_field_value_query', 'SELECT `' . $fieldname . '` FROM ' . $this->data_table() . ' WHERE `id` = %s', $fieldname );
+    
+    $db_value = $wpdb->get_var( $wpdb->prepare( $sql, $this->field->record_id ) );
     
     return is_null( $db_value ) ? '': $db_value;
   }
