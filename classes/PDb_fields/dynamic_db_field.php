@@ -42,6 +42,9 @@ abstract class dynamic_db_field extends core {
 
     add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
     add_filter( 'pdb-before_submit_add', array( $this, 'update_db_value' ) );
+    
+    // general filter for updating
+    add_filter( 'pdb-dynamic_db_field_update', array( $this, 'update_db_value' ) );
 
     add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
 
@@ -87,18 +90,20 @@ abstract class dynamic_db_field extends core {
       /** @var \PDb_Form_Field_Def $dynamic_db_field */
       $fieldname = $dynamic_db_field->name();
 
+      $field = $this->field_object( $dynamic_db_field, $post['id'], $post );
+      
+      $this->setup_field( $field );
+
+      $this->template = new calc_template( $field, $this->default_format_tag() );
+
+      $dynamic_value = $this->dynamic_value( $post );
+
       if ( isset( $post[ $fieldname ] ) ) {
+        $post[ $fieldname ] = $dynamic_value;
+      }
 
-        $field = $this->field_object( $dynamic_db_field, $post['id'] );
-        $this->setup_field( $field );
-
-        $this->template = new calc_template( $field, $this->default_format_tag() );
-
-        $post[ $fieldname ] = $this->dynamic_value( $post );
-        
-        if ( isset( $_POST[ $fieldname ] ) ) {
-          $_POST[ $fieldname ] = $post[ $fieldname ];
-        }
+      if ( isset( $_POST[ $fieldname ] ) ) {
+        $_POST[ $fieldname ] = $dynamic_value;
       }
     }
     
@@ -110,13 +115,19 @@ abstract class dynamic_db_field extends core {
    * 
    * @param \PDb_Form_Field_Def|string|\PDb_FormElement $field object
    * @param int $record_id
+   * @param array $data (optional) additional data 
    * @return \PDb_Field_Item object
    */
-  protected function field_object( $field, $record_id )
+  protected function field_object( $field, $record_id, $data = array() )
   {
     $field_obj = new \PDb_Field_Item( $field, $record_id );
-    
-    return \Participants_Db::apply_filters('dynamic_db_internal_field_object',  $field_obj );
+    /**
+     * @filter pdb-dynamic_db_internal_field_object
+     * @param \PDb_Field_Item the newly instantiated field object
+     * @param array additional data
+     * @return object
+     */
+    return\Participants_Db::apply_filters('dynamic_db_internal_field_object',  $field_obj, $data  );
   }
 
   /**
@@ -460,7 +471,7 @@ abstract class dynamic_db_field extends core {
     foreach ( $this->field_list() as $dynamic_db_field ) {
 
       /** @var \PDb_Form_Field_Def $dynamic_db_field */
-      $field = $this->field_object( $dynamic_db_field, $record_id );
+      $field = $this->field_object( $dynamic_db_field, $record_id, $post );
       
       $this->setup_field( $field );
 
