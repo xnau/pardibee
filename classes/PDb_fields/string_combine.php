@@ -90,7 +90,7 @@ class string_combine extends calculated_field {
     // iterate through the fields named in the template
     foreach( $this->template_field_list() as $fieldname ) {
 
-      $template_field = $this->field_object( $fieldname, $this->field->record_id );
+      $template_field = $this->field_object( $fieldname, $this->field->record_id(), $post );
       $template_field->set_module('list');
       
       if ( $template_field->form_element() === $this->name ) {
@@ -111,6 +111,7 @@ class string_combine extends calculated_field {
         $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
         $data['value:'.$fieldname] = $template_field->has_content() ? $template_field->raw_value() : '';
       }
+      
     }
     
     $clean_data = $this->clear_empty_values( $data );

@@ -53,7 +53,7 @@ class date_calc extends calculated_field {
     // iterate through the fields named in the template
     foreach ( $this->template_field_list() as $fieldname ) {
 
-      $template_field = $this->field_object( $fieldname, $this->field->record_id );
+      $template_field = $this->field_object( $fieldname, $this->field->record_id(), $post );
       $template_field->set_module('list');
 
       if ( isset( $post[ $template_field->name() ] ) && !\PDb_FormElement::is_empty( $post[ $template_field->name() ] ) ) {

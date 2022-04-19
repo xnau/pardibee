@@ -62,7 +62,7 @@ class numeric_calc extends calculated_field {
     // iterate through the fields named in the template
     foreach( $this->template_field_list() as $fieldname ) {
       
-      $template_field = $this->field_object( $fieldname, $this->field->record_id );
+      $template_field = $this->field_object( $fieldname, $this->field->record_id(), $post );
       $template_field->set_module('list');
       
       if ( $template_field->form_element() === $this->name ) {
