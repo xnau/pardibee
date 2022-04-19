@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.9
+ * @version    2.10
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -119,6 +119,16 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * @return int
    */
   public function record_id()
+  {
+    return $this->record_id;
+  }
+  
+  /**
+   * provides an identifier for use with a cache
+   * 
+   * @return string
+   */
+  public function cache_id()
   {
     return $this->record_id;
   }
