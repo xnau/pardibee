@@ -973,7 +973,6 @@ class PDb_List_Admin {
    */
   public static function set_user_setting( $name, $value, $setting_name )
   {
-
     $settings = array();
     $saved_settings = get_option( $setting_name );
     if ( is_array( $saved_settings ) ) {
@@ -995,13 +994,13 @@ class PDb_List_Admin {
   {
     $saved_settings = get_option( $setting_name );
     
-    return is_array( $saved_settings ) && isset( $saved_settings[ $name ] ) ? $saved_settings[ $name ] : $default;
+    return is_array( $saved_settings ) && isset( $saved_settings[ $name ] ) && $saved_settings[ $name ] !== '' ? $saved_settings[ $name ] : $default;
   }
 
   /**
    * supplies the second part of a download filename
    * 
-   * this is usually appended to the end of the base fielname for a plugin-generated file
+   * this is usually appended to the end of the base fieldname for a plugin-generated file
    * 
    * @return string a filename-compatible datestamp
    */
