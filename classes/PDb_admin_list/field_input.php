@@ -60,7 +60,7 @@ class field_input {
   {
     $this->field = new \PDb_Field_Item( $fieldname );
     
-    if ( $value === false && $this->field_uses_default_value() ) {
+    if ( $value === false && $this->field_displays_default_value() ) {
       $value = $this->field->default_value();
     }
     
@@ -144,11 +144,11 @@ class field_input {
   }
   
   /**
-   * tells of the field input should use the default value
+   * tells of the field input shows the default value if empty
    * 
    * @return bool
    */
-  private function field_uses_default_value()
+  private function field_displays_default_value()
   {
     return ! $this->field->is_dynamic_field();
   }
