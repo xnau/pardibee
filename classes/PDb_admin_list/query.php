@@ -96,11 +96,7 @@ class query {
   private function _query()
   {
     global $wpdb;
-    if ( method_exists( $wpdb, 'remove_placeholder_escape' ) ) {
-      return $wpdb->remove_placeholder_escape( $this->list_query );
-    }
-
-    return $this->list_query;
+    return $wpdb->remove_placeholder_escape( $this->list_query );
   }
 
   /**
