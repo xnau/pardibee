@@ -43,7 +43,7 @@ abstract class dynamic_db_field extends core {
     add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
     add_filter( 'pdb-before_submit_add', array( $this, 'update_db_value' ) );
     
-    // general filter for updating
+    // general filter for updating a single record
     add_filter( 'pdb-dynamic_db_field_update', array( $this, 'update_db_value' ) );
 
     add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
@@ -108,6 +108,16 @@ abstract class dynamic_db_field extends core {
     }
     
     return $post;
+  }
+  
+  /**
+   * updates a list of records
+   * 
+   * @param array $record_id_list
+   */
+  public function update_dynamic_fields( $record_id_list ) 
+  {
+    $this->update_record_list($record_id_list);
   }
   
   /**
@@ -225,7 +235,7 @@ abstract class dynamic_db_field extends core {
         
         if ( ! $calc_template->is_valid_template() ) {
           
-          \Participants_Db::set_admin_message( sprintf( __( 'The "Template" setting for the %s field could not be validated. Details here: %s', 'participants-database' ), $field->title(), '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/field-types/participant-database-calculation-fields/" target="_blank" >Calculation Fields</a>'  ), 'error' );
+          \Participants_Db::set_admin_message( sprintf( __( 'The "Template" setting for the %s field could not be validated. Details here: %s', 'participants-database' ), $field->title(), '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/field-types/participant-database-calculation-fields/" target="_blank" >Calculation Fields</a>' ), 'error' );
           
           $field_data['default'] = $stored_field_default;
           
@@ -324,8 +334,20 @@ abstract class dynamic_db_field extends core {
     status_header( 200 );
 
     foreach ( $record_list as $record ) {
-
-      $packet = (object) array( 'record_id' => $record->id, 'field' => $this->field->name(), 'default' => $this->field->default_value() );
+      
+      $packet_array = array( 
+          'record_id' => $record->id, 
+          'field' => $this->field->name(), 
+          'default' => $this->field->default_value() 
+              );
+      /**
+       * @filter pdb-dynamic_db_field_background_update_packet
+       * @param array the packet data
+       * @param object the db data for the record
+       * @param \PDb_Field_Item the current field object
+       * @return array the packet data
+       */
+      $packet = (object) \Participants_Db::apply_filters( 'dynamic_db_field_background_update_packet', $packet_array, $record, $this->field );
    
       $this->process->push_to_queue( $packet );
     }
@@ -363,9 +385,10 @@ abstract class dynamic_db_field extends core {
    */
   public function update_record( $packet )
   {
+    do_action('pdb-dynamic_db_field_background_record_update', $packet );
+    
     $this->set_field( $packet->field, $packet->record_id );
     $this->field->default = $packet->default;
-    $this->field->set_record_id( $packet->record_id );
     
     $value = $this->dynamic_value();
 
