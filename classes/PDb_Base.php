@@ -876,7 +876,7 @@ class PDb_Base {
        * here, we are attempting to access a value from a PHP superglobal
        */
 
-      list( $global, $name ) = explode( ':', $dynamic_key );
+      list( $variable, $name ) = explode( ':', $dynamic_key );
 
       /*
        * if the value refers to an array element by including [index_name] or 
@@ -891,14 +891,14 @@ class PDb_Base {
       }
 
       // clean this up in case someone puts $_SERVER instead of just SERVER
-      $global = preg_replace( '#^[$_]{1,2}#', '', $global );
+      $variable = preg_replace( '#^[$_]{1,2}#', '', $variable );
 
       /*
        * for some reason getting the superglobal array directly with the string
        * is unreliable, but this bascially works as a whitelist, so that's
        * probably not a bad idea.
        */
-      switch ( strtoupper( $global ) ) {
+      switch ( strtoupper( $variable ) ) {
 
         case 'SERVER':
           $global = $_SERVER;
