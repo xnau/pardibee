@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -77,6 +77,20 @@ class process extends \WP_Background_Process {
   }
   
   /**
+   * adds the data to the queue
+   * 
+   * @param array $line CSV data line
+   */
+  public function push_to_queue( $line )
+  {
+    if ( \Participants_Db::plugin_setting_is_true( 'background_import', true ) ) {
+      parent::push_to_queue($line);
+    } else {
+      $this->task( $line );
+    }
+  }
+  
+  /**
    * provides the settings array
    * 
    * @return array
@@ -93,6 +107,6 @@ class process extends \WP_Background_Process {
   {
     parent::complete();
     
-    tally::get_instance()->complete();
+    tally::get_instance()->complete( true );
   }
 }
