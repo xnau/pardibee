@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -32,7 +32,7 @@ abstract class base_query {
   /**
    * @var array of column clause strings
    */
-  protected $column_clauses;
+  protected $column_clauses = array();
 
   /**
    * @var array the posted data
@@ -169,6 +169,16 @@ abstract class base_query {
   public function query_head()
   {
     return $this->top_clause();
+  }
+  
+  /**
+   * tells the number of columns that are getting added/modified by the query
+   * 
+   * @return int
+   */
+  public function column_count()
+  {
+    return count( $this->column_clauses );
   }
 
   /**
