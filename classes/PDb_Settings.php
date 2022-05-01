@@ -1112,6 +1112,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
                 ),
         ),
     );
+
+    $this->plugin_settings[] = array(
+        'name' => 'background_import',
+        'title' => __( 'CSV Imports in the Background', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'When checked, CSV imports will be performed in the background, avoiding import size limits.', 'participants-database' ),
+            'value' => 1,
+            'options' => array(1, 0),
+        ),
+    );
     
       $this->plugin_settings[] = array(
         'name' => 'scroll_to_error',
