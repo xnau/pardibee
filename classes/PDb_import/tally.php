@@ -127,18 +127,22 @@ class tally {
    * completes the report
    * 
    * this posts the final report and resets the running tally
+   * 
+   * @param bool $background true if the import is done in the background
    */
-  public function complete()
+  public function complete( $background )
   {
     $this->complete = true;
     
-    $params = array(
-        'type' => 'success',
-        'persistent' => false,
-    );
-    \PDb_Admin_Notices::post_admin_notice( '<p>' . $this->report() . '</p>', $params );
-    
-    $this->clear();
+    if ( $background ) {
+      $params = array(
+          'type' => 'success',
+          'persistent' => false,
+      );
+      \PDb_Admin_Notices::post_admin_notice( '<p>' . $this->report() . '</p>', $params );
+
+     $this->clear();
+    }
   }
   
   /**
