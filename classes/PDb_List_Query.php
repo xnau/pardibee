@@ -558,6 +558,7 @@ class PDb_List_Query {
     $this->_count_clauses();
 
     $query = '';
+    
     if ( $this->suppress && !$this->is_search_result ) {
       $query .= ' WHERE p.id = "0"';
     } elseif ( $this->clause_count > 0 ) {
