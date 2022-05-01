@@ -277,7 +277,6 @@ class PDb_List extends PDb_Shortcode {
    */
   public function _setup_iteration()
   {
-
     /**
      * the list query object can be modified at this point to add a custom search
      * 
@@ -285,7 +284,7 @@ class PDb_List extends PDb_Shortcode {
      * @param PDb_List_Query
      */
     do_action( Participants_Db::$prefix . 'list_query_object', $this->list_query );
-
+      
     /**
      * allow the query to be altered before the records are retrieved
      * 
