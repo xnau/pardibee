@@ -227,7 +227,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   {
     $success = parent::insert_from_csv($src_file);
     
-    if ( $success ) {
+    if ( $success && $this->is_background_import() ) {
       
       \PDb_import\tally::get_instance()->reset();
       
