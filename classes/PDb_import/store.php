@@ -126,7 +126,7 @@ trait store {
      * now that we're done adding the submitted data to the query, check for 
      * validation and abort the process if there are validation errors
      */
-    if ( $main_query->has_validation_errors() ) {
+    if ( $main_query->has_validation_errors() || ! $main_query->column_count() > 0 ) {
       return false;
     }
     
