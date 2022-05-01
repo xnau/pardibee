@@ -88,7 +88,20 @@ abstract class xnau_CSV_Import {
           $success = $this->insert_from_csv($target_path);
           
           if ( $success ) {
-            $this->set_error_heading( $this->upload_success_message(), '', false);
+            
+            if ( ! $this->is_background_import() ) {
+              
+              $tally = \PDb_import\tally::get_instance();
+              $tally->complete( false );
+              $this->set_error_heading( $tally->report(), '', false);
+              $tally->reset();
+              
+            } else {
+              
+              $this->set_error_heading( $this->upload_success_message(), '', false);
+            }
+            
+    
           }
         } // file move successful
         else { // file move failed
@@ -380,6 +393,17 @@ csv line= '.print_r( $csv_line, true ), 2 );
 
     $this->errors[] = '<strong>' . $heading . '</strong>';
     $this->set_error($message, $error_status);
+  }
+  
+  /**
+   * tells if the import is done in the background
+   * 
+   * @return bool
+   */
+  public function is_background_import()
+  {
+    $options = get_option( Participants_Db::$participants_db_options );
+    return isset( $options['background_import'] ) ? (bool) $options['background_import'] : true;
   }
 
 }
