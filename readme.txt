@@ -290,6 +290,11 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.1 =
+now export selected records on admin List Participants page
+new setting: CSV imports in the background (by default) or immediately
+calculated fields supported in Participant Log add-on
+
 = 2.0.10 =
 added an unsaved changes warning to the add/edit participant page
 fixed issue with payment log field losing its configuration on update
@@ -1488,8 +1493,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-2.0 is a major feature upgrade release. We recommend you back up your files and database before upgrading.
-2.0.10 is a bug fix update
+2.1 is a feature update
 
 == Plugin Support ==
 
