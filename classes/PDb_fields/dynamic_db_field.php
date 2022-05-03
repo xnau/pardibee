@@ -489,6 +489,7 @@ abstract class dynamic_db_field extends core {
    */
   public function process_imported_record( $post, $record_id, $status )
   {
+    $match_prefs = array_intersect_key( $post, array( 'match_preference' => '', 'match_field' => '' ) );
     $data = array();
 
     foreach ( $this->field_list() as $dynamic_db_field ) {
@@ -504,7 +505,7 @@ abstract class dynamic_db_field extends core {
     }
     
     if ( count( $data ) ) {
-      \Participants_Db::write_participant( $data, $record_id );
+      \Participants_Db::write_participant( array_merge( $data, $match_prefs ), $record_id );
     }
   }
 
