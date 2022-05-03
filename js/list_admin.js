@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 1.1
+ * @version 1.2
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -107,8 +107,7 @@ var PDbListAdmin = (function ($) {
           listform.prepend(submitElement.clone().val(list_adminL10n.apply));
           armDeleteButton(true);
           checkState = false;
-          $(this).dialog("destroy");
-          listform.submit();
+          performTask();
         }
       }, {
         icon: 'dashicons dashicons-no-alt',
@@ -118,6 +117,26 @@ var PDbListAdmin = (function ($) {
         }
       }]
   });
+  var performTask = function () {
+    if ( task_selector.val() === 'export' ) {
+      var exportform = $('form.csv-export');
+      var listformdata = new FormData(listform[0]);
+      if ( exportform.find('[name=export_selection]').length ) {
+        exportform.find('[name=export_selection]').val(listformdata.getAll('pid[]').toString());
+      } else {
+        exportform.prepend($('<input>',{
+          type:'hidden',
+          name:'export_selection',
+          value:listformdata.getAll('pid[]').toString()
+        }));
+      }
+      exportform.submit();
+      confirmDialog.dialog("close").html('');
+    } else {
+      listform.submit();
+      confirmDialog.dialog("destroy");
+    }
+  }
   return {
     init: function () {
       apply_button.on('click', function (e) {
