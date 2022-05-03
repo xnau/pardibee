@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -114,6 +114,10 @@ class PDb_List_Admin {
                     "singular" => __( "Unapprove the selected record?", 'participants-database' ),
                     "plural" => __( "Unapprove the selected records?", 'participants-database' ),
                 ),
+                'export' => array(
+                    "singular" => __( "Export the selected record?", 'participants-database' ),
+                    "plural" => __( "Export the selected records?", 'participants-database' ),
+                ),
                 'send_signup_email' => array(
                     "singular" => __( "Send the signup email to the selected record?", 'participants-database' ),
                     "plural" => __( "Send the signup email to the selected records?", 'participants-database' ),
@@ -138,7 +142,7 @@ class PDb_List_Admin {
          * @param array of actions that are not quantity limited
          * @return array
          */
-        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove', PDb_admin_list\mass_edit::edit_action ) ),
+        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove', 'export', PDb_admin_list\mass_edit::edit_action ) ),
             ))
     );
     
@@ -818,6 +822,10 @@ class PDb_List_Admin {
       $core_actions = array(
           __( 'delete', 'participants-database' ) => 'delete'
               ) + $core_actions;
+    }
+    
+    if ( self::user_can_export_csv() ) {
+      $core_actions[__( 'export', 'participants-database' )] = 'export';
     }
 
     /**
