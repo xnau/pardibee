@@ -1120,7 +1120,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'When checked, CSV imports will be performed in the background. When unchecked, CSV imports will be processed during the page refresh.', 'participants-database' ) . $this->settings_help( 'background_imports' ),
+            'help_text' => __( 'When checked, CSV imports will be performed in the background. When unchecked, CSV imports will be processed immediately, during the page refresh.', 'participants-database' ) . $this->settings_help( 'background_imports' ),
             'value' => 1,
             'options' => array(1, 0),
         ),
