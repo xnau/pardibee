@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.0.10
+ * Version: 2.0.11
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -688,7 +688,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.2' );
+    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.0' );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$presuffix.js" ), array('jquery'), self::$plugin_version );
@@ -840,7 +840,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function include_admin_file()
   {
-    $file = str_replace( self::$plugin_page . '-', '', filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) ) . '.php';
+    $file = str_replace( self::$plugin_page . '-', '', filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS ) ) . '.php';
 
     if ( is_file( plugin_dir_path( __FILE__ ) . $file ) ) {
 
@@ -912,10 +912,10 @@ class Participants_Db extends PDb_Base {
     if ( $record_id !== '0' && $record_id !== 0 ) {
     
       // get the pid from the get string if given
-      $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
+      $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS );
 
       if ( empty( $get_pid ) ) {
-        $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_STRING );
+        $get_pid = filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS );
       }
 
       if ( !empty( $get_pid ) ) {
@@ -2151,16 +2151,17 @@ class Participants_Db extends PDb_Base {
   public static function process_page_request()
   {
     $post_sanitize = array(
-        'subsource' => FILTER_SANITIZE_STRING,
-        'action' => FILTER_SANITIZE_STRING,
-        'pdb_data_keys' => FILTER_SANITIZE_STRING,
-        'submit_button' => FILTER_SANITIZE_STRING,
-        'filename' => FILTER_SANITIZE_STRING,
-        'base_filename' => FILTER_SANITIZE_STRING,
-        'CSV_type' => FILTER_SANITIZE_STRING,
+        'subsource' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'action' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'pdb_data_keys' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'submit_button' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'filename' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'base_filename' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'CSV_type' => FILTER_SANITIZE_SPECIAL_CHARS,
         'include_csv_titles' => FILTER_VALIDATE_BOOLEAN,
         'nocookie' => FILTER_VALIDATE_BOOLEAN,
-        'previous_multipage' => FILTER_SANITIZE_STRING,
+        'previous_multipage' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'export_selection' => FILTER_SANITIZE_SPECIAL_CHARS,
     );
     /*
      * $post_input is used for control functions, not for the dataset
@@ -2412,16 +2413,32 @@ class Participants_Db extends PDb_Base {
 
             $query = false;
             
-            if ( is_admin() ) {
+            $selection_list = array();
+            if ( isset( $post_input['export_selection'] ) && ! empty( $post_input['export_selection'] ) ) {
+              $raw_list = explode( ',', str_replace( ' ', '', $post_input['export_selection'] ) );
+              $selection_list = array_filter( $raw_list, 'is_numeric' );
+            }
+            
+            if ( count( $selection_list ) > 0 ) {
+              
+              $query = 'SELECT ' . $export_column_list . ' FROM ' . Participants_Db::participants_table() . ' p WHERE p.id IN ("' . implode( '","', $selection_list ) . '")';
+              
+              if ( is_admin() ) {
+                \PDb_List_Admin::set_admin_user_setting( 'with_selected', 'export' );
+              }
+              
+            } elseif ( is_admin() ) {
+              
               global $current_user;
               $saved_query = self::$session->get( Participants_Db::$prefix . 'admin_list_query-' . $current_user->ID, PDb_List_Admin::default_query() );
               $query = str_replace( '*', ' ' . $export_column_list . ' ', $saved_query );
+              
             } else {
+              
               $saved_query = self::$session->get('csv_export_query');
               if ( $saved_query ) {
                 $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_column_list . ' FROM', $saved_query );
               }
-              
             }
 
             if ( $query ) {
@@ -2473,18 +2490,18 @@ class Participants_Db extends PDb_Base {
           exit;
         }
 
-        return $data;
+        return; // $data;
 
       case 'retrieve' :
 
-        if ( self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_STRING ), self::$main_submission_nonce_key ) ) {
+        if ( self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key ) ) {
           self::_process_retrieval();
         }
         return;
 
       case 'signup' :
 
-        if ( !self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_STRING ), self::$main_submission_nonce_key ) )
+        if ( !self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key ) )
           return;
 
         $_POST['private_id'] = '';
@@ -3205,7 +3222,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function plugin_menu()
   {
-    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === self::$plugin_page . '_settings_page' ) {
+    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS ) === self::$plugin_page . '_settings_page' ) {
       /*
        * intialize the plugin settings for the plugin settings page
        */
