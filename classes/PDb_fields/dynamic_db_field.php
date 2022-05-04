@@ -131,13 +131,14 @@ abstract class dynamic_db_field extends core {
   protected function field_object( $field, $record_id, $data = array() )
   {
     $field_obj = new \PDb_Field_Item( $field, $record_id );
+    
     /**
      * @filter pdb-dynamic_db_internal_field_object
      * @param \PDb_Field_Item the newly instantiated field object
      * @param array additional data
      * @return object
      */
-    return\Participants_Db::apply_filters('dynamic_db_internal_field_object',  $field_obj, $data  );
+    return \Participants_Db::apply_filters('dynamic_db_internal_field_object',  $field_obj, $data  );
   }
 
   /**
