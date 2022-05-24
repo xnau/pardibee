@@ -244,6 +244,7 @@ class PDb_List extends PDb_Shortcode {
         'module' => 'list',
         'action' => '',
         'suppress' => 'false',
+        'pagination' => 'true',
     );
   }
   
@@ -972,12 +973,13 @@ class PDb_List extends PDb_Shortcode {
    */
   public function show_pagination_control()
   {
+    if ( $this->attribute_true('pagination') ) {
+      // set the wrapper HTML parameters
+      $this->pagination->set_wrappers( $this->pagination_wrap );
 
-    // set the wrapper HTML parameters
-    $this->pagination->set_wrappers( $this->pagination_wrap );
-
-    // print the control
-    echo $this->pagination->create_links();
+      // print the control
+      echo $this->pagination->create_links();
+    }
   }
 
   /**
