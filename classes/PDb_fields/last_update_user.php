@@ -137,7 +137,22 @@ class last_update_user {
    */
   private function field_exists()
   {
-    return \PDb_Form_Field_Def::is_field(self::fieldname);
+    return \PDb_Form_Field_Def::is_field(self::fieldname) && $this->column_exists();
+  }
+  
+  /**
+   * tells if the database column for the field exists
+   * 
+   * @global \wpdb $wpdb
+   * @return bool true if the column exists
+   */
+  private function column_exists()
+  {
+    global $wpdb;
+    
+    $result = $wpdb->get_results( 'SHOW COLUMNS FROM `' . \Participants_Db::$participants_table . '` LIKE "' . self::fieldname . '"', ARRAY_N );
+    
+    return ! is_null( $result ) && count( $result ) > 0;
   }
   
   /**
@@ -158,9 +173,17 @@ class last_update_user {
   
   /**
    * creates the field if it doesn't exist
+   * 
+   * @global \wpdb $wpdb
    */
   private function create_field()
   {
+    if ( \PDb_Form_Field_Def::is_field(self::fieldname) && ! $this->column_exists() ) {
+      // if the field was added, but the column doesn't exist, try again
+      global $wpdb;
+      $wpdb->delete( \Participants_Db::$fields_table, array( 'name' => self::fieldname ) );
+    }
+    
     $params = array(
         'name' => self::fieldname,
         'title' => self::title(),
