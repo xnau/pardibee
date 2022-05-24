@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.3
+ * @version    3.4
  * 
  * 
  */
@@ -44,6 +44,19 @@ class PDb_Session {
     }
 
     return self::$instance;
+  }
+  
+  /**
+   * provides a URL with a session id
+   * 
+   * @param string $url the url base
+   * @return string the url with the session id added
+   */
+  public static function session_url_var( $url )
+  {
+    $session = self::get_instance();
+    
+    return add_query_arg( array( self::id_var => $session->session_id() ), $url );
   }
 
   /**
