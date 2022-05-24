@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 0.4
+ * @version 0.5
  * 
  * single table-based template for the [pdb_record] shortcode for editing a record on the frontend
  *
@@ -11,7 +11,7 @@
 <div class="wrap <?php echo $this->wrap_class ?>">
 
   <?php
-  if ( !empty( $this->participant_id ) ) :
+  if ( $this->record_found() ) :
     // output any validation errors
     $this->print_errors();
     ?>

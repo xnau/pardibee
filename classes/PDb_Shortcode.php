@@ -498,6 +498,16 @@ abstract class PDb_Shortcode {
    * template has to be included in the subclass context
    */
   abstract protected function _include_template();
+  
+  /**
+   * tells if the current page load is getting a valid record
+   * 
+   * @return bool true if a record was located
+   */
+  public function record_found()
+  {
+    return $this->participant_id > 0 && ! empty( $this->participant_values );
+  }
 
   /**
    * sets up the shortcode attributes array

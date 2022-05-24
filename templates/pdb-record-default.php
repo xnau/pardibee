@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 0.5
+ * @version 1.0
  * 
  * default template for the [pdb_record] shortcode for editing a record on the frontend
  *
@@ -17,7 +17,7 @@
    * 
    * 
    */
-  if ( !empty( $this->participant_id ) ) :
+  if ( $this->record_found() ) :
     ?>
 
     <?php // output any validation errors

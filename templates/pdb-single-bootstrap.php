@@ -1,7 +1,7 @@
 <?php
 /**
  * @name pdb single template bootstrap
- * @version 2.2
+ * @version 2.3
  * 
  * default template for displaying a single record for the twitter bootstrap framework
  *
@@ -12,7 +12,7 @@
 
 <div class="wrap  <?php echo $this->wrap_class ?>">
 
-  <?php if ( $this->participant_id > 0 ) : ?>
+  <?php if ( $this->record_found() ) : ?>
 	
   <?php while ( $this->have_groups() ) : $this->the_group(); ?>
   

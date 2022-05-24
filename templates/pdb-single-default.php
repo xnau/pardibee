@@ -1,12 +1,12 @@
 <?php
 /**
  * @name pdb single template default
- * @version 2.0
+ * @version 2.1
  * 
  * default template for displaying a single record
  *
  */
-if ( $this->participant_id > 0 ) :
+if ( $this->record_found() ) :
 ?>
 
 <div class="wrap <?php echo $this->wrap_class ?>">

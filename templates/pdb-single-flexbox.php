@@ -1,12 +1,12 @@
 <?php
 /**
  * @name pdb single flex template
- * @version 1.0
+ * @version 1.1
  * 
  * template for displaying a single record
  *
  */
-if ( $this->participant_id > 0 ) :
+if ( $this->record_found() ) :
 ?>
 
 <div class="wrap <?php echo $this->wrap_class ?> pdb-single-flex">
