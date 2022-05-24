@@ -1256,6 +1256,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
     );
 
     $this->plugin_settings[] = array(
+        'name' => 'use_cache_buster',
+        'title' => __( 'Use Cache-Busting Query Variables', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'this can help with issues like signups not completing or signup emails not getting sent.', 'participants-database' ) . $this->settings_help( 'cachebusting'),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
+    $this->plugin_settings[] = array(
         'name' => 'use_session_alternate_method',
         'title' => __( 'Use Alternate Session Method', 'participants-database' ),
         'group' => 'pdb-advanced',
