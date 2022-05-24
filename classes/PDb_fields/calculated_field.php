@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -131,7 +131,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   private function set_signup_filter()
   {
-    foreach( \Participants_Db::apply_filters( 'signup_shortcodes', array('pdb_signup') ) as $tag ) {
+    foreach( \Participants_Db::signup_shortcode_tags() as $tag ) {
       add_filter( 'pdb-shortcode_call_' . $tag, array( $this, 'setup_field_for_signup' ) );
     }
   }
@@ -144,43 +144,23 @@ abstract class calculated_field extends dynamic_db_field {
    */
   public function setup_field_for_signup( $params )
   {
-    add_filter( 'pdb-raw_field_definition', array( $this, 'redefine_for_signup' ) );
-    add_action( 'pdb-after_include_shortcode_template', function(){
-      remove_filter( 'pdb-raw_field_definition', array( $this, 'redefine_for_signup' ) );
-    });
-    
-    return $params;
-  }
-  
-  /**
-   * redefines the field for the signup form
-   * 
-   * this reconfigures the field when included in the signup form as a hidden 
-   * field so the calculated value can be added before the submission is saved
-   * 
-   * @param stdClass $definition
-   * @return stdClass
-   */
-  public function redefine_for_signup( $definition )
-  {
-    $class = get_class($this);
-    
-    if ( $definition->form_element === $class::element_name && $definition->signup ) {
-    
-      $definition->form_element = 'hidden';
-      $definition->default = '';
-      
-      // prevent the field from getting added to the main iterator now that is it hidden
-      add_filter( 'pdb-add_field_to_iterator', function ( $add, $field ) use ( $definition, $class ) {
-        if ( $field->name() === $definition->name && $field->form_element() === $class::element_name ) {
-          $add = false;
-        }
-        return $add;
-      }, 10, 2 );
-      
+    foreach( $this->field_list() as $field ) {
+      /** @var \PDb_Field_Item $field */
+      if ( $field->is_signup() ) {
+        $this->set_field( $field );
+        add_filter( 'pdb-signup_form_hidden_fields', array( $this, 'add_to_hidden_fields' ) );
+
+        // prevent the field from getting added to the main iterator now that is it hidden
+        add_filter( 'pdb-add_field_to_iterator', function ( $add, $field ) {
+          if ( $field->name() === $this->field->name() && $field->form_element() === $this->field->form_element() ) {
+            $add = false;
+          }
+          return $add;
+        }, 10, 2 );
+      }
     }
     
-    return $definition;
+    return $params;
   }
   
   /**
@@ -191,8 +171,7 @@ abstract class calculated_field extends dynamic_db_field {
    */
   public function set_submission_value( $post )
   {
-    foreach( $this->field_list() as $field )
-    {
+    foreach( $this->field_list() as $field ){
       if ( $field->is_signup() && isset( $post[$field->name()] ) ) {
         $this->set_field( $field );
         $post[$field->name()] = $this->dynamic_value($post);
@@ -200,6 +179,21 @@ abstract class calculated_field extends dynamic_db_field {
     }
     
     return $post;
+  }
+  
+  /**
+   * adds the field to the signup for hidden fields
+   * 
+   * @param array $hidden_fields
+   * @return array
+   */
+  public function add_to_hidden_fields( $hidden_fields )
+  {
+    if ( $this->field->is_signup() ) {
+      $hidden_fields[ $this->field->name() ] = '';
+    }
+    
+    return $hidden_fields;
   }
   
   /**
