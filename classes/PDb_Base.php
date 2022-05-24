@@ -347,6 +347,16 @@ class PDb_Base {
   }
   
   /**
+   * supplies a list of all signup shortcodes
+   * 
+   * @return array of string shortcode tags
+   */
+  public static function signup_shortcode_tags()
+  {
+    return \Participants_Db::apply_filters( 'signup_shortcodes', array('pdb_signup') );
+  }
+  
+  /**
    * provides an array of field definitions from main groups only
    * 
    * @global wpdb $wpdb
