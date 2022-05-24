@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    xnau_FormElement class, Shortcode class
  */
@@ -218,7 +218,7 @@ class PDb_Signup extends PDb_Shortcode {
     foreach ( Participants_Db::field_defs() as $field ) {
       /* @var $field PDb_Form_Field_Def */
       
-      if ( $field->is_hidden_field() && $field->signup ) {
+      if ( $field->is_hidden_field() && $field->is_signup() ) {
         
         $field_item = new PDb_Field_Item( $field );
         
@@ -227,6 +227,13 @@ class PDb_Signup extends PDb_Shortcode {
         $this->hidden_fields[ $field_item->name() ] = $field_item->value();
       }
     }
+    
+    /**
+     * @filter pdb-signup_form_hidden_fields
+     * @param array as $fieldname => $value
+     * @return array
+     */
+    $this->hidden_fields = Participants_Db::apply_filters( 'signup_form_hidden_fields', $this->hidden_fields );
   }
 
   /**
@@ -294,6 +301,7 @@ class PDb_Signup extends PDb_Shortcode {
       // the signup thanks page is not set up, so we submit to the page the form is on
       $this->submission_page = $_SERVER[ 'REQUEST_URI' ];
     }
+    
     $this->set_form_status( $form_status );
   }
 
