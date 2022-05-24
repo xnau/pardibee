@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.1.1
+ * Version: 2.1.2
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -2048,8 +2048,10 @@ class Participants_Db extends PDb_Base {
     $field_check = $wpdb->get_col( $wpdb->prepare( 'SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `name` = %s', $field_parameters['name'] ) );
     if ( count($field_check) > 0 ) {
 
-      if ( PDB_DEBUG )
+      if ( PDB_DEBUG ) {
+        PDb_Admin_Notices::post_error(' failed to add field "' . $params['name'] . '": possibly a duplicate', __METHOD__, true );
         self::debug_log( __METHOD__ . ' failed to add row ' . $params['name'] . ': duplicate field' );
+      }
 
       return false;
     }
@@ -2071,8 +2073,10 @@ class Participants_Db extends PDb_Base {
 
     if ( $wpdb->last_error ) {
 
-      if ( PDB_DEBUG )
+      if ( PDB_DEBUG ) {
+        PDb_Admin_Notices::post_error(' error when adding field "' . $params['name'] . '": ' . $wpdb->last_error, __METHOD__, true );
         self::debug_log( __METHOD__ . ' failed to add row ' . $params['name'] . ' with error: ' . $wpdb->last_error );
+      }
 
       return false;
     }
@@ -2082,12 +2086,16 @@ class Participants_Db extends PDb_Base {
 
       if ( false === ( self::_add_db_column( $field_parameters ) ) ) {
 
-        if ( PDB_DEBUG )
+        if ( PDB_DEBUG ) {
+          PDb_Admin_Notices::post_error(' failed to add database column "' . $params['name'] . '" with error: ' . $wpdb->last_error, __METHOD__, true );
           self::debug_log( __METHOD__ . ' failed to add column with error: ' . $wpdb->last_error .'  data: ' . print_r( $field_parameters, true ) );
+        }
 
         return false;
       }
     }
+    
+    self::debug_log( __METHOD__ . ' field added: "' . $params['name'] . '"' );
     
     /**
      * @action pdb-new_field_added
@@ -2538,6 +2546,10 @@ class Participants_Db extends PDb_Base {
           do_action( $wp_hook, $record );
           
           $redirect = $post_data['thanks_page'];
+          if ( Participants_Db::plugin_setting_is_true( 'use_cache_buster' ) || Participants_Db::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
+            $redirect = PDb_Session::session_url_var($post_data['thanks_page']);
+          }
+          
           if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
             $redirect = add_query_arg( array(
                 PDb_Session::id_var => self::$session->session_id(),
