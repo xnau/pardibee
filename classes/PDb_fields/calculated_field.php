@@ -147,12 +147,16 @@ abstract class calculated_field extends dynamic_db_field {
     foreach( $this->field_list() as $field ) {
       /** @var \PDb_Field_Item $field */
       if ( $field->is_signup() ) {
-        $this->set_field( $field );
-        add_filter( 'pdb-signup_form_hidden_fields', array( $this, 'add_to_hidden_fields' ) );
+        
+        // add to the hidden fields
+        add_filter( 'pdb-signup_form_hidden_fields', function ( $hidden_fields ) use ( $field ) {
+          $hidden_fields[ $field->name() ] = '';
+          return $hidden_fields;
+        } );
 
         // prevent the field from getting added to the main iterator now that is it hidden
-        add_filter( 'pdb-add_field_to_iterator', function ( $add, $field ) {
-          if ( $field->name() === $this->field->name() && $field->form_element() === $this->field->form_element() ) {
+        add_filter( 'pdb-add_field_to_iterator', function ( $add, $iterator_field ) use ( $field )  {
+          if ( $iterator_field->name() === $field->name() && $iterator_field->form_element() === $field->form_element() ) {
             $add = false;
           }
           return $add;
@@ -179,21 +183,6 @@ abstract class calculated_field extends dynamic_db_field {
     }
     
     return $post;
-  }
-  
-  /**
-   * adds the field to the signup for hidden fields
-   * 
-   * @param array $hidden_fields
-   * @return array
-   */
-  public function add_to_hidden_fields( $hidden_fields )
-  {
-    if ( $this->field->is_signup() ) {
-      $hidden_fields[ $this->field->name() ] = '';
-    }
-    
-    return $hidden_fields;
   }
   
   /**
