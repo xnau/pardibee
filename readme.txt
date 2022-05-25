@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 5.9.3
+Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 2.1
+Stable tag: 2.1.1
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -290,50 +290,54 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.1.2 =
+* added cache buster option for signup submissions
+* list shortcode don't show pagination option
+
 = 2.1.1 =
-fixed fatal error in dynamic_db_field class
+* fixed fatal error in dynamic_db_field class
 
 = 2.1 =
-now export selected records on admin List Participants page
-new setting: CSV imports in the background (by default) or immediately
-calculated fields supported in Participant Log add-on
+* now export selected records on admin List Participants page
+* new setting: CSV imports in the background (by default) or immediately
+* calculated fields supported in Participant Log add-on
 
 = 2.0.10 =
-added an unsaved changes warning to the add/edit participant page
-fixed issue with payment log field losing its configuration on update
-fixed issue with string combine templates getting an "unformatted" tag
-several minor bug and compatibility issues fixed
+* added an unsaved changes warning to the add/edit participant page
+* fixed issue with payment log field losing its configuration on update
+* fixed issue with string combine templates getting an "unformatted" tag
+* several minor bug and compatibility issues fixed
 
 = 2.0.9 =
-better logging of CSV imports
-fixed several minor bugs and messaging errors
+* better logging of CSV imports
+* fixed several minor bugs and messaging errors
 
 = 2.0.8 =
-added new "currency" format tag
-fixed issues with record timestamp using the wrong timezone
-better handling of errors when updating the database structure
-private ids on CSV import now handled correctly
+* added new "currency" format tag
+* fixed issues with record timestamp using the wrong timezone
+* better handling of errors when updating the database structure
+* private ids on CSV import now handled correctly
 
 = 2.0.7 =
-fixed fatal error with php 8.1 when defining field with options
-heading field now has auto paragraphs applied
+* fixed fatal error with php 8.1 when defining field with options
+* heading field now has auto paragraphs applied
 
 = 2.0.6 =
-now possible to use another calculated field in a calculation template
-fixed issue with spaces in list search term
-fixed record id matching mode in signup form
+* now possible to use another calculated field in a calculation template
+* fixed issue with spaces in list search term
+* fixed record id matching mode in signup form
 
 = 2.0.5 =
-improved localization of numeric values
-avoid divide by zero error
-dropdown/other respects default setting if no value set 
+* improved localization of numeric values
+* avoid divide by zero error
+* dropdown/other respects default setting if no value set 
 
 = 2.0.4 =
-new calculated field values are shown in the edited record
-Duplicate field titles now work in the mass edit field selector
+* new calculated field values are shown in the edited record
+* Duplicate field titles now work in the mass edit field selector
 
 = 2.0.3 =
-fixed setup issue with the PDb_Template class, affecting Field Group Tabs
+* fixed setup issue with the PDb_Template class, affecting Field Group Tabs
 
 = 2.0.2 =
 * fixed display issues with some multibyte characters
