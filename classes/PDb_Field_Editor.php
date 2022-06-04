@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -696,9 +696,9 @@ class PDb_Field_Editor {
    * 
    * @global wpdb $wpdb
    * @param string $fieldname
-   * @return bool true if the colum has data
+   * @return bool true if the column has data
    */
-  public function column_has_data( $fieldname )
+  public static function db_column_has_data( $fieldname )
   {
     global $wpdb;
     /**
@@ -716,6 +716,18 @@ class PDb_Field_Editor {
     
     $result = $wpdb->get_col( 'SELECT `' . $fieldname . '` FROM ' . $table );
     return count( array_filter( $result ) ) > 0;
+  }
+
+  /**
+   * tells if the field's column has data in the main database
+   * 
+   * @global wpdb $wpdb
+   * @param string $fieldname
+   * @return bool true if the colum has data
+   */
+  public function column_has_data( $fieldname )
+  {
+    return self::db_column_has_data($fieldname);
   }
 
 }
