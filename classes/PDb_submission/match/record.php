@@ -412,7 +412,20 @@ abstract class record {
    */
   public function match_field_value()
   {
-    return isset( $this->post[ $this->match_field ] ) ? filter_var( $this->post[ $this->match_field ], FILTER_SANITIZE_STRING ) : '';
+    $value = isset( $this->post[ $this->match_field ] ) ? filter_var( $this->post[ $this->match_field ], FILTER_SANITIZE_SPECIAL_CHARS ) : '';
+    
+    $field = new \PDb_Form_Field_Def( $this->match_field );
+    
+    // convert the value to something that can match the stored value
+    switch ( $field->form_element() ) {
+      
+      case 'date':
+        $value = \PDb_Date_Parse::timestamp( $value );
+        break;
+      
+    }
+    
+    return $value;
   }
 
   /**
