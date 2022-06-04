@@ -925,23 +925,11 @@ class PDb_Form_Field_Def {
   /**
    * tells if the field has data stored in the main db table
    * 
-   * @global \wpdb $wpdb
    * @return bool true if data has been stored for this field
    */
   public function has_stored_data()
   {
-    global $wpdb;
-    /**
-     * @filter pdb-field_data_table
-     * 
-     * @param string default table name
-     * @param string field name
-     * @return string table to use for this field
-     */
-    $table = Participants_Db::apply_filters('field_data_table', Participants_Db::$participants_table, $this->name );
-    
-    $result = $wpdb->get_col( 'SELECT `' . $this->name . '` FROM ' . $table );
-    return count( array_filter( $result ) ) > 0;
+    return PDb_Field_Editor::db_column_has_data( $this->name );
   }
 
   /**
