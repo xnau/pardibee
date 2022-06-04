@@ -1,7 +1,7 @@
 <?php
 /**
  * @name pdb single flex template
- * @version 1.1
+ * @version 1.2
  * 
  * template for displaying a single record
  *
@@ -26,7 +26,7 @@ if ( $this->record_found() ) :
 					$empty_class = $this->get_empty_class( $this->field );
       
       ?>
-    <div class="<?php echo Participants_Db::$prefix.$this->field->name.' '.$this->field->form_element.' '.$empty_class?> flex-field">
+    <div class="<?php echo Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ?> flex-field">
       
       <span class="<?php echo $this->field->name.' '.$empty_class?> flex-label"><?php $this->field->print_label() ?></span>
       

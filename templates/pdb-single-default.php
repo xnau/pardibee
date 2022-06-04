@@ -1,7 +1,7 @@
 <?php
 /**
  * @name pdb single template default
- * @version 2.1
+ * @version 2.2
  * 
  * default template for displaying a single record
  *
@@ -26,7 +26,7 @@ if ( $this->record_found() ) :
 					$empty_class = $this->get_empty_class( $this->field );
       
       ?>
-    <dl class="<?php echo Participants_Db::$prefix.$this->field->name.' '.$this->field->form_element.' '.$empty_class?>">
+    <dl class="<?php echo Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ?>">
       
       <dt class="<?php echo $this->field->name.' '.$empty_class?>"><?php $this->field->print_label() ?></dt>
       
