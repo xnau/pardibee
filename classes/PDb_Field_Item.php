@@ -775,20 +775,37 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
+   * provides a CSS class name based on the form_element
+   * 
+   * @return string classname
+   */
+  public function element_class()
+  {
+    $classes = array(
+        PDb_Template_Item::prep_css_class_string( $this->form_element )
+    );
+    
+    if( $this->module() === 'record' ) {
+      $classes[] =  $this->name() . '-input-group';
+    }
+    
+    if ( $this->is_readonly() ) {
+      $classes[] = 'readonly-element';
+    }
+    
+    if ( isset( $this->attributes['class'] ) ) {
+      $classes[] = $this->get_attribute('class');
+    }
+    
+    return implode( ' ', $classes );
+  }
+
+  /**
    * prints a CSS class name based on the form_element
    */
   public function print_element_class()
   {
-    // for compatibility we are not prefixing the form element class name
-    echo PDb_Template_Item::prep_css_class_string( $this->form_element ) . ' ' . $this->name() . '-input-group';
-
-    if ( $this->is_readonly() ) {
-      echo ' readonly-element';
-    }
-    
-    if ( isset($this->attributes['class'] ) ) {
-      echo ' ' . $this->attributes['class'];
-    }
+    echo $this->element_class();
   }
 
   /**
