@@ -239,8 +239,21 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array
             (
             'type' => 'checkbox',
-            'help_text' => __( 'if checked, allows uploaded files and images to be deleted from storage when deleted from a record by a user', 'participants-database' ),
+            'help_text' => __( 'if checked, uploaded files and images will be deleted from storage when a new file is uploaded or the delete switch is checked.', 'participants-database' ) . $this->settings_help( 'upload-file-delete' ),
             'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'show_delete_switch',
+        'title' => __( 'Show Delete Switch', 'participants-database' ),
+        'group' => 'pdb-main',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'if checked, the delete switch will be shown with image- or file-upload fields', 'participants-database' ) . $this->settings_help( 'show-delete-switch' ),
+            'value' => Participants_Db::plugin_setting( 'file_delete', 0 ),
             'options' => array(1, 0),
         ),
     );
