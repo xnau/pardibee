@@ -628,7 +628,7 @@ class Participants_Db extends PDb_Base {
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
-    wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '0.2.5' );
+    wp_register_script( self::$prefix . 'shortcode', self::asset_url( "js/shortcodes$presuffix.js" ), array('jquery'), '1.1' );
 
     wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '2.0' );
     wp_add_inline_script( self::$prefix . 'list-filter', self::inline_js_data( 'PDb_ajax', PDb_List::ajax_params() ), false );
@@ -1610,14 +1610,14 @@ class Participants_Db extends PDb_Base {
        */
       do_action( 'pdb-process_form_submission_column_' . $column->name, $column, $post );
       
-      $column_object = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
+      $field = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
-      $main_query->validate_column( $column_object->value(), $column );
+      $main_query->validate_column( $field, $column );
       
-      if ( $column_object->add_to_query( $action ) ) {
+      if ( $field->add_to_query( $action ) ) {
         
         // add the column to the query
-        $main_query->add_column( $column_object->value(), $column_object->query_clause() );
+        $main_query->add_column( $field->value(), $field->query_clause() );
       }
     } // columns
 
