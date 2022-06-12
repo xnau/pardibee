@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -25,7 +25,7 @@ class PDb_File_Uploads {
   public static function process_submission_uploads( $post )
   {
     // don't process a CSV import or a submission with no files
-    if ( \PDb_submission\main_query\base_query::is_csv_import() || empty( $_FILES ) || ! isset( $post['id'] ) ) {
+    if ( \PDb_submission\main_query\base_query::is_csv_import() || ! self::submission_has_files() || ! isset( $post['id'] ) ) {
       return $post;
     }
     
@@ -196,6 +196,28 @@ class PDb_File_Uploads {
   {
     $test = implode( '', (array) maybe_unserialize( $input ) );
     return empty( $test );
+  }
+  
+  /**
+   * determines of the $_FILES array has uploaded files
+   * 
+   * @return bool true if there are files included in the submission
+   */
+  protected static function submission_has_files()
+  {
+    $has_upload = false;
+    foreach ( $_FILES as $upload_field ) {
+      
+      $filename = is_array( $upload_field['name'] ) ? implode( '', $upload_field['name'] ) : $upload_field['name'];
+      
+      if ( ! empty( $filename ) ) {
+        
+        $has_upload = true;
+        break;
+      }
+    }
+    
+    return $has_upload;
   }
 
 }
