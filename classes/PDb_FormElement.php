@@ -412,8 +412,8 @@ class PDb_FormElement extends xnau_FormElement {
 
       $this->_addline( $this->_input_tag( 'file' ) );
 
-      // add the delete checkbox if there is a file defined
-      if ( $this->value !== $field_default && $this->module !== 'signup' ) {
+      // add the delete checkbox if there is a file defined and showing the switch is enabled in settings
+      if ( $this->value !== $field_default && $this->module !== 'signup' && Participants_Db::plugin_setting( 'show_delete_switch', Participants_Db::plugin_setting( 'file_delete', 0 ) ) ) {
         unset( $this->attributes['id'] );
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . esc_attr( $this->name . '-deletefile' ) . '" ' . $this->_attributes( 'no validate' ) . '>' . __( 'delete', 'participants-database' ) . '</label></span>' );
       }
@@ -428,7 +428,14 @@ class PDb_FormElement extends xnau_FormElement {
   protected function _password()
   {
     if ( !empty( $this->value ) ) {
-      $this->value = self::dummy;
+      
+      $valid = ! Participants_Db::$validation_errors->has_error($this->name);
+      
+      if ( !( $valid && Participants_Db::$validation_errors->errors_exist() ) ) {
+      
+        $this->value = $valid ? self::dummy : '';
+      }
+      
     }
 
     $this->_addline( $this->_input_tag( 'password' ) );
