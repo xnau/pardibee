@@ -397,19 +397,19 @@ class PDb_FormValidation extends xnau_FormValidation {
             $field_selector = '[for^="pdb-' . $error->field->name() . '"]';
             break;
           
+          case $error->field->is_value_set():
+          case $error->field->is_upload_field():
+            
+            $field_selector = '.' . $error->field->name() . '-input-group';
+            break;
+          
           case $error->field->form_element() === 'captcha':
           case $error->field->form_element() === 'link':
           case $error->field->form_element() === 'text-line':
           case $error->field->form_element() === 'text-area':
-            
-            $field_selector = '[name^="' . $error->field->name() . '"]';
-            break;
-          
-          case $error->field->is_value_set():
-          case $error->field->is_upload_field():
           default:
             
-            $field_selector = '.' . $error->field->name() . '-input-group';
+            $field_selector = '[name^="' . $error->field->name() . '"]';
         }
         
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
