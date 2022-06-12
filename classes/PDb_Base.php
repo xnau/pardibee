@@ -1275,15 +1275,26 @@ class PDb_Base {
    */
   public static function plugin_setting_is_true( $name, $default = false )
   {
+    $cachekey = 'pdb-bool-setting';
+    $setting = wp_cache_get( $name, $cachekey, true, $found );
+    
+    if ( $found ) {
+      return $setting;
+    }
+    
     if ( $default === false ) {
       $default = self::plugin_setting_default($name);
     }
     
     if ( isset( Participants_Db::$plugin_options[$name] ) ) {
-      return filter_var( self::plugin_setting_value( $name ), FILTER_VALIDATE_BOOLEAN );
+      $setting = filter_var( self::plugin_setting_value( $name ), FILTER_VALIDATE_BOOLEAN );
     } else {
-      return (bool) $default;
+      $setting = (bool) $default;
     }
+    
+    wp_cache_add( $name, $setting, $cachekey, Participants_Db::cache_expire() );
+    
+    return $setting;
   }
   
   /**
