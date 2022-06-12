@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * @version 1.0
+ * @version 1.1
  * 
  * xnau webdesign xnau.com
  * 
@@ -76,8 +76,12 @@ PDbShortcodes = (function ($) {
       }
       // hide the "no file chosen" text if a file is loaded 
       $('.pdb-record input[type=file]').each( function(){
-        if ($(this).prev('input[type=hidden]').val()) {
-          $(this).css({color:'transparent'});
+        var el = $(this);
+        if (el.prev('input[type=hidden][name="'+el.prop('name')+'"]').val()) {
+          el.css({color:'transparent'});
+          el.on('change',function(){
+            el.css({color:'inherit'});
+          });
         }
       });
     }
