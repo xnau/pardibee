@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -429,11 +429,18 @@ class PDb_FormElement extends xnau_FormElement {
   {
     if ( !empty( $this->value ) ) {
       
-      $valid = ! Participants_Db::$validation_errors->has_error($this->name);
+      if ( is_object(Participants_Db::$validation_errors) ) {
       
-      if ( !( $valid && Participants_Db::$validation_errors->errors_exist() ) ) {
-      
-        $this->value = $valid ? self::dummy : '';
+        $valid = ! Participants_Db::$validation_errors->has_error($this->name);
+
+        if ( !( $valid && Participants_Db::$validation_errors->errors_exist() ) ) {
+
+          $this->value = $valid ? self::dummy : '';
+        }
+        
+      } else {
+        
+        $this->value = self::dummy;
       }
       
     }
