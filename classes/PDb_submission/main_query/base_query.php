@@ -292,14 +292,14 @@ abstract class base_query {
   /**
    * validates a column
    * 
-   * @param string $value the submitted value
+   * @param base_column $field the submitted field object
    * @para, object $column the column object
    */
-  public function validate_column( $value, $column )
+  public function validate_column( $field, $column )
   {
     // validation is only performed on form submissions
     if ( is_object( PDB::$validation_errors ) && !$this->is_import() && !$this->is_func_call() ) {
-      PDB::$validation_errors->validate( PDB::deep_stripslashes( $value ), $column, $this->post, $this->record_id );
+      PDB::$validation_errors->validate( PDB::deep_stripslashes( $field->validation_value() ), $column, $this->post, $this->record_id );
     }
   }
 
