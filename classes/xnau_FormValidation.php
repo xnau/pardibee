@@ -130,7 +130,6 @@ class xnau_FormValidation {
    */
   public function errors_exist()
   {
-
     return empty($this->errors) ? false : true;
   }
 
