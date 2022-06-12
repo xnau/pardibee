@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -24,6 +24,8 @@ class user_column extends base_column {
 
   /**
    * sets the value property
+   * 
+   * @global \wpdb $wpdb
    */
   protected function setup_value()
   {
@@ -127,24 +129,34 @@ class user_column extends base_column {
 
         $participant_id = $this->main_query()->record_id();
 
-        if ( $this->yes_delete_uploaded_file() && $participant_id ) {
+        if ( $this->file_delete_enabled() && $participant_id ) {
 
           global $wpdb;
           $record_filename = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $this->field->name() . '` FROM ' . Participants_Db::participants_table() . ' WHERE id = %s', $participant_id ) );
+          
+          $delete_checkbox = filter_input( INPUT_POST, $this->field->name() . '-deletefile', FILTER_SANITIZE_SPECIAL_CHARS ) === 'delete';
           $filename = '';
 
-          if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the uploaded file
-            $post_filename = filter_input( INPUT_POST, $this->field->name(), FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+          if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the previously uploaded file
+            
+            $post_filename = filter_var( $_POST[$this->field->name()], FILTER_SANITIZE_SPECIAL_CHARS );
+            
+            if ( ! empty( $record_filename ) && $post_filename !== $record_filename && Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
+              
+              Participants_Db::debug_log(__METHOD__.' deleting overwrite '. $record_filename, 2 );
+              Participants_Db::delete_file( $record_filename );
+              
+            } elseif ( $post_filename === $record_filename && $delete_checkbox ) {
 
-            if ( $post_filename === $record_filename ) {
-
-              if ( Participants_Db::plugin_setting_is_true( 'file_delete' ) || Participants_Db::is_admin() ) {
+              if ( Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
+                Participants_Db::debug_log(__METHOD__.' deleting empty '. $record_filename, 2 );
                 Participants_Db::delete_file( $record_filename );
               }
-
+              
               unset( $_POST[ $this->field->name() ] );
               $this->value = null;
             }
+            
           } else { // it's an import deleting the field value
             Participants_Db::delete_file( $record_filename );
           }
@@ -167,17 +179,38 @@ class user_column extends base_column {
   }
 
   /**
+   * provides the column value
+   * 
+   * @return string|int|bool
+   */
+  public function validation_value()
+  {
+    switch ( $this->field->form_element() ) {
+      case 'password':
+
+        $value = $this->raw_value;
+        break;
+
+      default:
+        $value = $this->value;
+    }
+    return $value;
+  }
+
+  /**
    * tells if the uploaded file should be deleted
    * 
    * @return bool true to delete the uploaded file
    */
-  private function yes_delete_uploaded_file()
+  private function file_delete_enabled()
   {
-    $delete_checkbox = filter_input( INPUT_POST, $this->field->name() . '-deletefile', FILTER_SANITIZE_STRING ) === 'delete';
+    
+    
+    $delete_file = \Participants_Db::plugin_setting( 'file_delete', 0 );
 
     $import_null = $this->main_query()->is_import() && is_null( $this->value );
 
-    return $delete_checkbox || $import_null;
+    return $delete_file || $import_null;
   }
 
   /**
@@ -204,7 +237,7 @@ class user_column extends base_column {
    */
   private function initial_value()
   {
-    $initialvalue = $this->value === 'null' ? null : $this->value;
+    $initialvalue = $this->raw_value === 'null' ? null : $this->raw_value;
 
     if ( !$this->add_to_query( 'any' ) ) {
 
