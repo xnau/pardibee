@@ -31,6 +31,11 @@ abstract class base_column {
    * @var string the incoming column value
    */
   protected $value;
+
+  /**
+   * @var string the unaltered incoming column value
+   */
+  protected $raw_value;
   
   /**
    * @var bool skip flag
@@ -46,7 +51,7 @@ abstract class base_column {
   public function __construct( $column, $value )
   {
     $this->field = new \PDb_Field_Item( $column );
-    $this->value = $value;
+    $this->raw_value = $value;
     $this->setup_value();
     $this->setup_readonly();
   }
@@ -67,6 +72,16 @@ abstract class base_column {
    * @return string|int|bool
    */
   public function value()
+  {
+    return $this->value;
+  }
+
+  /**
+   * provides the column value
+   * 
+   * @return string|int|bool
+   */
+  public function validation_value()
   {
     return $this->value;
   }
