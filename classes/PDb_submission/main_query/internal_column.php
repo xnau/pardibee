@@ -27,7 +27,7 @@ class internal_column extends base_column {
    */
   protected function setup_value()
   {
-    $initialvalue = $this->value;
+    $initialvalue = $this->raw_value;
 
     switch ( $this->field->name() ) {
 
