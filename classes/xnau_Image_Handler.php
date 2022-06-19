@@ -659,14 +659,18 @@ abstract class xnau_Image_Handler {
     }
       
     if ( function_exists( 'mime_content_type' ) ) {
-      $valid_image = preg_match( '/(gif|jpeg|png)/', mime_content_type( $file ) ) === 1;
+      
+      $valid_image = preg_match( '/(gif|jpeg|png|webp)/', mime_content_type( $file ) ) === 1;
+      
     } else {
-      if ( PDB_DEBUG ) {
-        Participants_Db::debug_log( 'missing php fileinfo extension' );
-      }
+      
+      Participants_Db::debug_log( 'missing php fileinfo extension' );
+      
       $fileinfo = PDb_Image::getimagesize( $file );
-      $valid_image = in_array( $fileinfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WBMP) );
+      
+      $valid_image = in_array( $fileinfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WBMP, IMAGETYPE_WEBP) );
     }
+    
     return $valid_image;
   }
 
