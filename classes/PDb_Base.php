@@ -764,13 +764,13 @@ class PDb_Base {
    * tests a filename for allowed file extentions
    * 
    * @param string  $filename the filename to test
-   * @param array $field_allowed_extensions array of local allowed file extensions
+   * @param array $allowed_extensions array of local allowed file extensions
    * 
    * @return bool true if the extension is allowed
    */
-  public static function is_allowed_file_extension( $filename, $field_allowed_extensions = array() )
+  public static function is_allowed_file_extension( $filename, $allowed_extensions = array() )
   {
-    $extensions = empty( $field_allowed_extensions ) || ! is_array( $field_allowed_extensions ) ? self::global_allowed_extensions() : $field_allowed_extensions;
+    $extensions = empty( $allowed_extensions ) || ! is_array( $allowed_extensions ) ? self::global_allowed_extensions() : $allowed_extensions;
     
     if ( empty( $extensions ) ) {
       // nothing in the whitelist, don't allow
@@ -779,7 +779,7 @@ class PDb_Base {
 
     $result = preg_match( '#^(.+)\.(' . implode( '|', $extensions ) . ')$#', strtolower( $filename ), $matches );
     
-    return (bool) $result;
+    return $result == 1;
   }
   
   /**
