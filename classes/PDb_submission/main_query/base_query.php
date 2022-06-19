@@ -290,10 +290,10 @@ abstract class base_query {
   }
 
   /**
-   * validates a column
+   * validates a column submission
    * 
    * @param base_column $field the submitted field object
-   * @para, object $column the column object
+   * @param object $column the column object
    */
   public function validate_column( $field, $column )
   {
