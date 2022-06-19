@@ -193,6 +193,12 @@ class PDb_Admin_Notices {
     foreach ( $this->admin_notice_list() as $admin_notice ) {
       
       /* @var $admin_notice pdb_admin_notice_message */
+      
+      if ( ! is_a( $admin_notice, 'pdb_admin_notice_message' ) ) {
+        // we've got a corrupted queue, clear it
+        $this->purge_all_notices();
+        return;
+      }
 
       if ( $this->notice_is_shown( $admin_notice ) ) {
         ?><div
@@ -273,7 +279,7 @@ class PDb_Admin_Notices {
    */
   private function notice_is_shown( pdb_admin_notice_message $notice )
   {
-    return $notice->show_to_current_user() && $notice->is_dimissed() === false && ( $notice->is_global_message() || $this->is_plugin_screen() );
+    return $notice->show_to_current_user() && $notice->is_dismissed() === false && ( $notice->is_global_message() || $this->is_plugin_screen() );
   }
   
   /**
@@ -286,7 +292,7 @@ class PDb_Admin_Notices {
    */
   private function notice_should_be_added( pdb_admin_notice_message $notice )
   {
-    return array_key_exists($notice->id, $this->admin_notice_list) === false || $notice->is_dimissed();
+    return array_key_exists($notice->id, $this->admin_notice_list) === false || $notice->is_dismissed();
   }
 
   /**
@@ -295,7 +301,7 @@ class PDb_Admin_Notices {
   private function purge_transient_notices()
   {
     $this->admin_notice_list = array_filter( $this->admin_notice_list, function ($notice) {
-      return $notice->is_persistent();
+      return ! $notice->is_dismissed(); // $notice->is_persistent();
     } );
     
     $this->update_notices();
@@ -606,7 +612,7 @@ class pdb_admin_notice_message {
    * 
    * @return bool
    */
-  public function is_dimissed()
+  public function is_dismissed()
   {
     return (bool) $this->dismissed;
   }
