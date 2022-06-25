@@ -232,7 +232,7 @@ class PDb_FormValidation extends xnau_FormValidation {
 
           $validating_field->value = isset( $validating_field->value[1] ) ? $validating_field->value[1] : '';
           
-          $info = json_decode( urldecode( filter_var( $this->post_array[$validating_field->name][0], FILTER_SANITIZE_SPECIAL_CHARS ) ) );
+          $info = json_decode( urldecode( $this->post_array[$validating_field->name][0] ) );
 
           /**
            * @since 1.6.3
@@ -244,7 +244,7 @@ class PDb_FormValidation extends xnau_FormValidation {
             $validating_field->set_validation_state( 'invalid' );
           }
 
-          //error_log(__METHOD__.' validate CAPTCHA $info:'.print_r($info,1).' $field->value:'.$field->value.' regex:'.$regex);
+          Participants_Db::debug_log(__METHOD__.' validate CAPTCHA $info:'.print_r($info,1).' $field->value:'. $validating_field->value .' regex:'.$regex );
 
           break;
 
