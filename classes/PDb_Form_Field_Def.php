@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.12
+ * @version    0.13
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -805,6 +805,22 @@ class PDb_Form_Field_Def {
   public function is_csv_exported()
   {
     return (bool) $this->csv;
+  }
+  
+  /**
+   * tells if the field is a date field
+   * 
+   * This is a field that saves its value as a unix timestamp
+   */
+  public function is_date_field()
+  {
+    /**
+     * @filter pdb-is_date_form_element
+     * @param bool true if the field is a date form element
+     * @param PDb_Form_Field_Def this field definition
+     * @return bool
+     */
+    return Participants_Db::apply_filters( 'is_date_form_element',  strpos( $this->form_element, 'date' ) !== false, $this );
   }
 
   /**
