@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -294,25 +294,27 @@ trait calculations {
         default:
           // this will be a value
           if ( $op ) {
+              
+            $operand = floatval($item);
 
             switch ( $op ) {
 
               case '+':
-                $product = $product + $item;
+                $product = $product + $operand;
                 $sum_count++;
                 break;
 
               case '-':
-                $product = $product - $item;
+                $product = $product - $operand;
                 $sum_count++;
                 break;
 
               case '*':
-                $product = $product * $item;
+                $product = $product * $operand;
                 break;
 
               case '/':
-                $product = empty( $item ) ? 0 : ( $product / $item );
+                $product = empty( $operand ) ? 0 : ( $product / $operand );
                 break;
             }
           } else {
