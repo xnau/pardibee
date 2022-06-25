@@ -116,8 +116,8 @@ class PDb_File_Uploads {
 
     $field_allowed_extensions = $field_def->allowed_extensions();
     $allowed_extensions = empty( $field_allowed_extensions ) ? Participants_Db::global_allowed_extensions() : $field_allowed_extensions;
-
-    if ( !Participants_Db::is_allowed_file_extension( $file[ 'name' ], $allowed_extensions ) ) {
+    
+    if ( ! Participants_Db::is_allowed_file_extension( $file[ 'name' ], $allowed_extensions ) ) {
 
       if ( $is_image_field && empty( $field_allowed_extensions ) ) {
         Participants_Db::validation_error( sprintf( __( 'For "%s", you may only upload image files like JPEGs, GIFs or PNGs.', 'participants-database' ), $field_def->title() ), $field_name );
