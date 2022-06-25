@@ -51,7 +51,7 @@ class Participants_Db extends PDb_Base {
   /**
    * @var string sets the min PHP version level required
    */
-  const min_php_version = '5.6';
+  const min_php_version = '7.4';
 
   /**
    *
@@ -2968,7 +2968,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_record_link( $PID, $target_page = '' )
   {
-
     $target_page = $target_page === '' ? self::plugin_setting('registration_page') : $target_page;
     
     $registration_page = self::find_permalink( $target_page );
@@ -3002,7 +3001,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_admin_record_link( $id )
   {
-
     $path = 'admin.php?page=participants-database-edit_participant&action=edit&id=' . $id;
 
     return get_admin_url( NULL, $path );
