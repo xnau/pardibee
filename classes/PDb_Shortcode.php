@@ -1489,7 +1489,7 @@ abstract class PDb_Shortcode {
   }
 
   /**
-   * prints an empty class designator
+   * provides an empty class designator
    *
    * @param PDb_Field_Item $field  object
    * @return string the class name
