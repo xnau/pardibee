@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.3.3
+ * @version    1.4
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
