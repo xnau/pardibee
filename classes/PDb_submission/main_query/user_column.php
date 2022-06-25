@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -204,8 +204,6 @@ class user_column extends base_column {
    */
   private function file_delete_enabled()
   {
-    
-    
     $delete_file = \Participants_Db::plugin_setting( 'file_delete', 0 );
 
     $import_null = $this->main_query()->is_import() && is_null( $this->value );
@@ -237,6 +235,10 @@ class user_column extends base_column {
    */
   private function initial_value()
   {
+    if ( $this->field->is_date_field() && $this->raw_value === '' ) {
+      $this->raw_value = 'null';
+    }
+    
     $initialvalue = $this->raw_value === 'null' ? null : $this->raw_value;
 
     if ( !$this->add_to_query( 'any' ) ) {
