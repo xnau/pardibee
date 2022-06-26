@@ -5,7 +5,7 @@ Tags: supporter, member, volunteer, database, sign-up form, directory, index, su
 Requires at least: 5.0
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -289,6 +289,12 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.1.6 =
+* an empty value in a date field will overwrite an existing value
+* prevent fatal error with out of sync message queue
+* webp files now allowed in the native plugin
+* min php version updated to 7.4
 
 = 2.1.5 =
 * fixed issue with password field preventing record update
@@ -1513,7 +1519,8 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-2.1.5 is a bugfix update
+2.1.6 is a bugfix update
+Participants Database now requires minimum php version 7.4
 
 == Plugin Support ==
 
