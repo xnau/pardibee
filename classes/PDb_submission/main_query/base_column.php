@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -25,7 +25,7 @@ abstract class base_column {
   /**
    * @var \PDb_Field_Item current field item object
    */
-  protected $field;
+  public $field;
 
   /**
    * @var string the incoming column value
@@ -107,7 +107,7 @@ abstract class base_column {
    * 
    * @return \PDb_submission\main_query\base_query
    */
-  protected function main_query()
+  public function main_query()
   {
     return base_query::instance();
   }
@@ -126,10 +126,13 @@ abstract class base_column {
   /**
    * tells if the imported value should be skipped
    * 
-   * @return bool
+   * @return bool true to skip the value on import
    */
   public function skip_imported_value()
   {
+    if ( ! $this->main_query()->is_import() ) {
+      return false;
+    }
     // don't update the value if importing a CSV and the incoming value is empty #1647
     /**
      * @filter pdb-allow_imported_empty_value_overwrite
@@ -138,7 +141,15 @@ abstract class base_column {
      * @param \PDb_Field_Item the current field
      * @return bool if true, skip importing the column
      */
-    return $this->main_query()->is_import() && Participants_Db::apply_filters( 'allow_imported_empty_value_overwrite', false, $this->value, $this->field ) === false && $this->value === '';
+    $skip =  Participants_Db::apply_filters( 'allow_imported_empty_value_overwrite', false, $this->value, $this->field ) === false && $this->value === '';
+    
+    /**
+     * @filter pdb-skip_imported_value
+     * @param bool true to skip
+     * @param \PDb_submission\main_query\base_column object
+     * @return bool true to skip
+     */
+    return Participants_Db::apply_filters('skip_imported_value', $skip, $this );
   }
 
   /**
