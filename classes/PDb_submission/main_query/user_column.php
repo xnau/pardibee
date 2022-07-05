@@ -215,7 +215,7 @@ class user_column extends base_column {
    * tells if the incoming value should be added to the query
    * 
    * @param string $write_mode insert or update
-   * @return bool
+   * @return bool true to add the column to the main query
    */
   public function add_to_query( $write_mode )
   {
@@ -224,7 +224,7 @@ class user_column extends base_column {
     if ( $add && $write_mode === 'insert' && ( $this->value() === '' || is_null( $this->value() ) ) ) {
       $add = false;
     }
-
+    
     return $add;
   }
 
