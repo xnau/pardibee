@@ -108,5 +108,10 @@ class process extends \WP_Background_Process {
     parent::complete();
     
     tally::get_instance()->complete( true );
+    
+    /**
+     * @see xnau_CSV_Import::__construct for another import complete action
+     */
+    do_action( 'pdb-import_process_complete', $this );
   }
 }
