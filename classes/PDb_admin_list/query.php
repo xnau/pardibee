@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -210,7 +210,7 @@ class query {
         } elseif ( $filter_set[ 'value' ] === '' ) {
           $filter_set[ 'value' ] = 'null';
           $operator = '<>';
-        } elseif ( $this->term_has_wildcard( $filter_set[ 'value' ] ) ) {
+        } elseif ( $this->term_uses_wildcard( $filter_set ) ) {
           $delimiter = array( "'", "'" );
         }
         break;
@@ -225,7 +225,7 @@ class query {
         if ( $filter_set[ 'value' ] === '' ) {
           $filter_set[ 'value' ] = 'null';
           $operator = '<>';
-        } elseif ( $this->term_has_wildcard( $filter_set[ 'value' ] ) ) {
+        } elseif ( $this->term_uses_wildcard( $filter_set ) ) {
           $delimiter = array( "'", "'" );
         }
     }
@@ -417,6 +417,24 @@ class query {
     }
 
     return $value;
+  }
+  
+  /**
+   * tells if search term should have the enclosing wildcards removed
+   * 
+   * @param array $filter_set
+   * @return bool true if the term should have the pre and post wildcards removed
+   */
+  private function term_uses_wildcard( $filter_set )
+  {
+    $field = new \PDb_Form_Field_Def( $filter_set['search_field'] );
+    
+    // fields that store their value as an array are exempt here #2856
+    if ( $field->is_multi() ) {
+      return false;
+    }
+    
+    return $this->term_has_wildcard( $filter_set['value'] );
   }
 
   /**
