@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -37,7 +37,7 @@ class user_column extends base_column {
       case 'multi-checkbox':
       case 'multi-dropdown':
 
-        $multi_value = $initialvalue; // $this->field->get_value();
+        $multi_value = $initialvalue;
 
         if ( is_null( $initialvalue ) ) {
 
@@ -94,6 +94,7 @@ class user_column extends base_column {
 
       case 'captcha':
 
+        $this->value = $initialvalue;
         $this->skip = true;
         break;
 
