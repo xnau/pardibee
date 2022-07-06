@@ -95,8 +95,9 @@ class xnau_FormValidation {
    */
   public function validate($value, $column_atts, $post = false, $participant_id )
   {
-    if ($post)
+    if ($post) {
       $this->post_array = $post;
+    }
 
     $this->_validate_field( $value, $column_atts->name, $column_atts->validation, $column_atts->form_element, $participant_id );
   }
