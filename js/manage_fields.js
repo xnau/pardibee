@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.10
+ * @version 2.11
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -417,11 +417,14 @@ PDbManageFields = (function ($) {
   var delete_selected_fields = function (list, group) {
 
     var message = list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field;
+    var titleList = [];
     $.each(list, function (index, value) {
-      var name = $('#db_row_' + value).find('.name-attribute input').val();
-      message = message+('<br>'+PDb_L10n['delete_confirm_custom_' + name]+'<br>'||'');
+      var row = $('#db_row_' + value);
+      var name = row.find('.name-attribute input').val();
+      var title = row.find('.title-attribute input').data('title');
+      titleList.push(PDb_L10n['delete_confirm_custom_' + name]||title);
     });
-    confirmationBox.html(message);
+    confirmationBox.html(message+'<ul><li>'+titleList.join('</li><li>')+'</li></ul>');
     // initialize the dialog action
     confirmationBox.dialog(dialogOptions, {
       buttons: [{
