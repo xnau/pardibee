@@ -290,7 +290,7 @@ class PDb_Template {
    */
   public function get_group_prop( $name, $prop )
   {
-    return $this->groups[$name]->{$prop};
+    return isset( $this->groups[$name] ) ? $this->groups[$name]->{$prop} : '';
   }
 
   /**
