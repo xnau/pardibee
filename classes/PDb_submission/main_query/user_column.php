@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -37,7 +37,7 @@ class user_column extends base_column {
       case 'multi-checkbox':
       case 'multi-dropdown':
 
-        $multi_value = $initialvalue;
+        $multi_value = \PDb_Field_Item::field_value_array( $initialvalue );
 
         if ( is_null( $initialvalue ) ) {
 
