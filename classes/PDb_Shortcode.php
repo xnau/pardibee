@@ -418,77 +418,8 @@ abstract class PDb_Shortcode {
    */
   private function _find_template()
   {
-    $template_filename = 'pdb-' . $this->module . '-' . $this->template_name . '.php';
-    
-    /**
-     * @filter pdb-template_select
-     * @param string the name of the template file
-     * @return template file name or absolute path to the template file
-     */
-    $template = Participants_Db::apply_filters( 'template_select', $template_filename ); 
-    
-    if ( !file_exists( $template ) ) {
-      // look for a built-in template
-      $template = Participants_Db::$plugin_path . 'templates/' . $template_filename;
-    }
-
-    /**
-     * provides a global custom template location for the main and auxiliary plugins
-     * 
-     * @version 1.7.0.5
-     * @filter 'pdb-custom_template_location'
-     * @param string template directory path
-     * @return string
-     * 
-     */
-    if ( !file_exists( $template ) ) {
-      $template = Participants_Db::apply_filters( 'custom_template_location', get_stylesheet_directory() . '/templates/' ) . $template_filename;
-    }
-
-    if ( !file_exists( $template ) ) {
-      /* 
-       * checking the custom template file location
-       * this is the location used by the Custom Template Folder add-on, 
-       * but we're adding it here too #2253
-       */
-      $template = trailingslashit( WP_CONTENT_DIR ) . Participants_Db::PLUGIN_NAME . '-templates/' . $template_filename;
-    }
-
-    if ( !file_exists( $template ) ) {
-      
-      if ( $this->module !== 'API' ) {
-        Participants_Db::debug_log( __METHOD__ . ' custom template not found: "' . $template . '," using the default template instead.' );
-      }
-      
-      $template = Participants_Db::$plugin_path . 'templates/pdb-' . $this->module . '-default.php';
-    }
-
-    if ( !file_exists( $template ) ) {
-      if ( $this->module !== 'API' ) {
-        // API calls don't use a template
-        Participants_Db::debug_log( __METHOD__ . ' template not found: ' . $template );
-      }
-      $template = false;
-    }
-    $this->template = $template;
-    $this->get_template_version();
-  }
-
-  /**
-   * sets the template version property
-   * 
-   */
-  protected function get_template_version()
-  {
-    $version = 0;
-    if ( $this->template ) {
-      $contents = file_get_contents( $this->template );
-      $findversion = preg_match( '/@version (.+)\b/', $contents, $matches );
-      if ( $findversion === 1 ) {
-        $version = $matches[1];
-      }
-    }
-    $this->template_version = $version;
+    $this->template = \PDb_shortcodes\template::template_path( $this->template_name, $this->module );
+    $this->template_version = \PDb_shortcodes\template::template_version( $this->template );
   }
 
   /**
