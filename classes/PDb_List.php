@@ -87,7 +87,7 @@ class PDb_List extends PDb_Shortcode {
    * @var array wrapper HTML elements
    */
   public $pagination_wrap = array(
-      'wrap_tag' => 'div data-action="pdb_list_filter"',
+      'wrap_tag' => 'div',
       'all_buttons' => 'ul',
       'button' => 'li',
   );
