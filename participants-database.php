@@ -375,6 +375,9 @@ class Participants_Db extends PDb_Base {
       
       return $events;
     });
+    
+    // external custom template location plugin no longer needed, deactivate it
+    deactivate_plugins( 'pdb-custom-templates.php', true );
 
     /*
      * any plugins that require Participants Database should initialize on this action
