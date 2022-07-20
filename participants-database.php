@@ -2951,14 +2951,22 @@ class Participants_Db extends PDb_Base {
 
     $dir = empty( $dir ) ? Participants_Db::files_location() : $dir;
     $savedmask = umask( 0 );
-    $status = true;
-    if ( mkdir( Participants_Db::base_files_path() . $dir, 0755, true ) === false ) {
-
+    
+    // create the uploads directory
+    $status = mkdir( Participants_Db::base_files_path() . $dir, 0755, true );
+    
+    if ( $status  === false )
+    {
+      $message = sprintf( __( 'The uploads directory (%s) could not be created.', 'participants-database' ), $dir ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-Upload-Location"><span class="dashicons dashicons-editor-help"></span></a>';
+      
       if ( is_object( self::$validation_errors ) )
-        self::$validation_errors->add_error( '', sprintf( __( 'The uploads directory (%s) could not be created.', 'participants-database' ), $dir ) );
-
-      $status = false;
+      {
+        self::$validation_errors->add_error( '', $message );
+      } else {
+        PDb_Admin_Notices::post_error( $message, '' );
+      }
     }
+    
     umask( $savedmask );
     return $status;
   }
