@@ -202,7 +202,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array(
             'type' => 'text',
             'help_text' => sprintf( __( "Path (relative to the %s) of an image file to show if no image has been defined for an image field. Leave blank for no default image.", 'participants-database' ), $this->files_base_label() ),
-            'value' => '/wp-content/plugins/participants-database/ui/no-image.png',
+            'value' => 'wp-content/plugins/participants-database/ui/no-image.png',
         )
     );
     
