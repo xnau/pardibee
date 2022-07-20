@@ -2268,7 +2268,7 @@ class PDb_Base {
     if ( !is_writable( Participants_Db::files_path() ) ) {
       self::debug_log( ' The configured uploads directory is not writable: ' . Participants_Db::files_path() );
       
-      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '</p>', '', false);
+      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false);
     }
     
 //    if ( substr_count( Participants_Db::files_path(), 'wp-content' ) > 1 ) {
