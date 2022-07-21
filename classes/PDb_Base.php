@@ -573,6 +573,19 @@ class PDb_Base {
      */
     return get_permalink( Participants_Db::apply_filters( 'lang_page_id', $id ) );
   }
+  
+  
+  /**
+   * provides the basic string sanitize flags
+   * 
+   * this allows only ASCII 32-127 don't use if non-english characters are to be included
+   * 
+   * @return array
+   */
+  public static function string_sanitize()
+  {
+    return array( 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK );
+  }
 
   /**
    * supplies the current participant ID
