@@ -74,7 +74,7 @@ trait store {
     $record_id = false;
     $action = 'insert';
     
-    $record_match = new \PDb_submission\match\import( $post, $record_id );
+    $record_match = new \PDb_submission\matching\import( $post, $record_id );
 
     // modify the action according the the match mode
     $action = $record_match->get_action( $action );

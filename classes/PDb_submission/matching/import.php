@@ -13,7 +13,7 @@
  * @depends    
  */
 
-namespace PDb_submission\match;
+namespace PDb_submission\matching;
 
 defined( 'ABSPATH' ) || exit;
 

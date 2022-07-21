@@ -1571,8 +1571,8 @@ class Participants_Db extends PDb_Base {
   {
     do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
     
-    $record_match = \PDb_submission\match\record::get_object( $post, $record_id );
-    /** @var PDb_submission\match\record $record_match */
+    $record_match = \PDb_submission\matching\record::get_object( $post, $record_id );
+    /** @var PDb_submission\matching\record $record_match */
 
     // modify the action according the the match mode
     $action = $record_match->get_action( $action );
@@ -2010,7 +2010,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
-    return \PDb_submission\match\record::field_value_exists($value, $field, $mask_id);
+    return \PDb_submission\matching\record::field_value_exists($value, $field, $mask_id);
   }
 
   /**

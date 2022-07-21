@@ -13,7 +13,7 @@
  * @depends    
  */
 
-namespace PDb_submission\match;
+namespace PDb_submission\matching;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -63,7 +63,7 @@ abstract class record {
    * 
    * @param array $post data
    * @param int $record_id
-   * @return PDb_submission\match\record
+   * @return PDb_submission\matching\record
    */
   public static function get_object( $post, $record_id )
   {
