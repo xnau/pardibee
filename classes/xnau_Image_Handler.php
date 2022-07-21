@@ -602,7 +602,7 @@ abstract class xnau_Image_Handler {
     if ( $this->image_defined ) {
       return trailingslashit( $this->image_directory ) . $this->image_file;
     } else {
-      return  WP_CONTENT_DIR . str_replace( '/wp-content', '', Participants_Db::plugin_setting( 'default_image', '' ) );
+      return  WP_CONTENT_DIR . str_replace( 'wp-content', '', ltrim( Participants_Db::plugin_setting( 'default_image', '' ), '/' ) );
     }
   }
 
