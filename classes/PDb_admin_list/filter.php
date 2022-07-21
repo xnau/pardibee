@@ -204,7 +204,7 @@ class filter {
   {
     $filter = $this->get_filter();
 
-    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'admin_list_filter' ) {
+    if ( filter_input( INPUT_POST, 'action', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name') ) === 'admin_list_filter' ) {
 
       $post = filter_input_array( INPUT_POST, $this->list_filter_sanitize() );
 
@@ -230,7 +230,7 @@ class filter {
           $filter[$key] = $post[$key];
         }
       }
-    } elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_SANITIZE_STRING ) ) {
+    } elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name') ) ) {
       if ( $filter['sortBy'] !== $column_sort ) {
         // if we're changing the sort column, set the sort to ASC
         $filter['ascdesc'] = 'ASC';
@@ -288,7 +288,7 @@ class filter {
         'sortBy' => array('filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'),
         'search_field' => array('filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'),
         'operator' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE)$/i'), 'flags' => FILTER_REQUIRE_ARRAY),
-        'value' => array('filter' => FILTER_SANITIZE_SPECIAL_CHARS, 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY),
+        'value' => array('filter' => FILTER_DEFAULT, 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_REQUIRE_ARRAY),
         'logic' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(OR|AND)$/'), 'flags' => FILTER_REQUIRE_ARRAY),
     );
   }
