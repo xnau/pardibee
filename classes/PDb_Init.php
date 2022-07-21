@@ -264,6 +264,8 @@ class PDb_Init {
   private function _deactivate()
   {
     error_log( Participants_Db::PLUGIN_NAME . ' plugin deactivated' );
+    
+    do_action( 'participants_database_deactivated' );
   }
 
   /**
