@@ -2945,6 +2945,7 @@ class Participants_Db extends PDb_Base {
    * sets an error if it fails
    * 
    * @param string $dir the name of the new directory
+   * @return bool success
    */
   public static function _make_uploads_dir( $dir = '' )
   {
@@ -2955,7 +2956,7 @@ class Participants_Db extends PDb_Base {
     // create the uploads directory
     $status = mkdir( Participants_Db::base_files_path() . $dir, 0755, true );
     
-    if ( $status  === false )
+    if ( $status === false )
     {
       $message = sprintf( __( 'The uploads directory (%s) could not be created.', 'participants-database' ), $dir ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-Upload-Location"><span class="dashicons dashicons-editor-help"></span></a>';
       
