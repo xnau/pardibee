@@ -255,9 +255,9 @@ class PDb_Debug {
       $this->log_file_resource(); // set up the resource
 
       if ( !is_resource( $this->log_file ) ) {
-        $this->clear_log_filename();
+     //   $this->clear_log_filename();
         Participants_Db::debug_log( __METHOD__ . ' unable to open file for logging: ' . $this->log_filepath() );
-        PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>', array(
+        PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-Upload-Location"><span class="dashicons dashicons-editor-help"></span></a>', array(
             'type' => 'error',
             'context' => __( 'Debugging', 'participants-database' ),
         ) );
