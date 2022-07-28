@@ -2025,7 +2025,7 @@ ORDER BY g.order, v.order';
   private function add_settings_filters()
   { 
     add_filter( Participants_Db::$prefix . 'disable_live_notifications', function(){
-      return Participants_Db::plugin_setting('disable_live_notifications', '0' ) == '1';
+      return '1'; // Participants_Db::plugin_setting('disable_live_notifications', '0' ) == '1';
     });
     add_filter( Participants_Db::$prefix . 'files_use_content_base_path', function(){
       return Participants_Db::plugin_setting('files_use_content_base_path', '0' ) == '1';
