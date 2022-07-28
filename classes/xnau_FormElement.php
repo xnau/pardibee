@@ -1034,6 +1034,8 @@ abstract class xnau_FormElement {
    */
   protected function _hidden()
   {
+    unset( $this->attributes['data-after'], $this->attributes['data-before'] );
+    
     $this->_addline( $this->_input_tag( 'hidden' ) );
   }
 
