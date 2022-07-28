@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.13
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -214,23 +214,13 @@ class PDb_Form_Field_Def {
    * 
    * @global wpdb $wpdb
    * @param string  $fieldname
-   * @return object
+   * @return object (empty object if no field matches the name provided)
    */
   private static function get_field_def( $fieldname )
   {
-    $field_defs = wp_cache_get(self::def_cache);
-    
-    if ( ! $field_defs ) {
-      global $wpdb;
-      $sql = 'SELECT v.*, g.title AS grouptitle, g.id AS groupid  
-              FROM ' . Participants_Db::$fields_table . ' v 
-                JOIN ' . Participants_Db::$groups_table . ' g
-                  ON v.group = g.name 
-              WHERE v.name = %s';
-      $def = current( $wpdb->get_results( $wpdb->prepare( $sql, $fieldname ) ) );
-    } else {
-      $def = isset( $field_defs[$fieldname] ) ? $field_defs[$fieldname] : new stdClass();
-    }
+    $field_defs = Participants_Db::all_field_defs();
+      
+    $def = isset( $field_defs[$fieldname] ) ? $field_defs[$fieldname] : new stdClass();
     
     /**
      * provides a way to temporarily change a field's definition
