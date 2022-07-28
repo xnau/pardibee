@@ -1133,6 +1133,32 @@ class Participants_Db extends PDb_Base {
 
     return self::print_signup_class_form( $params );
   }
+  
+  /**
+   * provides a set of all field definitions
+   * 
+   * @return array of field definition objects indexed by fieldname
+   */
+  public static function all_field_defs()
+  {
+    $field_defs = wp_cache_get( PDb_Form_Field_Def::def_cache );
+    
+    if ( ! $field_defs ) {
+      
+      global $wpdb;
+      
+      $sql = 'SELECT v.name, v.*, g.title AS grouptitle, g.id AS groupid, g.mode  
+              FROM ' . Participants_Db::$fields_table . ' v 
+                JOIN ' . Participants_Db::$groups_table . ' g
+                  ON v.group = g.name 
+              ORDER BY v.order';
+      $field_defs = $wpdb->get_results( $sql, OBJECT_K );
+      
+      wp_cache_set( PDb_Form_Field_Def::def_cache, $field_defs, '', Participants_Db::cache_expire() );
+    }
+    
+    return $field_defs;
+  }
 
   /**
    * sets up the field definition array
@@ -1141,23 +1167,7 @@ class Participants_Db extends PDb_Base {
    */
   private static function _setup_fields()
   {
-    $field_defs = wp_cache_get( PDb_Form_Field_Def::def_cache );
-    
-    if ( ! $field_defs ) {
-      
-      global $wpdb;
-      
-      $sql = 'SELECT v.name, v.*, g.title AS grouptitle, g.id AS groupid  
-              FROM ' . Participants_Db::$fields_table . ' v 
-                JOIN ' . Participants_Db::$groups_table . ' g
-                  ON v.group = g.name 
-              ORDER BY v.order';
-      $field_defs = $wpdb->get_results( $sql, OBJECT_K );
-      
-      wp_cache_set( PDb_Form_Field_Def::def_cache, $field_defs, Participants_Db::cache_expire() );
-    }
-    
-    self::_setup_fields_prop( $field_defs );
+    self::_setup_fields_prop( self::all_field_defs() );
     
     // add our modular fields
     new \PDb_fields\initialize();
