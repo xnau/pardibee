@@ -369,17 +369,11 @@ class PDb_Base {
     
     if ( ! $fieldlist ) {
       
-      global $wpdb;
+      $main_modes = array_keys(PDb_Manage_Fields::group_display_modes());
       
-      $fieldlist = array();
-      
-      $sql = 'SELECT v.* 
-              FROM ' . Participants_Db::$fields_table . ' v 
-              JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name
-              WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '")
-              ORDER BY v.order';
-      
-      $result = $wpdb->get_results( $sql );
+      $result = array_filter( Participants_Db::all_field_defs(), function($v) use ($main_modes) {
+        return in_array( $v->mode, $main_modes );
+      });
       
       foreach ( $result as $column ) {
         $fieldlist[$column->name] = new PDb_Form_Field_Def( $column->name );
@@ -387,6 +381,7 @@ class PDb_Base {
       
       wp_cache_set($cachekey, $fieldlist, '', self::cache_expire() );
     }
+    
     return $fieldlist;
   }
   
@@ -882,8 +877,6 @@ class PDb_Base {
       list( $object, $property ) = explode( '->', $dynamic_key );
 
       $object = ltrim( $object, '$' );
-      
-//      error_log(__METHOD__.' oject: '.$object.' prop: '.$property.' value: '. $$object->$property );
 
       if ( is_object( $$object ) && ! empty( $$object->$property ) ) {
 
@@ -1064,8 +1057,6 @@ class PDb_Base {
        * @return string the WP capability that is allowed this privilege
        */
       $capability = self::apply_filters( 'access_capability', self::plugin_setting_value( $cap ), $context );
-//      global $wp_filter;
-//      error_log(__METHOD__.' filters placed on access_capability: '.print_r($wp_filter['pdb-access_capability'],1));
     }
     return $capability;
   }
