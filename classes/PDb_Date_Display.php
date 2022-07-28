@@ -258,6 +258,7 @@ class PDb_Date_Display {
     if ( self::is_valid_timestamp( $date ) ) {
       return $date;
     }
+    
     // we parse it into a TS or false if it can't be parsed
     // first try using the display format
     $date = PDb_Date_Parse::timestamp( $date, array( 'input_format' => $this->format ), __METHOD__ . ' ( ' . $this->context . ' )' );
@@ -277,6 +278,6 @@ class PDb_Date_Display {
    */
   public static function is_valid_timestamp( $timestamp )
   {
-    return is_int( $timestamp ) || ( (string) (int) $timestamp === $timestamp);
+    return is_int( $timestamp ) || ( (string) (int) $timestamp === $timestamp) || ( (float) (int) $timestamp === $timestamp);
   }
 }
