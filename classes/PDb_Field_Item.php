@@ -1325,7 +1325,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         case 'decimal':
         case 'currency':
         case 'numeric':
-
+          
           $field_display = $this->get_value();
 
           // localize the display value
@@ -1339,9 +1339,12 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
               break;
           }
 
-          if ( isset( $this->attributes['data-before'] ) && $this->has_content() ) {
+          if ( isset( $this->attributes['data-before'] ) && $this->has_content() )
+          {
             $field_display = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $this->attributes['data-before'] ) . '</span>' . esc_html( $field_display ) . '</span>';
-          } elseif ( isset( $this->attributes['data-after'] ) && $this->has_content() ) {
+            
+          } elseif ( isset( $this->attributes['data-after'] ) && $this->has_content() )
+          {
             $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . esc_html( $this->attributes['data-after'] ) . '</span></span>';
           }
 
