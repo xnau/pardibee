@@ -209,6 +209,11 @@ abstract class xnau_FormElement {
     $params = wp_parse_args( $parameters, $defaults );
     
     $this->field_def = Participants_Db::get_field_def( $params['name'] );
+    
+    if ( ! isset( $params['type']) || !isset($params['name']) ) {
+      Participants_Db::debug_log(__METHOD__.' form element instantiated with incomplete configuration. 
+backtrace: '.print_r( wp_debug_backtrace_summary(),1));
+    }
 
     $this->form_element = $params[ 'type' ];
     $this->value = $params[ 'value' ];
