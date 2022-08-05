@@ -129,10 +129,13 @@ class PDb_CAPTCHA {
    */
   private function captcha_setup() {
     
-    /*
-     * the pdb-capcha_setup filter expects the PDb_CAPTCHA::HTML property to be 
+    /**
+     * the pdb-captcha_setup action allows the PDb_CAPTCHA::HTML property to be 
      * filled with the HTML of the custom captcha element. The validation of the 
      * response should be included as a regex string in PDb_CAPTCHA::validation
+     * 
+     * @action pdb-captcha_setup
+     * @param PDb_CAPTCHA instance
      */
     Participants_Db::do_action('captcha_setup', $this);
     
@@ -289,7 +292,7 @@ class PDb_CAPTCHA {
    * @return bool true if last captcha validation was successful
    */
   public static function last_challenge_met() {
-    return Participants_Db::$session->get('captcha_result') ? Participants_Db::$session->get('captcha_result') == 'valid' : false ;
+    return Participants_Db::$session->get('captcha_result') ? Participants_Db::$session->get('captcha_result') === 'valid' : false ;
   }
   /**
    * returns a random alphanumeric
