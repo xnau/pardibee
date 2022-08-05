@@ -571,7 +571,7 @@ class PDb_Base {
   
   
   /**
-   * provides the basic string sanitize flags
+   * provides the basic string sanitize flags for a php filter function
    * 
    * this allows only ASCII 32-127 don't use if non-english characters are to be included
    * 
