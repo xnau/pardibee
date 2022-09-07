@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    0.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -57,6 +57,11 @@ class validating_field {
   public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false, $record_id = false )
   {
     foreach ( get_object_vars( $this ) as $prop => $val ) {
+      
+      if ( $prop === 'value' ) {
+        $value = maybe_unserialize( $value );
+      }
+      
       $this->{$prop} = $$prop;
     }
   }
