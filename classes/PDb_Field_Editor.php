@@ -443,7 +443,10 @@ class PDb_Field_Editor {
     $attributes = $this->field_def->attributes();
     
     if ( $this->field_def->is_upload_field() && ! isset( $attributes['allowed'] ) && ( array_values( $attributes ) === array_keys( $attributes ) ) ) {
-      $attributes = array( 'allowed' => implode( '|', $attributes ) );
+      
+      $allowed_attribute = implode( '|', array_filter( $attributes, 'trim' ) );
+      
+      $attributes = empty( $allowed_attribute ) ? '' : array( 'allowed' => $allowed_attribute );
     }
     
     return $attributes;
