@@ -257,6 +257,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       
       $option_value = apply_filters( $this->aux_plugin_shortname . '-' . $option_name, isset( $this->plugin_options[$option_name] ) ? $this->plugin_options[$option_name] : $default_setting );
       
+      if ( ! isset( $this->plugin_options[$option_name] ) ) {
+//        Participants_Db::debug_log(__METHOD__.' using fallback value for option "' . $this->aux_plugin_name . ': ' . $option_name . '"', 2);
+//        Participants_Db::debug_log(__METHOD__.' TRACE: ' . print_r( wp_debug_backtrace_summary(),1), 3);
+      }
+      
       return is_string( $option_value ) ? Participants_Db::apply_filters( 'translate_string', $option_value ) : $option_value;
     }
 
