@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -108,7 +108,7 @@ class string_combine extends calculated_field {
           $template_field->set_value( $post[$template_field->name()] );
         }
 
-        $data[$fieldname] = $template_field->has_content() ? $template_field->get_value_display() : '';
+        $data[$fieldname] = $this->field_value( $template_field );
         $data['value:'.$fieldname] = $template_field->has_content() ? $template_field->raw_value() : '';
       }
       
@@ -129,6 +129,27 @@ class string_combine extends calculated_field {
      * @return array
      */
     return \Participants_Db::apply_filters( $this->name . '_replacement_data', $this->filter_data( $clean_data ), $this->field );
+  }
+  
+  /**
+   * provides the field value to use in the string combine data array
+   * 
+   * @param \PDb_Field_Item $field
+   * @return string value to use in the concatenation
+   */
+  private function field_value( $template_field )
+  {
+    $value = '';
+    
+    if ( $template_field->has_content() )
+    {
+      $value = $template_field->get_value_display();
+      if ( $this->field->get_attribute( 'strip_tags' ) ) {
+        $value = strip_tags( $value );
+      }
+    }
+    
+    return $value;
   }
   
   
