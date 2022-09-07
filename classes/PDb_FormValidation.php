@@ -162,7 +162,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           // a "link" field only needs the first element to be filled in
           if ( $this->is_empty( $validating_field->value[0] ) ) {
             $validating_field->set_validation_state( 'empty' );
-          } elseif ( !filter_var( $validating_field->value[0], FILTER_VALIDATE_URL ) ) {
+          } elseif ( filter_var( $validating_field->value[0], FILTER_VALIDATE_URL ) === false ) {
             $validating_field->set_validation_state( 'invalid' );
           } else {
             $validating_field->set_validation_state( 'valid' );
@@ -404,12 +404,20 @@ class PDb_FormValidation extends xnau_FormValidation {
             break;
           
           case $error->field->form_element() === 'captcha':
+            
+            $field_selector = '[name="' . $error->field->name() . '[]"], [id="recaptcha-widget"]';
+            break;
+          
           case $error->field->form_element() === 'link':
+            
+            $field_selector = '[name="' . $error->field->name() . '[]"]';
+            break;
+          
           case $error->field->form_element() === 'text-line':
           case $error->field->form_element() === 'text-area':
           default:
             
-            $field_selector = '[name^="' . $error->field->name() . '"]';
+            $field_selector = '[name="' . $error->field->name() . '"]';
         }
         
         $error->set_css_selector( '[class*="' . Participants_Db::$prefix . '"] ' . $field_selector );
