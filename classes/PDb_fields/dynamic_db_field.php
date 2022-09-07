@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.6
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -184,7 +184,7 @@ abstract class dynamic_db_field extends core {
     
     $field_item = $this->field_object( $field, $record_id );
     
-    $field_item->default = $this->get_field_default( $field_item->name() );
+    $field_item->default = $this->get_template_def( $field_item->name() );
 
     $this->setup_field( $field_item );
 
@@ -224,9 +224,9 @@ abstract class dynamic_db_field extends core {
   {
     if ( isset( $field_data[ 'form_element' ] ) && $field_data[ 'form_element' ] === $this->name ) {
 
-      $stored_field_default = $this->get_field_default( $info[ 'name' ] );
+      $template_def = $this->get_template_def( $info[ 'name' ] );
       
-      if ( $stored_field_default !== $field_data[ 'default' ] ) {
+      if ( $template_def !== $field_data[ 'default' ] || $this->get_attributes_def( $info[ 'name' ] ) !== maybe_unserialize( $field_data['attributes'] ) ) {
         
         $field = new \PDb_Field_Item( $info );
         
@@ -238,7 +238,7 @@ abstract class dynamic_db_field extends core {
           
           \Participants_Db::set_admin_message( sprintf( __( 'The "Template" setting for the %s field could not be validated. Details here: %s', 'participants-database' ), $field->title(), '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/field-types/participant-database-calculation-fields/" target="_blank" >Calculation Fields</a>' ), 'error' );
           
-          $field_data['default'] = $stored_field_default;
+          $field_data['default'] = $template_def;
           
           return $field_data;
         }
@@ -278,29 +278,52 @@ abstract class dynamic_db_field extends core {
   }
   
   /**
-   * provides the field's default setting
+   * provides the field's stored default setting
+   * 
+   * @param string $fieldname
+   * @return string field default
+   */
+  private function get_template_def( $fieldname )
+  {
+    return $this->get_field_db_value( $fieldname, 'default' );
+  }
+  
+  /**
+   * provides the field's stored default setting
+   * 
+   * @param string $fieldname
+   * @return array field default
+   */
+  private function get_attributes_def( $fieldname )
+  {
+    return maybe_unserialize( $this->get_field_db_value( $fieldname, 'attributes' ) );
+  }
+  
+  /**
+   * provides the stored field def value
    * 
    * this gets the value directly from the db
    * 
    * @global \wpdb $wpdb
-   * @param string $fieldname
-   * @return string field default
+   * @param string $fieldname name of the field
+   * @param string $column name of the field def column value to get
+   * @return string field def value
    */
-  private function get_field_default( $fieldname )
+  private function get_field_db_value( $fieldname, $column )
   {
-    $cachekey = 'pdb-field_default';
+    $cachekey = 'pdb-field_' . $column;
     
-    $default_value = wp_cache_get( $fieldname, $cachekey );
+    $def_value = wp_cache_get( $fieldname, $cachekey );
     
-    if ( $default_value === false ) {
+    if ( $def_value === false ) {
       global $wpdb;
 
-      $default_value = $wpdb->get_var( $wpdb->prepare( 'SELECT f.default FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name = %s', $fieldname ) );
+      $def_value = $wpdb->get_var( $wpdb->prepare( 'SELECT f.' . $column . ' FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name = %s', $fieldname ) );
       
-      wp_cache_set( $fieldname, $default_value, $cachekey );
+      wp_cache_set( $fieldname, $def_value, $cachekey );
     }
     
-    return $default_value;
+    return $def_value;
   }
 
   /**
@@ -402,7 +425,8 @@ abstract class dynamic_db_field extends core {
       global $wpdb;
       $wpdb->update( $this->data_table(), array( $this->field->name() => $value ), array( 'id' => $packet->record_id ) );
 
-      \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query, 3 );
+      $debug_level = is_null( $value ) ? 3 : 1;
+      \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query, $debug_level );
     }
   }
 
