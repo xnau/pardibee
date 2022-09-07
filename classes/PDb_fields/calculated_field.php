@@ -175,7 +175,8 @@ abstract class calculated_field extends dynamic_db_field {
    */
   public function set_submission_value( $post )
   {
-    foreach( $this->field_list() as $field ){
+    foreach( $this->field_list() as $field )
+    { 
       if ( $field->is_signup() && isset( $post[$field->name()] ) ) {
         $this->set_field( $field );
         $post[$field->name()] = $this->dynamic_value($post);
