@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -1403,6 +1403,17 @@ class PDb_Base {
   }
 
   /**
+   * writes the custom CSS setting to the custom print css file
+   * 
+   * @return bool true if the css file can be written to
+   * 
+   */
+  protected static function _set_custom_print_css()
+  {
+    return self::_setup_custom_css( Participants_Db::$plugin_path . '/css/PDb-custom-print.css', 'print_css' );
+  }
+
+  /**
    * writes the custom CSS setting to the custom css file
    * 
    * @param string  $stylesheet_path absolute path to the stylesheet
@@ -1416,14 +1427,40 @@ class PDb_Base {
     if ( !is_writable( $stylesheet_path ) ) {
       return false;
     }
+    
     $file_contents = file_get_contents( $stylesheet_path );
-    $custom_css = Participants_Db::plugin_setting( $setting );
+    $custom_css = self::custom_css_content($setting);
+    
+    if ( empty( $custom_css ) ) {
+      return false;
+    }
+    
     if ( $file_contents === $custom_css ) {
       // error_log(__METHOD__.' CSS settings are unchanged; do nothing');
     } else {
       file_put_contents( $stylesheet_path, $custom_css );
     }
     return true;
+  }
+  
+  /**
+   * supplies the content of the custom CSS file
+   * 
+   * @param string $setting name of the css setting to use
+   * @return string the CSS
+   */
+  private static function custom_css_content( $setting )
+  {
+    $content = Participants_Db::plugin_setting( $setting );
+    
+    switch ($setting) {
+      
+      case 'print_css':
+        $content = sprintf( "@media print {\n\n%s\n\n}", $content );
+        break;
+    }
+    
+    return $content;
   }
   
   /**
