@@ -499,6 +499,9 @@ class Participants_Db extends PDb_Base {
     // set up the fields update processor
     new PDb_Manage_Fields_Updates();
     
+    // initialize the admin notices library
+    PAnD::init();
+    
     /**
      * sets the admin notices class
      * 
@@ -611,23 +614,20 @@ class Participants_Db extends PDb_Base {
    */
   public static function register_assets()
   {
-    /*
-     * normally, the custom CSS is written to a static css file, but on some systems, 
-     * that doesn't work, so the fallback is to load the dynamic CSS file
-     */
-    if ( self::_set_custom_css() ) {
-      $custom_css_file = 'PDb-custom.css';
-    } else {
-      $custom_css_file = 'custom_css.php';
-    }
-    
     $presuffix = self::use_minified_assets() ? '.min' : '';
     
     /*
      * register frontend scripts and stylesheets
      */
     wp_register_style( self::$prefix . 'frontend', plugins_url( "/css/participants-database$presuffix.css", __FILE__ ), array('dashicons'), '1.7.3' );
-    wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . $custom_css_file, __FILE__ ), null, self::$Settings->option_version() );
+    
+    if ( self::_set_custom_css() ) {
+      wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . 'PDb-custom.css', __FILE__ ), null, self::$Settings->option_version() );
+    }
+    
+    if ( self::_set_custom_print_css() ) {
+      wp_register_style( 'custom_plugin_print_css', plugins_url( '/css/' . 'PDb-custom-print.css', __FILE__ ), null, self::$Settings->option_version() );
+    }
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
 
@@ -818,6 +818,7 @@ class Participants_Db extends PDb_Base {
       wp_enqueue_style( 'pdb-frontend' );
     }
     wp_enqueue_style( 'custom_plugin_css' );
+    wp_enqueue_style( 'custom_plugin_print_css' );
   }
 
   /**
@@ -3325,14 +3326,12 @@ class Participants_Db extends PDb_Base {
    */
   public static function plugin_footer()
   {
-    $greeting = PDb_Live_Notification_Handler::greeting();
-    /**
-     * @version 1.6.3
-     * @filter pdb-show_live_notifications
-     * 
-     */
+    $greeting = false;
+    if ( self::apply_filters( 'show_live_notifications', true ) ) {
+      $greeting = PDb_Live_Notification_Handler::greeting();
+    }
     ?>
-    <?php if ( $greeting && self::apply_filters( 'show_live_notifications', true ) ) : ?>
+    <?php if ( $greeting ) : ?>
       <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
       <?php echo wpautop( $greeting ); ?>
       </div>
