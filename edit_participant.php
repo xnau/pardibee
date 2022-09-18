@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.3
+ * @version 1.4
  *
  */
 if ( !defined( 'ABSPATH' ) ) {
@@ -68,8 +68,8 @@ if ( $participant_values ) :
   
   $top_space = Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ? 'top-bar-space' : '';
   ?>
-  <div class="wrap pdb-admin-edit-participant participants_db <?php echo $top_space ?>">
-    <h2><?php echo $page_title ?></h2>
+  <div class="wrap pdb-admin-edit-participant participants_db <?php esc_attr_e( $top_space ) ?>">
+    <h2><?php echo esc_html( $page_title ) ?></h2>
     <?php
     if ( is_object( Participants_Db::$validation_errors ) ) {
       echo Participants_Db::$validation_errors->get_error_html();
@@ -77,20 +77,20 @@ if ( $participant_values ) :
       Participants_Db::admin_message();
     }
     ?>
-    <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>" enctype="multipart/form-data" autocomplete="off" >
+    <form method="post" action="<?php esc_attr_e( $_SERVER['REQUEST_URI'] ) ?>" enctype="multipart/form-data" autocomplete="off" >
       <?php
       PDb_FormElement::print_hidden_fields( $hidden );
       
       if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) :
         ?>
       <div class="top-bar-submit">
-        <span class="field-group-title"><?php _e( 'Save the Record', 'participants-database' ) ?></span>
+        <span class="field-group-title"><?php esc_html_e( 'Save the Record', 'participants-database' ) ?></span>
             <?php if ( !empty( $participant_id ) ) : ?>
-              <input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button">
+              <input class="button button-default button-leftarrow" type="submit" value="<?php esc_attr_e( self::$i18n['previous'] ) ?>" name="submit_button">
             <?php endif ?>
-              <input class="button button-primary" type="submit" value="<?php echo self::$i18n['submit'] ?>" name="submit_button">
-              <input class="button button-primary" type="submit" value="<?php echo self::$i18n['apply'] ?>" name="submit_button">
-              <input class="button button-default button-rightarrow" type="submit" value="<?php echo ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] )?>" name="submit_button">
+              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['submit'] ) ?>" name="submit_button">
+              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['apply'] ) ?>" name="submit_button">
+              <input class="button button-default button-rightarrow" type="submit" value="<?php esc_attr_e( ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] ) ) ?>" name="submit_button">
       </div>
       <?php
       endif;
@@ -129,9 +129,9 @@ if ( $participant_values ) :
       }
       $section = $column->group()
       ?>
-      <div  class="field-group field-group-<?php echo $groups[$section]['name'] ?>" >
-        <h3 class="field-group-title"><?php echo Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ?></h3>
-        <?php if ( $options['show_group_descriptions'] ) echo '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ?>
+      <div  class="field-group field-group-<?php esc_attr_e( $groups[$section]['name'] ) ?>" >
+        <h3 class="field-group-title"><?php esc_html_e( Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ) ?></h3>
+        <?php if ( $options['show_group_descriptions'] ) esc_html_e( '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ) ?>
         <table class="form-table">
           <tbody>
             <?php
@@ -139,7 +139,7 @@ if ( $participant_values ) :
 //          echo $id_line;
           ?>
 
-          <tr class="<?php echo ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' . apply_filters( 'pdb-field_empty_class', '', $column ) ?>">
+          <tr class="<?php esc_attr_e( ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' . apply_filters( 'pdb-field_empty_class', '', $column ) ) ?>">
             <?php
             $column_title = str_replace( array('"', "'"), array('&quot;', '&#39;'), Participants_Db::apply_filters( 'translate_string', stripslashes( $column->title ) ) );
             if ( $options['mark_required_fields'] && $column->validation != 'no' ) {
@@ -181,8 +181,8 @@ if ( $participant_values ) :
               }
             }
             ?>
-            <th><?php echo $column_title . ( empty( $add_title ) ? '' : sprintf( $fieldnote_pattern, implode( ', ', $add_title ) ) ) ?></th>
-            <td id="<?php echo Participants_Db::$prefix . $column->name() ?>-field" >
+            <th><?php esc_html_e( $column_title . ( empty( $add_title ) ? '' : sprintf( $fieldnote_pattern, implode( ', ', $add_title ) ) ) ) ?></th>
+            <td id="<?php esc_attr_e( Participants_Db::$prefix . $column->name() ) ?>-field" >
               <?php
               /*
                * get the value from the record; if it is empty, use the default value if the 
@@ -285,7 +285,7 @@ if ( $participant_values ) :
 
               if ( !empty( $column->help_text ) ) :
                 ?>
-                <span class="helptext"><?php echo Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ?></span>
+                <span class="helptext"><?php esc_html_e( Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ) ?></span>
               <?php endif; ?>
             </td>
           </tr>
@@ -296,18 +296,18 @@ if ( $participant_values ) :
     </table>
   </div>
   <div  class="field-group field-group-submit" >
-    <h3 class="field-group-title"><?php _e( 'Save the Record', 'participants-database' ) ?></h3>
+    <h3 class="field-group-title"><?php esc_html_e( 'Save the Record', 'participants-database' ) ?></h3>
     <table class="form-table">
       <tbody>
         <?php if ( is_admin() ) : ?>
           <tr>
             <td class="submit-buttons">
               <?php if ( $action === 'update' ) : ?>
-                <input class="button button-default button-leftarrow" type="submit" value="<?php echo self::$i18n['previous'] ?>" name="submit_button">
+                <input class="button button-default button-leftarrow" type="submit" value="<?php esc_attr_e( self::$i18n['previous'] ) ?>" name="submit_button">
               <?php endif ?>
-              <input class="button button-primary" type="submit" value="<?php echo self::$i18n['submit'] ?>" name="submit_button">
-              <input class="button button-primary" type="submit" value="<?php echo self::$i18n['apply'] ?>" name="submit_button">
-              <input class="button button-default button-rightarrow" type="submit" value="<?php echo ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] ) ?>" name="submit_button">
+              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['submit'] ) ?>" name="submit_button">
+              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['apply'] ) ?>" name="submit_button">
+              <input class="button button-default button-rightarrow" type="submit" value="<?php esc_attr_e( ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] ) ) ?>" name="submit_button">
             </td>
           </tr>
           <tr>
@@ -326,10 +326,10 @@ if ( $participant_values ) :
           </tr>
         <?php else : ?>
           <tr>
-            <th><h3><?php echo Participants_Db::apply_filters( 'translate_string', $options['save_changes_label'] ) ?></h3></th>
+            <th><h3><?php esc_html_e( Participants_Db::apply_filters( 'translate_string', $options['save_changes_label'] ) ) ?></h3></th>
             <td class="submit-buttons">
-              <input class="button button-primary pdb-submit" type="submit" value="<?php echo Participants_Db::apply_filters( 'translate_string', $options['save_changes_button'] ) ?>" name="save">
-              <input name="submit_button" type="hidden" value="<?php echo self::$i18n['apply'] ?>">
+              <input class="button button-primary pdb-submit" type="submit" value="<?php esc_attr_e( Participants_Db::apply_filters( 'translate_string', $options['save_changes_button'] ) ) ?>" name="save">
+              <input name="submit_button" type="hidden" value="<?php esc_attr_e( self::$i18n['apply'] ) ?>">
             </td>
           </tr>
         <?php endif; ?>
