@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.1
+ * @version    2.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -69,17 +69,17 @@ class PDb_Manage_Fields {
   {
     $top_space = Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ? 'top-bar-space' : '';
     ?>
-    <div class="wrap participants_db <?php echo $top_space ?>">
+    <div class="wrap participants_db <?php esc_attr_e( $top_space ) ?>">
       <?php Participants_Db::admin_page_heading() ?>
-      <h3><?php _e( 'Manage Database Fields', 'participants-database' ) ?></h3>
+      <h3><?php esc_html_e( 'Manage Database Fields', 'participants-database' ) ?></h3>
       <?php Participants_Db::admin_message(); ?>
-      <h4><?php _e( 'Field Groups', 'participants-database' ) ?>:</h4>
+      <h4><?php esc_html_e( 'Field Groups', 'participants-database' ) ?>:</h4>
       <div id="fields-tabs">
         <ul>
           <?php
           $mask = '<span class="mask"></span>';
           foreach ( $this->group_defs as $group ) {
-            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . $this->group_title( $group[ 'name' ] ) . '</a>' . $mask . '</li>';
+            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . esc_html( $this->group_title( $group[ 'name' ] ) ) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -112,18 +112,18 @@ class PDb_Manage_Fields {
 
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[ $group ][ 0 ][ 'group_id' ] : '';
         ?>
-        <div id="<?php echo $group ?>" class="manage-fields-wrap" data-group-id="<?php echo $data_group_id ?>" >
-          <h3><?php printf( _x( '%s Fields', 'Title of the field group', 'participants-database' ), $this->group_title( $group ) ) ?></h3>
+        <div id="<?php esc_attr_e( $group ) ?>" class="manage-fields-wrap" data-group-id="<?php esc_attr_e( $data_group_id ) ?>" >
+          <h3><?php esc_html_e( sprintf( _x( '%s Fields', 'Title of the field group', 'participants-database' ), $this->group_title( $group ) ) ) ?></h3>
           <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
             <div class="pdb-horiz-scroll-scroller">
               <div class="pdb-horiz-scroll-width">
               <?php endif ?>
-              <form id="manage_<?php echo $group ?>_fields" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
+              <form id="manage_<?php esc_attr_e( $group ) ?>_fields" method="post" autocomplete="off"  action="<?php esc_attr_e( admin_url( 'admin-post.php' ) ) ?>">
                 <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
                   <div class="submit top-bar-submit">
-                    <span class="field-group-title"><?php echo $this->group_title( $group ) ?></span>
-                    <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n[ 'update fields' ] ?></button>
+                    <span class="field-group-title"><?php esc_html_e( $this->group_title( $group ) ) ?></span>
+                    <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php esc_html_e( $this->i18n[ 'update fields' ] ) ?></button>
                   </div>
                 <?php endif ?>
                 <?php
@@ -131,11 +131,11 @@ class PDb_Manage_Fields {
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
-                  <section id="<?php echo $group ?>_fields">
+                  <section id="<?php esc_attr_e( $group ) ?>_fields">
                     <?php
                     if ( $num_group_rows < 1 ) { // there are no rows in this group to show
                       ?>
-                      <p><?php _e( 'No fields in this group', 'participants-database' ) ?></p>
+                      <p><?php esc_html_e( 'No fields in this group', 'participants-database' ) ?></p>
                       <?php
                     } else {
 
@@ -159,7 +159,7 @@ class PDb_Manage_Fields {
             </div>
           <?php endif ?>
           <p class="submit">
-            <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php echo $this->i18n[ 'update fields' ] ?></button>
+            <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php esc_html_e( $this->i18n[ 'update fields' ] ) ?></button>
           </p>
           </form>
         </div><!-- tab content container -->
