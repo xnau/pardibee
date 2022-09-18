@@ -1,4 +1,9 @@
 <?php
+/**
+ * displays the CSV import UI page
+ * 
+ * @version 2.0
+ */
 if ( !defined( 'ABSPATH' ) )
   exit;
 if ( !Participants_Db::current_user_has_plugin_role( 'admin', 'upload csv' ) )
@@ -37,33 +42,33 @@ $import_columns = $CSV_import->has_errors() ? $CSV_import->export_columns() : $C
 $column_count = count( $import_columns );
 
 ?>
-<div class="wrap <?php echo Participants_Db::$prefix ?>csv-upload">
+<div class="wrap <?php esc_attr_e( Participants_Db::$prefix ) ?>csv-upload">
 <?php Participants_Db::admin_page_heading() ?>
   <div id="poststuff">
     <div id="post-body">
-      <h2><?php echo __( 'Import CSV File', 'participants-database' ) ?></h2>
+      <h2><?php esc_html_e( 'Import CSV File', 'participants-database' ) ?></h2>
 
 <?php
 if ( $CSV_import->has_errors() ):
   ?>
 
-        <div class="<?php echo $CSV_import->error_status ?> fade below-h2" id="message">
-          <p><?php echo implode( '</p><p>', $CSV_import->get_errors() ) ?></p>
+        <div class="<?php echo esc_attr( $CSV_import->error_status ) ?> fade below-h2" id="message">
+          <p><?php esc_html_e( implode( '</p><p>', $CSV_import->get_errors() ) ) ?></p>
         </div>
 
   <?php
 endif;
 ?>
 
-      <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+      <form method="post" action="<?php echo esc_attr( $_SERVER["REQUEST_URI"] ) ?>">
         <input type="hidden" name="filename" value="blank_record.csv" />
-        <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
+        <input type="hidden" name="subsource" value="<?php echo esc_attr( Participants_Db::PLUGIN_NAME ) ?>">
         <input type="hidden" name="action" value="output CSV" />
         <input type="hidden" name="CSV type" value="blank" />
         <div class="postbox">
           <div class="inside">
-            <h3><?php _e( 'Prepare a spreadsheet file with the correct format:', 'participants-database' ) ?></h3>
-            <p><?php _e( 'To properly import your membership data, the columns in your spreadsheet must match exactly the columns in the database. Currently, the CSV export columns are as follows:', 'participants-database' ) ?></p>
+            <h3><?php esc_html_e( 'Prepare a spreadsheet file with the correct format:', 'participants-database' ) ?></h3>
+            <p><?php esc_html_e( 'To properly import your membership data, the columns in your spreadsheet must match exactly the columns in the database. Currently, the CSV export columns are as follows:', 'participants-database' ) ?></p>
             <div class="spreadsheet-frame">
               <table class="spreadsheet">
                 <tr>
@@ -80,23 +85,23 @@ echo str_repeat( '<td>&nbsp;</td>', $column_count );
                 </tr>
               </table>
             </div>
-            <p><?php printf( __( 'This means your spreadsheet needs to have %s columns, and the heading in each of those columns needs to match exactly the names above. If there is no data for a particular column, you can include it and leave it blank, or leave it out entirely. The order of the columns doesn&#39;t matter.', 'participants-database' ), $column_count ) ?></p>
-            <p><?php _e( 'If the imported CSV file has a different column set, that column set will be imported and used. If a column name does not match a defined column in the database, the import will be aborted and a list of the incorrect column names will be displayed.', 'participants-database' ) ?></p>
-            <p><input class="button button-default" type="submit" value="<?php _e( 'Get Blank CSV File', 'participants-database' ) ?>" style="float:left;margin:0 5px 5px 0" /><?php _e( 'You can download this file, then open it in Open Office, Excel or Google Docs.', 'participants-database' ) ?></p>
+            <p><?php esc_html( printf( __( 'This means your spreadsheet needs to have %s columns, and the heading in each of those columns needs to match exactly the names above. If there is no data for a particular column, you can include it and leave it blank, or leave it out entirely. The order of the columns doesn&#39;t matter.', 'participants-database' ), $column_count ) ) ?></p>
+            <p><?php esc_html_e( 'If the imported CSV file has a different column set, that column set will be imported and used. If a column name does not match a defined column in the database, the import will be aborted and a list of the incorrect column names will be displayed.', 'participants-database' ) ?></p>
+            <p><input class="button button-default" type="submit" value="<?php esc_attr_e( 'Get Blank CSV File', 'participants-database' ) ?>" style="float:left;margin:0 5px 5px 0" /><?php esc_html_e( 'You can download this file, then open it in Open Office, Excel or Google Docs.', 'participants-database' ) ?></p>
           </div>
         </div>
       </form>
       <div class="postbox">
         <div class="inside">
-          <h3><?php _e( 'Export the .csv file', 'participants-database' ) ?></h3>
-          <p><?php _e( 'When you have your spreadsheet properly set up and filled with data, export it as any of the following: "comma-delimited csv", or just "csv". Save it to your computer then upload it here.', 'participants-database' ) ?></p>
-          <h4><?php _e( 'Exported CSV files should be comma-delimited and enclosed with double-quotes ("). Encoding should be "UTF-8."', 'participants-database' ) ?></h4>
+          <h3><?php esc_html_e( 'Export the .csv file', 'participants-database' ) ?></h3>
+          <p><?php esc_html_e( 'When you have your spreadsheet properly set up and filled with data, export it as any of the following: "comma-delimited csv", or just "csv". Save it to your computer then upload it here.', 'participants-database' ) ?></p>
+          <h4><?php esc_html_e( 'Exported CSV files should be comma-delimited and enclosed with double-quotes ("). Encoding should be "UTF-8."', 'participants-database' ) ?></h4>
         </div>
       </div>
       <div class="postbox">
         <div class="inside">
-          <h3><?php _e( 'Upload the .csv file', 'participants-database' ) ?></h3>
-          <form enctype="multipart/form-data" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="POST">
+          <h3><?php esc_html_e( 'Upload the .csv file', 'participants-database' ) ?></h3>
+          <form enctype="multipart/form-data" action="<?php esc_attr_e( $_SERVER["REQUEST_URI"] ) ?>" method="POST">
 <?php wp_nonce_field( PDb_CSV_Import::nonce ) ?>
             <input type="hidden" name="csv_file_upload" id="file_upload" value="true" />
             <fieldset class="widefat inline-controls">
@@ -176,7 +181,7 @@ PDb_FormElement::print_element( $parameters );
               </p>
             </fieldset>
             <p><?php _e( '<strong>Note:</strong> Depending on the "Duplicate Record Preference" setting, imported records are checked against existing records by the field set in the "Duplicate Record Check Field" setting. If a record matching an existing record is imported, one of three things can happen, based on the "Duplicate Record Preference" setting:', 'participants-database' ) ?></p>
-            <h4 class="inset" id="match-preferences"><?php _e( 'Current Setting', 'participants-database' ) ?>: 
+            <h4 class="inset" id="match-preferences"><?php esc_html_e( 'Current Setting', 'participants-database' ) ?>: 
 <?php
 $preferences = array(
     'add' => sprintf( __( '%sCreate New%s adds all imported records as new records without checking for a match.', 'participants-database' ), '<span class="emphasized">', '</span>', '</span>' ),
@@ -190,8 +195,8 @@ foreach ( $preferences as $i => $preference ) {
 ?></h4>
 
 
-<?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="<?php echo PDb_CSV_Import::csv_field ?>" type="file" /><br />
-            <input type="submit" class="button button-primary" value="<?php _e( 'Upload File', 'participants-database' ) ?>" />
+<?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="<?php esc_attr_e( PDb_CSV_Import::csv_field ) ?>" type="file" /><br />
+<input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Upload File', 'participants-database' ) ?>" />
           </form>
         </div>
       </div>
