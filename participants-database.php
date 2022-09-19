@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.1.11
+ * Version: 2.2
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -701,7 +701,7 @@ class Participants_Db extends PDb_Base {
     
     // admin custom CSS
     if ( self::_set_admin_custom_css() ) {
-      wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), false, self::$Settings->option_version() );
+      wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), array(self::$prefix . 'admin'), self::$Settings->option_version() );
     }
     
     // jquery UI theme
@@ -713,7 +713,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), false, self::$plugin_version . '.1' );
     wp_register_style( $manage_fields_handle, plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( 'custom_plugin_admin_css' ), self::$plugin_version . '.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) ) {
