@@ -139,7 +139,7 @@ class shortcode extends core {
   {
     $record = \Participants_Db::get_participant( $this->field->record_id );
     
-    return $record ? $record[ $this->field->name() ] : '';
+    return $record && array_key_exists( $this->field->name(), $record ) ? $record[ $this->field->name() ] : '';
   }
 
   /**
