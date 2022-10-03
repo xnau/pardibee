@@ -504,7 +504,7 @@ class PDb_FormElement extends xnau_FormElement {
     /* @var PDb_Field_Item $field */
 
     // clean up the provided string
-    $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->get_value() ) ) );
+    $URI = str_replace( 'mailto:', '', trim( strip_tags( (string) $field->get_value() ) ) );
     
     if ( $field->has_link() ) {
       /*
