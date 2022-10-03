@@ -965,7 +965,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     protected function check_aux_plugin_updater()
     {
-      error_log(__METHOD__.' aux plugin ' . $this->aux_plugin_name . ' does not have the new updater method.' );
+//      error_log(__METHOD__.' aux plugin ' . $this->aux_plugin_name . ' does not have the new updater method.' );
       self::missing_updater_plugin_notice($this->aux_plugin_title);
     }
     
@@ -986,36 +986,56 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       // enable this once all the aux plugins have releases with the new updater available
       //$needs_update = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2)[1]['class'] === 'PDb_Aux_Plugin';
 
-      add_action( 'admin_notices', function() use ($plugin_name,$needs_update) {
+      $notice = 'xnau-updater-';
 
-        $notice = 'xnau-updater-' . sanitize_title( $plugin_name ) . '-';
+      if ( PDb_Aux_Plugin::pdb_update_library_present() )
+      {
+        $notice .= 'pre-remove-';
+        $message = sprintf( __('The next major release of Participants Database (version 2.3) will not carry the updater for add-on plugins. Download and activate the free "xnau Plugin Updates" plugin to continue to recieve updates to the following plugins after this change. %sDownload now%s', 'participants-database' ), '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
 
-        if ( PDb_Aux_Plugin::pdb_update_library_present() )
-        {
-          $notice .= 'pre-remove-';
-          $message = sprintf( __('The next major release of Participants Database (version 2.3) will not carry the updater for add-on plugins. Download and activate the free "xnau Plugin Updates" plugin to continue to recieve updates to the "%s" plugin after this change. %sDownload now%s', 'participants-database' ), $plugin_name, '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
+      } elseif ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) )
+      {
+        $notice .= 'post-remove-';
+        $message = sprintf( __('The <strong>xnau Plugin Updates</strong> plugin is not installed and activated. You must download and activate this free plugin to recieve updates to the following plugins. %sDownload now%s', 'participants-database' ), '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
+      }
+      
+      $message .= '<ul>%s</ul>';
 
-        } elseif ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) )
-        {
-          $notice .= 'post-remove-';
-          $message = sprintf( __('The <strong>xnau Plugin Updates</strong> plugin is not installed and activated. You must download and activate this free plugin to recieve updates to the "%s" plugin. %sDownload now%s', 'participants-database' ), $plugin_name, '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
+      if ( $needs_update )
+      {
+        $notice .= 'needs-update-';
+        $message .= '<br><br><strong>' . sprintf( __('The %s plugin must be updated to the latest version to recieve updates.', 'participants-database' ), '%s' ) . '</strong>';
+      }
+
+      $notice .= '7'; // notice will stay dismissed for 7 days
+
+      $plugin_name_list = get_transient( 'xnau-updater-notice-plugins');
+
+      if ( !is_array($plugin_name_list) )
+      {
+        $plugin_name_list = array( $plugin_name );
+
+        add_action( 'admin_notices', function() use ($notice,$message) {
+
+          if ( PAnD::is_admin_notice_active($notice) ) {
+
+            $plugin_names = get_transient( 'xnau-updater-notice-plugins' );
+
+            $plugin_message = sprintf( $message, '<li>' . implode( '</li><li>', (array) $plugin_names ) . '</li>' );
+
+            printf( '<div class="notice notice-warning is-dismissible" data-dismissible="%s"><p><span class="dashicons dashicons-warning"></span>%s</p></div>', $notice, $plugin_message );
+            
+            delete_transient( 'xnau-updater-notice-plugins' );
+          }
+
+        } );
+      
+      } else {
+        if ( ! in_array( $plugin_name, $plugin_name_list ) ) {
+          $plugin_name_list[] = $plugin_name;
         }
-
-        if ( $needs_update )
-        {
-          $notice .= 'needs-update-';
-          $message .= '<br><br><strong>' . sprintf( __('The %s plugin must be updated to the latest version to recieve updates.', 'participants-database' ), $plugin_name ) . '</strong>';
-        }
-
-        $notice .= '7'; // notice will stay dismissed for 7 days
-
-        if ( PAnD::is_admin_notice_active($notice) ) {
-
-          printf( '<div class="notice notice-warning is-dismissible" data-dismissible="%s"><p><span class="dashicons dashicons-warning"></span>%s</p></div>', $notice, $message );
-
-        }
-
-      } );
+      }
+      set_transient( 'xnau-updater-notice-plugins', $plugin_name_list, 60 );
     }
 
   }
