@@ -524,19 +524,23 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function is_empty( $value = false )
   {
-    if ( $value === false ) {
-      $value = $this->value;
+    switch (true)
+    {
+      case ( $value === false ):
+        $value = $this->value;
+        break;
+      
+      case ( is_object( $value ) ):
+        // backward compatibility: we used to call this with an object
+        $value = $value->value;
+        break;
+      
+      case ( is_array( $value ) ):
+        $value = implode( '', $value );
+        break;
     }
 
-    if ( is_object( $value ) ) {
-      // backward compatibility: we used to call this with an object
-      $value = $value->value;
-    }
-
-    if ( is_array( $value ) )
-      $value = implode( '', $value );
-
-    return strlen( $value ) === 0;
+    return strlen( (string) $value ) === 0;
   }
 
   /**
@@ -607,7 +611,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     if ( !is_array( $multivalues ) ) {
       
       // make it into an array and trim the values
-      $multivalues = array_map( 'trim', explode( ',', $value ) );
+      $multivalues = $value ? array_map( 'trim', explode( ',', $value ) ) : array();
     }
 
     // remove empty elements
@@ -1370,6 +1374,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
       endswitch; // form element
     endif; // return === false
+    
+    $return = is_null( $return ) ? '' : $return;
     
     return $this->html_output ? $return : strip_tags( $return );
   }
