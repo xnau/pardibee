@@ -369,6 +369,8 @@ class PDb_Base {
     
     if ( ! $fieldlist ) {
       
+      $fieldlist = array();
+      
       $main_modes = array_keys(PDb_Manage_Fields::group_display_modes());
       
       $result = array_filter( Participants_Db::all_field_defs(), function($v) use ($main_modes) {
@@ -1037,17 +1039,25 @@ class PDb_Base {
    * 
    * @see http://codex.wordpress.org/Roles_and_Capabilities
    * 
-   * @param string $cap the plugin capability level (not WP cap) to check for
+   * @param string $plugin_cap the plugin capability level (not WP cap) to check for
    * @param string $context provides the context of the request
    * 
    * @return string the name of the WP capability to use in the named context
    */
-  public static function plugin_capability( $cap, $context = '' )
+  public static function plugin_capability( $plugin_cap, $context = '' )
   {
 
     $capability = 'read'; // assume the lowest cap
     
-    if ( in_array( $cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
+    if ( in_array( $plugin_cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
+      
+      $wp_cap = self::plugin_setting_value( $plugin_cap );
+      
+      // ensure a valid admin role #2903
+      if ( $plugin_cap === 'plugin_admin_capability' ) {
+        $wp_cap = self::admin_cap($wp_cap);
+      }
+      
       /**
        * provides access to individual access privileges
        * 
@@ -1056,9 +1066,27 @@ class PDb_Base {
        * @param string the privilege being requested
        * @return string the WP capability that is allowed this privilege
        */
-      $capability = self::apply_filters( 'access_capability', self::plugin_setting_value( $cap ), $context );
+      $capability = self::apply_filters( 'access_capability', $wp_cap, $context );
     }
+    
     return $capability;
+  }
+  
+  /**
+   * checks for a valid administrator role capability
+   * 
+   * @param string $wp_cap the WP capability
+   * @return string a valid capability to use for the plugin administrator
+   */
+  private static function admin_cap( $wp_cap )
+  {
+    $admin_roles = get_users( array('role' => $wp_cap) );
+    
+    if ( empty( $admin_roles ) ) {
+      $wp_cap = 'manage_options';
+    }
+    
+    return $wp_cap;
   }
 
   /**
