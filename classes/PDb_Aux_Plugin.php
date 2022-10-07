@@ -5,14 +5,12 @@
  * the main function here is to establish a connection to the parent plugin and
  * provide some common functionality
  * 
- * Requires PHP Version 5.3 or greater
- * 
  * @category   
  * @package    WordPress
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    5.1
+ * @version    5.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -178,23 +176,15 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     protected function setup_updates( $plugin_file )
     {
-      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) && self::pdb_update_library_present() )
+      if ( apply_filters( 'pdbaux-enable_auto_updates', true ) )
       {
-        $update_url = self::update_url . '?action=get_metadata&slug=' . $this->aux_plugin_name;
-        
-        $this->check_aux_plugin_updater();
-
-        $update_checker = \Puc_v4_Factory::buildUpdateChecker(
-                $update_url, $plugin_file, $this->aux_plugin_name
-        );
-        
-        add_action( 'participants_database_uninstall', function () use ( $update_checker ) {
-          $update_checker->resetUpdateState();
-        });
-      }
-      else
-      {
+        // if we are here, the aux plugin hasn't been updated
         Participants_Db::debug_log( __METHOD__ . ': update services not provided to the "' . Participants_Db::$plugin_title . ' ' .$this->aux_plugin_title . '" plugin', 2 );
+        
+        if ( $this->check_aux_plugin_updater() )
+        {
+          \xnau_plugin_updates::setup( $plugin_file, $this->aux_plugin_name );
+        }
       }
     }
 
@@ -962,24 +952,26 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     
     /**
      * check for setup_updates method in aux plugin and notifies user
+     * 
+     * @return bool true if the updater plugin is installed
      */
     protected function check_aux_plugin_updater()
     {
-//      error_log(__METHOD__.' aux plugin ' . $this->aux_plugin_name . ' does not have the new updater method.' );
-      self::missing_updater_plugin_notice($this->aux_plugin_title);
-    }
-    
-    /**
-     * checks for the updater library
-     * 
-     * @return bool true if the library is present
-     */
-    public static function pdb_update_library_present()
-    {
-      return is_dir( Participants_Db::$plugin_path . '/vendor/yahnis-elsts/plugin-update-checker');
+      $plugin_updater_installed = true;
+      
+      if ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) ) {
+        self::missing_updater_plugin_notice($this->aux_plugin_title);
+        $plugin_updater_installed = false;
+      }
+      
+      return $plugin_updater_installed;
     }
       
-    
+    /**
+     * advises the user to install the updater plugin
+     * 
+     * @param string $plugin_name
+     */
     public static function missing_updater_plugin_notice( $plugin_name )
     {
       $needs_update = false;
@@ -988,12 +980,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
       $notice = 'xnau-updater-';
 
-      if ( PDb_Aux_Plugin::pdb_update_library_present() )
-      {
-        $notice .= 'pre-remove-';
-        $message = sprintf( __('The next major release of Participants Database (version 2.3) will not carry the updater for add-on plugins. Download and activate the free "xnau Plugin Updates" plugin to continue to recieve updates to the following plugins after this change. %sDownload now%s', 'participants-database' ), '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
-
-      } elseif ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) )
+      if ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) )
       {
         $notice .= 'post-remove-';
         $message = sprintf( __('The <strong>xnau Plugin Updates</strong> plugin is not installed and activated. You must download and activate this free plugin to recieve updates to the following plugins. %sDownload now%s', 'participants-database' ), '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
@@ -1009,7 +996,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
       $notice .= '7'; // notice will stay dismissed for 7 days
 
-      $plugin_name_list = get_transient( 'xnau-updater-notice-plugins');
+      $plugin_name_list = get_transient( 'xnau-updater-notice-plugins' );
 
       if ( !is_array($plugin_name_list) )
       {
@@ -1030,12 +1017,24 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
         } );
       
-      } else {
-        if ( ! in_array( $plugin_name, $plugin_name_list ) ) {
+      } else
+      {
+        if ( ! in_array( $plugin_name, $plugin_name_list ) )
+        {
           $plugin_name_list[] = $plugin_name;
         }
       }
-      set_transient( 'xnau-updater-notice-plugins', $plugin_name_list, 60 );
+      
+      set_transient( 'xnau-updater-notice-plugins', $plugin_name_list, 5 );
+    }
+    
+    /**
+     * advises the user to update their aux plugin
+     */
+    private static function aux_plugin_update_notice()
+    {
+      $notice = $this->aux_plugin_name . '-requres-update';
+      $message = sprintf( __( 'The %s plugin must be updated to its latest version to continue to recieve updates.') );
     }
 
   }
