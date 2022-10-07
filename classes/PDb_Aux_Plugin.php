@@ -984,7 +984,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       $needs_update = false;
       // enable this once all the aux plugins have releases with the new updater available
-      //$needs_update = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2)[1]['class'] === 'PDb_Aux_Plugin';
+      $needs_update = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2)[1]['class'] === 'PDb_Aux_Plugin';
 
       $notice = 'xnau-updater-';
 
