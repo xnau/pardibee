@@ -53,7 +53,7 @@ if ( $CSV_import->has_errors() ):
   ?>
 
         <div class="<?php echo esc_attr( $CSV_import->error_status ) ?> fade below-h2" id="message">
-          <p><?php esc_html_e( implode( '</p><p>', $CSV_import->get_errors() ) ) ?></p>
+          <p><?php echo wp_kses_post( implode( '</p><p>', $CSV_import->get_errors() ) ) ?></p>
         </div>
 
   <?php
