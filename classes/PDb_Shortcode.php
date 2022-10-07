@@ -330,7 +330,7 @@ abstract class PDb_Shortcode {
    */
   public function set_output( $content )
   {
-    $this->output = esc_html($content);
+    $this->output = wp_kses_post($content);
   }
 
   /**

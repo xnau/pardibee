@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.4
+ * @version 1.5
  *
  */
 if ( !defined( 'ABSPATH' ) ) {
@@ -130,8 +130,8 @@ if ( $participant_values ) :
       $section = $column->group()
       ?>
       <div  class="field-group field-group-<?php esc_attr_e( $groups[$section]['name'] ) ?>" >
-        <h3 class="field-group-title"><?php esc_html_e( Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ) ?></h3>
-        <?php if ( $options['show_group_descriptions'] ) esc_html_e( '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ) ?>
+        <h3 class="field-group-title"><?php echo wp_kses_post( Participants_Db::apply_filters( 'translate_string', $groups[$section]['title'] ) ) ?></h3>
+        <?php if ( $options['show_group_descriptions'] ) echo wp_kses_post( '<p class="' . Participants_Db::$prefix . 'group-description">' . Participants_Db::apply_filters( 'translate_string', $groups[$section]['description'] ) . '</p>' ) ?>
         <table class="form-table">
           <tbody>
             <?php
@@ -285,7 +285,7 @@ if ( $participant_values ) :
 
               if ( !empty( $column->help_text ) ) :
                 ?>
-                <span class="helptext"><?php esc_html_e( Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ) ?></span>
+                <span class="helptext"><?php echo wp_kses_post( Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ) ?></span>
               <?php endif; ?>
             </td>
           </tr>
