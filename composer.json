@@ -3,7 +3,6 @@
   "description": "database plugin for WordPress",
   "type": "wordpress-plugin",
   "require": {
-    "yahnis-elsts/plugin-update-checker": "^4.10",
     "deliciousbrains/wp-background-processing": "^1.0",
     "parsecsv/php-parsecsv": "^1.2",
     "collizo4sky/persist-admin-notices-dismissal": "^1.4"
