@@ -290,6 +290,13 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.2 =
+* added compatibility with the xnau Plugin Updater plugin
+* fixed issue with admin custom CSS not loaded
+* custom print CSS implemented
+* security updates: escaping outputs
+* removed wp-load.php include
+
 = 2.1.11 =
 * added new "strip_tags" attribute for string combine fields
 * admin last used tab remembered
@@ -1544,9 +1551,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-2.1.11 is a minor bugfix and feature enhancement update
-Participants Database now requires minimum php version 7.4
-The Custom Template Folder plugin is no longer needed, all its functionality has been brought into the main plugin, the add-on will be deactivated
+2.2 is an important security update
 
 == Plugin Support ==
 
