@@ -181,7 +181,7 @@ if ( $participant_values ) :
               }
             }
             ?>
-            <th><?php esc_html_e( $column_title . ( empty( $add_title ) ? '' : sprintf( $fieldnote_pattern, implode( ', ', $add_title ) ) ) ) ?></th>
+            <th><?php echo $column_title . ( empty( $add_title ) ? '' : sprintf( $fieldnote_pattern, implode( ', ', $add_title) ) ) ?></th>
             <td id="<?php esc_attr_e( Participants_Db::$prefix . $column->name() ) ?>-field" >
               <?php
               /*
