@@ -79,7 +79,7 @@ class PDb_Manage_Fields {
           <?php
           $mask = '<span class="mask"></span>';
           foreach ( $this->group_defs as $group ) {
-            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . esc_html( $this->group_title( $group[ 'name' ] ) ) . '</a>' . $mask . '</li>';
+            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . wp_kses_post( $this->group_title( $group[ 'name' ] ) ) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -122,7 +122,7 @@ class PDb_Manage_Fields {
               <form id="manage_<?php esc_attr_e( $group ) ?>_fields" method="post" autocomplete="off"  action="<?php esc_attr_e( admin_url( 'admin-post.php' ) ) ?>">
                 <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
                   <div class="submit top-bar-submit">
-                    <span class="field-group-title"><?php esc_html_e( $this->group_title( $group ) ) ?></span>
+                    <span class="field-group-title"><?php echo wp_kses_post( $this->group_title( $group ) ) ?></span>
                     <button type="submit" class="button button-primary manage-fields-update" name="action" value="update_fields"  ><?php esc_html_e( $this->i18n[ 'update fields' ] ) ?></button>
                   </div>
                 <?php endif ?>
