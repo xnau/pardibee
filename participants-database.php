@@ -3239,7 +3239,7 @@ class Participants_Db extends PDb_Base {
 
     $text = $text ? $text : self::$plugin_title;
     ?>
-    <div class="icon32" id="icon-users"></div><h2><?php echo $text ?></h2>
+    <div class="icon32" id="icon-users"></div><h2><?php echo esc_html( $text ) ?></h2>
     <?php
     self::admin_message();
   }
