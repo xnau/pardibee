@@ -902,7 +902,7 @@ abstract class PDb_Shortcode {
 
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
-      $value = isset( $_POST[$field->name()] ) ? $this->_esc_submitted_value( $_POST[$field->name()] ) : $value;
+      $value = array_key_exists( $field->name(), $_POST ) ? filter_input( INPUT_POST, $field->name(), FILTER_CALLBACK, array( 'options' => 'PDb_Shortcode::esc_submitted_value' ) ) : $value;
     }
 
     /*
@@ -1116,17 +1116,19 @@ abstract class PDb_Shortcode {
    * escape a value from a form submission
    *
    * can handle both single values and arrays
+   * 
+   * @param string|array $value
+   * @return sanitized value
    */
-  protected function _esc_submitted_value( $value )
+  public static function esc_submitted_value( $value )
   {
-
     $value = maybe_unserialize( $value );
 
     if ( is_array( $value ) ) {
       array_walk_recursive( $value, array($this, '_esc_element') );
       $return = $value;
     } else {
-      $return = $this->_esc_value( $value );
+      $return = esc_html( stripslashes( $value ) );
     }
 
     return $return;
