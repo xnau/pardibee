@@ -120,7 +120,7 @@ class PDb_Field_Group_Item extends PDb_Template_Item {
       
       $output = $start_tag.$this->description().$end_tag;
       
-      if ( $echo ) echo $output;
+      if ( $echo ) echo wp_kses_post( $output );
       else return $output;
       
     }
