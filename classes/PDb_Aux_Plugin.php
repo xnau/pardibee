@@ -160,7 +160,6 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       add_action( 'admin_enqueue_scripts', array($this, 'enqueues'), 1 );
       add_action( 'plugins_loaded', array($this, 'set_plugin_options'), 1 );
       add_action( 'init', array($this, 'load_textdomain'), 1 );
-      //add_action( 'init', array($this, 'initialize_updater'), 50 );
       add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
       add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
 
@@ -183,7 +182,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         
         if ( $this->check_aux_plugin_updater() )
         {
-          \xnau_plugin_updates::setup( $plugin_file, $this->aux_plugin_name );
+          add_action( 'plugins_loaded', function () use ($plugin_file) {
+            \xnau_plugin_updates::setup( $plugin_file, $this->aux_plugin_name );
+          }, 50 );
         }
       }
     }
@@ -264,15 +265,6 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       }
       
       return is_string( $option_value ) ? Participants_Db::apply_filters( 'translate_string', $option_value ) : $option_value;
-    }
-
-    /**
-     * initializes the update class
-     * 
-     */
-    public function initialize_updater()
-    {
-      $this->Updater = new PDb_Update( $this->plugin_path, $this->plugin_data['Version'] );
     }
 
     /**
@@ -998,7 +990,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
       $plugin_name_list = get_transient( 'xnau-updater-notice-plugins' );
 
-      if ( !is_array($plugin_name_list) )
+      if ( !is_array($plugin_name_list) && $notice !== 'xnau-updater-7' )
       {
         $plugin_name_list = array( $plugin_name );
 
