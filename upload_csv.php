@@ -18,10 +18,10 @@ foreach (array_keys( $csv_params ) as $param) {
   if ( isset( $_POST[$param] ) ) {
     switch ( $param ) {
       case 'enclosure_character':
-        $new_value = str_replace( array('"', "'"), array('&quot;', '&#39;'), filter_input( INPUT_POST, 'enclosure_character', FILTER_SANITIZE_STRING ) );
+        $new_value = str_replace( array('"', "'"), array('&quot;', '&#39;'), filter_input( INPUT_POST, 'enclosure_character', Participants_Db::string_sanitize() ) );
         break;
       default:
-        $new_value = filter_input( INPUT_POST, $param, FILTER_SANITIZE_STRING );
+        $new_value = filter_input( INPUT_POST, $param, Participants_Db::string_sanitize() );
     }
     $csv_params[$param] = $new_value;
   }
