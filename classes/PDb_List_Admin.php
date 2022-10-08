@@ -373,7 +373,7 @@ class PDb_List_Admin {
                       for ( $i = 0; $i <= $filter_count - 1; $i++ ) :
                         $filter_set = self::get_filter_set( $i );
                         ?>
-                        <fieldset class="widefat inline-controls" data-index="<?php echo $i ?>">
+                        <fieldset class="widefat inline-controls" data-index="<?php echo esc_attr( $i ) ?>">
                           <?php if ( $i === 0 ): ?>
                             <legend><?php _e( 'Show only records with', 'participants-database' ) ?>:</legend>
                             <?php
@@ -408,7 +408,7 @@ class PDb_List_Admin {
                             );
                             PDb_FormElement::print_element( $element );
                             ?>
-                            <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo $i ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
+                            <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo esc_attr( $i ) ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
                           </span>
                           <?php
                           if ( $i < $filter_count - 1 ) {
@@ -438,7 +438,7 @@ class PDb_List_Admin {
                         <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'filter' ] ?>">
                         <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'clear' ] ?>">
                         <div class="widefat inline-controls filter-count">
-                          <label for="list_filter_count"><?php _e( 'Number of filters to use: ', 'participants-database' ) ?><input id="list_filter_count" name="list_filter_count" class="number-entry single-digit" type="number" max="5" min="1" value="<?php echo $filter_count ?>"  /></label>
+                          <label for="list_filter_count"><?php _e( 'Number of filters to use: ', 'participants-database' ) ?><input id="list_filter_count" name="list_filter_count" class="number-entry single-digit" type="number" max="5" min="1" value="<?php echo esc_attr( $filter_count ) ?>"  /></label>
                         </div>
                       </fieldset>
                     </td></tr><tr><td>
@@ -592,7 +592,7 @@ class PDb_List_Admin {
                           <?php // print delete check     ?>
                           <td>
                             <?php if ( self::user_can_use_with_selected() ) : ?>
-                              <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo $value[ 'id' ] ?>" />
+                              <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo esc_attr( $value[ 'id' ] ) ?>" />
                             <?php endif ?>
                             <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value[ 'id' ] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
                           </td>
@@ -714,9 +714,9 @@ class PDb_List_Admin {
 
           <div class="postbox">
             <div class="inside">
-              <h3><?php echo Participants_Db::plugin_label( 'export_csv_title' ) ?></h3>
+              <h3><?php echo esc_html( Participants_Db::plugin_label( 'export_csv_title' ) ) ?></h3>
               <form method="post" class="csv-export">
-                <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
+                <input type="hidden" name="subsource" value="<?php echo esc_attr( Participants_Db::PLUGIN_NAME ) ?>">
                 <input type="hidden" name="action" value="output CSV" />
                 <input type="hidden" name="CSV type" value="participant list" />
                 <?php
@@ -725,7 +725,7 @@ class PDb_List_Admin {
                 ?>
                 <fieldset class="inline-controls">
                   <?php _e( 'File Name', 'participants-database' ) ?>:
-                  <input type="text" name="filename" value="<?php echo $suggested_filename ?>" size="<?php echo $namelength ?>" />
+                  <input type="text" name="filename" value="<?php echo esc_attr( $suggested_filename ) ?>" size="<?php echo esc_attr( $namelength ) ?>" />
                   <input type="submit" name="submit-button" value="<?php _e( 'Download CSV for this list', 'participants-database' ) ?>" class="button button-primary" />
                   <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php _e( 'Include field titles', 'participants-database' ) ?></label>
                 </fieldset>
