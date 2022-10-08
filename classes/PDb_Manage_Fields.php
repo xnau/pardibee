@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.2
+ * @version    2.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -68,6 +68,7 @@ class PDb_Manage_Fields {
   protected function print_header()
   {
     $top_space = Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ? 'top-bar-space' : '';
+    
     ?>
     <div class="wrap participants_db <?php esc_attr_e( $top_space ) ?>">
       <?php Participants_Db::admin_page_heading() ?>
@@ -185,13 +186,13 @@ class PDb_Manage_Fields {
         ob_start();
         ?>
 
-        <div class="def-fieldset def-line <?php echo $field_definition_attributes->rowclass() ?>" id="db_row_<?php echo $field_def->id ?>" data-numid="<?php echo $field_def->id ?>" data-groupid="<?php echo $field_def->groupid ?>">
+        <div class="def-fieldset def-line <?php echo esc_attr( $field_definition_attributes->rowclass() ) ?>" id="db_row_<?php echo esc_attr( $field_def->id ) ?>" data-numid="<?php echo esc_attr( $field_def->id ) ?>" data-groupid="<?php echo esc_attr( $field_def->groupid ) ?>">
           
           <?php echo $field_definition_attributes->get_hidden_inputs() ?>
 
           <?php
           while ( $control_html = $field_definition_attributes->get_next_control() ) {
-            echo $control_html;
+            echo wp_kses( $control_html, self::allowed_html() );
           }
           ?>
 
@@ -246,14 +247,14 @@ class PDb_Manage_Fields {
 
                 $group_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `group` = "%s"', $group ) );
                 ?>
-                <div class="def-fieldset def-line color-group view-mode-<?php echo $group_def[ 'mode' ] ?>" data-id="<?php echo $group ?>" data-numid="<?php echo $group_def[ 'id' ] ?>" data-groupid="0">
-                  <input type="hidden" name="<?php echo $group ?>[status]" id="status_<?php echo $group ?>" value />
+                <div class="def-fieldset def-line color-group view-mode-<?php echo esc_attr( $group_def[ 'mode' ] ) ?>" data-id="<?php echo esc_attr( $group ) ?>" data-numid="<?php echo esc_attr( $group_def[ 'id' ] ) ?>" data-groupid="0">
+                  <input type="hidden" name="<?php echo esc_attr( $group ) ?>[status]" id="status_<?php echo esc_attr( $group ) ?>" value />
                   <div class="field-header">
-                    <a id="order_<?php echo $group ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
+                    <a id="order_<?php echo esc_attr( $group ) ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
                     <?php if ( $group_def[ 'name' ] !== 'internal' ) : ?>
-                      <a href="<?php echo $group_count ?>" data-thing-name="delete_<?php echo $group ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
+                      <a href="<?php echo esc_html( $group_count ) ?>" data-thing-name="delete_<?php echo esc_attr( $group ) ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
                     <?php endif ?>
-                    <div id="field_count_<?php echo $group ?>" title="<?php _e( 'field count', 'participants-database' ) ?>"><?php echo $group_count ?></div>
+                    <div id="field_count_<?php echo esc_attr( $group ) ?>" title="<?php _e( 'field count', 'participants-database' ) ?>"><?php echo esc_html( $group_count ) ?></div>
                   </div>
                   <?php
                   foreach ( $group_def as $column => $value ) {
@@ -294,9 +295,9 @@ class PDb_Manage_Fields {
                         'options' => $options,
                     );
                     ?>
-                    <div class="attribute-control <?php echo $column ?>-attribute">
+                    <div class="attribute-control <?php echo esc_attr( $column ) ?>-attribute">
                       <?php PDb_FormElement::print_element( $element_atts ); ?>
-                      <label for="<?php echo $element_atts[ 'attributes' ][ 'id' ] ?>"><?php echo $this->table_header( $column ) ?></label>
+                      <label for="<?php echo esc_attr( $element_atts[ 'attributes' ][ 'id' ] ) ?>"><?php echo wp_kses_post( $this->table_header( $column ) ) ?></label>
                     </div>
                     <?php
                   }
@@ -349,17 +350,17 @@ class PDb_Manage_Fields {
       $current_user = wp_get_current_user();
       ?>
       <div class="general_fields_control_header">
-        <form id="general_fields_control_<?php echo $group ?>" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
+        <form id="general_fields_control_<?php echo esc_attr( $group ) ?>" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
           <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
-          <div id="check-all-<?php echo $group ?>" class="check-all">
-            <input id="select-all-checkbox-<?php echo $group ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo $group ?>" style="display:none" ><?php echo $this->i18n[ 'all' ] ?></label>
+          <div id="check-all-<?php echo esc_attr( $group ) ?>" class="check-all">
+            <input id="select-all-checkbox-<?php echo esc_attr( $group ) ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo esc_attr( $group ) ?>" style="display:none" ><?php echo $this->i18n[ 'all' ] ?></label>
           </div>
           <?php if ( $group !== 'internal' ) : ?>
-            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo $group ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n[ 'add field' ] ?></button>
+            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo esc_attr( $group ) ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n[ 'add field' ] ?></button>
           <?php endif ?>
           <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n[ 'all' ] ?></button>
           <?php if ( $group !== 'internal' ) : ?>
-            <div id="add-field-inputs-<?php echo $group ?>" class="button-showhide add-field-inputs manage-fields-actions" style="display:none">
+            <div id="add-field-inputs-<?php echo esc_attr( $group ) ?>" class="button-showhide add-field-inputs manage-fields-actions" style="display:none">
               <h4><?php echo $this->i18n[ 'add field' ] ?></h4>
               <label><?php echo $this->i18n[ 'new field title' ] ?></label>
               <?php
@@ -413,8 +414,8 @@ class PDb_Manage_Fields {
               </div>
             </div>
           <?php endif ?>
-          <div id="with-selected-control-<?php echo $group ?>" class="with-selected-control" style="display:none">
-            <label for="with_selected_action_selection_<?php echo $group ?>"><?php echo $this->i18n[ 'with selected' ] ?>: </label>
+          <div id="with-selected-control-<?php echo esc_attr( $group ) ?>" class="with-selected-control" style="display:none">
+            <label for="with_selected_action_selection_<?php echo esc_attr( $group ) ?>"><?php echo $this->i18n[ 'with selected' ] ?>: </label>
             <?php
             PDb_FormElement::print_element( array(
                 'type' => 'dropdown',
@@ -628,6 +629,55 @@ class PDb_Manage_Fields {
     {
       global $wpdb;
       $wpdb->update( Participants_Db::$groups_table, array( 'mode' => $group[ 'mode' ] ), array( 'name' => $group[ 'name' ] ) );
+    }
+    
+    /**
+     * provides an array of allowed HTML tags in a field editor
+     * 
+     * @return array
+     */
+    private static function allowed_html()
+    {
+      $allowed = array(
+          'input' => array(
+              'class' => 1,
+              'name' => 1,
+              'id' => 1,
+              'type' => 1,
+              'value' => 1,
+              'data-id' => 1,
+              'title' => 1,
+              'data-title' => 1,
+              'checked' => 1,
+          ),
+          'select' => array(
+              'name' => 1,
+              'id' => 1,
+              'class' => 1,
+          ),
+          'option' => array(
+              'value' => 1,
+              'selected' => 1,
+          ),
+          'textarea' => array(
+              'name' => 1,
+              'rows' => 1,
+              'cols' => 1,
+              'id' => 1,
+          ),
+          'a' => array(
+              'href' => 1,
+              'data-thing-name' => 1,
+              'data-thing' => 1,
+              'class' => 1,
+              'title' => 1,
+          ),
+          'break' => array(),
+          'br' => array(),
+          
+      ) + wp_kses_allowed_html('post');
+      
+      return $allowed;
     }
 
     /**
