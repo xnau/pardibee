@@ -180,12 +180,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         // if we are here, the aux plugin hasn't been updated
         Participants_Db::debug_log( __METHOD__ . ': update services not provided to the "' . Participants_Db::$plugin_title . ' ' .$this->aux_plugin_title . '" plugin', 2 );
         
-        if ( $this->check_aux_plugin_updater() )
+        if ( $this->check_aux_plugin_updater() && method_exists( '\xnau_plugin_updates', 'setup' ) )
         {
-          add_action( 'plugins_loaded', function () use ($plugin_file) {
-            \xnau_plugin_updates::setup( $plugin_file, $this->aux_plugin_name );
-          }, 50 );
+          \xnau_plugin_updates::setup( $plugin_file, $this->aux_plugin_name );
         }
+        
+        self::missing_updater_plugin_notice($this->aux_plugin_title);
       }
     }
 
@@ -952,7 +952,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $plugin_updater_installed = true;
       
       if ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) ) {
-        self::missing_updater_plugin_notice($this->aux_plugin_title);
+        
         $plugin_updater_installed = false;
       }
       
@@ -969,6 +969,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $needs_update = false;
       // enable this once all the aux plugins have releases with the new updater available
       $needs_update = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2)[1]['class'] === 'PDb_Aux_Plugin';
+      
+      $message = '';
 
       $notice = 'xnau-updater-';
 
@@ -983,7 +985,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( $needs_update )
       {
         $notice .= 'needs-update-';
-        $message .= '<br><br><strong>' . sprintf( __('The %s plugin must be updated to the latest version to recieve updates.', 'participants-database' ), '%s' ) . '</strong>';
+        $message .= '<br\><strong>' . __('All Participants Database Add-On plugins must be updated to the latest version to recieve updates.', 'participants-database' ) . '</strong>';
       }
 
       $notice .= '7'; // notice will stay dismissed for 7 days
