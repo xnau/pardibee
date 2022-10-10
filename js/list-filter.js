@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * version: 2.0
+ * version: 2.1
  * 
  * xnau webdesign xnau.com
  * 
@@ -161,18 +161,20 @@ PDbListFilter = (function ($) {
       beforeSend: function () {
         pagination.find('a').prop('disabled', true);
         buttonParent.append(spinner);
+        clear_submission();
       },
       success: function (html, status) {
         if (/^failed/.test(html)) {
+          var submitValue = submission.submit;
           // if the call fails, submit synchronously to reset form
-          switch (submission.submit) {
+          switch (submitValue) {
             case 'page':
               var parser = document.createElement('a');
               parser.href = window.location.href;
               window.location.href = parser.protocol + '//' + parser.hostname + button.attr('href');
               break;
             default:
-              filterform.append('<input type="hidden" name="submit_button" value="' + submission.submit + '" /> ').submit();
+              filterform.append('<input type="hidden" name="submit_button" value="' + submitValue + '" /> ').submit();
           }
         }
         var newContent = $(html);
@@ -199,6 +201,15 @@ PDbListFilter = (function ($) {
         console.log('Participants Database JS error status:' + status + ' error:' + errorThrown);
       }
     });
+  };
+  
+  /* clear the search form values so they don't accumulate with successive 
+   * submissions
+   */
+  var clear_submission = function(){
+    delete submission.search_field;
+    delete submission.value;
+    delete submission.operator;
   };
 
   $.fn.PDb_idFix = function () {
