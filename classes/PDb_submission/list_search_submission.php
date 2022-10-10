@@ -184,6 +184,18 @@ class list_search_submission {
   }
   
   /**
+   * trims spaces from the search terms
+   */
+  protected function trim_search_terms()
+  {
+    if ( is_array( $this->input['value'] ) ) {
+      array_walk( $this->input['value'], 'trim' );
+    } else {
+      $this->input['value'] = trim( $this->input['value'] );
+    }
+  }
+  
+  /**
    * tells if the split search preference is on
    * 
    * @return bool
