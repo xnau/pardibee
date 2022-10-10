@@ -341,9 +341,9 @@ class PDb_List_Query {
   public function add_filter( $field, $operator, $term, $logic = 'AND' )
   {
     $this->_add_single_statement(
-            filter_var( $field, FILTER_SANITIZE_STRING ),
+            filter_var( $field, FILTER_DEFAULT, Participants_Db::string_sanitize() ),
             $this->_sanitize_operator( $operator ),
-            filter_var( $term, FILTER_SANITIZE_STRING, array( 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES ) ),
+            filter_var( $term, FILTER_DEFAULT, array( 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_NO_ENCODE_QUOTES ) ),
             ($logic === 'OR' ? 'OR' : 'AND' ),
             false
     );
@@ -435,7 +435,7 @@ class PDb_List_Query {
   private function _add_filter_from_post()
   {
     // look for the identifier of the list search submission
-    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === Participants_Db::apply_filters( 'list_query_action', 'pdb_list_filter' ) ) {
+    if ( filter_input( INPUT_POST, 'action', FILTER_DEFAULT, Participants_Db::string_sanitize() ) === Participants_Db::apply_filters( 'list_query_action', 'pdb_list_filter' ) ) {
 
       $this->post_input = new \PDb_submission\list_search_post;
 
@@ -1438,10 +1438,10 @@ class PDb_List_Query {
    */
   public static function single_search_input_filter()
   {
-    return array_merge( array(
+    $filter = array_merge( array(
         'value' => array(
-            'filter' => FILTER_SANITIZE_STRING,
-            'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
+            'filter' => FILTER_DEFAULT,
+            'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK
         ),
         'search_field' => array(
             'filter' => FILTER_CALLBACK,
@@ -1453,6 +1453,8 @@ class PDb_List_Query {
         ),
             ), self::_common_search_input_filter()
     );
+    
+    return $filter;
   }
 
   /**
@@ -1463,10 +1465,10 @@ class PDb_List_Query {
   public static function multi_search_input_filter()
   {
     $array_filter = array(
-        'filter' => FILTER_SANITIZE_STRING,
-        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY
+        'filter' => FILTER_DEFAULT,
+        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY | FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK,
     );
-    return array_merge( array(
+    $filter = array_merge( array(
         'value' => $array_filter,
         'search_field' => array(
             'filter' => FILTER_CALLBACK,
@@ -1481,6 +1483,8 @@ class PDb_List_Query {
         'logic' => $array_filter,
             ), self::_common_search_input_filter()
     );
+    
+    return $filter;
   }
 
   /**
@@ -1490,12 +1494,12 @@ class PDb_List_Query {
    */
   private static function _common_search_input_filter()
   {
-    return array(
-        'submit' => FILTER_SANITIZE_STRING,
-        'submit_button' => FILTER_SANITIZE_STRING,
-        'submit-button' => FILTER_SANITIZE_STRING,
-        'ascdesc' => FILTER_SANITIZE_STRING,
-        'sortBy' => FILTER_SANITIZE_STRING,
+    $filter = array(
+        'submit' => array( 'filter' => FILTER_DEFAULT ) + Participants_Db::string_sanitize(),
+        'submit_button' => array( 'filter' => FILTER_DEFAULT ) + Participants_Db::string_sanitize(),
+        'submit-button' => array( 'filter' => FILTER_DEFAULT ) + Participants_Db::string_sanitize(),
+        'ascdesc' => array( 'filter' => FILTER_DEFAULT ) + Participants_Db::string_sanitize(),
+        'sortBy' => array( 'filter' => FILTER_DEFAULT ) + Participants_Db::string_sanitize(),
         Participants_Db::$list_page => array(
             'filter' => FILTER_VALIDATE_INT,
             'options' => array(
@@ -1509,6 +1513,8 @@ class PDb_List_Query {
             )
         ),
     );
+    
+    return $filter;
   }
 
   /**
