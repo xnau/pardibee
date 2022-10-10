@@ -42,6 +42,8 @@ class list_search_post extends list_search_submission {
       }
     }
     
+    $this->trim_search_terms();
+    
     $this->_prepare_submit_value();
   }
   
