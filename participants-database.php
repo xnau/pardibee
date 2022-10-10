@@ -3034,6 +3034,8 @@ class Participants_Db extends PDb_Base {
    *
    * called by the wp_ajax_nopriv_pdb_list_filter action: this happens when a 
    * user submits a search or sort on a record list
+   * 
+   * the POSTed search values are incorporated in PDb_List_Query::_add_filter_from_post()
    *
    * @return null
    */
