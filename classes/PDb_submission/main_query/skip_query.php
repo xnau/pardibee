@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -42,6 +42,16 @@ class skip_query {
   public function column_array( $function_columns )
   {
     return array();
+  }
+  
+  /**
+   * tells the number of columns that are getting added/modified by the query
+   * 
+   * @return int
+   */
+  public function column_count()
+  {
+    return 0;
   }
 
   /**
