@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -69,7 +69,7 @@ class columns {
        * @param the current $_POST action value
        * @return the action value to use: either "signup" or "update"
        */
-      if ( Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) === 'signup' ) {
+      if ( Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) === 'signup' ) {
 
         $column_set = 'signup';
         
@@ -83,7 +83,7 @@ class columns {
       }
     }
     
-    $this->column_array = self::column_atts( $column_set );
+    $this->column_array = self::column_atts( $column_set, $action );
       
 //    $array = [];
 //    foreach( $this->column_array as $column ) {
@@ -142,10 +142,11 @@ class columns {
    * @param string|array $filter sets the context of the display and determines the 
    *                             set of columns to return, also accepts an array of 
    *                             column names
+   * @param string $action the current calling action
    * @return object the object is ordered first by the order of the group, then 
    *                by the field order
    */
-  private static function column_atts( $filter = 'new' )
+  private static function column_atts( $filter = 'new', $action = 'update' )
   {
     global $wpdb;
     
@@ -153,8 +154,10 @@ class columns {
       
       $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
       // omit non-writing fields
-      // no longer doing this #2918
-      // $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+      // except in a signup submission #2918
+      if ( $action !== 'signup' ) { 
+        $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+      }
       
     } else {
       
