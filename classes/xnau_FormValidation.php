@@ -93,7 +93,7 @@ class xnau_FormValidation {
    *                            to $this->post_array as instantiated
    * @param int    $participant_id  id of the currently processed participant (if any)
    */
-  public function validate($value, $column_atts, $post = false, $participant_id )
+  public function validate($value, $column_atts, $post = false, $participant_id = 0 )
   {
     if ($post) {
       $this->post_array = $post;
