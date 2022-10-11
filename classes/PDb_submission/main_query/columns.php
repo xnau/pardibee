@@ -153,7 +153,8 @@ class columns {
       
       $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
       // omit non-writing fields
-      $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
+      // no longer doing this #2918
+      // $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
       
     } else {
       
