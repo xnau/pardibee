@@ -266,7 +266,7 @@ abstract class PDb_Shortcode {
      */
     if ( $this->shortcode_atts['filtering'] != 1 ) {
 
-      if ( filter_input( INPUT_GET, 'pdb-shortcode_clear', FILTER_SANITIZE_STRING ) ) {
+      if ( filter_input( INPUT_GET, 'pdb-shortcode_clear', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) {
         Participants_Db::$session->clear( 'shortcode_atts' );
       }
 
@@ -594,7 +594,7 @@ abstract class PDb_Shortcode {
     /*
      * if pre-fill values for the signup form are present in the GET array, set them
      */
-    $get_var_value = filter_input( INPUT_GET, $this->field->name(), FILTER_SANITIZE_STRING );
+    $get_var_value = filter_input( INPUT_GET, $this->field->name(), FILTER_DEFAULT, Participants_Db::string_sanitize() );
     if ( in_array( $this->module, array('signup', 'retrieve') ) and ! empty( $get_var_value ) ) {
       $this->field->set_value( $get_var_value );
     }
