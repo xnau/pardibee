@@ -627,6 +627,7 @@ class PDb_Field_Editor {
         $this->colorclass = 'captcha';
         $def = array(
             'default' => false,
+            'csv' => false,
             'validation' => array(
                 'email-regex' => false,
                 'captcha' => true,
