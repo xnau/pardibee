@@ -147,12 +147,12 @@ abstract class xnau_CSV_Import {
    */
   protected function check_submission()
   {
-    $nonce = filter_input(INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+    $nonce = filter_input(INPUT_POST, '_wpnonce', FILTER_DEFAULT, Participants_Db::string_sanitize() );
     if ( ! wp_verify_nonce( $nonce, self::nonce ) ) {
       return false;
     }
     
-    $filename = sanitize_file_name( filter_var( $_FILES[PDb_CSV_Import::csv_field]['name'], FILTER_SANITIZE_STRING ) );
+    $filename = sanitize_file_name( filter_var( $_FILES[PDb_CSV_Import::csv_field]['name'], FILTER_DEFAULT, Participants_Db::string_sanitize() ) );
     
     if ( pathinfo( $filename, PATHINFO_EXTENSION ) === 'csv' ) {
       $_FILES[PDb_CSV_Import::csv_field]['name'] = $filename;
