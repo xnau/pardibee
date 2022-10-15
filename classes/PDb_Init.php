@@ -5,7 +5,7 @@
  * 
  * handles installation, activation, deactivation, deletion, updates
  *
- * @version 2.3
+ * @version 2.4
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the update
  * queries to the series of upgrade steps that follow. Whichever version the
@@ -146,24 +146,6 @@ class PDb_Init {
     do_action( 'pdb-plugin_activation' );
 
     error_log( Participants_Db::PLUGIN_NAME . ' plugin activated' );
-  }
-  
-  /**
-   * prints an update notice to the plugins page
-   * 
-   * @param array $plugin_data
-   * @param array $response
-   */
-  public static function print_upgrade_notice( $plugin_data, $response )
-  {
-    $notice_path = apply_filters( 'pdb-upgrade_notice_content_path',  'https://plugins.svn.wordpress.org/participants-database/trunk/upgrade.html' );
-    
-    $notice = wp_safe_remote_get( $notice_path );
-    
-    if ( !empty( $notice['body'] )  ) {
-    
-      echo Participants_Db::apply_filters( 'inline_upgrade_notice', $notice['body'] );
-    }
   }
 
   /**
