@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.3.3
+ * Version: 2.4
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -152,6 +152,12 @@ class Participants_Db extends PDb_Base {
   public static $plugin_path;
 
   /**
+   * path to the main plugin file
+   * @var string
+   */
+  public static $plugin_file;
+
+  /**
    * a general-use prefix to set a namespace
    *
    * @var string
@@ -278,6 +284,7 @@ class Participants_Db extends PDb_Base {
     self::$default_options = self::$prefix . 'default_options';
     self::$plugin_page = self::PLUGIN_NAME;
     self::$plugin_path = plugin_dir_path( __FILE__ );
+    self::$plugin_file = __FILE__;
     
     // set the debug global if not already
     self::set_debug_mode();
@@ -700,7 +707,8 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'debug', self::asset_url( "js/pdb_debug$presuffix.js" ), array('jquery'), self::$plugin_version );
     
     // admin custom CSS
-    if ( self::_set_admin_custom_css() ) {
+    if ( self::_set_admin_custom_css() )
+    {
       wp_register_style( 'custom_plugin_admin_css', plugins_url( '/css/PDb-admin-custom.css', __FILE__ ), array(self::$prefix . 'admin'), self::$Settings->option_version() );
     }
     
@@ -716,8 +724,8 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), false, self::$plugin_version . '.1' );
     wp_register_style( $manage_fields_handle, plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( self::$prefix . 'admin' ), self::$plugin_version . '.1' );
 
-    if ( false !== stripos( $hook, 'participants-database' ) ) {
-      
+    if ( false !== stripos( $hook, 'participants-database' ) )
+    {  
       add_filter( 'admin_body_class', array(__CLASS__, 'add_admin_body_class') );
       
       wp_enqueue_script( self::$prefix . 'admin' );
@@ -726,11 +734,13 @@ class Participants_Db extends PDb_Base {
       wp_enqueue_style(self::$prefix . 'jquery-ui-theme');
     }
     
-    if ( $hook === 'toplevel_page_participants-database' ) {
+    if ( $hook === 'toplevel_page_participants-database' )
+    {
       new \PDb_admin_list\mass_edit_update();
     }
 
-    if ( false !== stripos( $hook, 'participants-database_settings_page' ) ) {
+    if ( false !== stripos( $hook, 'participants-database_settings_page' ) )
+    {
       wp_enqueue_script( self::$prefix . 'settings_script' );
     }
     
@@ -1044,7 +1054,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_list( $params )
   {
-
     $params['module'] = 'list';
 
     return PDb_List::get_list( $params );
@@ -1058,7 +1067,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_search_form( $params )
   {
-
     $params = (array) $params + array('module' => 'search', 'search' => true);
 
     return PDb_List::get_list( $params );
@@ -1115,7 +1123,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_signup_thanks_form( $params )
   {
-
     $params['module'] = 'thanks';
 
     return self::print_signup_class_form( $params );
@@ -1129,7 +1136,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function print_retrieval_form( $params )
   {
-
     $params['module'] = 'retrieve';
 
     return self::print_signup_class_form( $params );
@@ -1284,7 +1290,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_persistent()
   {
-
     return self::get_subset( 'persistent' );
   }
 
@@ -1310,7 +1315,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_field_list( $type = false, $fields = false, $sort = 'column' )
   {
-
     global $wpdb;
 
     $where_clauses = array();
@@ -3262,12 +3266,6 @@ class Participants_Db extends PDb_Base {
        * intialize the plugin settings for the plugin settings page
        */
       self::$Settings->initialize();
-    } 
-    
-    global $pagenow;
-    if ( $pagenow === 'plugins.php' ) {
-      $hook = 'in_plugin_update_message-participants-database/participants-database.php';
-      add_action( $hook, array( 'PDb_Init', 'print_upgrade_notice' ), 20, 2 );
     }
 
     /*
@@ -3330,12 +3328,12 @@ class Participants_Db extends PDb_Base {
   {
     $greeting = false;
     if ( self::apply_filters( 'show_live_notifications', true ) ) {
-      $greeting = PDb_Live_Notification_Handler::greeting();
+      $greeting = PDb_xnau_Greeting::greeting();
     }
     ?>
     <?php if ( $greeting ) : ?>
       <div id="PDb_greeting" class="pdb-footer padded widefat postbox pdb-live-notification">
-      <?php echo wpautop( $greeting ); ?>
+      <?php echo wp_kses_post( $greeting ); ?>
       </div>
       <?php endif; ?>
     <?php 
