@@ -74,7 +74,7 @@ endif;
                 <tr>
 <?php
 foreach ( $import_columns as $name ) {
-  echo '<th>' . $name . '</th>';
+  echo '<th>' . esc_html( $name ) . '</th>';
 }
 ?>
                 </tr>
