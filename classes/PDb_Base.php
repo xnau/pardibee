@@ -583,6 +583,77 @@ class PDb_Base {
   {
     return array( 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK );
   }
+  
+  /**
+   * provides the allowed HTML array for different contexts
+   * 
+   * @param string $type
+   * @return array
+   */
+  public static function allowed_html( $type )
+  {
+    $base_attributes = array(
+        'id' => 1,
+        'class' => 1,
+        );
+    $allowed = array(
+        'a' => array(
+            'href' => 1,
+            'title' => 1,
+            'target' => 1,
+        ) + $base_attributes,
+        'break' => array(),
+        'br' => array(),
+    );
+    $additional = array();
+    
+    $form_allowed = array(
+          'form' => array(
+              'method' => 1,
+              'enctype' => 1,
+              'action' => 1,
+          ) + $base_attributes,
+          'input' => array(
+              'name' => 1,
+              'type' => 1,
+              'value' => 1,
+              'data-id' => 1,
+              'title' => 1,
+              'data-title' => 1,
+              'checked' => 1,
+              'size' => 1,
+              'max' => 1,
+              'maxlength' => 1,
+              'min' => 1,
+              'minlength' => 1,
+              'alt' => 1,
+              'accept' => 1,
+          ) + $base_attributes,
+          'select' => array(
+              'name' => 1,
+          ) + $base_attributes,
+          'option' => array(
+              'value' => 1,
+              'selected' => 1,
+          ),
+          'textarea' => array(
+              'name' => 1,
+              'rows' => 1,
+              'cols' => 1,
+          ) + $base_attributes,
+        );
+    
+    switch ($type)
+    {
+      case 'form':
+        $additional = $form_allowed;
+        break;
+    }
+    
+    $all_allowed = $allowed + $additional + wp_kses_allowed_html('post');
+
+    return $all_allowed;
+  }
 
   /**
    * supplies the current participant ID
@@ -1649,7 +1720,19 @@ class PDb_Base {
    */
   public static function base_files_path()
   {
-    return Participants_Db::apply_filters( 'files_use_content_base_path', false ) ? trailingslashit( WP_CONTENT_DIR ) : self::app_base_path();
+    $base_path = Participants_Db::apply_filters( 'files_use_content_base_path', false ) ? trailingslashit( self::content_dir() ) : self::app_base_path();
+    
+    return $base_path;
+  }
+  
+  /**
+   * provides the content directory path
+   * 
+   * @return string
+   */
+  public static function content_dir()
+  {
+    return str_replace( 'plugins/' . Participants_Db::PLUGIN_NAME, '', plugin_dir_path( Participants_Db::$plugin_file ) );
   }
 
   /**
