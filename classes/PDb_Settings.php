@@ -167,7 +167,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-main',
         'options' => array(
             'type' => 'text',
-            'help_text' => sprintf( __( "This defines where the uploaded files will go, relative to the %s. The default location is '%s'<br />Don't put it in the plugin folder, the images and files could get deleted when the plugin is updated.", 'participants-database' ), $this->files_base_label(), 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/' ) . $this->settings_help( 'File-Upload-Location' ),
+            'help_text' => sprintf( __( "This defines where the uploaded files will go, relative to the %s. The default location is '%s'", 'participants-database' ), $this->files_base_label(), (Participants_Db::apply_filters( 'files_use_content_base_path', false )?'uploads/participants-database/':'wp-content/uploads/participants-database/') ) . $this->settings_help( 'File-Upload-Location' ),
             'value' => 'wp-content/uploads/' . Participants_Db::PLUGIN_NAME . '/',
         )
     );
@@ -201,8 +201,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'group' => 'pdb-main',
         'options' => array(
             'type' => 'text',
-            'help_text' => sprintf( __( "Path (relative to the %s) of an image file to show if no image has been defined for an image field. Leave blank for no default image.", 'participants-database' ), $this->files_base_label() ),
-            'value' => 'wp-content/plugins/participants-database/ui/no-image.png',
+            'help_text' => sprintf( __( "Path (relative to the %s) of an image file to show if no image has been defined for an image field. The default setting is '%s'. Leave blank for no default image.", 'participants-database' ), $this->files_base_label(), (Participants_Db::apply_filters( 'files_use_content_base_path', false )?'':'wp-content/') . 'plugins/participants-database/ui/no-image.png' ),
+            'value' => str_replace( Participants_Db::base_files_path(), '', plugin_dir_path( Participants_Db::$plugin_file ). 'ui/no-image.png' ),
         )
     );
     
@@ -1889,10 +1889,8 @@ ORDER BY g.order, v.order';
         'value' => $this->submit_button,
         'name' => 'submit',
     );
-    $news = false; // disable this banner PDb_Live_Notification_Handler::latest_news();
-    $has_news_class = $news ? 'has-news-panel' : '';
     ?>
-    <div class="wrap participants_db settings-class <?= $has_news_class ?>">
+    <div class="wrap participants_db settings-class">
       <?php Participants_Db::admin_page_heading( Participants_Db::$plugin_title . ' ' . __( 'Settings', 'participants-database' ) ) ?>
       <?php settings_errors(); ?>
       <form action="options.php" method="post" >
@@ -1922,16 +1920,6 @@ ORDER BY g.order, v.order';
       </form>
 
     </div>
-    <?php /**
-     * @version 1.6.3
-     * @filter pdb-show_live_notifications
-     * 
-     */ ?>
-    <?php if ( $news && Participants_Db::apply_filters( 'show_live_notifications', true ) ) : ?>
-      <div class="pdb-news-panel pdb-live-notification postbox">
-        <?php echo wpautop( $news ); ?>
-      </div>
-    <?php endif ?>
     <?php
   }
 
@@ -2016,7 +2004,7 @@ ORDER BY g.order, v.order';
   public function settings_help( $anchor )
   {
     $href = 'https://xnau.com/participants-database-settings-help/';
-    return '<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+    return '&nbsp;<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
   }
   
   /**
