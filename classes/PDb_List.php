@@ -533,7 +533,7 @@ class PDb_List extends PDb_Shortcode {
      * 
      * @return array
      */
-    echo $this->output_HTML( Participants_Db::apply_filters( 'search_sort_form_output', $output ) );
+    echo wp_kses( $this->output_HTML( Participants_Db::apply_filters( 'search_sort_form_output', $output ) ), Participants_Db::allowed_html('form') );
   }
 
   /**
@@ -1095,12 +1095,14 @@ class PDb_List extends PDb_Shortcode {
 
     $params = maybe_unserialize( $value );
 
-    if ( is_array( $params ) ) {
-
+    if ( is_array( $params ) )
+    {
       if ( count( $params ) < 2 )
+      {
         $params[1] = $params[0];
-    } else {
-
+      }
+    } else
+    {
       // in case we got old unserialized data in there
       $params = array_fill( 0, 2, $value );
     }
@@ -1108,9 +1110,12 @@ class PDb_List extends PDb_Shortcode {
     $output = Participants_Db::make_link( $params[0], $params[1], $template );
 
     if ( $print )
-      echo $output;
-    else
+    {
+      echo wp_kses_post( $output );
+    } else
+    {
       return $output;
+    }
   }
 
   /* BUILT-IN OUTPUT METHODS */
@@ -1293,30 +1298,30 @@ class PDb_List extends PDb_Shortcode {
         'field_titles_checkbox_label' => __( 'Include field titles', 'participants-database' ),
     ), $config ) );
     
-    $suggested_filename = esc_attr( $filename )  . '.csv';
+    $suggested_filename = $filename  . '.csv';
     
     Participants_Db::$session->set( 'csv_export_query', $this->list_query->get_list_query() );
     Participants_Db::$session->set( 'csv_export_fields', $export_fields );
     ?>
     <div class="pdb-pagination csv-export-box">
         <?php if ($title !== false ) : ?>
-        <h3><?php echo $title ?></h3>
+        <h3><?php echo esc_html( $title ) ?></h3>
         <?php endif ?>
         <form method="post" class="csv-export">
           <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
           <input type="hidden" name="action" value="output CSV" />
           <input type="hidden" name="CSV type" value="participant list" />
-          <input type="hidden" name="<?php echo PDb_Session::id_var ?>" value="<?php echo Participants_Db::$session->session_id() ?>" />
+          <input type="hidden" name="<?php echo esc_attr( PDb_Session::id_var ) ?>" value="<?php echo esc_attr( Participants_Db::$session->session_id() ) ?>" />
           <?php wp_nonce_field( PDb_Base::csv_export_nonce() ); ?>
           <fieldset class="inline-controls">
-<?php if ( $allow_user_filename ) echo __( 'File Name', 'participants-database' ) . ':' ?>
-            <input type="<?php echo ( $allow_user_filename ? 'text' : 'hidden' ) ?>" name="filename" value="<?php echo $suggested_filename ?>" />
-            <input type="submit" name="submit-button" value="<?php echo $button_text  ?>" class="button button-primary" />
+<?php if ( $allow_user_filename ) esc_html_e( 'File Name', 'participants-database' ) . ':' ?>
+            <input type="<?php echo esc_attr( ( $allow_user_filename ? 'text' : 'hidden' ) ) ?>" name="filename" value="<?php echo esc_attr( $suggested_filename ) ?>" />
+            <input type="submit" name="submit-button" value="<?php echo esc_attr( $button_text )  ?>" class="button button-primary" />
             <?php if ( $field_titles_checkbox ) : ?>
-            <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php echo $field_titles_checkbox_label ?></label>
+            <label for="include_csv_titles"><input type="checkbox" name="include_csv_titles" value="1"><?php echo esc_html( $field_titles_checkbox_label ) ?></label>
             <?php endif ?>
           </fieldset>
-          <?php echo $helptext ?>
+          <?php echo wp_kses_post( $helptext ) ?>
         </form>
     </div>
     <?php
