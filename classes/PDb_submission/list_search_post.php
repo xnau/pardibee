@@ -32,7 +32,7 @@ class list_search_post extends list_search_submission {
     } else {
       
       $this->input = filter_input_array( INPUT_POST, \PDb_List_Query::single_search_input_filter() );
-      
+    
       if ( ! isset( $this->input['search_field'] ) || $this->input['search_field'] === 'none' ) {
         $this->input['search_field'] = '';
       }
