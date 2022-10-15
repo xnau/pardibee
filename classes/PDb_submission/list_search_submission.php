@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -189,10 +189,23 @@ class list_search_submission {
   protected function trim_search_terms()
   {
     if ( is_array( $this->input['value'] ) ) {
-      array_walk( $this->input['value'], 'trim' );
+      array_walk( $this->input['value'], function(&$value){
+        $value = self::deep_trim($value);
+      } );
     } else {
-      $this->input['value'] = trim( $this->input['value'] );
+      $this->input['value'] = self::deep_trim( $this->input['value'] );
     }
+  }
+  
+  /**
+   * performs a trim on a url-encoded string
+   * 
+   * @param string $value
+   * @return string
+   */
+  public static function deep_trim($value)
+  {
+    return trim( urldecode( $value ) );
   }
   
   /**
