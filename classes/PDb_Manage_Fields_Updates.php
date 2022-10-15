@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -59,8 +59,11 @@ class PDb_Manage_Fields_Updates {
       if ( $row[ 'status' ] === 'changed' ) {
 
         $id = filter_var( $row[ 'id' ], FILTER_VALIDATE_INT );
+        
+        // get an array of all attributes that have array values
+        $array_atts = array_intersect_key( $row, array_flip( array( 'values', 'options', 'attributes' ) ) );
 
-        foreach ( array( 'values', 'options', 'attributes' ) as $attname ) {
+        foreach ( array_keys( $array_atts ) as $attname ) {
 
           /*
            * format the value for attributes that use a values array
@@ -69,29 +72,26 @@ class PDb_Manage_Fields_Updates {
            * data into the correct attribute
            */
 
-          if ( isset( $row[ $attname ] ) ) {
+          $attvalue = $row[ $attname ];
 
-            $attvalue = $row[ $attname ];
+          // handle depricated "values" parameter
+          if ( $attname === 'values' && strlen( $attvalue ) > 0 ) {
+            $correct_attribute = PDb_FormElement::is_value_set( $row[ 'form_element' ] ) ? 'options' : 'attributes';
+            if ( strlen( $row[ $correct_attribute ] ) === 0 ) {
+              $attname = $correct_attribute;
+              $row[ 'values' ] = '';
+            }
+          }
 
-            // handle depricated "values" parameter
-            if ( $attname === 'values' && strlen( $attvalue ) > 0 ) {
-              $correct_attribute = PDb_FormElement::is_value_set( $row[ 'form_element' ] ) ? 'options' : 'attributes';
-              if ( strlen( $row[ $correct_attribute ] ) === 0 ) {
-                $attname = $correct_attribute;
-                $row[ 'values' ] = '';
-              }
-            }
+          if ( is_string( $attvalue ) ) {
+            $row[ $attname ] = self::string_notation_to_array( $attvalue );
+          }
 
-            if ( is_string( $attvalue ) ) {
-              $row[ $attname ] = self::string_notation_to_array( $attvalue );
-            }
-            
-            if ( $attname === 'options' && is_array( $row[ $attname ] ) ) {
-              // clean up the values so they are valid
-              array_walk( $row[ $attname ], function (&$v) {
-                $v = strip_tags( $v );
-              } );
-            }
+          if ( $attname === 'options' && is_array( $row[ $attname ] ) ) {
+            // clean up the values so they are valid
+            array_walk( $row[ $attname ], function (&$v) {
+              $v = strip_tags( $v );
+            } );
           }
         }
 
@@ -168,7 +168,7 @@ class PDb_Manage_Fields_Updates {
         }
 
         // produce a status array for the pdb-update_field_def filter
-        $status = array_intersect_key( $row, array( 'id' => '', 'status' => '', 'name' => '' ) );
+        $status = array_intersect_key( $row, array_flip( array( 'id', 'status', 'name' ) ) );
 
         // remove the fields we won't be updating
         unset( $row[ 'status' ], $row[ 'id' ], $row[ 'name' ], $row[ 'selectable' ] );
