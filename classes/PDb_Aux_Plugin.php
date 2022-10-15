@@ -119,7 +119,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public $aux_plugin_events = array();
 
     /**
-     * @var string  URL for the aux plugin updater
+     * @var string  URL for the aux plugin updates
      */
     const update_url = 'https://xnau.com/xnau-updates/';
 
