@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    5.2
+ * @version    5.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -424,7 +424,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function render_settings_parent_page()
     {
-      echo $this->settings_page_header();
+      echo wp_kses_post($this->settings_page_header());
       /**
        * @filter 'pdb-aux_plugin_settings_page_header'
        */
@@ -550,7 +550,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           ?>  
         </form>  
 
-        <aside class="attribution"><?php echo $this->attribution ?></aside>
+        <aside class="attribution"><?php echo wp_kses_post( $this->attribution ) ?></aside>
 
       </div><!-- /.wrap -->  
       <?php
@@ -613,7 +613,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( !is_callable( array($this, $build_function) ) ) {
         $build_function = '_build_text';
       }
-      echo call_user_func( array($this, $build_function), $values );
+      $control_html = call_user_func( array($this, $build_function), $values );
+      echo wp_kses( $control_html, Participants_Db::allowed_html('form') );
     }
 
     /**
