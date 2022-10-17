@@ -203,15 +203,15 @@ class PDb_Admin_Notices {
       if ( $this->notice_is_shown( $admin_notice ) ) {
         ?><div
           class="notice pdb_admin_notices-notice notice-<?php
-          echo $admin_notice->type;
+          echo esc_attr( $admin_notice->type );
 
-          echo ' is-dismissible" data-dismiss="' . $admin_notice->id;
+          echo ' is-dismissible" data-dismiss="' . esc_attr( $admin_notice->id );
           ?>">
-          <h4><?php echo Participants_Db::$plugin_title . $admin_notice->context ?>:</h4>
+          <h4><?php echo esc_html( Participants_Db::$plugin_title . $admin_notice->context ) ?>:</h4>
           <?php if ( $admin_notice->html_message() ) : 
-            echo $admin_notice->message;
+            echo wp_kses_post( $admin_notice->message );
           else : ?>
-          <p><span class="dashicons <?php echo $this->dashicon( $admin_notice->type ) ?>"></span>&nbsp;<?php echo $admin_notice->message ?></p>
+          <p><span class="dashicons <?php echo esc_attr( $this->dashicon( $admin_notice->type ) ) ?>"></span>&nbsp;<?php echo wp_kses_post( $admin_notice->message ) ?></p>
           <?php endif ?>
 
         </div><?php
