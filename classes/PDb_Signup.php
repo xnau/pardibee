@@ -313,7 +313,7 @@ class PDb_Signup extends PDb_Shortcode {
   public function print_form_head( $hidden = '' )
   {
 
-    echo $this->_print_form_head( $hidden );
+    echo wp_kses( $this->_print_form_head( $hidden ), Participants_Db::allowed_html('form') );
   }
 
   /**
@@ -349,7 +349,7 @@ class PDb_Signup extends PDb_Shortcode {
       $linktext = empty( $linktext ) ? Participants_Db::plugin_setting( 'retrieve_link_text' ) : $linktext;
 
       $retrieve_link = Participants_Db::plugin_setting( 'link_retrieval_page' ) !== 'none' ? Participants_Db::get_permalink( Participants_Db::plugin_setting( 'link_retrieval_page' ) ) : $_SERVER[ 'REQUEST_URI' ];
-      echo $open_tag . '<a href="' . Participants_Db::add_uri_conjunction( $retrieve_link ) . 'm=r">' . $linktext . '</a>' . $close_tag;
+      echo wp_kses( $open_tag . '<a href="' . esc_attr( Participants_Db::add_uri_conjunction( $retrieve_link ) ) . 'm=r">' . esc_html( $linktext ) . '</a>' . $close_tag, Participants_Db::allowed_html('form') );
     }
   }
 
