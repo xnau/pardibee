@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.3
+ * @version    2.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -82,8 +82,8 @@ class PDb_Manage_Fields {
           foreach ( $this->group_defs as $group ) {
             echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . wp_kses_post( $this->group_title( $group[ 'name' ] ) ) . '</a>' . $mask . '</li>';
           }
-          echo '<li class="utility"><a href="#field_groups">' . __( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
-          echo '<li class="utility"><a href="#help">' . __( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
+          echo '<li class="utility"><a href="#field_groups">' . esc_html__( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
+          echo '<li class="utility"><a href="#help">' . esc_html__( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
           ?>
         </ul>
         <?php
@@ -114,7 +114,7 @@ class PDb_Manage_Fields {
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[ $group ][ 0 ][ 'group_id' ] : '';
         ?>
         <div id="<?php esc_attr_e( $group ) ?>" class="manage-fields-wrap" data-group-id="<?php esc_attr_e( $data_group_id ) ?>" >
-          <h3><?php esc_html_e( sprintf( _x( '%s Fields', 'Title of the field group', 'participants-database' ), $this->group_title( $group ) ) ) ?></h3>
+          <h3><?php esc_html_e( sprintf( esc_html_x( '%s Fields', 'Title of the field group', 'participants-database' ), $this->group_title( $group ) ) ) ?></h3>
           <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
             <div class="pdb-horiz-scroll-scroller">
@@ -188,7 +188,7 @@ class PDb_Manage_Fields {
 
         <div class="def-fieldset def-line <?php echo esc_attr( $field_definition_attributes->rowclass() ) ?>" id="db_row_<?php echo esc_attr( $field_def->id ) ?>" data-numid="<?php echo esc_attr( $field_def->id ) ?>" data-groupid="<?php echo esc_attr( $field_def->groupid ) ?>">
           
-          <?php echo $field_definition_attributes->get_hidden_inputs() ?>
+          <?php echo wp_kses( $field_definition_attributes->get_hidden_inputs(), Participants_Db::allowed_html('form')); ?>
 
           <?php
           while ( $control_html = $field_definition_attributes->get_next_control() ) {
@@ -216,14 +216,14 @@ class PDb_Manage_Fields {
             <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
               <div class="submit top-bar-submit">
                 <span class="field-group-title"><?php _e( 'Field Groups', 'participants-database' ) ?></span>
-                <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo $this->i18n[ 'update groups' ] ?></button>
+                <button type="submit" class="button button-primary manage-groups-update" name="action" value="update_groups"><?php echo esc_html($this->i18n[ 'update groups' ]) ?></button>
               </div>
             <?php endif ?>
 
             <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
             <h3><?php _e( 'Edit / Add / Remove Field Groups', 'participants-database' ) ?></h3>
             <p class="add-group-inputs">
-              <button type="submit" class="button button-secondary add-group-submit disabled" name="action" value="add_group" disabled="disabled"><?php echo $this->i18n[ 'add group' ] ?></button>
+              <button type="submit" class="button button-secondary add-group-submit disabled" name="action" value="add_group" disabled="disabled"><?php echo esc_html( $this->i18n[ 'add group' ] ) ?></button>
               <?php
               PDb_FormElement::print_element( array(
                   'type' => 'text',
@@ -353,16 +353,16 @@ class PDb_Manage_Fields {
         <form id="general_fields_control_<?php echo esc_attr( $group ) ?>" method="post" autocomplete="off"  action="<?php echo esc_url( admin_url( 'admin-post.php' ) ) ?>">
           <?php wp_nonce_field( PDb_Manage_Fields_Updates::action_key ); ?>
           <div id="check-all-<?php echo esc_attr( $group ) ?>" class="check-all">
-            <input id="select-all-checkbox-<?php echo esc_attr( $group ) ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo esc_attr( $group ) ?>" style="display:none" ><?php echo $this->i18n[ 'all' ] ?></label>
+            <input id="select-all-checkbox-<?php echo esc_attr( $group ) ?>" type="checkbox" /><label for="select-all-checkbox-<?php echo esc_attr( $group ) ?>" style="display:none" ><?php echo esc_html( $this->i18n[ 'all' ] ) ?></label>
           </div>
           <?php if ( $group !== 'internal' ) : ?>
-            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo esc_attr( $group ) ?>"><span class="dashicons dashicons-plus"></span><?php echo $this->i18n[ 'add field' ] ?></button>
+            <button type="button" class="button-secondary add-field showhide" for="add-field-inputs-<?php echo esc_attr( $group ) ?>"><span class="dashicons dashicons-plus"></span><?php echo esc_html( $this->i18n[ 'add field' ] ) ?></button>
           <?php endif ?>
-          <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo $this->i18n[ 'all' ] ?></button>
+          <button type="button" class="button-secondary openclose-all" ><span class="dashicons field-open-icon"></span><?php echo esc_html( $this->i18n[ 'all' ] ) ?></button>
           <?php if ( $group !== 'internal' ) : ?>
             <div id="add-field-inputs-<?php echo esc_attr( $group ) ?>" class="button-showhide add-field-inputs manage-fields-actions" style="display:none">
-              <h4><?php echo $this->i18n[ 'add field' ] ?></h4>
-              <label><?php echo $this->i18n[ 'new field title' ] ?></label>
+              <h4><?php echo esc_html( $this->i18n[ 'add field' ] ) ?></h4>
+              <label><?php echo esc_html( $this->i18n[ 'new field title' ] ) ?></label>
               <?php
               PDb_FormElement::print_element( array(
                   'type' => 'hidden',
@@ -415,7 +415,7 @@ class PDb_Manage_Fields {
             </div>
           <?php endif ?>
           <div id="with-selected-control-<?php echo esc_attr( $group ) ?>" class="with-selected-control" style="display:none">
-            <label for="with_selected_action_selection_<?php echo esc_attr( $group ) ?>"><?php echo $this->i18n[ 'with selected' ] ?>: </label>
+            <label for="with_selected_action_selection_<?php echo esc_attr( $group ) ?>"><?php echo esc_html( $this->i18n[ 'with selected' ] ) ?>: </label>
             <?php
             PDb_FormElement::print_element( array(
                 'type' => 'dropdown',
@@ -440,7 +440,7 @@ class PDb_Manage_Fields {
                     )
             );
             ?>
-            <button type="button" class="button-secondary apply-with-selected" disabled ><span class="dashicons dashicons-yes"></span><?php echo $this->i18n[ 'apply' ] ?></button>
+            <button type="button" class="button-secondary apply-with-selected" disabled ><span class="dashicons dashicons-yes"></span><?php echo esc_html( $this->i18n[ 'apply' ] ) ?></button>
           </div>
         </form>
       </div>
@@ -458,8 +458,8 @@ class PDb_Manage_Fields {
       if ( $group === 'internal' ) {
         // provide a limited list for the internal group
         return array(
-            'add_csv' => __( 'Add to CSV', 'participants-database' ),
-            'remove_csv' => __( 'Remove from CSV', 'participants-database' ),
+            'add_csv' => esc_html__( 'Add to CSV', 'participants-database' ),
+            'remove_csv' => esc_html__( 'Remove from CSV', 'participants-database' ),
         );
       }
       /**
@@ -470,11 +470,11 @@ class PDb_Manage_Fields {
        */
       return Participants_Db::apply_filters( 'manage_fields_with_selected_actions', array(
                   'delete' => $this->i18n[ 'delete' ],
-                  'group' => __( 'Assign Group', 'participants-database' ),
-                  'add_csv' => __( 'Add to CSV', 'participants-database' ),
-                  'remove_csv' => __( 'Remove from CSV', 'participants-database' ),
-                  'add_signup' => __( 'Add to Signup', 'participants-database' ),
-                  'remove_signup' => __( 'Remove from Signup', 'participants-database' ),
+                  'group' => esc_html__( 'Assign Group', 'participants-database' ),
+                  'add_csv' => esc_html__( 'Add to CSV', 'participants-database' ),
+                  'remove_csv' => esc_html__( 'Remove from CSV', 'participants-database' ),
+                  'add_signup' => esc_html__( 'Add to Signup', 'participants-database' ),
+                  'remove_signup' => esc_html__( 'Remove from Signup', 'participants-database' ),
               ) );
     }
 
@@ -567,9 +567,9 @@ class PDb_Manage_Fields {
        * @return array
        */
       return Participants_Db::apply_filters( 'group_display_modes', array(
-                  'public' => __( 'Public', 'participants-database' ),
-                  'private' => __( 'Private', 'participants-database' ),
-                  'admin' => _x( 'Admin', 'short form of "administrator"', 'participants-database' ),
+                  'public' => esc_html__( 'Public', 'participants-database' ),
+                  'private' => esc_html__( 'Private', 'participants-database' ),
+                  'admin' => esc_html_x( 'Admin', 'short form of "administrator"', 'participants-database' ),
               ) );
     }
 
@@ -689,43 +689,43 @@ class PDb_Manage_Fields {
     {
       return array(
           /* translators: these strings are used in logic matching, please test after translating in case special characters cause problems */
-          'update fields' => __( 'Update Fields', 'participants-database' ),
-          'update groups' => __( 'Update Groups', 'participants-database' ),
-          'add field' => __( 'Add Field', 'participants-database' ),
-          'add group' => __( 'Add Group', 'participants-database' ),
-          'group' => __( 'group', 'participants-database' ),
-          'field' => __( 'field', 'participants-database' ),
-          'new field title' => __( 'new field title', 'participants-database' ),
-          'new field form element' => __( 'new field form element', 'participants-database' ),
-          'new group title' => __( 'new group title', 'participants-database' ),
-          'fields' => _x( 'Fields', 'column name', 'participants-database' ),
-          'Group' => _x( 'Group', 'column name', 'participants-database' ),
-          'order' => _x( 'Order', 'column name', 'participants-database' ),
-          'name' => _x( 'Name', 'column name', 'participants-database' ),
-          'title' => _x( 'Title', 'column name', 'participants-database' ),
-          'default' => _x( 'Default Value', 'column name', 'participants-database' ),
-          'help_text' => _x( 'Help Text', 'column name', 'participants-database' ),
-          'form_element' => _x( 'Form Element', 'column name', 'participants-database' ),
-          'values' => _x( 'Values', 'column name', 'participants-database' ),
-          'validation' => _x( 'Validation', 'column name', 'participants-database' ),
-          'display_column' => str_replace( ' ', '<br />', _x( 'Display Column', 'column name', 'participants-database' ) ),
-          'admin_column' => str_replace( ' ', '<br />', _x( 'Admin Column', 'column name', 'participants-database' ) ),
-          'sortable' => _x( 'Sortable', 'column name', 'participants-database' ),
-          'CSV' => _x( 'CSV', 'column name, acronym for "comma separated values"', 'participants-database' ),
-          'persistent' => _x( 'Persistent', 'column name', 'participants-database' ),
-          'signup' => _x( 'Signup', 'column name', 'participants-database' ),
-          'readonly' => _x( 'Read Only', 'column name', 'participants-database' ),
-          'admin' => _x( 'Admin', 'column name', 'participants-database' ),
-          'delete' => _x( 'Delete', 'column name', 'participants-database' ),
-          'display' => _x( 'Display', 'column name', 'participants-database' ),
-          'description' => _x( 'Description', 'column name', 'participants-database' ),
-          'attributes' => _x( 'Attributes', 'column name', 'participants-database' ),
-          'options' => _x( 'Options', 'column name', 'participants-database' ),
-          'validation_message' => _x( 'Validation Message', 'column name', 'participants-database' ),
-          'with selected' => _x( 'With Selected', 'button label', 'participants-database' ),
-          'apply' => _x( 'Apply', 'button label', 'participants-database' ),
-          'all' => _x( 'All', 'select all button label', 'participants-database' ),
-          'mode' => _x( 'View Mode', 'label for the view mode selector', 'participants-database' ),
+          'update fields' => esc_html__( 'Update Fields', 'participants-database' ),
+          'update groups' => esc_html__( 'Update Groups', 'participants-database' ),
+          'add field' => esc_html__( 'Add Field', 'participants-database' ),
+          'add group' => esc_html__( 'Add Group', 'participants-database' ),
+          'group' => esc_html__( 'group', 'participants-database' ),
+          'field' => esc_html__( 'field', 'participants-database' ),
+          'new field title' => esc_html__( 'new field title', 'participants-database' ),
+          'new field form element' => esc_html__( 'new field form element', 'participants-database' ),
+          'new group title' => esc_html__( 'new group title', 'participants-database' ),
+          'fields' => esc_html_x( 'Fields', 'column name', 'participants-database' ),
+          'Group' => esc_html_x( 'Group', 'column name', 'participants-database' ),
+          'order' => esc_html_x( 'Order', 'column name', 'participants-database' ),
+          'name' => esc_html_x( 'Name', 'column name', 'participants-database' ),
+          'title' => esc_html_x( 'Title', 'column name', 'participants-database' ),
+          'default' => esc_html_x( 'Default Value', 'column name', 'participants-database' ),
+          'help_text' => esc_html_x( 'Help Text', 'column name', 'participants-database' ),
+          'form_element' => esc_html_x( 'Form Element', 'column name', 'participants-database' ),
+          'values' => esc_html_x( 'Values', 'column name', 'participants-database' ),
+          'validation' => esc_html_x( 'Validation', 'column name', 'participants-database' ),
+          'display_column' => str_replace( ' ', '<br />', esc_html_x( 'Display Column', 'column name', 'participants-database' ) ),
+          'admin_column' => str_replace( ' ', '<br />', esc_html_x( 'Admin Column', 'column name', 'participants-database' ) ),
+          'sortable' => esc_html_x( 'Sortable', 'column name', 'participants-database' ),
+          'CSV' => esc_html_x( 'CSV', 'column name, acronym for "comma separated values"', 'participants-database' ),
+          'persistent' => esc_html_x( 'Persistent', 'column name', 'participants-database' ),
+          'signup' => esc_html_x( 'Signup', 'column name', 'participants-database' ),
+          'readonly' => esc_html_x( 'Read Only', 'column name', 'participants-database' ),
+          'admin' => esc_html_x( 'Admin', 'column name', 'participants-database' ),
+          'delete' => esc_html_x( 'Delete', 'column name', 'participants-database' ),
+          'display' => esc_html_x( 'Display', 'column name', 'participants-database' ),
+          'description' => esc_html_x( 'Description', 'column name', 'participants-database' ),
+          'attributes' => esc_html_x( 'Attributes', 'column name', 'participants-database' ),
+          'options' => esc_html_x( 'Options', 'column name', 'participants-database' ),
+          'validation_message' => esc_html_x( 'Validation Message', 'column name', 'participants-database' ),
+          'with selected' => esc_html_x( 'With Selected', 'button label', 'participants-database' ),
+          'apply' => esc_html_x( 'Apply', 'button label', 'participants-database' ),
+          'all' => esc_html_x( 'All', 'select all button label', 'participants-database' ),
+          'mode' => esc_html_x( 'View Mode', 'label for the view mode selector', 'participants-database' ),
       );
     }
 
