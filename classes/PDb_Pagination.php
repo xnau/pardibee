@@ -134,7 +134,7 @@ class PDb_Pagination {
 
   public function show()
   {
-    echo $this->create_links();
+    echo wp_kses( $this->create_links(), Participants_Db::allowed_html('form') );
   }
 
   /**
