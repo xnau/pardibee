@@ -81,7 +81,7 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $Element = new self( $parameters );
 
-    echo $Element->_output();
+    echo wp_kses( $Element->_output(), Participants_Db::allowed_html('form') );
   }
 
   /**
@@ -118,7 +118,7 @@ class PDb_FormElement extends xnau_FormElement {
     }
 
     if ( $print ) {
-      echo implode( PHP_EOL, $output );
+      echo wp_kses( implode( PHP_EOL, $output ), Participants_Db::allowed_html('form') );
     } else {
       return implode( PHP_EOL, $output );
     }
