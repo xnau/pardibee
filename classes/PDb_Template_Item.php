@@ -91,7 +91,7 @@ class PDb_Template_Item {
    */
   protected function print_value() {
     
-    echo prepare_display_value($this->value);
+    echo wp_kses( prepare_display_value($this->value), Participants_Db::allowed_html('post') );
     
   }
   
@@ -111,7 +111,7 @@ class PDb_Template_Item {
   }
   
   /**
-   * preps a display tring allowing HTML
+   * preps a display string allowing HTML
    * 
    * @param string $string the string to display
    * @return string sanitized for HMTL
@@ -128,13 +128,7 @@ class PDb_Template_Item {
    */
   public static function allowed_tags()
   {
-    return Participants_Db::apply_filters('field_attributes_allowed_html_tags',array(
-        'a' => array('href' => array(), 'title' => array(), 'target' => array()),
-        'pre' => array(), 'em' => array(), 'strong' => array(), 'br' => array(), 'span' => array( 'class' => array() ),
-        'p' => array(), 'ul' => array(), 'ol' => array(), 'li' => array(),
-        'h1' => array(), 'h2' => array(), 'h3' => array(), 'h4' => array(), 'h5' => array(), 'h6' => array(),
-        'img' => array('src' => array(), 'class' => array(), 'alt' => array())
-    ) );
+    return Participants_Db::apply_filters('field_attributes_allowed_html_tags', Participants_Db::allowed_html( 'post' ) );
   }
   
   /**
@@ -147,7 +141,7 @@ class PDb_Template_Item {
     
     $name = false === $name? $this->name : $name;
     
-    echo $this->prepare_CSS_class( $name, $prefix );
+    echo esc_attr( $this->prepare_CSS_class( $name, $prefix ) );
     
   }
   
@@ -218,7 +212,7 @@ class PDb_Template_Item {
    * prints an HTML class value
    */
   public function print_class() {
-    echo $this->get_class();
+    echo esc_attr( $this->get_class() );
   }
   
   /**
