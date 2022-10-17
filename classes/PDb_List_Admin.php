@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -103,30 +103,30 @@ class PDb_List_Admin {
      */
     $apply_confirm_messages = Participants_Db::apply_filters( 'admin_list_with_selected_action_conf_messages', array(
                 'delete' => array(
-                    "singular" => __( "Do you really want to delete the selected record?", 'participants-database' ),
-                    "plural" => __( "Do you really want to delete the selected records?", 'participants-database' ),
+                    "singular" => esc_html__( "Do you really want to delete the selected record?", 'participants-database' ),
+                    "plural" => esc_html__( "Do you really want to delete the selected records?", 'participants-database' ),
                 ),
                 'approve' => array(
-                    "singular" => __( "Approve the selected record?", 'participants-database' ),
-                    "plural" => __( "Approve the selected records?", 'participants-database' ),
+                    "singular" => esc_html__( "Approve the selected record?", 'participants-database' ),
+                    "plural" => esc_html__( "Approve the selected records?", 'participants-database' ),
                 ),
                 'unapprove' => array(
-                    "singular" => __( "Unapprove the selected record?", 'participants-database' ),
-                    "plural" => __( "Unapprove the selected records?", 'participants-database' ),
+                    "singular" => esc_html__( "Unapprove the selected record?", 'participants-database' ),
+                    "plural" => esc_html__( "Unapprove the selected records?", 'participants-database' ),
                 ),
                 'export' => array(
-                    "singular" => __( "Export the selected record?", 'participants-database' ),
-                    "plural" => __( "Export the selected records?", 'participants-database' ),
+                    "singular" => esc_html__( "Export the selected record?", 'participants-database' ),
+                    "plural" => esc_html__( "Export the selected records?", 'participants-database' ),
                 ),
                 'send_signup_email' => array(
-                    "singular" => __( "Send the signup email to the selected record?", 'participants-database' ),
-                    "plural" => __( "Send the signup email to the selected records?", 'participants-database' ),
+                    "singular" => esc_html__( "Send the signup email to the selected record?", 'participants-database' ),
+                    "plural" => esc_html__( "Send the signup email to the selected records?", 'participants-database' ),
                 ),
                 'send_resend_link_email' => array(
-                    "singular" => __( 'Send the "resend link" email to the selected record?', 'participants-database' ),
-                    "plural" => __( 'Send the "resend link" email to the selected records?', 'participants-database' ),
+                    "singular" => esc_html__( 'Send the "resend link" email to the selected record?', 'participants-database' ),
+                    "plural" => esc_html__( 'Send the "resend link" email to the selected records?', 'participants-database' ),
                 ),
-                'recipient_count_exceeds_limit' => sprintf( __( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database' ), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}' ),
+                'recipient_count_exceeds_limit' => sprintf( esc_html__( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database' ), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}' ),
                     )
     );
 
@@ -229,7 +229,7 @@ class PDb_List_Admin {
     self::_main_table();
 
     // output the pagination controls
-    echo '<div class="pdb-list">' . self::$pagination->links() . '</div>';
+    echo '<div class="pdb-list">' . wp_kses( self::$pagination->links(), Participants_Db::allowed_html('form') ) . '</div>';
 
     // print the CSV export form (authorized users only)
     if ( self::user_can_export_csv() ) {
@@ -323,7 +323,7 @@ class PDb_List_Admin {
       <?php do_action( 'pdb-list_admin_head' ); ?>
       <div id="poststuff">
         <div class="post-body">
-          <h2><?php echo Participants_Db::plugin_label( 'list_participants_title' ) ?></h2>
+          <h2><?php echo esc_html( Participants_Db::plugin_label( 'list_participants_title' ) ) ?></h2>
           <?php
         }
 
@@ -365,7 +365,7 @@ class PDb_List_Admin {
           $filter_columns = array_merge( self::recent_field_option(), $filter_columns, PDb_admin_list\search_field_group::group_selector() );
           ?>
           <div class="pdb-searchform">
-            <form method="post" id="sort_filter_form" action="<?php echo self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ?>" >
+            <form method="post" id="sort_filter_form" action="<?php echo esc_attr( self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ) ?>" >
               <input type="hidden" name="action" value="admin_list_filter">
               <table class="form-table">
                 <tbody><tr><td>
@@ -391,24 +391,24 @@ class PDb_List_Admin {
                           <span class="filter-search-term">
 
                             <?php
-                            echo _x( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' ) . '&nbsp;';
+                            echo esc_html_x( 'that', 'joins two search terms, such as in "Show only records with last name that is Smith"', 'participants-database' ) . '&nbsp;';
                             $element = array(
                                 'type' => 'dropdown',
                                 'name' => 'operator[' . $i . ']',
                                 'value' => $filter_set[ 'operator' ],
                                 'options' => array(
                                     PDb_FormElement::null_select_key() => false,
-                                    __( 'is', 'participants-database' ) => '=',
-                                    __( 'is not', 'participants-database' ) => '!=',
-                                    __( 'contains', 'participants-database' ) => 'LIKE',
-                                    __( 'doesn&#39;t contain', 'participants-database' ) => 'NOT LIKE',
-                                    __( 'is greater than', 'participants-database' ) => 'gt',
-                                    __( 'is less than', 'participants-database' ) => 'lt',
+                                    esc_html__( 'is', 'participants-database' ) => '=',
+                                    esc_html__( 'is not', 'participants-database' ) => '!=',
+                                    esc_html__( 'contains', 'participants-database' ) => 'LIKE',
+                                    esc_html__( 'doesn&#39;t contain', 'participants-database' ) => 'NOT LIKE',
+                                    esc_html__( 'is greater than', 'participants-database' ) => 'gt',
+                                    esc_html__( 'is less than', 'participants-database' ) => 'lt',
                                 ),
                             );
                             PDb_FormElement::print_element( $element );
                             ?>
-                            <input id="participant_search_term_<?php echo $i ?>" type="text" name="value[<?php echo esc_attr( $i ) ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
+                            <input id="participant_search_term_<?php echo esc_attr( $i ) ?>" type="text" name="value[<?php echo esc_attr( $i ) ?>]" value="<?php echo esc_attr( $filter_set[ 'value' ] ) ?>">
                           </span>
                           <?php
                           if ( $i < $filter_count - 1 ) {
@@ -418,8 +418,8 @@ class PDb_List_Admin {
                                 'name' => 'logic[' . $i . ']',
                                 'value' => $filter_set[ 'logic' ],
                                 'options' => array(
-                                    __( 'and', 'participants-database' ) => 'AND',
-                                    __( 'or', 'participants-database' ) => 'OR',
+                                    esc_html__( 'and', 'participants-database' ) => 'AND',
+                                    esc_html__( 'or', 'participants-database' ) => 'OR',
                                 ),
                             );
                           } else {
@@ -435,8 +435,8 @@ class PDb_List_Admin {
                         </fieldset>
                       <?php endfor ?>
                       <fieldset class="widefat inline-controls">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'filter' ] ?>">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo self::$i18n[ 'clear' ] ?>">
+                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo esc_attr( self::$i18n[ 'filter' ] ) ?>">
+                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo esc_attr( self::$i18n[ 'clear' ] ) ?>">
                         <div class="widefat inline-controls filter-count">
                           <label for="list_filter_count"><?php _e( 'Number of filters to use: ', 'participants-database' ) ?><input id="list_filter_count" name="list_filter_count" class="number-entry single-digit" type="number" max="5" min="1" value="<?php echo esc_attr( $filter_count ) ?>"  /></label>
                         </div>
@@ -458,13 +458,13 @@ class PDb_List_Admin {
                             'name' => 'ascdesc',
                             'value' => strtolower( self::$list_filter->value( 'ascdesc' ) ),
                             'options' => array(
-                                __( 'Ascending', 'participants-database' ) => 'asc',
-                                __( 'Descending', 'participants-database' ) => 'desc'
+                                esc_html__( 'Ascending', 'participants-database' ) => 'asc',
+                                esc_html__( 'Descending', 'participants-database' ) => 'desc'
                             ),
                         );
                         PDb_FormElement::print_element( $element );
                         ?>
-                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo self::$i18n[ 'sort' ] ?>">
+                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo esc_attr( self::$i18n[ 'sort' ] ) ?>">
                       </fieldset>
                     </td></tr></tbody></table>
             </form>
@@ -522,7 +522,7 @@ class PDb_List_Admin {
                                       )
                               )
                       ?>
-                      <?php printf( __( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
+                      <?php printf( esc_html__( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
                       <?php PDb_FormElement::print_element( array( 'type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n[ 'change' ] ) ) ?>
                     </fieldset>
                   </td>
@@ -531,7 +531,7 @@ class PDb_List_Admin {
                   <tr>
                     <td>
                       <fieldset class="list-controls">
-                        <?php echo self::with_selected_control(); ?>
+                        <?php echo wp_kses( self::with_selected_control(), Participants_Db::allowed_html('form') ); ?>
                       </fieldset>
                     </td>
                   </tr>
@@ -554,7 +554,7 @@ class PDb_List_Admin {
             ?>
             <?php if ( $hscroll ) : ?>
               <div class="pdb-horiz-scroll-scroller">
-                <div class="pdb-horiz-scroll-width" style="width: <?php echo count( self::$display_columns ) * 10 ?>em">
+                <div class="pdb-horiz-scroll-width" style="width: <?php echo esc_attr( count( self::$display_columns ) * 10 ) ?>em">
                 <?php endif ?>
                 <table class="wp-list-table widefat fixed pages pdb-list stuffbox" cellspacing="0" >
                   <?php
@@ -594,7 +594,7 @@ class PDb_List_Admin {
                             <?php if ( self::user_can_use_with_selected() ) : ?>
                               <input type="checkbox" class="delete-check" name="pid[]" value="<?php echo esc_attr( $value[ 'id' ] ) ?>" />
                             <?php endif ?>
-                            <a href="admin.php?page=<?php echo 'participants-database' ?>-edit_participant&amp;action=edit&amp;id=<?php echo $value[ 'id' ] ?>" title="<?php _e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
+                            <a href="admin.php?page=participants-database-edit_participant&amp;action=edit&amp;id=<?php echo esc_attr($value[ 'id' ]) ?>" title="<?php esc_attr_e( 'Edit', 'participants-database' ) ?>"><span class="dashicons dashicons-edit"></span></a>
                           </td>
                           <?php
                           foreach ( self::$display_columns as $column ) {
@@ -812,15 +812,15 @@ class PDb_List_Admin {
     $approval_field_name = Participants_Db::apply_filters( 'approval_field', 'approved' );
     if ( PDb_Form_Field_Def::is_field( $approval_field_name ) ) {
       $core_actions = array(
-          __( 'approve', 'participants-database' ) => 'approve',
-          __( 'unapprove', 'participants-database' ) => 'unapprove',
+          esc_html__( 'approve', 'participants-database' ) => 'approve',
+          esc_html__( 'unapprove', 'participants-database' ) => 'unapprove',
       ) + $core_actions;
     }
 
     // add the delete action
     if ( current_user_can( Participants_Db::plugin_capability( 'record_edit_capability', 'delete participants' ) ) ) {
       $core_actions = array(
-          __( 'delete', 'participants-database' ) => 'delete'
+          esc_html__( 'delete', 'participants-database' ) => 'delete'
               ) + $core_actions;
     }
     
@@ -1026,12 +1026,12 @@ class PDb_List_Admin {
    */
   public static function register_admin_list_events( $list )
   {
-    $prefix = __( 'PDb Admin List With Selected: ', 'participants-database' );
+    $prefix = esc_html__( 'PDb Admin List With Selected: ', 'participants-database' );
     $admin_list_events = array(
-        'pdb-list_admin_with_selected_delete' => $prefix . __( 'delete', 'participants-database' ),
-        'pdb-list_admin_with_selected_approve' => $prefix . __( 'approve', 'participants-database' ),
-        'pdb-list_admin_with_selected_unapprove' => $prefix . __( 'unapprove', 'participants-database' ),
-        'pdb-list_admin_with_selected_send_signup_email' => $prefix . __( 'send signup email', 'participants-database' ),
+        'pdb-list_admin_with_selected_delete' => $prefix . esc_html__( 'delete', 'participants-database' ),
+        'pdb-list_admin_with_selected_approve' => $prefix . esc_html__( 'approve', 'participants-database' ),
+        'pdb-list_admin_with_selected_unapprove' => $prefix . esc_html__( 'unapprove', 'participants-database' ),
+        'pdb-list_admin_with_selected_send_signup_email' => $prefix . esc_html__( 'send signup email', 'participants-database' ),
     );
     return $list + $admin_list_events;
   }
@@ -1110,14 +1110,14 @@ class PDb_List_Admin {
 
     /* translators: the following 5 strings are used in logic matching, please test after translating in case special characters cause problems */
     self::$i18n = array(
-        'delete_checked' => _x( 'Delete Checked', 'submit button label', 'participants-database' ),
-        'change' => _x( 'Change', 'submit button label', 'participants-database' ),
-        'sort' => _x( 'Sort', 'submit button label', 'participants-database' ),
-        'filter' => _x( 'Filter', 'submit button label', 'participants-database' ),
-        'clear' => _x( 'Clear', 'submit button label', 'participants-database' ),
-        'search' => _x( 'Search', 'search button label', 'participants-database' ),
-        'apply' => __( 'Apply' ),
-        'with_selected' => _x( 'With selected', 'phrase used just before naming the action to perform on the selected items', 'participants-database' ),
+        'delete_checked' => esc_html_x( 'Delete Checked', 'submit button label', 'participants-database' ),
+        'change' => esc_html_x( 'Change', 'submit button label', 'participants-database' ),
+        'sort' => esc_html_x( 'Sort', 'submit button label', 'participants-database' ),
+        'filter' => esc_html_x( 'Filter', 'submit button label', 'participants-database' ),
+        'clear' => esc_html_x( 'Clear', 'submit button label', 'participants-database' ),
+        'search' => esc_html_x( 'Search', 'search button label', 'participants-database' ),
+        'apply' => esc_html__( 'Apply' ),
+        'with_selected' => esc_html_x( 'With selected', 'phrase used just before naming the action to perform on the selected items', 'participants-database' ),
     );
   }
 
