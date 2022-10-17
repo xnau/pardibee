@@ -149,7 +149,7 @@ PDb_FormElement::print_element( $parameters );
               <p>
                 <label>
 <?php
-echo __( 'Duplicate Record Preference', 'participants-database' ) . ': ';
+esc_html_e( 'Duplicate Record Preference', 'participants-database' ) . ': ';
 $parameters = array(
     'type' => 'dropdown',
     'name' => 'match_preference',
