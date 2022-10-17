@@ -71,8 +71,8 @@ class rich_text_editor {
   {
     $output = array();
 
-    $output[] = '<textarea name="' . $this->fieldname . '" id="' . $this->element_id() . '" ' . $this->textarea_dim_atts() . '>';
-    $output[] = $this->value;
+    $output[] = '<textarea name="' . esc_attr( $this->fieldname ) . '" id="' . esc_attr( $this->element_id() ) . '" ' . esc_attr( $this->textarea_dim_atts() ) . '>';
+    $output[] = wp_kses_post( $this->value );
     $output[] = '</textarea>';
     $output[] = $this->field_js();
 
