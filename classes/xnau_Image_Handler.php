@@ -364,7 +364,7 @@ abstract class xnau_Image_Handler {
         //$this->image_file = basename($this->image_file);
         $this->file_exists = true;
         $this->image_defined = true;
-        $this->_set_dimensions();
+        $this->set_image_dimensions( $this->image_uri );
         break;
 
       default:
@@ -579,6 +579,7 @@ abstract class xnau_Image_Handler {
     if ( $this->test_url_validity( $src ) /* and false !== self::getimagesize($src) */ ) {
       return $this->file_exists = true;
     }
+    return false;
   }
 
   /**
@@ -622,6 +623,22 @@ abstract class xnau_Image_Handler {
   }
 
   /**
+   * sets the dimension properties
+   *
+   * @param string $src the absolute image source path
+   */
+  protected function set_image_dimensions( $src )
+  {
+    $getimagesize = self::getimagesize( $src );
+
+    if ( false !== $getimagesize ) {
+
+      $this->width = $getimagesize[0];
+      $this->height = $getimagesize[1];
+    }
+  }
+
+  /**
    * performs a php getimagesize using a cache
    * 
    * @param string $uri the image uri
@@ -632,9 +649,8 @@ abstract class xnau_Image_Handler {
     $found = false;
     $result = wp_cache_get( $uri, self::group, false, $found );
     if ( $found === false ) {
-      
       try {
-        $result = getimagesize( $uri );
+        $result = @getimagesize( $uri );
       } catch (Exception $e) {
         Participants_Db::debug_log( __METHOD__ . ' ' . $e->getMessage() );
       }
