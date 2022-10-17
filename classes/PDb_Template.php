@@ -173,7 +173,7 @@ class PDb_Template {
   public function print_title( $name )
   {
 
-    echo $this->get_field_prop( $name, 'title' );
+    echo wp_kses_post( $this->get_field_prop( $name, 'title' ) );
   }
 
   /**
@@ -184,7 +184,7 @@ class PDb_Template {
   public function print_help_text( $name )
   {
 
-    echo $this->get_field_prop( $name, 'help_text' );
+    echo wp_kses_post( $this->get_field_prop( $name, 'help_text' ) );
   }
 
   /**
@@ -196,7 +196,7 @@ class PDb_Template {
    */
   public function print_field_prop( $name, $prop )
   {
-    echo $this->get_field_prop( $name, $prop );
+    echo wp_kses_post( $this->get_field_prop( $name, $prop ) );
   }
 
   /**
@@ -207,7 +207,7 @@ class PDb_Template {
    */
   public function print_group_title( $name )
   {
-    echo $this->get_group_prop( $name, 'title' );
+    echo wp_kses_post( $this->get_group_prop( $name, 'title' ) );
   }
 
   /**
@@ -231,7 +231,7 @@ class PDb_Template {
    */
   public function print_group_description( $name )
   {
-    echo $this->get_group_prop( $name, 'description' );
+    echo wp_kses_post( $this->get_group_prop( $name, 'description' ) );
   }
 
   /**
@@ -445,7 +445,7 @@ class PDb_Template {
    */
   public function print_form_element( $name )
   {
-    echo $this->get_form_element( $name );
+    echo wp_kses( $this->get_form_element( $name ), Participants_Db::allowed_html( 'form' ) );
   }
   
   /**
@@ -526,7 +526,7 @@ class PDb_Template {
   protected function _print( $name )
   {
     if ( $this->is_defined_field( $name ) ) {
-      echo $this->get_field( $name )->get_value_display();
+      echo wp_kses( $this->get_field( $name )->get_value_display(), Participants_Db::allowed_html('post') );
     }
   }
 
