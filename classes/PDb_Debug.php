@@ -188,7 +188,7 @@ class PDb_Debug {
    */
   private function print_log()
   {
-    echo $this->get_log();
+    echo wp_kses_post( $this->get_log() );
   }
 
   /**
@@ -202,7 +202,7 @@ class PDb_Debug {
     <div class="wrap pdb-admin-settings participants_db pdb-debugging" >
 
     <?php Participants_Db::admin_page_heading() ?>  
-      <h2><?php echo Participants_Db::$plugin_title . ' ' . $this->log_title ?></h2>
+      <h2><?php echo esc_html( Participants_Db::$plugin_title . ' ' . $this->log_title ) ?></h2>
       <div class="pdb-log-display-frame form-group">
 
         <div class="pdb-log-display">
