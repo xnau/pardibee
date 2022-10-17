@@ -575,13 +575,11 @@ class PDb_Base {
   /**
    * provides the basic string sanitize flags for a php filter function
    * 
-   * this allows only ASCII 32-127 don't use if non-english characters are to be included
-   * 
    * @return array
    */
   public static function string_sanitize()
   {
-    return array( 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK );
+    return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK );
   }
   
   /**
