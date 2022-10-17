@@ -349,7 +349,7 @@ abstract class PDb_Shortcode {
     ob_start();
 
     if ( PDB_DEBUG && stripos( $this->template, 'bare' ) === false ) {
-      echo '<!-- template: ' . $this->template_basename( $this->template ) . ' -->';
+      echo '<!-- template: ' . esc_html( $this->template_basename( $this->template ) ) . ' -->';
     }
 
     /**
@@ -362,7 +362,7 @@ abstract class PDb_Shortcode {
     $this->_include_template();
 
     if ( PDB_DEBUG && stripos( $this->template, 'bare' ) === false ) {
-      echo '<!-- end template: ' . $this->template_basename( $this->template ) . ' -->';
+      echo '<!-- end template: ' . esc_html( $this->template_basename( $this->template ) ) . ' -->';
     }
     
     /**
@@ -493,7 +493,7 @@ abstract class PDb_Shortcode {
         Participants_Db::$validation_errors->set_error_html( $container, $wrap );
       }
 
-      echo Participants_Db::$validation_errors->get_error_html();
+      wp_kses( Participants_Db::$validation_errors->get_error_html(), Participants_Db::allowed_html('form') );
     }
   }
 
