@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 1.2
+ * @version 1.3
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -12,7 +12,7 @@ var PDbListAdmin = (function ($) {
   var apply_button = $('#apply_button').prop('disabled', true).addClass('unarmed');
   var checkall = $('#checkall');
   var submitElement = $('<input type="hidden" name="submit-button" />');
-  var task_selector = $('#pdb-with_selected-1');
+  var task_selector = $('[name=with_selected]');
   var speed = 300;
   var spinner;
   var armDeleteButton = function (state) {
@@ -90,7 +90,7 @@ var PDbListAdmin = (function ($) {
               input.find('.field-input-label, .field-input').fadeTo(speed,1);
               input.removeClass('changeout');
               PDbOtherSelect.init();
-              if (PDbDatepicker) PDbDatepicker.init();
+              if (typeof PDbDatepicker!=='undefined') PDbDatepicker.init();
             }
     );
   }
@@ -143,7 +143,7 @@ var PDbListAdmin = (function ($) {
         e.preventDefault();
         var send_count = parseInt(count_element.val(), 10);
         var sense = (send_count > 1) ? 'plural' : 'singular';
-        var action = $('[name=with_selected]').val();
+        var action = task_selector.val();
         var overlimit = !list_adminL10n.unlimited_actions.includes(action) && send_count > parseInt(list_adminL10n.send_limit);
         var limit_message = overlimit ? $('<h4 class="dashicons-before dashicons-warning"/>').append(list_adminL10n.apply_confirm.recipient_count_exceeds_limit.replace('{limit}', list_adminL10n.send_limit)) : '';
         confirmDialog.append($('<h3/>').append(list_adminL10n.apply_confirm[action][sense])).append(limit_message).dialog('open').find('a').blur();
