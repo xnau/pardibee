@@ -255,3 +255,7 @@ button .dashicons {
 .manage-fields textarea:invalid {
   box-shadow: 0 0 5px 1px red;
 }
+
+.pdb-help-link {
+  cursor: help;
+}
