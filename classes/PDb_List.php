@@ -593,9 +593,12 @@ class PDb_List extends PDb_Shortcode {
     $output[] = PDb_FormElement::print_hidden_fields( array_merge( $this->search_sort_form_hidden_fields(), $hidden_fields ), false );
 
     if ( $print )
-      echo $this->output_HTML( $output );
-    else
+    {
+      echo wp_kses( $this->output_HTML( $output ), Participants_Db::allowed_html( 'form' ) );
+    } else
+    {
       return $this->output_HTML( $output );
+    }
   }
   
   /**
@@ -769,7 +772,7 @@ class PDb_List extends PDb_Shortcode {
     $html = Participants_Db::apply_filters( 'search_control_html', $this->output_HTML( $output ) );
 
     if ( $print )
-      echo $html;
+      echo wp_kses( $html, Participants_Db::allowed_html ( 'form' ) );
     else
       return $html;
   }
@@ -849,9 +852,12 @@ class PDb_List extends PDb_Shortcode {
     $output[] = '<input name="submit_button" data-submit="sort" type="submit" value="' . esc_attr( $this->i18n['sort'] ) . '" />';
 
     if ( $print )
-      echo $this->output_HTML( $output );
-    else
+    {
+      echo wp_kses( $this->output_HTML( $output ), Participants_Db::allowed_html( 'form' ) );
+    } else
+    {
       return $this->output_HTML( $output );
+    }
   }
 
   /**
@@ -891,9 +897,12 @@ class PDb_List extends PDb_Shortcode {
               ) . $wrap_tag_close;
 
       if ( $print )
-        echo $output;
-      else
+      {
+        echo wp_kses( $output, Participants_Db::allowed_html('form' ) );
+      } else
+      {
         return $output;
+      }
     }
   }
   
@@ -978,7 +987,7 @@ class PDb_List extends PDb_Shortcode {
       $this->pagination->set_wrappers( $this->pagination_wrap );
 
       // print the control
-      echo $this->pagination->create_links();
+      echo wp_kses( $this->pagination->create_links(), Participants_Db::allowed_html( 'form' ) );
     }
   }
 
@@ -1040,7 +1049,7 @@ class PDb_List extends PDb_Shortcode {
     $date = PDb_Date_Display::get_date( $value, __METHOD__ );
 
     if ( $print )
-      echo $date;
+      echo esc_html( $date );
     else
       return $date;
   }
@@ -1061,9 +1070,12 @@ class PDb_List extends PDb_Shortcode {
     $output = implode( $glue, $array );
 
     if ( $print )
-      echo $output;
-    else
+    {
+      echo esc_html( $output );
+    } else
+    {
       return $output;
+    }
   }
 
   /**
@@ -1308,7 +1320,7 @@ class PDb_List extends PDb_Shortcode {
         <h3><?php echo esc_html( $title ) ?></h3>
         <?php endif ?>
         <form method="post" class="csv-export">
-          <input type="hidden" name="subsource" value="<?php echo Participants_Db::PLUGIN_NAME ?>">
+          <input type="hidden" name="subsource" value="<?php echo esc_attr( Participants_Db::PLUGIN_NAME ) ?>">
           <input type="hidden" name="action" value="output CSV" />
           <input type="hidden" name="CSV type" value="participant list" />
           <input type="hidden" name="<?php echo esc_attr( PDb_Session::id_var ) ?>" value="<?php echo esc_attr( Participants_Db::$session->session_id() ) ?>" />
