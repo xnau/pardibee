@@ -244,7 +244,7 @@ class PDb_Record extends PDb_Shortcode {
   private function print_save_changes_label()
   {
 
-    echo Participants_Db::plugin_setting( 'save_changes_label' );
+    echo esc_html( Participants_Db::plugin_setting( 'save_changes_label' ) );
   }
 
   /**
