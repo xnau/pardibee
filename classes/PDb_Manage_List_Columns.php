@@ -257,15 +257,15 @@ class PDb_Manage_List_Columns {
     ?>
     <div class="wrap participants_db">
       <?php Participants_Db::admin_page_heading() ?>
-      <h3><?php echo Participants_Db::plugin_label( 'manage_list_columns' ) ?></h3>
+      <h3><?php echo esc_html( Participants_Db::plugin_label( 'manage_list_columns' ) ) ?></h3>
       <?php Participants_Db::admin_message(); ?>
-      <p><?php _e( 'Drag the fields you want shown from the "Available Fields" area to the "List Columns" area below. The fields can be re-ordered or removed from the List Columns area.', 'participants-database' ) ?>
+      <p><?php esc_html_e( 'Drag the fields you want shown from the "Available Fields" area to the "List Columns" area below. The fields can be re-ordered or removed from the List Columns area.', 'participants-database' ) ?>
       </p>
       <div class='column-setup-pair' id="publicfields">
-        <h3><?php _e( 'Public List Column Setup', 'participants-database' ) ?></h3>
-        <p><?php _e( 'Set up the columns for list displays using the [pdb_list] shortcode.', 'participants-database' ) ?></p>
+        <h3><?php esc_html_e( 'Public List Column Setup', 'participants-database' ) ?></h3>
+        <p><?php esc_html_e( 'Set up the columns for list displays using the [pdb_list] shortcode.', 'participants-database' ) ?></p>
         <div class='available-fields'>
-          <p><?php _e( 'Available Fields:', 'participants-database' ) ?></p>
+          <p><?php esc_html_e( 'Available Fields:', 'participants-database' ) ?></p>
           <ul id="pubfields-source" class='field-list fields-sortable'>
             <?php
             $group = '';
@@ -275,7 +275,7 @@ class PDb_Manage_List_Columns {
                 $field->class = 'newgroup';
                 echo '<li class="break"></li>';
               }
-              echo $this->field_item( $field );
+              echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
             ?>
           </ul>
@@ -285,7 +285,7 @@ class PDb_Manage_List_Columns {
           <ul id="pubfields-chosen" class='field-list columnsetup fields-sortable'>
             <?php
             foreach ( $this->configured_fields( 'public' ) as $field ) {
-              echo $this->field_item( $field );
+              echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
             ?>
           </ul>
@@ -305,7 +305,7 @@ class PDb_Manage_List_Columns {
                 $field->class = 'newgroup';
                 echo '<li class="break"></li>';
               }
-              echo $this->field_item( $field );
+              echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
             ?>
           </ul>
@@ -315,7 +315,7 @@ class PDb_Manage_List_Columns {
           <ul id="adminfields-chosen" class='field-list columnsetup fields-sortable'>
             <?php
             foreach ( $this->configured_fields( 'admin' ) as $field ) {
-              echo $this->field_item( $field );
+              echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
             ?>
           </ul>
@@ -531,6 +531,23 @@ class PDb_Manage_List_Columns {
     }
 
     return $colorclass . ' ' . $baseclass;
+  }
+  
+  /**
+   * provides the allowed html array for a field item
+   * 
+   * @return array
+   */
+  private function allowed_html()
+  {
+    return array(
+        'li' => array(
+            'class' => 1,
+            'data-id' => 1,
+            'data-fieldname' => 1,
+            'data-order' => 1,
+        ),
+      );
   }
 
 }
