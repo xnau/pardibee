@@ -592,67 +592,115 @@ class PDb_Base {
    */
   public static function allowed_html( $type )
   {
-    $base_attributes = array(
-        'id' => 1,
-        'class' => 1,
-        );
-    $allowed = array(
-        'a' => array(
-            'href' => 1,
-            'title' => 1,
-            'target' => 1,
-        ) + $base_attributes,
-        'break' => array(),
-        'br' => array(),
-    );
-    $additional = array();
+    $cachekey = 'pdb-allowed-html' ;
     
-    $form_allowed = array(
-          'form' => array(
-              'method' => 1,
-              'enctype' => 1,
-              'action' => 1,
-          ) + $base_attributes,
-          'input' => array(
-              'name' => 1,
-              'type' => 1,
-              'value' => 1,
-              'data-id' => 1,
+    $all_allowed = wp_cache_get( $cachekey, $type );
+    
+    if ( ! $all_allowed ) {
+      $base_attributes = array(
+          'id' => 1,
+          'class' => 1,
+          'style' => 1,
+          );
+      $allowed = array(
+          'a' => array(
+              'href' => 1,
               'title' => 1,
-              'data-title' => 1,
-              'checked' => 1,
-              'size' => 1,
-              'max' => 1,
-              'maxlength' => 1,
-              'min' => 1,
-              'minlength' => 1,
-              'alt' => 1,
-              'accept' => 1,
+              'target' => 1,
+              'rel' => 1,
+              'data-page' => 1,
           ) + $base_attributes,
-          'select' => array(
-              'name' => 1,
-          ) + $base_attributes,
-          'option' => array(
-              'value' => 1,
-              'selected' => 1,
-          ),
-          'textarea' => array(
-              'name' => 1,
-              'rows' => 1,
-              'cols' => 1,
-          ) + $base_attributes,
-        );
-    
-    switch ($type)
-    {
-      case 'form':
-        $additional = $form_allowed;
-        break;
-    }
-    
-    $all_allowed = $allowed + $additional + wp_kses_allowed_html('post');
+          'break' => array(),
+          'br' => array(),
+          'style' => array(),
+      );
+      $additional = array();
 
-    return $all_allowed;
+      $form_allowed = array(
+            'form' => array(
+                'method' => 1,
+                'enctype' => 1,
+                'action' => 1,
+            ) + $base_attributes,
+            'input' => array(
+                'name' => 1,
+                'type' => 1,
+                'value' => 1,
+                'data-id' => 1,
+                'title' => 1,
+                'data-title' => 1,
+                'checked' => 1,
+                'size' => 1,
+                'max' => 1,
+                'maxlength' => 1,
+                'min' => 1,
+                'minlength' => 1,
+                'alt' => 1,
+                'accept' => 1,
+                'step' => 1,
+                'disabled' => 1,
+                'pattern' => 1,
+                'placeholder' => 1,
+                'readonly' => 1,
+                'required' => 1,
+            ) + $base_attributes,
+            'select' => array(
+                'name' => 1,
+                'multiple' => 1,
+                'data-placeholder' => 1,
+                'disabled' => 1,
+                'required' => 1,
+            ) + $base_attributes,
+            'option' => array(
+                'value' => 1,
+                'selected' => 1,
+                'data-imagesrc' => 1,
+                'disabled' => 1,
+                'label' => 1,
+            ) + $base_attributes,
+            'textarea' => array(
+                'name' => 1,
+                'rows' => 1,
+                'cols' => 1,
+                'title' => 1,
+                'maxlength' => 1,
+                'minlength' => 1,
+                'placeholder' => 1,
+                'readonly' => 1,
+                'required' => 1,
+            ) + $base_attributes,
+            'optgroup' => array(
+                'label' => 1,
+                'disabled' => 1,
+            ),
+            'label' => array(
+                'title' => 1,
+            ) + $base_attributes,
+            'fieldset' => array(
+                'disabled' => 1,
+                'form' => 1,
+                'name' => 1,
+              ) + $base_attributes,
+          );
+
+      switch ($type)
+      {
+        case 'form':
+          $additional = $form_allowed;
+          break;
+      }
+
+      $wp_allowed_post =  wp_kses_allowed_html('post');
+
+      // add allowed attributes to the core allowed array
+      $wp_allowed_post['div']['data-action'] = 1;
+
+      $all_allowed = $allowed + $additional + $wp_allowed_post;
+      
+      wp_cache_add( $cachekey, $all_allowed, $type );
+    }
+
+    return Participants_Db::apply_filters( 'allowed_html_' . $type, $all_allowed );
   }
 
   /**
