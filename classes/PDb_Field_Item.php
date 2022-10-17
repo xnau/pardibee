@@ -168,7 +168,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_label()
   {
-    echo $this->_label();
+    echo wp_kses_post( $this->_label() );
   }
 
   /**
@@ -178,7 +178,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function print_value( $print = true )
   {
     if ( $print ) {
-      echo $this->get_value_display();
+      echo wp_kses( $this->get_value_display(), Participants_Db::allowed_html( 'post' ) );
     } else {
       return $this->get_value_display();
     }
@@ -809,7 +809,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_class()
   {
-    echo $this->element_class();
+    echo esc_attr( $this->element_class() );
   }
 
   /**
@@ -817,7 +817,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element_id()
   {
-    echo PDb_Template_Item::prep_css_class_string( $this->base_id() );
+    echo esc_attr( PDb_Template_Item::prep_css_class_string( $this->base_id() ) );
   }
 
   /**
@@ -845,7 +845,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_element()
   {
-    echo $this->get_element();
+    echo wp_kses( $this->get_element(), Participants_Db::allowed_html('form') );
   }
 
   /**
