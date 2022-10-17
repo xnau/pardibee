@@ -899,18 +899,29 @@ class PDb_Field_Def_Parameter {
         $name = 'readonly';
         break;
       case 'validation':
-        $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-validation" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+        $name = $titles[$this->name] . $this->help_link( 'field-validation' );
         break;
       case 'options':
-        $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-options" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+        $name = $titles[$this->name] . $this->help_link( 'field-options' );
         break;
       case 'attributes':
-        $name = $titles[$this->name] . ' <a href="'.PDb_Manage_Fields::help_page.'#field-attributes" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
+        $name = $titles[$this->name] . $this->help_link( 'field-attributes' );
         break;
       default:
         $name = $this->name;
     }
     return isset( $titles[$name] ) ? $titles[$name] : Participants_Db::apply_filters( 'translate_string', $name );
+  }
+  
+  /**
+   * provides a help link
+   * 
+   * @param string $anchor
+   * @return string link HTML
+   */
+  protected function help_link( $anchor )
+  {
+    return sprintf( ' <a href="'.PDb_Manage_Fields::help_page.'#%s" target="_blank" class="pdb-help-link" ><span class="dashicons dashicons-editor-help"></span></a>', esc_attr( $anchor ) );
   }
 
 }
