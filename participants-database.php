@@ -3111,7 +3111,7 @@ class Participants_Db extends PDb_Base {
 
     // output the filtered shortcode content
     header( "Content-Type:	text/html" );
-    echo PDb_List::get_list( $shortcode_atts );
+    echo wp_kses( PDb_List::get_list( $shortcode_atts ), Participants_Db::allowed_html('form') );
     return;
   }
 
