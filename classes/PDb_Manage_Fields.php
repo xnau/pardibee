@@ -192,7 +192,9 @@ class PDb_Manage_Fields {
 
           <?php
           while ( $control_html = $field_definition_attributes->get_next_control() ) {
-            echo wp_kses( $control_html, self::allowed_html() );
+            
+            // this is so the comma entity will display literally
+            echo str_replace( array('&#044;', '&#44;'), '&amp;#44;', wp_kses( $control_html, self::allowed_html() ) );
           }
           ?>
 
@@ -386,7 +388,7 @@ class PDb_Manage_Fields {
                       )
               );
               ?>
-              <label><?php echo $this->i18n[ 'new field form element' ] ?></label>
+              <label><?php echo esc_html( $this->i18n[ 'new field form element' ] ) ?></label>
               <?php
               /**
                * filter to control which form elements are available for new fields
@@ -409,7 +411,7 @@ class PDb_Manage_Fields {
               );
               ?>
               <div class="add-field-submit-wrap">
-                <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo $this->i18n[ 'add field' ] ?></button>
+                <button type="submit" class="button button-primary add-field-submit disabled" name="action" value="add_field" disabled="disabled"  ><?php echo esc_html( $this->i18n[ 'add field' ] ) ?></button>
                 <button class="button button-secondary add-field-submit" name="add-field-cancel" ><?php _e( 'Cancel', 'participants-database' ) ?></button>
               </div>
             </div>
