@@ -72,7 +72,7 @@ if ( $participant_values ) :
     <h2><?php echo esc_html( $page_title ) ?></h2>
     <?php
     if ( is_object( Participants_Db::$validation_errors ) ) {
-      echo Participants_Db::$validation_errors->get_error_html();
+      echo wp_kses( Participants_Db::$validation_errors->get_error_html(), Participants_Db::allowed_html( 'post' ) );
     } else {
       Participants_Db::admin_message();
     }
@@ -136,7 +136,6 @@ if ( $participant_values ) :
           <tbody>
             <?php
           endif; // new section
-//          echo $id_line;
           ?>
 
           <tr class="<?php esc_attr_e( ( $column->is_hidden_field() ? 'text-line' : $column->form_element() ) . ' ' . $column->name() . '-field' . apply_filters( 'pdb-field_empty_class', '', $column ) ) ?>">
