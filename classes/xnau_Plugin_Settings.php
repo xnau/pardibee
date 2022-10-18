@@ -355,9 +355,7 @@ class xnau_Plugin_Settings {
       if ( !isset( $input['name'] ) )
         return NULL;
 
-      if ( $input['type'] == 'header' ) {
-        //echo '<h3>' . $input['title'] . '</h3>';
-      } else {
+      if ( $input['type'] !== 'header' ) {
 
         $options = get_option( $this->WP_setting );
 
