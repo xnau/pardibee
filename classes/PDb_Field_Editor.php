@@ -779,7 +779,9 @@ class PDb_Field_Def_Parameter {
     switch ( $this->name ) {
       case 'attributes':
       case 'options':
+        
         $this->config['value'] = htmlspecialchars( PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] ) );
+        
         break;
       case 'deletable':
         return $this->delete_button();
