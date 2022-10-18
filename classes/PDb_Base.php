@@ -619,6 +619,7 @@ class PDb_Base {
                 'method' => 1,
                 'enctype' => 1,
                 'action' => 1,
+                'data-ref' => 1,
             ) + $base_attributes,
             'input' => array(
                 'name' => 1,
@@ -627,6 +628,7 @@ class PDb_Base {
                 'data-id' => 1,
                 'title' => 1,
                 'data-title' => 1,
+                'data-submit' => 1,
                 'checked' => 1,
                 'size' => 1,
                 'max' => 1,
