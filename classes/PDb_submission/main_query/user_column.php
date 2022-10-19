@@ -137,10 +137,12 @@ class user_column extends base_column {
           
           $delete_checkbox = filter_input( INPUT_POST, $this->field->name() . '-deletefile', FILTER_SANITIZE_SPECIAL_CHARS ) === 'delete';
           $filename = '';
+            
+          global $pdb_uploaded_files;
 
           if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the previously uploaded file
             
-            $post_filename = filter_var( $_POST[$this->field->name()], FILTER_SANITIZE_SPECIAL_CHARS );
+            $post_filename = isset($pdb_uploaded_files[$this->field->name()]) ? $pdb_uploaded_files[$this->field->name()] : filter_input( INPUT_POST, $this->field->name(), FILTER_DEFAULT, \Participants_Db::string_sanitize() );
             
             if ( ! empty( $record_filename ) && $post_filename !== $record_filename && Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
               
@@ -154,8 +156,9 @@ class user_column extends base_column {
                 Participants_Db::delete_file( $record_filename );
               }
               
-              unset( $_POST[ $this->field->name() ] );
               $this->value = null;
+              $_POST[$this->field->name()] = '';
+              $pdb_uploaded_files[$this->field->name()] = '';
             }
             
           } else { // it's an import deleting the field value
