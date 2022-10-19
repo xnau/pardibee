@@ -9,7 +9,7 @@
  * 
  */
 ?>
-<div class="wrap <?php echo $this->wrap_class ?>">
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>">
 
   <?php
   /*
@@ -35,7 +35,7 @@
 
       <table  class="form-table">
 
-        <tbody class="field-group field-group-<?php echo $this->group->name ?>">
+        <tbody class="field-group field-group-<?php esc_attr_e( $this->group->name ) ?>">
 
           <?php
           // step through the fields in the current group
@@ -88,7 +88,7 @@
 
     if ( !empty( $error_message ) ) :
       ?>
-      <p class="alert alert-error"><?php echo $error_message ?></p>
+      <p class="alert alert-error"><?php echo wp_kses_post( $error_message ) ?></p>
 
     <?php endif ?>
 

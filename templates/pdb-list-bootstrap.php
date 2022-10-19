@@ -25,7 +25,7 @@ $this->pagination->set_props( array(
     ),
 ) );
 ?>
-<div class="wrap <?php echo $this->wrap_class ?>" id="<?php echo $this->list_anchor ?>">
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>" id="<?php esc_attr_e( $this->list_anchor ) ?>">
   <?php /* SEARCH/SORT FORM */ ?>
   <?php if ( $filter_mode != 'none' ) : ?>
     <div class="pdb-searchform">
@@ -124,12 +124,12 @@ $this->pagination->set_props( array(
             <?php while ( $this->have_fields() ) : $this->the_field(); // each field is one cell  ?>
 
                 <?php if ( $this->field->has_content() ) : ?>
-                <td class="<?php echo $this->field->name() ?>-field" >
+                <td class="<?php esc_attr_e( $this->field->name() ) ?>-field" >
         <?php $this->field->print_value(); ?>
                 </td>
 
               <?php else : // if the field is empty  ?>
-                <td class="<?php echo $this->field->name() ?>-field <?php echo $this->get_empty_class( $this->field ) ?>" ></td>
+                <td class="<?php esc_attr_e( $this->field->name() ) ?>-field <?php esc_attr_e( $this->get_empty_class( $this->field ) ) ?>" ></td>
               <?php endif ?>
 
           <?php endwhile; // each field  ?>
@@ -141,7 +141,7 @@ $this->pagination->set_props( array(
 
       <tbody>
         <tr>
-          <td><?php if ( $this->is_search_result === true ) echo Participants_Db::plugin_setting('no_records_message') ?></td>
+          <td><?php if ( $this->is_search_result === true ) echo wp_kses_post( Participants_Db::plugin_setting('no_records_message') ) ?></td>
         </tr>
       </tbody>
 

@@ -5,9 +5,9 @@
  */
 $mode = isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'success' ? 'success' : 'request';
 ?>
-<div class="wrap <?php echo $this->wrap_class . 'mode-' . $mode ?> " >
+<div class="wrap <?php esc_attr_e( $this->wrap_class . 'mode-' . $mode ) ?> " >
 
-  <h4><?php echo Participants_Db::plugin_setting( 'retrieve_link_title', __( 'Request your Private Link', 'participants-database' ) ) ?></h4>
+  <h4><?php echo wp_kses_post( Participants_Db::plugin_setting( 'retrieve_link_title', __( 'Request your Private Link', 'participants-database' ) ) ) ?></h4>
 
   <?php // output any validation errors
   $this->print_errors();
@@ -15,7 +15,7 @@ $mode = isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'success' ? 'succes
 
 <?php if ( $mode == 'success' ) : ?>
 
-    <h5><?php echo Participants_Db::plugin_setting( 'retrieve_link_success', __( 'Success: your private link has been emailed to you.', 'participants-database' ) ) ?></h5>
+    <h5><?php echo wp_kses_post( Participants_Db::plugin_setting( 'retrieve_link_success', __( 'Success: your private link has been emailed to you.', 'participants-database' ) ) ) ?></h5>
 
   <?php else : ?>
 
@@ -26,7 +26,7 @@ $mode = isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'success' ? 'succes
   <?php while ( $this->have_groups() ) : $this->the_group(); ?>
 
 
-        <tbody class="field-group pdb-group-<?php echo $this->group->name ?>">
+        <tbody class="field-group pdb-group-<?php esc_attr_e( $this->group->name ) ?>">
 
           <?php while ( $this->have_fields() ) : $this->the_field(); ?>
 

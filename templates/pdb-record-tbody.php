@@ -7,7 +7,7 @@
  * 
  */
 ?>
-<div class="wrap <?php echo $this->wrap_class ?>">
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>">
 
   <?php
   if ( $this->record_found() ) :
@@ -24,7 +24,7 @@
 
       <?php while ( $this->have_groups() ) : $this->the_group(); ?>
 
-        <tbody class="field-group field-group-<?php echo $this->group->name ?>">
+        <tbody class="field-group field-group-<?php esc_attr_e( $this->group->name ) ?>">
 
           <tr class="signup-group">
             <td colspan="2">

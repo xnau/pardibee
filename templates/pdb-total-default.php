@@ -12,7 +12,7 @@ if (empty($this->shortcode_atts['fields'])) {
   /* if no "fields" attribute is defined, show a simple count of records, including 
    * the effect of a defined shortcode filter attribute
    */
-  echo $record_count;
+  echo wp_kses_post( $record_count );
   
 } else {
 
@@ -38,6 +38,6 @@ if (empty($this->shortcode_atts['fields'])) {
       
   endwhile;
 
-  echo PDb_Localization::auto_format_number($total);
+  echo wp_kses_post( PDb_Localization::auto_format_number($total) );
   
 }

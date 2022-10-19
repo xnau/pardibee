@@ -4,7 +4,7 @@
  *
  */
 ?>
-<div class="<?php echo $this->wrap_class ?> signup-thanks">
+<div class="<?php esc_attr_e( $this->wrap_class ) ?> signup-thanks">
   <?php
   /*
    * this shows the use of the "signup thanks" setting to generate the message. 
@@ -14,6 +14,6 @@
    * 
    * You can also pass in a message string to override the plugin setting.
    */
-  echo $this->get_thanks_message(); 
+  echo wp_kses_post( $this->get_thanks_message() ); 
   ?>
 </div>

@@ -8,7 +8,7 @@
  * 
  */
 ?>
-<div class="wrap <?php echo $this->wrap_class ?>">
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>">
 
   <?php
   if ( $this->record_found() ) :
@@ -23,7 +23,7 @@
 
     <?php while ( $this->have_groups() ) : $this->the_group(); ?>
 
-      <fieldset class="field-group field-group-<?php echo $this->group->name ?> <?php echo $this->group->printing_title() ? 'group-with-title' : 'group-no-title' ?>">
+      <fieldset class="field-group field-group-<?php esc_attr_e( $this->group->name ) ?> <?php echo $this->group->printing_title() ? 'group-with-title' : 'group-no-title' ?>">
 
         <?php $this->group->print_title( '<legend>', '</legend>' ) ?>
         <?php $this->group->print_description() ?>
@@ -50,14 +50,14 @@
 
         <?php endwhile; // field loop   ?>
 
-      </fieldset><!-- .field-group-<?php echo $this->group->name ?> -->
+      </fieldset><!-- .field-group-<?php esc_attr_e( $this->group->name ) ?> -->
 
     <?php endwhile; // group loop   ?>
 
     <fieldset class="field-group field-group-submit">
       <legend><?php $this->print_save_changes_label() ?></legend>
       <div class="form-group">
-        <button type="submit" class="btn btn-default" ><?php echo $this->shortcode_atts['submit_button'] ?></button>
+        <button type="submit" class="btn btn-default" ><?php echo wp_kses_post( $this->shortcode_atts['submit_button'] ) ?></button>
       </div>
     </fieldset>
 
@@ -69,7 +69,7 @@
 
     if ( !empty( $error_message ) ) :
       ?>
-      <p class="alert alert-error"><?php echo $error_message ?></p>
+      <p class="alert alert-error"><?php echo wp_kses_post( $error_message ) ?></p>
 
     <?php endif ?>
 

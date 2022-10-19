@@ -10,7 +10,7 @@
  */
 ?>
 
-<div class="wrap <?php echo $this->wrap_class ?>" >
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>" >
 
   <?php
   // this is how the html wrapper for the error messages can be customized
@@ -26,7 +26,7 @@
       <?php if ( $this->group->has_fields() ) : ?>
 
         <?php if ( $this->group->printing_title() ) : ?>
-          <fieldset class="field-group field-group-<?php echo $this->group->name ?>">
+          <fieldset class="field-group field-group-<?php esc_attr_e( $this->group->name ) ?>">
             <?php $this->group->print_title( '<legend>', '</legend>' ) ?>
             <?php $this->group->print_description() ?>
           <?php endif ?>
@@ -35,7 +35,7 @@
 
             <?php $feedback_class = $this->field->has_error() ? 'error' : ''; ?>
 
-            <div class="<?php $this->field->print_element_class() ?> control-group <?php echo $feedback_class ?>">
+            <div class="<?php $this->field->print_element_class() ?> control-group <?php esc_attr_e( $feedback_class ) ?>">
               <?php if ( $this->field->has_title() ) : ?>
                 <label class="control-label" for="<?php $this->field->print_element_id() ?>" ><?php $this->field->print_label(); // this function adds the required marker   ?></label>
               <?php endif ?>

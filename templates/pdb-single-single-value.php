@@ -15,7 +15,7 @@ while ($this->have_groups()) : $this->the_group();
   while ($this->have_fields()) : $this->the_field();
   ?>
  		
-    <span class="pdb-value <?php echo $this->field->name . ' ' . $this->get_empty_class($this->field) ?>"><?php $this->field->print_value() ?></span>
+    <span class="pdb-value <?php esc_attr_e( $this->field->name . ' ' . $this->get_empty_class($this->field) ) ?>"><?php $this->field->print_value() ?></span>
     
   <?php
     endwhile;

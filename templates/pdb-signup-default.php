@@ -22,7 +22,7 @@
  *
  */
  ?>
-<div class="wrap <?php echo $this->wrap_class ?>" >
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>" >
 
   <?php // output any validation errors
   $this->print_errors(); ?>
@@ -32,7 +32,7 @@
 
       <?php while ( $this->have_groups() ) : $this->the_group(); ?>
 
-      <tbody class="field-group field-group-<?php echo $this->group->name ?>">
+      <tbody class="field-group field-group-<?php esc_attr_e( $this->group->name ) ?>">
         
         <?php if ( $this->group->has_fields() && $this->group->printing_title() ) : // are we printing group titles and descriptions? ?>
         <tr class="signup-group">

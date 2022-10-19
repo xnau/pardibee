@@ -8,7 +8,7 @@
  * this is a more detailed template showing how the parts of the display can be customized
  */
 ?>
-<div class="wrap <?php echo $this->wrap_class ?>" id="<?php echo $this->list_anchor ?>">
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>" id="<?php esc_attr_e( $this->list_anchor ) ?>">
   <?php
   /*
    * SEARCH/SORT FORM
@@ -19,7 +19,7 @@
    */
   if ( $filter_mode != 'none' && !$filtering ) :
     ?>
-  <?php echo $this->search_error_style ?>
+  <?php esc_attr_e( $this->search_error_style ) ?>
     <div class="pdb-searchform">
 
       <?php /* this element is where error and feedback messages are shown to the user.
@@ -78,7 +78,7 @@
            * you can also replace this with a dropdown or other type of input
            */
           ?>
-          <input id="participant_search_term" type="text" name="value" class="search-item" value="<?php echo $this->list_query->current_filter( 'search_term' ) ?>">
+          <input id="participant_search_term" type="text" name="value" class="search-item" value="<?php esc_attr_e( $this->list_query->current_filter( 'search_term' ) ) ?>">
           <?php
           /*
            * this method places the submit buttons
@@ -176,7 +176,7 @@
     <?php while ( $this->have_fields() ) : $this->the_field(); // each field is one cell  ?>
 
               <td>
-            <?php echo PDb_FormElement::get_field_value_display( $this->field ); ?>
+            <?php echo wp_kses( PDb_FormElement::get_field_value_display( $this->field ), Participants_Db::allowed_html('post') ) ?>
               </td>
 
         <?php endwhile; // fields  ?>
@@ -188,7 +188,7 @@
 
       <tbody>
         <tr>
-          <td><?php if ( $this->is_search_result === true ) echo Participants_Db::plugin_setting('no_records_message') ?></td>
+          <td><?php if ( $this->is_search_result === true ) echo wp_kses_post( Participants_Db::plugin_setting('no_records_message') ) ?></td>
         </tr>
       </tbody>
 

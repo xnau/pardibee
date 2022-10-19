@@ -5,7 +5,7 @@
  * @version 0.4
  */
 ?>
-<div class="wrap <?php echo $this->wrap_class ?> pdb-flexbox-list" id="<?php echo $this->list_anchor ?>">
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?> pdb-flexbox-list" id="<?php esc_attr_e( $this->list_anchor ) ?>">
   <?php /* SEARCH/SORT FORM */ ?>
   <?php if ( $filter_mode != 'none' ) : ?>
     <div class="pdb-searchform">
@@ -68,13 +68,13 @@
     <?php if ( $record_count > 0 ) : ?>
 
       <?php while ( $this->have_records() ) : $this->the_record(); // each record is one row ?>
-        <section id="record-<?php echo $this->record->record_id ?>">
+        <section id="record-<?php esc_attr_e( $this->record->record_id ) ?>">
 
           <?php while ( $this->have_fields() ) : $this->the_field(); // each field is one cell ?>
 
-            <div class="pdb-field pdb-field-<?php echo $this->field->name() ?> <?php echo $this->get_empty_class() ?>">
-              <span class="pdb-field-title"><?php echo $this->field->title() ?></span>
-              <span class="pdb-field-data"><?php $this->field->print_value() ?></span>
+            <div class="pdb-field pdb-field-<?php esc_attr_e( $this->field->name() ) ?> <?php esc_attr_e( $this->get_empty_class() ) ?>">
+              <span class="pdb-field-title"><?php esc_attr_e( $this->field->title() ) ?></span>
+              <span class="pdb-field-data"><?php wp_kses( $this->field->print_value(), Participants_Db::allowed_html('post') ) ?></span>
             </div>
 
           <?php endwhile; // each field  ?>
@@ -85,7 +85,7 @@
 
     <?php else : // if there are no records    ?>
 
-      <h4><?php if ( $this->is_search_result === true ) echo Participants_Db::plugin_setting('no_records_message') ?></h4>
+      <h4><?php if ( $this->is_search_result === true ) echo wp_kses_post( Participants_Db::plugin_setting('no_records_message') ) ?></h4>
 
     <?php endif; // $record_count > 0   ?>
   </div>

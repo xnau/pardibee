@@ -10,13 +10,13 @@
  */
 ?>
 
-<div class="wrap  <?php echo $this->wrap_class ?>">
+<div class="wrap  <?php esc_attr_e( $this->wrap_class ) ?>">
 
   <?php if ( $this->record_found() ) : ?>
 	
   <?php while ( $this->have_groups() ) : $this->the_group(); ?>
   
-  <section id="<?php echo Participants_Db::$prefix.$this->group->name?>" class="<?php $this->group->print_class() ?> field-group" style="overflow:auto">
+  <section id="<?php esc_attr_e( Participants_Db::$prefix.$this->group->name ) ?>" class="<?php $this->group->print_class() ?> field-group" style="overflow:auto">
   
     <?php $this->group->print_title( '<h2 class="field-group-title" >', '</h2>' ) ?>
     
@@ -29,11 +29,11 @@
       
       ?>
     
-    <dl class="dl-horizontal <?php echo Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ?> <?php echo empty( $empty_class ) ? '' : $empty_class . '-group' ?>">
+    <dl class="dl-horizontal <?php esc_attr_e( Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ) ?> <?php esc_attr_e( empty( $empty_class ) ? '' : $empty_class . '-group' ) ?>">
       
-      <dt class="<?php echo $this->field->name.' '.$empty_class?>"><?php $this->field->print_label() ?></dt>
+      <dt class="<?php esc_attr_e( $this->field->name.' '.$empty_class ) ?>"><?php $this->field->print_label() ?></dt>
       
-      <dd class="<?php echo $this->field->name.' '.$empty_class?>"><?php $this->field->print_value() ?></dd>
+      <dd class="<?php esc_attr_e( $this->field->name.' '.$empty_class ) ?>"><?php $this->field->print_value() ?></dd>
       
     </dl>
   
@@ -49,7 +49,7 @@
   <?php $error_message = Participants_Db::plugin_setting( 'no_record_error_message', '' );
   
   if ( ! empty( $error_message ) ) : ?>
-    <p class="alert alert-error"><?php echo $error_message ?></p>
+    <p class="alert alert-error"><?php echo wp_kses_post( $error_message ) ?></p>
     
   <?php endif ?>
     

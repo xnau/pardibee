@@ -5,8 +5,8 @@
  *
  */
 ?>
-<div class="wrap <?php echo $this->wrap_class ?>">
-  <?php echo $this->search_error_style ?>
+<div class="wrap <?php esc_attr_e( $this->wrap_class ) ?>">
+  <?php echo wp_kses( $this->search_error_style, Participants_Db::allowed_html( 'post' ) ) ?>
   <div class="pdb-searchform">
 
     <?php 
