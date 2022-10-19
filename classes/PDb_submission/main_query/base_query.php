@@ -285,8 +285,34 @@ abstract class base_query {
    */
   public function add_column( $value, $clause )
   {
+    if ( $this->has_column( $this->clause_column( $clause ) ) ) {
     $this->values[] = $value;
     $this->column_clauses[] = $clause;
+  }
+  }
+
+  /**
+   * gets the column name from a column clause
+   * 
+   * @param string $clause
+   * @return string column name
+   */
+  private function clause_column( $clause )
+  {
+    preg_match( '/`([^`]+)`/', $clause, $matches );
+    
+    return $matches[1];
+  }
+  
+  /**
+   * tells if the column is in the db table
+   * 
+   * @param string $field_name
+   * @return bool true if the column exists
+   */
+  private function has_column( $field_name )
+  {
+    return in_array( $field_name, PDB::table_columns() );
   }
 
   /**
