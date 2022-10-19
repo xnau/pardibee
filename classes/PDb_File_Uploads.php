@@ -31,6 +31,8 @@ class PDb_File_Uploads {
     
     $upload = new self();
 
+    global $pdb_uploaded_files;
+
     foreach ( $_FILES as $fieldname => $attributes ) {
 
       if ( UPLOAD_ERR_NO_FILE == $attributes[ 'error' ] ) {
@@ -44,7 +46,7 @@ class PDb_File_Uploads {
         // place the path to the file in the field value
         $post[ $fieldname ] = $filepath;
 
-        $_POST[ $fieldname ] = basename( $filepath );
+        $pdb_uploaded_files[ $fieldname ] = basename( $filepath );
       }
     }
       
