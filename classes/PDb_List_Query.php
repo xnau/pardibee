@@ -343,7 +343,7 @@ class PDb_List_Query {
     $this->_add_single_statement(
             filter_var( $field, FILTER_DEFAULT, Participants_Db::string_sanitize() ),
             $this->_sanitize_operator( $operator ),
-            filter_var( $term, FILTER_DEFAULT, array( 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_NO_ENCODE_QUOTES ) ),
+            filter_var( $term, FILTER_DEFAULT, array( 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_NO_ENCODE_QUOTES ) ),
             ($logic === 'OR' ? 'OR' : 'AND' ),
             false
     );
@@ -1441,7 +1441,7 @@ class PDb_List_Query {
     $filter = array_merge( array(
         'value' => array(
             'filter' => FILTER_DEFAULT,
-            'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_BACKTICK
+            'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK
         ),
         'search_field' => array(
             'filter' => FILTER_CALLBACK,
@@ -1466,7 +1466,7 @@ class PDb_List_Query {
   {
     $array_filter = array(
         'filter' => FILTER_DEFAULT,
-        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY | FILTER_FLAG_STRIP_BACKTICK,
+        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_REQUIRE_ARRAY | FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK,
     );
     $filter = array_merge( array(
         'value' => $array_filter,
