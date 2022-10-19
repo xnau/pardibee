@@ -2939,7 +2939,7 @@ class Participants_Db extends PDb_Base {
   {
     $bitmap_source = plugins_url( 'ui/ajax-loader.gif', __FILE__ );
     $svg_source = plugins_url( 'ui/ajax-loader.svg', __FILE__ );
-    $index = stripos( $_SERVER['HTTP_USER_AGENT'], 'safari' ) !== false ? 0 : 1;
+    $index = isset($_SERVER['HTTP_USER_AGENT']) && stripos( $_SERVER['HTTP_USER_AGENT'], 'safari' ) !== false ? 0 : 1;
     $template = array(
         '<span class="ajax-loading"><object data="%1$s"><img src="%2$s" /></object></span>',
         '<svg class="ajax-loading" ><image xlink:href="%1$s" src="%2$s" /></svg>'
