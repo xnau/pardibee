@@ -47,6 +47,7 @@ class PDb_File_Uploads {
         $post[ $fieldname ] = $filepath;
 
         $pdb_uploaded_files[ $fieldname ] = basename( $filepath );
+        $_POST[ $fieldname ] = basename( $filepath );
       }
     }
       
