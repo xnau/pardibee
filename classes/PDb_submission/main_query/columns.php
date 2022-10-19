@@ -153,11 +153,6 @@ class columns {
     if ( is_array( $filter ) ) {
       
       $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
-      // omit non-writing fields
-      // except in a signup submission #2918
-      if ( $action !== 'signup' ) { 
-        $where .= ' AND v.name IN ("' . implode( '","', Participants_Db::table_columns() ) . '") ';
-      }
       
     } else {
       
