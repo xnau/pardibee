@@ -901,8 +901,20 @@ abstract class PDb_Shortcode {
     $value = $record_value;
 
     // replace it with the submitted value if provided, escaping the input
-    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) ) {
-      $value = array_key_exists( $field->name(), $_POST ) ? filter_input( INPUT_POST, $field->name(), FILTER_CALLBACK, array( 'options' => 'PDb_Shortcode::esc_submitted_value' ) ) : $value;
+    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && array_key_exists( $field->name(), $_POST ) ) {
+      
+      global $pdb_uploaded_files;
+      
+      // if the field is an upload, the value has already been set by the PDb_File_Uploads
+      if ( isset( $pdb_uploaded_files[$field->name()] ) )
+      {
+        $value = $pdb_uploaded_files[$field->name()];
+      } else 
+      {
+        $value = filter_input( INPUT_POST, $field->name, FILTER_CALLBACK, array('options' => function($v){
+          return PDb_Shortcode::esc_submitted_value($v);
+        }));
+      }
     }
 
     /*
@@ -1125,10 +1137,10 @@ abstract class PDb_Shortcode {
     $value = maybe_unserialize( $value );
 
     if ( is_array( $value ) ) {
-      array_walk_recursive( $value, array($this, '_esc_element') );
+      array_walk_recursive( $value, array(__CLASS__, '_esc_element') );
       $return = $value;
     } else {
-      $return = esc_html( stripslashes( $value ) );
+      $return = self::_esc_value( $value );
     }
 
     return $return;
@@ -1139,9 +1151,9 @@ abstract class PDb_Shortcode {
    * 
    * @param string $value the element value
    */
-  private function _esc_element( &$value )
+  public static function _esc_element( &$value )
   {
-    $value = $this->_esc_value( $value );
+    $value = self::_esc_value( $value );
   }
 
   /**
@@ -1151,9 +1163,9 @@ abstract class PDb_Shortcode {
    * 
    * @return the value, escaped
    */
-  private function _esc_value( $value )
+  private static function _esc_value( $value )
   {
-    return esc_html( stripslashes( $value ) );
+    return filter_var( $value, FILTER_DEFAULT, Participants_Db::string_sanitize() );
   }
 
   /**
