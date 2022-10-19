@@ -493,7 +493,7 @@ abstract class PDb_Shortcode {
         Participants_Db::$validation_errors->set_error_html( $container, $wrap );
       }
 
-      wp_kses( Participants_Db::$validation_errors->get_error_html(), Participants_Db::allowed_html('form') );
+      echo wp_kses( Participants_Db::$validation_errors->get_error_html(), Participants_Db::allowed_html('form') );
     }
   }
 
