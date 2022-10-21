@@ -606,7 +606,7 @@ class PDb_Base {
               'title' => 1,
               'target' => 1,
               'rel' => 1,
-              'data-page' => 1,
+              'data-*' => 1,
           ) + $base_attributes,
           'break' => array(),
           'br' => array(),
@@ -691,9 +691,6 @@ class PDb_Base {
       }
 
       $wp_allowed_post =  wp_kses_allowed_html('post');
-
-      // add allowed attributes to the core allowed array
-      $wp_allowed_post['div']['data-action'] = 1;
 
       $all_allowed = $allowed + $additional + $wp_allowed_post;
       
