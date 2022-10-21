@@ -2278,6 +2278,7 @@ class Participants_Db extends PDb_Base {
         }
 
         $record = self::get_participant( $participant_id );
+        
         /*
          * set the stored record hook.
          * 
