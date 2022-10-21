@@ -288,6 +288,12 @@ abstract class PDb_Shortcode {
     $this->wrap_class = trim( $this->wrap_class ) . ' ' . trim( $this->shortcode_atts['class'] );
     // set the template to use
     $this->set_template( $this->shortcode_atts['template'] );
+    
+    // this is to enable the use of the display property in the style attribute #2936
+    add_filter( 'safe_style_css', function( $styles ) {
+      $styles[] = 'display';
+      return $styles;
+    } );
 
     /**
      * @action pdb-shortcode_set
@@ -901,11 +907,11 @@ abstract class PDb_Shortcode {
     $value = $record_value;
 
     // replace it with the submitted value if provided, escaping the input
-    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && array_key_exists( $field->name(), $_POST ) ) {
-      
+    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && array_key_exists( $field->name(), $_POST ) && ! $field->is_templated_field() )
+    {  
       global $pdb_uploaded_files;
       
-      // if the field is an upload, the value has already been set by the PDb_File_Uploads
+      // if the field is an upload, the value has already been set in PDb_File_Uploads
       if ( isset( $pdb_uploaded_files[$field->name()] ) )
       {
         $value = $pdb_uploaded_files[$field->name()];
