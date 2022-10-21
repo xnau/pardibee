@@ -772,9 +772,12 @@ class PDb_List extends PDb_Shortcode {
     $html = Participants_Db::apply_filters( 'search_control_html', $this->output_HTML( $output ) );
 
     if ( $print )
+    {
       echo wp_kses( $html, Participants_Db::allowed_html ( 'form' ) );
-    else
+    } else
+    {
       return $html;
+    }
   }
 
   /**
