@@ -915,11 +915,6 @@ abstract class PDb_Shortcode {
       if ( isset( $pdb_uploaded_files[$field->name()] ) )
       {
         $value = $pdb_uploaded_files[$field->name()];
-      } else 
-      {
-        $value = filter_input( INPUT_POST, $field->name, FILTER_CALLBACK, array('options' => function($v){
-          return PDb_Shortcode::esc_submitted_value($v);
-        }));
       }
     }
 
