@@ -2,7 +2,7 @@
  * js for handling dropdown/other and multiselect/other form elements
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.5
+ * @version 0.6
  */
 var PDbOtherSelect = (function ($) {
   "use strict";
@@ -123,7 +123,8 @@ var PDbOtherSelect = (function ($) {
       rbOtherGroup.on('change', 'input[type="radio"]', radio_update);
       rbOtherGroup.on('click', 'input.otherfield', radio_otherfield_select);
       rbOtherGroup.find('.otherselect').trigger('change');
-
+      
+      $(':focus').blur();
     }
   };
 }(jQuery));
