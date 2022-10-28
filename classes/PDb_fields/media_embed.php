@@ -77,8 +77,32 @@ class media_embed extends core {
     $html[] = '<div class="pdb-media-container ' . $this->field->name . '-media ">';
     $html[] = $display;
     $html[] = '</div>';
+    
+    add_filter( 'pdb-allowed_html_post', array( $this, 'allow_iframe_tag' ) );
    
     return $html;
+  }
+  
+  /**
+   * adds iframes to the allowed tags array
+   * 
+   * @param array $allowed
+   * @return array
+   */
+  public function allow_iframe_tag($allowed)
+  {  
+    remove_filter( 'pdb-allowed_html_post', array( $this, 'allow_iframe_tag' ) );
+    // enable iframes
+    $allowed['iframe'] = array( 
+        'title' => 1,
+        'width' => 1,
+        'height' => 1,
+        'src' => 1,
+        'frameborder' => 1,
+        'allow' => 1,
+        'allowfullscreen' => 1,
+        );
+    return $allowed;
   }
   
   /**
@@ -114,7 +138,7 @@ class media_embed extends core {
   }
 
   /**
-   * displays the log in a write context
+   * displays the field in a write context
    * 
    * @param object $field
    * @return string
