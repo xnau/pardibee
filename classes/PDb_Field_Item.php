@@ -177,9 +177,12 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_value( $print = true )
   {
-    if ( $print ) {
+    if ( $print )
+    {
       echo wp_kses( $this->get_value_display(), Participants_Db::allowed_html( 'post' ) );
-    } else {
+    }
+    else
+    {
       return $this->get_value_display();
     }
   }
