@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    2.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -120,14 +120,66 @@ class shortcode extends core {
     
     $replaced_shortcode = $shortcode->replaced_shortcode( $this->field_value() );
 
-    $done_shortcode = do_shortcode( $replaced_shortcode );
+    $done_shortcode = $this->execute_shortcode( $replaced_shortcode );
     
     // if the shortcode doesn't get processed, show nothing
     if ( $done_shortcode === $replaced_shortcode ) {
       return '';
     }
     
+    add_filter( 'pdb-allowed_html_post', array( $this, 'allow_media_tags' ) );
+    
     return $done_shortcode;
+  }
+  
+  /**
+   *  provides the filtered (executed) shortcode content
+   * 
+   * @param string $shortcode
+   * @return string HTML
+   */
+  private function execute_shortcode( $shortcode )
+  {
+    if ( strpos( $shortcode, '[embed' ) !== 0 ) {
+      return do_shortcode( $shortcode );
+    }
+    
+    // the [embed] shortcode is a special case
+    global $wp_embed;
+    return is_object( $wp_embed ) ? $wp_embed->run_shortcode( $shortcode ) : '';
+  }
+  
+  /**
+   * adds iframes to the allowed tags array
+   * 
+   * @param array $allowed
+   * @return array
+   */
+  public function allow_media_tags($allowed)
+  {  
+    remove_filter( 'pdb-allowed_html_post', array( $this, 'allow_media_tags' ) );
+    // enable iframes
+    $allowed['iframe'] = array( 
+        'title' => 1,
+        'width' => 1,
+        'height' => 1,
+        'src' => 1,
+        'frameborder' => 1,
+        'allow' => 1,
+        'allowfullscreen' => 1,
+        );
+    $allowed['audio'] = array(
+        'class' => 1,
+        'id' => 1,
+        'preload' => 1,
+        'style' => 1,
+        'controls' => 1,
+    );
+    $allowed['source'] = array(
+        'type' => 1,
+        'src' => 1,
+    );
+    return $allowed;
   }
   
   /**
