@@ -92,7 +92,7 @@ class date_calc extends calculated_field {
         /** @var \PDb_Form_Field_Def $field_def */
         
         // this field only works with date values from the db
-        if ( in_array( $field_def->form_element(), array( 'date', 'timestamp' ) ) ) {
+        if ( $field_def->is_date_field() || $field_def->form_element() === 'timestamp' ) {
           $list[] = $fieldname;
         }
       }
