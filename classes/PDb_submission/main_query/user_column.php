@@ -142,17 +142,17 @@ class user_column extends base_column {
 
           if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the previously uploaded file
             
-            $post_filename = isset($pdb_uploaded_files[$this->field->name()]) ? $pdb_uploaded_files[$this->field->name()] : filter_input( INPUT_POST, $this->field->name(), FILTER_DEFAULT, \Participants_Db::string_sanitize() );
+            $post_filename = isset($pdb_uploaded_files[$this->field->name()]) ? $pdb_uploaded_files[$this->field->name()] : filter_var( $_POST[$this->field->name()], FILTER_DEFAULT, \Participants_Db::string_sanitize() );
             
             if ( ! empty( $record_filename ) && $post_filename !== $record_filename && Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
               
-              Participants_Db::debug_log(__METHOD__.' deleting overwrite '. $record_filename, 2 );
+              Participants_Db::debug_log(__METHOD__.' deleting file on overwrite '. $record_filename, 2 );
               Participants_Db::delete_file( $record_filename );
               
             } elseif ( $post_filename === $record_filename && $delete_checkbox ) {
 
               if ( Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
-                Participants_Db::debug_log(__METHOD__.' deleting empty '. $record_filename, 2 );
+                Participants_Db::debug_log(__METHOD__.' user checkbox deleting file '. $record_filename, 2 );
                 Participants_Db::delete_file( $record_filename );
               }
               
@@ -161,7 +161,9 @@ class user_column extends base_column {
               $pdb_uploaded_files[$this->field->name()] = '';
             }
             
-          } else { // it's an import deleting the field value
+          } elseif ( $record_filename !== $this->value )
+          { // it's an import deleting the field value  
+            Participants_Db::debug_log(__METHOD__.' deleting file on import overwrite '. $record_filename, 2 );
             Participants_Db::delete_file( $record_filename );
           }
         }
