@@ -909,9 +909,11 @@ abstract class PDb_Shortcode {
     // replace it with the submitted value if provided, escaping the input
     if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && array_key_exists( $field->name(), $_POST ) && ! $field->is_templated_field() )
     {  
+      $value = filter_input( INPUT_POST, $field->name(), FILTER_CALLBACK, array( 'options' => 'PDb_Shortcode::esc_submitted_value' ) );
+      
       global $pdb_uploaded_files;
       
-      // if the field is an upload, the value has already been set in PDb_File_Uploads
+      // if the field is an upload, the new value has already been set in PDb_File_Uploads
       if ( isset( $pdb_uploaded_files[$field->name()] ) )
       {
         $value = $pdb_uploaded_files[$field->name()];
@@ -1166,7 +1168,7 @@ abstract class PDb_Shortcode {
    */
   private static function _esc_value( $value )
   {
-    return filter_var( $value, FILTER_DEFAULT, Participants_Db::string_sanitize() );
+    return filter_var( trim( $value ), FILTER_DEFAULT, Participants_Db::string_sanitize() );
   }
 
   /**
