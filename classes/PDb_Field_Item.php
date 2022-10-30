@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.10
+ * @version    2.11
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -1133,6 +1133,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $return = false;
 
     $this->html_output = $html;
+    
     /**
      * @filter pdb-before_display_form_element
      * 
@@ -1348,11 +1349,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
           if ( isset( $this->attributes['data-before'] ) && $this->has_content() )
           {
-            $field_display = '<span class="pdb-added-content"><span class="pdb-precontent">' . esc_html( $this->attributes['data-before'] ) . '</span>' . esc_html( $field_display ) . '</span>';
+            $field_display = '<span class="pdb-added-content"><span class="pdb-precontent">' . wp_kses_post( $this->attributes['data-before'] ) . '</span>' . esc_html( $field_display ) . '</span>';
             
           } elseif ( isset( $this->attributes['data-after'] ) && $this->has_content() )
           {
-            $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . esc_html( $this->attributes['data-after'] ) . '</span></span>';
+            $field_display = '<span class="pdb-added-content">' . esc_html( $field_display ) . '<span class="pdb-postcontent">' . wp_kses_post( $this->attributes['data-after'] ) . '</span></span>';
           }
 
           $return = $field_display;
