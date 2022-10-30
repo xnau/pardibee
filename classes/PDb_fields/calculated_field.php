@@ -208,10 +208,10 @@ abstract class calculated_field extends dynamic_db_field {
     $postext = '';
     
     if ( $this->field->has_attribute( 'data-before' ) ) {
-      $pretext = '<span class="pdb-precontent">' . esc_html( $this->field->get_attribute('data-before') ) . '</span>';
+      $pretext = '<span class="pdb-precontent">' . wp_kses_post( $this->field->get_attribute('data-before') ) . '</span>';
     }
     if ( $this->field->has_attribute( 'data-after' ) ) {
-      $postext = '<span class="pdb-postcontent">' . esc_html( $this->field->get_attribute('data-after') ) . '</span>';
+      $postext = '<span class="pdb-postcontent">' . wp_kses_post( $this->field->get_attribute('data-after') ) . '</span>';
     }
     
     
