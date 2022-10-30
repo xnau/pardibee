@@ -703,8 +703,8 @@ class PDb_Manage_Fields_Updates {
   protected static function string_sanitize()
   {
     return array(
-        'filter' => FILTER_SANITIZE_STRING,
-        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+        'filter' => FILTER_DEFAULT,
+        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_STRIP_LOW,
     );
   }
   
@@ -876,7 +876,7 @@ class PDb_Manage_Fields_Updates {
             $strip_slashes = false;
           }
 
-          $values_array[ self::prep_value( $array_key ) ] = self::prep_value( filter_var( $value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES ), $strip_slashes );
+          $values_array[ self::prep_value( $array_key ) ] = self::prep_value( filter_var( $value, FILTER_DEFAULT, FILTER_FLAG_NO_ENCODE_QUOTES | FILTER_FLAG_ENCODE_LOW ), $strip_slashes );
         } else {
           // strip out the double colon in case it is present
           $term = str_replace( array( $pair_delim ), '', $term );
