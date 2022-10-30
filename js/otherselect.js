@@ -2,14 +2,16 @@
  * js for handling dropdown/other and multiselect/other form elements
  * 
  * @author Roland Barker, xnau webdesign
- * @version 0.6
+ * @version 0.7
  */
 var PDbOtherSelect = (function ($) {
   "use strict";
   var groupClass = '[class*="-other-control-group"]';
   var nameData = 'other-name';
   var tempName = 'temp';
-  var dropdown_update = function () {
+  var initializing;
+  var dropdown_update = function (e) {
+    initializing = e.type === 'pdbinit';
     var dropdown = $(this);
     var thisGroup = dropdown.closest(groupClass);
     var thisName = thisGroup.data(nameData);
@@ -39,13 +41,15 @@ var PDbOtherSelect = (function ($) {
             .find('select.otherselect').attr('name', tempName);
     return true;
   };
-  var checkbox_update = function () {
+  var checkbox_update = function (e) {
+    initializing = e.type === 'pdbinit';
     otherfield_update($(this));
   };
   var checkbox_otherfield_select = function () {
     return otherfield_select($(this));
   };
-  var radio_update = function () {
+  var radio_update = function (e) {
+    initializing = e.type === 'pdbinit';
     otherfield_update($(this));
   };
   var radio_otherfield_select = function () {
@@ -53,12 +57,13 @@ var PDbOtherSelect = (function ($) {
   };
   var set_saved_value = function (field) {
     if (field.data('fieldvalue')) {
-      field.attr('value', field.data('fieldvalue'));
+      field.attr('value', field.data('fieldvalue')).val(field.attr('value'));
     }
   };
   var cache_other_value = function (field) {
     var othervalue = field.val();
     if (othervalue !== '') {
+      field.attr( 'data-fieldvalue', othervalue );
       field.data('fieldvalue', othervalue);
     }
   };
@@ -70,7 +75,9 @@ var PDbOtherSelect = (function ($) {
     if (field.is(':checked') && field.hasClass('otherselect')) {
       set_saved_value(otherfield);
       otherfield.attr('name', thisName);
-      otherfield.focus();
+      if ( ! initializing ) {
+        otherfield.focus();
+      }
     } else {
       otherfield.attr('name', tempName).val("");
     }
@@ -105,26 +112,25 @@ var PDbOtherSelect = (function ($) {
       var cbOtherGroup = $('div.checkbox-other-control-group');
       var rbOtherGroup = $('div.radio-other-control-group');
       $('[class*=other-control-group]').each(other_element_setup);
+      
       /*
        * dropdown-other controls
        */
-      ddOtherGroup.on('change', 'select.otherselect', dropdown_update);
+      ddOtherGroup.on('change pdbinit', 'select.otherselect', dropdown_update);
       ddOtherGroup.on('click', 'input.otherfield', dropdown_otherfield_select);
-      ddOtherGroup.find('.otherselect').trigger('change');
+      ddOtherGroup.find('.otherselect').trigger('pdbinit');
       /*
        * multi-select-other controls
        */
-      cbOtherGroup.on('change', 'input.otherselect', checkbox_update);
+      cbOtherGroup.on('change pdbinit', 'input.otherselect', checkbox_update);
       cbOtherGroup.on('click', 'input.otherfield', checkbox_otherfield_select);
-      cbOtherGroup.find('.otherselect').trigger('change');
+      cbOtherGroup.find('.otherselect').trigger('pdbinit');
       /*
        * radio-other controls
        */
-      rbOtherGroup.on('change', 'input[type="radio"]', radio_update);
+      rbOtherGroup.on('change pdbinit', 'input[type="radio"]', radio_update);
       rbOtherGroup.on('click', 'input.otherfield', radio_otherfield_select);
-      rbOtherGroup.find('.otherselect').trigger('change');
-      
-      $(':focus').blur();
+      rbOtherGroup.find('.otherselect').trigger('pdbinit');
     }
   };
 }(jQuery));
