@@ -643,7 +643,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( self::$prefix . 'list-filter', self::asset_url( "js/list-filter$presuffix.js" ), array('jquery'), '2.0' );
     wp_add_inline_script( self::$prefix . 'list-filter', self::inline_js_data( 'PDb_ajax', PDb_List::ajax_params() ), false );
     
-    wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery'), '0.5' );
+    wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery'), '0.6' );
   }
 
   /**
