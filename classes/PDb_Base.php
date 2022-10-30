@@ -579,7 +579,7 @@ class PDb_Base {
    */
   public static function string_sanitize()
   {
-    return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK );
+    return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_LOW );
   }
   
   /**
@@ -599,6 +599,7 @@ class PDb_Base {
           'id' => 1,
           'class' => 1,
           'style' => 1,
+          'data-*' => 1,
           );
       $allowed = array(
           'a' => array(
@@ -606,7 +607,6 @@ class PDb_Base {
               'title' => 1,
               'target' => 1,
               'rel' => 1,
-              'data-*' => 1,
           ) + $base_attributes,
           'break' => array(),
           'br' => array(),
@@ -619,16 +619,12 @@ class PDb_Base {
                 'method' => 1,
                 'enctype' => 1,
                 'action' => 1,
-                'data-ref' => 1,
             ) + $base_attributes,
             'input' => array(
                 'name' => 1,
                 'type' => 1,
                 'value' => 1,
-                'data-id' => 1,
                 'title' => 1,
-                'data-title' => 1,
-                'data-submit' => 1,
                 'checked' => 1,
                 'size' => 1,
                 'max' => 1,
@@ -647,14 +643,12 @@ class PDb_Base {
             'select' => array(
                 'name' => 1,
                 'multiple' => 1,
-                'data-placeholder' => 1,
                 'disabled' => 1,
                 'required' => 1,
             ) + $base_attributes,
             'option' => array(
                 'value' => 1,
                 'selected' => 1,
-                'data-imagesrc' => 1,
                 'disabled' => 1,
                 'label' => 1,
             ) + $base_attributes,
