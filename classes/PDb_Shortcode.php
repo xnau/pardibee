@@ -1416,6 +1416,7 @@ abstract class PDb_Shortcode {
   protected function _form_data_keys()
   {
     $displayed = array();
+    
     foreach ( $this->display_columns as $column ) {
       $field = Participants_Db::$fields[$column];
       /* @var $field PDb_Form_Field_Def */
