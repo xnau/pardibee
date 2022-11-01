@@ -865,7 +865,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
      * 
      * allows a callback to alter the field object before displaying a form input element
      * 
-     * @param PDb_Form_Element this instance
+     * @param PDb_Field_Item this instance
      */
     Participants_Db::do_action( 'before_display_form_input', $this );
 
