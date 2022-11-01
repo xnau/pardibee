@@ -224,7 +224,7 @@ class columns {
     
     $result = $wpdb->get_results( $sql, OBJECT_K );
     
-//    error_log(__METHOD__.' filter: "'.$filter.'" sql: '.$wpdb->last_query);
+//    error_log(__METHOD__.' filter: "'. print_r($filter,1).'" sql: '.$wpdb->last_query);
 //    error_log(__METHOD__.' result: '.print_r($result,1));
 
     return $result;
