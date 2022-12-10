@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 6.0.3
+Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -290,11 +290,16 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.4.4 =
+* avoid validating fields that are not part of the submission
+* fixed issue with the use of custom roles for plugin admins
+* fixed PDb_Template class error on empty record
+* fixed error on plugin delete
+
 = 2.4.3 =
 * signup forms that don't validate remember previously submitted values
 * improved UI on otherselect fields
 * some HTML tags allowed in field attributes
-
 
 = 2.4.2 =
 * otherselect inputs no longer getting focus on page load
@@ -1592,7 +1597,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-2.4.2 is a bugfix update
+2.4.4 is a bugfix update
 
 == Plugin Support ==
 
