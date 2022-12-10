@@ -1190,7 +1190,7 @@ class PDb_Base {
    */
   private static function admin_cap( $wp_cap )
   {
-    $admin_roles = get_users( array('role' => $wp_cap) );
+    $admin_roles = get_users( array('capability' => $wp_cap) );
     
     if ( empty( $admin_roles ) ) {
       $wp_cap = 'manage_options';
