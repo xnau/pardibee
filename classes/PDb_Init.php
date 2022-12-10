@@ -5,7 +5,7 @@
  * 
  * handles installation, activation, deactivation, deletion, updates
  *
- * @version 2.4
+ * @version 2.5
  * The way db updates will work is we will first set the "fresh install" db
  * initialization to the latest version's structure. Then, we add the update
  * queries to the series of upgrade steps that follow. Whichever version the
@@ -346,7 +346,6 @@ class PDb_Init {
         '%' . PDb_List_Admin::$user_setting_name . '%',
         '%' . Participants_Db::$prefix . 'captcha_key',
         '%' . Participants_Db::$prefix . 'signup-email-sent',
-        '%' . Participants_Db::$prefix . PDb_Live_Notification::cache_name . '%',
         '%' . \PDb_shortcodes\attributes::attribute_store . '%',
         '%' . PDb_Aux_Plugin::throttler . '%',
         '%' . \PDb_fields\calculated_field::keycache . '%',
