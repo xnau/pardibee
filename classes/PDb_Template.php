@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.2
+ * @version    2.3
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -566,9 +566,12 @@ class PDb_Template {
     $this->set_edit_page();
     $this->set_detail_page();
     $this->module = $this->shortcode_object->module;
-    $this->id = isset( $this->values['id'] ) ? $this->values['id'] : '';
-    $this->edit_link = Participants_Db::apply_filters( 'record_edit_url', $this->cat_url_var( $this->edit_page, Participants_Db::$record_query, $this->values['private_id'] ), $this->values['private_id'] );
-    $this->detail_link = Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $this->detail_page, PDb_Single::single_query_var(), $this->values[ PDb_Single::single_query_id_field() ] ), $this->id );
+    
+    if ( ! empty( $this->values ) ) {
+      $this->id = isset( $this->values['id'] ) ? $this->values['id'] : '';
+      $this->edit_link = Participants_Db::apply_filters( 'record_edit_url', $this->cat_url_var( $this->edit_page, Participants_Db::$record_query, $this->values['private_id'] ), $this->values['private_id'] );
+      $this->detail_link = Participants_Db::apply_filters( 'single_record_url', $this->cat_url_var( $this->detail_page, PDb_Single::single_query_var(), $this->values[ PDb_Single::single_query_id_field() ] ), $this->id );
+    }
     
     $this->fields = new stdClass();
     $this->groups = array();
@@ -610,7 +613,7 @@ class PDb_Template {
           $this->fields->{$name} = new PDb_Field_Item( $field );
           $this->fields->{$name}->set_record_id($this->shortcode_object->participant_id);
           $this->fields->{$name}->set_module( $this->shortcode_object->module );
-          if ( array_key_exists( $name, $this->values ) ) {
+          if ( is_array( $this->values ) && array_key_exists( $name, $this->values ) ) {
             $this->fields->{$name}->set_value( $this->values[$name] );
           }
         }
