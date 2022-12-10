@@ -60,6 +60,7 @@ class PDb_Record extends PDb_Shortcode {
 
     if ( false === $this->shortcode_atts['record_id'] ) {
 
+      $this->participant_values = array();
       $this->_not_found();
     } else {
 
