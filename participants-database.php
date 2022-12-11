@@ -1630,7 +1630,7 @@ class Participants_Db extends PDb_Base {
       
       $field = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
-      if ( $column_names === false || in_array( $column->name, $column_names ) ) { // only validate submitted values #2956
+      if ( $column_names === false || in_array( $column->name, $column_names ) ) { // only validate submitted values #2956 or all fields are submitted
         $main_query->validate_column( $field, $column );
       }
       
