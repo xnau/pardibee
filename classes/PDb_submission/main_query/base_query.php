@@ -143,7 +143,7 @@ abstract class base_query {
   /**
    * provides the column object array
    * 
-   * @param array $function_columns
+   * @param array|bool $function_columns
    * @return array
    */
   public function column_array( $function_columns )

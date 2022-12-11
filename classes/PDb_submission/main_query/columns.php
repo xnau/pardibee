@@ -96,7 +96,7 @@ class columns {
    * provides the column array for use in the iterator
    * 
    * @param string $action
-   * @param array $columns optional list of column names
+   * @param array|bool $columns optional list of column names
    * @return array
    */
   public static function column_array( $action, $columns = false )
