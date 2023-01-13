@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.4
+ * @version    2.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -80,7 +80,7 @@ class PDb_Manage_Fields {
           <?php
           $mask = '<span class="mask"></span>';
           foreach ( $this->group_defs as $group ) {
-            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $group[ 'name' ] . '" id="tab_' . $group[ 'name' ] . '">' . wp_kses_post( $this->group_title( $group[ 'name' ] ) ) . '</a>' . $mask . '</li>';
+            echo '<li class="display-' . $group[ 'mode' ] . '"><a href="#' . $this->groupname( $group ) . '" id="tab_' . $this->groupname( $group ) . '">' . wp_kses_post( $this->group_title( $group[ 'name' ] ) ) . '</a>' . $mask . '</li>';
           }
           echo '<li class="utility"><a href="#field_groups">' . esc_html__( 'Field Groups', 'participants-database' ) . '</a>' . $mask . '</li>';
           echo '<li class="utility"><a href="#help">' . esc_html__( 'Help', 'participants-database' ) . '</a>' . $mask . '</li>';
@@ -94,7 +94,7 @@ class PDb_Manage_Fields {
        */
       protected function print_group_tabs()
       {
-        foreach ( $this->groups() as $group ) {
+        foreach ( $this->group_names() as $group ) {
           $this->print_group_tab_content( $group );
         }
         $this->print_group_edit_tab_content();
@@ -113,14 +113,14 @@ class PDb_Manage_Fields {
 
         $data_group_id = $num_group_rows > 1 ? $this->fields_data[ $group ][ 0 ][ 'group_id' ] : '';
         ?>
-        <div id="<?php esc_attr_e( $group ) ?>" class="manage-fields-wrap" data-group-id="<?php esc_attr_e( $data_group_id ) ?>" >
+        <div id="<?php esc_attr_e( $this->groupname( $group ) ) ?>" class="manage-fields-wrap" data-group-id="<?php esc_attr_e( $data_group_id ) ?>" >
           <h3><?php esc_html_e( sprintf( esc_html_x( '%s Fields', 'Title of the field group', 'participants-database' ), $this->group_title( $group ) ) ) ?></h3>
           <?php $this->general_fields_control( $group ); ?>
           <?php if ( $hscroll ) : ?>
             <div class="pdb-horiz-scroll-scroller">
               <div class="pdb-horiz-scroll-width">
               <?php endif ?>
-              <form id="manage_<?php esc_attr_e( $group ) ?>_fields" method="post" autocomplete="off"  action="<?php esc_attr_e( admin_url( 'admin-post.php' ) ) ?>">
+              <form id="manage_<?php esc_attr_e( $this->groupname( $group ) ) ?>_fields" method="post" autocomplete="off"  action="<?php esc_attr_e( admin_url( 'admin-post.php' ) ) ?>">
                 <?php if ( Participants_Db::plugin_setting_is_true( 'top_bar_submit', true ) ) : ?>
                   <div class="submit top-bar-submit">
                     <span class="field-group-title"><?php echo wp_kses_post( $this->group_title( $group ) ) ?></span>
@@ -132,7 +132,7 @@ class PDb_Manage_Fields {
                 wp_nonce_field( PDb_Manage_Fields_Updates::action_key );
                 ?>
                 <div class="manage-fields" >
-                  <section id="<?php esc_attr_e( $group ) ?>_fields">
+                  <section id="<?php esc_attr_e( $this->groupname( $group ) ) ?>_fields">
                     <?php
                     if ( $num_group_rows < 1 ) { // there are no rows in this group to show
                       ?>
@@ -519,7 +519,7 @@ class PDb_Manage_Fields {
      * 
      * @return array
      */
-    private function groups()
+    private function group_names()
     {
       return array_keys( $this->group_defs );
     }
@@ -534,7 +534,7 @@ class PDb_Manage_Fields {
     {
       global $wpdb;
       // get an array with all the defined fields
-      foreach ( $this->groups() as $group ) {
+      foreach ( $this->group_names() as $group ) {
 
         $sql = "SELECT f.id,f.name,f.form_element,f.order,g.id AS group_id,g.name AS group_name FROM " . Participants_Db::$fields_table . ' f JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name WHERE `group` = "' . $group . '" ORDER BY f.order ';
 
@@ -619,6 +619,19 @@ class PDb_Manage_Fields {
       $string = isset( $this->i18n[ $string ] ) ? $this->i18n[ $string ] : $string;
 
       return str_replace( array( '_' ), array( " " ), $string );
+    }
+    
+    /**
+     * provides the group name text
+     * 
+     * @param array|string $group the group definition values or name
+     * @param bool $encode whether to encode the name
+     * @return string the group name 
+     */
+    private function groupname( $group, $encode = true )
+    {
+      $groupname = is_array( $group ) ? $group['name'] : $group;
+      return $encode ? urlencode( $groupname ) : $groupname;
     }
 
     /**
