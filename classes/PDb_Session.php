@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.4
+ * @version    3.5
  * 
  * 
  */
@@ -373,8 +373,17 @@ class PDb_Session {
     if ( !$sessid ) {
       // now we have to create an id and use that
       $sessid = $this->create_id();
+      
       // save it in our cookie
-      setcookie( $this->cookie_name(), $sessid, 0, '/' );
+      if ( PDB_DEBUG > 0 ) // go ahead and let the error happen if it's going to while debugging
+      { 
+        setcookie( $this->cookie_name(), $sessid, 0, '/' );
+        
+      } elseif ( ! headers_sent() ) // don't set the cookie if the headers have already been sent and we're not debugging
+      { 
+        setcookie( $this->cookie_name(), $sessid, 0, '/' );
+      }
+      
       $source = 'create new';
     }
 
