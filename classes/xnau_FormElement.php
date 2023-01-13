@@ -88,13 +88,6 @@ abstract class xnau_FormElement {
    * @var array
    */
   public $output = array();
-
-  /**
-   * sets the height and width of the textarea element
-   *
-   * @var array
-   */
-  public $textarea_dims = array( 'rows' => 2, 'cols' => 40 );
   
   /**
    * holds the form element definition
@@ -634,6 +627,27 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $this->_addline( $this->_input_tag() );
   }
+  
+  /**
+   * provides the textarea rows and cols attributes
+   * 
+   * @return string
+   */
+  public function textarea_dims()
+  {
+    $default = array( 'rows' => 2, 'cols' => 40 );
+    $dims = array();
+    
+    foreach( $default as $att => $value )
+    {
+      $dims[$att] = $value;
+      if ( isset( $this->attributes[$att] )  && is_numeric( $this->attributes[$att] ) ) {
+        $dims[$att] = $this->attributes[$att];
+      }
+    }
+    
+    return vsprintf( ' rows="%s" cols="%s" ', $dims );
+  }
 
   /**
    * builds a text-field (textarea) element
@@ -643,7 +657,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $value = !empty( $this->value ) ? $this->value : '';
 
-    $this->_addline( '<textarea name="' . $this->name . '" rows="' . $this->textarea_dims[ 'rows' ] . '" cols="' . $this->textarea_dims[ 'cols' ] . '" ' . $this->_attributes() . $this->_class() . ' >' . $value . '</textarea>', empty( $this->value ) ? 0 : -1  );
+    $this->_addline( '<textarea name="' . $this->name . '" ' . $this->textarea_dims() . $this->_attributes() . $this->_class() . ' >' . $value . '</textarea>', empty( $this->value ) ? 0 : -1  );
   }
 
   /**
