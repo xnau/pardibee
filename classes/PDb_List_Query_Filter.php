@@ -244,7 +244,7 @@ class PDb_List_Query_Filter {
   public function get_term()
   {
     if ( $this->is_regex ) {
-      return str_replace( array('*', '?'), array('.*', '.'), esc_sql( $this->term ) );
+      return str_replace( array('*', '?'), array('.*', '.'), esc_sql( $this->term ) ); // esc_sql( $this->term )
     } elseif ( $this->wildcard_present() || $this->like_term === true ) {
       return str_replace( array('*', '?'), array('%', '_'), self::_esc_like( $this->term ) );
     } else {
