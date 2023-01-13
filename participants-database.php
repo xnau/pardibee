@@ -1491,13 +1491,15 @@ class Participants_Db extends PDb_Base {
    */
   public static function table_columns()
   {
-    $cachekey = 'pdb-table-columns';
+    $tablename = Participants_Db::participants_table();
+    $cachekey = 'pdb-table-' . $tablename . '-columns';
     
     $columns = wp_cache_get($cachekey);
     
     if ( ! $columns ) {
       global $wpdb;
-      $shown_columns = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::participants_table() );
+      $shown_columns = $wpdb->get_results( 'SHOW COLUMNS FROM ' . $tablename );
+      
       $columns = array();
       foreach( $shown_columns as $column ) {
         $columns[] = $column->Field;
