@@ -37,14 +37,17 @@ class PDb_Manage_List_Columns {
    */
   public static function process_request()
   {
-    $ui = new self();
-    switch ( filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ) ) {
-      case 'publicfields':
-        $ui->set_column_config( $_POST['fieldlist'], 'public' ); // this is sanitized later
-        break;
-      case 'adminfields':
-        $ui->set_column_config( $_POST['fieldlist'], 'admin' );
-        break;
+    if ( is_user_logged_in() && check_ajax_referer( self::action ) !== false )
+    {
+      $ui = new self();
+      switch ( filter_input( INPUT_POST, 'group', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) {
+        case 'publicfields':
+          $ui->set_column_config( $_POST['fieldlist'], 'public' ); // this is sanitized later
+          break;
+        case 'adminfields':
+          $ui->set_column_config( $_POST['fieldlist'], 'admin' );
+          break;
+      }
     }
     wp_die();
   }
@@ -360,6 +363,7 @@ class PDb_Manage_List_Columns {
             }).get();
             var data = {
               'action' : "<?php echo self::action ?>",
+              '_wpnonce' : "<?php echo wp_create_nonce( self::action ) ?>",
               'group' : columngroup.attr('id'),
               'fieldlist' : fieldlist
             };
