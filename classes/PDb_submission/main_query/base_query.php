@@ -27,7 +27,7 @@ abstract class base_query {
   /**
    * @var array of column values
    */
-  protected $values;
+  protected $values = array();
 
   /**
    * @var array of column clause strings
@@ -286,9 +286,9 @@ abstract class base_query {
   public function add_column( $value, $clause )
   {
     if ( $this->has_column( $this->clause_column( $clause ) ) ) {
-    $this->values[] = $value;
-    $this->column_clauses[] = $clause;
-  }
+      $this->values[] = $value;
+      $this->column_clauses[] = $clause;
+    }
   }
 
   /**
