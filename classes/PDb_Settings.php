@@ -1716,7 +1716,7 @@ ORDER BY g.order, v.order';
    */
   public static function _get_identifier_columns( $null = true )
   {
-    $columnlist = wp_cache_get( 'pdb-id_columns' );
+    $columnlist = PDB_DEBUG ? false : wp_cache_get( 'pdb-id_columns' );
 
     if ( $columnlist === false ) {
 
@@ -1732,10 +1732,9 @@ ORDER BY g.order, v.order';
       $sql = '
 SELECT v.name, v.title, g.title AS grouptitle 
 FROM ' . Participants_Db::$fields_table . ' v 
-  INNER JOIN ' . Participants_Db::$groups_table . ' g 
-    ON v.group = g.name 
+  INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name 
       WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") 
-        AND v.form_element NOT IN ("rich-text", "multi-checkbox","multi-dropdown","multi-select-other", "link", "image-upload", "file-upload", "password", "placeholder", "timestamp")
+        AND v.form_element NOT IN ("rich-text", "multi-checkbox","multi-dropdown","multi-select-other", "link", "image-upload", "file-upload", "password", "placeholder", "timestamp","captcha")
 ORDER BY g.order, v.order';
 
       $columns = $wpdb->get_results( $sql, OBJECT_K );
@@ -1768,7 +1767,7 @@ ORDER BY g.order, v.order';
    */
   public static function column_dropdown_options( $columns, $columnlist = array() )
   {
-    $grouptitle = current( $columns )->grouptitle;
+    $grouptitle = reset( $columns )->grouptitle;
     $columnlist[$grouptitle] = 'optgroup';
     foreach ( $columns as $column ) {
       if ( $column->grouptitle !== $grouptitle ) {
