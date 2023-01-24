@@ -585,7 +585,7 @@ class PDb_Base {
   /**
    * provides the allowed HTML array for different contexts
    * 
-   * @param string $type
+   * @param string $type for now, will be either "post" or "form"
    * @return array
    */
   public static function allowed_html( $type )
@@ -675,6 +675,11 @@ class PDb_Base {
                 'form' => 1,
                 'name' => 1,
               ) + $base_attributes,
+           'output' => array(
+               'for' => 1,
+               'form' => 1,
+               'name' => 1,
+           ),
           );
 
       switch ($type)
