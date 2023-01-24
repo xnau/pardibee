@@ -254,7 +254,7 @@ class PDb_Manage_Fields {
                   <div class="field-header">
                     <a id="order_<?php echo esc_attr( $group ) ?>" class="dragger" href="#"><span class="dashicons dashicons-sort"></span></a>
                     <?php if ( $group_def[ 'name' ] !== 'internal' ) : ?>
-                      <a href="<?php echo esc_html( $group_count ) ?>" data-thing-name="delete_<?php echo esc_attr( $group ) ?>" class="delete" data-thing="<?php _e( 'group', 'participants-database' ) ?>"><span class="dashicons dashicons-no"></span></a>
+                      <a href="<?php echo esc_html( $group_count ) ?>" data-thing-name="delete_<?php echo esc_attr( $group ) ?>" class="delete" data-thing="group"><span class="dashicons dashicons-no"></span></a>
                     <?php endif ?>
                     <div id="field_count_<?php echo esc_attr( $group ) ?>" title="<?php _e( 'field count', 'participants-database' ) ?>"><?php echo esc_html( $group_count ) ?></div>
                   </div>
@@ -660,7 +660,7 @@ class PDb_Manage_Fields {
               'id' => 1,
               'type' => 1,
               'value' => 1,
-              'data-id' => 1,
+              'data-*' => 1,
               'title' => 1,
               'data-title' => 1,
               'checked' => 1,
@@ -682,8 +682,7 @@ class PDb_Manage_Fields {
           ),
           'a' => array(
               'href' => 1,
-              'data-thing-name' => 1,
-              'data-thing' => 1,
+              'data-*' => 1,
               'class' => 1,
               'title' => 1,
           ),
