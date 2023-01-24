@@ -762,6 +762,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $selectstring = $this->set_selectstring( $values[1] );
       $html = '';
       $option_pattern = "\n" . '<option value="%4$s" %9$s ><span>%5$s</span></option>';
+      $optgroup_pattern = "\n" . '<optgroup label="%4$s">';
+      $in_optgroup = false;
+      $is_associated = PDb_FormElement::is_assoc( $values[7] );
       
       if ( $multi ) {
         $html .= "\n" . '<div class="dropdown-group ' . $values[1] . ' ' . $values[4] . '" ><select name="' . $this->settings_name() . '[' . $values[0] . '][]" multiple ' . $values[9] . ' >';
@@ -770,12 +773,22 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       }
 
 
-      if ( PDb_FormElement::is_assoc( $values[7] ) ) {
+      if ( $is_associated ) {
+        
         foreach ( $values[7] as $name => $title ) {
           $values[8] = in_array( $name, (array) $values[2] ) ? $selectstring : '';
-          $values[3] = $name;
+          $values[3] = Participants_Db::string_static_translation( $name );
           $values[4] = $title;
-          $html .= vsprintf( $option_pattern, $values );
+          $pattern = $option_pattern;
+          if ( $title === 'optgroup' ) {
+            if ( $in_optgroup ) {
+              $html .= '</optgroup>';
+              $in_optgroup = false;
+            }
+            $pattern = $optgroup_pattern;
+            $in_optgroup = true;
+          }
+          $html .= vsprintf( $pattern, $values );
         }
       } else {
         foreach ( $values[7] as $value ) {
@@ -784,6 +797,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           $values[4] = $value;
           $html .= vsprintf( $option_pattern, $values );
         }
+      }
+      if ( $in_optgroup ) {
+        $html .= '</optgroup>';
+        $in_optgroup = false;
       }
       $html .= "\n" . '</select></div>';
       if ( !empty( $values[6] ) )
