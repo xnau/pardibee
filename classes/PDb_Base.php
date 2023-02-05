@@ -601,6 +601,11 @@ class PDb_Base {
           'style' => 1,
           'data-*' => 1,
           );
+      
+      if ( Participants_Db::plugin_setting_is_true( 'allow_js_atts', false ) ) {
+        $base_attributes = $base_attributes + self::js_attributes();
+      }
+      
       $allowed = array(
           'a' => array(
               'href' => 1,
@@ -697,6 +702,38 @@ class PDb_Base {
     }
 
     return Participants_Db::apply_filters( 'allowed_html_' . $type, $all_allowed );
+  }
+  
+  /**
+   * provides the list of allowed js action attributes
+   * 
+   * @return array
+   */
+  private static function js_attributes()
+  {
+    return array(
+      'onblur' => 1,
+      'onchange' => 1,
+      'oncontextmenu' => 1,
+      'onfocus' => 1,
+      'oninput' => 1,
+      'oninvalid' => 1,
+      'onreset' => 1,
+      'onsearch' => 1,
+      'onselect' => 1,
+      'onsubmit' => 1,
+      'onkeydown' => 1,
+      'onkeypress' => 1,
+      'onkeyup' => 1,
+      'onclick' => 1,
+      'ondblclick' => 1,
+      'onmousedown' => 1,
+      'onmousemove' => 1,
+      'onmouseout' => 1,
+      'onmouseover' => 1,
+      'onmouseup' => 1,
+      'onwheel' => 1,
+    );
   }
 
   /**
