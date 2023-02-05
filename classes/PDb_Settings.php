@@ -1384,6 +1384,21 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'options' => array(1, 0),
         ),
     );
+    
+    
+
+    $this->plugin_settings[] = array(
+        'name' => 'allow_js_atts',
+        'title' => __( 'Allow Javascript Attributes', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'normally, javascript attributes on HTML elements are blocked for security reasons. If you need to use javascript attributes such as "onclick" you should check this setting.', 'participants-database' ) . $this->settings_help( 'allow-js-atts'),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'pdb_debug',
