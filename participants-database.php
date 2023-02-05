@@ -633,7 +633,7 @@ class Participants_Db extends PDb_Base {
     }
     
     if ( self::_set_custom_print_css() ) {
-      wp_register_style( 'custom_plugin_print_css', plugins_url( '/css/' . 'PDb-custom-print.css', __FILE__ ), null, self::$Settings->option_version() );
+      wp_register_style( 'custom_plugin_print_css', plugins_url( '/css/' . 'PDb-custom-print.css', __FILE__ ), null, self::$Settings->option_version(), 'print' );
     }
     
     wp_add_inline_style(self::$prefix . 'frontend', self::inline_css() );
@@ -3116,6 +3116,10 @@ class Participants_Db extends PDb_Base {
 
     // output the filtered shortcode content
     header( "Content-Type:	text/html" );
+    
+    error_log(__METHOD__.' allowed: '. print_r( Participants_Db::allowed_html('form'),1 ));
+    
+    
     echo wp_kses( PDb_List::get_list( $shortcode_atts ), Participants_Db::allowed_html('form') );
     return;
   }
