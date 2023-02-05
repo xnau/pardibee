@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -207,10 +207,21 @@ class PDb_Tag_Template {
     }, array_keys( $data ) );
 
     // replace the tags with variables
-    $pattern = str_replace( $tags, $placeholders, $template );
+    $pattern = str_replace( $tags, $placeholders, self::escape_template( $template ) );
 
     // replace the variables with strings
     return vsprintf( $pattern, $data );
+  }
+  
+  /**
+   * escapes a printf template
+   * 
+   * @param string $template
+   * @return string escaped template
+   */
+  private static function escape_template( $template )
+  {
+    return preg_replace( '/(%[a-zA-Z])/', '%$1', $template );
   }
 
   /**
