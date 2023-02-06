@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    5.3
+ * @version    5.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -117,11 +117,6 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * @var array of registered aux_plugin events as $tag => $title
      */
     public $aux_plugin_events = array();
-
-    /**
-     * @var string  URL for the aux plugin updates
-     */
-    const update_url = 'https://xnau.com/xnau-updates/';
 
     /**
      * @var string basename of the request throttling transient
