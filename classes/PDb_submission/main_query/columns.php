@@ -251,7 +251,7 @@ class columns {
    * 
    * @return bool
    */
-  private static function editor_can_edit_admin_fields()
+  public static function editor_can_edit_admin_fields()
   {
     return current_user_can( Participants_Db::plugin_capability( 'plugin_admin_capability', 'access admin field groups' ) ) || \Participants_Db::plugin_setting_is_true( 'editor_allowed_edit_admin_fields', false );
   }
