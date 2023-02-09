@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -341,28 +341,23 @@ class PDb_List_Admin {
 
           //build the list of columns available for filtering
           $filter_columns = array();
-          $group_title = '';
 
-          foreach ( self::filter_columns() as $column ) {
+          foreach ( self::filter_columns() as $grouptitle => $field_group ) {
+            
+            $filter_columns[$grouptitle] = 'optgroup';
+            
+            foreach( $field_group as $column ) {
+              
+              $title = Participants_Db::apply_filters( 'translate_string', $column->title );
+              
+              $display_title = empty( $title ) ? $column->name . ' ' : $title . ' (' . $column->name . ')';
 
-            if ( empty( $column->grouptitle ) ) {
-              $column->grouptitle = $column->group;
+              $filter_columns[ $display_title ] = $column->name;
             }
-
-            if ( $column->grouptitle !== $group_title ) {
-              $group_title = $column->grouptitle;
-              $filter_columns[ $group_title ] = 'optgroup';
-            }
-
-            // add the field name if a field with the same title is already in the list
-            $title = Participants_Db::apply_filters( 'translate_string', $column->title );
-            $select_title = ( isset( $filter_columns[ $column->title ] ) || strlen( $column->title ) === 0 ) ? $title . ' (' . $column->name . ')' : $title;
-
-            $filter_columns[ $select_title ] = $column->name;
           }
 
           // add the multi-field selection
-          $filter_columns = array_merge( self::recent_field_option(), $filter_columns, PDb_admin_list\search_field_group::group_selector() );
+          $search_columns = array_merge( self::recent_field_option(), $filter_columns, PDb_admin_list\search_field_group::group_selector() );
           ?>
           <div class="pdb-searchform">
             <form method="post" id="sort_filter_form" action="<?php echo esc_attr( self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ) ?>" >
@@ -383,7 +378,7 @@ class PDb_List_Admin {
                               'type' => 'dropdown',
                               'name' => 'search_field[' . $i . ']',
                               'value' => $filter_set[ 'search_field' ],
-                              'options' => $filter_columns,
+                              'options' => $search_columns,
                           );
                           PDb_FormElement::print_element( $element );
                           ?>
@@ -1063,9 +1058,64 @@ class PDb_List_Admin {
   private static function filter_columns()
   {
     add_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ), 10, 2 );
-    $columns = Participants_db::get_column_atts( 'backend' );
+    $columns = self::search_field_list();
     remove_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ) );
     return $columns;
+  }
+  
+  /**
+   * provides the list of searchable fields
+   * 
+   * @global wpdb $wpdb
+   * @return array of data objects
+   */
+  private static function search_field_list()
+  {
+    $cachekey = 'pdb-search_field_list';
+    
+    $field_select = wp_cache_get( $cachekey );
+    
+    if ( $field_select !== false && !PDB_DEBUG )
+    {
+      return $field_select;
+    }
+    
+    global $wpdb;
+    
+    $log_list = array();
+    if ( is_plugin_active( 'pdb-participant_log/participant_log.php' ) ) {
+      $log_list = $wpdb->get_col('SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `form_element` = "participant-log" ORDER BY `order`' );
+    }
+    
+    $main_group_list = $wpdb->get_col( 'SELECT `name` FROM ' . Participants_Db::$groups_table . ' WHERE `mode` IN ("public", "private", "admin") ORDER BY CASE `mode` WHEN "public" THEN 1 WHEN "private" THEN 2 WHEN "admin" THEN 3 ELSE `id` END, `order`');
+    
+    $group_list = array_merge( $main_group_list, $log_list );
+    
+    $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder','heading') );
+    $where = 'WHERE f.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
+
+    if ( !PDb_submission\main_query\columns::editor_can_edit_admin_fields() ) {
+      // don't show non-displaying groups to non-admin users
+      // the approval field is an exception; it should always be visible to editor users
+      $where .= 'AND g.mode <> "admin" OR f.name = "' . \Participants_Db::apply_filters( 'approval_field', 'approved' ) . '"';
+    }
+    
+    $group_db = $wpdb->get_results('SELECT f.name,f.title,f.group,g.title AS grouptitle FROM ' . Participants_Db::$fields_table . ' f INNER JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name ' . $where . ' ORDER BY FIELD (f.group,"' . implode( '","',$group_list ) . '")' );
+    
+    $field_select = array();
+    $group = '';
+    foreach( $group_db as $field ) {
+      if ( $field->group !== $group ) {
+        $group = $field->group;
+        $grouptitle = empty($field->grouptitle) ? $field->group : $field->grouptitle;
+        $field_select[$grouptitle] = array();
+      }
+      $field_select[$field->grouptitle][] = $field;
+    }
+    
+    wp_cache_add( $cachekey, $field_select, '', HOUR_IN_SECONDS );
+    
+    return $field_select;
   }
 
   /**
