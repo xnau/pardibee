@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -44,6 +44,8 @@ class PDb_Manage_Fields_Updates {
   {
     global $wpdb;
     $current_user = wp_get_current_user();
+    
+    $changed_groups = array();
 
     self::clear_field_def_cache();
 
@@ -59,6 +61,10 @@ class PDb_Manage_Fields_Updates {
       if ( $row[ 'status' ] === 'changed' ) {
 
         $id = filter_var( $row[ 'id' ], FILTER_VALIDATE_INT );
+        
+        if ( isset($row['group']) ) {
+          $changed_groups[] = $row['group'];
+        }
         
         // get an array of all attributes that have array values
         $array_atts = array_intersect_key( $row, array_flip( array( 'values', 'options', 'attributes' ) ) );
@@ -218,6 +224,14 @@ class PDb_Manage_Fields_Updates {
         }
       }
     }
+    
+    if ( ! empty( $changed_groups ) )
+    {
+      foreach( array_unique($changed_groups) as $groupname ) {
+        self::rebuild_group_field_order($groupname);
+      }
+    }
+    
     $this->return_to_the_manage_database_fields_page();
   }
 
@@ -391,7 +405,7 @@ class PDb_Manage_Fields_Updates {
     global $wpdb;
     $current_user = wp_get_current_user();
 
-    switch ( filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ) ) {
+    switch ( filter_input( INPUT_POST, 'task', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) {
 
       case 'delete_field':
 
@@ -564,6 +578,40 @@ class PDb_Manage_Fields_Updates {
     }
     
     return $result;
+  }
+  
+  /**
+   * rebuilds the field order of a group
+   * 
+   * the numbering for the fields of each group start with group->id * 1000
+   * 
+   * @global wpdb $wpdb
+   * @param string $groupname
+   */
+  public static function rebuild_group_field_order( $groupname )
+  {
+    global $wpdb;
+    
+    $sql = 'SELECT f.id,f.order,g.id AS groupid FROM ' . Participants_Db::$fields_table . ' f INNER JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name  WHERE f.group = "' . esc_sql($groupname) . '" ORDER BY f.order ASC';
+    
+    $field_list = $wpdb->get_results($sql);
+    
+    if ( !is_array( $field_list ) ) {
+      Participants_Db::debug_log(__METHOD__.': empty response for query: ' . $wpdb->last_query );
+      return;
+    }
+    
+    $update = array();
+    $field_id_list = array();
+    $start_value = 1000 * reset( $field_list )->groupid;
+    
+    foreach ( $field_list as $item ) {
+      $update[] = 'WHEN `id` = "' . $item->id . '" THEN "' . $start_value . '"';
+      $field_id_list[] = $item->id;
+      $start_value++;
+    }
+    
+    $wpdb->query( 'UPDATE ' . Participants_Db::$fields_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END WHERE `id` IN ("' . implode( '","', $field_id_list ) . '")' );
   }
   
   /**
