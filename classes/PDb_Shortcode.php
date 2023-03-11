@@ -1028,7 +1028,13 @@ abstract class PDb_Shortcode {
         break;
 
       case 'retrieve':
-        $where .= 'WHERE field.name = "' . Participants_Db::plugin_setting( 'retrieve_link_identifier' ) . '"';
+        $in = array( Participants_Db::plugin_setting( 'retrieve_link_identifier' ) );
+        
+        if ( Participants_Db::plugin_setting_is_true( 'retrieve_form_captcha' ) )
+        {
+          $in[] = self::get_captcha_fieldname();
+        }
+        $where .= 'WHERE field.name IN ("' . implode( '","', $in ) . '")';
         break;
 
       case 'record':
@@ -1047,6 +1053,35 @@ abstract class PDb_Shortcode {
       ' . $where . ' ORDER BY fieldgroup.order, field.order ASC';
 
     $this->display_columns = $wpdb->get_col( $sql );
+  }
+  
+  /**
+   * finds the name of the CAPTCHA field
+   * 
+   * @global wpdb $wpdb
+   * @return string field name
+   */
+  public static function get_captcha_fieldname()
+  {
+    $cachekey = 'captcha_fieldname';
+    
+    $fieldname = wp_cache_get( $cachekey );
+    
+    if ( $fieldname === false )
+    {
+      global $wpdb;
+      $fieldname = $wpdb->get_var( 'SELECT f.name FROM ' . Participants_Db::$fields_table . ' f WHERE f.form_element = "captcha" ORDER BY f.order ASC LIMIT 1' );
+      
+      if ( ! $fieldname )
+      {
+        $fieldname = '';
+        Participants_Db::debug_log('No CAPTCHA field defined');
+      }
+      
+      wp_cache_set( $cachekey, $fieldname );
+    }
+    
+    return $fieldname;
   }
 
   /**
