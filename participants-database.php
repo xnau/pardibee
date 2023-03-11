@@ -2682,6 +2682,21 @@ class Participants_Db extends PDb_Base {
     if ( !is_object( self::$validation_errors ) ) {
       self::$validation_errors = new PDb_FormValidation();
     }
+    
+    if ( self::plugin_setting_is_true( 'retrieve_form_captcha' ) )
+    {
+      $captchafield = PDb_Shortcode::get_captcha_fieldname();
+      if ( ! empty( $captchafield ) )
+      {
+        $captchavalue = isset( $_POST[$captchafield] ) ? $_POST[$captchafield] : '';
+        self::$validation_errors->validate_field( $captchavalue, $captchafield, 'captcha');
+        
+        if ( self::$validation_errors->has_error( $captchafield ) )
+        {
+          return;
+        }
+      }
+    }
 
     if ( !isset( $_POST[$column] ) || empty( $_POST[$column] ) ) {
       self::$validation_errors->add_error( $column, 'empty' );
