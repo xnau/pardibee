@@ -27,7 +27,6 @@ class PDb_FormValidation extends xnau_FormValidation {
 
   public function __construct()
   {
-
     parent::__construct();
 
     $this->set_up_error_messages();
@@ -119,7 +118,7 @@ class PDb_FormValidation extends xnau_FormValidation {
      * by the filter callback, no further processing will be applied.
      * 
      * @action pdb-before_validate_field
-     * @param PDb_Validating_Field $field
+     * @param \PDb_submission\validating_field $field
      * 
      */
     Participants_Db::do_action( 'before_validate_field', $validating_field );
@@ -200,6 +199,7 @@ class PDb_FormValidation extends xnau_FormValidation {
           break;
           
         default:
+          
           /*
            * check all the simple validated fields for empty
            */
