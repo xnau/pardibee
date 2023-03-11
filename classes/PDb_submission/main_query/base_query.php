@@ -227,27 +227,33 @@ abstract class base_query {
     // run the query
     $result = $wpdb->query( $this->sanitized_query() );
 
-    if ( $result === false ) {
+    if ( $result === false )
+    {
       PDB::debug_log( __METHOD__ . ' record store error: ' . $wpdb->last_error . ' for query: '.$wpdb->last_query );
-    } elseif ( $result > 0 ) {
-      
+    } 
+    elseif ( $result > 0 )
+    {
       PDB::debug_log( __METHOD__ . ' storing record: ' . $wpdb->last_query );
     }
 
     $db_error_message = '';
-    if ( $result === 0 ) {
-      
+    if ( $result === 0 )
+    {  
       if ( !$this->is_import && !$this->is_func_call ) {
         $db_error_message = sprintf( PDB::$i18n[ 'zero_rows_error' ], $wpdb->last_query );
       }
       PDB::$insert_status = 'skip';
-    } elseif ( $result === false ) {
+    }
+    elseif ( $result === false )
+    {
       $db_error_message = sprintf( PDB::$i18n[ 'database_error' ], $wpdb->last_query, $wpdb->last_error );
       PDB::$insert_status = 'error';
-    } else {
+    }
+    else
+    {
       // is it a new record?
-      if ( $this->query_mode() === 'insert' ) {
-
+      if ( $this->query_mode() === 'insert' )
+      {
         // get the new record id for the return
         $this->record_id = $wpdb->insert_id;
 
@@ -255,7 +261,8 @@ abstract class base_query {
          * is this record a new one created in the admin? This also applies to CSV 
          * imported new records
          */
-        if ( PDB::is_admin() ) {
+        if ( PDB::is_admin() )
+        {
           // if in the admin hang on to the id of the last record for an hour
           set_transient( PDB::$last_record, $this->record_id, HOUR_IN_SECONDS );
         }
@@ -265,11 +272,14 @@ abstract class base_query {
     /*
      * set up user feedback
      */
-    if ( PDB::is_admin() ) {
-      if ( !$this->is_import && !$this->is_func_call && $result ) {
+    if ( PDB::is_admin() )
+    {
+      if ( !$this->is_import && !$this->is_func_call && $result )
+      {
         PDB::set_admin_message( ($this->query_mode() === 'insert' ? PDB::$i18n[ 'added' ] : PDB::$i18n[ 'updated' ] ), 'updated' );
       }
-      if ( !empty( $db_error_message ) ) {
+      if ( !empty( $db_error_message ) )
+      {
         PDB::set_admin_message( PDB::db_error_message( $db_error_message ), 'error' );
       }
     }
