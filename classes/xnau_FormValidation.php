@@ -87,7 +87,7 @@ class xnau_FormValidation {
    * validation status array
    *
    * @param string $value       the submitted value of the field
-   * @param object $column_atts the column atributes object
+   * @param object $column_atts the column attributes object
    *                            validation key can be NULL, 'yes', 'email-regex', a field name, regex
    * @param array  $post        the post array with all submitted values, defaults 
    *                            to $this->post_array as instantiated
@@ -112,7 +112,6 @@ class xnau_FormValidation {
    */
   public function validate_field($value, $name, $validation = NULL)
   {
-
     $this->_validate_field($value, $name, $validation);
   }
   
