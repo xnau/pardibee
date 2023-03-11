@@ -962,6 +962,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
         )
     );
     
+    $this->plugin_settings[] = array(
+        'name' => 'retrieve_form_captcha',
+        'title' => __( 'Use CAPTCHA', 'participants-database' ),
+        'group' => 'pdb-resend',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'Add a CAPTCHA field to the Private Link Recovery form.', 'participants-database' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        )
+    );
+    
 
     $this->plugin_settings[] = array(
         'name' => 'retrieve_link_title',
