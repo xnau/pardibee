@@ -1675,7 +1675,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
       if ( $pages === false ) {
         $pages = get_posts( array('post_type' => 'page', 'posts_per_page' => -1) );
-        wp_cache_set( 'pdb-pagelist_posts', $pages, Participants_Db::cache_expire() );
+        wp_cache_set( 'pdb-pagelist_posts', $pages, '', Participants_Db::cache_expire() );
       }
 
       foreach ( $pages as $page ) {
