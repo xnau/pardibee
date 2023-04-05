@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -53,7 +53,7 @@ class PDb_Manage_Fields_Updates {
 
       // unescape quotes in values
       foreach ( $row as $k => $rowvalue ) {
-        if ( !is_array( $rowvalue ) ) {
+        if ( !is_array( $rowvalue ) && ! empty( $rowvalue ) ) {
           $row[ $k ] = stripslashes( $rowvalue );
         }
       }
@@ -200,7 +200,7 @@ class PDb_Manage_Fields_Updates {
 
         if ( $result !== false ) {
           
-          $with_selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+          $with_selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_DEFAULT, Participants_Db::string_sanitize( FILTER_NULL_ON_FAILURE ) );
           
           if ( $with_selected_action ) {
             PDb_List_Admin::set_user_setting( 'with_selected_selection', $with_selected_action, 'manage_fields' . $current_user->ID );
@@ -246,10 +246,10 @@ class PDb_Manage_Fields_Updates {
     $new_field = array(
         'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name' ) ),
         'title' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::sanitize_text' ) ),
-        'group' => filter_input( INPUT_POST, 'group', FILTER_SANITIZE_STRING ),
+        'group' => filter_input( INPUT_POST, 'group', FILTER_DEFAULT, Participants_Db::string_sanitize() ),
         'order' => filter_input( INPUT_POST, 'order', FILTER_SANITIZE_NUMBER_INT ),
         'validation' => 'no',
-        'form_element' => filter_input( INPUT_POST, 'form_element', FILTER_SANITIZE_STRING ),
+        'form_element' => filter_input( INPUT_POST, 'form_element', FILTER_DEFAULT, Participants_Db::string_sanitize() ),
     );
     
     /**
@@ -472,8 +472,8 @@ class PDb_Manage_Fields_Updates {
           wp_send_json( 'error:no valid id list' );
         }
 
-        $param = filter_input( INPUT_POST, 'param', FILTER_SANITIZE_STRING );
-        $setting = filter_input( INPUT_POST, 'setting', FILTER_SANITIZE_STRING ) === 'true' ? 1 : 0;
+        $param = filter_input( INPUT_POST, 'param', FILTER_DEFAULT, Participants_Db::string_sanitize() );
+        $setting = filter_input( INPUT_POST, 'setting', FILTER_DEFAULT, Participants_Db::string_sanitize() ) === 'true' ? 1 : 0;
 
         $result = $wpdb->query( '
       UPDATE ' . Participants_Db::$fields_table . '
@@ -481,13 +481,13 @@ class PDb_Manage_Fields_Updates {
       WHERE id IN ("' . implode( '","', $list ) . '")'
         );
 
-        PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ), 'manage_fields' . $current_user->ID );
+        PDb_List_Admin::set_user_setting( 'with_selected_selection', filter_input( INPUT_POST, 'with_selected', FILTER_DEFAULT, Participants_Db::string_sanitize() ), 'manage_fields' . $current_user->ID );
 
         wp_send_json( array( 'status' => 'success', 'feedback' => $this->dismissable_message( __( 'Field settings updated.', 'participants-database' ) ) ) );
 
       case 'reorder_fields':
 
-        parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
+        parse_str( filter_input( INPUT_POST, 'list', FILTER_DEFAULT, Participants_Db::string_sanitize() ), $list );
         $update = array();
         foreach ( $list as $key => $value ) {
           $update[] = 'WHEN `id` = "' . filter_var( str_replace( 'row_', '', $key ), FILTER_SANITIZE_NUMBER_INT ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
@@ -497,10 +497,10 @@ class PDb_Manage_Fields_Updates {
         wp_send_json( array( 'status' => $result !== false ? 'success' : 'failed' ) );
 
       case 'reorder_groups':
-        parse_str( filter_input( INPUT_POST, 'list', FILTER_SANITIZE_STRING ), $list );
+        parse_str( filter_input( INPUT_POST, 'list', FILTER_DEFAULT, Participants_Db::string_sanitize() ), $list );
         $update = array();
         foreach ( $list as $key => $value ) {
-          $update[] = 'WHEN `id` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_SANITIZE_STRING ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
+          $update[] = 'WHEN `id` = "' . filter_var( str_replace( 'order_', '', $key ), FILTER_DEFAULT, Participants_Db::string_sanitize() ) . '" THEN "' . filter_var( $value, FILTER_SANITIZE_NUMBER_INT ) . '"';
         }
         $result = $wpdb->query( 'UPDATE ' . Participants_Db::$groups_table . ' SET `order` = CASE ' . implode( " \r", $update ) . ' END WHERE `id` IN ("' . implode( '","', array_keys( $list ) ) . '")' );
 
@@ -508,7 +508,7 @@ class PDb_Manage_Fields_Updates {
 
       case 'open_close_editor':
         $fieldid = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
-        switch ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) ) {
+        switch ( filter_input( INPUT_POST, 'state', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) {
           case 'open':
             Participants_Db::$session->update( self::action_key, array( 'editoropen' => array( $fieldid => true ) ) );
             break;
@@ -526,7 +526,7 @@ class PDb_Manage_Fields_Updates {
         }
 
         foreach ( $list as $id ) {
-          if ( filter_input( INPUT_POST, 'state', FILTER_SANITIZE_STRING ) === 'open' ) {
+          if ( filter_input( INPUT_POST, 'state', FILTER_DEFAULT, Participants_Db::string_sanitize() ) === 'open' ) {
             Participants_Db::$session->update( self::action_key, array( 'editoropen' => array( $id => true ) ) );
           } else {
             Participants_Db::$session->update( self::action_key, array( 'editoropen' => array( $id => false ) ) );
@@ -536,8 +536,8 @@ class PDb_Manage_Fields_Updates {
         
       case 'update_editor':
         
-        $fieldname = filter_input( INPUT_POST, 'field', FILTER_SANITIZE_STRING );
-        $new_type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+        $fieldname = filter_input( INPUT_POST, 'field', FILTER_DEFAULT, Participants_Db::string_sanitize() );
+        $new_type = filter_input( INPUT_POST, 'type', FILTER_DEFAULT, Participants_Db::string_sanitize() );
         
         // update the field def with the new type
         global $wpdb;
@@ -553,7 +553,7 @@ class PDb_Manage_Fields_Updates {
          * @param string name of the task
          * @param array of selected ids
          */
-        do_action( Participants_Db::$prefix . 'with_selected_field_edit_action', filter_input( INPUT_POST, 'task', FILTER_SANITIZE_STRING ), $this->sanitize_id_list() );
+        do_action( Participants_Db::$prefix . 'with_selected_field_edit_action', filter_input( INPUT_POST, 'task', FILTER_DEFAULT, Participants_Db::string_sanitize() ), $this->sanitize_id_list() );
     }
   }
   
@@ -669,8 +669,8 @@ class PDb_Manage_Fields_Updates {
   {
     $filters = array(
         'id' => FILTER_SANITIZE_NUMBER_INT,
-        'status' => FILTER_SANITIZE_STRING,
-        'name' => FILTER_SANITIZE_STRING,
+        'status' => self::string_sanitize(),
+        'name' => self::string_sanitize(),
         'title' => self::text_sanitize(),
         'group' => self::string_sanitize(),
         'form_element' => self::string_sanitize(),
@@ -727,8 +727,8 @@ class PDb_Manage_Fields_Updates {
   {
     $filters = array(
         'id' => FILTER_SANITIZE_NUMBER_INT,
-        'status' => FILTER_SANITIZE_STRING,
-        'name' => FILTER_SANITIZE_STRING,
+        'status' => self::string_sanitize(),
+        'name' => self::string_sanitize(),
         'title' => self::text_sanitize(),
         'description' => self::text_sanitize(),
         'mode' => self::string_sanitize(),
