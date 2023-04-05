@@ -622,13 +622,13 @@ svg.ajax-loading image {
 }
 
 .pdb-error {
-  border-left: 4px solid #dd3d36;
+  border-left: 4px solid #cf2e2e;
 }
 .pdb-error li {
   margin:0.5em 20px;
 }
 .pdb-message {
-  border-left: 4px solid #7ad03a;
+  border-left: 4px solid #7bdcb5;
 }
 .pdb-error p, .pdb-message p {
   margin:0;
