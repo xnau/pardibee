@@ -102,7 +102,7 @@ class PDb_Signup extends PDb_Shortcode {
        * in which case we show the saved values from the record
        */
       $this->participant_values = Participants_Db::get_participant( $this->participant_id );
-
+      
       if ( $this->participant_values && ($form_status === 'normal' || ( $shortcode_atts[ 'module' ] === 'thanks' && Participants_Db::is_multipage_form() ) ) ) {
         /*
          * the submission (single or multi-page) is successful, set the submitted flag
