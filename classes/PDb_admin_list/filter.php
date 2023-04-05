@@ -54,9 +54,10 @@ class filter {
   {
     $filter = wp_cache_get(self::cachekey);
     
-    if ( ! $filter ) {
+    if ( ! $filter )
+    {
       $filter = get_option( self::$filter_option, $this->default_filter() );
-      wp_cache_add( self::cachekey, $filter, \Participants_Db::cache_expire() );
+      wp_cache_set( self::cachekey, $filter, '', \Participants_Db::cache_expire() );
     }
     
     return $filter;
@@ -320,7 +321,7 @@ class filter {
           'recent_fields' => array(),
       );
       
-      wp_cache_set( $cachekey, $filter, \Participants_Db::cache_expire() );
+      wp_cache_set( $cachekey, $filter, '', \Participants_Db::cache_expire() );
     }
 
     return $filter;

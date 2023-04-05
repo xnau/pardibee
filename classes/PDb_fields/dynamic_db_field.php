@@ -164,7 +164,7 @@ abstract class dynamic_db_field extends core {
         }
       }
 
-      wp_cache_add( $cachekey, $list );
+      wp_cache_set( $cachekey, $list, '', HOUR_IN_SECONDS );
     }
 
     return $list;
@@ -320,7 +320,7 @@ abstract class dynamic_db_field extends core {
 
       $def_value = $wpdb->get_var( $wpdb->prepare( 'SELECT f.' . $column . ' FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name = %s', $fieldname ) );
       
-      wp_cache_set( $fieldname, $def_value, $cachekey );
+      wp_cache_set( $fieldname, $def_value, $cachekey, \Participants_Db::cache_expire() );
     }
     
     return $def_value;
@@ -588,7 +588,7 @@ AND TABLE_NAME = %s';
         $types[ $info[ 'COLUMN_NAME' ] ] = $info[ 'DATA_TYPE' ];
       }
 
-      wp_cache_add( $table, $types, $cachekey, DAY_IN_SECONDS );
+      wp_cache_set( $table, $types, $cachekey, DAY_IN_SECONDS );
     }
 
     return $types;
