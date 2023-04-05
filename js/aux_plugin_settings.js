@@ -3,7 +3,7 @@
  * 
  * sets up the tab functionality on the plugin settings page
  * 
- * @version 1.1
+ * @version 1.2
  * 
  */
 PDbAuxSettings = (function ($) {
@@ -11,46 +11,69 @@ PDbAuxSettings = (function ($) {
   var wrapped;
   var wrapclass;
   var effect = {
-    effect : 'fadeToggle',
-    duration : 200
+    effect: 'fadeToggle',
+    duration: 200
   };
-  const lastTab = 'pdb-settings-page-tab';
+  var curpage;
+  var pagetabs = {}
+  const tabcookie = 'pdb-settings-page-tab';
   const tabvar = 'settingstab';
   var getCurrentTab = function () {
-    var currentTab = isNaN(Cookies.get(lastTab)) ? 0 : Cookies.get(lastTab);
-    if ( typeof URLSearchParams !== 'function' ) {
-      return currentTab; // if the browser doesn't support this function, return now
-    }
-    var urlTab = new URLSearchParams(window.location.search).get(tabvar);
-    if (urlTab) {
-      currentTab = urlTab;
-    }
-    return parseInt(currentTab);
+    return parseInt(pagetabs[curpage]);
   }
   var setupTabConfig = function () {
+    curpage = $('input[name=option_page]').val();
+    var cookieval = tryParseJSONObject(Cookies.get(tabcookie));
+    if (typeof cookieval === 'undefined') {
+      pagetabs = {};
+      pagetabs[curpage] = 0;
+      setCookie();
+    } else {
+      if (typeof cookieval !== 'object') {
+        pagetabs = {};
+        pagetabs[curpage] = cookieval;
+        setCookie();
+      }
+      pagetabs = cookieval;
+    }
     if ($.versioncompare("1.9", $.ui.version) == 1) {
       tabsetup = {
-        fx : {
-          opacity : "show",
-          duration : "fast"
+        fx: {
+          opacity: "show",
+          duration: "fast"
         },
-        cookie : {
-          expires : 1
+        cookie: {
+          expires: 1
         }
       }
     } else {
       tabsetup = {
-        hide : effect,
-        show : effect,
-        active : getCurrentTab(),
-        activate : function (event, ui) {
-          Cookies.set(lastTab, ui.newTab.index(), {
-            expires : 365, path : ''
-          });
+        hide: effect,
+        show: effect,
+        active: getCurrentTab(),
+        activate: function (event, ui) {
+          pagetabs[curpage] = ui.newTab.index();
+          setCookie();
         }
       }
     }
   }
+  var setCookie = function () {
+    Cookies.set(tabcookie, pagetabs, {
+      expires: 365, path: ''
+    });
+  }
+  var tryParseJSONObject = function (jsonString) {
+    try {
+      var o = JSON.parse(jsonString);
+      if (o && typeof o === "object") {
+        return o;
+      }
+    } catch (e) {
+    }
+
+    return jsonString;
+  };
   var wrapTabs = function () {
     if (wrapped.length) {
       wrapped.each(function () {
@@ -69,7 +92,7 @@ PDbAuxSettings = (function ($) {
     }
   }
   return {
-    init : function () {
+    init: function () {
       wrapped = $(".pdb-aux-settings-tabs .ui-tabs>h2, .pdb-aux-settings-tabs .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">");
       wrapclass = $('.pdb-aux-settings-tabs').attr('class');
       setupTabConfig();
