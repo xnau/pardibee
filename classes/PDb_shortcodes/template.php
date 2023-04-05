@@ -123,7 +123,7 @@ class template {
 
       if ( $module !== 'API' )
       {
-        Participants_Db::debug_log( __METHOD__ . ' custom template not found: "' . $this->custom_template_path($template_filename) . '," using the default template' );
+        Participants_Db::debug_log( __METHOD__ . ' custom template not found: "' . $this->custom_template_path($template_filename) . '," using the default template', 2 );
       }
 
       $template = $default_template;
@@ -134,7 +134,7 @@ class template {
       if ( $module !== 'API' )
       {
         // API calls don't use a template
-        Participants_Db::debug_log( __METHOD__ . ' template not found: ' . $template );
+        Participants_Db::debug_log( __METHOD__ . ' template not found: ' . $template, 2 );
       }
       $template = false;
     }
