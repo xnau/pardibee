@@ -107,7 +107,7 @@ class rich_text_editor {
    */
   private function field_editor_label_fix()
   {
-    if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === 'participants-database-manage_fields' ) {
+    if ( filter_input( INPUT_GET, 'page', FILTER_DEFAULT, \Participants_Db::string_sanitize() ) === 'participants-database-manage_fields' ) {
       ob_start();
       ?>
       <script>
