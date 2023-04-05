@@ -791,7 +791,7 @@ class PDb_Field_Def_Parameter {
       case 'help_text':
       case 'validation_message':
       case 'default':
-        $this->config['value'] = htmlspecialchars( $this->config['value'] );
+        $this->config['value'] = empty( $this->config['value'] ) ? '' : htmlspecialchars( $this->config['value'] );
         break;
     }
     
