@@ -1504,7 +1504,7 @@ class Participants_Db extends PDb_Base {
       foreach( $shown_columns as $column ) {
         $columns[] = $column->Field;
       }
-      wp_cache_add( $cachekey, $columns );
+      wp_cache_set( $cachekey, $columns, '', Participants_Db::cache_expire() );
     }
     
     return $columns;
@@ -1767,7 +1767,7 @@ class Participants_Db extends PDb_Base {
 //      $default_record['date_recorded'] = \Participants_Db::timestamp_now();
 //      $default_record['date_updated'] = \Participants_Db::timestamp_now();
       
-      wp_cache_add( $cachekey, $default_record, Participants_Db::cache_expire()  );
+      wp_cache_set( $cachekey, $default_record, '', Participants_Db::cache_expire()  );
     }
 
     return $default_record;
@@ -3131,8 +3131,6 @@ class Participants_Db extends PDb_Base {
 
     // output the filtered shortcode content
     header( "Content-Type:	text/html" );
-    
-    error_log(__METHOD__.' allowed: '. print_r( Participants_Db::allowed_html('form'),1 ));
     
     
     echo wp_kses( PDb_List::get_list( $shortcode_atts ), Participants_Db::allowed_html('form') );
