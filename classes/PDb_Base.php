@@ -575,11 +575,12 @@ class PDb_Base {
   /**
    * provides the basic string sanitize flags for a php filter function
    * 
+   * @param string $flags additional flags to add
    * @return array
    */
-  public static function string_sanitize()
+  public static function string_sanitize( $flags = FILTER_FLAG_NONE )
   {
-    return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_LOW );
+    return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_LOW | $flags );
   }
   
   /**
@@ -698,7 +699,7 @@ class PDb_Base {
 
       $all_allowed = $allowed + $additional + $wp_allowed_post;
       
-      wp_cache_add( $cachekey, $all_allowed, $type );
+      wp_cache_set( $cachekey, $all_allowed, $type, self::cache_expire() );
     }
 
     return Participants_Db::apply_filters( 'allowed_html_' . $type, $all_allowed );
@@ -1476,7 +1477,7 @@ class PDb_Base {
       $setting = (bool) $default;
     }
     
-    wp_cache_add( $name, $setting, $cachekey, Participants_Db::cache_expire() );
+    wp_cache_set( $name, $setting, $cachekey, Participants_Db::cache_expire() );
     
     return $setting;
   }
@@ -2028,7 +2029,7 @@ class PDb_Base {
         return null;
       }
       
-      $messages = Participants_Db::$session->get( 'admin_message' );
+      $messages = Participants_Db::$session->get( 'admin_message', array() );
       
       switch ( $type ) {
         // this is to translate some legacy values
