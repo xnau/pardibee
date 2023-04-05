@@ -1078,7 +1078,7 @@ abstract class PDb_Shortcode {
         Participants_Db::debug_log('No CAPTCHA field defined');
       }
       
-      wp_cache_set( $cachekey, $fieldname );
+      wp_cache_set( $cachekey, $fieldname, '', Participants_Db::cache_expire() );
     }
     
     return $fieldname;
