@@ -183,7 +183,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   public function print_form_head()
   {
-
     $hidden = array(
         'action' => 'update',
         'id' => $this->participant_id,
@@ -202,7 +201,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   public function print_submit_button( $class = 'button-primary', $button_value = false )
   {
-
     if ( !empty( $this->participant_id ) ) {
 
       $button_value = $button_value ? $button_value : $this->shortcode_atts['submit_button'];
@@ -244,7 +242,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   private function print_save_changes_label()
   {
-
     echo esc_html( Participants_Db::plugin_setting( 'save_changes_label' ) );
   }
 
@@ -255,7 +252,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   protected function _not_found()
   {
-
     if ( Participants_Db::plugin_setting_is_true( 'no_record_use_template' ) || version_compare( $this->template_version, '0.2', '<' ) ) {
 
       $this->_print_from_template();
