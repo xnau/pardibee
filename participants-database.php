@@ -3313,7 +3313,7 @@ class Participants_Db extends PDb_Base {
      * this registers the edit participant page without adding it as a menu item
      */
     add_submenu_page(
-            null, null, null, self::plugin_capability( 'record_edit_capability', 'edit participant' ), self::$plugin_page . '-edit_participant', array(__CLASS__, 'include_admin_file')
+            '', null, null, self::plugin_capability( 'record_edit_capability', 'edit participant' ), self::$plugin_page . '-edit_participant', array(__CLASS__, 'include_admin_file')
     );
 
     add_submenu_page(
