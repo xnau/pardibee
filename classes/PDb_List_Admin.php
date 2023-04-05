@@ -1113,7 +1113,7 @@ class PDb_List_Admin {
       $field_select[$field->grouptitle][] = $field;
     }
     
-    wp_cache_add( $cachekey, $field_select, '', HOUR_IN_SECONDS );
+    wp_cache_set( $cachekey, $field_select, '', HOUR_IN_SECONDS );
     
     return $field_select;
   }
