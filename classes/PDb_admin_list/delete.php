@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -38,8 +38,8 @@ class delete {
     
     global $pagenow;
     
-    if ( $pagenow === 'admin.php' && strpos( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ), 'participants-database' ) !== false ) {
-      $delete_orphan_file_types = filter_input( INPUT_GET, self::orphan_delete, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+    if ( $pagenow === 'admin.php' && strpos( filter_input( INPUT_GET, 'page', FILTER_DEFAULT, \Participants_Db::string_sanitize() ), 'participants-database' ) !== false ) {
+      $delete_orphan_file_types = filter_input( INPUT_GET, self::orphan_delete, FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) );
       if ( $delete_orphan_file_types ) {
         
         $count = uploaded_files::delete_orphaned_files( $delete_orphan_file_types );
