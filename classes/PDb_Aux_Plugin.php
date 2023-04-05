@@ -463,15 +463,24 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function _add_settings_sections( $sections = false )
     {
+      global $pagenow;
+      if ( $pagenow !== 'admin.php' )
+      {
+        return;
+      }
+      
       if ( $sections ) {
         $this->settings_sections = $sections;
       }
-      // enqueue the settings tabs script of there is more than one section
-      if ( count( $this->settings_sections ) > 1 ) {
+      
+      // enqueue the settings tabs script if there is more than one section
+      if ( count( $this->settings_sections ) > 1 )
+      {
         add_action( 'admin_enqueue_scripts', function() {
           wp_enqueue_script( Participants_Db::$prefix . 'aux_plugin_settings_tabs' );
         }, 50 );
       }
+      
       foreach ( $this->settings_sections as $section ) {
         // Add the section to reading settings so we can add our
         // fields to it
