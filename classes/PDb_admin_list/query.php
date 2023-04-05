@@ -81,7 +81,7 @@ class query {
 
       $count = $wpdb->get_var( $count_query );
       
-      wp_cache_add( $cachekey, $count );
+      wp_cache_set( $cachekey, $count, '', Participants_Db::cache_expire() );
     }
     
     return $count;

@@ -257,7 +257,7 @@ abstract class calculated_field extends dynamic_db_field {
         $dynamic_value = preg_replace( $cleanup_expression, '', $replaced_string );
       }
       
-      wp_cache_add( $this->field->cache_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
+      wp_cache_set( $this->field->cache_id(), $dynamic_value, $cachegroup, HOUR_IN_SECONDS );
     }
     
     return $this->is_numeric_field() ? filter_var( $dynamic_value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) : $dynamic_value;
