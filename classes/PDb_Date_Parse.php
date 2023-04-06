@@ -63,7 +63,7 @@ class PDb_Date_Parse {
 
 
   /**
-   * @var string context label for use in filtering, erros, etc.
+   * @var string context label for use in filtering, errors, etc.
    */
   private $context;
   
