@@ -419,7 +419,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function render_settings_parent_page()
     {
-      echo wp_kses_post($this->settings_page_header());
+      $header = $this->settings_page_header();
+      if ( ! empty( $header) )
+      {   
+        echo wp_kses_post($header);
+      }
       /**
        * @filter 'pdb-aux_plugin_settings_page_header'
        */
@@ -481,11 +485,17 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         }, 50 );
       }
       
-      foreach ( $this->settings_sections as $section ) {
+      foreach ( $this->settings_sections as $section )
+      {
+        $args = array(
+            'before_section' => isset( $section['before_section'] ) ? $section['before_section'] : '',
+            'after_section' => isset( $section['after_section'] ) ? $section['after_section'] : '',
+            'section_class' => isset( $section['class'] ) ? $section['class'] : $section['slug'] . '-settings-section',
+        );
         // Add the section to reading settings so we can add our
         // fields to it
         add_settings_section(
-                $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name
+                $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name, $args
         );
       }
     }
