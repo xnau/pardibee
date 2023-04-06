@@ -865,6 +865,8 @@ abstract class PDb_Shortcode {
       $groups = wp_cache_get($cachekey);
       
       if ( ! $groups ) {
+        
+        $groups = [];
 
         $result = $wpdb->get_results( $sql, ARRAY_N );
 
