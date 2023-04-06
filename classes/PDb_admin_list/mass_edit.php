@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -167,7 +167,7 @@ class mass_edit {
    */
   private function get_field_name()
   {
-    return (string) filter_input( INPUT_POST, self::field_selector, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+    return (string) filter_input( INPUT_POST, self::field_selector, FILTER_DEFAULT, \Participants_Db::string_sanitize( FILTER_NULL_ON_FAILURE ) );
   }
   
   /**
@@ -178,7 +178,7 @@ class mass_edit {
    */
   private function field_input( $fieldname )
   {
-    $value = \PDb_List_Admin::get_admin_user_setting( $fieldname, filter_input( INPUT_POST, $fieldname, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
+    $value = \PDb_List_Admin::get_admin_user_setting( $fieldname, filter_input( INPUT_POST, $fieldname, FILTER_DEFAULT, \Participants_Db::string_sanitize( FILTER_NULL_ON_FAILURE ) ) );
     
     return field_input::html($fieldname, $value );
   }
