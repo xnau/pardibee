@@ -405,7 +405,7 @@ class PDb_Form_Field_Def {
       return '';
     }
     if ( $this->is_dynamic_field() || ( $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default ) ) ) {
-      return htmlspecialchars_decode( $this->default );
+      return empty( $this->default ) ? '' : htmlspecialchars_decode( $this->default );
     }
     return Participants_Db::apply_filters( 'translate_string', $this->default );
   }
