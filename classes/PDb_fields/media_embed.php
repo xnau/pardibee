@@ -208,6 +208,11 @@ class media_embed extends core {
   {
     $output = '';
     
+    if ( empty( $content ) )
+    {
+      return $output;
+    }
+    
     foreach( explode( ' ', $content ) as $part ) {
       if ( empty( $part ) ) {
         continue;
