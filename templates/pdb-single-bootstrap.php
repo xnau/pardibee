@@ -29,7 +29,7 @@
       
       ?>
     
-    <dl class="dl-horizontal <?php esc_attr_e( Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ) ?> <?php esc_attr_e( empty( $empty_class ) ? '' : $empty_class . '-group' ) ?>">
+    <dl class="dl-horizontal <?php echo esc_attr( Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ) ?> <?php echo esc_attr( empty( $empty_class ) ? '' : $empty_class . '-group' ) ?>">
       
       <dt class="<?php esc_attr_e( $this->field->name.' '.$empty_class ) ?>"><?php $this->field->print_label() ?></dt>
       
