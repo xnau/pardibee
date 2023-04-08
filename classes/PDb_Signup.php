@@ -312,8 +312,7 @@ class PDb_Signup extends PDb_Shortcode {
    */
   public function print_form_head( $hidden = '' )
   {
-
-    echo wp_kses( $this->_print_form_head( $hidden ), Participants_Db::allowed_html('form') );
+    echo $this->_print_form_head( $hidden );
   }
 
   /**
