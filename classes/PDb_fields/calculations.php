@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -405,8 +405,17 @@ trait calculations {
         break;
 
       case 'unformatted':
-      default:
         $formatted = $value;
+        break;
+      
+      default:
+        /**
+         * @filter pdb-calc_field_format_tag_{$tag}
+         * @param mixed $value unformatted value
+         * @param \PDb_Field_Item $field
+         * @return string value
+         */
+        $formatted = \Participants_Db::apply_filters( 'calc_field_format_tag_' . $format_tag, $value, $this->field );
     }
 
     return $formatted;
@@ -466,7 +475,12 @@ trait calculations {
 
       case 'unformatted':
       default:
-        return false;
+        /**
+         * @filter pdb-display_only_format_tag_{$format_tag}
+         * @param bool false
+         * @return bool true if it is a display tag
+         */
+        return \Participants_Db::apply_filters( 'display_only_format_tag_' . $format_tag, false );
     }
   }
   
