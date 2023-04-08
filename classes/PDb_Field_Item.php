@@ -1294,7 +1294,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         case 'textarea':
 
           $pattern = $this->html_output ? '<span ' . PDb_FormElement::class_attribute( 'textarea' ) . '>%s</span>' : '%s';
-          $return = sprintf( $pattern, esc_textarea( $this->value() ) );
+          $return = empty( $this->value() ) ? '' : sprintf( $pattern, esc_textarea( $this->value() ) );
           break;
 
         case 'rich-text':
@@ -1302,7 +1302,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           if ( $this->html_output ) {
             $return = sprintf( '<span ' . PDb_FormElement::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $this->value(), 'rich-text field' ) );
           } else {
-            $return = strip_tags( esc_textarea( $this->value() ) );
+            $return = empty( $this->value() ) ? '' : strip_tags( esc_textarea( $this->value() ) );
           }
 
           break;
