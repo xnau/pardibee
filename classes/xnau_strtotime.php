@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -41,11 +41,12 @@ class xnau_strtotime {
    * @param string $date the date string
    * @param string $date_format the date format string (used to detect european formatting)
    * @param bool $euro european order setting
+   * @return int|bool timestamp or bool false if the date can't be parsed
    */
   public static function get_timestamp( $date, $date_format = '', $euro = null )
   {
     $strtotime = new self( $date, $date_format, $euro );
-    return $strtotime->parse();
+    return empty( $date ) ? false : $strtotime->parse();
   }
   
   /**
