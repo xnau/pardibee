@@ -84,9 +84,10 @@ abstract class core {
    */
   public function display_form_element( $display, $field )
   {
-    if ( $field->form_element() === $this->name ) {
-      
+    if ( $field->form_element() === $this->name )
+    {
       $this->setup_field( $field );
+      
       $display = $this->display_value();
     }
     return $display;
