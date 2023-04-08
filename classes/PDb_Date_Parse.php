@@ -111,7 +111,7 @@ class PDb_Date_Parse {
    */
   public static function is_mysql_timestamp( $timestamp )
   {
-    return $timestamp !== '0000-00-00 00:00:00' && preg_match( '#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#', $timestamp ) === 1;
+    return ! is_null( $timestamp ) && $timestamp !== '0000-00-00 00:00:00' && preg_match( '#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#', $timestamp ) === 1;
   }
   
   /**
