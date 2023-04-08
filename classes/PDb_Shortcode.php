@@ -285,7 +285,7 @@ abstract class PDb_Shortcode {
     $this->_set_display_columns();
     $this->_set_display_groups();
 
-    $this->wrap_class = trim( $this->wrap_class ) . ' ' . trim( $this->shortcode_atts['class'] );
+    $this->wrap_class = trim( $this->wrap_class ) . ( empty( $this->shortcode_atts['class'] ) ? '' : ' ' . trim( $this->shortcode_atts['class'] ) );
     // set the template to use
     $this->set_template( $this->shortcode_atts['template'] );
     
