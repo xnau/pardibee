@@ -1023,7 +1023,7 @@ class PDb_Manage_Fields_Updates {
    */
   public static function sanitize_text( $string )
   {
-    return wp_kses( $string, self::allowed_text_html() );
+    return empty( $string ) ? '' : wp_kses( $string, self::allowed_text_html() );
    ///return wp_kses( PDb_List_Query::straighten_quotes( $string ), self::allowed_text_html() );
   }
 
