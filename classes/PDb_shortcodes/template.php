@@ -121,7 +121,7 @@ class template {
     {
       $default_template = Participants_Db::$plugin_path . 'templates/pdb-' . $module . '-default.php';
 
-      if ( $module !== 'API' )
+      if ( $module !== 'API' && $template_name !== 'default' )
       {
         Participants_Db::debug_log( __METHOD__ . ' custom template not found: "' . $this->custom_template_path($template_filename) . '," using the default template', 2 );
       }
