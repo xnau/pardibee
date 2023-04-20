@@ -1045,6 +1045,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       
       } else
       {
+        if ( ! is_array( $plugin_name_list ) )
+        {
+          $plugin_name_list = array( $plugin_name );
+        }
+        
         if ( ! in_array( $plugin_name, $plugin_name_list ) )
         {
           $plugin_name_list[] = $plugin_name;
