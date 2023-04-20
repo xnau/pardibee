@@ -188,11 +188,14 @@ class list_search_submission {
    */
   protected function trim_search_terms()
   {
-    if ( is_array( $this->input['value'] ) ) {
+    if ( is_array( $this->input['value'] ) )
+    {
       array_walk( $this->input['value'], function(&$value){
         $value = self::deep_trim($value);
       } );
-    } else {
+    }
+    elseif ( ! empty( $this->input['value'] ) )
+    {
       $this->input['value'] = self::deep_trim( $this->input['value'] );
     }
   }
