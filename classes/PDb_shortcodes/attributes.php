@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -30,6 +30,11 @@ class attributes {
   public function __construct()
   {
     $this->setup_filters();
+    
+    if ( $this->list_sort_headers() )
+    {
+      new sort_headers();
+    }
   }
   
   /**
@@ -43,6 +48,18 @@ class attributes {
         return $atts;
       } );
     }
+  }
+  
+  /**
+   * checks the list attributes for the sort headers
+   * 
+   * @return bool
+   */
+  private function list_sort_headers()
+  {
+    $list_atts = $this->list_attributes();
+    
+    return isset( $list_atts['header_sort'] ) && boolval( $list_atts['header_sort'] );
   }
   
   /**
@@ -104,6 +121,16 @@ class attributes {
   private static function get_attributes()
   {
     return get_transient( self::attribute_store );
+  }
+  
+  /**
+   * gets the attributes for a list tag
+   * 
+   * @return array
+   */
+  private function list_attributes()
+  {
+    return self::attribute_set('pdb_list');
   }
   
 }
