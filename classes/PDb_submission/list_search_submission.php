@@ -103,7 +103,7 @@ class list_search_submission {
    */
   public function has_search()
   {
-    return isset( $this->input['search_field'] ) && ! empty( $this->input['search_field'] );
+    return ( isset( $this->input['search_field'] ) && ! empty( $this->input['search_field'] ) ) || ( isset( $this->input['sortBy'] ) && ! empty( $this->input['sortBy'] ) );
   }
   
   /**
