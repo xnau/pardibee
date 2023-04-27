@@ -135,23 +135,30 @@ class user_column extends base_column {
           global $wpdb;
           $record_filename = $wpdb->get_var( $wpdb->prepare( 'SELECT `' . $this->field->name() . '` FROM ' . Participants_Db::participants_table() . ' WHERE id = %s', $participant_id ) );
           
+          if ( empty( $record_filename ) )
+          {
+            break;
+          }
+          
           $delete_checkbox = filter_input( INPUT_POST, $this->field->name() . '-deletefile', FILTER_SANITIZE_SPECIAL_CHARS ) === 'delete';
           $filename = '';
             
           global $pdb_uploaded_files;
 
-          if ( array_key_exists( $this->field->name(), $_POST ) ) { // it's a record update deleting the previously uploaded file
-            
+          if ( array_key_exists( $this->field->name(), $_POST ) )
+          { 
+            // this is a record update deleting the previously uploaded file
             $post_filename = isset($pdb_uploaded_files[$this->field->name()]) ? $pdb_uploaded_files[$this->field->name()] : filter_var( $_POST[$this->field->name()], FILTER_DEFAULT, \Participants_Db::string_sanitize() );
             
-            if ( ! empty( $record_filename ) && $post_filename !== $record_filename && Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
-              
+            if ( $post_filename !== $record_filename && Participants_Db::plugin_setting_is_true( 'file_delete' ) )
+            {  
               Participants_Db::debug_log(__METHOD__.' deleting file on overwrite '. $record_filename, 2 );
               Participants_Db::delete_file( $record_filename );
-              
-            } elseif ( $post_filename === $record_filename && $delete_checkbox ) {
-
-              if ( Participants_Db::plugin_setting_is_true( 'file_delete' ) ) {
+            }
+            elseif ( $post_filename === $record_filename && $delete_checkbox )
+            {
+              if ( Participants_Db::plugin_setting_is_true( 'file_delete' ) )
+              {
                 Participants_Db::debug_log(__METHOD__.' user checkbox deleting file '. $record_filename, 2 );
                 Participants_Db::delete_file( $record_filename );
               }
@@ -159,11 +166,12 @@ class user_column extends base_column {
               $this->value = null;
               $_POST[$this->field->name()] = '';
               $pdb_uploaded_files[$this->field->name()] = '';
-            }
-            
-          } elseif ( $record_filename !== $this->value )
-          { // it's an import deleting the field value  
-            Participants_Db::debug_log(__METHOD__.' deleting file on import overwrite '. $record_filename, 2 );
+            }  
+          }
+          elseif ( $record_filename !== $this->value )
+          { 
+            // it's an import deleting the field value  
+            Participants_Db::debug_log(__METHOD__.' deleting ' . $this->field->title() . ' file on import overwrite '. $record_filename, 2 );
             Participants_Db::delete_file( $record_filename );
           }
         }
