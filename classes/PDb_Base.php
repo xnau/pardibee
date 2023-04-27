@@ -326,7 +326,6 @@ class PDb_Base {
    *                    order       a comma-separated list of sort directions, correlates 
    *                                to the $sort_fields argument
    *                    fields      a comma-separated list of fields to get
-   * @param array $columns list of field names to include in the results
    * 
    * @return array of data arrays as $name => $value
    */
@@ -394,13 +393,22 @@ class PDb_Base {
    */
   public static function db_field_list()
   {
-    $field_list = array();
+    $cachekey = 'pdb-db-field-list';
+    
+    $field_list = wp_cache_get($cachekey);
+    
+    if ( is_array( $field_list ) )
+    {
+      return $field_list;
+    }
     
     foreach( self::field_defs() as $fieldname => $field ) {
       if ( $field->stores_data() ) {
         $field_list[] = $fieldname;
       }
     }
+    
+    wp_cache_set( $cachekey, $field_list, '', Participants_Db::cache_expire() );
     
     return $field_list;
   }
@@ -574,6 +582,8 @@ class PDb_Base {
   
   /**
    * provides the basic string sanitize flags for a php filter function
+   * 
+   * this is intended to be used with FILTER_DEFAULT as the primary filter
    * 
    * @param string $flags additional flags to add
    * @return array
