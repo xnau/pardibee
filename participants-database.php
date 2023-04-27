@@ -385,6 +385,13 @@ class Participants_Db extends PDb_Base {
     
     // external custom template location plugin no longer needed, deactivate it
     deactivate_plugins( 'pdb-custom-templates.php', true );
+    
+    add_action('wp_loaded', function(){ 
+      if ( Participants_Db::$plugin_options['enable_api'] )
+      {
+        new \PDb_submission\rest_api\routing();
+      }
+    });
 
     /*
      * any plugins that require Participants Database should initialize on this action
