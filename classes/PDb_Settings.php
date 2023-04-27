@@ -1267,6 +1267,44 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => get_option( 'date_format' ),
         ),
     );
+//
+//    $this->plugin_settings[] = array(
+//        'name' => 'app_pass_name',
+//        'title' => __( 'Application Password Name', 'participants-database' ),
+//        'group' => 'pdb-advanced',
+//        'options' => array
+//            (
+//            'type' => 'text-line',
+//            'help_text' => __( 'this only applies to the use of the external REST API: this is the application name to use for the application password.', 'participants-database' ) . $this->settings_help( 'inputdateformat'),
+//            'value' => 'pdbapi',
+//        ),
+//    );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'enable_api',
+        'title' => __( 'Enable the Participants Database external API', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( "When checked, requests sent to the plugin REST API will be answered.", 'participants-database' ) . $this->settings_help( 'pluginapi'),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'api_public',
+        'title' => __( 'Enable Limited Public Access to Plugin API', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( "This setting enables limited REST API access to unauthenticated GET requests.", 'participants-database' ) . $this->settings_help( 'publicapiaccess'),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
     
     $this->plugin_settings[] = array(
         'name' => 'ajax_search',
