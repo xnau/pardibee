@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcipants_Db
  */
@@ -276,13 +276,10 @@ class PDb_Date_Parse {
     if ( is_a( $Date, 'DateTime' ) ) {
       
       $errors = $Date->getLastErrors();
-      if ( $errors['warning_count'] === 0 && $errors['error_count'] === 0 ) {
-        $errors = false;
-      }
-      if ( is_array( $errors ) ) {
-        if ( PDB_DEBUG ) {
-          Participants_Db::debug_log( __METHOD__ . ' value: ' . $this->input .' error: ' . print_r($errors,1) );
-        }
+      
+      if ( is_array( $errors ) && ( $errors['warning_count'] !== 0 || $errors['error_count'] !== 0 ) )
+      {
+        Participants_Db::debug_log( __METHOD__ . ' value: ' . $this->input .' error: ' . print_r($errors,1) );
 
         return;
       }
