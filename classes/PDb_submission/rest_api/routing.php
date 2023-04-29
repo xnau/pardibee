@@ -43,5 +43,8 @@ class routing {
     new post\update_record();
     new post\delete_record();
     new post\add_record();
+    
+    // other plugins that add to these routes can use this action to initialize
+    do_action( 'pdb-rest_routing_init' );
   }
 }
