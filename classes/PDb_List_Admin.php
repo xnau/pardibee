@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.7
+ * @version    1.8
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -489,6 +489,7 @@ class PDb_List_Admin {
             <?php PDb_FormElement::print_hidden_fields( array( 'action' => 'list_action' ) ) ?>
             <input type="hidden" id="select_count" value="0" />
             <?php
+            wp_nonce_field( \PDb_admin_list\process::nonce );
             /**
              * action pdb-admin_list_form_top
              * @since 1.6
@@ -831,7 +832,7 @@ class PDb_List_Admin {
      * @return array
      */
     $with_selected_selections = Participants_Db::apply_filters( 'admin_list_with_selected_actions', $core_actions );
-    $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING ) : self::get_admin_user_setting( 'with_selected', 'approve' );
+    $with_selected_value = array_key_exists( 'with_selected', $_POST ) ? filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_SPECIAL_CHARS, \Participants_Db::string_sanitize() ) : self::get_admin_user_setting( 'with_selected', 'approve' );
 
     $selector = array(
         'type' => 'dropdown',
