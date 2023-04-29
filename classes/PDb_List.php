@@ -638,7 +638,7 @@ class PDb_List extends PDb_Shortcode {
     
     $value = $this->list_query->current_filter( 'search_field' );
     if ( empty( $value ) && isset( $_POST['search_field'] ) ) {
-      $value = filter_input( INPUT_POST, 'search_field', FILTER_SANITIZE_STRING );
+      $value = filter_input( INPUT_POST, 'search_field', FILTER_DEFAULT, \Participants_Db::string_sanitize() );
     }
     if ( $multi ) {
       $values = $this->list_query->current_filter( 'search_fields' );
