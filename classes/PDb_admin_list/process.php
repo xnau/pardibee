@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    0.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -20,6 +20,11 @@ use \Participants_Db;
 defined( 'ABSPATH' ) || exit;
 
 class process {
+  
+  /**
+   * @var string name of the nonce
+   */
+  const nonce = 'pdb-admin-list-action';
 
   /**
    * stets up the input processing
@@ -35,9 +40,9 @@ class process {
    */
   private function _process_general()
   {
-    if ( filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) === 'list_action' ) {
+    if ( filter_input( INPUT_POST, 'action', FILTER_DEFAULT, \Participants_Db::string_sanitize() ) === 'list_action' && check_admin_referer( self::nonce ) === 1 ) {
 
-      switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
+      switch ( filter_input( INPUT_POST, 'submit-button', FILTER_DEFAULT, \Participants_Db::string_sanitize() ) ) {
 
         // handles a "with selected" action
         case PDb_List_Admin::$i18n['apply']:
@@ -73,7 +78,7 @@ class process {
    */
   private function handle_with_selected()
   {
-    $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING );
+    $selected_action = filter_input( INPUT_POST, 'with_selected', FILTER_DEFAULT, \Participants_Db::string_sanitize() );
     /**
      * @version 1.7.1
      * @filter  pdb-before_list_admin_with_selected_action
