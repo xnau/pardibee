@@ -1824,12 +1824,15 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     if ( !$baseid ) {
       $baseid = isset( $this->attributes[ 'id' ] ) ? $this->attributes[ 'id' ] : '';
     }
+    
     $id = (!empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
 
     // attach the instance index if it is not present
-    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0 ) {
+    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0 )
+    {
       $id = $id . '-' . Participants_Db::$instance_index;
     }
+    
     return $id;
   }
 
