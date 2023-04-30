@@ -180,8 +180,8 @@ class PDb_Template_Item {
   {
     // make sure it does not begin with a numeral
     $classname = preg_replace( '/^([0-9])/','n$1', $string );
-    // clean out any non-valid CSS name characters
-    return preg_replace( '/[^_a-zA-Z0-9-]/','', $classname );
+    
+    return esc_attr( $classname );
   }
   
   /**
