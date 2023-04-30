@@ -442,7 +442,7 @@ abstract class dynamic_db_field extends core {
     $getkey = 'pdb-regenerate-dynamic-fields';
     if ( strpos( $hook, 'participants-database' ) !== false && array_key_exists( $getkey, $_GET ) ) {
 
-      $rebuild_field = filter_input( INPUT_GET, $getkey, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+      $rebuild_field = filter_input( INPUT_GET, $getkey, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE );
       
       if ( empty( $rebuild_field ) ) {
         

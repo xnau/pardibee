@@ -112,7 +112,7 @@ class PDb_Manage_List_Columns {
     }
 
     foreach ( $update_list as $i => $rawname ) {
-      $fieldname = filter_var( $rawname, FILTER_SANITIZE_STRING );
+      $fieldname = filter_var( $rawname, FILTER_SANITIZE_SPECIAL_CHARS );
       if ( isset( $fieldlist[$fieldname] ) ) { // check against list of defined fields before adding
         $fieldlist[$fieldname] = filter_var( $i, FILTER_SANITIZE_NUMBER_INT ) + 1;
       }

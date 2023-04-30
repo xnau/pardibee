@@ -106,7 +106,7 @@ class query {
    */
   private function _process_search()
   {
-    switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_STRING ) ) {
+    switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
 
       case PDb_List_Admin::$i18n[ 'clear' ] :
         $this->filter->reset();

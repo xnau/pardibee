@@ -169,7 +169,7 @@ abstract class base_column {
             $this->field->is_readonly() &&
             !$this->field->is_hidden_field() &&
             \Participants_Db::current_user_has_plugin_role( 'editor', 'readonly access' ) === false &&
-            \Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING ) ) !== 'signup' &&
+            \Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS ) ) !== 'signup' &&
             $this->main_query()->is_func_call() === false
     ) {
       $this->value = '';

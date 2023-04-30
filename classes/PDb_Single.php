@@ -103,7 +103,7 @@ class PDb_Single extends PDb_Shortcode {
   {
     $use_pid = Participants_Db::plugin_setting_is_true('use_single_record_pid', false);
     
-    $validation = $use_pid ? FILTER_SANITIZE_STRING : FILTER_SANITIZE_NUMBER_INT;
+    $validation = $use_pid ? FILTER_SANITIZE_SPECIAL_CHARS : FILTER_SANITIZE_NUMBER_INT;
     
     $get_value = filter_input( INPUT_GET, self::single_query_var(), $validation, FILTER_NULL_ON_FAILURE );
     

@@ -124,7 +124,7 @@ class list_search_submission {
 
       $i = 1;
       foreach ( $search_terms as $term ) {
-        $this->input['value'][$i] = filter_var( $term, FILTER_SANITIZE_STRING );
+        $this->input['value'][$i] = filter_var( $term, FILTER_DEFAULT, \Participants_Db::string_sanitize( FILTER_NULL_ON_FAILURE ) );
         $this->input['search_field'][$i] = $search_field;
         $this->input['operator'][$i] = $operator;
         $this->input['logic'][$i] = 'OR';

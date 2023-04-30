@@ -210,7 +210,7 @@ class mass_edit_update {
    */
   private function sanitizer()
   {
-    $sanitizer = array( 'filter' => FILTER_SANITIZE_STRING );
+    $sanitizer = array( 'filter' => FILTER_SANITIZE_SPECIAL_CHARS );
     
     if ( $this->field->is_multi() ) {
       $sanitizer['flags'] = FILTER_REQUIRE_ARRAY;
@@ -224,7 +224,7 @@ class mass_edit_update {
    */
   private function setup_field()
   {
-    $this->field = new \PDb_Field_Item( filter_input( INPUT_POST, mass_edit::field_selector, FILTER_SANITIZE_STRING ) );
+    $this->field = new \PDb_Field_Item( filter_input( INPUT_POST, mass_edit::field_selector, FILTER_SANITIZE_SPECIAL_CHARS ) );
   }
 
 
@@ -235,7 +235,7 @@ class mass_edit_update {
    */
   private function is_plugin_action()
   {
-    $action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE );
+    $action = filter_input( INPUT_POST, 'with_selected', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE );
     
     return $action === mass_edit::edit_action;
   }

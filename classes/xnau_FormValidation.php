@@ -349,9 +349,9 @@ TRACE: ' .print_r( wp_debug_backtrace_summary(),1 ), 4 );
         case ( isset( $this->post_array[ $field->validation ] ) ) :
 
           if ( is_array( $this->post_array[ $field->validation ] ) ) {
-            $test_value = filter_var_array( $this->post_array[ $field->validation ], FILTER_SANITIZE_STRING );
+            $test_value = filter_var_array( $this->post_array[ $field->validation ], FILTER_SANITIZE_SPECIAL_CHARS );
           } else {
-            $test_value = filter_var( $this->post_array[ $field->validation ], FILTER_SANITIZE_STRING );
+            $test_value = filter_var( $this->post_array[ $field->validation ], FILTER_SANITIZE_SPECIAL_CHARS );
           }
           break;
 

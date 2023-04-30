@@ -457,7 +457,7 @@ class PDb_Signup extends PDb_Shortcode {
       case 'normal':
       case 'signup-thanks':
       default:
-        if ( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING ) === 'update' ) {
+        if ( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS ) === 'update' ) {
           // this is a record form using a thanks page
           if ( $this->feedback->send_notification ) {
             $this->_do_update_notify();

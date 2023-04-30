@@ -112,7 +112,7 @@ class PDb_Session {
       if ( !$pid_only && array_key_exists( Participants_Db::$single_query, $_GET ) ) {
         $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
       } elseif ( array_key_exists( Participants_Db::$record_query, $_GET ) ) {
-        $record_id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE ) );
+        $record_id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE ) );
       }
       if ( $record_id ) {
         return $record_id;
