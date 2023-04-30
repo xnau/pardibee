@@ -199,12 +199,17 @@ if ( $participant_values ) :
               if ( array_key_exists( $column->name(), $_POST ) ) {
 
                 if ( is_array( $_POST[$column->name()] ) )
-                  $column->value = filter_var_array( $_POST[$column->name], FILTER_SANITIZE_STRING );
-
+                {
+                  $column->value = filter_input_array( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS );
+                }
                 elseif ( 'rich-text' === $column->form_element() )
+                {
                   $column->set_value( filter_input( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS ) );
+                }
                 else
+                {
                   $column->set_value( filter_input( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS ) );
+                }
               }
 
               $field_class = ( $column->validation != 'no' ? "required-field" : '' ) . ( in_array( $column->form_element(), array('text-line', 'date') ) ? ' regular-text' : '' );
