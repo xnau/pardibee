@@ -36,6 +36,11 @@ class query {
    * @var string holds the current list query
    */
   protected $list_query;
+  
+  /**
+   * @var string the duplicate check operator
+   */
+  const dupcheck = '<=>';
 
   /**
    * sets up the object
@@ -121,30 +126,46 @@ class query {
 
         $this->list_query = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p ';
 
-        if ( $this->filter->has_search() ) {
+        if ( $this->filter->has_search() )
+        {
           $this->list_query .= 'WHERE ';
-          for ( $i = 0; $i <= $this->filter->count() - 1; $i++ ) {
-            if ( $this->filter->is_valid_set( $i ) ) {
-
-              $this->_add_where_clause( $this->filter->get_set( $i ) );
+          for ( $i = 0; $i <= $this->filter->count() - 1; $i++ )
+          {
+            if ( $this->filter->is_valid_set( $i ) )
+            {
+              $filter_set = $this->filter->get_set( $i );
+              
+              if ( $filter_set['operator'] === self::dupcheck )
+              {
+                $this->duplicate_check( $filter_set, $i );
+              } 
+              else
+              {
+                $this->_add_where_clause( $filter_set );
+              }
             }
-            if ( $i === $this->filter->count() - 1 ) {
-              if ( $this->inparens ) {
+            if ( $i === $this->filter->count() - 1 )
+            {
+              if ( $this->inparens )
+              {
                 $this->list_query .= ') ';
                 $this->inparens = false;
               }
-            } elseif ( $this->filter->get_set( $i + 1 )[ 'search_field' ] !== 'none' && $this->filter->get_set( $i + 1 )[ 'search_field' ] !== '' ) {
+            }
+            elseif ( $this->filter->get_set( $i + 1 )[ 'search_field' ] !== 'none' && $this->filter->get_set( $i + 1 )[ 'search_field' ] !== '' && $this->filter->get_set( $i )[ 'operator' ] !== self::dupcheck )
+            {
               $this->list_query .= $this->filter->get_set( $i )[ 'logic' ] . ' ';
             }
           }
           // if no where clauses were added, remove the WHERE operator
-          if ( preg_match( '/WHERE $/', $this->list_query ) ) {
+          if ( preg_match( '/WHERE $/', $this->list_query ) )
+          {
             $this->list_query = str_replace( 'WHERE', '', $this->list_query );
           }
         }
 
         // add the sorting
-        $this->list_query .= ' ORDER BY ' . esc_sql( $this->filter->sortBy ) . ' ' . esc_sql( $this->filter->ascdesc );
+        $this->list_query .= ' ORDER BY p.' . esc_sql( $this->filter->sortBy ) . ' ' . esc_sql( $this->filter->ascdesc );
     }
   }
 
@@ -321,6 +342,25 @@ class query {
     }
 
     $this->list_query .= ' ';
+  }
+  
+  /**
+   * sets up a duplicate check search
+   * 
+   * @param array $filter_set the filter parameters
+   * @param int $index
+   * @return null
+   */
+  private function duplicate_check( $filter_set, $index )
+  {
+    $pattern = ' INNER JOIN( SELECT %1$s FROM ' . Participants_Db::$participants_table . ' p GROUP BY p.%1$s HAVING COUNT(p.%1$s) > 1 ORDER BY p.%1$s) %2$s ON p.%1$s = %2$s.%1$s ';
+    
+    $this->list_query = str_replace( 'WHERE ', '', $this->list_query );
+    
+    $this->list_query .= sprintf( $pattern, $filter_set['search_field'], 'temp' . $index );
+    
+    // set up the sorting
+    $this->filter->sortBy = $filter_set['search_field'];
   }
 
   /**
