@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -25,15 +25,21 @@ class field_input {
   private $field;
   
   /**
+   * @var string the element ID prefix
+   */
+  private $id_prefix;
+  
+  /**
    * provides the field input HTML including the label
    * 
    * @param string $fieldname name of the field
    * @param string|array $value the field's initial value
+   * @param string $id_prefix
    * @return string HTML
    */
-  public static function html( $fieldname, $value )
+  public static function html( $fieldname, $value, $id_prefix )
   {
-    $field = new self( $fieldname, $value );
+    $field = new self( $fieldname, $value, $id_prefix );
     
     return $field->field_input();
   }
@@ -43,11 +49,12 @@ class field_input {
    * 
    * @param string $fieldname name of the field
    * @param string|array $value the field's initial value
+   * @param string $id_prefix
    * @return string HTML
    */
-  public static function bare_html( $fieldname, $value )
+  public static function bare_html( $fieldname, $value, $id_prefix )
   {
-    $field = new self( $fieldname, $value );
+    $field = new self( $fieldname, $value, $id_prefix );
     
     return $field->field_input(false);
   }
@@ -55,10 +62,13 @@ class field_input {
   /**
    * @param string $fieldname name of the field
    * @param string|array|bool $value the field's initial value
+   * @param string $id_prefix
    */
-  private function __construct( $fieldname, $value )
+  private function __construct( $fieldname, $value, $id_prefix )
   {
     $this->field = new \PDb_Field_Item( $fieldname );
+    
+    $this->id_prefix = $id_prefix;
     
     if ( $value === false && $this->field_displays_default_value() ) {
       $value = $this->field->default_value();
@@ -113,7 +123,7 @@ class field_input {
     
     $this->field->set_readonly(false);
     
-    $this->field->attributes['id'] = 'mass_edit_' . $this->field->name();
+    $this->field->attributes['id'] = $this->id_prefix . '_' . $this->field->name();
     $this->field->add_class('field-input');
   }
   
