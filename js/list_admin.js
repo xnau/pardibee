@@ -2,7 +2,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 1.3
+ * @version 1.5
  */
 var PDbListAdmin = (function ($) {
   "use strict";
@@ -13,6 +13,7 @@ var PDbListAdmin = (function ($) {
   var checkall = $('#checkall');
   var submitElement = $('<input type="hidden" name="submit-button" />');
   var task_selector = $('[name=with_selected]');
+  var op_selector = $('select[name^=operator]');
   var speed = 300;
   var spinner;
   var armDeleteButton = function (state) {
@@ -137,6 +138,15 @@ var PDbListAdmin = (function ($) {
       confirmDialog.dialog("destroy");
     }
   }
+  var op_selection = function(e){
+    var el = e.target ? $(e.target) : $(e);
+    var value_field = el.closest('.filter-search-term').find('input[name^=value]');
+    if ( el.val() === list_adminL10n.dupcheck) {
+      value_field.val('').hide();
+    } else {
+      value_field.show();
+    }
+  }
   return {
     init: function () {
       apply_button.on('click', function (e) {
@@ -150,8 +160,13 @@ var PDbListAdmin = (function ($) {
       });
 
       spinner = mass_editL10n.spinner;
+      
       task_selector.on('change', taskSelect);
       taskSelect(task_selector);
+      
+      op_selector.on('change',op_selection);
+      op_selection(op_selector);
+      
       $('[name="' + mass_editL10n.selector + '"]').on('change',set_mass_edit_input);
 
       checkall.click(checkAll);
