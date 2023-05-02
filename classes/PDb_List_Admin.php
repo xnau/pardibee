@@ -143,6 +143,7 @@ class PDb_List_Admin {
          * @return array
          */
         'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove', 'export', PDb_admin_list\mass_edit::edit_action ) ),
+        'dupcheck' => PDb_admin_list\query::dupcheck,
             ))
     );
     
@@ -399,6 +400,7 @@ class PDb_List_Admin {
                                     esc_html__( 'doesn&#39;t contain', 'participants-database' ) => 'NOT LIKE',
                                     esc_html__( 'is greater than', 'participants-database' ) => 'gt',
                                     esc_html__( 'is less than', 'participants-database' ) => 'lt',
+                                    esc_html__( 'is a duplicate value', 'participants-database' ) => \PDb_admin_list\query::dupcheck,
                                 ),
                             );
                             PDb_FormElement::print_element( $element );
