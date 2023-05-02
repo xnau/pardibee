@@ -180,7 +180,7 @@ class mass_edit {
   {
     $value = \PDb_List_Admin::get_admin_user_setting( $fieldname, filter_input( INPUT_POST, $fieldname, FILTER_DEFAULT, \Participants_Db::string_sanitize( FILTER_NULL_ON_FAILURE ) ) );
     
-    return field_input::html($fieldname, $value );
+    return field_input::html($fieldname, $value, 'mass_edit' );
   }
 
   /**
