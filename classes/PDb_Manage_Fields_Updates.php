@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -61,6 +61,7 @@ class PDb_Manage_Fields_Updates {
       if ( $row[ 'status' ] === 'changed' ) {
 
         $id = filter_var( $row[ 'id' ], FILTER_VALIDATE_INT );
+        
         
         if ( isset($row['group']) ) {
           $changed_groups[] = $row['group'];
@@ -122,8 +123,9 @@ class PDb_Manage_Fields_Updates {
 
         // remove empty values
         // prevents these attributes from getting cleared
-        foreach ( array( 'group', 'form_element', 'validation' ) as $att ) {
-          if ( isset( $row[ $att ] ) && empty( $row[ $att ] ) ) {
+        foreach ( array( 'group', 'form_element', 'validation' ) as $att )
+        {  
+          if ( array_key_exists( $att, $row ) && empty( $row[ $att ] ) ) {
             unset( $row[ $att ] );
           }
         }
@@ -1153,6 +1155,61 @@ class PDb_Manage_Fields_Updates {
     $replace_pattern = '/^(.*)\(.+\)$/';
     // strip out the parenthesized part
     return preg_replace( $replace_pattern, '\1', $current_type ) !== preg_replace( $replace_pattern, '\1', $default_type );
+  }
+  
+  /**
+   * repairs an issue with internal fields losing their group assign
+   */
+  public static function repair_internal_fields()
+  {
+    Participants_Db::debug_log(__METHOD__);
+    if ( $repairs = self::field_needs_repair() )
+    {
+      if ( count( $repairs ) ) {
+        self::repair_fields( $repairs );
+      }
+    }
+  }
+  
+  /**
+   * checks for a corrupted field
+   * 
+   * @global \wpdb $wpdb
+   * @return array of fields that need repair
+   */
+  private static function field_needs_repair()
+  {
+    global $wpdb;
+    
+    $internal_fields = array('id','private_id','date_updated','last_accessed','date_recorded','last_update_user');
+    
+    $sql = 'SELECT f.id,f.name,f.group FROM ' . \Participants_Db::$fields_table . ' f WHERE f.name IN ("' . implode( '","', $internal_fields ) . '") AND ( f.group IS NULL OR f.group <> "internal" )';
+    
+    $result = $wpdb->get_results( $sql );
+    
+    return $result;
+  }
+  
+  /**
+   * repairs the field
+   * 
+   * @global \wpdb $wpdb
+   * @param array $list if fields needing repair
+   */
+  private static function repair_fields( $list )
+  {
+    global $wpdb;
+    
+    $repairs = [];
+    foreach( $list as $field )
+    {
+      $repairs[] = sprintf( '(%d,"internal")', $field->id );
+    }
+    
+    if ( count( $repairs ) )
+    {
+      $wpdb->query( 'INSERT INTO ' . Participants_Db::$fields_table . '(`id`,`group`) VALUES ' . implode( ',', $repairs ) . ' ON DUPLICATE KEY UPDATE  `group` = VALUES(`group`)' );
+    }
   }
 
   /**
