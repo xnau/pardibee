@@ -14,7 +14,7 @@
  * 
  * 
  * 
- * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
+ * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 3, as
@@ -101,7 +101,7 @@ class Participants_Db extends PDb_Base {
    * 
    * @var string current Db version
    */
-  public static $db_version = '1.2';
+  public static $db_version = '1.3';
 
   /**
    * name of the WP option where the current db version is stored
@@ -146,7 +146,7 @@ class Participants_Db extends PDb_Base {
   public static $plugin_page;
 
   /**
-   * path to the plugin root ditectory
+   * path to the plugin root directory
    * @var string
    */
   public static $plugin_path;
@@ -537,6 +537,8 @@ class Participants_Db extends PDb_Base {
     
     new PDb_admin_list\mass_edit();
     new PDb_admin_list\delete();
+    
+    
   }
 
   /**
@@ -705,7 +707,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
     wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
     wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.0' );
+    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.2' );
     wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
     wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$presuffix.js" ), array('jquery'), self::$plugin_version );
@@ -2061,7 +2063,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function add_blank_field( $params )
   {
-//    error_log(__METHOD__.' params: '.print_r($params,1));
     // prevent spurious field creation
     if ( !isset( $params['name'] ) || empty( $params['name'] ) ) return;
     
@@ -2074,11 +2075,12 @@ class Participants_Db extends PDb_Base {
     $field_parameters = wp_parse_args( $params, array('form_element' => 'text-line') );
     
     // check for a duplicate field
-    $field_check = $wpdb->get_col( $wpdb->prepare( 'SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `name` = %s', $field_parameters['name'] ) );
-    if ( count($field_check) > 0 ) {
+    $field_check = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::$fields_table . ' WHERE `name` = %s', $field_parameters['name'] ) );
+    
+    if ( $field_check != '0' ) {
 
       if ( PDB_DEBUG ) {
-        PDb_Admin_Notices::post_error(' failed to add field "' . $params['name'] . '": possibly a duplicate', __METHOD__, true );
+        PDb_Admin_Notices::post_error(' failed to add field "' . $params['name'] . '": possibly a duplicate', __METHOD__, false );
         self::debug_log( __METHOD__ . ' failed to add row ' . $params['name'] . ': duplicate field' );
       }
 
@@ -2103,7 +2105,7 @@ class Participants_Db extends PDb_Base {
     if ( $wpdb->last_error ) {
 
       if ( PDB_DEBUG ) {
-        PDb_Admin_Notices::post_error(' error when adding field "' . $params['name'] . '": ' . $wpdb->last_error, __METHOD__, true );
+        PDb_Admin_Notices::post_error(' error when adding field "' . $params['name'] . '": ' . $wpdb->last_error, __METHOD__, false );
         self::debug_log( __METHOD__ . ' failed to add row ' . $params['name'] . ' with error: ' . $wpdb->last_error );
       }
 
@@ -2475,12 +2477,17 @@ class Participants_Db extends PDb_Base {
               
               $saved_query = self::$session->get('csv_export_query');
               if ( $saved_query ) {
-                $query = preg_replace( '#SELECT.+FROM#', 'SELECT ' . $export_column_list . ' FROM', $saved_query );
+                $query = preg_replace( '#SELECT.+?FROM #', 'SELECT ' . $export_column_list . ' FROM ', $saved_query );
               }
             }
 
             if ( $query ) {
               
+              /**
+               * @filter pdb-csv_export_query
+               * @param string $query
+               * @return string query
+               */
               $query = self::apply_filters('csv_export_query', $query );
               
               $result = $wpdb->get_results( $query, ARRAY_A );
