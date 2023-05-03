@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -31,6 +31,7 @@ class last_update_user {
    */
   public function __construct()
   {
+    
     if ( ! $this->field_exists() ) {
       $this->create_field();
     }
@@ -189,8 +190,9 @@ class last_update_user {
         'title' => self::title(),
         'group' => 'internal',
         'form_element' => 'text-line',
-        'read-only' => 1,
+        'readonly' => 1,
         'searchable' => 1,
+        'order' => 100,
     );
     
     \Participants_Db::add_blank_field($params);
