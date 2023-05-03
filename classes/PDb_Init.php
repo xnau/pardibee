@@ -972,6 +972,14 @@ class PDb_Init {
       }
     }
     
+    // update 1.2 to 1.3
+    if ( '1.2' == $db_version )
+    {
+      PDb_Manage_Fields_Updates::repair_internal_fields();
+      $success = true;
+      $db_version = '1.3';
+    }
+    
     update_option( Participants_Db::$db_version_option, $db_version );
 
     if ( $success ) {
