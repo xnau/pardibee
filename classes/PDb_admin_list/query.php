@@ -165,8 +165,22 @@ class query {
         }
 
         // add the sorting
-        $this->list_query .= ' ORDER BY p.' . esc_sql( $this->filter->sortBy ) . ' ' . esc_sql( $this->filter->ascdesc );
+        $this->list_query .= $this->sort_clause();
     }
+  }
+  
+  /**
+   * provides the sort clause
+   * 
+   * this sorts empty values at the end of the result
+   * 
+   * @return string
+   */
+  private function sort_clause()
+  {
+    $sortclause = 'ORDER BY p.%1$s = "" OR p.%1$s IS NULL, p.%1$s %2$s';
+    
+    return sprintf( $sortclause, esc_sql( $this->filter->sortBy ), esc_sql( $this->filter->ascdesc ) );
   }
 
   /**
