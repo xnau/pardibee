@@ -21,14 +21,21 @@ class initialize {
 
   function __construct()
   {
-    new heading();
-    new media_embed();
-    new string_combine();
-    new shortcode();
-    new placeholder();
-    new numeric_calc();
-    new date_calc();
-    new last_update_user();
+    static $initialized = false;
+    
+    if ( !$initialized )
+    {
+      new heading();
+      new media_embed();
+      new string_combine();
+      new shortcode();
+      new placeholder();
+      new numeric_calc();
+      new date_calc();
+      new last_update_user();
+      
+      $initialized = true;
+    }
   }
 
 }
