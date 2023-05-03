@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -288,7 +288,7 @@ class filter {
         'ascdesc' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(asc|desc)$/i')),
         'sortBy' => array('filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'),
         'search_field' => array('filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'),
-        'operator' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE)$/i'), 'flags' => FILTER_REQUIRE_ARRAY),
+        'operator' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE|' . query::dupcheck . ')$/i'), 'flags' => FILTER_REQUIRE_ARRAY),
         'value' => array('filter' => FILTER_DEFAULT, 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_REQUIRE_ARRAY),
         'logic' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(OR|AND)$/'), 'flags' => FILTER_REQUIRE_ARRAY),
     );
