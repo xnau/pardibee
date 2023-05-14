@@ -996,7 +996,8 @@ class PDb_List_Query {
     /*
      * set up special-case field types
      */
-    if ( $filter->has_search_term() && in_array( $field_def->form_element(), array( 'date', 'timestamp' ) ) ) {
+    if ( $filter->has_search_term() && in_array( $field_def->form_element(), array( 'date', 'timestamp' ) ) ) 
+    {
 
       /*
        * if we're dealing with a date element, the target value needs to be 
@@ -1006,38 +1007,49 @@ class PDb_List_Query {
 
       $operator = in_array( $operator, array( '>', '<', '>=', '<=', '<>' ) ) ? $operator : '=';
 
-      if ( $search_term === false ) {
+      if ( $search_term === false )
+      {
         // the search term doesn't parse as a date
         $statement = false;
-      } elseif ( $field_def->form_element() === 'timestamp' ) {
+      }
+      elseif ( $field_def->form_element() === 'timestamp' )
+      {
         /**
          * @since 1.6.3
          * 
          * the calculation in the query converts the local WP timezone date supplied 
          * in the search term to the active timezone in the database by adding the 
          * difference between PHP's time() and MYSQLs NOW() functions
+         * 
+         * @since 2.5.1 using a substring search on a date string instead of a 
+         * range search on a numeric timestamp
          */
-        $statement = 'DATE(p.' . $field_def->name() . ') ' . $operator . ' DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
-      } else {
+        $statement = 'DATE(p.' . $field_def->name() . ') LIKE CONCAT( "%", DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))), "%" ) ';
+      }
+      else
+      {
         /*
          * if the date query was submitted on a standard search form, convert 
          * it to a 24-hour date range #2440
          */
-        if ( is_object( $this->post_input ) && empty( $this->subclauses ) && $operator === '=' ) {
+        if ( /* is_object( $this->post_input ) && empty( $this->subclauses ) && */ $operator === '=' ) {
           $statement = 'p.' . $field_def->name() . ' >= CAST(' . $search_term . ' AS SIGNED) AND p.' . $field_def->name() . ' < CAST(' . strtotime( '+ 24 hours', $search_term ) . ' AS SIGNED)';
         } else {
           $statement = 'p.' . $field_def->name() . ' ' . $operator . ' CAST(' . $search_term . ' AS SIGNED)';
         }
       }
-    } elseif ( $filter->is_empty_search() ) {
-
+    }
+    elseif ( $filter->is_empty_search() )
+    {
       if ( in_array( $operator, array( 'NOT LIKE', '!', '!=' ) ) ) {
         $pattern = $is_numeric ? 'p.%1$s IS NOT NULL' : '(p.%1$s IS NOT NULL AND p.%1$s <> "")';
       } else {
         $pattern = $is_numeric ? 'p.%1$s IS NULL' : '(p.%1$s IS NULL OR p.%1$s = "")';
       }
       $statement = sprintf( $pattern, $field_def->name() );
-    } else {
+    }
+    else
+    {
 
       if ( $operator === NULL )
         $operator = 'LIKE';
@@ -1068,8 +1080,8 @@ class PDb_List_Query {
        * 
        * or if the field value is stored as an array and strict search is enabled
        */
-      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) || ( $is_multi && Participants_Db::plugin_setting_is_true( 'strict_search' ) ) ) {
-
+      if ( Participants_Db::apply_filters( 'whole_word_match_list_query', false ) || ( $is_multi && Participants_Db::plugin_setting_is_true( 'strict_search' ) ) )
+      {
         // fields with values stored as arrays use word search if strict 
         if ( $is_multi ) {
           switch ( $operator ) {
