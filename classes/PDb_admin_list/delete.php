@@ -38,10 +38,12 @@ class delete {
     
     global $pagenow;
     
-    if ( $pagenow === 'admin.php' && strpos( filter_input( INPUT_GET, 'page', FILTER_DEFAULT, \Participants_Db::string_sanitize() ), 'participants-database' ) !== false ) {
+    if ( $pagenow === 'admin.php' && strpos( filter_input( INPUT_GET, 'page', FILTER_DEFAULT, \Participants_Db::string_sanitize() ), 'participants-database' ) !== false )
+    {
       $delete_orphan_file_types = filter_input( INPUT_GET, self::orphan_delete, FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) );
-      if ( $delete_orphan_file_types ) {
-        
+      
+      if ( $delete_orphan_file_types )
+      {
         $count = uploaded_files::delete_orphaned_files( $delete_orphan_file_types );
         
         \Participants_Db::set_admin_message( sprintf( __( 'Orphan uploaded files cleared. %s files deleted', 'participants-database' ), $count ), 'updated' );
