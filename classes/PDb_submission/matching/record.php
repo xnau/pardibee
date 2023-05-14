@@ -486,15 +486,45 @@ abstract class record {
    */
   public static function field_value_exists( $value, $field, $mask_id = 0 )
   {
+    if ( ! self::column_exists( $field ) ) {
+      \Participants_Db::debug_log( __METHOD__ . ' column "' . $field . '" not found', 1 );
+      return false;
+    }
+    
     global $wpdb;
 
     $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::participants_table() . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
 
-    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG > 2 ) {
-      \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query );
-    }
+    \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query, 2 );
 
     return is_null( $match_count ) ? false : (bool) $match_count;
+  }
+  
+  /**
+   * tells if a database column exists
+   * 
+   * @global \wpdb $wpdb
+   * @param string $fieldname
+   * @return bool true if the column exists
+   */
+  public static function column_exists( $fieldname )
+  {
+    $cachekey = 'pdb-column_check';
+    
+    $db_table = \Participants_Db::participants_table();
+    
+    $columns = wp_cache_get( $db_table, $cachekey, false, $found );
+    
+    if ( ! $found )
+    {
+      global $wpdb;
+      
+      $columns = array_map( function($v){ return $v['Field']; }, $wpdb->get_results( "SHOW COLUMNS FROM " . $db_table, ARRAY_A ) );
+
+      wp_cache_set( $db_table, $columns, $cachekey, \Participants_Db::cache_expire() );
+    }
+    
+    return in_array( $fieldname, $columns );
   }
 
 }
