@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -69,11 +69,21 @@ class string_combine extends calculated_field {
     
     $replaced_string = \PDb_Tag_Template::replace_text( $this->template(), $replacement_data );
     
-    if ( $this->field->get_attribute( 'complete_only' ) && ! $this->complete ) {
+    if ( $this->is_complete_only() && ! $this->complete ) {
       $replaced_string = '';
     }
     
     return $replaced_string;
+  }
+  
+  /**
+   * tells if the field has the complete only directive
+   * 
+   * @return bool true if the directive is set
+   */
+  private function is_complete_only()
+  {
+    return $this->field->get_attribute( 'complete_only' ) || $this->field->get_attribute( 'complete only' );
   }
 
   /**
