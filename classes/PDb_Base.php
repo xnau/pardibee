@@ -2039,7 +2039,7 @@ class PDb_Base {
         return null;
       }
       
-      $messages = Participants_Db::$session->get( 'admin_message', array() );
+      $message_list = Participants_Db::$session->get( 'admin_message', array() );
       
       switch ( $type ) {
         // this is to translate some legacy values
@@ -2047,10 +2047,27 @@ class PDb_Base {
           $type = 'success';
       }
       
-      $messages[] = array($message, $type);
+      if ( ! self::has_duplicate_message( $message, $message_list ) )
+      {
+        $message_list[] = array($message, $type);
+      }
       
-      Participants_Db::$session->set( 'admin_message', $messages );
+      Participants_Db::$session->set( 'admin_message', $message_list );
     }
+  }
+  
+  /**
+   * checks for a duplicate admin message
+   * 
+   * @param string $message
+   * @param array $message_list
+   * @return bool true if the same message is already in the array
+   */
+  private static function has_duplicate_message( $message, $message_list )
+  {
+    return count( array_filter( array_map( function($v) use($message) {
+        return $v[0] === $message;
+      }, $message_list ) ) ) > 0;
   }
   
   /**
