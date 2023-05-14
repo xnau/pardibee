@@ -52,7 +52,7 @@ class db_session {
    * provides the session value
    * 
    * @param string $key
-   * @return string|array|bool flase if no value found for the given key
+   * @return string|array|bool false if no value found for the given key
    */
   public function get( $key )
   {
