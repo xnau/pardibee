@@ -156,17 +156,24 @@ class PDb_Manage_Fields_Updates {
          */
         if ( isset( $row[ 'form_element' ] ) ) {
           
-          switch ( $row[ 'form_element' ] ) {
+          switch ( $row[ 'form_element' ] )
+          {
             case 'captcha':
-              foreach ( array( 'title', 'help_text', 'default' ) as $field ) {
+              foreach ( array( 'title', 'help_text', 'default' ) as $field )
+              {
                 if ( isset( $row[ $field ] ) )
+                {
                   $row[ $field ] = stripslashes( $row[ $field ] );
+                }
               }
               $row[ 'validation' ] = 'captcha';
               foreach ( array( 'display_column', 'admin_column', 'CSV', 'persistent', 'sortable' ) as $c )
+              {
                 $row[ $c ] = 0;
+              }
               $row[ 'readonly' ] = 1;
               break;
+              
             case 'decimal':
               if ( !isset( $row[ 'attributes' ][ 'step' ] ) ) {
                 $row[ 'attributes' ][ 'step' ] = 'any';
