@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -469,6 +469,12 @@ class PDb_FormValidation extends xnau_FormValidation {
       
       $error->set_error_message( $error_message );
       $error->add_message_class( $this->error_class . '-' . $fieldname );
+      
+      /**
+       * @filter pdb-field_validation_message
+       * @param $error \PDb_submission\validation_error_message
+       */
+      do_action( 'pdb-field_validation_message', $error );
     }
   }
 
