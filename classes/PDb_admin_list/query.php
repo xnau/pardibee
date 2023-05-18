@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -269,7 +269,7 @@ class query {
 
     $value = $this->field_value( $filter_set[ 'value' ], $search_field );
 
-    if ( $search_field->form_element() == 'timestamp' ) {
+    if ( $search_field->form_element() === 'timestamp' ) {
 
       $value = $filter_set[ 'value' ];
       $value2 = false;
@@ -297,7 +297,7 @@ class query {
           $this->list_query .= ' ' . $date_column . ' ' . $operator . ' DATE(FROM_UNIXTIME(' . esc_sql( $value ) . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))) ';
         }
       }
-    } elseif ( in_array( $search_field->form_element(), array( 'date' ) ) ) {
+    } elseif ( $search_field->form_element() === 'date' ) {
 
       $value = $filter_set[ 'value' ];
 
@@ -336,8 +336,9 @@ class query {
           }
         }
       }
-    } elseif ( $filter_set[ 'value' ] === 'null' ) {
-
+    }
+    elseif ( $filter_set[ 'value' ] === 'null' )
+    {
       $this->list_query .= $this->empty_value_where_clause( $filter_set[ 'operator' ], $search_field );
       
     } elseif ( $operator === '!=' ) {
@@ -381,7 +382,7 @@ class query {
    * provides the where clause for a search for a blank or empty value
    * 
    * @param string $operator
-   * @param object $search_field
+   * @param \PDb_Form_Field_Def $search_field
    * @return string where clause
    */
   private function empty_value_where_clause( $operator, $search_field )
@@ -392,13 +393,25 @@ class query {
       case '!=':
       case 'NOT LIKE':
         $clause = ' (' . $this->name_clause( $search_field ) . ' IS NOT NULL' . $this->empty_value_phrase( $search_field, true ) . ')';
+        $not = true;
         break;
 
       case 'LIKE':
       case '=':
       default:
         $clause = ' (' . $this->name_clause( $search_field ) . ' IS NULL' . $this->empty_value_phrase( $search_field, false ) . ')';
+        $not = false;
         break;
+    }
+    
+    if ( $search_field->form_element() === 'link' )
+    {
+      $empty_array = '"%i:0;s:0%"';
+      $default_value = ( $not ? ' NOT ' : '' ) . $this->name_clause( $search_field ) . ' LIKE "%\"' . esc_sql( $search_field->default_value() ) . '\"%"';
+      
+      $logic = $not ? ' AND ' : ' OR ';
+      
+      $clause .= $logic . $this->name_clause( $search_field ) . ( $not ? ' NOT ' : '' ) . ' LIKE ' . $empty_array . $logic . $default_value;
     }
 
     return $clause;
