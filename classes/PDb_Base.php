@@ -1867,7 +1867,7 @@ class PDb_Base {
   {
     /**
      * provides a way to override the delete method: if the filter returns bool 
-     * true of false, the normal delete method will be skipped. If the filter returns 
+     * true or false, the normal delete method will be skipped. If the filter returns 
      * a string, the string will be treated as the filename to delete
      * 
      * @since 1.7.6.2
@@ -1877,7 +1877,8 @@ class PDb_Base {
      */
     $result = self::apply_filters( 'delete_file', $filename );
 
-    if ( !is_bool( $result ) ) {
+    if ( !is_bool( $result ) )
+    {
       $current_dir = getcwd(); // save the current dir
       chdir( self::files_path() ); // set the plugin uploads dir
       $result = @unlink( $filename ); // delete the file
