@@ -3,17 +3,18 @@
  * 
  * sets up the tab functionality on the plugin settings page
  * 
- * @version 0.5
+ * @version 0.6
  * 
  */
 PDbSettings = (function ($) {
   var lastTab = 'pdb-settings-page-tab';
+  var optIndex = 'participants-database_options';
   var effect = {
     effect: 'fadeToggle',
     duration: 200
   };
   var getCurrentTab = function () {
-    var currentTab = isNaN(Cookies.get(lastTab)) ? 0 : Cookies.get(lastTab);
+    var currentTab = get_tab_cookie()[optIndex]||0;
     var tabvar = 'settingstab';
     if (typeof URLSearchParams !== 'function') {
       return currentTab; // if the browser doesn't support this function, return now
@@ -29,6 +30,21 @@ PDbSettings = (function ($) {
     }
     return parseInt(currentTab);
   }
+  var get_tab_cookie = function() {
+    var cookie = tryParseJSONObject(Cookies.get(lastTab));
+    return typeof cookie === "object" ? cookie : {};
+  }
+  var tryParseJSONObject = function (jsonString) {
+    try {
+      var o = JSON.parse(jsonString);
+      if (o && typeof o === "object") {
+        return o;
+      }
+    } catch (e) {
+    }
+
+    return jsonString;
+  };
   return {
     init: function () {
       var wrapped = $(".participants_db.wrap .ui-tabs>h2, .participants_db.wrap .ui-tabs>h3").wrap("<div class=\"ui-tabs-panel\">");
@@ -50,7 +66,9 @@ PDbSettings = (function ($) {
           show: effect,
           active: getCurrentTab(),
           activate: function (event, ui) {
-            Cookies.set(lastTab, ui.newTab.index(), {
+            var cookie = get_tab_cookie();
+            cookie[optIndex] = ui.newTab.index();
+            Cookies.set(lastTab, cookie, {
               expires: 365, path: ''
             });
           }
