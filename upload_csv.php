@@ -173,7 +173,7 @@ $parameters = array(
     'type' => 'dropdown',
     'name' => 'match_field',
     'value' => $match_field,
-    'options' => PDb_Settings::_get_identifier_columns( false ),
+    'options' => PDb_Settings::_get_identifier_columns( false, array('rich-text', 'multi-checkbox','multi-dropdown','multi-select-other', 'image-upload', 'file-upload', 'password', 'placeholder', 'timestamp','captcha') ),
 );
 PDb_FormElement::print_element( $parameters );
 ?>
