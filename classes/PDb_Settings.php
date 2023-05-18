@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -441,7 +441,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
             (
             'type' => 'dropdown',
             'help_text' => __( 'when a signup is submitted or CSV record is imported, this field is checked for a duplicate', 'participants-database' ),
-            'options' => self::_get_identifier_columns( false ),
+            'options' => self::_get_identifier_columns( false, array('rich-text', 'multi-checkbox','multi-dropdown','multi-select-other', 'image-upload', 'file-upload', 'password', 'placeholder', 'timestamp','captcha') ),
             'value' => 'email',
         )
     );
@@ -1776,19 +1776,25 @@ ORDER BY g.order, v.order';
   /**
    * this provides a set of fields that can be used to identify a record
    * 
-   * @param bool $null if true include a null value
    * @global object $wpdb
+   * @param bool $null if true include a null value
+   * @param array $exception_list optional list of form element types to exclude
    * @return array of fields as $title => $value
    */
-  public static function _get_identifier_columns( $null = true )
+  public static function _get_identifier_columns( $null = true, $exception_list = false )
   {
-    $columnlist = PDB_DEBUG ? false : wp_cache_get( 'pdb-id_columns' );
+    $cachegroup = 'pdb-id_columns';
+    $cachekey = $exception_list ? implode('', $exception_list ) : 'default';
+    
+    $columnlist = PDB_DEBUG ? false : wp_cache_get( $cachekey, $cachegroup );
 
     if ( $columnlist === false ) {
 
       global $wpdb;
 
       $columnlist = $null ? array(PDb_FormElement::null_select_key() => '') : array(PDb_FormElement::null_select_key() => false);
+      
+      $exception_list = is_array($exception_list) ? $exception_list : array('rich-text', 'multi-checkbox','multi-dropdown','multi-select-other', 'link', 'image-upload', 'file-upload', 'password', 'placeholder', 'timestamp','captcha');
 
       /**
        * @version 1.7.0.7
@@ -1800,14 +1806,14 @@ SELECT v.name, v.title, g.title AS grouptitle
 FROM ' . Participants_Db::$fields_table . ' v 
   INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name 
       WHERE g.mode IN ("' . implode( '","', array_keys(PDb_Manage_Fields::group_display_modes()) ) . '") 
-        AND v.form_element NOT IN ("rich-text", "multi-checkbox","multi-dropdown","multi-select-other", "link", "image-upload", "file-upload", "password", "placeholder", "timestamp","captcha")
+        AND v.form_element NOT IN ("' . implode( '","', $exception_list ) . '")
 ORDER BY g.order, v.order';
 
       $columns = $wpdb->get_results( $sql, OBJECT_K );
 
       $columnlist = self::column_dropdown_options( $columns, $columnlist );
 
-      wp_cache_set( 'pdb-id_columns', $columnlist, '', Participants_Db::cache_expire() );
+      wp_cache_set( $cachekey, $columnlist, $cachegroup, Participants_Db::cache_expire() );
     }
 
     return $columnlist;
