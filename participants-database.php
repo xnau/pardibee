@@ -387,7 +387,7 @@ class Participants_Db extends PDb_Base {
     deactivate_plugins( 'pdb-custom-templates.php', true );
     
     add_action('wp_loaded', function(){ 
-      if ( Participants_Db::$plugin_options['enable_api'] )
+      if ( isset(Participants_Db::$plugin_options['enable_api']) && Participants_Db::$plugin_options['enable_api'] )
       {
         new \PDb_submission\rest_api\routing();
       }
@@ -697,7 +697,7 @@ class Participants_Db extends PDb_Base {
     
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
     wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), self::$plugin_version . '.2', true );
-    wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version . '.1', true );
     
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_add_inline_script(self::$prefix.'record_edit_script', Participants_Db::inline_js_data( 'PDb_L10n', array(
@@ -1401,7 +1401,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_sortables( $fields = false, $sort = 'column' )
   {
-
     return self::get_field_list( 'sortable', $fields, $sort );
   }
 
@@ -1874,7 +1873,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_record_id_by_term( $term, $value, $single = true )
   {
-
     return self::_get_participant_id_by_term( $term, $value, $single );
   }
 
@@ -1902,11 +1900,11 @@ class Participants_Db extends PDb_Base {
     $output = wp_cache_get( $value, $cachekey, false, $found );
     
     if ( ! $found ) {
-    global $wpdb;
-
+      global $wpdb;
+      
       $sql = 'SELECT p.id FROM ' . self::$participants_table . ' p WHERE p.' . $term . ' = %s';
       $result = $wpdb->get_results( $wpdb->prepare( $sql, $value ), ARRAY_N );
-
+      
       if ( !is_array( $result ) ) {
         $output = false;
       } else {
