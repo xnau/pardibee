@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -419,8 +419,9 @@ class PDb_Form_Field_Def {
   {
     $default = $this->default_value();
     
-    if ( $this->is_dynamic_field() ) {
+    if ( $this->is_dynamic_field() || $this->form_element === 'link' ) {
       // dynamic fields don't display the default value
+      // link fields use the default value as a link wrapper only
       $default = '';
     }
     
