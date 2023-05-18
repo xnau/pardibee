@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2019  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -412,16 +412,24 @@ abstract class record {
    */
   public function match_field_value()
   {
-    $value = isset( $this->post[ $this->match_field ] ) ? filter_var( $this->post[ $this->match_field ], FILTER_SANITIZE_SPECIAL_CHARS ) : '';
-    
     $field = new \PDb_Form_Field_Def( $this->match_field );
+    
+    $postval = isset( $this->post[ $this->match_field ] ) ? $this->post[ $this->match_field ] : ''; // unsanitized
     
     // convert the value to something that can match the stored value
     switch ( $field->form_element() ) {
       
       case 'date':
-        $value = \PDb_Date_Parse::timestamp( $value );
+        $value = \PDb_Date_Parse::timestamp( filter_var( $postval, FILTER_SANITIZE_SPECIAL_CHARS ) );
         break;
+      
+      case 'link':
+        $link_array =  \Participants_Db::get_link_array( $postval );
+        $value = is_array( $link_array ) ? filter_var( $link_array[0], FILTER_SANITIZE_URL ) : $postval;
+        break;
+      
+      default:
+        $value = filter_var( $postval, FILTER_SANITIZE_SPECIAL_CHARS );
       
     }
     
@@ -479,21 +487,25 @@ abstract class record {
    * check the db for a record that matches the given field
    *
    * @param string $value the value of the field to test
-   * @param string $field the field to test
+   * @param string $fieldname the field to test
    * @param int $mask_id optional record id to exclude
    * @global \wpdb $wpdb
    * @return bool true if there is a matching value for the field
    */
-  public static function field_value_exists( $value, $field, $mask_id = 0 )
+  public static function field_value_exists( $value, $fieldname, $mask_id = 0 )
   {
-    if ( ! self::column_exists( $field ) ) {
-      \Participants_Db::debug_log( __METHOD__ . ' column "' . $field . '" not found', 1 );
+    if ( ! self::column_exists( $fieldname ) ) {
+      \Participants_Db::debug_log( __METHOD__ . ' column "' . $fieldname . '" not found', 1 );
       return false;
     }
     
     global $wpdb;
+      
+    $field = new \PDb_Form_Field_Def( $fieldname );
 
-    $match_count = $wpdb->get_var( $wpdb->prepare( "SELECT EXISTS( SELECT 1 FROM " . \Participants_Db::participants_table() . " p WHERE p." . $field . " = '%s' AND p.id <> %s )", $value, $mask_id ) );
+    $placeholder = $field->form_element() === 'link' ? ' LIKE "%\"%1s\"%"' : ' = %s';
+
+    $match_count = $wpdb->get_var( $wpdb->prepare( 'SELECT EXISTS( SELECT 1 FROM ' . \Participants_Db::participants_table() . ' p WHERE p.' . $fieldname . $placeholder . ' AND p.id <> %s )', $value, $mask_id ) );
 
     \Participants_Db::debug_log( __METHOD__ . ' query: ' . $wpdb->last_query, 2 );
 
