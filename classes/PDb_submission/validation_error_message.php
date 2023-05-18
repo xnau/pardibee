@@ -73,7 +73,7 @@ class validation_error_message {
   }
 
   /**
-   * supplies the error message HMTL data
+   * supplies the error message HTML data
    * 
    * @return string HTML element attribute string
    */
