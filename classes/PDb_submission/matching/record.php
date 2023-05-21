@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2019  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -424,8 +424,8 @@ abstract class record {
         break;
       
       case 'link':
-        $link_array =  \Participants_Db::get_link_array( $postval );
-        $value = is_array( $link_array ) ? filter_var( $link_array[0], FILTER_SANITIZE_URL ) : $postval;
+        $link_array = is_array( $postval ) ? $postval : \Participants_Db::get_link_array( $postval );
+        $value = filter_var( $link_array[0], FILTER_SANITIZE_URL );
         break;
       
       default:
