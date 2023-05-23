@@ -227,9 +227,10 @@ class PDb_Form_Field_Def {
      * 
      * @filter pdb-raw_field_definition
      * @param stdClass field definition properties
+     * @param string fieldname
      * @return stdClass
      */
-    return Participants_Db::apply_filters( 'raw_field_definition', $def );
+    return Participants_Db::apply_filters( 'raw_field_definition', $def, $fieldname );
   }
   
   /**
