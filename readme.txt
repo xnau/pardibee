@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: supporter, member, volunteer, database, sign-up form, directory, index, survey, management, non-profit, political, community, organization, mailing list, team, records
 Requires at least: 5.0
-Tested up to: 6.2
+Tested up to: 6.2.2
 Requires PHP: 7.4
 Stable tag: 2.4.9
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -289,6 +289,14 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.5.1 =
+* fixed the "complete_only" directive on string combine fields
+* filtering by record timestamp values improved, a simple date match works now
+* fixed undefined index warning message
+* admin list can now filter on empty/non-empty link fields
+* duplicate record checks on link fields now possible
+* fixed db issue with timestamp sorting on some systems
 
 = 2.5 =
 * new find duplicates operator on the admin List Participants page
@@ -1630,7 +1638,7 @@ Taking defensive precautions against other plugins in the admin:
 
 == Upgrade Notice ==
 
-2.5 is an important feature, security, and bugfix update
+2.5.1 is a minor feature and bugfix update
 
 == Plugin Support ==
 
