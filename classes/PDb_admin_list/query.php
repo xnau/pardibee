@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.6
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -178,7 +178,15 @@ class query {
    */
   private function sort_clause()
   {
-    $sortclause = 'ORDER BY p.%1$s = "" OR p.%1$s IS NULL, p.%1$s %2$s';
+    $field_def = new \PDb_Form_Field_Def( $this->filter->sortBy );
+    
+    $sortclause = 'ORDER BY ';
+    
+    if ( is_a( $field_def, '\PDb_Form_Field_Def' ) && $field_def->form_element() !== 'timestamp') {
+      $sortclause .= 'p.%1$s = "" OR p.%1$s IS NULL, ';
+    }
+    
+    $sortclause .= 'p.%1$s %2$s';
     
     return sprintf( $sortclause, esc_sql( $this->filter->sortBy ), esc_sql( $this->filter->ascdesc ) );
   }
