@@ -1688,7 +1688,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function get_link_array( $markdown_string )
   {
-
     if ( preg_match( '#^<([^>]+)>$#', trim( $markdown_string ), $matches ) ) {
       return array($matches[1], '');
     } elseif ( preg_match( '#^\[([^\]]+)\]\(([^\)]+)\)$#', trim( $markdown_string ), $matches ) ) {
