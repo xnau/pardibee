@@ -174,7 +174,6 @@ class PDb_Record extends PDb_Shortcode {
    */
   protected function _include_template()
   {
-
     include $this->template;
   }
 
