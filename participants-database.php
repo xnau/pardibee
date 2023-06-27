@@ -583,8 +583,6 @@ class Participants_Db extends PDb_Base {
      * @version 1.6 filter pdb-private_id_length
      */
     self::$private_id_length = self::apply_filters( 'private_id_length', self::$private_id_length );
-    
-    new \PDb_shortcodes\attributes();
 
     /*
      * checks for the need to update the DB
@@ -666,6 +664,7 @@ class Participants_Db extends PDb_Base {
    */
   public static function check_for_shortcode()
   {
+    static $shortcode_checked = false;
     global $post;
     /**
      * @filter pdb-shortcode_in_content
@@ -673,9 +672,15 @@ class Participants_Db extends PDb_Base {
      * @param WP_Post object the current post
      * @return bool true if plugin content is present
      */
-    if ( is_object( $post ) && self::apply_filters( 'shortcode_in_content', preg_match( '/(?<!\[)\[pdb_/', $post->post_content ) > 0, $post ) ) {
+    if ( $shortcode_checked === false && is_object( $post ) && self::apply_filters( 'shortcode_in_content', preg_match( '/(?<!\[)\[pdb_/', $post->post_content ) > 0, $post ) ) 
+    {
       do_action( Participants_Db::$prefix . 'shortcode_present' );
+      
       self::$shortcode_present = true;
+    
+      new \PDb_shortcodes\attributes();
+      
+      $shortcode_checked = true;
     }
   }
 
