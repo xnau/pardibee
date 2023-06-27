@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -100,7 +100,6 @@ class xnau_Date_Format_String {
    */
   private function translate_date_format($format_type)
   {
-
     // these are the PHP date codes
     $pattern = array(
         //day
@@ -120,7 +119,8 @@ class xnau_Date_Format_String {
         // time
         'g', // 12-hour hour
         'i', // minute with leading zero
-        'a', // AM or PM
+        'a', // am or pm
+        'A', // AM or PM
     );
     switch ($format_type) {
       case 'strftime':
@@ -131,7 +131,7 @@ class xnau_Date_Format_String {
             'dd', 'd', 'EEEE', 'EEEE', 'D',
             'MMMM', 'MMM', 'M', 'MM',
             'yyyy', 'yy',
-            'h', 'mm', 'a',
+            'h', 'mm', 'a','a',
         );
         break;
       case 'jQuery':
@@ -139,7 +139,7 @@ class xnau_Date_Format_String {
             'dd', 'd', 'DD', 'D', 'o',
             'MM', 'M', 'm', 'mm',
             'yy', 'y',
-            'h', 'MM', 'tt',
+            'h', 'MM', 'tt','tt',
         );
         break;
     }
