@@ -208,6 +208,7 @@ class user_column extends base_column {
       default:
         $value = $this->value;
     }
+    
     return $value;
   }
 
