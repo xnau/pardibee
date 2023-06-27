@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -20,33 +20,48 @@ defined( 'ABSPATH' ) || exit;
 class attributes {
   
   /**
-   * @var string name of the shortcode attributes transient
+   * @var array the collected shortcode attributes
    */
-  const attribute_store = 'pdb-shortcode_attributes';
+  private $shortcode_attributes = [];
+  
+  /**
+   * @var \PDb_shortcodes\attributes holds the class instance
+   */
+  private static $instance;
   
   /**
    * initializes the class filters
    */
   public function __construct()
   {
-    $this->setup_filters();
+    $this->get_page_content_atts();
     
-    if ( $this->list_sort_headers() )
+    if ( $this->list_sort_headers_enabled() )
     {
       new sort_headers();
     }
+    
+    self::$instance = $this;
   }
   
   /**
-   * sets up the filters
+   * gets the attributes from the loading page
+   * 
+   * @global \WP_Post $post
    */
-  private function setup_filters()
+  private function get_page_content_atts()
   {
-    foreach( \Participants_Db::plugin_shortcode_list() as $tag ) {
-      add_filter( 'pdb-shortcode_call_' . $tag, function ( $atts ) use ( $tag ) {
-        $this->stash_attributes( $atts, $tag );
-        return $atts;
-      } );
+    global $post;
+    
+    preg_match_all( '/\[(.+?)\]/', $post->post_content, $matches );
+    
+    foreach ( $matches[1] as $shortcode )
+    {
+      $atts = shortcode_parse_atts( $shortcode );
+      $tag = $atts[0];
+      unset( $atts[0] );
+      $this->shortcode_attributes[$tag] = $atts;
+      $this->shortcode_attributes['last'] = array_merge( ['tag' => $tag ], $atts );
     }
   }
   
@@ -55,35 +70,22 @@ class attributes {
    * 
    * @return bool
    */
-  private function list_sort_headers()
+  private function list_sort_headers_enabled()
   {
     $list_atts = $this->list_attributes();
     
-    return isset( $list_atts['header_sort'] ) && boolval( $list_atts['header_sort'] );
+    return isset( $list_atts['header_sort'] ) && self::attribute_true( $list_atts['header_sort'] );
   }
   
   /**
-   * registers the attributes for the shortcode
+   * tells if a boolean attribute is enabled
    * 
-   * @param array $shortcode_atts
-   * @param string $tag the shortcode tag
-   * @return array
+   * @paeam string $attrivute_value
+   * @return bool true if the attribute is set
    */
-  private function stash_attributes( $shortcode_atts, $tag )
+  public static function attribute_true( $attribute_value )
   {
-    $attributes = self::get_attributes();
-    
-    if ( ! $attributes ) {
-      $attributes = array();
-    }
-    
-    $attributes[ $tag ] = $shortcode_atts;
-    
-    $attributes['last'] = array_merge( $shortcode_atts, array( 'tag' => $tag ) );
-    
-    set_transient( self::attribute_store, $attributes );
-    
-    return $shortcode_atts;
+    return $attribute_value == 1 || $attribute_value === 'true';
   }
   
   /**
@@ -93,7 +95,12 @@ class attributes {
    */
   public static function last_attributes()
   {
-    return self::attribute_set('last');
+    $attributes = self::$instance;
+    
+    if ( is_object( $attributes ) )
+    {
+      return $attributes->attribute_set('last');
+    }
   }
   
   /**
@@ -102,25 +109,9 @@ class attributes {
    * @param string $set the tag or name of the attribute set to get
    * @return array
    */
-  private static function attribute_set( $set )
+  private function attribute_set( $set )
   {
-    $attributes = self::get_attributes();
-    
-    if ( $attributes && isset( $attributes[$set] ) ) {
-      return $attributes[$set];
-    }
-    
-    return array();
-  }
-  
-  /**
-   * provides the stored attribute array
-   * 
-   * @return array
-   */
-  private static function get_attributes()
-  {
-    return get_transient( self::attribute_store );
+    return isset( $this->shortcode_attributes[$set] ) ? $this->shortcode_attributes[$set] : [];
   }
   
   /**
@@ -130,7 +121,7 @@ class attributes {
    */
   private function list_attributes()
   {
-    return self::attribute_set('pdb_list');
+    return $this->attribute_set('pdb_list');
   }
   
 }
