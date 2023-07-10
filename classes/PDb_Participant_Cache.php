@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -140,18 +140,18 @@ class PDb_Participant_Cache {
   /**
    * supplies the participant data
    * 
-   * @return array
+   * @return array|bool false if record not found
    */
   private function get()
   {
     $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
     
-    if ( ! $participant_data && $this->id !== 0 ) {
-      Participants_Db::debug_log(__METHOD__ . ' cache missed for participant id ' . $this->id );
+    if ( $participant_data === false ) {
+      Participants_Db::debug_log(__METHOD__ . ' no record at this ID: ' . $this->id );
       
-      $this->refresh_cache();
-      
-      $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
+//      $this->reload_cache();
+//      
+//      $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
     }
     
     return $participant_data;
@@ -249,7 +249,7 @@ class PDb_Participant_Cache {
     $this->data = empty( $this->data ) ? $this->get_cache() : $this->data;
 
     if ( $this->data === false || $this->cache_is_stale() ) {
-      $this->refresh_cache();
+      $this->reload_cache();
     }
   }
 
@@ -258,7 +258,7 @@ class PDb_Participant_Cache {
    * 
    * @global wpdb $wpdb
    */
-  private function refresh_cache()
+  private function reload_cache()
   {
     global $wpdb;
 
