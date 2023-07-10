@@ -51,8 +51,6 @@ abstract class request {
         'args' => $this->args(),
         'permission_callback' => [ $this, 'check_permissions' ],
     ) );
-    
-   // error_log(__METHOD__.' registering route: '. $this->route().' with methods: '. $this->methods() );
   }
 
   /**
