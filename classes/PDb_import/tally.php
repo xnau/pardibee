@@ -172,7 +172,7 @@ class tally {
       $report[] = sprintf( $template, $this->status_phrase( $status ) );
     }
     
-    $report[] = sprintf( $template, $this->count_report() );
+    $report[] = sprintf( $template, \Participants_Db::apply_filters( 'csv_import_report', $this->count_report() ) );
     
     $report[] = '</span>';
     
