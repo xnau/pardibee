@@ -1,8 +1,16 @@
 <?php
 
 /*
- * class for displaying an single record on the frontend with the [pdb_single] shortcode
+ * class for displaying n single record on the frontend with the [pdb_single] shortcode
  *
+ * @package    WordPress
+ * @subpackage Participants Database Plugin
+ * @author     Roland Barker <webdesign@xnau.com>
+ * @copyright  2016  xnau webdesign
+ * @license    GPL2
+ * @version    2.1
+ * @link       http://xnau.com/wordpress-plugins/
+ * 
  */
 if ( !defined( 'ABSPATH' ) )
   die;
@@ -32,22 +40,34 @@ class PDb_Single extends PDb_Shortcode {
      * the 'term' value, which defaults to 'id'
      *
      */
-    if ( $this->shortcode_atts[ 'record_id' ] !== false ) {
-      
+    if ( $this->shortcode_atts[ 'record_id' ] !== false )
+    {  
       $term = PDb_Form_Field_Def::is_field( $this->shortcode_atts[ 'term' ] ) ? $this->shortcode_atts[ 'term' ] : 'id';
-      $record_id = Participants_Db::get_record_id_by_term( $term, $this->shortcode_atts[ 'record_id' ] );
-      
-    } else {
-      
+      $record_id = Participants_Db::get_record_id_by_term( $term, $this->shortcode_atts[ 'record_id' ] ); 
+    } 
+    else 
+    {  
       $record_id = self::get_single_record_id_from_url();
     }
 
-    if ( false === $record_id && version_compare( $this->template_version, '0.2', '<' ) ) {
-
-      $this->_not_found();
-    } else {
-
+    if ( $record_id )
+    {
       $this->participant_values = Participants_Db::get_participant( $record_id );
+    }
+
+    if ( ! $record_id || false === $this->participant_values )
+    {  
+      if ( version_compare( $this->template_version, '0.2', '<' ) )
+      {
+        $this->_not_found();
+      }
+      else
+      {
+        $this->_print_from_template();
+      }
+    } 
+    else
+    {
       $this->participant_id = $record_id;
 
       $this->_setup_iteration();
@@ -88,7 +108,6 @@ class PDb_Single extends PDb_Shortcode {
    */
   public static function print_record( $params )
   {
-
     self::$instance = new PDb_Single( $params );
 
     return self::$instance->output;
