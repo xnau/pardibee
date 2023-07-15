@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -144,17 +144,7 @@ class PDb_Participant_Cache {
    */
   private function get()
   {
-    $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
-    
-    if ( $participant_data === false ) {
-      Participants_Db::debug_log(__METHOD__ . ' no record at this ID: ' . $this->id );
-      
-//      $this->reload_cache();
-//      
-//      $participant_data = isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
-    }
-    
-    return $participant_data;
+    return isset( $this->data[ $this->id ] ) ? (array) $this->data[ $this->id ] : false;
   }
   /**
    * provides the cache persistence time
