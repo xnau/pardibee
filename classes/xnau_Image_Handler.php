@@ -360,7 +360,7 @@ abstract class xnau_Image_Handler {
 
       case ($this->test_absolute_path_image( $this->image_file )) :
         $status = 'absolute';
-        $this->image_uri = $this->image_file;
+        $this->image_uri = esc_url( $this->image_file );
         //$this->image_file = basename($this->image_file);
         $this->file_exists = true;
         $this->image_defined = true;
@@ -590,7 +590,7 @@ abstract class xnau_Image_Handler {
    */
   public function test_url_validity( $url )
   {
-    return 0 !== preg_match( "#^(https?:|)//.+/.+\..{2,4}$#", $url );
+    return 0 !== preg_match( "#^(https?:|)//.+$#", $url ); //  previously: "#^(https?:|)//.+/.+\..{2,4}$#"
   }
   
   /**
