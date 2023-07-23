@@ -128,6 +128,7 @@ class shortcode extends core {
     }
     
     add_filter( 'pdb-allowed_html_post', array( $this, 'allow_media_tags' ) );
+    add_filter( 'pdb-allowed_html_form', array( $this, 'allow_media_tags' ) );
     
     return $done_shortcode;
   }
@@ -158,6 +159,7 @@ class shortcode extends core {
   public function allow_media_tags($allowed)
   {  
     remove_filter( 'pdb-allowed_html_post', array( $this, 'allow_media_tags' ) );
+    remove_filter( 'pdb-allowed_html_form', array( $this, 'allow_media_tags' ) );
     // enable iframes
     $allowed['iframe'] = array( 
         'title' => 1,
