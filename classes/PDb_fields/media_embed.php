@@ -79,6 +79,7 @@ class media_embed extends core {
     $html[] = '</div>';
     
     add_filter( 'pdb-allowed_html_post', array( $this, 'allow_iframe_tag' ) );
+    add_filter( 'pdb-allowed_html_form', array( $this, 'allow_iframe_tag' ) );
    
     return $html;
   }
@@ -92,6 +93,7 @@ class media_embed extends core {
   public function allow_iframe_tag($allowed)
   {  
     remove_filter( 'pdb-allowed_html_post', array( $this, 'allow_iframe_tag' ) );
+    remove_filter( 'pdb-allowed_html_form', array( $this, 'allow_iframe_tag' ) );
     // enable iframes
     $allowed['iframe'] = array( 
         'title' => 1,
