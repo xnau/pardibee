@@ -1299,11 +1299,12 @@ class PDb_Base {
   }
 
   /**
-   * loads the plugin translation fiels and sets the textdomain
+   * loads the plugin translation files and sets the textdomain
    * 
    * the parameter is for the use of aux plugins
    * 
    * originally from: http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way
+   * also: https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
    * 
    * @param string $path of the calling file
    * @param string $textdomain omit to use default plugin textdomain
@@ -1312,14 +1313,9 @@ class PDb_Base {
    */
   public static function load_plugin_textdomain( $path, $textdomain = '' )
   {
-
     $textdomain = empty( $textdomain ) ? Participants_Db::PLUGIN_NAME : $textdomain;
-    // The "plugin_locale" filter is also used in load_plugin_textdomain()
-    $locale = apply_filters( 'plugin_locale', get_locale(), $textdomain );
-
-    load_textdomain( $textdomain, WP_LANG_DIR . '/' . Participants_Db::PLUGIN_NAME . '/' . $textdomain . '-' . $locale . '.mo' );
     
-    load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages/' );
+    load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages' );
   }
 
   /**
