@@ -157,7 +157,7 @@ class PDb_FormElement extends xnau_FormElement {
    * 
    * @return null
    */
-  function build_element()
+  public function build_element()
   {
     /**
      * we pass the object to an external function with 
