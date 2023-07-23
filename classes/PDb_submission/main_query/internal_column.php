@@ -61,6 +61,7 @@ class internal_column extends base_column {
             if ( PDb_Date_Parse::is_mysql_timestamp( $initialvalue ) ) {
               // record it if it is a valid mysql timestamp
               $this->value = $initialvalue;
+              $this->skip = false;
             } else {
               // convert the date to a mysql timestamp
               $display_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
