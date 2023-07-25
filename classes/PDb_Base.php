@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.12
+ * @version    1.13
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -1010,7 +1010,6 @@ class PDb_Base {
    */
   public static function get_dynamic_value( $value )
   {
-
     // this value serves as a key for the dynamic value to get
     $dynamic_key = html_entity_decode( $value );
     
@@ -1024,35 +1023,64 @@ class PDb_Base {
     $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
     
     // return the value if it was set in the filter
-    if ( $dynamic_value !== '' ) {
+    if ( $dynamic_value !== '' )
+    {
       return $dynamic_value;
     }
 
-    if ( strpos( $dynamic_key, '->' ) > 0 ) {
-
+    if ( strpos( $dynamic_key, '->' ) > 0 )
+    {
       /*
        * here, we can get values from one of several WP objects
        * 
-       * so far, that is only $post amd $current_user
+       * these will be: $post, $current_user
        */
       global $post, $current_user;
-      
-      $shortcode = self::last_shortcode_atts();
 
       list( $object, $property ) = explode( '->', $dynamic_key );
+      
+      $shortcode = \PDb_shortcodes\attributes::page_shortcode_attributes( 'pdb_signup' );
 
       $object = ltrim( $object, '$' );
 
-      if ( is_object( $$object ) && ! empty( $$object->$property ) ) {
-
+      if ( is_object( $$object ) && ! empty( $$object->$property ) )
+      {
         $dynamic_value = $$object->$property;
-        
-      } elseif ( $object === 'current_user' && $property === 'locale' ) {
-        
+      } 
+      elseif ( $object === 'current_user' && $property === 'locale' )
+      {  
         $dynamic_value = get_locale();
       }
-    } elseif ( strpos( $dynamic_key, ':' ) > 0 ) {
-
+      elseif ( $object = 'shortcode' )
+      {
+        static $shortcode_index = 0;
+        
+        if ( isset($shortcode[$shortcode_index]) )
+        {
+          $transient = 'pdb-shortcode_assigns';
+          $assigns = get_transient($transient);
+          if ( $assigns === false )
+          {
+            $assigns = $shortcode[$shortcode_index];
+          }
+          if ( isset( $shortcode[$shortcode_index][$property] ) )
+          {
+            $dynamic_value = $shortcode[$shortcode_index][$property];
+            unset( $assigns[$property] );
+            if ( count( $assigns ) == 0 )
+            {
+              $shortcode_index++;
+              delete_transient($transient);
+            } else {
+              set_transient($transient, $assigns, 20 );
+            }
+          }
+        }
+        
+      }
+    } 
+    elseif ( strpos( $dynamic_key, ':' ) > 0 )
+    {
       /*
        * here, we are attempting to access a value from a PHP superglobal
        */
