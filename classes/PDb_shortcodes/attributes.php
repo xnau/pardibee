@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -60,7 +60,7 @@ class attributes {
       $atts = shortcode_parse_atts( $shortcode );
       $tag = $atts[0];
       unset( $atts[0] );
-      $this->shortcode_attributes[$tag] = $atts;
+      $this->shortcode_attributes[$tag][] = $atts;
       $this->shortcode_attributes['last'] = array_merge( ['tag' => $tag ], $atts );
     }
   }
@@ -104,6 +104,19 @@ class attributes {
   }
   
   /**
+   * provides the sets of attributes for the given shortcode tag
+   * 
+   * @param string $tag
+   * @return array of attribute arrays, one for each instance of the named shortcode on the page
+   */
+  public static function page_shortcode_attributes( $tag )
+  {
+    $attributes = self::$instance;
+    
+    return is_object( $attributes ) ? $attributes->attribute_set($tag) : [];
+  }
+  
+  /**
    * provides the shortcode attribute values
    * 
    * @param string $set the tag or name of the attribute set to get
@@ -121,7 +134,8 @@ class attributes {
    */
   private function list_attributes()
   {
-    return $this->attribute_set('pdb_list');
+    $list_atts = $this->attribute_set('pdb_list');
+    return end($list_atts);
   }
   
 }
