@@ -42,11 +42,11 @@ class update_query extends base_query {
    */
   private function needs_date_updated_timestamp()
   {
-    if ( !$this->is_import ) {
+    if ( !$this->is_import  ) {
       return true;
     }
 
-    return !isset( $this->post[ 'date_updated' ] ) || !\PDb_Date_Parse::is_mysql_timestamp( $this->post[ 'date_updated' ] );
+    return apply_filters( 'pdb-needs_date_updated_timestamp', (!isset( $this->post[ 'date_updated' ] ) || !\PDb_Date_Parse::is_mysql_timestamp( $this->post[ 'date_updated' ] )), $this );
   }
 
   /**
