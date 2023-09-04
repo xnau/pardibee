@@ -831,7 +831,6 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
    */
   protected function _multi_checkbox()
   {
-
     $this->value = self::field_value_array( $this->value );
 
 //    if (!isset($this->attributes['readonly'])) {
@@ -1828,7 +1827,13 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     $id = (!empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
 
     // attach the instance index if it is not present
-    if ( preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0 )
+    /**
+     * @filter pdb-add_index_to_element_id
+     * @param bool true to add the instance index to the id
+     * @param PDb_FormElement object
+     * @return bool
+     */
+    if ( Participants_Db::apply_filters( 'add_index_to_element_id', preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0, $this ) )
     {
       $id = $id . '-' . Participants_Db::$instance_index;
     }
