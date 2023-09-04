@@ -783,7 +783,7 @@ abstract class PDb_Shortcode {
    * first, attempts to get the list from the shortcode, then uses the defined as 
    * visible list from the database
    *
-   * if the shortcode "groups" attribute is used, it overrides the gobal group 
+   * if the shortcode "groups" attribute is used, it overrides the global group 
    * visibility settings
    *
    * @global wpdb $wpdb
