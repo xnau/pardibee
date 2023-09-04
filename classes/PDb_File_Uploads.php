@@ -141,7 +141,7 @@ class PDb_File_Uploads {
        * @param string the sanitized filename (without extension)
        * @param PDb_Form_Field_Def the field definition parameters
        * @param int|bool the record id or bool false if the ID hasn't been determined yet (as in a signup form)
-       * @return string filename without it's extension
+       * @return string filename without its extension
        */
       $new_filename = Participants_Db::apply_filters( 'file_upload_filename', preg_replace( array( '#\.#', "/\s+/", "/[^-\.\w]+/" ), array( "-", "_", "" ), $matches[ 1 ] ), $field_def, $id ) . '.' . $matches[ 2 ];
 
