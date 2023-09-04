@@ -1347,7 +1347,7 @@ class PDb_Base {
   }
 
   /**
-   * sends a string through a filter for affecting a multilingual translation
+   * sends a string through a filter for effecting a multilingual translation
    * 
    * this is called on the pdb-translate_string filter, which is only enabled 
    * when PDB_MULTILINGUAL is defined true
