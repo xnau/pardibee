@@ -529,6 +529,13 @@ abstract class dynamic_db_field extends core {
       $data[ $dynamic_db_field->name() ] = $this->dynamic_value( $post );
     }
     
+    $data['csv_file_upload'] = 1;
+    
+    add_filter( 'pdb-needs_date_updated_timestamp', function( $needs, $query ) {
+      /** @var \PDb_submission\main_query\base_query $query */
+      return false;
+    }, 10, 2 );
+    
     if ( count( $data ) ) {
       \Participants_Db::write_participant( array_merge( $data, $match_prefs ), $record_id );
     }
