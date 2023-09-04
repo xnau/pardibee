@@ -87,11 +87,19 @@ class PDb_FormElement extends xnau_FormElement {
   /**
    * returns a form element
    *
-   * @param array $parameters (same as __construct() )
+   * @param array|object $parameters (same as __construct() )
    * @static
    */
   public static function get_element( $parameters )
   {
+    if ( is_array( $parameters ) && isset( $parameters['instance_index'] ) && $parameters['instance_index'] == 0 )
+    {
+      add_filter( 'pdb-add_index_to_element_id', function ($add) {
+          return false;
+        }
+      );
+    }
+    
     $Element = new self( $parameters );
 
     return $Element->_output();
