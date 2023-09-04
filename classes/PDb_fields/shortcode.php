@@ -45,7 +45,7 @@ class shortcode extends core {
    */
   protected function display_value()
   {
-    if ( strpos( $this->field->module(), 'list' ) !== false ) {
+    if ( strpos( $this->field->module(), 'list' ) !== false && ! $this->field->get_attribute( 'list_enable' ) ) {
       return $this->field->value();
     }
     
