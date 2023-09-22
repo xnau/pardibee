@@ -1833,7 +1833,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
      * @param PDb_FormElement object
      * @return bool
      */
-    if ( Participants_Db::apply_filters( 'add_index_to_element_id', preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) === 0, $this ) )
+    if ( Participants_Db::apply_filters( 'add_index_to_element_id', true, $this ) && preg_match( '/-' . Participants_Db::$instance_index . '$/', $id ) !== 1 )
     {
       $id = $id . '-' . Participants_Db::$instance_index;
     }
