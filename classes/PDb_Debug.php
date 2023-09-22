@@ -412,7 +412,7 @@ class PDb_Debug {
    */
   private function get_option_array()
   {
-    return get_option( $this->logging_option );
+    return get_option( $this->logging_option, [] );
   }
 
   /**
