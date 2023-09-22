@@ -136,7 +136,6 @@ class PDb_Template_Email extends xnau_Template_Email {
    */
   private function add_email_data()
   {
-
     // add the "record_link" tag
     if ( isset( $this->data['private_id'] ) ) {
       $this->data['record_link'] = Participants_Db::get_record_link( $this->data['private_id'] );
@@ -272,6 +271,7 @@ class PDb_Template_Email extends xnau_Template_Email {
     } else {
       $this->data = array();
     }
+    
     $this->add_email_data();
   }
 
