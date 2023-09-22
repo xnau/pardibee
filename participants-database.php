@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.5.3
+ * Version: 2.5.4
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -2527,7 +2527,12 @@ class Participants_Db extends PDb_Base {
           header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 
           // output the data lines
-          foreach ( $data as $line ) {
+          /**
+           * @filter pdb-csv_output_data
+           * @param array sanitized CSV output data array of data lines
+           * @return array
+           */
+          foreach ( self::apply_filters( 'csv_output_data', $data ) as $line ) {
             fputcsv( $output, $line, PDb_admin_list\csv::delimiter(), PDb_admin_list\csv::enclosure() );
           }
 
