@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.9.1
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -1702,6 +1702,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
     $pagelist = wp_cache_get( $key, 'pdb-get_pagelist' );
 
     if ( $pagelist === false ) {
+      
+      $pagelist = [];
 
       if ( $with_blank )
         $pagelist[PDb_FormElement::null_select_key()] = '';
