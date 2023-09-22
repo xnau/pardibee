@@ -250,9 +250,9 @@ csv line= '.print_r( $csv_line, true ), 2 );
 
       $column_values = array();
 
-      foreach ($csv_line as $value) {
-
-        $column_values[] = $this->process_value($value);
+      foreach ($csv_line as $fieldname => $value) {
+        
+        $column_values[] = $this->process_value($value, $fieldname);
       }
 
       if (count($column_values) != $this->column_count) {
@@ -279,9 +279,10 @@ csv line= '.print_r( $csv_line, true ), 2 );
    * applies conditioning and escaping to the incoming value
    * 
    * @param type $value
+   * @param string $column name of the column
    * @return string
    */
-  protected function process_value($value) {
+  protected function process_value($value,$column) {
     
     return esc_sql($this->_enclosure_trim($value, '', $this->CSV->enclosure));
   }
