@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.4
+ * @version    1.4.1
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -228,7 +228,14 @@ class PDb_Admin_Notices {
    */
   private function admin_notice_list()
   {
-    return get_option( self::pdb_admin_notice, array() );
+    $admin_notice_list = get_option( self::pdb_admin_notice, [] );
+    
+    if ( ! is_array( $admin_notice_list ) )
+    {
+      $admin_notice_list = [];
+    }
+    
+    return $admin_notice_list;
   }
   
   /**
