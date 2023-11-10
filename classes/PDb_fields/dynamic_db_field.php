@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -34,9 +34,11 @@ abstract class dynamic_db_field extends core {
   {
     parent::__construct( $name, $title );
 
-    $this->is_dynamic_field();
-
     $this->field_list(); // cache the field list
+    
+    if ( count( $this->field_list() ) > 0 ) :
+
+    $this->is_dynamic_field();
 
     $this->process = new dynamic_value_update( $this );
 
@@ -55,6 +57,8 @@ abstract class dynamic_db_field extends core {
     if ( !has_action( 'pdb-after_import_record', array( $this, 'process_imported_record' ) ) ) {
       add_action( 'pdb-after_import_record', array( $this, 'process_imported_record' ), 10, 3 );
     }
+    
+    endif;
   }
 
   /**
