@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -334,7 +334,15 @@ class PDb_Form_Field_Def {
         $this->{$prop} = $value;
         break;
       default:
-        $this->{$prop} = $value;
+        if ( property_exists( $this, $prop ) )
+        {
+          $this->{$prop} = $value;
+        }
+        else
+        {
+          Participants_Db::debug_log('Accessing unknown property "' . $prop . '" in ' . get_class($this) . '  TRACE: '.print_r( wp_debug_backtrace_summary(),1) );
+          $this->{$prop} = $value;
+        }
     }
   }
 
