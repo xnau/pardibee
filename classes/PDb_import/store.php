@@ -79,6 +79,11 @@ trait store {
     // modify the action according the the match mode
     $action = $record_match->get_action( $action );
     
+    if ( PDB_DEBUG > 2 )
+    {
+      \Participants_Db::debug_log('CSV import action: ' . $action );
+    }
+    
     // get the record id to use in the query
     $record_id = $record_match->record_id();
     
