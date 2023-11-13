@@ -372,8 +372,8 @@ class PDb_Base {
       
       $main_modes = array_keys(PDb_Manage_Fields::group_display_modes());
       
-      $result = array_filter( Participants_Db::all_field_defs(), function($v) use ($main_modes) {
-        return in_array( $v->mode, $main_modes );
+      $result = array_filter( Participants_Db::all_field_defs(), function($field_def) use ($main_modes) {
+        return in_array( $field_def->mode, $main_modes );
       });
       
       foreach ( $result as $column ) {
@@ -2551,10 +2551,18 @@ class PDb_Base {
    */
   protected static function check_uploads_directory()
   {
+    $message_key = 'uploads_directory_notice';
+    
     if ( !is_writable( Participants_Db::files_path() ) ) {
       self::debug_log( ' The configured uploads directory is not writable: ' . Participants_Db::files_path() );
       
-      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false);
+      $message_id = PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false);
+      
+      PDb_Admin_Notices::store_message_key( $message_key, $message_id);
+    } 
+    else
+    {
+      PDb_Admin_Notices::clear_message_key( $message_key );
     }
     
 //    if ( substr_count( Participants_Db::files_path(), 'wp-content' ) > 1 ) {
