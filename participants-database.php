@@ -3005,7 +3005,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function _make_uploads_dir( $dir = '' )
   {
-
     $dir = empty( $dir ) ? Participants_Db::files_location() : $dir;
     $savedmask = umask( 0 );
     
