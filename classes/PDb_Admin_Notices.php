@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.4.1
+ * @version    1.5
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -67,6 +67,74 @@ class PDb_Admin_Notices {
     $notice = self::get_instance();
     return $notice->notice( $type, $message, $context, $persistent, $global );
   }
+  
+  /**
+   * persistently stores a message ID
+   * 
+   * this stores the id in an array with they message ID as the key and the message 
+   * key as the value. This is so if there are multiple messages with the same 
+   * message key, we can clear them all.
+   * 
+   * @param string $message_key
+   * @param string $message_id
+   */
+  public static function store_message_key( $message_key, $message_id )
+  {
+    $id_store = self::get_id_store();
+    
+    $id_store[$message_id] = $message_key;
+    
+    self::update_id_store( $id_store );
+  }
+  
+  /**
+   * clears the message or messages with the given message key
+   * 
+   * @param string $message_key
+   */
+  public static function clear_message_key( $message_key )
+  {
+    $id_store = self::get_id_store();
+    
+    $key_list = array_filter( $id_store, function($value) use($message_key){
+      return $value === $message_key;
+    });
+    
+    if ( empty( $key_list ) )
+    {
+      return;
+    }
+    
+    $notice = self::get_instance();
+    
+    foreach( array_keys( $key_list ) as $key )
+    {
+      $notice->dismiss( $key );
+    }
+    
+    // update the option with the dismissed message ids removed
+    self::update_id_store( array_diff_key( $id_store, $key_list ) );
+  }
+  
+  /**
+   * provides the id store array
+   * 
+   * @return array
+   */
+  private static function get_id_store()
+  {
+    return get_option( self::pdb_admin_notice . '_id_store', [] );
+  }
+  
+  /**
+   * updates the id store
+   * 
+   * @param array $id_store
+   */
+  private static function update_id_store( $id_store )
+  {
+    update_option( self::pdb_admin_notice . '_id_store', $id_store );
+  }
 
   /**
    * these are our specific API calls
@@ -74,7 +142,7 @@ class PDb_Admin_Notices {
    * the static calls are the most likely to be used, dynamic calls are for situations 
    * where the object needs to be set up and modified before posting the message.
    * 
-   * @param string  $message can inclue HTML, remember it is wrapped in a <p> tag.
+   * @param string  $message can include HTML, remember it is wrapped in a <p> tag.
    * @param string  $context a context message (goes in the message heading)
    * @param bool    $persistent if true, the message persists across page loads until dismissed
    * @param bool    $force if true, show the message even if previously dismissed
