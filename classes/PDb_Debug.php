@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -249,19 +249,27 @@ class PDb_Debug {
    */
   public function initialize_logging()
   {
-    if ( !is_resource( $this->log_file ) ) {
-
-
+    if ( !is_resource( $this->log_file ) )
+    {
+      $msg_key = 'init_log_file';
+      
       $this->log_file_resource(); // set up the resource
 
       if ( !is_resource( $this->log_file ) ) {
      //   $this->clear_log_filename();
         Participants_Db::debug_log( __METHOD__ . ' unable to open file for logging: ' . $this->log_filepath() );
-        PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-Upload-Location"><span class="dashicons dashicons-editor-help"></span></a>', array(
+        $msgid = PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-Upload-Location"><span class="dashicons dashicons-editor-help"></span></a>', array(
             'type' => 'error',
             'context' => __( 'Debugging', 'participants-database' ),
         ) );
+        
+        PDb_Admin_Notices::store_message_key( $msg_key, $msgid );
+        
         return;
+      } 
+      else
+      {
+        PDb_Admin_Notices::clear_message_key($msg_key);
       }
     }
 
@@ -279,7 +287,8 @@ class PDb_Debug {
    */
   private function log_file_resource()
   {
-    if ( !is_resource( $this->log_file ) ) {
+    if ( !is_resource( $this->log_file ) )
+    {
       $this->log_file = fopen( $this->log_filepath(), 'a+b' );
     }
     return $this->log_file;
@@ -328,7 +337,9 @@ class PDb_Debug {
    */
   private function write_log_entry( $entry )
   {
-    fwrite( $this->log_file_resource(), $entry );
+    if ( $this->log_file_resource() ) {
+      fwrite( $this->log_file_resource(), $entry );
+    }
   }
 
   /**
@@ -347,7 +358,11 @@ class PDb_Debug {
    */
   private function empty_log()
   {
-    $first = fread( $this->log_file_resource(), 4096 );
+    if ( $this->log_file_resource() ) {
+      $first = fread( $this->log_file_resource(), 4096 );
+    } else {
+      $first = '';
+    }
     return empty( $first );
   }
 
