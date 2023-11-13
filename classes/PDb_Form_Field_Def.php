@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -60,6 +60,11 @@ class PDb_Form_Field_Def {
    * @var int id of the field's group
    */
   protected $groupid;
+  
+  /**
+   * @var string the field group visibility mode
+   */
+  protected $mode;
   
   /**
    * @var string field help text
@@ -340,7 +345,7 @@ class PDb_Form_Field_Def {
         }
         else
         {
-          Participants_Db::debug_log('Accessing unknown property "' . $prop . '" in ' . get_class($this) . '  TRACE: '.print_r( wp_debug_backtrace_summary(),1) );
+          Participants_Db::debug_log('Accessing unknown property "' . $prop . '" in ' . get_class($this) . '  TRACE: '.print_r( wp_debug_backtrace_summary(),1), 2 );
           $this->{$prop} = $value;
         }
     }
