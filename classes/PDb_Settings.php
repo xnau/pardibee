@@ -2003,7 +2003,6 @@ ORDER BY g.order, v.order';
    */
   public function options_section( $section )
   {
-
     $parts = explode( '_', $section['id'] );
     $name = Participants_db::make_anchor( end( $parts ) );
 
@@ -2023,7 +2022,6 @@ ORDER BY g.order, v.order';
    */
   public function validate( $settings )
   {
-
     $this->increment_option_version();
 
     foreach ( $settings as $name => $value ) {
