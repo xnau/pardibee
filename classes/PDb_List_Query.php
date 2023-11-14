@@ -403,6 +403,10 @@ class PDb_List_Query {
   private function requested_page()
   {
     $page_number = filter_input( INPUT_GET, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+    $instance_index = filter_input( INPUT_GET, 'instance', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+    
+    $page_number = is_int( $instance_index ) && $instance_index === $this->instance_index ? $page_number : false;
+    
     if ( !$page_number ) {
       $page_number = filter_input( INPUT_POST, Participants_Db::$list_page, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     }
@@ -410,6 +414,7 @@ class PDb_List_Query {
     if ( !$page_number ) {
       return false;
     }
+    
     return $page_number;
   }
 
