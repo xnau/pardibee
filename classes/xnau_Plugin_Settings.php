@@ -9,7 +9,7 @@
  * plugins requiring a more complex settings scheme, such as multiple pages. It
  * will work well with Javascript tabs, however.
  *
- * @version 1.3
+ * @version 1.4
  *
  * @depends xnau_FormElement class
  */
@@ -65,9 +65,10 @@ class xnau_Plugin_Settings {
    */
   public function __construct( $class = false, $label = false, $sections = false )
   {
-
     if ( false === $class )
+    {
       die( __CLASS__ . ' class must be instantiated by a plugin-specific subclass' );
+    }
 
     $this->plugin_class = $class;
 
@@ -93,7 +94,19 @@ class xnau_Plugin_Settings {
 
     // register the plugin setting with WP
     // this will store an array of all the individual settings for the plugin
-    register_setting( $this->WP_setting, $this->WP_setting, array($this, 'validate') );
+    register_setting( $this->WP_setting, $this->WP_setting, $this->register_setting_args() );
+  }
+  
+  /**
+   * supplies the setting registration argument array
+   * 
+   * @return array
+   */
+  protected function register_setting_args()
+  {
+    return [
+        'sanitize_callback' => [$this, 'validate'],
+    ];
   }
 
   /**
@@ -172,12 +185,11 @@ class xnau_Plugin_Settings {
 
   protected function increment_option_version()
   {
-
-//    error_log(__METHOD__.' incrementing version');
-
     $version = get_option( $this->option_version_location, '0.0' );
+    
+    $new_version = floatval( $version ) + 0.1;
 
-    update_option( $this->option_version_location, floatval( $version ) + 0.1 );
+    update_option( $this->option_version_location, $new_version );
   }
 
   /*   * *****************
@@ -327,7 +339,6 @@ class xnau_Plugin_Settings {
      */
     public function validate( $input )
     {
-
       $this->increment_option_version();
 
       return $input;
@@ -349,15 +360,12 @@ class xnau_Plugin_Settings {
      */
     public function print_settings_field( $input )
     {
-
-      //error_log(__METHOD__.' name:'.$input['name'].' type:'.$input['type'].' title:'.$input['title']);
-
       if ( !isset( $input['name'] ) )
         return NULL;
 
       if ( $input['type'] !== 'header' ) {
 
-        $options = get_option( $this->WP_setting );
+        $options = $this->options_array();
 
         $args = wp_parse_args( $input, array(
             'options' => false,
@@ -386,6 +394,29 @@ class xnau_Plugin_Settings {
           printf( $this->help_text_wrap, trim( $args['help_text'] ) );
         }
       }
+    }
+    
+    /**
+     * provides the plugin options array
+     * 
+     * this is cached
+     * 
+     * @return array
+     */
+    protected function options_array()
+    {
+      $cachekey = 'pdb-options_array';
+      
+      $options_array = wp_cache_get($cachekey);
+      
+      if ( ! is_array( $options_array ) )
+      {
+        $options_array = get_option( $this->WP_setting );
+        
+        wp_cache_set($cachekey, $options_array);
+      }
+      
+      return $options_array;
     }
 
     /**
