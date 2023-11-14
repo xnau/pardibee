@@ -466,7 +466,7 @@ class PDb_List extends PDb_Shortcode {
     /*
      * paginating using the pgae number in as a GET var doesn't require the instance number
      */
-    if ( filter_input( INPUT_GET, $this->list_page, FILTER_VALIDATE_INT ) !== false ) {
+    if ( filter_input( INPUT_GET, $this->list_page, FILTER_VALIDATE_INT ) !== false && filter_input( INPUT_GET, 'instance', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) ) === $this->instance_index ) {
       $input = INPUT_GET;
     }
     /*
@@ -475,6 +475,7 @@ class PDb_List extends PDb_Shortcode {
     if ( isset( $_POST[$this->list_page] ) && filter_input( INPUT_POST, 'instance_index', FILTER_VALIDATE_INT ) == $this->instance_index ) {
       $input = INPUT_POST;
     }
+    
     if ( $input !== false ) {
       $this->current_page = filter_input( $input, $this->list_page, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'default' => 1)) );
     }
