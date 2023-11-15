@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -324,6 +324,7 @@ class PDb_Manage_List_Columns {
           </ul>
         </div>
       </div>
+      <?php do_action('pdb-after_manage_list_display') ?>
     </div>
     <?php
   }
