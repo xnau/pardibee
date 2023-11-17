@@ -76,8 +76,8 @@ class PDb_Signup extends PDb_Shortcode {
       // override read-only in signup and link recovery forms
       add_action( 'pdb-before_field_added_to_iterator', array( $this, 'allow_readonly_fields_in_form' ) );
 
-      if ( filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS ) === 'r' || $shortcode_atts[ 'module' ] == 'retrieve' ) {
-        
+      if ( filter_input( INPUT_GET, 'm', FILTER_SANITIZE_SPECIAL_CHARS ) === 'r' || $shortcode_atts[ 'module' ] == 'retrieve' )
+      {  
         /*
          * we're proceesing a link retrieve request
          */
