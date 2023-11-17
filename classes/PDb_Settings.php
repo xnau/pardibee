@@ -906,6 +906,72 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'attributes' => array('style' => 'width:5em'),
         )
     );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'search_field_label',
+        'title' => __( 'Search Field Label', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Label for the search input when it is displayed with the list. Blank to show no label.', 'participants-database' ),
+            'value' => PDb_List::setting_string( 'search_field_label' ),
+        )
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'sort_field_label',
+        'title' => __( 'Sort Field Label', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Label for the sorting selector when it is displayed with the list. Blank to show no label.', 'participants-database' ),
+            'value' => PDb_List::setting_string('sort_field_label'),
+        )
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'search_field_error',
+        'title' => __( 'Search Field Error Message', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Message to show when the search has no search field selected.', 'participants-database' ),
+            'value' => PDb_List::setting_string('search_field_error'),
+        )
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'search_value_error',
+        'title' => __( 'Search Value Error Message', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Message to show when the search value is blank.', 'participants-database' ),
+            'value' => PDb_List::setting_string('search_value_error'),
+        )
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'ascending_sort_label',
+        'title' => __( 'Ascending Sort Label', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Label for the ascending selection for the list sort.', 'participants-database' ),
+            'value' => PDb_List::setting_string('ascending_sort_label'),
+        )
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'descending_sort_label',
+        'title' => __( 'Descending Sort Label', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Label for the descending selection for the list sort.', 'participants-database' ),
+            'value' => PDb_List::setting_string('descending_sort_label'),
+        )
+    );
 
     /*     * *****************************************************
      * 

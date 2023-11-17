@@ -19,8 +19,8 @@
      * replace the contents of the p tag with your error messages
      */ ?>
     <div class="pdb-error pdb-search-error" style="display:none">
-      <p class="search_field_error"><?php _e('Please select a column to search in.', 'participants-database') ?></p>
-      <p class="value_error"><?php _e('Please type in something to search for.', 'participants-database') ?></p>
+      <p class="search_field_error"><?php echo PDb_List::setting_string( 'search_field_error' ) ?></p>
+      <p class="value_error"><?php echo PDb_List::setting_string( 'search_value_error' ) ?></p>
     </div>
 
     <?php
@@ -32,7 +32,7 @@
     <?php if ($filter_mode == 'filter' || $filter_mode == 'both') : ?>
 
       <fieldset class="widefat">
-        <legend><?php _e('Search', 'participants-database') ?>:</legend>
+        <legend><?php echo PDb_List::setting_string( 'search_field_label' ) ?></legend>
 
         <?php
         /*
@@ -60,7 +60,7 @@
     <?php if ($filter_mode == 'sort' || $filter_mode == 'both') : ?>
 
       <fieldset class="widefat">
-        <legend><?php _e('Sort by', 'participants-database') ?>:</legend>
+        <legend><?php echo PDb_List::setting_string( 'sort_field_label' ) ?></legend>
 
         <?php
         /*

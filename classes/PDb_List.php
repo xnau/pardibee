@@ -495,8 +495,8 @@ class PDb_List extends PDb_Shortcode {
       $output[] = $this->search_error_style;
       $output[] = '<div class="pdb-searchform">';
       $output[] = '<div class="pdb-error pdb-search-error" style="display:none">';
-      $output[] = sprintf( '<p class="search_field_error">%s</p>', __( 'Please select a column to search in.', 'participants-database' ) );
-      $output[] = sprintf( '<p class="value_error">%s</p>', __( 'Please type in something to search for.', 'participants-database' ) );
+      $output[] = sprintf( '<p class="search_field_error">%s</p>', self::setting_string( 'search_field_error' ) );
+      $output[] = sprintf( '<p class="value_error">%s</p>', self::setting_string( 'search_value_error' ) );
       $output[] = '</div>';
       $output[] = $this->search_sort_form_top( false, false, false );
 
@@ -504,7 +504,7 @@ class PDb_List extends PDb_Shortcode {
 
         $output[] = '<fieldset class="widefat inline-controls">';
 
-        $output[] = sprintf( '<legend>%s:</legend>', __( 'Search', 'participants-database' ) );
+        $output[] = sprintf( '<legend>%s:</legend>', self::setting_string( 'search_field_label' )  );
 
         $output[] = $this->column_selector( false, false );
         $output[] = $this->search_form( false );
@@ -518,7 +518,7 @@ class PDb_List extends PDb_Shortcode {
 
         $output[] = '<fieldset class="widefat inline-controls">';
 
-        $output[] = sprintf( '<legend>%s:</legend>', __( 'Sort by', 'participants-database' ) );
+        $output[] = sprintf( '<legend>%s:</legend>', self::setting_string( 'sort_field_label' )  );
 
         $output[] = $this->sort_form( false );
 
@@ -847,8 +847,8 @@ class PDb_List extends PDb_Shortcode {
         'value' => $this->list_query->current_filter( 'sort_order' ),
         'class' => 'checkbox inline search-item',
         'options' => array(
-            __( 'Ascending', 'participants-database' ) => 'ASC',
-            __( 'Descending', 'participants-database' ) => 'DESC'
+            self::setting_string( 'ascending_sort_label' ) => 'ASC',
+            self::setting_string( 'descending_sort_label' ) => 'DESC'
         ),
     );
     $output[] = PDb_FormElement::get_element( $element );
@@ -1419,6 +1419,17 @@ class PDb_List extends PDb_Shortcode {
   }
   
   /**
+   * provides a string from the settings
+   * 
+   * @param string $name
+   * @return string
+   */
+  public static function setting_string( $name )
+  {
+    return Participants_Db::plugin_setting_value( $name, self::i18n()[$name] );
+  }
+  
+  /**
    * provides the variables for use by the AJAX code
    * 
    * @global WP_Query $wp_query
@@ -1451,6 +1462,12 @@ class PDb_List extends PDb_Shortcode {
         'filter' => _x( 'Filter', 'submit button label', 'participants-database' ),
         'clear' => _x( 'Clear', 'submit button label', 'participants-database' ),
         'search' => _x( 'Search', 'search button label', 'participants-database' ),
+        'search_field_label' => __( 'Search', 'participants-database' ),
+        'sort_field_label'=> __( 'Sort by', 'participants-database' ),
+        'search_field_error' => __( 'Please select a column to search in.', 'participants-database' ),
+        'search_value_error' => __( 'Please type in something to search for.', 'participants-database' ),
+        'ascending_sort_label' => __( 'Ascending', 'participants-database' ),
+        'descending_sort_label' => __( 'Descending', 'participants-database' ),
     );
   }
 

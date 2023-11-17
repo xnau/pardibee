@@ -2,7 +2,7 @@
 /**
  * template for a responsive list layout using CSS3 flexbox
  * 
- * @version 0.4
+ * @version 0.5
  */
 ?>
 <div class="wrap <?php esc_attr_e( $this->wrap_class ) ?> pdb-flexbox-list" id="<?php esc_attr_e( $this->list_anchor ) ?>">
@@ -12,8 +12,8 @@
 
       <div class="alert alert-block" style="display:none">
         <a class="close" data-dismiss="alert" href="#">X</a>
-        <p class="search_field_error"><?php _e( 'Please select a column to search in.', 'participants-database' ) ?></p>
-        <p class="value_error"><?php _e( 'Please type in something to search for.', 'participants-database' ) ?></p>
+        <p class="search_field_error"><?php echo PDb_List::setting_string( 'search_field_error' ) ?></p>
+        <p class="value_error"><?php echo PDb_List::setting_string( 'search_value_error' ) ?></p>
       </div>
 
       <?php $this->search_sort_form_top( false, 'form-horizontal' ); ?>
@@ -21,7 +21,7 @@
       <?php if ( $filter_mode == 'filter' || $filter_mode == 'both' ) : ?>
 
         <div class="control-group">
-          <label class="control-label"><?php _e( 'Search', 'participants-database' ) ?>:</label>
+          <label class="control-label"><?php echo PDb_List::setting_string( 'search_field_label' ) ?></label>
           <div class="controls">
 
             <?php
@@ -41,7 +41,7 @@
 
 
         <div class="control-group">
-          <label class="control-label"><?php _e( 'Sort by', 'participants-database' ) ?>:</label>
+          <label class="control-label"><?php echo PDb_List::setting_string( 'sort_field_label' ) ?></label>
           <div class="controls">
 
             <?php $this->sort_form() ?>
