@@ -51,10 +51,12 @@ PDbShortcodes = (function ($) {
       // prevent double submissions
       var pdbform = $('input.pdb-submit').closest("form");
       pdbform.submit(submitOnce);
+      
       // test for cookies, then set a page class if not available
       if (!navigator.cookieEnabled) {
         $('html').addClass('cookies-disabled');
       }
+      
       // place email obfuscation
       $('a.obfuscate[data-email-values]').each(function () {
         $(this).PDb_email_obfuscate();
@@ -65,15 +67,18 @@ PDbShortcodes = (function ($) {
       $('[data-after]').each(function () {
         postcontent($(this));
       });
-      var errormsg = $('.pdb-scroll-to-error .pdb-error').filter(':visible');
-      if (errormsg.length) {
+      
+      // if there is a thanks or error message, scroll to it
+      var scrollto = $('.pdb-scroll-to-error .pdb-error, .pdb-thanks.pdb-scroll-to-error').filter(':visible');
+      if (scrollto.length) {
         $("body,html").animate(
                 {
-                  scrollTop : errormsg.offset().top - 50
+                  scrollTop : scrollto.offset().top - 50
                 },
                 300 //speed
                 );
       }
+      
       // hide the "no file chosen" text if a file is loaded 
       $('.pdb-record input[type=file]').each( function(){
         var el = $(this);
