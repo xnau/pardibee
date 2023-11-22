@@ -81,6 +81,11 @@ class PDb_Record extends PDb_Shortcode {
                 array_filter( Participants_Db::get_default_record(), 'Participants_Db::is_set_value' ),
                 array_filter( $record_values, 'Participants_Db::is_set_value' )
         );
+      
+        if ( Participants_Db::pid_in_url( $this->participant_id ) )
+        {
+          new \PDb_shortcodes\user_access_action( ( $this->participant_id  ) );
+        }
 
         // update the access timestamp
         Participants_Db::set_record_access( $this->participant_id );
@@ -134,36 +139,6 @@ class PDb_Record extends PDb_Shortcode {
         $atts['record_id'] = $atts['id'];
       }
       $record_id = Participants_Db::get_record_id_by_term( 'id', $atts['record_id'] );
-      
-      if ( $record_id && Participants_Db::pid_in_url( $record_id ) ) {
-        
-        $record = Participants_Db::get_participant($record_id);
-          /**
-           * @action pdb-record_accessed_using_private_link
-           * @param array record data
-           */
-        do_action( 'pdb-record_accessed_using_private_link', $record );
-        
-        if ( has_action( 'pdb-first_time_record_access_with_private_link' ) ) {
-          
-          global $wpdb;
-          
-          $sql = 'SELECT count(*) FROM ' . Participants_Db::$participants_table . ' WHERE `id` = %s AND `last_accessed` IS NULL';
-          
-          // check for a null value in the last_accessed field
-          if ( $wpdb->get_var( $wpdb->prepare( $sql, $record_id ) ) ) {
-            
-            /**
-             * @action pdb-first_time_record_access_with_private_link
-             * @param array record data
-             */
-            do_action( 'pdb-first_time_record_access_with_private_link', $record );
-            
-            // set the last_accessed field the the current timestamp
-            Participants_Db::set_record_access($record_id);
-          }
-        }
-      }
     }
     
     return $record_id;
