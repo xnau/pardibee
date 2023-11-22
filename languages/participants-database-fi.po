@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Participants Database 1.5.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/participants-database\n"
 "POT-Creation-Date: 2022-01-31 18:15-1000\n"
-"PO-Revision-Date: 2022-01-31 18:57-1000\n"
+"PO-Revision-Date: 2023-11-17 16:39+0200\n"
 "Last-Translator: Visa Jokela <visa.jokela@gmail.com>\n"
 "Language-Team: xnau <support@xnau.com>\n"
 "Language: fi_FI\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: classes/PDb_Aux_Plugin.php:369
@@ -51,8 +51,8 @@ msgstr ""
 #: classes/PDb_CSV_Import.php:187
 msgid "Incorrect column name found in CSV:"
 msgid_plural "Incorrect column names found in CSV:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Virheellinen sarakkeen nimi CSV:ssä:"
+msgstr[1] "Virheellisiä sarakkeen nimiä CSV:ssä:"
 
 #: classes/PDb_Debug.php:54
 msgid "Debugging Log"
@@ -519,12 +519,10 @@ msgid "Help"
 msgstr "Apua"
 
 #: classes/PDb_Manage_Fields.php:116
-#, fuzzy, php-format
-#| msgctxt "column name"
-#| msgid "Fields"
+#, php-format
 msgctxt "Title of the field group"
 msgid "%s Fields"
-msgstr "Kentät"
+msgstr "%s Kentät"
 
 #: classes/PDb_Manage_Fields.php:138
 msgid "No fields in this group"
@@ -757,16 +755,16 @@ msgid ""
 "The validation setting for the \"%s\" field is not a valid regex or field "
 "name."
 msgstr ""
+"Tarkistus asetus \"%s\" kentälle ei ole kunnollinen vakio ilmaisu tai kentän "
+"nimi."
 
 #: classes/PDb_Manage_Fields_Updates.php:204
 msgid "Fields Updated"
 msgstr "Päivitetyt kentät"
 
 #: classes/PDb_Manage_Fields_Updates.php:216
-#, fuzzy
-#| msgid "Fields Updated"
 msgid "Field update error:"
-msgstr "Päivitetyt kentät"
+msgstr "Virhe kentän päivittämisessä:"
 
 #: classes/PDb_Manage_Fields_Updates.php:256
 #: classes/PDb_Manage_Fields_Updates.php:265
@@ -1028,7 +1026,7 @@ msgstr ""
 
 #: classes/PDb_Settings.php:212 classes/PDb_Settings.php:887
 msgid "Image Size"
-msgstr ""
+msgstr "Kuvan koko"
 
 #: classes/PDb_Settings.php:216
 msgid ""
@@ -1036,6 +1034,10 @@ msgid ""
 "displays. Defaults to pixels, but any valid CSS size value can be used. "
 "Default size for the list display is under the list display tab."
 msgstr ""
+"Asettaa oletuskorkeuden kuvalle tietueessa ja tietueen editointinäytöllä. "
+"Oletukset pikselien määrälle, mutta mitä tahansa CSS  koon arvoa voi "
+"käyttää. Oletuskoko listan näytölle on listan alapuolella näyttö -"
+"välilehdellä."
 
 #: classes/PDb_Settings.php:224
 msgid "Link Image to Fullsize"
@@ -1154,8 +1156,7 @@ msgstr ""
 "testi epäonnistuu"
 
 #: classes/PDb_Settings.php:329
-#, fuzzy, php-format
-#| msgid "Pleast try the %s question again."
+#, php-format
 msgid "Please try the %s question again."
 msgstr "Ole hyvä ja yritä %s kysymystä uudelleen."
 
@@ -1709,18 +1710,20 @@ msgstr ""
 
 #: classes/PDb_Settings.php:873
 msgid "Split Search Phrases"
-msgstr ""
+msgstr "Jaa hakufraasit"
 
 #: classes/PDb_Settings.php:878
 msgid ""
 "When checked, words separated by spaces will each be searched for separately."
-msgstr ""
+msgstr "Valittuna, välilyönneillä erotellut sanat haetaan jokainen erillisenä."
 
 #: classes/PDb_Settings.php:891
 msgid ""
 "Sets the default height of images displayed in the list. Defaults to pixels, "
 "but any valid CSS size value can be used."
 msgstr ""
+"Asettaa listalla näkyvien kuvien oletuskorkeuden. Oletukset pikselien "
+"määrälle, mutta mitä tahansa CSS koon arvoa voi käyttää."
 
 #: classes/PDb_Settings.php:905
 msgid "Enable Lost Private Link"
@@ -1956,11 +1959,12 @@ msgstr ""
 
 #: classes/PDb_Settings.php:1134
 msgid "Use the Private ID for the Single Record Link"
-msgstr ""
+msgstr "Käytä yksityistä ID:tä yksittäisen tietueen linkissä"
 
 #: classes/PDb_Settings.php:1139
 msgid "use the Private ID instead of the Record ID in single record links"
 msgstr ""
+"käytä ykstyistä ID:tä tietue ID:n asemasta yksittäisen tietueen linkissä"
 
 #: classes/PDb_Settings.php:1150
 msgid "Remove Line Breaks"
@@ -2171,10 +2175,8 @@ msgstr ""
 "listaamiseen."
 
 #: classes/PDb_Settings.php:1429
-#, fuzzy
-#| msgid "Record Edit Access Level"
 msgid "Plugin Admin Access Level"
-msgstr "Oikeustaso tietueen muokkaamisessa"
+msgstr "Liitännäisen pääkäyttäjän oikeustaso"
 
 #: classes/PDb_Settings.php:1433
 msgid ""
@@ -2323,82 +2325,63 @@ msgstr "seuraava"
 #: classes/PDb_admin_list/delete.php:47
 #, php-format
 msgid "Orphan uploaded files cleared. %s files deleted"
-msgstr ""
+msgstr "Orporivejä sisältäneet tiedostot selvitetty. %s tiedostoa poistettu"
 
 #: classes/PDb_admin_list/delete.php:95
 msgid "Record delete successful."
 msgstr "Tietueen poisto onnistui."
 
 #: classes/PDb_admin_list/delete.php:131
-#, fuzzy
-#| msgid "Delete Uploaded Files with Record"
 msgid "delete uploaded files with record?"
-msgstr "Poista ladatut tiedostot yhdessä tietueen kanssa"
+msgstr "poista ladatut tiedostot yhdessä tietueen kanssa?"
 
 #: classes/PDb_admin_list/field_input.php:132
 #, php-format
 msgid "Timestamp values must be entered using this format: %s"
-msgstr ""
+msgstr "Aikaleiman arvo pitää syöttää muodossa: %s"
 
 #: classes/PDb_admin_list/filter.php:365
-#, fuzzy
-#| msgid "Hidden Field"
 msgid "Recent Fields"
-msgstr "Piilotettu kenttä"
+msgstr "Viimeksikäytetyt kentät"
 
 #: classes/PDb_admin_list/mass_edit.php:60
 msgid "mass edit"
-msgstr ""
+msgstr "massamuutos"
 
 #: classes/PDb_admin_list/mass_edit.php:95
-#, fuzzy
-#| msgid "Send the signup email to the selected record?"
 msgid "Apply the field edit to the selected record?"
-msgstr "Lähetä ilmoittautumislomake valitun tietueen mukaisesti?"
+msgstr "Käytä kentän editointia valitulle tietueelle?"
 
 #: classes/PDb_admin_list/mass_edit.php:96
-#, fuzzy
-#| msgid "Send the signup email to the selected records?"
 msgid "Apply the field edit to the selected records?"
-msgstr "Lähetä ilmoittautumislomake valittujen tietueiden mukaisesti?"
+msgstr "Käytä kentän editointia valituille tietueille?"
 
 #: classes/PDb_admin_list/mass_edit.php:136
-#, fuzzy
-#| msgctxt "column name"
-#| msgid "Fields"
 msgid "Field"
-msgstr "Kentät"
+msgstr "Kenttä"
 
 #: classes/PDb_admin_list/mass_edit_update.php:78
-#, fuzzy
-#| msgid "Admin List Default Sort"
 msgid "Admin List Mass Edit"
-msgstr "Pääkäyttäjän listauksessa oletusjärjestys"
+msgstr "Pääkäyttäjän listan massaeditointi"
 
 #: classes/PDb_admin_list/mass_edit_update.php:79
-#, fuzzy, php-format
-#| msgid "%s record added"
-#| msgid_plural "%s records added"
+#, php-format
 msgid "%s Record was updated"
 msgid_plural "%s Records were updated"
-msgstr[0] "%s tietue on lisätty"
-msgstr[1] "%s tietuetta on lisätty"
+msgstr[0] "%s Tietue on päivitetty"
+msgstr[1] "%s Tietueet on päivitetty"
 
 #: classes/PDb_admin_list/search_field_group.php:36
-#, fuzzy
-#| msgid "Add Field"
 msgid "Any Text Field"
-msgstr "Lisää kenttä"
+msgstr "MIkä tahansa tekstikenttä"
 
 #: classes/PDb_admin_list/search_field_group.php:37
-#, fuzzy
-#| msgid "Add Field"
 msgid "Any Field"
-msgstr "Lisää kenttä"
+msgstr "Mikä tahansa kenttä"
 
 #: classes/PDb_admin_list/search_field_group.php:58
 msgid "Multi-Field"
-msgstr ""
+msgstr "Monikenttä"
 
 #: classes/PDb_admin_list/with_selected.php:131
 #: classes/PDb_admin_list/with_selected.php:158
@@ -2410,68 +2393,53 @@ msgstr[0] "%d sähköposti on lähetetty."
 msgstr[1] "%d sähköpostia on lähetetty."
 
 #: classes/PDb_admin_list/with_selected.php:203
-#, fuzzy, php-format
-#| msgctxt "number of records with approval statuses set"
-#| msgid "Approval status for %d records has been updated."
+#, php-format
 msgctxt "number of records with approval statuses set"
 msgid "Approval status for %d record has been updated."
 msgid_plural "Approval status for %d records has been updated."
-msgstr[0] "Hyväksyntä %d tietuetta on päivitetty."
-msgstr[1] "Hyväksyntä %d tietuetta on päivitetty."
+msgstr[0] "Hyväksyntä %d tietueelle on päivitetty."
+msgstr[1] "Hyväksyntä %d tietueille on päivitetty."
 
 #: classes/PDb_admin_list/with_selected.php:206
-#, fuzzy, php-format
-#| msgctxt "number of records with approval statuses set"
-#| msgid "Approval status for %d records has been updated."
+#, php-format
 msgid "Approval status for %d record was unchanged."
 msgid_plural "Approval status for %d records was unchanged."
-msgstr[0] "Hyväksyntä %d tietuetta on päivitetty."
-msgstr[1] "Hyväksyntä %d tietuetta on päivitetty."
+msgstr[0] "Hyväksynnän tilaa %d tietueelle ei ole muutettu."
+msgstr[1] "Hyväksynnän tilaa %d tietueille ei ole muutettu."
 
 #: classes/PDb_fields/calculated_field.php:52
 msgid "Template"
-msgstr ""
+msgstr "Pohja"
 
 #: classes/PDb_fields/date_calc.php:39
-#, fuzzy
-#| msgctxt "Plugin installer section title"
-#| msgid "Installation"
 msgctxt "name of a field type that saves a date as a searchable string"
 msgid "Date Calculation"
-msgstr "Asennus"
+msgstr "Päivämäärän laskenta"
 
 #: classes/PDb_fields/heading.php:32
-#, fuzzy
-#| msgid "Ascending"
 msgctxt "name of a field type that shows a text heading"
 msgid "Heading"
-msgstr "Aakkosjärjestys"
+msgstr "Otsikko"
 
 #: classes/PDb_fields/heading.php:36
-#, fuzzy
-#| msgid "Ascending"
 msgid "Heading"
-msgstr "Aakkosjärjestys"
+msgstr "Otsikko"
 
 #: classes/PDb_fields/last_update_user.php:130
-#, fuzzy
-#| msgid "Last Updated:"
 msgid "Last Updater"
-msgstr "Päivitetty viimeksi:"
+msgstr "Päivittänyt viimeksi"
 
 #: classes/PDb_fields/media_embed.php:32
 msgctxt "name of a field type that shows embedded media"
 msgid "Media Embed"
-msgstr ""
+msgstr "Upotettu media"
 
 #: classes/PDb_fields/numeric_calc.php:37
 msgctxt "name of a field type that shows the result of a calculation"
 msgid "Numeric Calculation"
-msgstr ""
+msgstr "Numeerinen laskenta"
 
 #: classes/PDb_fields/placeholder.php:32
-#, fuzzy
-#| msgid "Placeholder"
 msgctxt "name of a field type that shows placeholder text"
 msgid "Placeholder"
 msgstr "Paikkamerkki"
@@ -2479,41 +2447,35 @@ msgstr "Paikkamerkki"
 #: classes/PDb_fields/shortcode.php:32
 msgctxt "name of a field type that shows a shortcode"
 msgid "Shortcode"
-msgstr ""
+msgstr "Lyhytkoodi"
 
 #: classes/PDb_fields/shortcode.php:185
 msgid "Shortcode"
-msgstr ""
+msgstr "Lyhytkoodi"
 
 #: classes/PDb_fields/string_combine.php:34
 msgctxt "name of a field type that shows a combined string"
 msgid "String Combine"
-msgstr ""
+msgstr "Merkkiyhdistelmä"
 
 #: classes/PDb_fields/utility.php:35
-#, fuzzy
-#| msgctxt "column name"
-#| msgid "Display"
 msgid "Display"
-msgstr "Näytä"
+msgstr "Näyttö"
 
 #: classes/PDb_import/tally.php:213
-#, fuzzy, php-format
-#| msgid "Zero records imported"
+#, php-format
 msgid "%s record imported."
 msgid_plural "%s records imported"
-msgstr[0] "Sisäänlatauksessa ei tuotu yhtään tietuetta"
-msgstr[1] "Sisäänlatauksessa ei tuotu yhtään tietuetta"
+msgstr[0] "%s tietuetta ladattiin."
+msgstr[1] "%s tietueita ladattiin"
 
 #: classes/PDb_import/tally.php:224
-#, fuzzy
-#| msgid "Import CSV File"
 msgid "Import Complete"
-msgstr "Lataa sisään CSV tiedosto"
+msgstr "Sisäänlautaus tehty"
 
 #: classes/PDb_import/tally.php:226
 msgid "Import in Progress"
-msgstr ""
+msgstr "Sisäänlataus meneillään"
 
 #: classes/PDb_import/tally.php:275
 #, php-format
@@ -2549,16 +2511,12 @@ msgid "The file %s has been uploaded."
 msgstr "Tiedosto %s on luettu sisään."
 
 #: classes/xnau_CSV_Import.php:96
-#, fuzzy
-#| msgid ""
-#| "There was an error uploading the file. This could be a problem with "
-#| "permissions on the uploads directory."
 msgid ""
 "There was an error uploading the file. This is often because the file is "
 "larger than the server configuration will allow."
 msgstr ""
-"Tapahtui virhe tiedostoa sisäänladattaessa. Tämä voi liittyä latauksen "
-"kohdehakemiston oikeuksiin."
+"Tapahtui virhe tiedostoa sisäänladattaessa. Tämä voi johtua siitä, että "
+"ladattava tiedosto on suurempi kuin palvelimen arvot sallivat."
 
 #: classes/xnau_CSV_Import.php:96 classes/xnau_CSV_Import.php:102
 msgid "Destination"
@@ -2573,23 +2531,22 @@ msgstr ""
 "manuaalisesti."
 
 #: classes/xnau_CSV_Import.php:121
-#, fuzzy
-#| msgid "File Upload Limit"
 msgid "File upload complete"
-msgstr "Rajoitus sisäänladattavalle tiedostolle"
+msgstr "Tiedoston lataus on tehty"
 
 #: classes/xnau_CSV_Import.php:123
 #, php-format
 msgid "%d line received."
 msgid_plural "%d lines received."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d riviä vastaanotettu."
+msgstr[1] "%d riviä otettu vastaan."
 
 #: classes/xnau_CSV_Import.php:125
 msgid ""
 "The data is importing in the background, refresh the page to get the current "
 "status of the import."
 msgstr ""
+"Data latautuu taustalla, päivitä sivu nähdäksesi sisäänlatauksen tilanteen."
 
 #: classes/xnau_CSV_Import.php:148
 msgid "Invalid file for import."
@@ -2610,6 +2567,8 @@ msgstr ""
 msgid ""
 "Cannot import data. Make sure all field names are correct in the CSV header."
 msgstr ""
+"Tietoa ei voida ladata. Tarkista, että kaikki kenttien nimet ovat oikein CSV "
+"tiedoston ylimmällä rivillä."
 
 #: classes/xnau_CSV_Import.php:247
 #, php-format
@@ -2639,8 +2598,6 @@ msgid "Save the Record"
 msgstr "Talleta tietue"
 
 #: edit_participant.php:153
-#, fuzzy
-#| msgid "hidden"
 msgctxt "label for a hidden field"
 msgid "hidden"
 msgstr "piilotettu"
@@ -2652,28 +2609,27 @@ msgstr "lukutila"
 #: edit_participant.php:316
 #, php-format
 msgid "<%1$s>Submit:</%1$s> save record and return to list"
-msgstr ""
+msgstr "<%1$s>Lähetä:</%1$s> talleta tietue ja palaa listaan"
 
 #: edit_participant.php:317
 #, php-format
 msgid "<%1$s>Apply:</%1$s> save record and continue with same record"
-msgstr ""
+msgstr "<%1$s>Suorita:</%1$s> talleta tietue ja jatka saman tietueen kohdalla"
 
 #: edit_participant.php:319
 #, php-format
 msgid "<%1$s>Next:</%1$s> save record and go to the next record"
-msgstr ""
+msgstr "<%1$s>Seuraava::</%1$s> talleta tietue ja siirry seuraavaan"
 
 #: edit_participant.php:320
-#, fuzzy, php-format
-#| msgid "<strong>Previous:</strong> save and move to previous record"
+#, php-format
 msgid "<%1$s>Previous:</%1$s> save and move to previous record"
-msgstr "<strong>Edellinen:</strong> talleta tietue ja siirry edelliseen"
+msgstr "<%1$s>Edellinen:</%1$s> talleta tietue ja siirry edelliseen"
 
 #: edit_participant.php:322
 #, php-format
 msgid "<%1$s>New:</%1$s> save record and then start a new one"
-msgstr ""
+msgstr "<%1$s>Uusi:</%1$s> talleta tietue ja aloita uusi"
 
 #: manage_fields_help.php:4
 msgid "Manage Fields Help"
@@ -2736,26 +2692,20 @@ msgstr ""
 "ohjeet liitännäisen käytössä."
 
 #: participants-database.php:369
-#, fuzzy
-#| msgid "Single Record Page"
 msgid "View Single Record"
-msgstr "Sivu yksittäiselle tietueelle"
+msgstr "Näytä yksittäinen tietue"
 
 #: participants-database.php:370
-#, fuzzy
-#| msgid "Edit Record"
 msgid "Open Edit Record Form"
-msgstr "Muokkaa tietuetta"
+msgstr "Avaa 'editoi tietuetta'  -lomake"
 
 #: participants-database.php:371
-#, fuzzy
-#| msgid "Request your Private Link"
 msgid "Record Accessed with Private Link"
-msgstr "Pyydän lähettämään minulle henkilökohtaisen linkkini"
+msgstr "Tietue on avattu yksityisen linkin avulla"
 
 #: participants-database.php:372
 msgid "Record Accessed First Time with Private Link"
-msgstr ""
+msgstr "Tietue avattu ensimmäistä kertaa yksityisen linkin avulla"
 
 #. Plugin Name of the plugin/theme
 #: participants-database.php:544
@@ -2811,7 +2761,7 @@ msgstr "Lähetä"
 
 #: participants-database.php:3112
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #: participants-database.php:3114
 msgid "The record has been updated."
@@ -2935,11 +2885,6 @@ msgstr ""
 "keskinäisellä järjestyksellä ei ole merkitystä."
 
 #: upload_csv.php:84
-#, fuzzy
-#| msgid ""
-#| "If the imported CSV file has a different column set, that column set will "
-#| "be imported and used. If a column name does not match a defined column in "
-#| "the database, the data from that column will be discarded"
 msgid ""
 "If the imported CSV file has a different column set, that column set will be "
 "imported and used. If a column name does not match a defined column in the "
@@ -2948,7 +2893,7 @@ msgid ""
 msgstr ""
 "Jos sisäänladattavassa CSv tiedostossa on poikkeavia sarakkeita, ne otetaan "
 "käyttöön. Jos sarakkeen nimi ei täsmää tietokannan sarakkeen nimen kanssa, "
-"kaikki tiedot siitä sarakkeesta jätetään käsittelemättä"
+"sisäänlataus keskeytyy ja tiedot epäyhtenäisistä sarakkeista näytetään."
 
 #: upload_csv.php:85
 msgid "Get Blank CSV File"
@@ -3074,17 +3019,13 @@ msgid "Every %d Minutes"
 msgstr "Joka %d minuutti"
 
 #: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:54
-#, fuzzy
-#| msgctxt "label for the view mode selector"
-#| msgid "View Mode"
 msgid "View details"
-msgstr "Näyttömoodi"
+msgstr "Näytön yksityiskohdat"
 
 #: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:77
-#, fuzzy, php-format
-#| msgid "More information here…"
+#, php-format
 msgid "More information about %s"
-msgstr "Lisää tietoja täältä…"
+msgstr "Lisää tietoja täältä %s"
 
 #: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:128
 msgid "Check for updates"
@@ -3106,7 +3047,7 @@ msgstr "Liitännäisen %s uusi versio on saatavilla."
 #, php-format
 msgctxt "the plugin title"
 msgid "Could not determine if updates are available for %s."
-msgstr ""
+msgstr "Ei voida päätellä, onko saatavilla päivitystä %s:lle."
 
 #: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p11/Plugin/Ui.php:224
 #, php-format
@@ -3178,14 +3119,12 @@ msgstr "http://xnau.com"
 #~ msgid "Author:"
 #~ msgstr "Tekijä:"
 
-#, php-format
 #~ msgid "%s ago"
 #~ msgstr "%s sitten"
 
 #~ msgid "Requires WordPress Version:"
 #~ msgstr "Edellyttää WordPress version:"
 
-#, php-format
 #~ msgid "%s or higher"
 #~ msgstr "%s tai korkeampi"
 
@@ -3214,7 +3153,6 @@ msgstr "http://xnau.com"
 #~ msgid "Average Rating"
 #~ msgstr "Arvioinnin keskiarvo"
 
-#, php-format
 #~ msgid "(based on %s rating)"
 #~ msgid_plural "(based on %s ratings)"
 #~ msgstr[0] "(perustuu %s arvioon)"
@@ -3227,13 +3165,11 @@ msgstr "http://xnau.com"
 #~ msgstr ""
 #~ "Lue kaikki arvioinnit WordPress.org sivuilla tai kirjoita oma arviosi!"
 
-#, php-format
 #~ msgid "Reviews with %1$d star: %2$s. Opens in a new window."
 #~ msgid_plural "Reviews with %1$d stars: %2$s. Opens in a new window."
 #~ msgstr[0] "Arvioinnit %1$d tähteä: %2$s. Avautuu uuteen ikkunaan."
 #~ msgstr[1] "Arvioinnit %1$d tähteä: %2$s. Avautuu uuteen ikkunaan."
 
-#, php-format
 #~ msgid "%d star"
 #~ msgid_plural "%d stars"
 #~ msgstr[0] "%d tähti"
@@ -3262,7 +3198,6 @@ msgstr "http://xnau.com"
 #~ msgid "Install Update Now"
 #~ msgstr "Asenna päivitys nyt"
 
-#, php-format
 #~ msgid "Newer Version (%s) Installed"
 #~ msgstr "Uudempi versio (%s) on asennettu"
 
