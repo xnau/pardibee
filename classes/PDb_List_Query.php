@@ -231,6 +231,26 @@ class PDb_List_Query {
     }
     return false;
   }
+  
+  /**
+   * provides the current page selection from the post request
+   * 
+   * @return int
+   */
+  public function current_page()
+  {
+    return is_object( $this->post_input ) ? $this->post_input->current_page() : 1;
+  }
+  
+  /**
+   * provides the current instance index
+   * 
+   * @return int
+   */
+  public function instance_index()
+  {
+    return $this->instance_index;
+  }
 
   /**
    * sets the sort property, given a set of fields and sort directions
