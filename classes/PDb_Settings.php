@@ -917,6 +917,17 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'value' => PDb_List::setting_string( 'search_field_label' ),
         )
     );
+    
+    $this->plugin_settings[] = array(
+        'name' => 'search_selector_prompt',
+        'title' => __( 'Search Field Selector Prompt', 'participants-database' ),
+        'group' => 'pdb-list',
+        'options' => array(
+            'type' => 'text',
+            'help_text' => __( 'Text that is shown in the search field selector when no field has been selected.', 'participants-database' ),
+            'value' => '(' . PDb_List::setting_string( 'search_selector_prompt' ) . ')',
+        )
+    );
 
     $this->plugin_settings[] = array(
         'name' => 'sort_field_label',
