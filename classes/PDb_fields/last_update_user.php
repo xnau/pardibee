@@ -49,12 +49,14 @@ class last_update_user {
    */
   public function update_last_user_id( $post )
   {
-    if ( $this->yes_log_user_id() ) {
-      if ( array_key_exists( self::fieldname, $post ) ) {
-
+    if ( $this->yes_log_user_id() )
+    {
+      if ( array_key_exists( self::fieldname, $post ) )
+      {
         $post[self::fieldname] = $this->user_login;
-      } else {
-        
+      } 
+      else 
+      {
         add_action( 'pdb-after_submit_update', array( $this, 'update_record' ) );
       }
     }
