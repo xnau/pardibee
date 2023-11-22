@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -64,6 +64,16 @@ class list_search_submission {
   public function value()
   {
     return $this->input['value'];
+  }
+  
+  /**
+   * provides the current list page
+   * 
+   * @return int
+   */
+  public function current_page()
+  {
+    return $this->input[ Participants_Db::$list_page ];
   }
   
   /**
