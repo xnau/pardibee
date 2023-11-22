@@ -924,7 +924,7 @@ class Participants_Db extends PDb_Base {
    *
    * the ID of the record to show for editing can be provided one of three ways: 
    *    $_GET['pid'] (private link) or in the POST array (actively editing a record)
-   *    $atts['id'](deprecated) or $atts['record_id'] (in the sortcode), or 
+   *    $atts['id'](deprecated) or $atts['record_id'] (in the shortcode), or 
    *    self::$session->get('pdbid') (directly from the signup form)
    * 
    * 
@@ -983,7 +983,10 @@ class Participants_Db extends PDb_Base {
    */
   public static function set_record_access( $id )
   {
-    self::_record_access( $id );
+    if ( ! self::current_user_has_plugin_role( 'editor', __METHOD__ ) )
+    {
+      self::_record_access( $id );
+    }
   }
 
   /**
