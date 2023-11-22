@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 - 2015 xnau webdesign
  * @license    GPL2
- * @version    2.0
+ * @version    2.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -463,11 +463,18 @@ class PDb_List extends PDb_Shortcode {
   {
     $input = false;
     $this->current_page = 1;
+    
     /*
-     * paginating using the pgae number in as a GET var doesn't require the instance number
+     * paginating using the page number in as a GET var doesn't require the instance number
      */
-    if ( filter_input( INPUT_GET, $this->list_page, FILTER_VALIDATE_INT ) !== false && filter_input( INPUT_GET, 'instance', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) ) === $this->instance_index ) {
-      $input = INPUT_GET;
+    if ( filter_input( INPUT_GET, $this->list_page, FILTER_VALIDATE_INT ) !== false )
+    {  
+      $instance_value = filter_input( INPUT_GET, 'instance', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) ) ? : 1;
+      
+      if ( $instance_value === $this->instance_index )
+      {
+        $input = INPUT_GET;
+      }
     }
     /*
      * paginating using the POST array does require the correct instance index value
@@ -659,7 +666,7 @@ class PDb_List extends PDb_Shortcode {
      */
     $search_columns = Participants_Db::apply_filters( 'searchable_columns', $this->column_options( $this->searchable_columns( self::field_list( $columns ) ) ) );
     
-    $all_string = $all ? $all : '(' . __( 'select', 'participants-database' ) . ')';
+    $all_string = $all ? $all : self::setting_string( 'search_selector_prompt' );
     $base_array = array( $all_string => 'none', PDb_FormElement::null_select_key() => false );
     
     if ( in_array( $this->shortcode_atts['default_search_field'], $search_columns ) ) {
@@ -1468,6 +1475,7 @@ class PDb_List extends PDb_Shortcode {
         'search_value_error' => __( 'Please type in something to search for.', 'participants-database' ),
         'ascending_sort_label' => __( 'Ascending', 'participants-database' ),
         'descending_sort_label' => __( 'Descending', 'participants-database' ),
+        'search_selector_prompt' => __( 'select', 'participants-database' ),
     );
   }
 
