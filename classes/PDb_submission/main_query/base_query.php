@@ -251,21 +251,22 @@ abstract class base_query {
     }
     else
     {
-      // is it a new record?
-      if ( $this->query_mode() === 'insert' )
+      switch ( $this->query_mode() )
       {
-        // get the new record id for the return
-        $this->record_id = $wpdb->insert_id;
+        case 'insert':
+          // get the new record id for the return
+          $this->record_id = $wpdb->insert_id;
 
-        /*
-         * is this record a new one created in the admin? This also applies to CSV 
-         * imported new records
-         */
-        if ( PDB::is_admin() )
-        {
-          // if in the admin hang on to the id of the last record for an hour
-          set_transient( PDB::$last_record, $this->record_id, HOUR_IN_SECONDS );
-        }
+          /*
+           * is this record a new one created in the admin? This also applies to CSV 
+           * imported new records
+           */
+          if ( PDB::is_admin() )
+          {
+            // if in the admin hang on to the id of the last record for an hour
+            set_transient( PDB::$last_record, $this->record_id, HOUR_IN_SECONDS );
+          }
+          break;
       }
     }
 
