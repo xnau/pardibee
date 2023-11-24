@@ -511,7 +511,7 @@ class PDb_List extends PDb_Shortcode {
 
         $output[] = '<fieldset class="widefat inline-controls">';
 
-        $output[] = sprintf( '<legend>%s:</legend>', self::setting_string( 'search_field_label' )  );
+        $output[] = sprintf( '<legend>%s</legend>', self::setting_string( 'search_field_label' )  );
 
         $output[] = $this->column_selector( false, false );
         $output[] = $this->search_form( false );
@@ -525,7 +525,7 @@ class PDb_List extends PDb_Shortcode {
 
         $output[] = '<fieldset class="widefat inline-controls">';
 
-        $output[] = sprintf( '<legend>%s:</legend>', self::setting_string( 'sort_field_label' )  );
+        $output[] = sprintf( '<legend>%s</legend>', self::setting_string( 'sort_field_label' )  );
 
         $output[] = $this->sort_form( false );
 
