@@ -42,6 +42,11 @@ class PDb_Manage_Fields_Updates {
    */
   public function update_fields()
   {
+    if ( ! check_admin_referer( self::action_key ) || ! Participants_Db::current_user_has_plugin_role( 'admin', __METHOD__ ) )
+    {
+      wp_die('unauthorized');
+    }
+    
     global $wpdb;
     $current_user = wp_get_current_user();
     
@@ -251,6 +256,11 @@ class PDb_Manage_Fields_Updates {
    */
   public function add_field()
   {
+    if ( ! check_admin_referer( self::action_key ) || ! Participants_Db::current_user_has_plugin_role( 'admin', __METHOD__ ) )
+    {
+      wp_die('unauthorized');
+    }
+    
     // set up the new field's parameters
     $new_field = array(
         'name' => filter_input( INPUT_POST, 'title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name' ) ),
