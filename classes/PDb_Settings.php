@@ -914,7 +914,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array(
             'type' => 'text',
             'help_text' => __( 'Label for the search input when it is displayed with the list. Blank to show no label.', 'participants-database' ),
-            'value' => PDb_List::setting_string( 'search_field_label' ),
+            'value' => PDb_List::setting_string( 'search_field_label' ) . ':',
         )
     );
     
@@ -936,7 +936,7 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'options' => array(
             'type' => 'text',
             'help_text' => __( 'Label for the sorting selector when it is displayed with the list. Blank to show no label.', 'participants-database' ),
-            'value' => PDb_List::setting_string('sort_field_label'),
+            'value' => PDb_List::setting_string('sort_field_label') . ':',
         )
     );
 
