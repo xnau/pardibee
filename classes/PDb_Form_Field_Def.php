@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -65,6 +65,16 @@ class PDb_Form_Field_Def {
    * @var string the field group visibility mode
    */
   protected $mode;
+  
+  /**
+   * @var int the visibility mode for a participant log field
+   */
+  protected $visibility;
+  
+  /**
+   * @var bool the searchability mode for a participant log field
+   */
+  protected $searchable;
   
   /**
    * @var string field help text
