@@ -113,7 +113,7 @@ This plugin is fully compliant with WordPress Internationalization standards and
 
 * Polish: Łukasz Markusik
 
-* Brazilian Portuguese: Celso Coslop
+* Brazilian Portuguese: Eric Sornoso [Mealfan.com](https://Mealfan.com)
 
 * Romanian: Cornelia Năescu
 
