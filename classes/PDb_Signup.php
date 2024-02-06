@@ -191,7 +191,6 @@ class PDb_Signup extends PDb_Shortcode {
    */
   public static function print_form( $params )
   {
-
     self::$instance = new PDb_Signup( $params );
 
     return self::$instance->output;
