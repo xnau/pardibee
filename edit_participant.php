@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.5
+ * @version 1.6
  *
  */
 if ( !defined( 'ABSPATH' ) ) {
@@ -194,11 +194,14 @@ if ( $participant_values ) :
               }
 
               // get the existing value if any
-              //$column->value = isset($participant_values[$column->name]) ? Participants_Db::unserialize_array($participant_values[$column->name]) : '';
               // replace it with the new value if provided
-              if ( array_key_exists( $column->name(), $_POST ) ) {
-
-                if ( is_array( $_POST[$column->name()] ) )
+              $post_column_value = filter_input( INPUT_POST, $column->name(), FILTER_DEFAULT, FILTER_NULL_ON_FAILURE );
+              
+              if ( $post_column_value )
+              {
+                Participants_Db::debug_log(__METHOD__.' record values in $_POST array', 2 );
+                
+                if ( is_array( $post_column_value ) )
                 {
                   $column->value = filter_input_array( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS );
                 }
