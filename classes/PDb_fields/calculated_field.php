@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.6
+ * @version    0.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -177,9 +177,14 @@ abstract class calculated_field extends dynamic_db_field {
   {
     foreach( $this->field_list() as $field )
     { 
-      if ( $field->is_signup() && isset( $post[$field->name()] ) ) {
+      /** @var \PDb_Form_Field_Def $field */
+      
+      if ( $field->is_signup() && array_key_exists( $field->name(), $post ) )
+      {
+        $post['date_recorded'] = date( 'Y-m-d h:i:s' ); // temporarily add this value #3062
         $this->set_field( $field );
         $post[$field->name()] = $this->dynamic_value($post);
+        unset($post['date_recorded']);
       }
     }
     
