@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -38,25 +38,25 @@ abstract class dynamic_db_field extends core {
     
     if ( count( $this->field_list() ) > 0 ) :
 
-    $this->is_dynamic_field();
+      $this->is_dynamic_field();
 
-    $this->process = new dynamic_value_update( $this );
+      $this->process = new dynamic_value_update( $this );
 
-    add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
-    add_filter( 'pdb-before_submit_add', array( $this, 'update_db_value' ) );
-    
-    // general filter for updating a single record
-    add_filter( 'pdb-dynamic_db_field_update', array( $this, 'update_db_value' ) );
+      add_filter( 'pdb-before_submit_update', array( $this, 'update_db_value' ) );
+      add_filter( 'pdb-before_submit_add', array( $this, 'update_db_value' ) );
 
-    add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
+      // general filter for updating a single record
+      add_filter( 'pdb-dynamic_db_field_update', array( $this, 'update_db_value' ) );
 
-    add_action( 'admin_enqueue_scripts', array( $this, 'admin_update_all' ) );
+      add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
 
-    add_filter( 'pdb-before_list_admin_with_selected_action', array( $this, 'mass_edit_update' ), 10, 2 );
+      add_action( 'admin_enqueue_scripts', array( $this, 'admin_update_all' ) );
 
-    if ( !has_action( 'pdb-after_import_record', array( $this, 'process_imported_record' ) ) ) {
-      add_action( 'pdb-after_import_record', array( $this, 'process_imported_record' ), 10, 3 );
-    }
+      add_filter( 'pdb-before_list_admin_with_selected_action', array( $this, 'mass_edit_update' ), 10, 2 );
+
+      if ( !has_action( 'pdb-after_import_record', array( $this, 'process_imported_record' ) ) ) {
+        add_action( 'pdb-after_import_record', array( $this, 'process_imported_record' ), 10, 3 );
+      }
     
     endif;
   }
@@ -102,13 +102,14 @@ abstract class dynamic_db_field extends core {
 
       $dynamic_value = $this->dynamic_value( $post );
 
-      if ( isset( $post[ $fieldname ] ) ) {
+      if ( array_key_exists( $fieldname, $post ) ) {
         $post[ $fieldname ] = $dynamic_value;
       }
 
       if ( isset( $_POST[ $fieldname ] ) ) {
         $_POST[ $fieldname ] = $dynamic_value;
       }
+      
     }
     
     return $post;
@@ -146,11 +147,11 @@ abstract class dynamic_db_field extends core {
   }
 
   /**
-   * gets the dynamic db field list
+   * gets the dynamic db field list for the type
    * 
    * caches a list of all the field types that extend this class
    * 
-   * @return array of PDb_Form_Field_Def objects
+   * @return array of \PDb_Form_Field_Def objects
    */
   protected function field_list()
   {
