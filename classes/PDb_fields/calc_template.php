@@ -170,7 +170,7 @@ class calc_template {
       $this->components = $matches;
     } else {
       
-      \Participants_Db::debug_log(' calculation template format not recognized for template: '.$this->field_template() );
+      \Participants_Db::debug_log(' calculation template format not recognized for template: "'.$this->field_template() . '" in field: "' . $this->field->name() . '"' );
     }
   }
   
