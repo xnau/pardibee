@@ -251,12 +251,12 @@ class PDb_FormElement extends xnau_FormElement {
         if ( $in_optgroup ) {
           $this->_addline( '</fieldset>' );
         }
-        $id = $this->element_id( $this->legal_name( $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_key ) ) ) ) );
+        $id = $this->element_id( self::legal_name( $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_key ) ) ) ) );
         $this->_addline( '<fieldset class="' . esc_attr( $type . '-subgroup ' . $this->name . '-subgroup' ) . '" id="' . esc_attr( $id ) . '"><legend>' . esc_html( $option_key ) . '</legend>' );
         $in_optgroup = true;
       } else {
         $id = $this->element_id();
-        $this->attributes['id'] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : esc_attr( trim( strtolower( $option_value ) ) ) ) ) );
+        $this->attributes['id'] = $this->element_id( self::legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : esc_attr( trim( strtolower( $option_value ) ) ) ) ) );
         $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
         $this->_addline( $this->_input_tag( $type, esc_attr( $option_value ), 'checked' ), 1 );
         $this->_addline( $option_key . '</label>' );
