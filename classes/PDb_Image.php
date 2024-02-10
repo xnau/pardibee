@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.5
+ * @version    0.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Image_Handler class
  */
@@ -153,22 +153,22 @@ class PDb_Image extends xnau_Image_Handler {
    */
   protected function _set_image_wrap()
   {
-    if ($this->link === false || empty($this->link)) {
-
+    if ($this->link === false || empty($this->link))
+    {
       $this->image_wrap = array(
           '<span class="%1$s">',
           '</span>'
       );
-    } elseif ( Participants_Db::plugin_setting_is_true ('image_link') && $this->image_defined ) {
-
+    } elseif ( Participants_Db::plugin_setting_is_true ('image_link') && $this->image_defined )
+    {
       $this->image_wrap = array(
           '<span class="%1$s"><a href="%2$s" %4$s title="%3$s" >',
           '</a></span>'
       );
-    } elseif (!empty($this->link) and $this->link !== false) {
-
+    } elseif (!empty($this->link) and $this->link !== false)
+    {
       $this->image_wrap = array(
-          '<span class="%1$s single-record-link"><a href="%2$s" title="%3$s" >',
+          '<span class="%1$s single-record-link"><a href="%2$s" %4$s title="%3$s" >',
           '</a></span>'
       );
     }
