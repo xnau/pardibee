@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.8
+ * @version    1.9
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -607,8 +607,9 @@ class PDb_List_Admin {
 
                                 $image_params = array(
                                     'filename' => $field->value(),
-                                    'link' => '',
+                                    'link' => Participants_Db::is_single_record_link( $field->name() ) ? Participants_Db::single_record_url( $field->record_id() ) : '',
                                     'mode' => Participants_Db::plugin_setting_is_true( 'admin_thumbnails' ) ? 'image' : 'filename',
+                                    'attributes' => $field->attributes,
                                 );
 
                                 // this is to display the image as a linked thumbnail
@@ -672,10 +673,12 @@ class PDb_List_Admin {
                             }
 
                             if ( $column->name === 'private_id' && Participants_Db::plugin_setting_is_set( 'registration_page' ) ) {
-                              printf( $PID_pattern, $display_value, Participants_Db::get_record_link( $display_value ) );
+                              $html = sprintf( $PID_pattern, $display_value, Participants_Db::get_record_link( $display_value ) );
                             } else {
-                              printf( $col_pattern, $display_value );
+                              $html = sprintf( $col_pattern, $display_value );
                             }
+                            
+                            echo wp_kses( $html , wp_kses_allowed_html('post') );
                           }
                           ?>
                         </tr>
