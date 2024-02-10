@@ -737,19 +737,19 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
   /**
    * outputs a single record link
+   * 
+   * this is used internally only by calculated fields
    *
    * @param string $template an optional template for showing the link
-   *
    * @return string the HTML for the single record link
-   *
    */
   public function output_single_record_link( $template = false )
   {
-    $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" title="%2$s" >%2$s</a>';
+    $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" %3$s title="%2$s" >%2$s</a>';
     $url = Participants_Db::single_record_url( $this->record_id );
     $clickable_text = strlen( $this->value ) === 0 ? $this->default : $this->value;
 
-    return sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ) );
+    return wp_kses( sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ), $this->attributes_string() ), wp_kses_allowed_html('post') );
   }
   
   /**
@@ -762,6 +762,28 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     $disallowed = implode( '|', apply_filters( 'pdb-disallowed_tags_in_anchor_tag', array('a','div') ) );
     return preg_replace( '#<(' . $disallowed . ')(.*?)>(.*?)</\1>#ms', '$3', $text );
+  }
+  
+  /**
+   * provides the HTML attributes string
+   * 
+   * @return string
+   */
+  private function attributes_string()
+  {
+    if ( empty( $this->attributes ) )
+    {
+      return '';
+    }
+    
+    $attstring = [];
+    foreach ( $this->attributes as $name => $value ) {
+      if ( is_string( $name ) && strlen( $name ) > 0 ) {
+        $attstring[] = sprintf( '%s="%s"', $name, $value );
+      }
+    }
+    
+    return implode( ' ', $attstring );
   }
 
   /**
