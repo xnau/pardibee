@@ -49,20 +49,27 @@
         },
         {
             "name": "deliciousbrains/wp-background-processing",
-            "version": "1.0.2",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deliciousbrains/wp-background-processing.git",
-                "reference": "2cbee1abd1b49e1133cd8f611df4d4fc5a8b9800"
+                "reference": "33b7bc1aacfc6a18a2f50fee4d9fdd4652dfaad4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deliciousbrains/wp-background-processing/zipball/2cbee1abd1b49e1133cd8f611df4d4fc5a8b9800",
-                "reference": "2cbee1abd1b49e1133cd8f611df4d4fc5a8b9800",
+                "url": "https://api.github.com/repos/deliciousbrains/wp-background-processing/zipball/33b7bc1aacfc6a18a2f50fee4d9fdd4652dfaad4",
+                "reference": "33b7bc1aacfc6a18a2f50fee4d9fdd4652dfaad4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "phpunit/phpunit": "^8.0",
+                "spryker/code-sniffer": "^0.17.18",
+                "wp-coding-standards/wpcs": "^2.3",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "coenjacobs/mozart": "Easily wrap this library with your own prefix, to prevent collisions when multiple plugins use this library"
@@ -86,9 +93,9 @@
             "description": "WP Background Processing can be used to fire off non-blocking asynchronous requests or as a background processing tool, allowing you to queue tasks.",
             "support": {
                 "issues": "https://github.com/deliciousbrains/wp-background-processing/issues",
-                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/master"
+                "source": "https://github.com/deliciousbrains/wp-background-processing/tree/1.3.0"
             },
-            "time": "2020-07-31T07:00:11+00:00"
+            "time": "2024-02-08T14:27:35+00:00"
         },
         {
             "name": "parsecsv/php-parsecsv",
@@ -163,5 +170,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }
