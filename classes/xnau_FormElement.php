@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -160,6 +160,11 @@ abstract class xnau_FormElement {
    * @var int holds the record ID
    */
   public $record_id;
+  
+  /**
+   * @var string html element id
+   */
+  public $containter_id;
 
   /**
    * instantiates a xnau_FormElement object
