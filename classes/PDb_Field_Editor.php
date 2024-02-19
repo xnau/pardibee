@@ -776,22 +776,28 @@ class PDb_Field_Def_Parameter {
    */
   public function html()
   {
-    switch ( $this->name ) {
+    switch ( $this->name )
+    {
       case 'attributes':
       case 'options':
         
         $this->config['value'] = empty( $this->config['value'] ) ? '' : htmlspecialchars( PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] ) );
-        
         break;
+      
       case 'deletable':
         return $this->delete_button();
+        
       case 'selectable':
         $this->config['attributes']['title'] = __('Select this field', 'participants-database');
         break;
+      
       case 'help_text':
       case 'validation_message':
       case 'default':
         $this->config['value'] = empty( $this->config['value'] ) ? '' : htmlspecialchars( $this->config['value'] );
+        break;
+      
+      case 'name':
         break;
     }
     
