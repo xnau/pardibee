@@ -387,6 +387,86 @@ class PDb_Base {
   }
   
   /**
+   * update a dynamic db field value
+   * 
+   * this will process an update for all dynamic db fields for a record or series of records
+   * 
+   * if a fieldname is specified, the update will only be applied to that field
+   * 
+   * @param int|array $record_id the id of the record or list of record ids to process
+   * @param string $fieldname the name of a dynamic db type field
+   * @return int number of records updated
+   */
+  public static function dynamic_db_field_update_record_value( $record_id = [], $fieldname = '' )
+  {
+    $id_list = is_array( $record_id ) ? $record_id : [$record_id];
+    
+    if ( empty( $id_list ) )
+    {
+      $id_list = self::get_id_list([]); // gets all record ids
+    }
+    
+    if ( $fieldname !== '' )
+    {
+      self::add_dynamic_db_field_filter($fieldname);
+    }
+    
+    $tally = 0;
+    
+    foreach( $id_list as $id )
+    {
+      $record = Participants_Db::get_participant( $id );
+      
+      if ( ! is_array( $record ) )
+      {
+        continue;
+      }
+       
+      // update the dynamic values in the record
+      $updated_record = apply_filters( 'pdb-dynamic_db_field_update', $record );
+
+      // filter out any values that did not change
+      $post = array_diff_assoc( $updated_record, $record );
+
+      if ( ! empty( $post ) )
+      {
+        Participants_Db::write_participant( $post, $record['id'] );
+        
+        $tally++;
+      }
+    }
+    
+    return $tally;
+  }
+  
+  /**
+   * sets up a filter for singling out a field for a dynamic db field record update
+   * 
+   * @param string $fieldname name of the field
+   * 
+   */
+  private static function add_dynamic_db_field_filter( $fieldname )
+  {
+    $field = PDb_Field_Item::is_field($fieldname) ? Participants_Db::$fields[$fieldname] : false;
+
+    if ( ! $field )
+    {
+      return;
+    }
+    
+    add_filter( 'pdb-dynamic_field_type_list', function( $list ) use ($fieldname)
+    {  
+      return array_filter( $list, function( $field ) use ($fieldname)
+      {
+        /** @var PDb_Form_Field_Def $field */
+        return $field->name() === $fieldname;
+      });
+    } );
+  }
+  
+  
+  
+  /**
    * provides a list of fields that have columns in the main db
    * 
    * @return array of field names
