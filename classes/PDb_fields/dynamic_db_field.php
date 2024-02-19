@@ -47,6 +47,8 @@ abstract class dynamic_db_field extends core {
 
       // general filter for updating a single record
       add_filter( 'pdb-dynamic_db_field_update', array( $this, 'update_db_value' ) );
+      // general action for updating all records
+      add_action( 'pdb-dynamic_db_field_update_all', [ $this, 'update_dynamic_field_values' ], 10, 2 );
 
       add_filter( 'pdb-update_field_def', array( $this, 'maybe_update_database' ), 10, 2 );
 
@@ -158,13 +160,14 @@ abstract class dynamic_db_field extends core {
     $cachekey = $this->name . '_field_list';
     $list = wp_cache_get( $cachekey );
 
-    if ( !is_array( $list ) ) {
-
+    if ( !is_array( $list ) ) 
+    {
       $list = array();
 
-      foreach ( \Participants_Db::$fields as $field ) {
-        if ( $field->form_element() === $this->name ) {
-
+      foreach ( \Participants_Db::$fields as $field ) 
+      {
+        if ( $field->form_element() === $this->name )
+        {
           $list[] = $field;
         }
       }
@@ -172,7 +175,18 @@ abstract class dynamic_db_field extends core {
       wp_cache_set( $cachekey, $list, '', HOUR_IN_SECONDS );
     }
 
-    return $list;
+    /**
+     * filters the list of fields with a specific dynamic form element type
+     * 
+     * this makes it possible to restrict methods that work on all fields of a 
+     * type to a single field or subset of fields of the type
+     * 
+     * @filter pdb-dynamic_field_type_list
+     * @param array of \PDb_Form_Field_Def objects
+     * @param this class instance
+     * @return array
+     */
+    return \Participants_Db::apply_filters( 'dynamic_field_type_list', $list, $this );
   }
 
   /**
@@ -329,6 +343,30 @@ abstract class dynamic_db_field extends core {
     }
     
     return $def_value;
+  }
+  
+  /**
+   * updates all records for a single dynamic field
+   * 
+   * @param string $fieldname
+   * @param array $id_list record ID or list of record IDs, empty to do all records
+   */
+  public function update_dynamic_field_values( $fieldname, Array $id_list = [] )
+  {
+    if ( !\PDb_Form_Field_Def::is_field( $fieldname ) )
+    {
+      return;
+    }
+    
+    $dynamic_db_field = \Participants_Db::$fields[$fieldname];
+      
+    $this->field = $dynamic_db_field;
+
+    $this->template = new calc_template( $this->field, $this->default_format_tag() );
+    
+    $record_id_list = empty( $id_list ) ? false : $id_list;
+    
+    $this->update_record_list( $record_id_list );
   }
 
   /**
