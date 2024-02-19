@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.5
+ * @version    2.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -664,6 +664,7 @@ class PDb_Manage_Fields {
               'title' => 1,
               'data-title' => 1,
               'checked' => 1,
+              'readonly' => 1,
           ),
           'select' => array(
               'name' => 1,
