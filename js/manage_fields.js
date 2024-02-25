@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.12
+ * @version 2.13
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -564,6 +564,7 @@ PDbManageFields = (function ($) {
         var control = $(this).closest('form').prev('.general_fields_control_header').find('.with-selected-control');
         if (is_field_selected($(this).closest('form'))) {
           control.slideDown(effect_speed);
+          control.find('.with-selected-action-select').trigger('change');
         } else {
           control.slideUp(effect_speed);
         }
