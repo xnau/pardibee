@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.3
+ * @version    2.4
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -626,7 +626,7 @@ class PDb_Template {
             $this->fields->{$group_field->name}->set_value( $group_field->value );
           }
           
-          reset( $group->fields );
+          //reset( $group->fields );
         }
         reset( $this->record );
         break;
