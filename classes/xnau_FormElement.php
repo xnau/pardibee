@@ -570,7 +570,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $this->add_options_to_attributes();
 
-    $this->value = htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false );
+    $this->value = empty($this->value) ? '' : htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false );
 
     $this->_addline( $this->_input_tag() );
   }
@@ -793,7 +793,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
         $this->attributes[ 'id' ] .= '_other';
         $is_other = $this->_set_selected( $this->options, $this->value, 'selected', false ) !== '';
 
-        $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other ? htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false ) : '' ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' >' );
+        $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other && ! empty( $this->value ) ? htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false ) : '' ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' >' );
         $this->_addline( '</div>' );
       }
     } else {
@@ -1804,9 +1804,9 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     }
 
     switch ( true ) {
+      case $test === null:
       case $test === '0000-00-00 00:00:00':
       case strlen( trim( $test ) ) === 0:
-      case $test === null:
         return true;
       case is_bool( $test ):
       case is_object( $test ):
