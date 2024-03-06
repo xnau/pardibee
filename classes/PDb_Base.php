@@ -792,6 +792,13 @@ class PDb_Base {
       wp_cache_set( $cachekey, $all_allowed, $type, self::cache_expire() );
     }
 
+    /**
+     * @filter pdb-allowed_html_post
+     * @filter pdb-allowed_html_form
+     * 
+     * @param array allowed config
+     * @return array
+     */
     return Participants_Db::apply_filters( 'allowed_html_' . $type, $all_allowed );
   }
   
@@ -2633,12 +2640,16 @@ class PDb_Base {
   {
     $message_key = 'uploads_directory_notice';
     
-    if ( !is_writable( Participants_Db::files_path() ) ) {
-      self::debug_log( ' The configured uploads directory is not writable: ' . Participants_Db::files_path() );
+    if ( true || !is_writable( Participants_Db::files_path() ) )
+    {
+      self::debug_log( ' The configured uploads directory is not reporting as writable: ' . Participants_Db::files_path() );
       
-      $message_id = PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false);
+      if ( ! Participants_Db::plugin_setting_is_set( 'upload_location_warning_disable', false) ) {
       
-      PDb_Admin_Notices::store_message_key( $message_key, $message_id);
+        $message_id = PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false);
+
+        PDb_Admin_Notices::store_message_key( $message_key, $message_id);
+      }
     } 
     else
     {
