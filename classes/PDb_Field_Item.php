@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.11
+ * @version    2.12
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -1287,10 +1287,13 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
             $value = $this->value();
           }
 
-          if ( strlen( $value ) < 1 ) {
-            if ( strlen( $url ) > 0 ) {
+          if ( is_null( $value ) || strlen( $value ) === 0 )
+          {
+            if ( $url && strlen( $url ) > 0 )
+            {
               $value = $this->has_default() ? $this->default : preg_replace( '#https?://#', '', $url );
-            } else {
+            } else
+            {
               $value = '';
             }
           }
