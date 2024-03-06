@@ -670,6 +670,7 @@ class PDb_List_Admin {
                               default:
 
                                 $display_value = $field->get_value_display();
+                                
                             }
 
                             if ( $column->name === 'private_id' && Participants_Db::plugin_setting_is_set( 'registration_page' ) ) {
