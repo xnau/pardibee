@@ -1474,6 +1474,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
     );
 
     $this->plugin_settings[] = array(
+        'name' => 'upload_location_warning_disable',
+        'title' => __( 'Don\'t Show File Uploads Location Warning', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'If you find the file uploads location setting is working, but you are still seeing the warning, you can disable the warning message here.', 'participants-database' ) . $this->settings_help( 'File-Upload-Location' ),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
+    $this->plugin_settings[] = array(
         'name' => 'allow_record_timestamp_edit',
         'title' => __( 'Allow Record Timestamps to be Edited', 'participants-database' ),
         'group' => 'pdb-advanced',
