@@ -291,6 +291,7 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 2.5.7 =
+* new setting to suppress uploads directory warning if not needed
 * fixed occasional save bug in admin edit_participant
 * fixed record link in images in the admin list
 * "target" attribute now allowed on dynamic fields that are links
