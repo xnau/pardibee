@@ -814,7 +814,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         PDb_Template_Item::prep_css_class_string( $this->form_element )
     );
     
-    if( $this->module() === 'record' ) {
+    if( in_array( $this->module(), ['record','signup'] ) ) {
       $classes[] =  $this->name() . '-input-group';
     }
     
