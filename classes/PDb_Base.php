@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.13
+ * @version    1.14
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -1613,9 +1613,12 @@ class PDb_Base {
   {
     $options = get_option( Participants_Db::$participants_db_options );
     
-    $options[$option_name] = $setting;
-    
-    update_option( Participants_Db::$participants_db_options, $options );
+    if ( is_array( $options ) )
+    {
+      $options[$option_name] = $setting;
+
+      update_option( Participants_Db::$participants_db_options, $options );
+    }
   }
 
   /**
@@ -2604,16 +2607,22 @@ class PDb_Base {
    */
   public static function deep_stripslashes( $input )
   {
-    if ( is_array( $input ) ) {
+    if ( is_array( $input ) )
+    {
       $input = array_map( array(__CLASS__, 'deep_stripslashes'), $input );
-    } elseif ( is_object( $input ) ) {
+    } 
+    elseif ( is_object( $input ) )
+    {
       $vars = get_object_vars( $input );
       foreach ( $vars as $k => $v ) {
         $input->{$k} = deep_stripslashes( $v );
       }
-    } else {
+    }
+    elseif ( is_string( $input ) )
+    {
       $input = stripslashes( $input );
     }
+    
     return $input;
   }
 
@@ -2640,7 +2649,7 @@ class PDb_Base {
   {
     $message_key = 'uploads_directory_notice';
     
-    if ( true || !is_writable( Participants_Db::files_path() ) )
+    if ( !is_writable( Participants_Db::files_path() ) )
     {
       self::debug_log( ' The configured uploads directory is not reporting as writable: ' . Participants_Db::files_path() );
       
