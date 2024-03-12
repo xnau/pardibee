@@ -276,7 +276,7 @@ class Participants_Db extends PDb_Base {
    * @param bool $activate options flag for a non-activation use of this method
    */
   public static function initialize( $activate = true )
-  {
+  {    
     // set the plugin version
     self::$plugin_version = self::_get_plugin_data( 'Version' );
 
@@ -288,6 +288,9 @@ class Participants_Db extends PDb_Base {
     
     // set the debug global if not already
     self::set_debug_mode();
+    
+    // start sessions management
+    self::$session = PDb_Session::get_instance();
     
     // add the composer autoload
     require_once self::$plugin_path . '/vendor/autoload.php';
@@ -554,9 +557,6 @@ class Participants_Db extends PDb_Base {
      * settings UI on the 'admin_menu' hook
      */
     self::$Settings = new PDb_Settings();
-    
-    // start sessions management
-    self::$session = PDb_Session::get_instance();
     
     if ( self::plugin_setting_is_true( 'use_session_alternate_method' ) ) {
       add_filter( 'pdb-record_id_in_get_var', function () { return true; } );
