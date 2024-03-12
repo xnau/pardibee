@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.5
+ * @version    3.6
  * 
  * 
  */
@@ -107,14 +107,19 @@ class PDb_Session {
   {
     $pid_only = $pid_only ? : Participants_Db::plugin_setting_is_true('use_single_record_pid', false);
     
-    if ( apply_filters( 'pdb-record_id_in_get_var', false ) ) {
+    if ( apply_filters( 'pdb-record_id_in_get_var', false ) )
+    {
       $record_id = 0;
-      if ( !$pid_only && array_key_exists( Participants_Db::$single_query, $_GET ) ) {
+      if ( !$pid_only && array_key_exists( Participants_Db::$single_query, $_GET ) ) 
+      {
         $record_id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE );
-      } elseif ( array_key_exists( Participants_Db::$record_query, $_GET ) ) {
+      } 
+      elseif ( array_key_exists( Participants_Db::$record_query, $_GET ) ) 
+      {
         $record_id = Participants_Db::get_participant_id( filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE ) );
       }
-      if ( $record_id ) {
+      if ( $record_id ) 
+      {
         return $record_id;
       }
     }
@@ -133,10 +138,14 @@ class PDb_Session {
     $array_object = $this->get( $key );
 
     if ( is_array( $array_object ) )
+    {
       return $array_object;
+    }
 
     if ( is_object( $array_object ) )
+    {
       return $array_object->toArray();
+    }
 
     return $default;
   }
@@ -211,27 +220,30 @@ class PDb_Session {
   {
     $sessid = '';
 
-    if ( $this->alt_session_setting() ) {
+    if ( $this->alt_session_setting() )
+    {
       $sessid = $this->get_alt_session_id();
 
       Participants_Db::debug_log( __METHOD__ . ' using alt method, got: ' . $sessid, 4 );
     }
 
-
-    if ( $sessid === '' ) {
+    if ( $sessid === '' )
+    {
       $sessid = $this->get_php_session_id();
 
       Participants_Db::debug_log( __METHOD__ . ' using php method, got: ' . $sessid, 4 );
     }
 
     // if we still don't have the session ID, switch to the alternate method
-    if ( $sessid === '' ) {
+    if ( $sessid === '' ) 
+    {
       $sessid = $this->use_alternate_method();
 
       Participants_Db::debug_log( __METHOD__ . ' using fallback alt method, got: ' . $sessid, 3 );
     }
 
-    if ( empty( $sessid ) ) {
+    if ( empty( $sessid ) ) 
+    {
       Participants_Db::debug_log( __METHOD__ . ' unable to get session id', 3 );
     }
 
@@ -247,10 +259,11 @@ class PDb_Session {
   {
     $started_here = false;
 
-    if ( session_status() !== PHP_SESSION_ACTIVE ) {
-
-      if ( PDB_DEBUG && headers_sent() ) {
-        Participants_Db::debug_log( __METHOD__ . ' headers sent before session start. trace: ' . print_r( wp_debug_backtrace_summary(), 1 ) );
+    if ( session_status() !== PHP_SESSION_ACTIVE ) 
+    {
+      if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG && headers_sent() ) 
+      {
+        Participants_Db::debug_log( __METHOD__ . ' headers sent before session start. ', 2 );
       }
 
       session_start();
@@ -260,7 +273,8 @@ class PDb_Session {
 
     $sessid = session_id();
 
-    if ( $started_here ) {
+    if ( $started_here ) 
+    {
       session_write_close();
 
       Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 4 );
@@ -276,7 +290,8 @@ class PDb_Session {
    */
   private function use_alternate_method()
   {
-    $this->set_alt_setting();
+    // #3070
+    //$this->set_alt_setting();
 
     return $this->get_alt_session_id();
   }
@@ -289,6 +304,8 @@ class PDb_Session {
     if ( !$this->alt_session_setting() ) {
       // change the setting if php sessions are not providing an ID
       Participants_Db::update_plugin_setting( 'use_session_alternate_method', 1 );
+      
+      Participants_Db::debug_log(__METHOD__.' changing alt session setting to use alt sessions', 2 );
     }
   }
 
@@ -320,25 +337,26 @@ class PDb_Session {
     );
     $source = 'none';
 
-    if ( array_key_exists( self::php_cookie_name(), $_POST ) ) {
-
+    if ( array_key_exists( self::php_cookie_name(), $_POST ) )
+    {
       $sessid = filter_input( INPUT_POST, self::php_cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
       $source = 'POST';
     }
 
-    if ( !$sessid && array_key_exists( self::id_var, $_POST ) ) {
-
+    if ( !$sessid && array_key_exists( self::id_var, $_POST ) ) 
+    {
       $sessid = filter_input( INPUT_POST, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
       $source = 'POST';
     }
 
-    if ( !$sessid && array_key_exists( self::id_var, $_GET ) ) {
-
+    if ( !$sessid && array_key_exists( self::id_var, $_GET ) ) 
+    {
       $sessid = filter_input( INPUT_GET, self::id_var, FILTER_VALIDATE_REGEXP, $validator );
       $source = 'GET';
     }
 
-    if ( !$sessid ) {
+    if ( !$sessid )
+    {
       $value = false;
       /**
        * @filter pdb-session_get_var_keys
