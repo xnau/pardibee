@@ -881,6 +881,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function get_element()
   {
     $this->field_class = ( $this->validation != 'no' ? "required-field" : '' ) . ( in_array( $this->form_element(), array('text-line', 'date', 'timestamp') ) ? ' regular-text' : '' );
+    
+    if ( $this->has_attribute( PDb_fields\exclusive_options::keyword ) )
+    {
+      add_filter( 'pdb-' . $this->name() . '_selector_option_attribute_list', 'PDb_fields\exclusive_options::filter_handler', 10, 4 );
+    }
 
     /**
      * @filter pdb-before_display_form_input
