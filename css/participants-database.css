@@ -64,6 +64,10 @@
   margin: 0 2px 0 0;
   /*  vertical-align: middle;*/
 }
+.selectother label.pdb-selection-prompt, 
+label.pdb-selection-prompt {
+  display: block;
+}
 .participants_db .inline-controls input[type='checkbox'],
 .participants_db .inline-controls input[type='radio'] {
   float:none;
