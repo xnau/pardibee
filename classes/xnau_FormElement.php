@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.3
+ * @version    1.4
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -228,6 +228,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
         'other' => _x( 'other', 'indicates a write-in choice', 'participants-database' ),
         'linktext' => _x( 'Link Text', 'indicates the text to be clicked to go to another web page', 'participants-database' )
     );
+    
     /*
      * classes can come in in the classes parameter or as part of the attributes array. 
      * We consolidate them into the classes property here.
@@ -242,7 +243,6 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     // clear the output array
     $this->output = array();
-
 
     $this->build_element();
   }
@@ -1136,9 +1136,17 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     
     unset( $this->attributes['type'] );
 
-    if ( in_array( $type, array( 'checkbox', 'radio', 'multi-checkbox', 'select-other' ) ) && isset( $this->attributes[ 'readonly' ] ) ) {
-      $this->attributes[ 'disabled' ] = 'disabled';
-      unset( $this->attributes[ 'readonly' ] );
+    if ( $this->is_selector( $type ) )
+    {
+      if ( isset( $this->attributes[ 'readonly' ] ) )
+      {
+        $this->attributes[ 'disabled' ] = 'disabled';
+        unset( $this->attributes[ 'readonly' ] );
+      } 
+      elseif ( has_filter( 'pdb-' . $this->name . '_selector_option_attribute_list' ) ) 
+      {
+        $this->attributes = apply_filters( 'pdb-'. $this->name . '_selector_option_attribute_list', [], $this->name, $value, $this->record_id );
+      }
     }
 
     $value_att = in_array( $type, array( 'file', 'image' ) ) ? '' : esc_attr( $value );
@@ -1154,6 +1162,17 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     
     return $html;
   }
+  
+  /**
+   * tells if the type is a selector type
+   * 
+   * @param string $type
+   * @return bool
+   */
+  protected function is_selector( $type )
+  {
+    return in_array( $type, ['checkbox', 'radio', 'multi-checkbox', 'select-other'] );
+  }
 
   /**
    * builds a checkbox or radio input series
@@ -1163,9 +1182,10 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
    */
   protected function _add_input_series( $type = 'checkbox', $otherlabel = false )
   {
-
     if ( empty( $this->options ) )
+    {
       return;
+    }
 
     // checkboxes are grouped, radios are not
     $this->group = $type === 'checkbox';
@@ -1187,28 +1207,40 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
-      if ( ($option_value === false or $option_value === 'false' or $option_value === 'optgroup') and ! empty( $option_key ) ) {
-        if ( $optgroup ) {
+      if ( ($option_value === false || $option_value === 'false' || $option_value === 'optgroup') && ! empty( $option_key ) ) 
+      {
+        if ( $optgroup )
+        {
           $this->_addline( '</fieldset>' );
         }
+        
         $id = $this->element_id( $this->legal_name( $this->name . '-' . ($option_value === '' ? '_' : trim( strtolower( $option_key ) )) ) );
         $this->_addline( '<fieldset class="' . $type . '-subgroup ' . $this->name . '-subgroup" id="' . $id . '"><legend>' . $option_key . '</legend>' );
         $optgroup = true;
-      } else {
+      }
+      else
+      {
         $id = $this->element_id();
         $this->attributes[ 'id' ] = $this->element_id( $this->legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_value ) ) ) ) );
+        
         $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes[ 'id' ] . '">' );
+        
         $this->_addline( $this->_input_tag( $type, $option_value, 'checked' ), 1 );
+        
         $this->_addline( $option_key . '</label>' );
+        
         $this->attributes[ 'id' ] = $id;
       }
     }
-    if ( $optgroup ) {
+    
+    if ( $optgroup ) 
+    {
       $this->_addline( '</fieldset>' );
       $optgroup = false;
     }
-    if ( $otherlabel ) {
-
+    
+    if ( $otherlabel ) 
+    {
       $value = $type == 'checkbox' ? (isset( $this->value[ 'other' ] ) ? $this->value[ 'other' ] : '') : $this->value;
       $this->_addline( '<div class="othercontrol">' );
       $id = $this->element_id();
@@ -1257,36 +1289,105 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
    */
   protected function _add_option_series( $otherlabel = false )
   {
-    if ( empty( $this->options ) ) {
+    if ( empty( $this->options ) )
+    {
       return;
     }
+    
+    $has_option_atts = has_filter( $this->name . '_selector_option_attribute_list' );
 
-    foreach ( $this->_make_assoc( $this->options ) as $title => $value ) {
-
+    foreach ( $this->_make_assoc( $this->options ) as $title => $value ) 
+    {
       $title = Participants_Db::apply_filters( 'translate_string', $title );
 
-      if ( $title === self::null_select_key() && ( $value === 'false' || $value === false ) ) {
+      if ( $title === self::null_select_key() && ( $value === 'false' || $value === false ) ) 
+      {
         continue 1;
-      } elseif ( $value === 'optgroup' && strlen( $title ) > 0 ) {
-        $this->_add_options_divider( $title );
-      } elseif ( $value === 'other' ) {
-        $otherlabel = $title;
-      } elseif ( strlen( $value ) > 0 ) {
-        $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . strip_tags( $title ) . '</option>', -1 );
+      }
+      
+      switch ( $value )
+      {
+        case 'optgroup':
+          if ( strlen( $title ) > 0 )
+          {
+            $this->_add_options_divider( $title );
+          }
+          break;
+          
+        case 'other':
+          $otherlabel = $title;
+          break;
+        
+        case '':
+          break;
+        
+        default:
+          if ( $has_option_atts  )
+          {
+            $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . $this->option_attribute( $value ) . ' >' . strip_tags( $title ) . '</option>', -1 );
+          }
+          else
+          {
+            $this->_addline( '<option value="' . esc_attr( $value ) . '" ' . $this->_set_selected( $value, $this->value, 'selected' ) . ' >' . strip_tags( $title ) . '</option>', -1 );
+          }
       }
     }
+    
+    // 
     // add the "other" option
-    if ( $otherlabel !== false ) {
-      if ( in_array( 'optgroup', $this->options ) ) {
+    if ( $otherlabel !== false ) 
+    {
+      if ( in_array( 'optgroup', $this->options ) ) 
+      {
         $this->_add_options_divider( $this->i18n[ 'other' ] );
       }
+      
       $this->_addline( '<option ' . ( $this->value_is_unset() ? '' : $this->_set_selected( $this->options, $this->value, 'selected', false ) ) . ' value="other" >' . strip_tags( $otherlabel ) . '</option>' );
     }
 
-    if ( $this->inside ) {
+    if ( $this->inside ) 
+    {
       $this->_addline( '</optgroup>' );
       $this->inside = false;
     }
+  }
+  
+  /**
+   * provides an option attribute string
+   * 
+   * @param string $value the option value
+   * @return string
+   */
+  protected function option_attribute( $value )
+  {
+    /**
+     * @filter pdb-$fieldname_selector_option_attribute_list
+     * @param array the empty attributes array
+     * @param string the option value
+     * @param int the record ID
+     * @param array the attribute list as $attribute => $value
+     */
+    $attributes = apply_filters( 'pdb-' . $this->name . '_selector_option_attribute_list', [], $this->name, $value, $this->record_id );
+    
+    if ( empty( $attributes ) )
+    {
+      return '';
+    }
+    
+    $html = [];
+    $pattern = '%s="%s"';
+    
+    foreach ( $attributes as $att => $attval )
+    {
+      if ( empty( $attval ) )
+      {
+        $attval = $att;
+      }
+      
+      $html[] = sprintf( $pattern, $att, $att );
+    }
+    
+    return ( empty( $attributes ) ? '' : ' ' ) . implode( ' ', $html );
   }
 
   /*   * ****************  
@@ -1739,8 +1840,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
    */
   protected function _make_assoc( $array )
   {
-
-    if ( $this->is_assoc( $array ) )
+    if ( self::is_assoc( $array ) )
       return $array;
 
     return array_combine( array_values( $array ), $array );
@@ -1844,6 +1944,52 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     }
     
     return $id;
+  }
+
+  /**
+   *  tells if a field is represented as a set of values, such as a dropdown, checkbox or radio control
+   * 
+   * any new form element that does this is expected to register with this list
+   * 
+   * @param string  $form_element the name of the form element
+   * 
+   * @return bool true if the element is represented as a set of values
+   */
+  public static function is_value_set( $form_element )
+  {
+    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array(
+                'dropdown',
+                'radio',
+                'checkbox',
+                'dropdown-other',
+                'select-other',
+                'multi-checkbox',
+                'multi-select-other',
+                'multi-dropdown',
+            ) ) );
+  }
+
+  /**
+   * determines if a field type is "linkable"
+   * 
+   * meaning it is displayed as an element that can be wrapped in an anchor tag
+   * 
+   * @param object $field the field object
+   * @return bool true if the type is linkable
+   */
+  public static function field_is_linkable( $field )
+  {
+    $linkable = in_array( $field->form_element, array(
+        'text-line',
+        'image-upload',
+        'file-upload',
+        'dropdown',
+        'checkbox',
+        'radio',
+        'hidden',
+            )
+    );
+    return Participants_Db::apply_filters( 'field_is_linkable', $linkable, $field->form_element );
   }
 
   /**
@@ -1978,15 +2124,14 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
    */
   protected function setup_attributes( array $params )
   {
-    $attributes = $params['attributes'];
+    $attributes = is_array( $params['attributes'] ) ? $params['attributes'] : [];
     
-    if ( $this->is_pdb_field() ) {
-      if ( is_array($attributes) ) {
-        $this->attributes = array_merge( $this->field_def->attributes(), $attributes );
-      } else {
-        $this->attributes = $this->field_def->attributes();
-      }
-    } else {
+    if ( $this->is_pdb_field() ) 
+    {
+      $this->attributes = array_merge( $this->field_def->attributes(), $attributes );
+    } 
+    else 
+    {
       $this->attributes = $attributes;
     }
     
@@ -2004,14 +2149,19 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
    */
   protected function setup_options( $options )
   {
-    $field_options = array();
-    if ( empty($options) && $this->is_pdb_field() ) {
+    $field_options = [];
+    
+    if ( empty($options) && $this->is_pdb_field() ) 
+    {
       $field_options = $this->field_def->options();
-    } elseif ( ! empty( $options ) ) {
+    } 
+    elseif ( ! empty( $options ) ) 
+    {
       $field_options = maybe_unserialize( $options );
     }
     
-    if ( is_array( $field_options ) ) {
+    if ( is_array( $field_options ) ) 
+    {
       // escape all values
       array_walk( $field_options, function(&$v) { 
         $v = $v === false ? $v : esc_attr( $v );
