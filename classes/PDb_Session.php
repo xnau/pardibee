@@ -263,16 +263,17 @@ class PDb_Session {
     {
       if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG && headers_sent() ) 
       {
-        Participants_Db::debug_log( __METHOD__ . ' headers sent before session start. ', 2 );
+        Participants_Db::debug_log( __METHOD__ . ' can\'t initiate session: headers already sent ', 2 );
       }
-
-      session_start();
-
-      $started_here = true;
+      else
+      {
+        session_start();
+        $started_here = true;
+      }
     }
 
     $sessid = session_id();
-
+    
     if ( $started_here ) 
     {
       session_write_close();
@@ -290,23 +291,7 @@ class PDb_Session {
    */
   private function use_alternate_method()
   {
-    // #3070
-    //$this->set_alt_setting();
-
     return $this->get_alt_session_id();
-  }
-
-  /**
-   * sets the use alternate method setting automatically
-   */
-  private function set_alt_setting()
-  {
-    if ( !$this->alt_session_setting() ) {
-      // change the setting if php sessions are not providing an ID
-      Participants_Db::update_plugin_setting( 'use_session_alternate_method', 1 );
-      
-      Participants_Db::debug_log(__METHOD__.' changing alt session setting to use alt sessions', 2 );
-    }
   }
 
   /**
@@ -376,38 +361,39 @@ class PDb_Session {
     }
 
     // try the php cookie
-    if ( !$sessid ) {
+    if ( !$sessid ) 
+    {
 
       $sessid = filter_input( INPUT_COOKIE, self::php_cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
       $source = 'php cookie';
     }
 
-    if ( !$sessid ) {
+    if ( !$sessid )
+    {
       // try our own cookie
       $sessid = filter_input( INPUT_COOKIE, $this->cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
       $source = 'PDB cookie';
     }
 
-    if ( !$sessid ) {
+    if ( !$sessid )
+    {
       // now we have to create an id and use that
       $sessid = $this->create_id();
       
       // save it in our cookie
-      if ( PDB_DEBUG > 0 ) // go ahead and let the error happen if it's going to while debugging
+      if ( ! headers_sent() ) // don't set the cookie if the headers have already been sent and we're not debugging
       { 
         setcookie( $this->cookie_name(), $sessid, 0, '/' );
-        
-      } elseif ( ! headers_sent() ) // don't set the cookie if the headers have already been sent and we're not debugging
-      { 
-        setcookie( $this->cookie_name(), $sessid, 0, '/' );
+      }
+      else
+      {
+        Participants_Db::debug_log(__METHOD__.' unable to set session cookie', 2 );
       }
       
       $source = 'create new';
     }
 
-    if ( PDB_DEBUG > 2 ) {
-      Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $source . ': ' . $sessid );
-    }
+    Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $source . ': ' . $sessid, 2 );
 
     return $sessid;
   }
