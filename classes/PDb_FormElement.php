@@ -220,15 +220,19 @@ class PDb_FormElement extends xnau_FormElement {
     // checkboxes are given a null select so an "unchecked" state is possible
     $null_select = (isset( $this->options[self::null_select_key()] )) ? $this->options[self::null_select_key()] : ($type == 'checkbox' ? true : false);
 
-    if ( $null_select !== false ) {
-      if ( $type === 'checkbox' ) {
+    if ( $null_select !== false ) 
+    {
+      if ( $type === 'checkbox' ) 
+      {
         $id = $this->element_id();
         $this->attributes['id'] = $id . '-default';
         $this->_addline( $this->_input_tag( 'hidden', (is_string( $null_select ) && $null_select !== 'false' ? $null_select : '' ), false ), 1 );
         $this->attributes['id'] = $id;
-      } elseif ( $this->options[self::null_select_key()] !== 'false' ) { 
-        // for radio buttons, include a "none" if configured
-        $this->options[$this->options[self::null_select_key()]] = '';
+      } 
+      elseif ( $this->options[self::null_select_key()] !== 'false' ) 
+      { 
+        // this adds a unselectable prompt
+        $this->options = [$this->options[self::null_select_key()] => ''] + $this->options;
       }
     }
     unset( $this->options[self::null_select_key()] );
@@ -243,22 +247,40 @@ class PDb_FormElement extends xnau_FormElement {
 
     $in_optgroup = false;
 
-    foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
-
+    foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) 
+    {
       $option_key = Participants_Db::apply_filters( 'translate_string', stripslashes( $option_key ) );
 
-      if ( ( $option_value === 'optgroup') and ! empty( $option_key ) ) {
-        if ( $in_optgroup ) {
+      if ( ( $option_value === 'optgroup') and ! empty( $option_key ) ) 
+      {
+        if ( $in_optgroup ) 
+        {
           $this->_addline( '</fieldset>' );
         }
+        
         $id = $this->element_id( self::legal_name( $this->name . '-' . ( $option_value === '' ? '_' : trim( strtolower( $option_key ) ) ) ) );
         $this->_addline( '<fieldset class="' . esc_attr( $type . '-subgroup ' . $this->name . '-subgroup' ) . '" id="' . esc_attr( $id ) . '"><legend>' . esc_html( $option_key ) . '</legend>' );
         $in_optgroup = true;
-      } else {
+      } 
+      else 
+      {
         $id = $this->element_id();
         $this->attributes['id'] = $this->element_id( self::legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : esc_attr( trim( strtolower( $option_value ) ) ) ) ) );
-        $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
-        $this->_addline( $this->_input_tag( $type, esc_attr( $option_value ), 'checked' ), 1 );
+        
+        $this->_addline( '<label ' . $this->_class( $option_value === '' ? 'pdb-selection-prompt' : '' ) . ' for="' . $this->attributes['id'] . '">' );
+        
+        if ( $option_value === '' )
+        {
+          if ( $this->field_def->validation() !== 'no' )
+          {
+            $this->_addline( $this->_input_tag( 'hidden', '' ), 1 );
+          }
+        }
+        else
+        {
+          $this->_addline( $this->_input_tag( $type, esc_attr( $option_value ), 'checked' ), 1 );
+        }
+        
         $this->_addline( $option_key . '</label>' );
         $this->attributes['id'] = $id;
       }
@@ -870,52 +892,6 @@ class PDb_FormElement extends xnau_FormElement {
   public static function is_multi( $form_element )
   {
     return in_array( $form_element, Participants_Db::apply_filters( 'multi_form_elements_list', array('multi-checkbox', 'multi-select-other', 'link', 'multi-dropdown') ) );
-  }
-
-  /**
-   *  tells if a field is represented as a set of values, such as a dropdown, checkbox or radio control
-   * 
-   * any new form element that does this is expected to register with this list
-   * 
-   * @param string  $form_element the name of the form element
-   * 
-   * @return bool true if the element is represented as a set of values
-   */
-  public static function is_value_set( $form_element )
-  {
-    return in_array( $form_element, Participants_Db::apply_filters( 'value_set_form_elements_list', array(
-                'dropdown',
-                'radio',
-                'checkbox',
-                'dropdown-other',
-                'select-other',
-                'multi-checkbox',
-                'multi-select-other',
-                'multi-dropdown',
-            ) ) );
-  }
-
-  /**
-   * determines if a field type is "linkable"
-   * 
-   * meaning it is displayed as an element that can be wrapped in an anchor tag
-   * 
-   * @param object $field the field object
-   * @return bool true if the type is linkable
-   */
-  public static function field_is_linkable( $field )
-  {
-    $linkable = in_array( $field->form_element, array(
-        'text-line',
-        'image-upload',
-        'file-upload',
-        'dropdown',
-        'checkbox',
-        'radio',
-        'hidden',
-            )
-    );
-    return Participants_Db::apply_filters( 'field_is_linkable', $linkable, $field->form_element );
   }
 
   /**
