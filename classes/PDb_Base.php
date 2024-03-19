@@ -37,11 +37,11 @@ class PDb_Base {
   {
     $content_path = explode( '/', WP_CONTENT_DIR );
     $wp_app_path = explode( '/', ABSPATH );
-    $end = min( array(count( $content_path ), count( $wp_app_path )) );
+    $end = min( array( count( $content_path ), count( $wp_app_path ) ) );
     $i = 0;
     $common = array();
-    while ( $content_path[$i] === $wp_app_path[$i] and $i < $end ) {
-      $common[] = $content_path[$i];
+    while ( $content_path[ $i ] === $wp_app_path[ $i ] and $i < $end ) {
+      $common[] = $content_path[ $i ];
       $i++;
     }
     /**
@@ -67,17 +67,16 @@ class PDb_Base {
     $content_path = explode( '/', str_replace( $scheme, '', content_url() ) );
     $wp_app_path = explode( '/', str_replace( $scheme, '', site_url() ) );
 
-
-    $end = min( array(count( $content_path ), count( $wp_app_path )) );
+    $end = min( array( count( $content_path ), count( $wp_app_path ) ) );
     $i = 0;
     $common = array();
-    while ( $i < $end and $content_path[$i] === $wp_app_path[$i] ) {
-      $common[] = $content_path[$i];
+    while ( $i < $end and $content_path[ $i ] === $wp_app_path[ $i ] ) {
+      $common[] = $content_path[ $i ];
       $i++;
     }
     return $scheme . trailingslashit( implode( '/', $common ) );
   }
-  
+
   /**
    * provides the asset include path
    * 
@@ -87,34 +86,35 @@ class PDb_Base {
   public static function asset_url( $asset )
   {
     $basepath = Participants_Db::$plugin_path . '/participants-database/';
-    
+
     $asset_filename = self::asset_filename( $asset );
-    
-    if ( ! is_readable( trailingslashit(Participants_Db::$plugin_path) . $asset_filename ) ) {
+
+    if ( !is_readable( trailingslashit( Participants_Db::$plugin_path ) . $asset_filename ) ) {
       $asset_filename = $asset; // revert to the original name
     }
-    
+
     return plugins_url( $asset_filename, $basepath );
   }
-  
+
   /**
    * adds the minify extension to an asset filename
    * 
    * @param string $asset
    * @return asset filename with the minify extension
    */
-  protected static function asset_filename( $asset ) {
-    
-    $info = pathinfo($asset);
-    
+  protected static function asset_filename( $asset )
+  {
+
+    $info = pathinfo( $asset );
+
     $presuffix = self::use_minified_assets() ? '.min' : '';
-    
-    return ($info['dirname'] ? $info['dirname'] . DIRECTORY_SEPARATOR : '') 
-        . $info['filename'] 
-        . $presuffix . '.' 
-        . $info['extension'];
+
+    return ($info[ 'dirname' ] ? $info[ 'dirname' ] . DIRECTORY_SEPARATOR : '')
+            . $info[ 'filename' ]
+            . $presuffix . '.'
+            . $info[ 'extension' ];
   }
-  
+
   /**
    * tells if the minified assets should be used
    * 
@@ -127,7 +127,7 @@ class PDb_Base {
      * @param bool default: true if PDB_DEBUG not enabled
      * @return bool
      */
-    return Participants_Db::apply_filters( 'use_minified_assets', ! ( defined('PDB_DEBUG') && PDB_DEBUG ) );
+    return Participants_Db::apply_filters( 'use_minified_assets', !( defined( 'PDB_DEBUG' ) && PDB_DEBUG ) );
   }
 
   /**
@@ -141,17 +141,17 @@ class PDb_Base {
   public static function write_participant( Array $post, $id = '' )
   {
     $action = 'update';
-    
+
     // if the ID isn't in the DB, the action is an insert
-    if ( ( is_numeric( $id ) && ! self::id_exists( $id ) ) || !is_numeric( $id ) ) {
-      
+    if ( ( is_numeric( $id ) && !self::id_exists( $id ) ) || !is_numeric( $id ) ) {
+
       $action = 'insert';
       $id = false;
     }
-    
+
     return Participants_Db::process_form( $post, $action, $id, array_keys( $post ), true );
   }
-  
+
   /**
    * prepares data for inline javascript
    * 
@@ -167,13 +167,13 @@ class PDb_Base {
      * @param array the data
      * @return array the filtered data
      */
-    $filter_handle = 'inline_js_data_' . $obj_name . ($context? '_' . $context:'');
-    
+    $filter_handle = 'inline_js_data_' . $obj_name . ($context ? '_' . $context : '');
+
     $data_array = Participants_Db::apply_filters( $filter_handle, $obj_data );
-    
+
     return 'var ' . esc_js( $obj_name ) . '=' . json_encode( $data_array );
   }
-  
+
   /**
    * tells if the ID is in the main DB
    * 
@@ -184,10 +184,9 @@ class PDb_Base {
   public static function id_exists( $id )
   {
     global $wpdb;
-    
+
     return (bool) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . Participants_Db::participants_table() . ' WHERE `id` = %d', $id ) );
   }
-  
 
   /**
    * parses a list shortcode filter string into an array
@@ -225,7 +224,7 @@ class PDb_Base {
   {
     $filter_string = '';
     foreach ( $filter_array as $statement ) {
-      $filter_string .= $statement['column'] . $statement['operator'] . $statement['search_term'] . $statement['relation'];
+      $filter_string .= $statement[ 'column' ] . $statement[ 'operator' ] . $statement[ 'search_term' ] . $statement[ 'relation' ];
     }
     return rtrim( $filter_string, '&|' );
   }
@@ -245,7 +244,7 @@ class PDb_Base {
   {
     $return = array();
     foreach ( $array1 as $statement ) {
-      $index = self::search_array_column( $array2, $statement['column'] );
+      $index = self::search_array_column( $array2, $statement[ 'column' ] );
       if ( $index === false ) {
         $return[] = $statement;
       }
@@ -267,7 +266,7 @@ class PDb_Base {
   private static function search_array_column( $array, $term, $key = 'column' )
   {
     for ( $i = 0; $i < count( $array ); $i++ ) {
-      if ( $array[$i][$key] == $term )
+      if ( $array[ $i ][ $key ] == $term )
         return $i;
     }
     return false;
@@ -294,11 +293,11 @@ class PDb_Base {
     // get the parts
     $return = compact( 'column', 'operator', 'search_term' );
 
-    $return['relation'] = $relation;
+    $return[ 'relation' ] = $relation;
 
     return $return;
   }
-  
+
   /**
    * supplies a list of participant record ids
    * 
@@ -312,9 +311,9 @@ class PDb_Base {
    */
   public static function get_id_list( $config )
   {
-    return self::get_list( $config, array('id') );
+    return self::get_list( $config, array( 'id' ) );
   }
-  
+
   /**
    * supplies a list of participant data arrays
    * 
@@ -331,20 +330,20 @@ class PDb_Base {
    */
   public static function get_participant_list( $config )
   {
-    if ( !isset( $config['fields'] ) ) {
+    if ( !isset( $config[ 'fields' ] ) ) {
       // get all column names
-      $columns = array_keys(self::field_defs());
+      $columns = array_keys( self::field_defs() );
     } else {
-      $columns = explode(',', str_replace(' ','',$config['fields'] ) );
+      $columns = explode( ',', str_replace( ' ', '', $config[ 'fields' ] ) );
       if ( array_search( 'id', $columns ) ) {
-        unset( $columns[array_search( 'id', $columns )] );
+        unset( $columns[ array_search( 'id', $columns ) ] );
       }
-      $columns = array_merge( array('id'), $columns );
+      $columns = array_merge( array( 'id' ), $columns );
     }
-    
+
     return self::get_list( $config, $columns );
   }
-  
+
   /**
    * supplies a list of all signup shortcodes
    * 
@@ -352,9 +351,9 @@ class PDb_Base {
    */
   public static function signup_shortcode_tags()
   {
-    return \Participants_Db::apply_filters( 'signup_shortcodes', array('pdb_signup') );
+    return \Participants_Db::apply_filters( 'signup_shortcodes', array( 'pdb_signup' ) );
   }
-  
+
   /**
    * provides an array of field definitions from main groups only
    * 
@@ -362,30 +361,30 @@ class PDb_Base {
    * @return array of PDb_Form_Field_Def objects
    */
   public static function field_defs()
- {
+  {
     $cachekey = 'pdb_field_def_array';
-    $fieldlist = wp_cache_get($cachekey);
-    
-    if ( ! $fieldlist ) {
-      
+    $fieldlist = wp_cache_get( $cachekey );
+
+    if ( !$fieldlist ) {
+
       $fieldlist = array();
-      
-      $main_modes = array_keys(PDb_Manage_Fields::group_display_modes());
-      
-      $result = array_filter( Participants_Db::all_field_defs(), function($field_def) use ($main_modes) {
+
+      $main_modes = array_keys( PDb_Manage_Fields::group_display_modes() );
+
+      $result = array_filter( Participants_Db::all_field_defs(), function ( $field_def ) use ( $main_modes ) {
         return in_array( $field_def->mode, $main_modes );
-      });
-      
+      } );
+
       foreach ( $result as $column ) {
-        $fieldlist[$column->name] = new PDb_Form_Field_Def( $column->name );
+        $fieldlist[ $column->name ] = new PDb_Form_Field_Def( $column->name );
       }
-      
-      wp_cache_set($cachekey, $fieldlist, '', self::cache_expire() );
+
+      wp_cache_set( $cachekey, $fieldlist, '', self::cache_expire() );
     }
-    
+
     return $fieldlist;
   }
-  
+
   /**
    * update a dynamic db field value
    * 
@@ -399,46 +398,41 @@ class PDb_Base {
    */
   public static function dynamic_db_field_update_record_value( $record_id = [], $fieldname = '' )
   {
-    $id_list = is_array( $record_id ) ? $record_id : [$record_id];
-    
-    if ( empty( $id_list ) )
-    {
-      $id_list = self::get_id_list([]); // gets all record ids
+    $id_list = is_array( $record_id ) ? $record_id : [ $record_id ];
+
+    if ( empty( $id_list ) ) {
+      $id_list = self::get_id_list( [] ); // gets all record ids
     }
-    
-    if ( $fieldname !== '' )
-    {
-      self::add_dynamic_db_field_filter($fieldname);
+
+    if ( $fieldname !== '' ) {
+      self::add_dynamic_db_field_filter( $fieldname );
     }
-    
+
     $tally = 0;
-    
-    foreach( $id_list as $id )
-    {
+
+    foreach ( $id_list as $id ) {
       $record = Participants_Db::get_participant( $id );
-      
-      if ( ! is_array( $record ) )
-      {
+
+      if ( !is_array( $record ) ) {
         continue;
       }
-       
+
       // update the dynamic values in the record
       $updated_record = apply_filters( 'pdb-dynamic_db_field_update', $record );
 
       // filter out any values that did not change
       $post = array_diff_assoc( $updated_record, $record );
 
-      if ( ! empty( $post ) )
-      {
-        Participants_Db::write_participant( $post, $record['id'] );
-        
+      if ( !empty( $post ) ) {
+        Participants_Db::write_participant( $post, $record[ 'id' ] );
+
         $tally++;
       }
     }
-    
+
     return $tally;
   }
-  
+
   /**
    * sets up a filter for singling out a field for a dynamic db field record update
    * 
@@ -447,25 +441,20 @@ class PDb_Base {
    */
   private static function add_dynamic_db_field_filter( $fieldname )
   {
-    $field = PDb_Field_Item::is_field($fieldname) ? Participants_Db::$fields[$fieldname] : false;
+    $field = PDb_Field_Item::is_field( $fieldname ) ? Participants_Db::$fields[ $fieldname ] : false;
 
-    if ( ! $field )
-    {
+    if ( !$field ) {
       return;
     }
-    
-    add_filter( 'pdb-dynamic_field_type_list', function( $list ) use ($fieldname)
-    {  
-      return array_filter( $list, function( $field ) use ($fieldname)
-      {
-        /** @var PDb_Form_Field_Def $field */
-        return $field->name() === $fieldname;
-      });
+
+    add_filter( 'pdb-dynamic_field_type_list', function ( $list ) use ( $fieldname ) {
+      return array_filter( $list, function ( $field ) use ( $fieldname ) {
+/** @var PDb_Form_Field_Def $field */
+return $field->name() === $fieldname;
+} );
     } );
   }
-  
-  
-  
+
   /**
    * provides a list of fields that have columns in the main db
    * 
@@ -474,25 +463,24 @@ class PDb_Base {
   public static function db_field_list()
   {
     $cachekey = 'pdb-db-field-list';
-    
-    $field_list = wp_cache_get($cachekey);
-    
-    if ( is_array( $field_list ) )
-    {
+
+    $field_list = wp_cache_get( $cachekey );
+
+    if ( is_array( $field_list ) ) {
       return $field_list;
     }
-    
-    foreach( self::field_defs() as $fieldname => $field ) {
+
+    foreach ( self::field_defs() as $fieldname => $field ) {
       if ( $field->stores_data() ) {
         $field_list[] = $fieldname;
       }
     }
-    
+
     wp_cache_set( $cachekey, $field_list, '', Participants_Db::cache_expire() );
-    
+
     return $field_list;
   }
-  
+
   /**
    * provides the name of the main database table
    * 
@@ -500,7 +488,7 @@ class PDb_Base {
    */
   public static function participants_table()
   {
-    return Participants_Db::apply_filters('participants_table', Participants_Db::$participants_table );
+    return Participants_Db::apply_filters( 'participants_table', Participants_Db::$participants_table );
   }
 
   /**
@@ -527,21 +515,21 @@ class PDb_Base {
         'order' => Participants_Db::plugin_setting( 'list_default_sort_order' ),
         'suppress' => false,
         'module' => 'API',
-        'fields' => implode(',',$columns),
+        'fields' => implode( ',', $columns ),
         'instance_index' => '1',
     );
     $shortcode_atts = shortcode_atts( $shortcode_defaults, $config );
-    
+
     $list = new PDb_List( $shortcode_atts );
     $list_query = new PDb_List_Query( $list );
-    
+
     global $wpdb;
     if ( count( $list->display_columns ) === 1 ) {
-      $result = $wpdb->get_col($list_query->get_list_query());
+      $result = $wpdb->get_col( $list_query->get_list_query() );
     } else {
       $result = $wpdb->get_results( $list_query->get_list_query(), OBJECT_K );
     }
-    
+
     return $result;
   }
 
@@ -595,8 +583,8 @@ class PDb_Base {
     $where = array();
     $columns = is_array( $columns ) ? $columns : explode( ',', str_replace( ' ', '', $columns ) );
     foreach ( $columns as $column ) {
-      if ( isset( $submission[$column] ) ) {
-        $values[] = $submission[$column];
+      if ( isset( $submission[ $column ] ) ) {
+        $values[] = $submission[ $column ];
         $where[] = ' r.' . $column . ' = %s';
       } else {
         $where[] = ' (r.' . $column . ' IS NULL OR r.' . $column . ' = "")';
@@ -632,13 +620,12 @@ class PDb_Base {
       // get the ID by the post slug
       global $wpdb;
       $id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p WHERE p.post_name = '%s' AND p.post_status = 'publish'", trim( $page, '/ ' ) ) );
-      
     }
     if ( $id )
       $permalink = self::get_permalink( $id );
     return $permalink;
   }
-  
+
   /**
    * provides the permalink for a WP page or post given the ID
    * 
@@ -658,8 +645,7 @@ class PDb_Base {
      */
     return get_permalink( Participants_Db::apply_filters( 'lang_page_id', $id ) );
   }
-  
-  
+
   /**
    * provides the basic string sanitize flags for a php filter function
    * 
@@ -672,7 +658,7 @@ class PDb_Base {
   {
     return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_LOW | $flags );
   }
-  
+
   /**
    * provides the allowed HTML array for different contexts
    * 
@@ -681,28 +667,28 @@ class PDb_Base {
    */
   public static function allowed_html( $type )
   {
-    $cachekey = 'pdb-allowed-html' ;
-    
+    $cachekey = 'pdb-allowed-html';
+
     $all_allowed = wp_cache_get( $cachekey, $type );
-    
-    if ( ! $all_allowed ) {
+
+    if ( !$all_allowed ) {
       $base_attributes = array(
           'id' => 1,
           'class' => 1,
           'style' => 1,
           'data-*' => 1,
-          );
-      
+      );
+
       if ( Participants_Db::plugin_setting_is_true( 'allow_js_atts', false ) ) {
         $base_attributes = $base_attributes + self::js_attributes();
       }
-      
+
       $allowed = array(
           'a' => array(
-              'href' => 1,
-              'title' => 1,
-              'target' => 1,
-              'rel' => 1,
+      'href' => 1,
+      'title' => 1,
+      'target' => 1,
+      'rel' => 1,
           ) + $base_attributes,
           'break' => array(),
           'br' => array(),
@@ -711,84 +697,83 @@ class PDb_Base {
       $additional = array();
 
       $form_allowed = array(
-            'form' => array(
-                'method' => 1,
-                'enctype' => 1,
-                'action' => 1,
-            ) + $base_attributes,
-            'input' => array(
-                'name' => 1,
-                'type' => 1,
-                'value' => 1,
-                'title' => 1,
-                'checked' => 1,
-                'size' => 1,
-                'max' => 1,
-                'maxlength' => 1,
-                'min' => 1,
-                'minlength' => 1,
-                'alt' => 1,
-                'accept' => 1,
-                'step' => 1,
-                'disabled' => 1,
-                'pattern' => 1,
-                'placeholder' => 1,
-                'readonly' => 1,
-                'required' => 1,
-            ) + $base_attributes,
-            'select' => array(
-                'name' => 1,
-                'multiple' => 1,
-                'disabled' => 1,
-                'required' => 1,
-            ) + $base_attributes,
-            'option' => array(
-                'value' => 1,
-                'selected' => 1,
-                'disabled' => 1,
-                'label' => 1,
-            ) + $base_attributes,
-            'textarea' => array(
-                'name' => 1,
-                'rows' => 1,
-                'cols' => 1,
-                'title' => 1,
-                'maxlength' => 1,
-                'minlength' => 1,
-                'placeholder' => 1,
-                'readonly' => 1,
-                'required' => 1,
-            ) + $base_attributes,
-            'optgroup' => array(
-                'label' => 1,
-                'disabled' => 1,
-            ),
-            'label' => array(
-                'title' => 1,
-            ) + $base_attributes,
-            'fieldset' => array(
-                'disabled' => 1,
-                'form' => 1,
-                'name' => 1,
-              ) + $base_attributes,
-           'output' => array(
-               'for' => 1,
-               'form' => 1,
-               'name' => 1,
-           ),
-          );
+          'form' => array(
+      'method' => 1,
+      'enctype' => 1,
+      'action' => 1,
+          ) + $base_attributes,
+          'input' => array(
+      'name' => 1,
+      'type' => 1,
+      'value' => 1,
+      'title' => 1,
+      'checked' => 1,
+      'size' => 1,
+      'max' => 1,
+      'maxlength' => 1,
+      'min' => 1,
+      'minlength' => 1,
+      'alt' => 1,
+      'accept' => 1,
+      'step' => 1,
+      'disabled' => 1,
+      'pattern' => 1,
+      'placeholder' => 1,
+      'readonly' => 1,
+      'required' => 1,
+          ) + $base_attributes,
+          'select' => array(
+      'name' => 1,
+      'multiple' => 1,
+      'disabled' => 1,
+      'required' => 1,
+          ) + $base_attributes,
+          'option' => array(
+      'value' => 1,
+      'selected' => 1,
+      'disabled' => 1,
+      'label' => 1,
+          ) + $base_attributes,
+          'textarea' => array(
+      'name' => 1,
+      'rows' => 1,
+      'cols' => 1,
+      'title' => 1,
+      'maxlength' => 1,
+      'minlength' => 1,
+      'placeholder' => 1,
+      'readonly' => 1,
+      'required' => 1,
+          ) + $base_attributes,
+          'optgroup' => array(
+              'label' => 1,
+              'disabled' => 1,
+          ),
+          'label' => array(
+      'title' => 1,
+          ) + $base_attributes,
+          'fieldset' => array(
+      'disabled' => 1,
+      'form' => 1,
+      'name' => 1,
+          ) + $base_attributes,
+          'output' => array(
+              'for' => 1,
+              'form' => 1,
+              'name' => 1,
+          ),
+      );
 
-      switch ($type)
-      {
+      switch ( $type ) {
         case 'form':
           $additional = $form_allowed;
           break;
       }
 
-      $wp_allowed_post =  wp_kses_allowed_html('post');
+      $wp_allowed_post = wp_kses_allowed_html( 'post' );
 
       $all_allowed = $allowed + $additional + $wp_allowed_post;
-      
+
       wp_cache_set( $cachekey, $all_allowed, $type, self::cache_expire() );
     }
 
@@ -801,7 +786,7 @@ class PDb_Base {
      */
     return Participants_Db::apply_filters( 'allowed_html_' . $type, $all_allowed );
   }
-  
+
   /**
    * provides the list of allowed js action attributes
    * 
@@ -810,27 +795,27 @@ class PDb_Base {
   private static function js_attributes()
   {
     return array(
-      'onblur' => 1,
-      'onchange' => 1,
-      'oncontextmenu' => 1,
-      'onfocus' => 1,
-      'oninput' => 1,
-      'oninvalid' => 1,
-      'onreset' => 1,
-      'onsearch' => 1,
-      'onselect' => 1,
-      'onsubmit' => 1,
-      'onkeydown' => 1,
-      'onkeypress' => 1,
-      'onkeyup' => 1,
-      'onclick' => 1,
-      'ondblclick' => 1,
-      'onmousedown' => 1,
-      'onmousemove' => 1,
-      'onmouseout' => 1,
-      'onmouseover' => 1,
-      'onmouseup' => 1,
-      'onwheel' => 1,
+        'onblur' => 1,
+        'onchange' => 1,
+        'oncontextmenu' => 1,
+        'onfocus' => 1,
+        'oninput' => 1,
+        'oninvalid' => 1,
+        'onreset' => 1,
+        'onsearch' => 1,
+        'onselect' => 1,
+        'onsubmit' => 1,
+        'onkeydown' => 1,
+        'onkeypress' => 1,
+        'onkeyup' => 1,
+        'onclick' => 1,
+        'ondblclick' => 1,
+        'onmousedown' => 1,
+        'onmousemove' => 1,
+        'onmouseout' => 1,
+        'onmouseover' => 1,
+        'onmouseup' => 1,
+        'onwheel' => 1,
     );
   }
 
@@ -845,7 +830,7 @@ class PDb_Base {
    */
   public static function get_record_id( $id = '' )
   {
-    if ( empty( $id ) && ! Participants_Db::plugin_setting_is_true('use_single_record_pid', false ) ) {
+    if ( empty( $id ) && !Participants_Db::plugin_setting_is_true( 'use_single_record_pid', false ) ) {
       // this is for backward compatibility
       $id = filter_input( INPUT_GET, Participants_Db::$single_query, FILTER_SANITIZE_NUMBER_INT );
     }
@@ -866,7 +851,7 @@ class PDb_Base {
     }
     return $id;
   }
-  
+
   /**
    * tells if the private ID is in the URL
    * 
@@ -878,10 +863,10 @@ class PDb_Base {
    */
   public static function pid_in_url( $record_id )
   {
-    $url = $_SERVER['REQUEST_URI'];
+    $url = $_SERVER[ 'REQUEST_URI' ];
     $record = Participants_Db::get_participant( $record_id );
-    
-    return is_array( $record ) && strpos( $url, $record['private_id'] ) !== false;
+
+    return is_array( $record ) && strpos( $url, $record[ 'private_id' ] ) !== false;
   }
 
   /**
@@ -925,7 +910,7 @@ class PDb_Base {
 
       if ( $value !== '' )
         $empty = false;
-      $prepped_array[$key] = Participants_Db::_prepare_string_mysql( (string) $value );
+      $prepped_array[ $key ] = Participants_Db::_prepare_string_mysql( (string) $value );
     }
 
     return $empty ? '' : serialize( $prepped_array );
@@ -940,7 +925,7 @@ class PDb_Base {
   {
     return stripslashes( $string );
   }
-  
+
   /**
    * provides a rich text editor element ID
    * 
@@ -952,16 +937,15 @@ class PDb_Base {
   public static function rich_text_editor_id( $name )
   {
     $texnum = array(
-        '0' => 'zero','1' => 'one','2' => 'two','3' => 'three','4' => 'four','5' => 'five','6' => 'six','7' => 'seven','8' => 'eight','9' => 'nine'
+        '0' => 'zero', '1' => 'one', '2' => 'two', '3' => 'three', '4' => 'four', '5' => 'five', '6' => 'six', '7' => 'seven', '8' => 'eight', '9' => 'nine'
     );
-    $text_numbered = preg_replace_callback('/[0-9]/', function ($d) use ($texnum) {
-      return '_' . $texnum[intval(current($d))];
+    $text_numbered = preg_replace_callback( '/[0-9]/', function ( $d ) use ( $texnum ) {
+      return '_' . $texnum[ intval( current( $d ) ) ];
     }, strtolower( Participants_Db::$prefix . $name . Participants_Db::$instance_index ) );
-    
-    return preg_replace( array('#-#', '#[^a-z_]#'), array('_', ''), $text_numbered );
+
+    return preg_replace( array( '#-#', '#[^a-z_]#' ), array( '_', '' ), $text_numbered );
   }
-  
-  
+
   /**
    * tells if a database value is set
    * 
@@ -970,8 +954,9 @@ class PDb_Base {
    * @param string|null $v the raw value from the db
    * @return bool true if the value is set 
    */
-  public static function is_set_value( $v ) {
-    return ! is_null($v) && strlen($v) > 0;
+  public static function is_set_value( $v )
+  {
+    return !is_null( $v ) && strlen( $v ) > 0;
   }
 
   /**
@@ -1030,18 +1015,18 @@ class PDb_Base {
    */
   public static function is_allowed_file_extension( $filename, $allowed_extensions = array() )
   {
-    $extensions = empty( $allowed_extensions ) || ! is_array( $allowed_extensions ) ? self::global_allowed_extensions() : $allowed_extensions;
-    
+    $extensions = empty( $allowed_extensions ) || !is_array( $allowed_extensions ) ? self::global_allowed_extensions() : $allowed_extensions;
+
     if ( empty( $extensions ) ) {
       // nothing in the whitelist, don't allow
       return false;
     }
 
     $result = preg_match( '#^(.+)\.(' . implode( '|', $extensions ) . ')$#', strtolower( $filename ), $matches );
-    
+
     return $result == 1;
   }
-  
+
   /**
    * provides a list of globally allowed file extensions
    * 
@@ -1049,8 +1034,8 @@ class PDb_Base {
    */
   public static function global_allowed_extensions()
   {
-    $global_setting = Participants_Db::plugin_setting_value('allowed_file_types');
-    
+    $global_setting = Participants_Db::plugin_setting_value( 'allowed_file_types' );
+
     return explode( ',', str_replace( array( '.', ' ' ), '', strtolower( $global_setting ) ) );
   }
 
@@ -1065,18 +1050,18 @@ class PDb_Base {
   public static function get_field_allowed_extensions( $values )
   {
     $value_list = array_filter( self::unserialize_array( $values ) );
-    
-    foreach( array('rel','download','target','type') as $att ) {
+
+    foreach ( array( 'rel', 'download', 'target', 'type' ) as $att ) {
       if ( array_key_exists( $att, $value_list ) ) {
-        unset( $value_list[$att] ); 
+        unset( $value_list[ $att ] );
       }
     }
-    
+
     // if the allowed attribute is used, return its values
     if ( array_key_exists( 'allowed', $value_list ) ) {
-        return str_replace( '|', ',', $value_list['allowed'] );
+      return str_replace( '|', ',', $value_list[ 'allowed' ] );
     }
-    
+
     return implode( ',', $value_list );
   }
 
@@ -1099,7 +1084,7 @@ class PDb_Base {
   {
     // this value serves as a key for the dynamic value to get
     $dynamic_key = html_entity_decode( $value );
-    
+
     /**
      * @filter pdb-dynamic_value
      * 
@@ -1108,15 +1093,13 @@ class PDb_Base {
      * @return the computed dynamic value
      */
     $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $dynamic_key );
-    
+
     // return the value if it was set in the filter
-    if ( $dynamic_value !== '' )
-    {
+    if ( $dynamic_value !== '' ) {
       return $dynamic_value;
     }
 
-    if ( strpos( $dynamic_key, '->' ) > 0 )
-    {
+    if ( strpos( $dynamic_key, '->' ) > 0 ) {
       /*
        * here, we can get values from one of several WP objects
        * 
@@ -1125,49 +1108,37 @@ class PDb_Base {
       global $post, $current_user;
 
       list( $object, $property ) = explode( '->', $dynamic_key );
-      
+
       $shortcode = \PDb_shortcodes\attributes::page_shortcode_attributes( 'pdb_signup' );
 
       $object = ltrim( $object, '$' );
 
-      if ( is_object( $$object ) && ! empty( $$object->$property ) )
-      {
+      if ( is_object( $$object ) && !empty( $$object->$property ) ) {
         $dynamic_value = $$object->$property;
-      } 
-      elseif ( $object === 'current_user' && $property === 'locale' )
-      {  
+      } elseif ( $object === 'current_user' && $property === 'locale' ) {
         $dynamic_value = get_locale();
-      }
-      elseif ( $object = 'shortcode' )
-      {
+      } elseif ( $object = 'shortcode' ) {
         static $shortcode_index = 0;
-        
-        if ( isset($shortcode[$shortcode_index]) )
-        {
+
+        if ( isset( $shortcode[ $shortcode_index ] ) ) {
           $transient = 'pdb-shortcode_assigns';
-          $assigns = get_transient($transient);
-          if ( $assigns === false )
-          {
-            $assigns = $shortcode[$shortcode_index];
+          $assigns = get_transient( $transient );
+          if ( $assigns === false ) {
+            $assigns = $shortcode[ $shortcode_index ];
           }
-          if ( isset( $shortcode[$shortcode_index][$property] ) )
-          {
-            $dynamic_value = $shortcode[$shortcode_index][$property];
-            unset( $assigns[$property] );
-            if ( count( $assigns ) == 0 )
-            {
+          if ( isset( $shortcode[ $shortcode_index ][ $property ] ) ) {
+            $dynamic_value = $shortcode[ $shortcode_index ][ $property ];
+            unset( $assigns[ $property ] );
+            if ( count( $assigns ) == 0 ) {
               $shortcode_index++;
-              delete_transient($transient);
+              delete_transient( $transient );
             } else {
-              set_transient($transient, $assigns, 20 );
+              set_transient( $transient, $assigns, 20 );
             }
           }
         }
-        
       }
-    } 
-    elseif ( strpos( $dynamic_key, ':' ) > 0 )
-    {
+    } elseif ( strpos( $dynamic_key, ':' ) > 0 ) {
       /*
        * here, we are attempting to access a value from a PHP superglobal
        */
@@ -1214,26 +1185,26 @@ class PDb_Base {
         case 'GET':
           $global = $_GET;
       }
-      
+
       /*
        * we attempt to evaluate the named value from the superglobal, which includes 
        * the possiblity that it will be referring to an array element. We take that 
        * to two dimensions only. the only way that I know of to do this open-ended 
        * is to use eval, which I won't do
        */
-      if ( isset( $global[$name] ) ) {
-        
-        $dynamic_value = $global[$name];
-        
+      if ( isset( $global[ $name ] ) ) {
+
+        $dynamic_value = $global[ $name ];
+
         if ( is_array( $dynamic_value ) || is_object( $dynamic_value ) ) {
 
           $array = is_object( $dynamic_value ) ? get_object_vars( $dynamic_value ) : $dynamic_value;
           switch ( count( $indexes ) ) {
             case 1:
-              $dynamic_value = isset( $array[$indexes[0]] ) ? $array[$indexes[0]] : '';
+              $dynamic_value = isset( $array[ $indexes[ 0 ] ] ) ? $array[ $indexes[ 0 ] ] : '';
               break;
             case 2:
-              $dynamic_value = isset( $array[$indexes[0]][$indexes[1]] ) ? $array[$indexes[0]][$indexes[1]] : '';
+              $dynamic_value = isset( $array[ $indexes[ 0 ] ][ $indexes[ 1 ] ] ) ? $array[ $indexes[ 0 ] ][ $indexes[ 1 ] ] : '';
               break;
             default:
               // if we don't have an index, grab the first value
@@ -1245,7 +1216,7 @@ class PDb_Base {
 
     return filter_var( $dynamic_value, FILTER_SANITIZE_SPECIAL_CHARS );
   }
-  
+
   /**
    * provides the attributes of the last shortcode called
    * 
@@ -1265,7 +1236,7 @@ class PDb_Base {
   public static function is_dynamic_value( $value )
   {
     $test_value = html_entity_decode( $value );
-    
+
     /**
      * @filter pdb-dynamic_value
      * 
@@ -1276,10 +1247,10 @@ class PDb_Base {
      * @return the computed dynamic value
      */
     $dynamic_value = Participants_Db::apply_filters( 'dynamic_value', '', $test_value );
-    
+
     return strpos( $test_value, '->' ) > 0 || strpos( $test_value, ':' ) > 0 || $dynamic_value !== '';
   }
-  
+
   /**
    * tells if the string is a new password
    * 
@@ -1306,7 +1277,7 @@ class PDb_Base {
     $sql = 'SELECT * FROM ' . Participants_Db::$groups_table . ' WHERE `name` = "%s"';
     return current( $wpdb->get_results( $wpdb->prepare( $sql, $name ) ) );
   }
-  
+
   /**
    * checks a plugin permission level and passes it through a filter
    * 
@@ -1326,16 +1297,16 @@ class PDb_Base {
   {
 
     $capability = 'read'; // assume the lowest cap
-    
-    if ( in_array( $plugin_cap, array('plugin_admin_capability', 'record_edit_capability') ) ) {
-      
+
+    if ( in_array( $plugin_cap, array( 'plugin_admin_capability', 'record_edit_capability' ) ) ) {
+
       $wp_cap = self::plugin_setting_value( $plugin_cap );
-      
+
       // ensure a valid admin role #2903
       if ( $plugin_cap === 'plugin_admin_capability' ) {
-        $wp_cap = self::admin_cap($wp_cap);
+        $wp_cap = self::admin_cap( $wp_cap );
       }
-      
+
       /**
        * provides access to individual access privileges
        * 
@@ -1346,10 +1317,10 @@ class PDb_Base {
        */
       $capability = self::apply_filters( 'access_capability', $wp_cap, $context );
     }
-    
+
     return $capability;
   }
-  
+
   /**
    * checks for a valid administrator role capability
    * 
@@ -1358,12 +1329,12 @@ class PDb_Base {
    */
   private static function admin_cap( $wp_cap )
   {
-    $admin_roles = get_users( array('capability' => $wp_cap) );
-    
+    $admin_roles = get_users( array( 'capability' => $wp_cap ) );
+
     if ( empty( $admin_roles ) ) {
       $wp_cap = 'manage_options';
     }
-    
+
     return $wp_cap;
   }
 
@@ -1429,7 +1400,7 @@ class PDb_Base {
   public static function load_plugin_textdomain( $path, $textdomain = '' )
   {
     $textdomain = empty( $textdomain ) ? Participants_Db::PLUGIN_NAME : $textdomain;
-    
+
     load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages' );
   }
 
@@ -1450,13 +1421,13 @@ class PDb_Base {
    */
   public static function string_static_translation( $string )
   {
-    if ( ! is_string( $string ) || is_numeric( $string ) ) {
+    if ( !is_string( $string ) || is_numeric( $string ) ) {
       return $string;
     }
-    
+
     return self::extract_from_multilingual_string( $string );
   }
-  
+
   /**
    * extracts a language string from a multilingual string
    * 
@@ -1475,22 +1446,22 @@ class PDb_Base {
        * @param string the multilingual string
        * @return the extracted string for the current language
        */
-      return Participants_Db::apply_filters('extract_multilingual_string', $ml_string );
+      return Participants_Db::apply_filters( 'extract_multilingual_string', $ml_string );
     }
-    
+
     if ( strpos( $ml_string, '[:' ) === false && strpos( $ml_string, '{:' ) === false ) {
       return $ml_string;
     }
-    
+
     if ( preg_match( '/\[:[a-z]{2}/', $ml_string ) === 1 ) {
       $brace = array( '\[', '\]' );
     } else {
       $brace = array( '\{', '\}' );
     }
-    
+
     $lang = strstr( get_locale(), '_', true );
-    
-    return preg_filter( '/.*' . $brace[0] . ':' . $lang . '' . $brace[1] . '(([^' . $brace[0] . ']|' . $brace[0] . '[^:])*)(' . $brace[0] . ':.*|$)/s', '$1', $ml_string );
+
+    return preg_filter( '/.*' . $brace[ 0 ] . ':' . $lang . '' . $brace[ 1 ] . '(([^' . $brace[ 0 ] . ']|' . $brace[ 0 ] . '[^:])*)(' . $brace[ 0 ] . ':.*|$)/s', '$1', $ml_string );
   }
 
   /**
@@ -1519,7 +1490,7 @@ class PDb_Base {
   public static function plugin_setting( $name, $default = false )
   {
     $setting_value = self::plugin_setting_value( $name, $default );
-    
+
     return is_string( $setting_value ) ? self::apply_filters( 'translate_string', $setting_value ) : $setting_value;
   }
 
@@ -1535,17 +1506,17 @@ class PDb_Base {
   public static function plugin_setting_value( $name, $default = false )
   {
     if ( $default === false ) {
-      $default = self::plugin_setting_default($name);
+      $default = self::plugin_setting_default( $name );
     }
-    
+
     /**
      * @filter pdb-{$setting_name}_setting_value
      * @param mixed the setting value
      * @return mixed setting value
      */
-    return self::apply_filters( $name . '_setting_value', ( isset( Participants_Db::$plugin_options[$name] ) ? Participants_Db::$plugin_options[$name] : $default ) );
+    return self::apply_filters( $name . '_setting_value', ( isset( Participants_Db::$plugin_options[ $name ] ) ? Participants_Db::$plugin_options[ $name ] : $default ) );
   }
-  
+
   /**
    * provides the default setting for an option
    * 
@@ -1555,8 +1526,8 @@ class PDb_Base {
   public static function plugin_setting_default( $name )
   {
     $defaults = get_option( Participants_Db::$default_options );
-    
-    return isset( $defaults[$name ] ) ? $defaults[$name ] : false;
+
+    return isset( $defaults[ $name ] ) ? $defaults[ $name ] : false;
   }
 
   /**
@@ -1569,7 +1540,7 @@ class PDb_Base {
    */
   public static function plugin_setting_is_set( $name )
   {
-    return isset( Participants_Db::$plugin_options[$name] ) && strlen( Participants_Db::plugin_setting( $name ) ) > 0;
+    return isset( Participants_Db::$plugin_options[ $name ] ) && strlen( Participants_Db::plugin_setting( $name ) ) > 0;
   }
 
   /**
@@ -1583,26 +1554,26 @@ class PDb_Base {
   {
     $cachekey = 'pdb-bool-setting';
     $setting = wp_cache_get( $name, $cachekey, true, $found );
-    
+
     if ( $found ) {
       return $setting;
     }
-    
+
     if ( $default === false ) {
-      $default = self::plugin_setting_default($name);
+      $default = self::plugin_setting_default( $name );
     }
-    
-    if ( isset( Participants_Db::$plugin_options[$name] ) ) {
+
+    if ( isset( Participants_Db::$plugin_options[ $name ] ) ) {
       $setting = filter_var( self::plugin_setting_value( $name ), FILTER_VALIDATE_BOOLEAN );
     } else {
       $setting = (bool) $default;
     }
-    
+
     wp_cache_set( $name, $setting, $cachekey, Participants_Db::cache_expire() );
-    
+
     return $setting;
   }
-  
+
   /**
    * updates a main setting option
    * 
@@ -1612,10 +1583,9 @@ class PDb_Base {
   public static function update_plugin_setting( $option_name, $setting )
   {
     $options = get_option( Participants_Db::$participants_db_options );
-    
-    if ( is_array( $options ) )
-    {
-      $options[$option_name] = $setting;
+
+    if ( is_array( $options ) ) {
+      $options[ $option_name ] = $setting;
 
       update_option( Participants_Db::$participants_db_options, $options );
     }
@@ -1732,14 +1702,14 @@ class PDb_Base {
     if ( !is_writable( $stylesheet_path ) ) {
       return false;
     }
-    
+
     $file_contents = file_get_contents( $stylesheet_path );
-    $custom_css = self::custom_css_content($setting);
-    
+    $custom_css = self::custom_css_content( $setting );
+
     if ( empty( $custom_css ) ) {
       return false;
     }
-    
+
     if ( $file_contents === $custom_css ) {
       // error_log(__METHOD__.' CSS settings are unchanged; do nothing');
     } else {
@@ -1747,7 +1717,7 @@ class PDb_Base {
     }
     return true;
   }
-  
+
   /**
    * supplies the content of the custom CSS file
    * 
@@ -1757,17 +1727,17 @@ class PDb_Base {
   private static function custom_css_content( $setting )
   {
     $content = Participants_Db::plugin_setting( $setting );
-    
-    switch ($setting) {
-      
+
+    switch ( $setting ) {
+
       case 'print_css':
         $content = sprintf( "@media print {\n\n%s\n\n}", $content );
         break;
     }
-    
+
     return $content;
   }
-  
+
   /**
    * provides a CSS dimension value with units
    * 
@@ -1779,21 +1749,19 @@ class PDb_Base {
   public static function css_dimension_value( $value )
   {
     $keyword_check = preg_match( '#^(auto|inherit)$#', $value );
-    
+
     if ( $keyword_check === 1 ) {
       return $value;
     }
-    
+
     $fallback = preg_replace( "/[^0-9]/", "", $value ) . 'px';
-    
+
     $value = str_replace( ' ', '', $value ); // remove any spaces
-    
-    $check = preg_match('/^[0-9]+.?([0-9]+)?(px|em|rem|ex|ch|%|lh|vw|vh|vmin|vmax)$/', $value );
-    
+
+    $check = preg_match( '/^[0-9]+.?([0-9]+)?(px|em|rem|ex|ch|%|lh|vw|vh|vmin|vmax)$/', $value );
+
     return $check === 1 ? $value : $fallback;
   }
-  
-  
 
   /**
    * processes the search term keys for use in shortcode filters
@@ -1835,11 +1803,9 @@ class PDb_Base {
         $value = date( 'M j,Y 00:00', strtotime( $numeric . ' months' ) );
         break;
     }
-    
+
     return $value;
   }
-  
-  
 
   /**
    * processes the search term keys for use in shortcode filters as a partial date string
@@ -1872,9 +1838,9 @@ class PDb_Base {
         $value = wp_date( 'Y', strtotime( $numeric . ' years' ) );
         break;
       default:
-        $value = self::date_key($key);
+        $value = self::date_key( $key );
     }
-    
+
     return $value;
   }
 
@@ -1927,10 +1893,10 @@ class PDb_Base {
   public static function base_files_path()
   {
     $base_path = Participants_Db::apply_filters( 'files_use_content_base_path', false ) ? trailingslashit( self::content_dir() ) : self::app_base_path();
-    
+
     return $base_path;
   }
-  
+
   /**
    * provides the content directory path
    * 
@@ -1991,8 +1957,7 @@ class PDb_Base {
      */
     $result = self::apply_filters( 'delete_file', $filename );
 
-    if ( !is_bool( $result ) )
-    {
+    if ( !is_bool( $result ) ) {
       $current_dir = getcwd(); // save the current dir
       chdir( self::files_path() ); // set the plugin uploads dir
       $result = @unlink( $filename ); // delete the file
@@ -2016,11 +1981,11 @@ class PDb_Base {
    */
   public static function is_form_validated()
   {
-    if ( is_admin() && ! self::plugin_setting_is_true( 'admin_edits_validated', false) ) {
-      
+    if ( is_admin() && !self::plugin_setting_is_true( 'admin_edits_validated', false ) ) {
+
       return self::current_user_has_plugin_role( 'admin', 'forms not validated' ) === false;
     } else {
-      
+
       return true;
     }
   }
@@ -2054,7 +2019,7 @@ class PDb_Base {
    */
   public static function cleanup_array( $array )
   {
-    return array_filter( $array, function($v) {
+    return array_filter( $array, function ( $v ) {
       return $v || $v === 0 || $v === '0';
     } );
   }
@@ -2073,17 +2038,39 @@ class PDb_Base {
   {
     $x = array();
     foreach ( $array as $k => $v ) {
-      if ( isset( $override[$k] ) ) {
+      if ( isset( $override[ $k ] ) ) {
         if ( is_array( $v ) ) {
-          $v = Participants_Db::array_merge2( $v, (array) $override[$k] );
+          $v = Participants_Db::array_merge2( $v, (array) $override[ $k ] );
         } else
-          $v = $override[$k];
-        unset( $override[$k] );
+          $v = $override[ $k ];
+        unset( $override[ $k ] );
       }
-      $x[$k] = $v;
+      $x[ $k ] = $v;
     }
     // add in the remaining unmatched elements
     return $x += $override;
+  }
+  
+  
+  /**
+   * replaces a key in the array without changing the order of the array
+   * 
+   * @param array $array
+   * @param string $key
+   * @param string $new_key
+   * @return array
+   */
+  public static function replace_key($array, $key, $new_key)
+  {
+    $keys = array_keys($array);
+    $index = array_search($key, $keys);
+
+    if ($index !== false) {
+        $keys[$index] = $new_key;
+        $array = array_combine($keys, $array);
+    }
+
+    return $array;
   }
 
   /**
@@ -2120,9 +2107,9 @@ class PDb_Base {
 
     $numbers = explode( '.', phpversion() );
 
-    return (float) ( $numbers[0] + ( $numbers[1] / 10 ) );
+    return (float) ( $numbers[ 0 ] + ( $numbers[ 1 ] / 10 ) );
   }
-  
+
   /**
    * tells if the current operation is in the WP admin side
    * 
@@ -2132,7 +2119,7 @@ class PDb_Base {
    */
   public static function is_admin()
   {
-    return is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX );
+    return is_admin() && !( defined( 'DOING_AJAX' ) && DOING_AJAX );
   }
 
   /**
@@ -2148,29 +2135,28 @@ class PDb_Base {
   public static function set_admin_message( $message, $type = 'error' )
   {
     if ( self::is_admin() ) {
-      
+
       if ( empty( $message ) ) {
-        Participants_Db::debug_log(__METHOD__.' adding empty message '. print_r(wp_debug_backtrace_summary(),1), 3 );
+        Participants_Db::debug_log( __METHOD__ . ' adding empty message ' . print_r( wp_debug_backtrace_summary(), 1 ), 3 );
         return null;
       }
-      
+
       $message_list = Participants_Db::$session->get( 'admin_message', array() );
-      
+
       switch ( $type ) {
         // this is to translate some legacy values
         case 'updated':
           $type = 'success';
       }
-      
-      if ( ! self::has_duplicate_message( $message, $message_list ) )
-      {
-        $message_list[] = array($message, $type);
+
+      if ( !self::has_duplicate_message( $message, $message_list ) ) {
+        $message_list[] = array( $message, $type );
       }
-      
+
       Participants_Db::$session->set( 'admin_message', $message_list );
     }
   }
-  
+
   /**
    * checks for a duplicate admin message
    * 
@@ -2180,11 +2166,11 @@ class PDb_Base {
    */
   private static function has_duplicate_message( $message, $message_list )
   {
-    return count( array_filter( array_map( function($v) use($message) {
-        return $v[0] === $message;
-      }, $message_list ) ) ) > 0;
+    return count( array_filter( array_map( function ( $v ) use ( $message ) {
+                              return $v[ 0 ] === $message;
+                            }, $message_list ) ) ) > 0;
   }
-  
+
   /**
    * clears the admin message
    */
@@ -2197,18 +2183,18 @@ class PDb_Base {
    * prints the admin message
    */
   public static function admin_message()
-  {   
+  {
     if ( self::has_admin_message() ) {
-      
+
       $messages = Participants_Db::$session->get( 'admin_message' );
-      
-      foreach( $messages as $message ) {
-        printf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $message[1], $message[0] );
-        self::clear_admin_message(); 
+
+      foreach ( $messages as $message ) {
+        printf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $message[ 1 ], $message[ 0 ] );
+        self::clear_admin_message();
       }
     }
   }
-  
+
   /**
    * provides the current admin message as a plain string
    * 
@@ -2217,20 +2203,20 @@ class PDb_Base {
   public static function admin_message_content()
   {
     $messages = Participants_Db::$session->get( 'admin_message' );
-    
+
     if ( self::has_admin_message() ) {
-      
+
       $message_text = '';
-      
-      foreach( $messages as $message ) {
-        $message_text .= $message[0];
+
+      foreach ( $messages as $message ) {
+        $message_text .= $message[ 0 ];
       }
       return $message_text;
     }
-    
+
     return '';
   }
-  
+
   /**
    * provides the current admin message type
    * 
@@ -2239,14 +2225,14 @@ class PDb_Base {
   public static function admin_message_type()
   {
     $message = Participants_Db::$session->get( 'admin_message' );
-    
+
     if ( self::has_admin_message() ) {
-      return current($message)[1];
+      return current( $message )[ 1 ];
     }
-    
+
     return '';
   }
-  
+
   /**
    * tells if there is an admin message
    * 
@@ -2255,10 +2241,10 @@ class PDb_Base {
   public static function has_admin_message()
   {
     $messages = Participants_Db::$session->get( 'admin_message' );
-    
-    return is_array( $messages ) && ! empty( current($messages) ); 
+
+    return is_array( $messages ) && !empty( current( $messages ) );
   }
-  
+
   /**
    * displays a warning message if the php version is too low
    * 
@@ -2267,12 +2253,12 @@ class PDb_Base {
   {
     $target_version = '5.6';
 
-    if ( version_compare( PHP_VERSION, $target_version, '<' ) && ! get_option( Participants_Db::one_time_notice_flag ) ) {
-      
-      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database will require PHP version %1$s in future releases, you have PHP version %2$s. Please update your php version, future versions of Participants Database may not run without minimum php version %1$s', 'participants-database' ), $target_version, PHP_VERSION ) . '</p>', '', false);
-      
+    if ( version_compare( PHP_VERSION, $target_version, '<' ) && !get_option( Participants_Db::one_time_notice_flag ) ) {
+
+      PDb_Admin_Notices::post_warning( '<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database will require PHP version %1$s in future releases, you have PHP version %2$s. Please update your php version, future versions of Participants Database may not run without minimum php version %1$s', 'participants-database' ), $target_version, PHP_VERSION ) . '</p>', '', false );
+
       // mark the option as shown
-      update_option(Participants_Db::one_time_notice_flag, true);
+      update_option( Participants_Db::one_time_notice_flag, true );
     }
   }
 
@@ -2286,7 +2272,7 @@ class PDb_Base {
     $php_timezone = ini_get( 'date.timezone' );
     return empty( $php_timezone ) ? 'UTC' : $php_timezone;
   }
-  
+
   /**
    * provides a UTC timestamp string for db queries
    * 
@@ -2295,8 +2281,8 @@ class PDb_Base {
    */
   public static function timestamp_now()
   {
-    $use_utc_tz = Participants_Db::plugin_setting_is_true('db_timestamps_use_local_tz', false ) === false;
-    
+    $use_utc_tz = Participants_Db::plugin_setting_is_true( 'db_timestamps_use_local_tz', false ) === false;
+
     return Participants_Db::apply_filters( 'timestamp_now', current_time( 'mysql', $use_utc_tz ) );
   }
 
@@ -2318,8 +2304,8 @@ class PDb_Base {
       return array();
     // check each one for a plugin shortcode
     foreach ( $matches as $shortcode ) {
-      if ( false !== strpos( $shortcode[0], $tag ) ) {
-        $shortcodes[] = $shortcode[2] . '-shortcode';
+      if ( false !== strpos( $shortcode[ 0 ], $tag ) ) {
+        $shortcodes[] = $shortcode[ 2 ] . '-shortcode';
       }
     }
     return $shortcodes;
@@ -2345,16 +2331,16 @@ class PDb_Base {
     // none found
     if ( empty( $matches ) )
       return false;
-    
+
     // check each one for a plugin shortcode
     foreach ( $matches as $shortcode ) {
-      if ( false !== strpos( $shortcode[0], $tag ) && false === strpos( $shortcode[0], '[[' ) ) {
+      if ( false !== strpos( $shortcode[ 0 ], $tag ) && false === strpos( $shortcode[ 0 ], '[[' ) ) {
         return true;
       }
     }
     return false;
   }
-  
+
   /**
    * flushes the page cache
    * 
@@ -2370,16 +2356,15 @@ class PDb_Base {
   public static function flush_page_cache( $path )
   {
     global $post;
-    
-    if ( is_a( $post, 'WP_Post') ) {
-    
+
+    if ( is_a( $post, 'WP_Post' ) ) {
+
       // W3 Total Cache
       do_action( 'w3tc_flush_post', $post->ID );
-      
     }
-    
-    $url = site_url($path);
-    
+
+    $url = site_url( $path );
+
     // WP Cloudflare Super Page Cache
 //    global $sw_cloudflare_pagecache;
 //    if ( is_object( $sw_cloudflare_pagecache ) ) {
@@ -2491,7 +2476,7 @@ class PDb_Base {
         Participants_Db::$list_page => FILTER_VALIDATE_INT,
     );
   }
-  
+
   /**
    * provides a list of orphaned field columns in the main db
    * 
@@ -2502,18 +2487,18 @@ class PDb_Base {
   {
     global $wpdb;
     $columns = $wpdb->get_results( 'SHOW COLUMNS FROM ' . Participants_Db::$participants_table );
-    
+
     $orphan_columns = array();
-    
-    foreach( $columns as $column ) {
+
+    foreach ( $columns as $column ) {
       if ( !array_key_exists( $column->Field, Participants_Db::$fields ) ) {
         $orphan_columns[] = $column->Field;
       }
     }
-    
+
     return $orphan_columns;
   }
-  
+
   /**
    * provides a general cache expiration time
    * 
@@ -2543,11 +2528,11 @@ class PDb_Base {
       /*
        * clear the current page's session
        */
-      $current_session[$post->ID] = array();
+      $current_session[ $post->ID ] = array();
       Participants_Db::$session->set( 'shortcode_atts', $current_session );
     }
   }
-  
+
   /**
    * checks for the presence of the WP Session plugin
    * 
@@ -2557,7 +2542,7 @@ class PDb_Base {
    */
   public static function wp_session_plugin_is_active()
   {
-    return class_exists('EAMann\Sessionz\Manager');
+    return class_exists( 'EAMann\Sessionz\Manager' );
   }
 
   /**
@@ -2568,10 +2553,10 @@ class PDb_Base {
   public static function is_multipage_form()
   {
     $form_status = Participants_Db::$session->get( 'form_status' );
-    
+
     return stripos( $form_status, 'multipage' ) !== false;
   }
-  
+
   /**
    * provides the byte value for a php configuration shortcoand value
    * 
@@ -2581,21 +2566,21 @@ class PDb_Base {
   public static function shorthand_bytes_value( $value )
   {
     $mult = 1;
-    switch (true) {
-      
+    switch ( true ) {
+
       case stripos( $value, 'K' ) !== false:
         $mult = 1000;
         break;
-      
+
       case stripos( $value, 'M' ) !== false:
         $mult = 1000000;
         break;
-      
+
       case stripos( $value, 'G' ) !== false:
         $mult = 1000000000;
         break;
     }
-    
+
     return intval( $value ) * $mult;
   }
 
@@ -2607,22 +2592,17 @@ class PDb_Base {
    */
   public static function deep_stripslashes( $input )
   {
-    if ( is_array( $input ) )
-    {
-      $input = array_map( array(__CLASS__, 'deep_stripslashes'), $input );
-    } 
-    elseif ( is_object( $input ) )
-    {
+    if ( is_array( $input ) ) {
+      $input = array_map( array( __CLASS__, 'deep_stripslashes' ), $input );
+    } elseif ( is_object( $input ) ) {
       $vars = get_object_vars( $input );
       foreach ( $vars as $k => $v ) {
         $input->{$k} = deep_stripslashes( $v );
       }
-    }
-    elseif ( is_string( $input ) )
-    {
+    } elseif ( is_string( $input ) ) {
       $input = stripslashes( $input );
     }
-    
+
     return $input;
   }
 
@@ -2632,39 +2612,36 @@ class PDb_Base {
   public static function reg_page_setting_fix()
   {
     // if the setting was made in previous versions and is a slug, convert it to a post ID
-    $regpage = isset( Participants_Db::$plugin_options['registration_page'] ) ? Participants_Db::$plugin_options['registration_page'] : '';
-    
-    if ( !empty( $regpage ) && !is_numeric( $regpage ) ) {
-      
-      Participants_Db::update_plugin_setting('registration_page', self::get_id_by_slug( $regpage ) );
+    $regpage = isset( Participants_Db::$plugin_options[ 'registration_page' ] ) ? Participants_Db::$plugin_options[ 'registration_page' ] : '';
 
-      Participants_Db::$plugin_options['registration_page'] = self::get_id_by_slug( $regpage );
+    if ( !empty( $regpage ) && !is_numeric( $regpage ) ) {
+
+      Participants_Db::update_plugin_setting( 'registration_page', self::get_id_by_slug( $regpage ) );
+
+      Participants_Db::$plugin_options[ 'registration_page' ] = self::get_id_by_slug( $regpage );
     }
   }
-  
+
   /**
    * checks to make sure the plugin uploads directory is writable 
    */
   protected static function check_uploads_directory()
   {
     $message_key = 'uploads_directory_notice';
-    
-    if ( !is_writable( Participants_Db::files_path() ) )
-    {
-      self::debug_log( ' The configured uploads directory is not reporting as writable: ' . Participants_Db::files_path() );
-      
-      if ( ! Participants_Db::plugin_setting_is_set( 'upload_location_warning_disable', false) ) {
-      
-        $message_id = PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false);
 
-        PDb_Admin_Notices::store_message_key( $message_key, $message_id);
+    if ( !is_writable( Participants_Db::files_path() ) ) {
+      self::debug_log( ' The configured uploads directory is not reporting as writable: ' . Participants_Db::files_path() );
+
+      if ( !Participants_Db::plugin_setting_is_set( 'upload_location_warning_disable', false ) ) {
+
+        $message_id = PDb_Admin_Notices::post_warning( '<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false );
+
+        PDb_Admin_Notices::store_message_key( $message_key, $message_id );
       }
-    } 
-    else
-    {
+    } else {
       PDb_Admin_Notices::clear_message_key( $message_key );
     }
-    
+
 //    if ( substr_count( Participants_Db::files_path(), 'wp-content' ) > 1 ) {
 //      
 //      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database containes a duplicate reference to the wp-content directory. Check your "File Upload Location" setting or uncheck the "File and Image Uploads Use WP Content Path" setting to correct this.', 'participants-database' ), Participants_Db::files_path() ) . '</p>', '', false);
@@ -2717,7 +2694,7 @@ class PDb_Base {
     $output = '';
     for ( $i = 0; $i < strlen( $text ); ) {
       for ( $j = 0; ($j < strlen( $key ) && $i < strlen( $text ) ); $j++, $i++ ) {
-        $output .= $text[$i] ^ $key[$j];
+        $output .= $text[ $i ] ^ $key[ $j ];
       }
     }
     return $output;
@@ -2753,7 +2730,7 @@ class PDb_Base {
     $alphanum = self::get_alpha_set();
     $key = '';
     while ( $length > 0 ) {
-      $key .= $alphanum[array_rand( $alphanum )];
+      $key .= $alphanum[ array_rand( $alphanum ) ];
       $length--;
     }
     return $key;
@@ -2800,44 +2777,45 @@ class PDb_Base {
   {
     global $PDb_Debugging;
     if ( !defined( 'PDB_DEBUG' ) ) {
-      $settings = get_option( Participants_Db::PLUGIN_NAME . '_options');
-      if ( isset( $settings['pdb_debug'] ) ) {
-        define( 'PDB_DEBUG', intval($settings['pdb_debug']) );
+      $settings = get_option( Participants_Db::PLUGIN_NAME . '_options' );
+      if ( isset( $settings[ 'pdb_debug' ] ) ) {
+        define( 'PDB_DEBUG', intval( $settings[ 'pdb_debug' ] ) );
       } elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
         define( 'PDB_DEBUG', 1 );
       } else {
         define( 'PDB_DEBUG', 0 );
       }
     }
-    
-    if ( PDB_DEBUG > 0 && ! defined('WP_DEBUG') ) {
+
+    if ( PDB_DEBUG > 0 && !defined( 'WP_DEBUG' ) ) {
       define( 'WP_DEBUG', true );
     }
-      
-    if ( PDB_DEBUG && ! is_a( $PDb_Debugging, 'PDb_Debug' ) ) {
+
+    if ( PDB_DEBUG && !is_a( $PDb_Debugging, 'PDb_Debug' ) ) {
       $PDb_Debugging = new PDb_Debug();
     }
   }
-  
+
   /**
    * writes a debug log message
    * 
    * @global PDb_Debug $PDb_Debugging
    * @param string $message the debugging message
    * @param int $verbosity the verbosity level
+   * @param string $group name of logging group the message belongs to
    */
-  public static function debug_log( $message, $verbosity = 1 )
+  public static function debug_log( $message, $verbosity = 1, $group = 'general' )
   {
     if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG >= $verbosity ) {
       global $PDb_Debugging;
       if ( $PDb_Debugging && method_exists( $PDb_Debugging, 'write_debug' ) ) {
-        $PDb_Debugging->write_debug($message);
+        $PDb_Debugging->write_debug( $message, $group );
       } else {
         error_log( $message );
       }
     }
   }
-  
+
   /**
    * provides the user's IP
    * 
@@ -2848,7 +2826,6 @@ class PDb_Base {
    */
   public static function user_ip()
   {
-    return self::apply_filters('user_ip', $_SERVER['REMOTE_ADDR']);
+    return self::apply_filters( 'user_ip', $_SERVER[ 'REMOTE_ADDR' ] );
   }
-  
-  }
+}
