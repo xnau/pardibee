@@ -231,8 +231,10 @@ class PDb_FormElement extends xnau_FormElement {
       } 
       elseif ( $this->options[self::null_select_key()] !== 'false' ) 
       { 
-        // this adds a unselectable prompt
-        $this->options = [$this->options[self::null_select_key()] => ''] + $this->options;
+        // this is a "none" selector, set up its label by swapping in its value
+        $null_label = $this->options[self::null_select_key()];
+        $this->options = Participants_Db::replace_key( $this->options, self::null_select_key(), $null_label );
+        $this->options[$null_label] = '';
       }
     }
     unset( $this->options[self::null_select_key()] );
@@ -266,21 +268,8 @@ class PDb_FormElement extends xnau_FormElement {
       {
         $id = $this->element_id();
         $this->attributes['id'] = $this->element_id( self::legal_name( $this->prefix . $this->name . '-' . ( $option_value === '' ? '_' : esc_attr( trim( strtolower( $option_value ) ) ) ) ) );
-        
-        $this->_addline( '<label ' . $this->_class( $option_value === '' ? 'pdb-selection-prompt' : '' ) . ' for="' . $this->attributes['id'] . '">' );
-        
-        if ( $option_value === '' )
-        {
-          if ( $this->field_def->validation() !== 'no' )
-          {
-            $this->_addline( $this->_input_tag( 'hidden', '' ), 1 );
-          }
-        }
-        else
-        {
-          $this->_addline( $this->_input_tag( $type, esc_attr( $option_value ), 'checked' ), 1 );
-        }
-        
+        $this->_addline( '<label ' . $this->_class() . ' for="' . $this->attributes['id'] . '">' );
+        $this->_addline( $this->_input_tag( $type, esc_attr( $option_value ), 'checked' ), 1 );
         $this->_addline( $option_key . '</label>' );
         $this->attributes['id'] = $id;
       }
