@@ -65,7 +65,7 @@ class string_combine extends calculated_field {
     
     $replacement_data = $this->replacement_data( $data );
     
-    \Participants_Db::debug_log(__METHOD__.' field: '. $this->field->name() .' replacement data: '. print_r($replacement_data,1), 2 );
+    \Participants_Db::debug_log(__METHOD__.' field: '. $this->field->name() .' replacement data: '. print_r($replacement_data,1), 2, 'calcfield' );
     
     $replaced_string = \PDb_Tag_Template::replace_text( $this->template(), $replacement_data );
     
