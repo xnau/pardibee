@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -111,12 +111,35 @@ class PDb_Debug {
    * copies the message to the php debug log
    * 
    * @param string $message the debug message
+   * @param string $group
    */
-  public function write_debug( $message )
+  public function write_debug( $message, $group = 'general' )
   {
-    $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . str_replace( array(PHP_EOL, "\t"), array('<br/>', '&emsp;'), $this->format_message( $message ) ) );
-    error_log( $message );
+    if ( ! $this->is_suppressed( $group ) )
+    {
+      $this->write_log_entry( "\n<header>" . $this->timestamp() . '</header> ' . str_replace( array(PHP_EOL, "\t"), array('<br/>', '&emsp;'), $this->format_message( $message ) ) );
+      error_log( $message );
+    }
   }
+  
+  /**
+   * checks for a suppressed group
+   * 
+   * @param string $group
+   * @return bool true if the group is suppressed
+   */
+  private function is_suppressed( $group )
+  {
+    $suppressed = [];
+    
+    if ( defined('PDB_DEBUG_SUPPRESSED_GROUPS') )
+    {
+      $suppressed = (array) PDB_DEBUG_SUPPRESSED_GROUPS;
+    }
+    
+    return in_array( $group, $suppressed );
+  }
+  
   
   /**
    * attempts to format the message for the log
