@@ -31,6 +31,13 @@ class PDb_Session {
    * @var \PDb_Session the current instance
    */
   private static $instance;
+  
+  /**
+   * @var string name of the session cache
+   * 
+   * this is only used for logging to prevent repeated messages
+   */
+  const cache_key = 'pdb-session-log-cache';
 
   /**
    * provides the class instance
@@ -239,12 +246,12 @@ class PDb_Session {
     {
       $sessid = $this->use_alternate_method();
 
-      Participants_Db::debug_log( __METHOD__ . ' using fallback alt method, got: ' . $sessid, 3 );
+      Participants_Db::debug_log( __METHOD__ . ' using fallback alt method, got: ' . $sessid, 4 );
     }
 
     if ( empty( $sessid ) ) 
     {
-      Participants_Db::debug_log( __METHOD__ . ' unable to get session id', 3 );
+      Participants_Db::debug_log( __METHOD__ . ' unable to get session id', 4 );
     }
 
     return $sessid;
@@ -263,7 +270,7 @@ class PDb_Session {
     {
       if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG && headers_sent() ) 
       {
-        Participants_Db::debug_log( __METHOD__ . ' can\'t initiate session: headers already sent ', 2 );
+        Participants_Db::debug_log( __METHOD__ . ' can\'t initiate session: headers already sent ', 4 );
       }
       else
       {
@@ -277,11 +284,51 @@ class PDb_Session {
     if ( $started_here ) 
     {
       session_write_close();
-
-      Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 4 );
+      
+      if ( $this->session_is_not_logged( $sessid ) )
+      {
+        Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 3 );
+        $this->log_session( $sessid );
+      }
     }
 
     return $sessid;
+  }
+  
+  /**
+   * checks if the session start has been logged
+   * 
+   * @param string $sessid
+   * @return bool
+   */
+  private function session_is_not_logged( $sessid )
+  {
+    $posted = get_transient( self::cache_key );
+    
+    if ( $posted === false )
+    {
+      return true;
+    }
+    
+    return isset($posted[$sessid]) && ( time() - $posted[$sessid] > 2 );
+  }
+  
+  /**
+   * flags the session as logged
+   * 
+   * @param $sessid
+   */
+  private function log_session( $sessid )
+  {
+    $posted = get_transient( self::cache_key );
+    
+    if ( ! is_array( $posted ) )
+    {
+      $posted = [];
+    }
+    
+    $posted[$sessid] = time();
+    set_transient( self::cache_key, $posted, 10 );
   }
 
   /**
@@ -387,13 +434,18 @@ class PDb_Session {
       }
       else
       {
-        Participants_Db::debug_log(__METHOD__.' unable to set session cookie', 2 );
+        Participants_Db::debug_log(__METHOD__.' unable to set session cookie', 4 );
       }
       
       $source = 'create new';
     }
-
-    Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $source . ': ' . $sessid, 2 );
+    
+      
+    if ( $this->session_is_not_logged( $sessid ) )
+    {
+      Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $source . ': ' . $sessid, 3 );
+      $this->log_session( $sessid );
+    }
 
     return $sessid;
   }
