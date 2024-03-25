@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -1294,7 +1294,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       return;
     }
     
-    $has_option_atts = has_filter( $this->name . '_selector_option_attribute_list' );
+    $has_option_atts = has_filter( 'pdb-' . $this->name . '_selector_option_attribute_list' );
 
     foreach ( $this->_make_assoc( $this->options ) as $title => $value ) 
     {
