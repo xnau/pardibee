@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.4.3
 Requires PHP: 7.4
-Stable tag: 2.5.7
+Stable tag: 2.5.8
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
@@ -290,6 +290,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.5.8.1 =
+* fixed bug with using exclusive options on dropdown element
+* prevented failed session start
+
 = 2.5.8 =
 * new "exclusive" option disables options that have been selected in other records
 * improved handling of php sessions
@@ -552,7 +556,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.5.8 is a bugfix and feature update
+2.5.8.1 is a minor bugfix release
 
 == Plugin Support ==
 
