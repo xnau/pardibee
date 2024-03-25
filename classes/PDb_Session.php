@@ -268,7 +268,7 @@ class PDb_Session {
 
     if ( session_status() !== PHP_SESSION_ACTIVE ) 
     {
-      if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG && headers_sent() ) 
+      if ( headers_sent() ) 
       {
         Participants_Db::debug_log( __METHOD__ . ' can\'t initiate session: headers already sent ', 4 );
       }
