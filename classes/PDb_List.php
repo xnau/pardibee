@@ -1433,7 +1433,7 @@ class PDb_List extends PDb_Shortcode {
    */
   public static function setting_string( $name )
   {
-    return Participants_Db::plugin_setting_value( $name, self::i18n()[$name] );
+    return Participants_Db::plugin_setting( $name, self::i18n()[$name] );
   }
   
   /**
