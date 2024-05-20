@@ -26,7 +26,6 @@
 					
           // CSS class for empty fields
 					$empty_class = $this->get_empty_class( $this->field );
-      
       ?>
     
     <dl class="dl-horizontal <?php echo esc_attr( Participants_Db::$prefix.$this->field->name.' '.$empty_class . ' ' . $this->field->element_class() ) ?> <?php echo esc_attr( empty( $empty_class ) ? '' : $empty_class . '-group' ) ?>">
