@@ -3520,7 +3520,6 @@ class Participants_Db extends PDb_Base {
  */
 function PDb_class_loader( $class )
 {
-
   if ( !class_exists( $class ) ) {
     
     $file = ltrim(str_replace('\\', '/', $class), '/') . '.php';
