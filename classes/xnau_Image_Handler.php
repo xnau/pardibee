@@ -743,7 +743,6 @@ abstract class xnau_Image_Handler {
    */
   public static function concatenate_directory_path( $path1, $path2, $endslash = true )
   {
-
     return rtrim( $path1, '/' ) . '/' . ltrim( rtrim( $path2, '/' ), '/' ) . ( $endslash ? '/' : '' );
   }
 
