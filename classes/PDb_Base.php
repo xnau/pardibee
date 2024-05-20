@@ -1924,7 +1924,7 @@ return $field->name() === $fieldname;
    */
   public static function files_path()
   {
-    return trailingslashit( PDb_Image::concatenate_directory_path( self::base_files_path(), Participants_Db::files_location() ) );
+    return trailingslashit( xnau_Image_Handler::concatenate_directory_path( self::base_files_path(), Participants_Db::files_location() ) );
   }
 
   /**
