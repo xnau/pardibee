@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.12
+ * @version    2.13
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -287,8 +287,8 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
     $export_value = '';
 
-    switch ( $this->form_element ) {
-
+    switch ( $this->form_element )
+    {
       case 'date':
         
         if ( PDb_Date_Display::is_valid_timestamp( $value ) ) {
@@ -301,11 +301,14 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         $link_pair = maybe_unserialize( $value );
         
         // is $link a linktext/URL array?
-        if ( is_array( $link_pair ) ) {
-
+        if ( is_array( $link_pair ) )
+        {
           if ( empty( $link_pair[0] ) )
+          {
             $export_value = isset( $link_pair[1] ) ? $link_pair[1] : '';
-          else {
+          }
+          else
+          {
             $pattern = empty( $link_pair[1] ) ? '<%1$s>' : '[%2$s](%1$s)';
             $export_value = vsprintf( $pattern, $link_pair );
           }
@@ -520,19 +523,20 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   }
 
   /**
-   * tests a value for emptiness, includinf arrays with empty elements
+   * tests a value for emptiness, including arrays with empty elements
    * 
    * @param mixed $value the value to test
    * @return bool
    */
   public function is_empty( $value = false )
   {
+    if ( $value === false )
+    {
+      $value = $this->value;
+    }
+    
     switch (true)
     {
-      case ( $value === false ):
-        $value = $this->value;
-        break;
-      
       case ( is_object( $value ) ):
         // backward compatibility: we used to call this with an object
         $value = $value->value;
@@ -543,7 +547,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         break;
     }
 
-    return strlen( (string) $value ) === 0;
+    return strlen( trim( (string) $value ) ) === 0;
   }
 
   /**
@@ -1324,7 +1328,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
         case 'textarea':
 
           $pattern = $this->html_output ? '<span ' . PDb_FormElement::class_attribute( 'textarea' ) . '>%s</span>' : '%s';
-          $return = empty( $this->value() ) ? '' : sprintf( $pattern, esc_textarea( $this->value() ) );
+          $return = $this->is_empty( $this->value() ) ? '' : sprintf( $pattern, esc_textarea( $this->value() ) );
           break;
 
         case 'rich-text':
@@ -1332,7 +1336,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           if ( $this->html_output ) {
             $return = sprintf( '<span ' . PDb_FormElement::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $this->value(), 'rich-text field' ) );
           } else {
-            $return = empty( $this->value() ) ? '' : strip_tags( esc_textarea( $this->value() ) );
+            $return = $this->is_empty( $this->value() ) ? '' : strip_tags( esc_textarea( $this->value() ) );
           }
 
           break;
