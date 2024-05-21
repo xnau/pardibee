@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -167,7 +167,7 @@ class PDb_Field_Editor {
         $title = $this->field_def->title();
         $lines = array(
             $this->field_def->is_internal_field() ? '' : $field_def_att->html(),
-            '<h4>' . ( empty( $title ) ? $this->field_def->name() : $title ) . '</h4>',
+            '<h4>' . ( strlen( trim( $title ) ) === 0 ? $this->field_def->name() : $title ) . '</h4>',
             '</div>
               <div class="form-element-label" >' . $this->field_def->form_element_title() . '</div>',
         );
@@ -484,7 +484,7 @@ class PDb_Field_Editor {
     $options = array();
     foreach( Participants_Db::get_groups('name,title') as $group_data ) {
       if ( $group_data['name'] === 'internal' ) continue;
-      $title = empty($group_data['title']) ? $group_data['name'] : $group_data['title'];
+      $title = strlen( trim( $group_data['title'])) === 0 ? $group_data['name'] : $group_data['title'];
       $options[stripslashes($title)] = $group_data['name'];
     }
     return $options + array(PDb_FormElement::null_select_key() => false);
@@ -766,7 +766,7 @@ class PDb_Field_Def_Parameter {
   {
     $this->name = $name;
     $this->config = $config;
-    $this->label = isset( $config['label'] ) && ! empty( $config['label'] ) ? $config['label'] : $this->get_label();
+    $this->label = isset( $config['label'] ) && ! \PDb_FormElement::is_empty( $config['label'] ) ? $config['label'] : $this->get_label();
   }
 
   /**
@@ -781,7 +781,7 @@ class PDb_Field_Def_Parameter {
       case 'attributes':
       case 'options':
         
-        $this->config['value'] = empty( $this->config['value'] ) ? '' : htmlspecialchars( PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] ) );
+        $this->config['value'] = \PDb_FormElement::is_empty( $this->config['value'] ) ? '' : htmlspecialchars( PDb_Manage_Fields_Updates::array_to_string_notation( $this->config['value'] ) );
         break;
       
       case 'deletable':
@@ -794,7 +794,7 @@ class PDb_Field_Def_Parameter {
       case 'help_text':
       case 'validation_message':
       case 'default':
-        $this->config['value'] = empty( $this->config['value'] ) ? '' : htmlspecialchars( $this->config['value'] );
+        $this->config['value'] = \PDb_FormElement::is_empty( $this->config['value'] ) ? '' : htmlspecialchars( $this->config['value'] );
         break;
       
       case 'name':
