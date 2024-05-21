@@ -5,7 +5,7 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.6
+ * @version 1.7
  *
  */
 if ( !defined( 'ABSPATH' ) ) {
@@ -262,23 +262,15 @@ if ( $participant_values ) :
                */
               do_action( 'pdb-before_display_form_input', $column );
 
-              if ( 'rich-text' == $column->form_element ) {
-               
-//                wp_editor(
-//                  $column->value(), Participants_Db::rich_text_editor_id( $column->name() ), array(
-//                      'media_buttons' => false,
-//                      'textarea_name' => $column->name(),
-//                      'editor_class' => $field_class,
-//                          )
-//                );
-
+              if ( 'rich-text' == $column->form_element ) 
+              {
                 $editor = new PDb_fields\rich_text_editor($column->name(), $column->value(), array('editor_class' => $field_class) );
 
                 $editor->print_editor();
-                
-              } else {
-                
-                PDb_FormElement::print_element( array(
+              } 
+              else 
+              {  
+                $config = [
                     'type' => $column->form_element(),
                     'value' => $column->get_value(),
                     'name' => $column->name(),
@@ -287,10 +279,13 @@ if ( $participant_values ) :
                     'attributes' => $attributes,
                     'module' => 'admin-edit',
                     'link' => $column->link(),
-                ) );
+                    'record_id' => $participant_values['id'],
+                ];
+                
+                PDb_FormElement::print_element( $config );
               }
 
-              if ( !empty( $column->help_text ) ) :
+              if ( strlen( trim( $column->help_text ) ) > 0 ) :
                 ?>
                 <span class="helptext"><?php echo wp_kses_post( Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ) ?></span>
               <?php endif; ?>
