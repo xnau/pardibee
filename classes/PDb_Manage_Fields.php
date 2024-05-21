@@ -291,7 +291,7 @@ class PDb_Manage_Fields {
                     }
                     $element_atts = array(
                         'name' => ( empty( $name ) ? $group . '[' . $column . ']' : $name ),
-                        'value' => htmlspecialchars( stripslashes( $value ) ),
+                        'value' => htmlspecialchars( stripslashes( strval( $value ) ) ),
                         'type' => $type,
                         'attributes' => array_merge( array( 'id' => 'group-' . $group . '-attribute-' . $column ), $attributes ),
                         'options' => $options,
