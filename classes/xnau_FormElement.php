@@ -33,7 +33,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2011, 2012, 2013, 2014, 2015 xnau webdesign
  * @license    GPL2
- * @version    1.5
+ * @version    1.6
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -456,7 +456,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
       case 'file-upload' :
 
-        if ( $html and ! empty( $field->value ) ) {
+        if ( $html && ! self::is_empty( $field->value ) ) {
 
           if ( $field->module == 'signup' ) {
             $field->link = false;
@@ -491,7 +491,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       case 'multi-dropdown':
 
         $multivalues = maybe_unserialize( $field->value );
-        if ( is_array( $multivalues ) and empty( $multivalues[ 'other' ] ) )
+        if ( is_array( $multivalues ) || empty( $multivalues[ 'other' ] ) )
           unset( $multivalues[ 'other' ] );
 
         $return = implode( ', ', (array) $multivalues );
@@ -510,12 +510,18 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
         }
 
         if ( empty( $linkdata[ 1 ] ) )
+        {
           $linkdata[ 1 ] = str_replace( 'http://', '', $linkdata[ 0 ] );
+        }
 
         if ( $html )
+        {
           $return = vsprintf( ( empty( $linkdata[ 0 ] ) ? '%1$s%2$s' : '<a href="%1$s">%2$s</a>' ), $linkdata );
+        }
         else
+        {
           $return = $linkdata[ 0 ];
+        }
         break;
 
       case 'text-line' :
@@ -570,7 +576,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $this->add_options_to_attributes();
 
-    $this->value = empty($this->value) ? '' : htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false );
+    $this->value = self::is_empty($this->value) ? '' : htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false );
 
     $this->_addline( $this->_input_tag() );
   }
@@ -598,7 +604,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $this->add_class( 'date_field' );
 
-    if ( !empty( $this->value ) ) {
+    if ( !self::is_empty( $this->value ) ) {
       $this->value = $this->format_date( $this->value, false );
     }
 
@@ -660,9 +666,9 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
   protected function _text_field()
   {
 
-    $value = !empty( $this->value ) ? $this->value : '';
+    $value = ! self::is_empty( $this->value ) ? $this->value : '';
 
-    $this->_addline( '<textarea name="' . $this->name . '" ' . $this->textarea_dims() . $this->_attributes() . $this->_class() . ' >' . $value . '</textarea>', empty( $this->value ) ? 0 : -1  );
+    $this->_addline( '<textarea name="' . $this->name . '" ' . $this->textarea_dims() . $this->_attributes() . $this->_class() . ' >' . $value . '</textarea>', self::is_empty( $this->value ) ? 0 : -1  );
   }
 
   /**
@@ -793,7 +799,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
         $this->attributes[ 'id' ] .= '_other';
         $is_other = $this->_set_selected( $this->options, $this->value, 'selected', false ) !== '';
 
-        $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other && ! empty( $this->value ) ? htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false ) : '' ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' >' );
+        $this->_addline( '<input type="text" name="' . $this->name . '" value="' . ( $is_other && ! self::is_empty( $this->value ) ? htmlspecialchars( $this->value, ENT_QUOTES, 'UTF-8', false ) : '' ) . '" ' . $this->_attributes( 'no validate' ) . $this->_class( 'otherfield' ) . ' >' );
         $this->_addline( '</div>' );
       }
     } else {
@@ -1072,7 +1078,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $this->_addline( '<div class="' . $this->prefix . 'upload">' );
     // if a file is already defined, show it
-    if ( !empty( $this->value ) ) {
+    if ( ! self::is_empty( $this->value ) ) {
 
       $this->_addline( self::get_field_value_display( $this ) );
     }
@@ -1090,7 +1096,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       $this->_addline( $this->_input_tag( 'file' ) );
 
       // add the delete checkbox if there is a file defined
-      if ( !empty( $this->value ) ) {
+      if ( ! self::is_empty( $this->value ) ) {
         $this->_addline( '<span class="file-delete" ><label><input type="checkbox" value="delete" name="' . $this->name . '-deletefile">' . __( 'delete', 'participants-database' ) . '</label></span>' );
       }
     }
@@ -1207,7 +1213,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) {
 
-      if ( ($option_value === false || $option_value === 'false' || $option_value === 'optgroup') && ! empty( $option_key ) ) 
+      if ( ($option_value === false || $option_value === 'false' || $option_value === 'optgroup') && ! self::is_empty( $option_key ) ) 
       {
         if ( $optgroup )
         {
@@ -1379,7 +1385,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     
     foreach ( $attributes as $att => $attval )
     {
-      if ( empty( $attval ) )
+      if ( self::is_empty( $attval ) )
       {
         $attval = $att;
       }
@@ -1464,9 +1470,9 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     // clean up the provided link string
     $URI = str_replace( 'mailto:', '', trim( strip_tags( $field->value ) ) );
-    $linktext = empty( $field->value ) ? $field->default : $field->value;
+    $linktext = self::is_empty( $field->value ) ? $field->default : $field->value;
 
-    if ( isset( $field->link ) and ! empty( $field->link ) ) {
+    if ( isset( $field->link ) && ! empty( $field->link ) ) {
       // if the field is a single record link or other kind of defined link field
       $URI = $field->link;
     } elseif ( filter_var( $URI, FILTER_VALIDATE_URL ) ) {
@@ -1492,7 +1498,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     // default template for links
     $linktemplate = $template === false ? '<a href="%1$s" >%2$s</a>' : $template;
 
-    $linktext = empty( $linktext ) ? str_replace( array( 'http://', 'https://' ), '', $URI ) : $linktext;
+    $linktext = self::is_empty( $linktext ) ? str_replace( array( 'http://', 'https://' ), '', $URI ) : $linktext;
 
     //construct the link
     return sprintf( $linktemplate, $URI, esc_html( $linktext ) );
@@ -1929,7 +1935,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       $baseid = isset( $this->attributes[ 'id' ] ) ? $this->attributes[ 'id' ] : '';
     }
     
-    $id = (!empty( $baseid ) ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
+    $id = ( $baseid !== '' ? $baseid : $this->prefix . str_replace( '[]', '', $this->name ) );
 
     // attach the instance index if it is not present
     /**
@@ -2151,11 +2157,11 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
   {
     $field_options = [];
     
-    if ( empty($options) && $this->is_pdb_field() ) 
+    if ( self::is_empty($options) && $this->is_pdb_field() ) 
     {
       $field_options = $this->field_def->options();
     } 
-    elseif ( ! empty( $options ) ) 
+    elseif ( ! self::is_empty( $options ) ) 
     {
       $field_options = maybe_unserialize( $options );
     }
