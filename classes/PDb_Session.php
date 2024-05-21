@@ -443,7 +443,6 @@ class PDb_Session {
       
     if ( $this->session_is_not_logged( $sessid ) )
     {
-      Participants_Db::debug_log( __METHOD__ . ' obtaining session id by alternate method: ' . $source . ': ' . $sessid, 3 );
       $this->log_session( $sessid );
     }
 
