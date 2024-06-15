@@ -104,7 +104,8 @@ abstract class xnau_CSV_Import {
     
           }
         } // file move successful
-        else { // file move failed
+        else 
+        { // file move failed
           $this->set_error_heading(
                   __('There was an error uploading the file. This is often because the file is larger than the server configuration will allow.', 'participants-database'), __('Destination', 'participants-database') . ': ' . dirname( $target_path )
           );
