@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2013 xnau webdesign
  * @license    GPL2
- * @version    3.6
+ * @version    3.7
  * 
  * 
  */
@@ -31,13 +31,6 @@ class PDb_Session {
    * @var \PDb_Session the current instance
    */
   private static $instance;
-  
-  /**
-   * @var string name of the session cache
-   * 
-   * this is only used for logging to prevent repeated messages
-   */
-  const cache_key = 'pdb-session-log-cache';
 
   /**
    * provides the class instance
@@ -285,52 +278,13 @@ class PDb_Session {
     {
       session_write_close();
       
-      if ( $this->session_is_not_logged( $sessid ) )
-      {
-        Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 3 );
-        $this->log_session( $sessid );
-      }
+      Participants_Db::debug_log( __METHOD__ . ' starting session ' . $sessid, 4 );
     }
 
     return $sessid;
   }
   
-  /**
-   * checks if the session start has been logged
-   * 
-   * @param string $sessid
-   * @return bool
-   */
-  private function session_is_not_logged( $sessid )
-  {
-    $posted = get_transient( self::cache_key );
-    
-    if ( $posted === false )
-    {
-      return true;
-    }
-    
-    return isset($posted[$sessid]) && ( time() - $posted[$sessid] > 2 );
-  }
   
-  /**
-   * flags the session as logged
-   * 
-   * @param $sessid
-   */
-  private function log_session( $sessid )
-  {
-    $posted = get_transient( self::cache_key );
-    
-    if ( ! is_array( $posted ) )
-    {
-      $posted = [];
-    }
-    
-    $posted[$sessid] = time();
-    set_transient( self::cache_key, $posted, 10 );
-  }
-
   /**
    * tries the alternate method for getting the session ID
    * 
@@ -438,12 +392,6 @@ class PDb_Session {
       }
       
       $source = 'create new';
-    }
-    
-      
-    if ( $this->session_is_not_logged( $sessid ) )
-    {
-      $this->log_session( $sessid );
     }
 
     return $sessid;
