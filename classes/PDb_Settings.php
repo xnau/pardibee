@@ -69,7 +69,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
       }
       return $value;
     }, 10, 2 );
-    
   }
   
   /**
