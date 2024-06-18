@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.14
+ * @version    1.15
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -2647,6 +2647,74 @@ return $field->name() === $fieldname;
 //      PDb_Admin_Notices::post_warning('<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database containes a duplicate reference to the wp-content directory. Check your "File Upload Location" setting or uncheck the "File and Image Uploads Use WP Content Path" setting to correct this.', 'participants-database' ), Participants_Db::files_path() ) . '</p>', '', false);
 //      
 //    }
+  }
+  
+  /**
+   * checks for the ability to perform a background process
+   * 
+   * this tries loading a script from the website, which must be possible to 
+   * perform a background process using an HTTP loopback
+   * 
+   * @return bool true if the loopback is working
+   */
+  public static function check_http_loopback()
+  {
+    $bg_imports_enabled = Participants_Db::plugin_setting_value( 'background_import', '0' ) != '0';
+    
+    $message_key = 'pdb-background_process_fault';
+    
+    $working = true;
+    
+    if ( $bg_imports_enabled )
+    { 
+      $response = wp_remote_head( admin_url( 'admin-ajax.php' ) );
+
+      switch (true)
+      {
+        case ! is_array( $response ):
+          $working = false;
+          break;
+        case ! isset( $response['response']['code'] ):
+          $working = false;
+          break;
+        case $response['response']['code'] == '403': // the expected code if it is working is 400 Bad Request
+          $working = false;
+          break;
+      }
+    }
+    
+    if ( ! $working && $bg_imports_enabled )
+    {
+      self::debug_log( __METHOD__ . ' The site cannot remotely access its own admin-ajax.php script', 3 );
+      
+      global $pagenow;
+      $page = filter_input( INPUT_GET, 'page', FILTER_DEFAULT, Participants_Db::string_sanitize() );
+
+      if ( $pagenow === 'admin.php' && ( $page === 'participants-database-upload_csv' || $page === 'participants-database_settings_page') ) {
+
+        $message_id = PDb_Admin_Notices::post_warning( '<p><span class="dashicons dashicons-warning"></span>' . sprintf( __('You current server configuration does not allow background processes. You can disable "CSV Imports in the Background" or attempt to fix the problem by making sure the WordPress application can access its own %s script.', 'participants-database'), 'admin-ajax.php' ) . self::settings_help('background-imports-fail') . '</p>', '', false );
+
+        PDb_Admin_Notices::store_message_key( $message_key, $message_id );
+      }
+    }
+    else
+    {
+      PDb_Admin_Notices::clear_message_key( $message_key );
+    }
+    
+    return $working;
+  }
+  
+  /**
+   * supplies a settings help link
+   * 
+   * @param string $anchor the anchor string
+   * @return string 
+   */
+  public static function settings_help( $anchor )
+  {
+    $href = 'https://xnau.com/participants-database-settings-help/';
+    return '&nbsp;<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
   }
 
   /**
