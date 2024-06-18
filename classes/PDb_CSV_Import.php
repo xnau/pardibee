@@ -232,6 +232,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       \PDb_import\tally::get_instance()->reset();
       
       $this->process->save()->dispatch();
+      
+      Participants_Db::debug_log(__METHOD__.' dispatching process '. print_r($this->process,1), 3 );
     }
     
     return $success;
