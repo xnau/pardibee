@@ -101,7 +101,7 @@ class PDb_File_Uploads {
      */
     if ( !is_uploaded_file( realpath( $file[ 'tmp_name' ] ) ) ) {
 
-      if ( filesize( realpath( $field_file[ 'tmp_name' ][ $i ] ) ) > ini_get( 'upload_max_filesize' ) ) {
+      if ( filesize( realpath( $file[ 'tmp_name' ][ $i ] ) ) > ini_get( 'upload_max_filesize' ) ) {
 
         \Participants_Db::validation_error( sprintf( __( 'The file you tried to upload is too large. The file must be smaller than %sK.', 'participants-database' ), ceil( Participants_Db::shorthand_bytes_value( ini_get( 'upload_max_filesize' ) ) / 1000 ) ), $field_name );
 
