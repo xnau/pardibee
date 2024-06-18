@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.4
+ * @version    1.4.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -1042,7 +1042,7 @@ class PDb_Manage_Fields_Updates {
    */
   public static function sanitize_text( $string )
   {
-    return strlen( trim( $string ) ) === 0 ? '' : wp_kses( $string, self::allowed_text_html() );
+    return strlen( trim( strval( $string ) ) ) === 0 ? '' : wp_kses( $string, self::allowed_text_html() );
    ///return wp_kses( PDb_List_Query::straighten_quotes( $string ), self::allowed_text_html() );
   }
 
