@@ -245,6 +245,7 @@ class PDb_List extends PDb_Shortcode {
         'action' => '',
         'suppress' => 'false',
         'pagination' => 'true',
+        'header_sort' => 'false',
     );
   }
   
