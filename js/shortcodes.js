@@ -1,7 +1,7 @@
 /*
  * Participants Database Plugin
  * 
- * @version 1.1
+ * @version 1.2
  * 
  * xnau webdesign xnau.com
  * 
@@ -89,6 +89,15 @@ PDbShortcodes = (function ($) {
           });
         }
       });
+      
+      // clear the search term
+      var listsearch = $('.pdb-searchform form.sort_filter_form');
+      if (listsearch.length){
+        listsearch.on('click','input.search-form-clear',function(){
+          listsearch.find('input[name=value]').val('');
+          listsearch.find('[name=search_field]').prop('selectedIndex',0).val('none');
+        });
+      }
     }
   }
 }(jQuery));
