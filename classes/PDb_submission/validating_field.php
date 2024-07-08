@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    0.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -18,11 +18,6 @@ namespace PDb_submission;
 defined( 'ABSPATH' ) || exit;
 
 class validating_field {
-
-  /**
-   * @var mixed the submitted values
-   */
-  private $value;
 
   /**
    *
@@ -52,16 +47,17 @@ class validating_field {
   private $record_id;
 
   /**
+   * @var mixed the submitted values
+   */
+  private $value;
+
+  /**
    * set it up
    */
   public function __construct( $value, $name, $validation = NULL, $form_element = false, $error_type = false, $record_id = false )
   {
-    foreach ( get_object_vars( $this ) as $prop => $val ) {
-      
-      if ( $prop === 'value' ) {
-        $value = maybe_unserialize( $value );
-      }
-      
+    foreach ( get_object_vars( $this ) as $prop => $val )
+    {
       $this->{$prop} = $$prop;
     }
   }
