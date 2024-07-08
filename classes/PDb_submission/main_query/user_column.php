@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -178,15 +178,25 @@ class user_column extends base_column {
         break;
 
       default:
+        
+        // filter out any serialized objects
+        $test = maybe_unserialize( $initialvalue );
+        
+        if ( $test !== $initialvalue && ! is_array( $test ) )
+        {
+          $initialvalue = '';
+        }
 
-        if ( is_null( $initialvalue ) ) {
-
+        if ( is_null( $initialvalue ) )
+        {
           $this->value = null;
-        } elseif ( is_array( $initialvalue ) ) {
-
+        } 
+        elseif ( is_array( $initialvalue ) )
+        {
           $this->value = Participants_Db::_prepare_array_mysql( $initialvalue );
-        } else {
-
+        }
+        else
+        {
           $this->value = Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
         }
     }
