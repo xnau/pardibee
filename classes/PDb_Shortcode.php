@@ -20,7 +20,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    3.1
+ * @version    3.2
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -1175,15 +1175,20 @@ abstract class PDb_Shortcode {
   public static function esc_submitted_value( $value )
   {
     $value = maybe_unserialize( $value );
-
-    if ( is_array( $value ) ) {
-      array_walk_recursive( $value, array(__CLASS__, '_esc_element') );
-      $return = $value;
-    } else {
-      $return = self::_esc_value( $value );
+    
+    switch (true)
+    {
+      case is_array( $value ):
+        array_walk_recursive( $value, array(__CLASS__, '_esc_element') );
+        return $value;
+      
+      case is_string( $value ):
+        return self::_esc_value( $value );
+      
+      default:
+        // only strings or arrays are allowed #3095
+        return '';
     }
-
-    return $return;
   }
 
   /**
