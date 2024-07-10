@@ -6,6 +6,7 @@ Requires at least: 5.0
 Tested up to: 6.5.3
 Requires PHP: 7.4
 Stable tag: 2.5.9
+License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Build and maintain a fully customizable database of participants, members or anything with signup forms, admin backend, custom lists, and CSV support.
