@@ -285,7 +285,7 @@ if ( $participant_values ) :
                 PDb_FormElement::print_element( $config );
               }
 
-              if ( strlen( trim( $column->help_text ) ) > 0 ) :
+              if ( strlen( trim( strval( $column->help_text ) ) ) > 0 ) :
                 ?>
                 <span class="helptext"><?php echo wp_kses_post( Participants_Db::apply_filters( 'translate_string', stripslashes( trim( $column->help_text ) ) ) ) ?></span>
               <?php endif; ?>
