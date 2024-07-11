@@ -2685,7 +2685,7 @@ return $field->name() === $fieldname;
     
     if ( ! $working && $bg_imports_enabled )
     {
-      self::debug_log( __METHOD__ . ' The site cannot remotely access its own admin-ajax.php script', 3 );
+      self::debug_log( __METHOD__ . ' The site cannot remotely access its own admin-ajax.php script. Response: ' . print_r($response,1), 3 );
       
       global $pagenow;
       $page = filter_input( INPUT_GET, 'page', FILTER_DEFAULT, Participants_Db::string_sanitize() );
