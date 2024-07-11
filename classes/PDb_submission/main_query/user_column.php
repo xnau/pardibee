@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.8
+ * @version    0.9
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -179,10 +179,11 @@ class user_column extends base_column {
 
       default:
         
-        // filter out any serialized objects
-        $test = maybe_unserialize( $initialvalue );
-        
-        if ( $test !== $initialvalue && ! is_array( $test ) )
+        // sanitize out serializations
+        // we don't bother to check if it is a valid serialization
+        // the filter is so an admin can craft their own serialization check if they want
+        $pattern = \Participants_Db::apply_filters( 'serialization_check_regex', '/^[OsibNa]:/' );
+        if ( preg_match( $pattern, $initialvalue ) )
         {
           $initialvalue = '';
         }
