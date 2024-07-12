@@ -20,7 +20,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    3.2
+ * @version    3.3
  * @link       http://xnau.com/wordpress-plugins/
  *
  */
@@ -1174,8 +1174,6 @@ abstract class PDb_Shortcode {
    */
   public static function esc_submitted_value( $value )
   {
-    $value = maybe_unserialize( $value );
-    
     switch (true)
     {
       case is_array( $value ):
