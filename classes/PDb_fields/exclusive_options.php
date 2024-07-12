@@ -111,7 +111,7 @@ class exclusive_options {
     
     foreach( $db_selections as $selection )
     {
-      $selection = maybe_unserialize( $selection );
+      $selection = \Participants_Db::unserialize_array( $selection );
       
       switch (true)
       {
