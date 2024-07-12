@@ -151,6 +151,21 @@ abstract class base_column {
      */
     return Participants_Db::apply_filters('skip_imported_value', $skip, $this );
   }
+  
+  /**
+   * simple serialization detection
+   * 
+   * @param string $value
+   * @return bool
+   */
+  protected function is_serialization( $value )
+  {
+    // we don't bother to check if it is a valid serialization
+    // the filter is so an admin can craft their own serialization check if they want
+    $pattern = \Participants_Db::apply_filters( 'serialization_check_regex', '/^[OsibNa]:/' );
+    
+    return is_string( $value ) && boolval( preg_match( $pattern, $value ) );
+  }
 
   /**
    * sets the value property
