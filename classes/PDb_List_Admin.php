@@ -633,8 +633,6 @@ class PDb_List_Admin {
                                 // multi selects are displayed as comma separated lists
 
                                 $display_value = PDb_FormElement::get_field_value_display( $field, false );
-
-                                //$display_value = is_serialized($value[$column->name]) ? implode(', ', unserialize($value[$column->name])) : $value[$column->name];
                                 break;
 
                               case 'link':
