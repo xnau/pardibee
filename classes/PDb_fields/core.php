@@ -193,7 +193,7 @@ abstract class core {
   protected function set_options_prop( $field )
   {
     if ( !isset( $field->options ) && isset( $field->values ) ) {
-      $options = maybe_unserialize( $field->values );
+      $options = \Participants_Db::unserialize_array( $field->values );
       if ( is_array( $options ) ) {
         $field->options = $options;
       }
