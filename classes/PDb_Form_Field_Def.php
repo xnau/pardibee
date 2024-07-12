@@ -536,7 +536,7 @@ class PDb_Form_Field_Def {
    */
   public function options()
   {
-    return $this->options;
+    return (array) $this->options;
   }
 
   /**
@@ -950,7 +950,7 @@ class PDb_Form_Field_Def {
 //    if ( $calling_class !== get_class() ) {
 //      error_log(__METHOD__.' calling deprecated method: '. print_r( wp_debug_backtrace_summary(),1 ) );
 //    }
-    return (array) maybe_unserialize( $this->values );
+    return Participants_Db::unserialize_array( $this->values );
   }
   
   /**
@@ -1010,14 +1010,14 @@ class PDb_Form_Field_Def {
         case 'attributes':
           
           if ( empty( $this->{$prop} ) ) {
-              $this->{$prop} = (array) maybe_unserialize($value);
+              $this->{$prop} = Participants_Db::unserialize_array($value);
           }
           break;
           
         case 'options':
           
           if ( empty( $this->{$prop} ) ) {
-              $this->{$prop} = (array) maybe_unserialize($value);
+              $this->{$prop} = Participants_Db::unserialize_array($value);
           }
           if ( isset( $field->{$prop} ) &&  ! empty( $field->{$prop} ) && is_array( $field->{$prop} ) ) {
             $this->{$prop} = $field->{$prop};
