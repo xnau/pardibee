@@ -960,15 +960,32 @@ return $field->name() === $fieldname;
   }
 
   /**
-   * unserializes an array if necessary, provides an array in all cases
+   * provides an array, unserializing if necessary
    * 
-   * @param string $string the string to unserialize; does nothing if it is not 
-   *                       a serialization
+   * @param string $string the string to unserialize
    * @return array
    */
   public static function unserialize_array( $string )
   {
-    return (array) maybe_unserialize( $string );
+    if ( ! self::is_serialized_array( $string ) ) // make sure it is a serialized array with no objects
+    {
+      return (array) $string;
+    }
+    
+    return maybe_unserialize( $string );
+  }
+  
+  /**
+   * verifies that a string is a serialized array
+   * 
+   * also makes sure there are no objects in the serialization
+   * 
+   * @param string $string
+   * @return bool
+   */
+  public static function is_serialized_array( $string )
+  {
+    return is_string( $string ) && preg_match( '/^a:\d/', $string ) == 1 && preg_match( '/O:\d/', $string ) == 0;
   }
 
   /**
