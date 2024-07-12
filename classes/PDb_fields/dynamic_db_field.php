@@ -245,7 +245,7 @@ abstract class dynamic_db_field extends core {
 
       $template_def = $this->get_template_def( $info[ 'name' ] );
       
-      if ( $template_def !== $field_data[ 'default' ] || $this->get_attributes_def( $info[ 'name' ] ) !== maybe_unserialize( $field_data['attributes'] ) ) {
+      if ( $template_def !== $field_data[ 'default' ] || $this->get_attributes_def( $info[ 'name' ] ) !== Participants_Db::unserialize_array( $field_data['attributes'] ) ) {
         
         $field = new \PDb_Field_Item( $info );
         
@@ -315,7 +315,7 @@ abstract class dynamic_db_field extends core {
    */
   private function get_attributes_def( $fieldname )
   {
-    return maybe_unserialize( $this->get_field_db_value( $fieldname, 'attributes' ) );
+    return Participants_Db::unserialize_array( $this->get_field_db_value( $fieldname, 'attributes' ) );
   }
   
   /**
