@@ -490,7 +490,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       case 'multi-select-other' :
       case 'multi-dropdown':
 
-        $multivalues = maybe_unserialize( $field->value );
+        $multivalues = Participants_Db::unserialize_array( $field->value );
         if ( is_array( $multivalues ) || empty( $multivalues[ 'other' ] ) )
           unset( $multivalues[ 'other' ] );
 
@@ -503,7 +503,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
          * value is indexed array: array( $url, $linktext )
          */
 
-        if ( !$linkdata = unserialize_array( $field->value ) ) {
+        if ( !$linkdata = Participants_Db::unserialize_array( $field->value ) ) {
 
           $return = '';
           break;
@@ -945,7 +945,8 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $parts = maybe_unserialize( $this->value );
 
-    if ( !is_array( $parts ) ) {
+    if ( !is_array( $parts ) ) 
+    {
       if ( filter_var( $parts, FILTER_VALIDATE_URL, FILTER_NULL_ON_FAILURE ) ) {
         $this->value = $parts;
         $parts = array( $parts, $linktext_placeholder );
@@ -954,8 +955,12 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       } else {
         $parts = array( '', $this->value );
       }
-    } elseif ( !empty( $this->link ) ) {
-      $parts[ 0 ] = $this->link;
+    } 
+    else
+    {
+      if ( !empty( $this->link ) ) {
+        $parts[0] = $this->link;
+      }
     }
 
     // if the value contains only a URL, the linktext and URL are made the same
@@ -975,7 +980,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
 
     $this->_addline( '<div class="link-element">' );
 
-    $title = strip_tags( empty( $title ) ? '' : $title );
+    $title = strip_tags( empty( $title ) || ! is_string( $title ) ? '' : $title );
 
     $this->attributes[ 'placeholder' ] = $link_placeholder;
 
@@ -2163,7 +2168,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     } 
     elseif ( ! self::is_empty( $options ) ) 
     {
-      $field_options = maybe_unserialize( $options );
+      $field_options = Participants_Db::unserialize_array( $options );
     }
     
     if ( is_array( $field_options ) ) 
