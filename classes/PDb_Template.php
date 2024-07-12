@@ -146,7 +146,7 @@ class PDb_Template {
    */
   public function get_value( $name )
   {
-    return maybe_unserialize( $this->_value( $name ) );
+    return Participants_Db::unserialize_array( $this->_value( $name ) );
   }
 
   /**
@@ -273,7 +273,7 @@ class PDb_Template {
           $value = $field->help_text();
           break;
         default:
-          $value = maybe_unserialize( $field->{$prop} );
+          $value = Participants_Db::unserialize_array( $field->{$prop} );
       }
       
     }
