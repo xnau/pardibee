@@ -60,20 +60,31 @@ class user_column extends base_column {
 
         /* translate the link markdown used in CSV files to the array format used in the database
          */
-        if ( is_null( $initialvalue ) ) {
-
+        if ( is_null( $initialvalue ) )
+        {
           $this->value = null;
-        } elseif ( !is_array( $initialvalue ) ) {
-
+        } 
+        elseif ( !is_array( $initialvalue ) )
+        {
           $this->value = Participants_Db::_prepare_array_mysql( Participants_Db::get_link_array( $initialvalue ) );
-        } else {
-
+        } 
+        else 
+        {
+          if ( $this->is_serialization( $initialvalue[1] ) )
+          {
+            $initialvalue[1] = '';
+          }
           $this->value = Participants_Db::_prepare_array_mysql( $initialvalue );
         }
 
         break;
 
       case 'rich-text':
+        
+        if ( $this->is_serialization( $initialvalue ) )
+        {
+          $initialvalue = '';
+        }
 
         global $allowedposttags;
         $this->value = is_null( $initialvalue ) ? null : wp_kses( stripslashes( $initialvalue ), $allowedposttags );
@@ -180,10 +191,7 @@ class user_column extends base_column {
       default:
         
         // sanitize out serializations
-        // we don't bother to check if it is a valid serialization
-        // the filter is so an admin can craft their own serialization check if they want
-        $pattern = \Participants_Db::apply_filters( 'serialization_check_regex', '/^[OsibNa]:/' );
-        if ( preg_match( $pattern, $initialvalue ) )
+        if ( $this->is_serialization(  $initialvalue ) )
         {
           $initialvalue = '';
         }
