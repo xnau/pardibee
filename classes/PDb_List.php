@@ -1117,7 +1117,7 @@ class PDb_List extends PDb_Shortcode {
   public function show_link( $value, $template = false, $print = false )
   {
 
-    $params = maybe_unserialize( $value );
+    $params = Participants_Db::unserialize_array( $value );
 
     if ( is_array( $params ) )
     {
