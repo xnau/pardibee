@@ -864,7 +864,7 @@ class PDb_Manage_Fields_Updates {
    */
   public static function array_to_string_notation( $array )
   {
-    $value_list = maybe_unserialize( $array );
+    $value_list = Participants_Db::unserialize_array( $array );
 
     if ( !is_array( $value_list ) ) {
       return $value_list;
