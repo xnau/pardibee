@@ -534,8 +534,6 @@ class Participants_Db extends PDb_Base {
     
     self::check_uploads_directory();
     
-    self::check_http_loopback();
-    
     if ( is_admin() && array_key_exists( 'pdb-clear_sessions', $_GET ) ) {
       PDb_submission\db_session::close_all();
     }
