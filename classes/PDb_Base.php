@@ -963,13 +963,14 @@ return $field->name() === $fieldname;
    * provides an array, unserializing if necessary
    * 
    * @param string $string the string to unserialize
-   * @return array
+   * @param bool $return_array optionally don't convert the output to an array
+   * @return array|mixed
    */
-  public static function unserialize_array( $string )
+  public static function unserialize_array( $string, $return_array = true )
   {
     if ( ! self::is_serialized_array( $string ) ) // make sure it is a serialized array with no objects
     {
-      return (array) $string;
+      return $return_array ? (array) $string : $string;
     }
     
     return maybe_unserialize( $string );
