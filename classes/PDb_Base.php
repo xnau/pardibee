@@ -960,7 +960,7 @@ return $field->name() === $fieldname;
   }
 
   /**
-   * provides an array, unserializing if necessary
+   * provides an array, safely unserializing if necessary
    * 
    * @param string $string the string to unserialize
    * @param bool $return_array optionally don't convert the output to an array
