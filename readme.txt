@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.5.5
 Requires PHP: 7.4
-Stable tag: 2.5.9.1
+Stable tag: 2.5.9.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -291,6 +291,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.5.9.3 =
+* further hardening against code injection vulerability
+* fixed issue with false reporting of HTTP loopback failure
+
 = 2.5.9.2 =
 * fixed issue with list header sorting not working on AJAX search results
 * fixed code injection vulerability in form submissions
@@ -572,7 +576,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.5.9.2 is a minor bugfix release with an important security fix
+2.5.9.3 is a minor bugfix release with an important security fix
 
 == Plugin Support ==
 
