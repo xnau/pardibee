@@ -943,7 +943,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       $this->value = array( '' );
     }
 
-    $parts = maybe_unserialize( $this->value );
+    $parts = Participants_Db::unserialize_array( $this->value, false );
 
     if ( !is_array( $parts ) ) 
     {
