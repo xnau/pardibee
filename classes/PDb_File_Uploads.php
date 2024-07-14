@@ -188,18 +188,6 @@ class PDb_File_Uploads {
 
     return $new_filename;
   }
-
-  /**
-   * quick empty test works on arrays and serialized arrays
-   * 
-   * @param string|array $input
-   * @return bool if empty
-   */
-  public function is_empty( $input )
-  {
-    $test = implode( '', (array) maybe_unserialize( $input ) );
-    return empty( $test );
-  }
   
   /**
    * determines of the $_FILES array has uploaded files
