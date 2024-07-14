@@ -298,7 +298,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
       case 'link':
 
-        $link_pair = maybe_unserialize( $value );
+        $link_pair = Participants_Db::unserialize_array( $value, false );
         
         // is $link a linktext/URL array?
         if ( is_array( $link_pair ) )
@@ -337,7 +337,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
       default:
 
-        $value = maybe_unserialize( $value );
+        $value = Participants_Db::unserialize_array( $value, false );
 
         /*
          * as of version 1.7.9 multi-type fields export their values as a 
@@ -613,7 +613,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public static function field_value_array( $value )
   {
-    $multivalues = maybe_unserialize( $value );
+    $multivalues = Participants_Db::unserialize_array( $value, false );
 
     if ( !is_array( $multivalues ) ) {
       
@@ -1138,7 +1138,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   private function set_link_field_value()
   {
-    $parts = maybe_unserialize( $this->value );
+    $parts = Participants_Db::unserialize_array( $this->value, false );
 
     if ( is_array( $parts ) ) {
 
@@ -1287,7 +1287,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
         case 'link' :
 
-          $linkdata = maybe_unserialize( $this->value() );
+          $linkdata = Participants_Db::unserialize_array( $this->value(), false );
 
           if ( !empty( $linkdata ) && is_array( $linkdata ) ) {
             list( $url, $value ) = $linkdata + array('', '');
