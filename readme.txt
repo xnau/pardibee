@@ -292,12 +292,12 @@ You can define a "captcha" form element which will show a simple math question f
 == Changelog ==
 
 = 2.5.9.3 =
-* further hardening against code injection vulerability
+* further hardening against code injection vulnerability
 * fixed issue with false reporting of HTTP loopback failure
 
 = 2.5.9.2 =
 * fixed issue with list header sorting not working on AJAX search results
-* fixed code injection vulerability in form submissions
+* fixed code injection vulnerability in form submissions
 * list search "clear" now clears the last submitted search value
 
 = 2.5.9.1 =
