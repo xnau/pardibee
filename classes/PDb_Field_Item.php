@@ -647,7 +647,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   public function file_uri()
   {
     $uri = '';
-    if ( $this->is_upload_field() ) {
+    if ( $this->is_upload_field() && ! empty( $this->value ) ) {
       if ( function_exists( 'get_attachment_url_by_slug' ) ) {
         $uri = get_attachment_url_by_slug( $this->value );
       }
@@ -1333,7 +1333,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
 
         case 'rich-text':
 
-          if ( $this->html_output ) {
+          if ( $this->html_output && ! $this->is_empty( $this->value() ) ) {
             $return = sprintf( '<span ' . PDb_FormElement::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $this->value(), 'rich-text field' ) );
           } else {
             $return = $this->is_empty( $this->value() ) ? '' : strip_tags( esc_textarea( $this->value() ) );
