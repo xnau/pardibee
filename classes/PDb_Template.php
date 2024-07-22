@@ -14,7 +14,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.4
+ * @version    2.5
  * @link       http://xnau.com/wordpress-plugins/
  */
 
@@ -146,7 +146,7 @@ class PDb_Template {
    */
   public function get_value( $name )
   {
-    return Participants_Db::unserialize_array( $this->_value( $name ) );
+    return Participants_Db::unserialize_array( $this->_value( $name ), false );
   }
 
   /**
@@ -273,7 +273,7 @@ class PDb_Template {
           $value = $field->help_text();
           break;
         default:
-          $value = Participants_Db::unserialize_array( $field->{$prop} );
+          $value = Participants_Db::unserialize_array( $field->{$prop}, false );
       }
       
     }
