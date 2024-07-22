@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -58,7 +58,15 @@ class validating_field {
   {
     foreach ( get_object_vars( $this ) as $prop => $val )
     {
-      $this->{$prop} = $$prop;
+      switch ($prop)
+      {
+        case 'value':
+          $this->value = $this->prepare_value( $value );
+          break;
+        default:
+          $this->{$prop} = $$prop;
+      }
+      
     }
   }
   
@@ -219,6 +227,17 @@ class validating_field {
   public function __get( $name )
   {
     return $this->{$name};
+  }
+  
+  /**
+   * prepares the value property
+   * 
+   * @param mixed $value
+   * @return mixed the field value
+   */
+  private function prepare_value( $value )
+  {
+    return \Participants_Db::unserialize_array( $value, false );
   }
 
 }
