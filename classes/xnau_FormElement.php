@@ -164,7 +164,7 @@ abstract class xnau_FormElement {
   /**
    * @var string html element id
    */
-  public $containter_id;
+  public $container_id;
 
   /**
    * instantiates a xnau_FormElement object
