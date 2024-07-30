@@ -1085,7 +1085,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    * sets the value property from an incoming value
    * 
    * this is to clean up an array of values and replace any commas with entities 
-   * so that when stored as a comma string, can be recompsed into the same array
+   * so that when stored as a comma string, can be recomposed into the same array
    * 
    * @param string|array $raw_value
    */
