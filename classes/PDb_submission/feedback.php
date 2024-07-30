@@ -47,7 +47,7 @@ class feedback {
       $value = $this->properties[ $name ];
     } catch ( Exception $exc ) {
       $value = '';
-      Participants_Db::debug_log( __METHOD__ . ' property "' . $name . '" not found.' );
+      \Participants_Db::debug_log( __METHOD__ . ' property "' . $name . '" not found.' );
     }
 
     return $value;

@@ -14,7 +14,7 @@
  */
 
 namespace PDb_submission;
-use Participants_Db;
+use \Participants_Db;
 
 defined( 'ABSPATH' ) || exit;
 
