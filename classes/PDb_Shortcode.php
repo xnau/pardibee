@@ -909,7 +909,7 @@ abstract class PDb_Shortcode {
     $value = $record_value;
 
     // replace it with the submitted value if provided, escaping the input
-    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && array_key_exists( $field->name(), $_POST ) && ! $field->is_templated_field() )
+    if ( in_array( $this->module, array('record', 'signup', 'retrieve') ) && isset( $_POST[$field->name()] ) && ! $field->is_templated_field() )
     {  
       $value = filter_input( INPUT_POST, $field->name(), FILTER_CALLBACK, array( 'options' => 'PDb_Shortcode::esc_submitted_value' ) );
       
