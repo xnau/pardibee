@@ -146,7 +146,7 @@ class string_combine extends calculated_field {
   /**
    * provides the field value to use in the string combine data array
    * 
-   * @param \PDb_Field_Item $field
+   * @param \PDb_Field_Item $template_field
    * @return string value to use in the concatenation
    */
   private function field_value( $template_field )
@@ -156,7 +156,7 @@ class string_combine extends calculated_field {
     if ( $template_field->has_content() )
     {
       $value = $template_field->get_value_display();
-      if ( $this->field->get_attribute( 'strip_tags' ) ) {
+      if ( $this->field->get_attribute( 'strip_tags' ) || ! \Participants_Db::field_html_is_allowed( $template_field->name() ) ) {
         $value = strip_tags( $value );
       }
     }
