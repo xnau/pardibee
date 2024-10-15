@@ -786,6 +786,33 @@ return $field->name() === $fieldname;
      */
     return Participants_Db::apply_filters( 'allowed_html_' . $type, $all_allowed );
   }
+  
+  
+  
+  /**
+   * tells if the current field allows HTML tags
+   * 
+   * @param string $fieldname
+   * @return bool
+   */
+  public static function field_html_is_allowed( $fieldname )
+  {
+    $field = PDb_Form_Field_Def::instance($fieldname);
+    
+    if ( ! is_a( $field, '\PDb_Form_Field_Def' ) || ! in_array( $field->form_element(), ['text-line','text-area'] ) )
+    {
+      return true;
+    }
+    
+    $allow = \Participants_Db::plugin_setting_is_true('allow_html', 1);
+    
+    if ( isset( $field->attributes['allow_html'] ) )
+    {
+      $allow = ! in_array( $field->attributes['allow_html'], ['no',0,'0','false'] );
+    }
+    
+    return $allow;
+  }
 
   /**
    * provides the list of allowed js action attributes
