@@ -173,7 +173,8 @@ class PDb_Form_Field_Def {
    */
   public static function instance( $fieldname )
   {
-    return $result = self::get_field_def( $fieldname ) ? new self( $result ) : false;
+    $result = self::get_field_def( $fieldname );
+    return $result ? new self( $result ) : false;
   }
 
   /**
