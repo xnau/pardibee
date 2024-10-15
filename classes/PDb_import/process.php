@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -142,7 +142,7 @@ class process extends \WP_Background_Process {
   {
     if ( $this->is_process_running() ) {
 			// Background process already running.
-			exit;
+      exit;
 		}
 
 		if ( $this->is_queue_empty() ) {
@@ -178,7 +178,9 @@ class process extends \WP_Background_Process {
     $this->tally = tally::get_instance();
     $this->tally->add('error');
     delete_transient( $this->check_transient_name() );
-    delete_option( $this->tally->get_tally()->key );
+    
+    // looks like we don't need this #3108
+    //delete_option( $this->tally->get_tally()->key );
     
     add_filter( 'pdb-csv_import_report', function($report)
     {
