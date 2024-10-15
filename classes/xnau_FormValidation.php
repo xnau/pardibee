@@ -297,7 +297,8 @@ TRACE: ' .print_r( wp_debug_backtrace_summary(),1 ), 4 );
     /*
      * if there is no validation method defined, exit here
      */
-    if (empty($field->validation) || $field->validation === NULL || $field->validation == 'no' || $field->validation === FALSE) {
+    if (empty($field->validation) || $field->validation === NULL || $field->validation == 'no' || $field->validation === FALSE) 
+    {
       return;
     }
     
@@ -307,7 +308,8 @@ TRACE: ' .print_r( wp_debug_backtrace_summary(),1 ), 4 );
      * validated (error_type false) we test the submitted field for empty using
      * a defined method that allows 0, but no whitespace characters.
      */ 
-    elseif ($field->validation == 'yes') {
+    elseif ($field->validation == 'yes')
+    {
 
       if ($this->is_empty($field->value)) {
         $field->error_type = 'empty';
@@ -317,7 +319,9 @@ TRACE: ' .print_r( wp_debug_backtrace_summary(),1 ), 4 );
        * here we process the remaining validation methods set for the field if we
        * have not validated the field yet
        */
-    } elseif ($field->error_type === false) {
+    } 
+    elseif ($field->error_type === false) 
+    {
 
       $regex = false;
       $test_value = false;
