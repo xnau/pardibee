@@ -74,7 +74,7 @@ class PDb_List extends PDb_Shortcode {
   public $search_error_style = '';
 
   /**
-   * @var \PDb_Paginationt the pagination object
+   * @var \PDb_Pagination the pagination object
    */
   public $pagination;
 
