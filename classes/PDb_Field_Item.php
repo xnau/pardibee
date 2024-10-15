@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.13
+ * @version    2.14
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -205,7 +205,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function value()
   {
-    return $this->value;
+    return is_null( $this->value ) ? '' : $this->value;
   }
 
   /**
