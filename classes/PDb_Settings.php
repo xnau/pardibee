@@ -1191,6 +1191,20 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    // #3099
+    $this->plugin_settings[] = array(
+        'name' => 'allow_html',
+        'title' => __( 'Allow HTML in Text Fields', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'This allows HTML tags in "Text" and "Text Area" type fields. Does not affect "Rich Text" fields. This can be overridden in the field attribute with the "allow_html" attribute.', 'participants-database' ) . $this->settings_help( 'allow_html' ),
+            'value' => 1,
+            'options' => array(1, 0),
+        ),
+    );
+
     /**
      * @version 1.7.3.1
      * 
