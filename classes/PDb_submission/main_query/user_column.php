@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.9
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -206,7 +206,9 @@ class user_column extends base_column {
         }
         else
         {
-          $this->value = Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
+          $value = \Participants_Db::field_html_is_allowed( $this->field->name() ) ? wp_kses( trim( $initialvalue ), \Participants_Db::allowed_html( 'post' ) ) : strip_tags( trim( $initialvalue ) );
+          
+          $this->value = Participants_Db::_prepare_string_mysql( $value );
         }
     }
   }
