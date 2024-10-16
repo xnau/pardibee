@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9
+ * @version    1.10
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -874,16 +874,31 @@ class PDb_List_Admin {
   /**
    * sets up the main list columns
    * 
-   * @global wpdb $wpdb
+   * @global \wpdb $wpdb
    */
   private static function setup_display_columns()
   {
     global $wpdb;
+    
     $sql = '
-          SELECT f.name, f.form_element, f.default, f.group, f.title
-          FROM ' . Participants_Db::$fields_table . ' f 
-          WHERE f.name IN ("' . implode( '","', PDb_Shortcode::get_list_display_columns( 'admin_column' ) ) . '") 
-          ORDER BY f.admin_column ASC';
+      SELECT f.name, f.form_element, f.default, f.group, f.title
+      FROM ' . Participants_Db::$fields_table . ' f ';
+    
+    $user_pref_columns = self::get_admin_user_setting( 'list_columns' );
+    
+    if ( is_array( $user_pref_columns ) )
+    {
+      $columns = implode( '", "', array_keys( $user_pref_columns ) );
+      $sql .= '
+            WHERE f.name IN ("' . $columns . '") 
+            ORDER BY FIELD( name, "' . $columns . '")';
+    }
+    else
+    {
+      $sql .= '
+            WHERE f.name IN ("' . implode( '","', PDb_Shortcode::get_list_display_columns( 'admin_column' ) ) . '") 
+            ORDER BY f.admin_column ASC';
+    }
 
     self::$display_columns = $wpdb->get_results( $sql );
   }
