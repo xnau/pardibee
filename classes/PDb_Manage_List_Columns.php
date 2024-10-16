@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    0.5
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -84,6 +84,14 @@ class PDb_Manage_List_Columns {
     global $wpdb;
 
     $column = $this->list_column( $type );
+    
+    if ( $type === 'admin' )
+    {
+      $sorted_columns = array_filter($this->fieldlist( $update_list ));
+      asort($sorted_columns);
+
+      PDb_List_Admin::set_admin_user_setting( 'list_columns', $sorted_columns );
+    }
 
     $setlist = array();
     foreach ( $this->fieldlist( $update_list ) as $field => $order ) {
@@ -112,11 +120,12 @@ class PDb_Manage_List_Columns {
     }
 
     foreach ( $update_list as $i => $rawname ) {
-      $fieldname = filter_var( $rawname, FILTER_SANITIZE_SPECIAL_CHARS );
+      $fieldname = filter_var( $rawname, FILTER_DEFAULT, Participants_Db::string_sanitize() );
       if ( isset( $fieldlist[$fieldname] ) ) { // check against list of defined fields before adding
         $fieldlist[$fieldname] = filter_var( $i, FILTER_SANITIZE_NUMBER_INT ) + 1;
       }
     }
+    
     return $fieldlist;
   }
 
