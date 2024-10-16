@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Requires PHP: 7.4
-Stable tag: 2.5.9.4
+Stable tag: 2.5.9.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -101,6 +101,8 @@ This plugin is fully compliant with WordPress Internationalization standards and
 * French: Pierre Fischer
 
 * German: Martin Sauter
+
+* German Formal: Hanno Bolte [Hanno Bolte IT Consulting](https://www.bsoft.de)
 
 * Greek: Toni Bishop [Jrop](https://www.jrop.com)
 
@@ -290,6 +292,12 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.5.10 =
+* added preference to disallow HTML in text fields
+* admin list column preferences now on a per-user basis
+* added German Formal translation
+* minor bug fixes
 
 = 2.5.9.5 =
 * fixed classname reference error causing error when saving dynamic fields
@@ -583,7 +591,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.5.9.5 is a minor bugfix release
+2.5.10 is a feature and bugfix release
 
 == Plugin Support ==
 
