@@ -1256,6 +1256,8 @@ abstract class PDb_Shortcode {
             $this->shortcode_atts['autocomplete'], 
             Participants_Db::apply_filters( $this->module . '_form_action_attribute', $_SERVER['REQUEST_URI'] )
     );
+    
+    
     $default_hidden_fields = array(
         'action' => $this->module,
         'subsource' => Participants_Db::PLUGIN_NAME,
