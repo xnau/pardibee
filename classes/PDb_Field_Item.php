@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.14
+ * @version    2.15
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -749,11 +749,11 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function output_single_record_link( $template = false )
   {
-    $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" %3$s title="%2$s" >%2$s</a>';
+    $pattern = $template ? $template : '<a class="single-record-link" href="%1$s" %4$s title="%3$s" >%2$s</a>';
     $url = Participants_Db::single_record_url( $this->record_id );
     $clickable_text = strlen( $this->value ) === 0 ? $this->default : $this->value;
 
-    return wp_kses( sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ), $this->attributes_string() ), wp_kses_allowed_html('post') );
+    return wp_kses( sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ), esc_attr( strip_tags( $clickable_text ) ), $this->attributes_string() ), wp_kses_allowed_html('post') );
   }
   
   /**
