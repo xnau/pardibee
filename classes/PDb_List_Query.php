@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.3
+ * @version    2.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -852,7 +852,6 @@ class PDb_List_Query {
    */
   private function _add_filter_from_shortcode_filter( $filter_string = '' )
   {
-
     if ( !empty( $filter_string ) ) {
 
       $statements = preg_split( '#(?<!\\\\)(&|\\|)#', $this->prep_filter_string( $filter_string ), -1, PREG_SPLIT_DELIM_CAPTURE );
@@ -877,12 +876,19 @@ class PDb_List_Query {
     /*
      * convert curly quote entities to straight quotes and converts curly quotes to straight quotes #2454
      */
-    $filter_string = self::straighten_quotes( $filter_string );
+    $filter_string = html_entity_decode( self::straighten_quotes( $filter_string ) );
     
-    // unquote the string
-    preg_match( '/^[\'"]?(.+?)[\'"]?$/', html_entity_decode( $filter_string ), $matches );
-    
-    return $matches[1];
+    /*
+     * trim the quotes only if the entire statement is enclosed #2755
+     */
+    if ( preg_match( '/^".+?"$/', $filter_string ) === 1 )
+    {
+      return trim( $filter_string, '"' );
+    }
+    else
+    {
+      return $filter_string;
+    }
   }
   
   /**
