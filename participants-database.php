@@ -613,6 +613,8 @@ class Participants_Db extends PDb_Base {
             "Content-Type: " . $type . "\n";
 
     self::$email_headers = self::apply_filters( 'email_headers', $email_headers );
+    
+    new \PDb_shortcodes\search_return_link();
 
     /**
      * any plugins that require Participants Database settings/database should use this hook
@@ -1173,7 +1175,7 @@ class Participants_Db extends PDb_Base {
       
       $sql = 'SELECT v.name, v.*, g.title AS grouptitle, g.id AS groupid, g.mode  
               FROM ' . Participants_Db::$fields_table . ' v 
-                JOIN ' . Participants_Db::$groups_table . ' g
+                INNER JOIN ' . Participants_Db::$groups_table . ' g
                   ON v.group = g.name 
               ORDER BY v.order';
       $field_defs = $wpdb->get_results( $sql, OBJECT_K );
