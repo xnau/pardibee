@@ -469,6 +469,8 @@ return $field->name() === $fieldname;
     if ( is_array( $field_list ) ) {
       return $field_list;
     }
+    
+    $field_list = [];
 
     foreach ( self::field_defs() as $fieldname => $field ) {
       if ( $field->stores_data() ) {
