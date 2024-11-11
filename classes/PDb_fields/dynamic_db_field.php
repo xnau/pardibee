@@ -131,7 +131,7 @@ abstract class dynamic_db_field extends core {
    * provides the field item object
    * 
    * @param \PDb_Form_Field_Def|string|\PDb_FormElement $field object
-   * @param int $record_id
+   * @param int $record_id the record id
    * @param array $data (optional) additional data 
    * @return \PDb_Field_Item object
    */
