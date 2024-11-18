@@ -1002,6 +1002,12 @@ return $field->name() === $fieldname;
       return $return_array ? (array) $string : $string;
     }
     
+    // this is to fix serializations that come in with single quotes enclosing the values
+    if ( preg_match( "/(:'.+';)/", $string ) === 1 )
+    {
+      $string = str_replace( [":'","';"], [':"','";'], $string );
+    }
+    
     return maybe_unserialize( $string );
   }
   
