@@ -311,6 +311,9 @@ class Participants_Db extends PDb_Base {
     // set the WP hooks to finish setting up the plugin
     add_action( 'plugins_loaded', array(__CLASS__, 'setup_source_names'), 1 );
     add_action( 'plugins_loaded', array(__CLASS__, 'init'), 5 );
+    add_action('init', function(){
+      self::load_plugin_textdomain( __FILE__ );
+    });
     add_action( 'wp', array(__CLASS__, 'check_for_shortcode'), 1 );
     add_action( 'wp', array(__CLASS__, 'remove_rel_link') );
 
@@ -386,10 +389,15 @@ class Participants_Db extends PDb_Base {
       return $events;
     });
     
-    // external custom template location plugin no longer needed, deactivate it
-    deactivate_plugins( 'pdb-custom-templates.php', true );
+    if ( ! function_exists( 'deactivate_plugins' ) ) {
+      include_once ABSPATH . '/wp-admin/includes/plugin.php';
+    }
     
     add_action('wp_loaded', function(){ 
+      
+      // external custom template location plugin no longer needed, deactivate it
+      deactivate_plugins( 'pdb-custom-templates.php', true );
+      
       if ( isset(Participants_Db::$plugin_options['enable_api']) && Participants_Db::$plugin_options['enable_api'] )
       {
         new \PDb_submission\rest_api\routing();
@@ -573,8 +581,6 @@ class Participants_Db extends PDb_Base {
      * initialize the import background process
      */
     new \PDb_import\controller();
-
-    self::load_plugin_textdomain( __FILE__ );
 
     self::$plugin_title = self::apply_filters( 'plugin_title', __( 'Participants Database', 'participants-database' ) );
 
@@ -3150,7 +3156,7 @@ class Participants_Db extends PDb_Base {
       return;
     }
     
-    if ( isset( $shortcode_atts['header_sort'] ) && $shortcode_atts['header_sort'] == 'true' )
+    if ( isset( $shortcode_atts['header_sort'] ) && $shortcode_atts['header_sort'] === 'true' )
     {
       new PDb_shortcodes\sort_headers();
     }
@@ -3160,10 +3166,8 @@ class Participants_Db extends PDb_Base {
     $shortcode_atts['module'] = 'list';
 
     // output the filtered shortcode content
-    header( "Content-Type:	text/html" );
-    
-    
     echo wp_kses( PDb_List::get_list( $shortcode_atts ), Participants_Db::allowed_html('form') );
+    
     return;
   }
 
@@ -3443,21 +3447,55 @@ class Participants_Db extends PDb_Base {
     ) );
     return isset( $labels[$key] ) ? $labels[$key] : $key;
   }
+  
+  /**
+   * provides the plugin's data array
+   * 
+   * @param string $plugin_file path tp the plugin file
+   * @return array
+   */
+  public static function get_plugin_data( $plugin_file = '' )
+  {
+    return self::_get_all_plugin_data( $plugin_file );
+  }
 
   /**
    * parses the text header to extract plugin info
    * 
+   * @param string $plugin_file path to the main plugin file
+   * @return array of plugin header values
+   */
+  private static function _get_all_plugin_data( $plugin_file = '' )
+  {
+    if ( $plugin_file === '' )
+    {
+      $plugin_file = __FILE__;
+    }
+    
+    $default_headers = [
+      'Name' => 'Plugin Name',
+      'PluginURI' => 'Plugin URI',
+      'Version' => 'Version',
+      'Description' => 'Description',
+      'Author' => 'Author',
+      'AuthorURI' => 'Author URI',
+      'TextDomain' => 'Text Domain',
+      'DomainPath' => 'Domain Path',
+      'Network' => 'Network',
+    ];
+    
+    return get_file_data( $plugin_file, $default_headers, 'plugin');
+  }
+  
+
+  /**
+   * provides a single value from the plugin file header
+   * 
    * @param string $key the name of the field to get
    */
-  private static function _get_plugin_data( $key = 'Name' )
+  private static function _get_plugin_data( $key )
   {
-    if ( ! function_exists( 'get_plugin_data' ) ) {
-      include_once ABSPATH . '/wp-admin/includes/plugin.php';
-    }
-
-    $plugin_data = get_plugin_data( __FILE__ );
-
-    return $plugin_data[$key];
+    return self::_get_all_plugin_data()[$key];
   }
   
   /**
