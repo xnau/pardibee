@@ -1945,14 +1945,18 @@ ORDER BY g.order, v.order';
   public static function column_dropdown_options( $columns, $columnlist = array() )
   {
     $grouptitle = reset( $columns )->grouptitle;
+    
     $columnlist[$grouptitle] = 'optgroup';
-    foreach ( $columns as $column ) {
+    
+    foreach ( $columns as $column ) 
+    {
       if ( $column->grouptitle !== $grouptitle ) {
         $grouptitle = $column->grouptitle;
         $columnlist[$column->grouptitle] = 'optgroup';
       }
       $columnlist[Participants_Db::title_key( $column->title, $column->name )] = $column->name;
     }
+    
     return $columnlist;
   }
   
