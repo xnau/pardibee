@@ -1020,9 +1020,11 @@ class PDb_Form_Field_Def {
           if ( empty( $this->{$prop} ) ) {
               $this->{$prop} = Participants_Db::unserialize_array($value);
           }
+          
           if ( isset( $field->{$prop} ) &&  ! empty( $field->{$prop} ) && is_array( $field->{$prop} ) ) {
             $this->{$prop} = $field->{$prop};
           }
+          
           break;
 
         default:
