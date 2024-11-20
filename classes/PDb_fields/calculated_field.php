@@ -40,6 +40,11 @@ abstract class calculated_field extends dynamic_db_field {
    * @var int|float holds the calculated value
    */
   protected $result;
+  
+  /**
+   * @var string unique identifier for the element
+   */
+  protected $element_id;
 
   /**
    * 
