@@ -48,14 +48,20 @@ class sort_headers {
       return $title;
     }
 
-    parse_str( $_SERVER[ 'QUERY_STRING' ], $get_array );
+    
     global $post;
     $base_url = get_permalink( $post->ID );
 
     $ascdesc = 'ASC';
-    if ( isset( $get_array[ 'sortBy' ] ) && $field->name() === $get_array[ 'sortBy' ] && isset( $get_array[ 'ascdesc' ] ) ) {
-      // we need to set the sort link to the opposite of the submitted sort direction
-      $ascdesc = stripos( $get_array[ 'ascdesc' ], 'ASC' ) !== false ? 'DESC' : 'ASC';
+    
+    if ( isset( $_SERVER[ 'QUERY_STRING' ] ) )
+    {
+      parse_str( $_SERVER[ 'QUERY_STRING' ], $get_array );
+
+      if ( isset( $get_array[ 'sortBy' ] ) && $field->name() === $get_array[ 'sortBy' ] && isset( $get_array[ 'ascdesc' ] ) ) {
+        // we need to set the sort link to the opposite of the submitted sort direction
+        $ascdesc = stripos( $get_array[ 'ascdesc' ], 'ASC' ) !== false ? 'DESC' : 'ASC';
+      }
     }
 
     $arg_array = array(
