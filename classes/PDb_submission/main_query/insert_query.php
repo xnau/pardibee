@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -26,16 +26,36 @@ class insert_query extends base_query {
    */
   protected function top_clause()
   {
-    $sql = 'INSERT INTO ' . \Participants_Db::participants_table() . ' SET ';
+    return 'INSERT INTO ' . \Participants_Db::participants_table();
+  }
 
-    if ( $this->needs_timestamp( 'date_recorded' ) ) {
-      $sql .= ' `date_recorded` = "' . \Participants_Db::timestamp_now() . '", ';
+  /**
+   * provides the data body of the query
+   * 
+   * @return string
+   */
+  protected function data_clause()
+  {
+    if ( $this->needs_timestamp( 'date_recorded' ) )
+    {
+      $this->column_clauses[] = ' `date_recorded` = %s';
+      $this->values[] = \Participants_Db::timestamp_now();
     }
-    if ( $this->needs_timestamp( 'date_updated' ) ) {
-      $sql .= ' `date_updated` = "' . \Participants_Db::timestamp_now() . '", ';
+    if ( $this->needs_timestamp( 'date_updated' ) ) 
+    {
+      $this->column_clauses[] = ' `date_updated` = %s';
+      $this->values[] = \Participants_Db::timestamp_now();
     }
     
-    return $sql;
+    $fields = [];
+    $values = [];
+    
+    foreach ( $this->column_clauses as $clause )
+    {
+      list( $fields[], $values[] ) = explode( ' = ', $clause );
+    }
+    
+    return ' ( ' . implode( ', ', $fields ) . ' ) VALUES ( ' . implode( ', ', $values ) . ' )';
   }
 
   /**
