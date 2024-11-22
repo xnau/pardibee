@@ -50,6 +50,11 @@ $column_count = count( $import_columns );
 
 <?php
 if ( $CSV_import->has_errors() ):
+  
+  if ( $CSV_import->error_status === 'error' )
+  {
+    Participants_Db::debug_log( 'CSV Import page error: ' . implode( "\n", $CSV_import->get_errors() ), 2 );
+  }
   ?>
 
         <div class="<?php echo esc_attr( $CSV_import->error_status ) ?> fade below-h2" id="message">
