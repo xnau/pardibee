@@ -352,7 +352,6 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function add_plugin_meta_links( $links, $file )
     {
-
       $plugin = plugin_basename( $this->plugin_path );
 
       // create link
@@ -362,7 +361,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 //        if ( !empty( $this->plugin_data['PluginURI'] ) ) {
 //          $links[] = '<a href="' . $this->plugin_data['PluginURI'] . '">' . __( 'Submit a rating or review', 'participants-database' ) . ' </a>';
 //        }
-        $links[] = '<a href="' . $this->plugin_data['SupportURI'] . '">' . __( 'Support', 'participants-database' ) . ' </a>';
+        if ( isset( $this->plugin_data['SupportURI'] ) )
+        {
+          $links[] = '<a href="' . $this->plugin_data['SupportURI'] . '">' . __( 'Support', 'participants-database' ) . ' </a>';
+        }
       }
       return $links;
     }
