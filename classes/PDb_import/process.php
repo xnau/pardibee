@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    2.1
+ * @version    2.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -63,6 +63,23 @@ class process extends \WP_Background_Process {
         'match_field' => $match_field
     ));
   }
+
+	/**
+	 * Save queue
+	 *
+	 * @return $this
+	 */
+	public function save() {
+		$key = $this->generate_key();
+    
+    $this->clear_old_batch_entries($key);
+
+		if ( ! empty( $this->data ) ) {
+			update_site_option( $key, $this->data );
+		}
+
+		return $this;
+	}
   
   /**
    * performs the import on a single line
@@ -131,6 +148,22 @@ class process extends \WP_Background_Process {
      */
     do_action( 'pdb-import_process_complete', $this );
   }
+
+	/**
+	 * Delete queue
+	 *
+	 * @param string $key Key.
+	 *
+	 * @return $this
+	 */
+	public function delete( $key ) {
+    
+   \Participants_Db::debug_log( __METHOD__.' deleting: ' . $key, 2 );
+    
+		delete_site_option( $key );
+
+		return $this;
+	}
 
 	/**
 	 * Handle cron healthcheck
@@ -235,5 +268,20 @@ class process extends \WP_Background_Process {
   private function set_check_transient( $batch_id )
   {
     set_transient( $this->check_transient_name(), $batch_id, MINUTE_IN_SECONDS * apply_filters( 'wp_pdb_import_cron_interval', 5 ) * 1.1 );
+  }
+  
+  /**
+   * clears any orphan batch entries
+   * 
+   * @global \wpdb $wpdb
+   * @param string $key the current batch key
+   */
+  private function clear_old_batch_entries( $key )
+  {
+    global $wpdb;
+    
+    $sql = 'DELETE FROM ' . $wpdb->options . ' WHERE `option_name` LIKE "wp_' . $this->action . '_batch_%" AND `option_name` <> %s';
+    
+    $wpdb->query( $wpdb->prepare( $sql, $key ) );
   }
 }
