@@ -359,6 +359,7 @@ abstract class xnau_Image_Handler {
         break;
 
       case ($this->test_absolute_path_image( $this->image_file )) :
+        
         $status = 'absolute';
         $this->image_uri = esc_url( $this->image_file );
         //$this->image_file = basename($this->image_file);
@@ -400,7 +401,6 @@ abstract class xnau_Image_Handler {
    */
   protected function _showing_default_image( $filename = false )
   {
-
     if ( !empty( $this->default_image ) ) {
 
       if ( $filename ) {
@@ -430,12 +430,12 @@ abstract class xnau_Image_Handler {
    */
   protected function set_up_file_props( $filename = '' )
   {
-
     $filename = empty( $filename ) ? $this->image_file : $filename;
 
     $filepath = $this->concatenate_directory_path( $this->image_directory, $filename, false );
 
-    if ( $this->_file_exists( $filepath ) ) {
+    if ( $this->_file_exists( $filepath ) ) 
+    {
       $this->image_uri = $this->image_directory_uri . $this->image_file;
       $this->file_exists = true;
     }
@@ -452,29 +452,17 @@ abstract class xnau_Image_Handler {
    */
   protected function _file_exists( $filepath )
   {
-
-    //error_log(__METHOD__.' checking path:'.$filepath.' is_file:'.(is_file($filepath)?'yes':'no'));
-
     if ( empty( $filepath ) )
+    {
       return false;
-
-    // first use the standard function
-    if ( is_file( $filepath ) ) {
-      return true;
     }
 
-    /*
-     * if we're testing the file using http
-     * 
-     * this is pretty slow and probably isn't needed, so we'll keep it commented out
-     */
-//    if (function_exists('stream_context_create')) {
-//      
-//      error_log(__METHOD__.' checking URL:'.$this->concatenate_directory_path($this->image_directory_uri,basename($filepath),false));
-//
-//      return $this->url_exists($this->concatenate_directory_path($this->image_directory_uri,basename($filepath),false));
-//    }
-    // we give up, can't find the file
+    // first use the standard function
+    if ( is_file( $filepath ) ) 
+    {
+      return true;
+    }
+    
     return false;
   }
 
@@ -489,7 +477,6 @@ abstract class xnau_Image_Handler {
    */
   function url_exists( $url )
   {
-
     $code = $this->get_http_response_code( $url );
 
     return $code == 200;
