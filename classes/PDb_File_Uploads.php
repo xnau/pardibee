@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    0.8
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -64,7 +64,7 @@ class PDb_File_Uploads {
    * @param array $attributes
    * @param int|bool $record_id id of the current record or bool false new record
    * 
-   * @return string|bool the path to the uploaded file or bool false if error
+   * @return string|bool name of the uploaded file or bool false if error
    */
   public static function upload( $field_name, $attributes, $record_id = false )
   {
@@ -79,7 +79,7 @@ class PDb_File_Uploads {
    * @param array  $file the $_FILES array element corresponding to one file
    * @param int|bool record id if the action is an update
    *
-   * @return string|bool the path to the uploaded file or bool false if error
+   * @return string|bool final name of the uploaded file or bool false if error
    */
   public function handle_file_upload( $field_name, $file, $id )
   {
@@ -138,10 +138,10 @@ class PDb_File_Uploads {
 
       /**
        * @filter pdb-file_upload_filename
-       * @param string the sanitized filename (without extension)
+       * @param string the sanitized filename
        * @param PDb_Form_Field_Def the field definition parameters
        * @param int|bool the record id or bool false if the ID hasn't been determined yet (as in a signup form)
-       * @return string filename without its extension
+       * @return string filename
        */
       $new_filename = Participants_Db::apply_filters( 'file_upload_filename', preg_replace( array( '#\.#', "/\s+/", "/[^-\.\w]+/" ), array( "-", "_", "" ), $matches[ 1 ] ), $field_def, $id ) . '.' . $matches[ 2 ];
 
@@ -174,8 +174,10 @@ class PDb_File_Uploads {
 
       return false;
     }
+    
+    $filepath = Participants_Db::files_path() . $new_filename;
 
-    if ( false === move_uploaded_file( $file[ 'tmp_name' ], Participants_Db::files_path() . $new_filename ) ) {
+    if ( false === move_uploaded_file( $file[ 'tmp_name' ], $filepath ) ) {
 
       Participants_Db::validation_error( __( 'The file could not be saved.', 'participants-database' ) );
 
@@ -183,8 +185,15 @@ class PDb_File_Uploads {
 
       return false;
     }
+    
+    /**
+     * @action pdb-after_file_uploaded
+     * @param string $filepath full path to the file
+     * @param array $file array of file information
+     */
+    Participants_Db::do_action( 'after_file_uploaded', $filepath, $file );
 
-    Participants_Db::debug_log( sprintf( __METHOD__ . ": The file was successfully uploaded as %s", Participants_Db::files_path() . $new_filename ) );
+    Participants_Db::debug_log( sprintf( __METHOD__ . ": The file was successfully uploaded as %s", $filepath ) );
 
     return $new_filename;
   }
