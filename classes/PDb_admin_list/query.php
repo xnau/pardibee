@@ -98,10 +98,10 @@ class query {
   }
   
   /**
-   * provides a list of record IDs from the list result
+   * provides a list of record IDs from a query
    * 
    * @global \wpdb $wpdb
-   * @param string $query
+   * @param string $query a list query
    * @return array as $index => $record_id
    */
   public static function result_list( $query )
