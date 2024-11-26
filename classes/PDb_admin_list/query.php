@@ -41,6 +41,11 @@ class query {
    * @var string the duplicate check operator
    */
   const dupcheck = '<=>';
+  
+  /**
+   * @var string name of the list query transient
+   */
+  const query_store = 'pdb_amin_list_query';
 
   /**
    * sets up the object
@@ -91,6 +96,33 @@ class query {
     
     return $count;
   }
+  
+  /**
+   * provides a list of record IDs from the list result
+   * 
+   * @global \wpdb $wpdb
+   * @param string $query
+   * @return array as $index => $record_id
+   */
+  public static function result_list( $query )
+  {
+    $cachekey = 'pdb_admin_result_list';
+    
+    $result_list = wp_cache_get( $cachekey );
+    
+    if ( false === $result_list )
+    {
+      global $wpdb;
+      
+      $sql = str_replace('SELECT * FROM', 'SELECT `id` FROM', $query );
+      
+      $result_list = $wpdb->get_col( $sql );
+      
+      wp_cache_set( $cachekey, $result_list, Participants_Db::cache_expire() );
+    }
+    
+    return $result_list;
+  }
 
   /**
    * provides the sanitized query
@@ -100,8 +132,14 @@ class query {
    */
   private function _query()
   {
+    delete_transient( self::query_store ); // clear the transient
+    
     global $wpdb;
-    return $wpdb->remove_placeholder_escape( $this->list_query );
+    $query = $wpdb->remove_placeholder_escape( $this->list_query );
+    
+    set_transient( self::query_store, $query );
+    
+    return $query;
   }
 
   /**
