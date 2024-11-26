@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.7
+ * @version    0.8
  * @link       http://xnau.com/wordpress-plugins/
  *
  * functionality provided here:
@@ -55,13 +55,13 @@ abstract class xnau_Image_Handler {
    * 
    * @var string
    */
-  var $image_file;
+  var $image_file = '';
 
   /**
    * holds the URI to the image
    * @var string
    */
-  var $image_uri;
+  var $image_uri = '';
 
   /**
    * holds the pixel width of the image
