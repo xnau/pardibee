@@ -2023,17 +2023,9 @@ class Participants_Db extends PDb_Base {
       
       $next_i = $index + $i;
       
-      while ( ! array_key_exists( $next_i, $result_list ) )
+      if ( ! array_key_exists( $next_i, $result_list ) )
       {
-        if ( $next_i < 1 )
-        {
-          $next_i = array_key_last( $result_list );
-          break;
-        }
-        else
-        {
-          $next_i = array_key_first( $result_list );
-        }
+        $next_i = $i === 1 ? array_key_first( $result_list ) : array_key_last( $result_list );
       }
 
       return $result_list[ $next_i ];
