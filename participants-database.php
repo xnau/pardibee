@@ -1999,31 +1999,60 @@ class Participants_Db extends PDb_Base {
   }
 
   /**
-   * returns the next valid record id
+   * returns the next valid record id from the results of the admin list filter
    * 
    * the next id can be the next higher or lower. This function will wrap, so it 
    * always returns a valid id.
    * 
-   * @global object $wpdb
+   * @global \wpdb $wpdb
    * @param string $id the current id
    * @param bool   $increment true for next higher, false for next lower
    * @return string the next valid id
    */
   public static function next_id( $id, $increment = true )
   {
-    global $wpdb;
-    $max = $wpdb->get_var( 'SELECT MAX(p.id) FROM ' . self::$participants_table . ' p' );
-    $id = (int) $id;
-    $inc = $increment ? 1 : -1;
-    $id = $id + $inc;
-    while ( !self::_id_exists( $id ) ) {
-      $id = $id + $inc;
-      if ( $id > $max )
-        $id = 1;
-      elseif ( $id < 1 )
-        $id = $max;
+    $i = $increment ? 1 : -1;
+    
+    $query = get_transient( PDb_admin_list\query::query_store );
+    
+    if ( $query ) // get the ID from the last list filter
+    {
+      $result_list = PDb_admin_list\query::result_list( $query );
+
+      $index = array_search( $id, $result_list );
+      
+      $next_i = $index + $i;
+      
+      while ( ! array_key_exists( $next_i, $result_list ) )
+      {
+        if ( $next_i < 1 )
+        {
+          $next_i = array_key_last( $result_list );
+          break;
+        }
+        else
+        {
+          $next_i = array_key_first( $result_list );
+        }
+      }
+
+      return $result_list[ $next_i ];
     }
-    return $id;
+    else // get it from the full ID list
+    {
+      global $wpdb;
+      $max = $wpdb->get_var( 'SELECT MAX(p.id) FROM ' . self::$participants_table . ' p' );
+      $id = (int) $id;
+      $id = $id + $i;
+      while ( !self::_id_exists( $id ) ) {
+        $id = $id + $i;
+        if ( $id > $max )
+          $id = 1;
+        elseif ( $id < 1 )
+          $id = $max;
+      }
+      return $id;
+    }
   }
 
   /**
