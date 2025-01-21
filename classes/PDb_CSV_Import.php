@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class, CSV_Import
  *
@@ -175,7 +175,8 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     
     foreach ( $this->CSV->titles as $fieldname ) {
       
-      if ( PDb_Form_Field_Def::is_field( $fieldname ) ) {
+      if ( PDb_Form_Field_Def::has_db_column( $fieldname ) ) 
+      {
         $columns[] = $fieldname;
       } else {
         $bad_columns[] = $fieldname;
