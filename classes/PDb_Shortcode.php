@@ -205,7 +205,6 @@ abstract class PDb_Shortcode {
     // increment the index each time this class is instantiated
     Participants_Db::$instance_index++;
 
-    
     $this->set_instance_index();
 
     // set the global shortcode flag and trigger the action on the first instantiation of this class
