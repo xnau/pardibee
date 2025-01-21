@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -261,6 +261,28 @@ class PDb_Form_Field_Def {
   {
     $datatype = Participants_Db::apply_filters('form_element_datatype', xnau_FormElement::get_datatype($this->form_element()), $this->form_element() );
     return $datatype !== '';
+  }
+  
+  /**
+   * tells if the field has a column in the main db
+   * 
+   * this should be compatible with SQLite #3082
+   * 
+   * @global \wpdb $wpdb
+   * @param string $fieldname
+   * @return bool true if the field has a db column
+   */
+  public static function has_db_column( $fieldname )
+  {
+    global $wpdb;
+    
+    $sql = 'SELECT `' . $fieldname . '` FROM ' . Participants_Db::$participants_table;
+    
+    $wpdb->suppress_errors( true );
+    $wpdb->get_col( $sql );
+    $wpdb->suppress_errors( false );
+    
+    return strpos( strval( $wpdb->last_error ), 'Unknown column' ) === false;
   }
   
   /**
