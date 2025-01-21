@@ -276,7 +276,7 @@ class Participants_Db extends PDb_Base {
    * @param bool $activate options flag for a non-activation use of this method
    */
   public static function initialize( $activate = true )
-  {    
+  {  
     // set the plugin version
     self::$plugin_version = self::_get_plugin_data( 'Version' );
 
