@@ -60,11 +60,6 @@ class xnau_Template_Email {
    * @var array of attachment paths
    */
   protected $attachments = array();
-  
-  /**
-   * @var string the last mail error message
-   */
-  public static $error_message = '';
 
   /**
    * instantiates the class instance
@@ -213,7 +208,7 @@ class xnau_Template_Email {
    */
   public function get_error_message( WP_Error $error )
   {
-    self::$error_message = $error->get_error_message();
+    Participants_Db::debug_log( 'Email failed with message: "' . $error->get_error_message() . '"' );
   }
 
 }
