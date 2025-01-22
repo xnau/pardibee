@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.4
+ * @version    2.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -1034,9 +1034,9 @@ class PDb_List_Query {
        * if we're dealing with a date element, the target value needs to be 
        * conditioned to get a correct comparison
        */
-      $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), array(), __METHOD__ . ' ' . $field_def->form_element() . ' field' );
+      $search_term = PDb_Date_Parse::timestamp( $filter->get_raw_term(), [], __METHOD__ . ' ' . $field_def->form_element() . ' field' );
 
-      $operator = in_array( $operator, array( '>', '<', '>=', '<=', '<>' ) ) ? $operator : '=';
+      $operator = in_array( $operator, [ '>', '<', '>=', '<=', '<>' ] ) ? $operator : '=';
 
       if ( $search_term === false )
       {
@@ -1045,17 +1045,29 @@ class PDb_List_Query {
       }
       elseif ( $field_def->form_element() === 'timestamp' )
       {
-        /**
-         * @since 1.6.3
-         * 
-         * the calculation in the query converts the local WP timezone date supplied 
-         * in the search term to the active timezone in the database by adding the 
-         * difference between PHP's time() and MYSQLs NOW() functions
-         * 
-         * @since 2.5.1 using a substring search on a date string instead of a 
-         * range search on a numeric timestamp
-         */
-        $statement = 'DATE(p.' . $field_def->name() . ') LIKE CONCAT( "%", DATE(FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . time() . '), NOW()))), "%" ) ';
+        $date_offset_query = 'FROM_UNIXTIME(' . $search_term . ' + TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(' . current_datetime()->format( 'U' ) . '), UTC_TIMESTAMP()) )';
+        
+        switch ( $operator )
+        {
+          case '=':
+            $statement = 'DATE(p.' . $field_def->name() . ') LIKE CONCAT( "%", DATE( ' . $date_offset_query . ' ), "%" )';
+            break;
+          
+          case '<>':
+            $statement = 'DATE(p.' . $field_def->name() . ') NOT LIKE CONCAT( "%", DATE( ' . $date_offset_query . ' ), "%" )';
+            break;
+          
+          case '>':
+          case '>=':
+            $statement = 'p.' . $field_def->name() . ' > ' . $date_offset_query;
+            break;
+          
+          case '<':
+          case '<=':
+            $statement = 'p.' . $field_def->name() . ' < ' . $date_offset_query;
+            break;
+        }
+
       }
       else
       {
