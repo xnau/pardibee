@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.7.1
 Requires PHP: 7.4
-Stable tag: 2.5.10
+Stable tag: 2.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,6 +292,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.6.1 =
+* fixed list filtering issues with internal timestamp fields
+* improved error prevention on CSV imports
+* admin section next/previous navigator now follows current admin list filter
 
 = 2.6 =
 * new "return to results" shortcode
@@ -599,7 +604,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.6 is a feature and bugfix release
+2.6.1 is a bugfix release
 
 == Plugin Support ==
 
