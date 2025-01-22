@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.6
+ * Version: 2.6.1
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -14,7 +14,7 @@
  * 
  * 
  * 
- * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
+ * Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Roland Barker xnau webdesign  (email : webdesign@xnau.com)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 3, as
