@@ -1257,7 +1257,7 @@ abstract class PDb_Shortcode {
     );
     
     
-    $default_hidden_fields = array(
+    $default_hidden_fields = [
         'action' => $this->module,
         'subsource' => Participants_Db::PLUGIN_NAME,
         'shortcode_page' => $uri_components['path'] . (isset( $uri_components['query'] ) ? '?' . $uri_components['query'] : ''),
@@ -1265,7 +1265,7 @@ abstract class PDb_Shortcode {
         'instance_index' => $this->instance_index,
         'pdb_data_keys' => $this->_form_data_keys(),
         'session_hash' => Participants_Db::nonce( Participants_Db::$main_submission_nonce_key ),
-    );
+    ];
 
     if ( Participants_Db::is_multipage_form() ) {
       $default_hidden_fields['previous_multipage'] = $default_hidden_fields['shortcode_page'];
