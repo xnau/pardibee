@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.6
+ * @version    1.7
  * @link       http://xnau.com/wordpress-plugins/
  * 
  */
@@ -150,6 +150,21 @@ class PDb_Record extends PDb_Shortcode {
   protected function _include_template()
   {
     include $this->template;
+  }
+  
+  /**
+   * sets up the hidden fields for the record form
+   */
+  protected function _setup_hidden_fields()
+  {
+    parent::_setup_hidden_fields();
+    
+    /**
+     * @filter pdb-record_form_hidden_fields
+     * @param array as $fieldname => $value
+     * @return array
+     */
+    $this->hidden_fields = Participants_Db::apply_filters( 'record_form_hidden_fields', $this->hidden_fields );
   }
 
   /**
