@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -36,13 +36,31 @@ class last_update_user {
       $this->create_field();
     }
     
+    // add the field to the list of hidden fields for the record form
+    add_filter( 'pdb-record_form_hidden_fields', [$this, 'add_hidden_field'] );
+    
     add_filter( "pdb-field_editor_switches", array( $this, 'editor_config' ), 10, 2 );
     
     add_filter( 'pdb-before_submit_update', array( $this, 'update_last_user_id' ) );
   }
   
   /**
-   * updates the field
+   * adds the field as a hidden field to the frontend record edit form
+   * 
+   * @param array $hidden_fields
+   * @return array
+   */
+  public function add_hidden_field( $hidden_fields )
+  {
+    $hidden_fields[ self::fieldname ] = '';
+    
+    return $hidden_fields;
+  }
+  
+  /**
+   * updates the last update user value
+   * 
+   * places the last update user value in the post array if present in the submission
    * 
    * @param array $post the posted data
    * @return array
@@ -57,8 +75,15 @@ class last_update_user {
       } 
       else 
       {
+        // fallback method if the field isn't in the submission but we want to keep it updated
         add_action( 'pdb-after_submit_update', array( $this, 'update_record' ) );
       }
+    }
+    elseif ( array_key_exists( self::fieldname, $post ) ) 
+    {
+      // leave it unchanged if the current user isn't logged'
+      $record = \Participants_Db::get_participant( $post['id'] );
+      $post[self::fieldname] = $record[self::fieldname];
     }
     
     return $post;
@@ -88,7 +113,9 @@ class last_update_user {
   {
     global $wpdb;
     
-    $wpdb->update( \Participants_Db::participants_table(), array( self::fieldname => $this->user_login ), array( 'id' => $record_id ) );
+    $wpdb->update( \Participants_Db::$participants_table, array( self::fieldname => $this->user_login ), array( 'id' => $record_id ) );
+    
+    \PDb_Participant_Cache::is_now_stale($record_id);
   }
   
   /**
