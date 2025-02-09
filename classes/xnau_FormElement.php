@@ -885,6 +885,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
       $otherlabel = array_search( 'other', $this->options );
       unset( $this->options[ $otherlabel ] );
     }
+    
     if ( isset( $this->attributes[ 'other' ] ) ) {
       $otherlabel = $this->attributes[ 'other' ];
       unset( $this->attributes[ 'other' ] );
@@ -893,7 +894,7 @@ backtrace: '.print_r( wp_debug_backtrace_summary(),1));
     // make a unique prefix for the function
     $js_prefix = $this->_prep_js_string( $this->name )/* .'_' */;
 
-    // put it in a conatiner
+    // put it in a container
     $this->_addline( '<div class="selectother ' . $type . '-other-control-group"' . ( $this->container_id ? ' id="' . $this->container_id . '"' : '' ) . ' >' );
     $this->indent++;
 
