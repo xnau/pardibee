@@ -163,13 +163,14 @@ class calc_template {
    */
   private function extract_components()
   {
-    $this->components = array( 'front' => '', 'body' => '', 'format' => '', 'back' => '' );
+    $this->components = [ 'front' => '', 'body' => '', 'format' => '', 'back' => '' ];
     
-    if ( preg_match( '/^(?<front>.*?)(?<body>\[.+=(?<format>\[.+\]))(?<back>.*)$/', $this->field_template(), $matches ) === 1 ) {
-    
+    if ( preg_match( '/^(?<front>.*?)(?<body>\[.+=(?<format>\[.+\]))(?<back>.*)$/', $this->field_template(), $matches ) === 1 ) 
+    {
       $this->components = $matches;
-    } else {
-      
+    } 
+    else 
+    {  
       \Participants_Db::debug_log(' calculation template format not recognized for template: "'.$this->field_template() . '" in field: "' . $this->field->name() . '"' );
     }
   }
@@ -183,6 +184,11 @@ class calc_template {
   private function completed_template( $default_format )
   {
     $template = $this->field_template();
+    
+    if ( empty( $template ) )
+    {
+      return '';
+    }
     
     if ( ! $this->has_format_tag() ) {
       
