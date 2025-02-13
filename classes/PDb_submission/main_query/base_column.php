@@ -166,6 +166,46 @@ abstract class base_column {
     
     return is_string( $value ) && boolval( preg_match( $pattern, $value ) );
   }
+  
+  /**
+   * sanitize for strings or arrays
+   * 
+   * this is intended to be applied before adding the value to a db query
+   * 
+   * @param string|array $initialvalue
+   * @param bool $allow_array
+   * @return string|array
+   */
+  protected function general_sanitize( $initialvalue, $allow_array = true )
+  {    
+    // sanitize out serializations; they are not allowed here #3095, #3098
+    if ( $this->is_serialization(  $initialvalue ) )
+    {
+      $initialvalue = '';
+    }
+
+    if ( is_null( $initialvalue ) )
+    {
+      $returnvalue = null;
+    } 
+    elseif ( is_array( $initialvalue ) && $allow_array )
+    {
+      $returnvalue = Participants_Db::_prepare_array_mysql( $initialvalue );
+    }
+    else
+    {
+      if ( is_array( $initialvalue ) )
+      {
+        $initialvalue = implode( ', ', $initialvalue );
+      }
+      
+      $value = Participants_Db::field_html_is_allowed( $this->field->name() ) ? wp_kses( trim( $initialvalue ), Participants_Db::allowed_html( 'post' ) ) : strip_tags( trim( $initialvalue ) );
+
+      $returnvalue = Participants_Db::_prepare_string_mysql( $value );
+    }
+
+    return $returnvalue;
+  }
 
   /**
    * sets the value property
