@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.5
+ * @version    1.6
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -984,6 +984,16 @@ class PDb_Form_Field_Def {
   public function has_stored_data()
   {
     return PDb_Field_Editor::db_column_has_data( $this->name );
+  }
+  
+  /**
+   * tells if the field is an "other" type selector
+   * 
+   * @return bool
+   */
+  public function has_other_option()
+  {
+    return strpos( $this->form_element, 'other' ) !== false;
   }
 
   /**
