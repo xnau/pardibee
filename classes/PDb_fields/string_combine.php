@@ -61,7 +61,7 @@ class string_combine extends calculated_field {
   protected function replaced_string( $data )
   {
     // supply an empty array if the data is not provided in the argument
-    $data = is_array( $data ) ? $data : array();
+    $data = is_array( $data ) ? $data : [];
     
     $replacement_data = $this->replacement_data( $data );
     
@@ -69,7 +69,8 @@ class string_combine extends calculated_field {
     
     $replaced_string = \PDb_Tag_Template::replace_text( $this->template(), $replacement_data );
     
-    if ( $this->is_complete_only() && ! $this->complete ) {
+    if ( $this->is_complete_only() && ! $this->complete ) 
+    {
       $replaced_string = '';
     }
     
@@ -97,7 +98,7 @@ class string_combine extends calculated_field {
    */
   protected function replacement_data( $post )
   {
-    $data = array();
+    $data = [];
     
     // iterate through the fields named in the template
     foreach( $this->template_field_list() as $fieldname ) {
@@ -121,6 +122,7 @@ class string_combine extends calculated_field {
         }
 
         $data[$fieldname] = $this->field_value( $template_field );
+        
         $data['value:'.$fieldname] = $template_field->has_content() ? $template_field->raw_value() : '';
       }
       
@@ -155,7 +157,8 @@ class string_combine extends calculated_field {
     
     if ( $template_field->has_content() )
     {
-      $value = $template_field->get_value_display();
+      $value = html_entity_decode( $template_field->get_value_display() );
+      
       if ( $this->field->get_attribute( 'strip_tags' ) || ! \Participants_Db::field_html_is_allowed( $template_field->name() ) ) {
         $value = strip_tags( $value );
       }
