@@ -581,18 +581,26 @@ return $field->name() === $fieldname;
   public static function record_match_id( $columns, $submission )
   {
     global $wpdb;
-    $values = array();
-    $where = array();
+    $values = [];
+    $where = [];
+    
     $columns = is_array( $columns ) ? $columns : explode( ',', str_replace( ' ', '', $columns ) );
-    foreach ( $columns as $column ) {
-      if ( isset( $submission[ $column ] ) ) {
+    
+    foreach ( $columns as $column ) 
+    {
+      if ( isset( $submission[ $column ] ) ) 
+      {
         $values[] = $submission[ $column ];
         $where[] = ' r.' . $column . ' = %s';
-      } else {
+      } 
+      else 
+      {
         $where[] = ' (r.' . $column . ' IS NULL OR r.' . $column . ' = "")';
       }
     }
+    
     $sql = 'SELECT r.id FROM ' . Participants_Db::$participants_table . ' r WHERE ' . implode( ' AND ', $where );
+    
     $match = $wpdb->get_var( $wpdb->prepare( $sql, $values ) );
 
     return is_numeric( $match ) ? (int) $match : false;
@@ -612,19 +620,31 @@ return $field->name() === $fieldname;
   {
     $permalink = false;
     $id = false;
-    if ( filter_var( $page, FILTER_VALIDATE_URL ) ) {
+    
+    if ( filter_var( $page, FILTER_VALIDATE_URL ) )
+    {
       $permalink = $page;
-    } elseif ( preg_match( '#^[0-9]+$#', $page ) ) {
+    } 
+    elseif ( preg_match( '#^[0-9]+$#', $page ) ) 
+    {
       $id = $page;
-    } elseif ( $post = get_page_by_path( $page ) ) {
+    } 
+    elseif ( $post = get_page_by_path( $page ) ) 
+    {
       $id = $post->ID;
-    } else {
+    } 
+    else 
+    {
       // get the ID by the post slug
       global $wpdb;
       $id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p WHERE p.post_name = '%s' AND p.post_status = 'publish'", trim( $page, '/ ' ) ) );
     }
+    
     if ( $id )
+    {
       $permalink = self::get_permalink( $id );
+    }
+    
     return $permalink;
   }
 
@@ -658,7 +678,7 @@ return $field->name() === $fieldname;
    */
   public static function string_sanitize( $flags = FILTER_FLAG_NONE )
   {
-    return array( 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_LOW | $flags );
+    return [ 'flags' => FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_LOW | $flags ];
   }
 
   /**
@@ -674,37 +694,37 @@ return $field->name() === $fieldname;
     $all_allowed = wp_cache_get( $cachekey, $type );
 
     if ( !$all_allowed ) {
-      $base_attributes = array(
+      $base_attributes = [
           'id' => 1,
           'class' => 1,
           'style' => 1,
           'data-*' => 1,
-      );
+      ];
 
       if ( Participants_Db::plugin_setting_is_true( 'allow_js_atts', false ) ) {
         $base_attributes = $base_attributes + self::js_attributes();
       }
 
-      $allowed = array(
-          'a' => array(
+      $allowed = [
+          'a' => [
             'href' => 1,
             'title' => 1,
             'target' => 1,
             'rel' => 1,
-          ) + $base_attributes,
-          'break' => array(),
-          'br' => array(),
-          'style' => array(),
-      );
-      $additional = array();
+          ] + $base_attributes,
+          'break' => [],
+          'br' => [],
+          'style' => [],
+      ];
+      $additional = [];
 
-      $form_allowed = array(
-          'form' => array(
+      $form_allowed = [
+          'form' => [
             'method' => 1,
             'enctype' => 1,
             'action' => 1,
-          ) + $base_attributes,
-          'input' => array(
+          ] + $base_attributes,
+          'input' => [
             'name' => 1,
             'type' => 1,
             'value' => 1,
@@ -723,20 +743,20 @@ return $field->name() === $fieldname;
             'placeholder' => 1,
             'readonly' => 1,
             'required' => 1,
-          ) + $base_attributes,
-          'select' => array(
+          ] + $base_attributes,
+          'select' => [
             'name' => 1,
             'multiple' => 1,
             'disabled' => 1,
             'required' => 1,
-          ) + $base_attributes,
-          'option' => array(
+          ] + $base_attributes,
+          'option' => [
             'value' => 1,
             'selected' => 1,
             'disabled' => 1,
             'label' => 1,
-          ) + $base_attributes,
-          'textarea' => array(
+          ] + $base_attributes,
+          'textarea' => [
             'name' => 1,
             'rows' => 1,
             'cols' => 1,
@@ -746,25 +766,26 @@ return $field->name() === $fieldname;
             'placeholder' => 1,
             'readonly' => 1,
             'required' => 1,
-          ) + $base_attributes,
-          'optgroup' => array(
+          ] + $base_attributes,
+          'optgroup' => [
               'label' => 1,
               'disabled' => 1,
-          ),
-          'label' => array(
+          ],
+          'label' => [
             'title' => 1,
-          ) + $base_attributes,
-          'fieldset' => array(
+              'for' => 1,
+          ] + $base_attributes,
+          'fieldset' => [
             'disabled' => 1,
             'form' => 1,
             'name' => 1,
-          ) + $base_attributes,
-          'output' => array(
+          ] + $base_attributes,
+          'output' => [
               'for' => 1,
               'form' => 1,
               'name' => 1,
-          ),
-      );
+          ],
+      ];
 
       switch ( $type ) {
         case 'form':
