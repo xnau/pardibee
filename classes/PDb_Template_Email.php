@@ -160,6 +160,7 @@ class PDb_Template_Email extends xnau_Template_Email {
      * @version 1.6.3
      * @filter pdb-template_email_tag_map
      * @param array as $tag => value
+     * @param string $context will usually be the name of the template
      * @return array
      */
     $this->data = Participants_Db::apply_filters( 'template_email_tag_map', $this->data, $this->context );
