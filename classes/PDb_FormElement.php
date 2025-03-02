@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  *
  */
@@ -384,15 +384,23 @@ class PDb_FormElement extends xnau_FormElement {
   {
     $this->add_class( 'date_field' );
     
-    if ( $this->field_def && empty( $this->value ) ) {
-      
-      // set the default value using a relative date key
-      $this->value = PDb_Date_Display::get_date( PDb_Date_Parse::timestamp( PDb_List_Query::process_search_term_keys( $this->field_def->default_value() ) ), 'date field dynamic default' );
-      
-    } else {
-      
-      $this->value = PDb_Date_Display::get_date( $this->value, __METHOD__ );
+    $field_atts = $this->field_def ? $this->field_def->attributes() : [];
+    
+    if ( $this->field_def && empty( $this->value ) ) 
+    {  
+      // set the timestamp using a relative date key
+      $timestamp = PDb_Date_Parse::timestamp( PDb_List_Query::process_search_term_keys( $this->field_def->default_value() ) );
+    } 
+    else 
+    {  
+      $timestamp = $this->value;
     }
+    
+    $field_atts['timestamp'] = $timestamp;
+    
+    $date_display = new PDb_Date_Display( $field_atts );
+    
+    $this->value = $date_display->output();
 
     $this->_addline( $this->_input_tag() );
   }
