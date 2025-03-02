@@ -93,12 +93,16 @@ class user_column extends base_column {
       case 'date':
       case 'date5':
 
-        if ( $initialvalue !== '' && !is_null( $initialvalue ) ) {
-
+        if ( $initialvalue !== '' && !is_null( $initialvalue ) ) 
+        {
           $this->value = PDb_Date_Parse::timestamp( $initialvalue, array(), __METHOD__ . ' date field value' );
-        } elseif ( is_null( $initialvalue ) ) {
+        } 
+        elseif ( is_null( $initialvalue ) ) 
+        {
           $this->value = null;
-        } else {
+        } 
+        else 
+        {
           $this->skip = true;
         }
         break;
