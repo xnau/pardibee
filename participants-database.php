@@ -2378,8 +2378,8 @@ class Participants_Db extends PDb_Base {
           /*
            * if the "thanks page" is defined as another page, save the ID in a session variable and move to that page.
            */
-          if ( isset( $post_data['thanks_page'] ) && $post_data['thanks_page'] != $_SERVER['REQUEST_URI'] ) {
-
+          if ( isset( $post_data['thanks_page'] ) && $post_data['thanks_page'] != $_SERVER['REQUEST_URI'] ) 
+          {
             self::$session->set( 'pdbid', $post_data['id'] );
             self::$session->set( 'previous_multipage', $post_data['shortcode_page'] );
             
