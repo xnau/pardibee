@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    0.2
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcicipants_Db
  */
@@ -18,8 +18,10 @@ class PDb_Date_Display {
   /**
    * @var string output mode: read, mysql
    * 
-   * read - human-readable date string
-   * time - date string with time
+   * this property is really just a shorthand method for determining the display format
+   * 
+   * read - human-readable date string using WP defaults
+   * time - date string with time using WP defaults
    * mysql - mysql timestamp string
    */
   private $mode;
@@ -152,11 +154,8 @@ class PDb_Date_Display {
   {
     $this->context = isset( $atts['context'] ) ? $atts['context'] : '';
     $this->timestamp = $this->get_timestamp( isset( $atts['timestamp'] ) ? $atts['timestamp'] : ''  );
-    $this->set_mode( isset( $atts['mode'] ) ? $atts['mode'] : 'read'  );
-    $this->_set_format();
-    if ( isset( $atts['format'] ) ) {
-      $this->set_format( $atts['format'] );
-    }
+    $this->_set_mode( $atts );
+    $this->_set_format( $atts );
   }
 
   /**
@@ -209,19 +208,36 @@ class PDb_Date_Display {
     
     return $this->timestamp ? $date_func( $this->format(), $this->timestamp ) : '';
   }
+  
+  /**
+   * sets the mode property
+   * 
+   * @param array $atts the field attributes array
+   */
+  private function _set_mode( $atts )
+  {
+    $this->set_mode( isset( $atts['mode'] ) ? $atts['mode'] : 'read' );
+  }
 
   /**
    * provides a default date format
    * 
-   * @return string date format
+   * @param array $atts the field attributes
    */
-  private function _set_format()
+  private function _set_format( $atts )
   {
-    if ( $this->mode === 'mysql' ) {
+    if ( isset( $atts['format'] ) )
+    {
+      $format = $atts['format'];
+    }
+    elseif ( $this->mode === 'mysql' ) 
+    {
       $format = 'Y-m-d H:i:s';
-    } else {
+    } 
+    else 
+    {
       $format = get_option( 'date_format' );
-      if ( $this->showing_time() ) {
+      if ( $this->mode === 'time' ) {
         $format .= ' ' . get_option( 'time_format' );
       }
     }
