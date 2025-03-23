@@ -246,3 +246,15 @@ foreach ( $preferences as $i => $preference ) {
     UploadCSV.run();
   });
 </script>
+<style>
+  progress {
+    border-radius: 3px;
+    border: 1px solid #1d232733;
+    appearance: none;
+    width: 100%;
+  }
+  progress::-webkit-progress-value,
+  progress::-moz-progress-bar {
+    background-color: blue;
+  }
+</style>
