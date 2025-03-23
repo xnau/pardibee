@@ -196,7 +196,6 @@ class tally {
    */
   private function is_complete()
   {
-    error_log(__METHOD__.' tally: '. print_r($this->tally,1));
     return isset( $this->tally['progress'] ) && isset( $this->tally['length'] ) && $this->tally['progress'] == $this->tally['length'];
   }
   
@@ -292,7 +291,6 @@ class tally {
    */
   private function clear()
   {
-    error_log(__METHOD__);
     $this->tally = array();
     delete_transient( self::store_name );
     delete_transient( self::store_name . 'final-report' );
