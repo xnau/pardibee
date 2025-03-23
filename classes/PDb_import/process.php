@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    2.2
+ * @version    2.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -77,6 +77,16 @@ class process extends \WP_Background_Process {
 		if ( ! empty( $this->data ) ) {
 			update_site_option( $key, $this->data );
 		}
+    
+    // store the queue length
+    tally::set_import_length( $this->queue_count() );
+    
+    /**
+     * @action pdb-import_queue_saved
+     * 
+     * fired when the queue is complete and processing begins
+     */
+    do_action( 'pdb-import_queue_saved', $this );
 
 		return $this;
 	}
@@ -100,11 +110,24 @@ class process extends \WP_Background_Process {
    */
   public function push_to_queue( $line )
   {
-    if ( \Participants_Db::plugin_setting_is_true( 'background_import', true ) ) {
+    if ( \Participants_Db::plugin_setting_is_true( 'background_import', true ) ) 
+    {
       parent::push_to_queue($line);
-    } else {
+    } 
+    else 
+    {
       $this->task( $line );
     }
+  }
+  
+  /**
+   * tells the number of items in the queue
+   * 
+   * @return int
+   */
+  public function queue_count()
+  {
+    return count( $this->data );
   }
   
   /**
@@ -141,8 +164,6 @@ class process extends \WP_Background_Process {
   {
     parent::complete();
     
-    tally::get_instance()->complete( true );
-    
     /**
      * @see xnau_CSV_Import::__construct for another import complete action
      */
@@ -156,9 +177,9 @@ class process extends \WP_Background_Process {
 	 *
 	 * @return $this
 	 */
-	public function delete( $key ) {
-    
-   \Participants_Db::debug_log( __METHOD__.' deleting: ' . $key, 2 );
+	public function delete( $key )
+  {
+    do_action('pdb-import_process_delete_queue', $this );
     
 		delete_site_option( $key );
 
