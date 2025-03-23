@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.3
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -59,6 +59,22 @@ class tally {
   }
   
   /**
+   * sets the import length value
+   * 
+   * this represents the total number of lines in the imported CSV file
+   * 
+   * @param int $length
+   */
+  public static function set_import_length( $length )
+  {
+    $tally = self::get_instance();
+    
+    $tally->tally['length'] = intval( $length );
+    
+    $tally->save();
+  }
+  
+  /**
    * sets up the tally
    */
   private function __construct()
@@ -101,6 +117,8 @@ class tally {
     $this->tally[$status] += $number;
     $this->last_status = $status;
     
+    $this->tally['progress'] = $this->import_count();
+    
     $this->save();
   }
   
@@ -120,29 +138,8 @@ class tally {
    */
   public function reset()
   {
+    $this->complete = false;
     $this->clear();
-  }
-  
-  /**
-   * completes the report
-   * 
-   * this posts the final report and resets the running tally
-   * 
-   * @param bool $background true if the import is done in the background
-   */
-  public function complete( $background )
-  {
-    $this->complete = true;
-    
-    if ( $background ) {
-      $params = array(
-          'type' => 'success',
-          'persistent' => false,
-      );
-      \PDb_Admin_Notices::post_admin_notice( '<p>' . $this->report() . '</p>', $params );
-
-     $this->clear();
-    }
   }
   
   /**
@@ -162,6 +159,11 @@ class tally {
    */
   public function report()
   {
+    if ( $this->is_complete() )
+    {
+      $this->complete = true;
+    }
+    
     $report = array( '<span class="import-tally-report">' );
     
     $report[] = '<strong>' . $this->context_string() . ':</strong><br>';
@@ -176,7 +178,38 @@ class tally {
     
     $report[] = '</span>';
     
-    return implode( PHP_EOL, $report );
+    $report_html = implode( PHP_EOL, $report );;
+    
+    if ( $this->complete )
+    {
+      set_transient( self::store_name . 'final-report', $report_html, 0 );
+      $this->clear();
+    }
+    
+    return $report_html;
+  }
+  
+  /**
+   * tells if the import is complete
+   * 
+   * @return bool
+   */
+  private function is_complete()
+  {
+    error_log(__METHOD__.' tally: '. print_r($this->tally,1));
+    return isset( $this->tally['progress'] ) && isset( $this->tally['length'] ) && $this->tally['progress'] == $this->tally['length'];
+  }
+  
+  /**
+   * provides the report to asynchronous code
+   * 
+   * @return string HTML
+   */
+  public function realtime_report()
+  {
+    $final_report = get_transient( self::store_name . 'final-report' );
+    
+    return $final_report ? : $this->report();
   }
   
   /**
@@ -259,8 +292,10 @@ class tally {
    */
   private function clear()
   {
+    error_log(__METHOD__);
     $this->tally = array();
     delete_transient( self::store_name );
+    delete_transient( self::store_name . 'final-report' );
   }
   
   /**
