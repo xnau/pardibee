@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -82,6 +82,9 @@ abstract class xnau_CSV_Import {
         $target_path = Participants_Db::base_files_path() . $this->upload_directory . basename($_FILES[PDb_CSV_Import::csv_field]['name']);
 
         if (false !== move_uploaded_file($_FILES[PDb_CSV_Import::csv_field]['tmp_name'], $target_path)) {
+              
+              $tally = \PDb_import\tally::get_instance();
+              $tally->reset();
 
           $this->set_error(sprintf(__('The file %s has been uploaded.', 'participants-database'), '<strong>' . $_FILES[PDb_CSV_Import::csv_field]['name'] . '</strong>'), false);
 
@@ -91,8 +94,8 @@ abstract class xnau_CSV_Import {
             
             if ( ! $this->is_background_import() ) {
               
-              $tally = \PDb_import\tally::get_instance();
-              $tally->complete( false );
+              \PDb_import\tally::set_import_length( $this->lines );
+              
               $this->set_error_heading( $tally->report(), '', false);
               $tally->reset();
               
@@ -136,7 +139,7 @@ abstract class xnau_CSV_Import {
     
     $message[] = sprintf( _n( '%d line received.', '%d lines received.', $this->lines, 'participants-database' ), $this->lines  );
     
-    $message[] = '<br/>' . __( 'The data is importing in the background, refresh the page to get the current status of the import.', 'participants-database');
+//    $message[] = '<br/>' . __( 'The data is importing in the background, refresh the page to get the current status of the import.', 'participants-database');
     
     return implode( PHP_EOL, $message );
   }
@@ -206,12 +209,7 @@ abstract class xnau_CSV_Import {
       return false;
     }
 
-    $this->CSV = new \ParseCsv\Csv();
-
-    /* this method determines the delimiter automatically then parses the file; 
-     * we don't use it because it seems easily confused
-     */
-    //$this->CSV->auto( $src_file, true, 1, ',' );
+    $this->setup_parser();
 
     /*
      * we use our own detection algorithms and parse the file based on what we 
@@ -274,6 +272,17 @@ csv line= '.print_r( $csv_line, true ), 2 );
     }
 
     return true;
+  }
+  
+  /**
+   * sets up the Parse CSV object
+   */
+  protected function setup_parser()
+  {
+    $this->CSV = new \ParseCsv\Csv();
+    
+    // convert the encoding to UTF-8 #3161
+    $this->CSV->encoding( null, 'UTF-8');
   }
 
   /**
