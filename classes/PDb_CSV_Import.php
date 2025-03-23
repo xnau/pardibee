@@ -111,6 +111,18 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   }
   
   /**
+   * tells the total line count for the current import
+   * 
+   * this is the number of records found in the CSV before importing
+   * 
+   * @return int
+   */
+  public function total_lines()
+  {
+    return $this->lines;
+  }
+  
+  /**
    * provides the configured export columns
    * 
    * @return array of field names
