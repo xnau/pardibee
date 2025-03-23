@@ -549,7 +549,10 @@ class Participants_Db extends PDb_Base {
     new PDb_admin_list\mass_edit();
     new PDb_admin_list\delete();
     
-    
+    if ( self::plugin_setting_is_true( 'background_import' ))
+    {
+      new \PDb_import\import_status_display();
+    }
   }
 
   /**
@@ -813,6 +816,27 @@ class Participants_Db extends PDb_Base {
       wp_enqueue_style( 'pdb-frontend' );
       wp_enqueue_style( 'pdb-admin' );
       wp_enqueue_style( 'custom_plugin_admin_css' );
+    }
+    
+    if ( strpos( $hook, 'participants-database-upload_csv') !== false && self::plugin_setting_is_true( 'background_import' ) )
+    {
+      $handle = 'csv-status';
+      wp_register_script( $handle, self::asset_url( "js/csv_status.js" ), array('jquery'), '1.0' );
+      
+      $uploading = filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, self::string_sanitize(FILTER_NULL_ON_FAILURE) );
+      
+      if ( $uploading )
+      {
+        do_action( 'pdb-csv_import_file_load' );
+      }
+      
+      wp_add_inline_script( $handle, Participants_Db::inline_js_data('csvStatus', [
+          '_wpnonce' => wp_create_nonce( \PDb_import\import_status_display::action ), 
+          'action' => \PDb_import\import_status_display::action,
+          'uploading' => $uploading,
+          ] ) );
+      
+      wp_enqueue_script($handle);
     }
   }
 
