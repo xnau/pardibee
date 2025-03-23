@@ -12,7 +12,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -250,20 +250,27 @@ class PDb_Participant_Cache {
    */
   private function reload_cache()
   {
-    global $wpdb;
-
-    $series_start = $this->cache_group * $this->group_size;
-    $series_end = $series_start + $this->group_size;
-
-    $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p WHERE p.id >= ' . $series_start . ' AND p.id < ' . $series_end . ' ORDER BY p.id ASC';
-
-    $this->data = $wpdb->get_results( $sql, OBJECT_K );
-
-    $this->set_cache();
-
-    $this->set_fresh();
+    $cachekey = 'pdb-cache_reload-' . $this->cache_group;
     
-    Participants_Db::debug_log( __METHOD__ . ': Refreshing Participants Database cache for cache group ' . $this->cache_group, 2 );
+    if ( get_transient( $cachekey ) === false )
+    {
+      global $wpdb;
+
+      $series_start = $this->cache_group * $this->group_size;
+      $series_end = $series_start + $this->group_size;
+
+      $sql = 'SELECT * FROM ' . Participants_Db::$participants_table . ' p WHERE p.id >= ' . $series_start . ' AND p.id < ' . $series_end . ' ORDER BY p.id ASC';
+
+      $this->data = $wpdb->get_results( $sql, OBJECT_K );
+
+      $this->set_cache();
+
+      $this->set_fresh();
+      
+      set_transient( $cachekey, true, 10 );
+
+      Participants_Db::debug_log( __METHOD__ . ': Refreshing Participants Database cache for cache group ' . $this->cache_group, 2 );
+    }
   }
 
   /**
