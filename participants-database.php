@@ -821,11 +821,9 @@ class Participants_Db extends PDb_Base {
     if ( strpos( $hook, 'participants-database-upload_csv') !== false && self::plugin_setting_is_true( 'background_import' ) )
     {
       $handle = 'csv-status';
-      wp_register_script( $handle, self::asset_url( "js/csv_status.js" ), array('jquery'), '1.0' );
+      wp_register_script( $handle, self::asset_url( "js/csv_status.js" ), array('jquery'), '1.3' );
       
-      $uploading = filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, self::string_sanitize(FILTER_NULL_ON_FAILURE) );
-      
-      if ( $uploading )
+      if ( filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) ) )
       {
         do_action( 'pdb-csv_import_file_load' );
       }
@@ -833,7 +831,7 @@ class Participants_Db extends PDb_Base {
       wp_add_inline_script( $handle, Participants_Db::inline_js_data('csvStatus', [
           '_wpnonce' => wp_create_nonce( \PDb_import\import_status_display::action ), 
           'action' => \PDb_import\import_status_display::action,
-          'uploading' => $uploading,
+          'importing' => \PDb_import\import_status_display::is_importing(),
           ] ) );
       
       wp_enqueue_script($handle);
