@@ -70,7 +70,7 @@ class user_column extends base_column {
         } 
         else 
         {
-          if ( $this->is_serialization( $initialvalue[1] ) )
+          if ( isset( $initialvalue[1] ) && $this->is_serialization( $initialvalue[1] ) )
           {
             $initialvalue[1] = '';
           }
