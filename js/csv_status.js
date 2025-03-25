@@ -12,7 +12,7 @@ PDb_CSV_Status = (function ($) {
       _wpnonce: csvStatus._wpnonce
     }, update_screen, 'json')
             .done(function () {
-              if (csvStatus.uploading && importing) {
+              if (csvStatus.importing && importing) {
                 setTimeout(poll_updates, 0);
               }
             });
