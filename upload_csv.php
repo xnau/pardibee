@@ -200,8 +200,16 @@ foreach ( $preferences as $i => $preference ) {
 ?></h4>
 
 
-<?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="<?php esc_attr_e( PDb_CSV_Import::csv_field ) ?>" type="file" /><br />
-<input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Upload File', 'participants-database' ) ?>" />
+<?php _e( 'Choose .csv file to import:', 'participants-database' ) ?> <input name="<?php esc_attr_e( PDb_CSV_Import::csv_field ) ?>" type="file" />
+<p><input type="submit" id="csv-upload-submit" class="button button-primary" value="<?php esc_attr_e( 'Upload File', 'participants-database' ) ?>" />&emsp;
+  <?php if (Participants_Db::plugin_setting_is_true( 'background_import', true ) )
+  {
+    _e('Records will be imported in the background.','participants-database');
+  } else {
+    _e('Records will be imported as the file is uploaded, this may take some time if the file is large.', 'participants-database');
+    echo '<span class="csv-import-spinner">' . Participants_Db::get_loading_spinner() . '</span>';
+  } ?>
+</p>
           </form>
         </div>
       </div>
@@ -236,8 +244,9 @@ foreach ( $preferences as $i => $preference ) {
       run : function () {
         prefs = $('#match-preferences');
         matchfield = prefs.find('.match-field');
-        $('#pdb-match_preference').change(set_pref);
-        $('#pdb-match_field').change(set_match_field);
+        $('[id^="pdb-match_preference"]').change(set_pref);
+        $('[id^="pdb-match_field"]').change(set_match_field);
+        $('#csv-upload-submit').on('click', () => $('.csv-import-spinner .ajax-loading').css('visibility', 'visible'));
       }
     }
   }(jQuery));
@@ -247,6 +256,14 @@ foreach ( $preferences as $i => $preference ) {
   });
 </script>
 <style>
+  .csv-import-spinner .ajax-loading {
+    visibility: hidden;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .csv-import-spinner {
+    margin-left: 1em;
+  }
   progress {
     border-radius: 3px;
     border: 1px solid #1d232733;
