@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.6
+ * @version    1.8
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 class PDb_Form_Field_Def {
   
   /**
-   * @var string holds the name of the field definition qurey result cache
+   * @var string holds the name of the field definition query result cache
    */
   const def_cache = 'pdb-field_def';
 
@@ -137,19 +137,14 @@ class PDb_Form_Field_Def {
   public $validation_message;
 
   /**
-   * @var string name of the current module
-   */
-  private $module;
-
-  /**
    * @var array element attributes
    */
-  public $attributes = array();
+  public $attributes = [];
 
   /**
    * @var array element options
    */
-  public $options = array();
+  public $options = [];
 
   /**
    * instantiates the object
@@ -160,7 +155,8 @@ class PDb_Form_Field_Def {
   {
     $field_def = is_string( $field ) ? self::get_field_def( $field ) : self::get_field_def( $field->name );
 
-    if ( $field_def ) {
+    if ( $field_def ) 
+    {
       $this->assign_def_props( $field_def, $field );
     }
   }
@@ -187,7 +183,8 @@ class PDb_Form_Field_Def {
    */
   public static function is_field( $fieldname, $main_only = false )
   {
-    if ( ! is_string($fieldname) ) {
+    if ( ! is_string($fieldname) ) 
+    {
       return false;
     }
     
@@ -295,7 +292,8 @@ class PDb_Form_Field_Def {
    */
   public function get_prop( $prop )
   {
-    switch ( $prop ) {
+    switch ( $prop ) 
+    {
       case 'form_element':
       case 'default_value':
       case 'name':
@@ -306,20 +304,24 @@ class PDb_Form_Field_Def {
       case 'validation':
       case 'validation_message':
         return $this->{$prop}();
+        
       case 'sortable':
       case 'csv':
       case 'persistent':
       case 'signup':
       case 'readonly':
         return $this->{'is_' . $prop}();
+        
       case 'default':
         return $this->default_value();
+        
       case 'id':
       case 'order':
       case 'title':
       case 'grouptitle':
       case 'groupid':
         return $this->{$prop};
+        
       default:
         return null;
     }
@@ -333,28 +335,6 @@ class PDb_Form_Field_Def {
    */
   public function __get( $prop )
   {
-//    error_log(__METHOD__.' getting property: '.$prop.' 
-//      
-//trace: '.print_r(wp_debug_backtrace_summary(),1));
-//    switch ( $prop ) {
-//      case 'form_element':
-//      case 'title':
-//      case 'default':
-//      case 'name':
-//      case 'group':
-//      case 'options':
-//      case 'attributes':
-//      case 'help_text':
-//      case 'validation_message':
-//      case 'sortable':
-//      case 'csv':
-//      case 'persistent':
-//      case 'signup':
-//      case 'readonly':
-//        return $this->{$prop}();
-//      default:
-//        return property_exists(get_class($this), $prop) ? $this->{$prop} : null;
-//    }
     return $this->get_prop( $prop );
   }
 
@@ -391,10 +371,13 @@ class PDb_Form_Field_Def {
    */
   public function make_readonly( $readonly = true )
   {
-    if ( $readonly ) {
+    if ( $readonly ) 
+    {
       $this->readonly = true;
       $this->form_element = 'text-line';
-    } else {
+    } 
+    else 
+    {
       $this->readonly = false;
     }
   }
@@ -416,7 +399,8 @@ class PDb_Form_Field_Def {
    */
   public function set_form_element( $form_element )
   {
-    if ( PDb_FormElement::is_form_element( $form_element ) ) {
+    if ( PDb_FormElement::is_form_element( $form_element ) ) 
+    {
       $this->form_element = esc_sql($form_element);
     }
   }
@@ -451,9 +435,12 @@ class PDb_Form_Field_Def {
     if ( ! $this->has_default() ) {
       return '';
     }
-    if ( $this->is_dynamic_field() || ( $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default ) ) ) {
+    
+    if ( $this->is_dynamic_field() || ( $this->is_hidden_field() && Participants_Db::is_dynamic_value( $this->default ) ) ) 
+    {
       return empty( $this->default ) ? '' : htmlspecialchars_decode( $this->default );
     }
+    
     return Participants_Db::apply_filters( 'translate_string', $this->default );
   }
   
@@ -466,7 +453,8 @@ class PDb_Form_Field_Def {
   {
     $default = $this->default_value();
     
-    if ( $this->is_dynamic_field() || $this->form_element === 'link' ) {
+    if ( $this->is_dynamic_field() || $this->form_element === 'link' ) 
+    {
       // dynamic fields don't display the default value
       // link fields use the default value as a link wrapper only
       $default = '';
@@ -543,7 +531,8 @@ class PDb_Form_Field_Def {
    */
   public function group_title()
   {
-    if ( ! empty($this->grouptitle) ) {
+    if ( ! empty($this->grouptitle) ) 
+    {
       return Participants_Db::apply_filters( 'translate_string', $this->grouptitle );
     }
     
@@ -701,7 +690,7 @@ class PDb_Form_Field_Def {
      * @param array of upload field form element names
      * @return array
      */
-    $upload_fields = Participants_Db::apply_filters( 'upload_field_types', array( 'file-upload', 'image-upload' ) );
+    $upload_fields = Participants_Db::apply_filters( 'upload_field_types', ['file-upload', 'image-upload'] );
     
     return in_array( $this->form_element(), $upload_fields );
   }
@@ -743,7 +732,7 @@ class PDb_Form_Field_Def {
    */
   public function is_templated_field()
   {
-    return in_array( $this->form_element, Participants_Db::apply_filters( 'templated_field_list', array( 'string-combine', 'numeric-calc', 'date-calc' ) ) );
+    return in_array( $this->form_element, Participants_Db::apply_filters( 'templated_field_list', ['string-combine', 'numeric-calc', 'date-calc'] ) );
   }
 
   /**
@@ -766,7 +755,7 @@ class PDb_Form_Field_Def {
    */
   public function is_dynamic_field()
   {
-    $registered_dynamic = in_array( $this->form_element, Participants_Db::apply_filters( 'dynamic_field_list', array('date') ) );
+    $registered_dynamic = in_array( $this->form_element, Participants_Db::apply_filters( 'dynamic_field_list', ['date'] ) );
     
     return $registered_dynamic || $this->is_dynamic_hidden_field();
   }
@@ -778,7 +767,7 @@ class PDb_Form_Field_Def {
    */
   public function is_single_record_link_field()
   {
-    return !in_array( $this->form_element, array('rich-text', 'link') ) && Participants_Db::is_single_record_link( $this );
+    return !in_array( $this->form_element, ['rich-text', 'link'] ) && Participants_Db::is_single_record_link( $this );
   }
 
   /**
@@ -949,12 +938,13 @@ class PDb_Form_Field_Def {
      * @param array of numeric form element names
      * @return array
      */
-    return in_array( $this->form_element, Participants_Db::apply_filters('numeric_fields', array(
+    return in_array( $this->form_element, Participants_Db::apply_filters('numeric_fields', [
         'numeric',
         'decimal',
         'currency',
         'date',
-    )));
+        'numeric-calc',
+    ]));
   }
 
   /**
@@ -994,6 +984,16 @@ class PDb_Form_Field_Def {
   public function has_other_option()
   {
     return strpos( $this->form_element, 'other' ) !== false;
+  }
+  
+  /**
+   * tells if the field is a calculated field
+   * 
+   * @return bool
+   */
+  public function is_calculated()
+  {
+    return in_array( $this->form_element, Participants_Db::apply_filters('calculated_field_list', ['string-combine','date-calc','numeric-calc'] ) );
   }
 
   /**
