@@ -1,9 +1,14 @@
+
+
 /**
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
  * @version 1.5
+ * 
  */
+/* global mass_editL10n */
+/* global list_adminL10n */
 var PDbListAdmin = (function ($) {
   "use strict";
   var checkState = false;
@@ -56,7 +61,7 @@ var PDbListAdmin = (function ($) {
     var hide_all = function (){
         edit_control.hide(speed);
         delete_control.hide(speed);
-      }
+      };
     switch(el.val()){
       case mass_editL10n.edit_action:
         delete_control.hide(speed);
@@ -70,7 +75,7 @@ var PDbListAdmin = (function ($) {
       default:
         hide_all();
     }
-  }
+  };
   // provides the field-specific input for the mass edit control
   var set_mass_edit_input = function (e) {
     var el = e.target ? $(e.target) : $(e);
@@ -94,7 +99,7 @@ var PDbListAdmin = (function ($) {
               if (typeof PDbDatepicker!=='undefined') PDbDatepicker.init();
             }
     );
-  }
+  };
   var confirmDialog = $('<div/>').dialog({
     dialogClass: 'confirmation-dialog participants-database-confirm',
     modal: true,
@@ -137,7 +142,7 @@ var PDbListAdmin = (function ($) {
       listform.submit();
       confirmDialog.dialog("destroy");
     }
-  }
+  };
   var op_selection = function(e){
     var el = e.target ? $(e.target) : $(e);
     var value_field = el.closest('.filter-search-term').find('input[name^=value]');
@@ -146,7 +151,7 @@ var PDbListAdmin = (function ($) {
     } else {
       value_field.show();
     }
-  }
+  };
   return {
     init: function () {
       apply_button.on('click', function (e) {
