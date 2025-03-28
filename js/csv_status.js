@@ -20,7 +20,6 @@ PDb_CSV_Status = (function ($) {
   var update_screen = function (data, status, jqXHR)
   {
     if (jqXHR.status == 200) {
-      console.log(data);
       if (importing){
         $('#message .import-tally-report').remove();
         if (messageFrame.find('#realtime').length === 0)
@@ -49,4 +48,3 @@ PDb_CSV_Status = (function ($) {
 jQuery(function () {
   PDb_CSV_Status.init();
 });
-
