@@ -708,28 +708,28 @@ class Participants_Db extends PDb_Base {
     /*
      * register admin scripts and stylesheets
      */
-    $presuffix = self::use_minified_assets() ? '.min' : '';
+    $min = self::use_minified_assets() ? '.min' : '';
     $manage_fields_handle = self::$prefix . 'manage_fields';
     
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
-    wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.13', true );
-    wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version . '.1', true );
+    wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.13', true );
+    wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version . '.1', true );
     
-    wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$presuffix.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
     wp_add_inline_script(self::$prefix.'record_edit_script', Participants_Db::inline_js_data( 'PDb_L10n', array(
         'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
     ), 'record_edit' ));
     
-    wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$presuffix.js" ), array('jquery', 'jquery-ui-widget') );
-    wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$presuffix.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
-    wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$presuffix.js" ), array('jquery') );
-    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$presuffix.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.2' );
-    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$presuffix.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
+    wp_register_script( 'jq-doublescroll', self::asset_url( "js/jquery.doubleScroll$min.js" ), array('jquery', 'jquery-ui-widget') );
+    wp_register_script( self::$prefix . 'admin', self::asset_url( "js/admin$min.js" ), array('jquery', 'jq-doublescroll', 'jquery-ui-sortable', self::$prefix . 'cookie', 'jquery-ui-dialog' ), self::$plugin_version );
+    wp_register_script( self::$prefix . 'otherselect', self::asset_url( "js/otherselect$min.js" ), array('jquery') );
+    wp_register_script( self::$prefix . 'list-admin', self::asset_url( "js/list_admin$min.js" ), array('jquery', 'jquery-ui-dialog'), self::$plugin_version . '.2' );
+    wp_register_script( self::$prefix . 'aux_plugin_settings_tabs', self::asset_url( "/js/aux_plugin_settings$min.js" ), array('jquery', 'jquery-ui-tabs', self::$prefix . 'admin', /*self::$prefix . 'jq-placeholder',*/ self::$prefix . 'cookie'), self::$plugin_version );
     wp_register_script( self::$prefix . 'debounce', plugins_url( 'js/jq_debounce.js', __FILE__ ), array('jquery') );
-    wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$presuffix.js" ), array('jquery'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'admin-notices', self::asset_url( "js/pdb_admin_notices$min.js" ), array('jquery'), self::$plugin_version );
     //wp_register_script( 'datepicker', plugins_url( 'js/jquery.datepicker.js', __FILE__ ) );
     //wp_register_script( 'edit_record', plugins_url( 'js/edit.js', __FILE__ ) );
-    wp_register_script( self::$prefix . 'debug', self::asset_url( "js/pdb_debug$presuffix.js" ), array('jquery'), self::$plugin_version );
+    wp_register_script( self::$prefix . 'debug', self::asset_url( "js/pdb_debug$min.js" ), array('jquery'), self::$plugin_version );
     
     // admin custom CSS
     if ( self::_set_admin_custom_css() )
@@ -740,7 +740,7 @@ class Participants_Db extends PDb_Base {
     // jquery UI theme
     wp_register_style( self::$prefix . 'jquery-ui', self::asset_url( "css/jquery-ui-theme/jquery-ui.min.css" ) );
     wp_register_style(self::$prefix . 'jquery-ui-structure', self::asset_url( "css/jquery-ui-theme/jquery-ui.structure.min.css" ) );
-    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$presuffix.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '2.0' );
+    wp_register_style(self::$prefix . 'jquery-ui-theme', self::asset_url( "css/jquery-ui-theme/jquery-ui.pdb-theme$min.css" ), array(self::$prefix . 'jquery-ui',self::$prefix . 'jquery-ui-structure'), '2.0' );
     
     wp_register_style( self::$prefix . 'utility', plugins_url( '/css/xnau-utility.css', __FILE__ ), null, self::$plugin_version );
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
@@ -821,7 +821,7 @@ class Participants_Db extends PDb_Base {
     if ( strpos( $hook, 'participants-database-upload_csv') !== false && self::plugin_setting_is_true( 'background_import' ) )
     {
       $handle = 'csv-status';
-      wp_register_script( $handle, self::asset_url( "js/csv_status.js" ), array('jquery'), '1.3' );
+      wp_register_script( $handle, self::asset_url( "js/csv_status$min.js" ), array('jquery'), '1.3' );
       
       if ( filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) ) )
       {
