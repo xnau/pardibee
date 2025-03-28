@@ -130,8 +130,7 @@ class PDb_List_Admin {
                     )
     );
 
-    wp_add_inline_script(
-            Participants_Db::$prefix . 'list-admin', Participants_Db::inline_js_data( 'list_adminL10n', array(
+    wp_add_inline_script('pdb-list-admin', Participants_Db::inline_js_data( 'list_adminL10n', array(
         'delete' => self::$i18n[ 'delete_checked' ],
         'cancel' => self::$i18n[ 'change' ],
         'apply' => self::$i18n[ 'apply' ],
@@ -155,7 +154,7 @@ class PDb_List_Admin {
         'spinner' => Participants_Db::get_loading_spinner(),
     ) ) );
     
-    wp_enqueue_script( Participants_Db::$prefix . 'list-admin' );
+    wp_enqueue_script( 'pdb-list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
 
     // set up email error feedback
