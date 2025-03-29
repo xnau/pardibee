@@ -580,7 +580,7 @@ abstract class dynamic_db_field extends core {
     }, 10, 2 );
     
     if ( count( $data ) ) {
-      \Participants_Db::write_participant( array_merge( $data, $match_prefs ), $record_id );
+      \Participants_Db::write_participant( array_merge( $data, $match_prefs ), $record_id, 'update dynamic db field on import' );
     }
   }
 
