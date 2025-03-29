@@ -1626,11 +1626,12 @@ class Participants_Db extends PDb_Base {
    * @param array|bool  $column_names   array of column names to process from the $post 
    *                                    array, if false, processes a preset set of columns
    * @param bool        $func_call      optional flag to indicate the method is getting called by external code
+   * @param string      $context        optional label
    *
    * @return int|bool   int ID of the record created or updated, bool false if submission 
    *                    does not validate
    */
-  public static function process_form( $post, $action, $record_id = false, $column_names = false, $func_call = false )
+  public static function process_form( $post, $action, $record_id = false, $column_names = false, $func_call = false, $context = '' )
   {
     do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
     
@@ -1657,7 +1658,9 @@ class Participants_Db extends PDb_Base {
     // set the insert status value
     self::$insert_status = $action;
     
-    $main_query = PDb_submission\main_query\base_query::get_instance( $action, $post, $record_id, $func_call );
+    $context_label = empty( $context ) ? 'main process_form method' : $context;
+    
+    $main_query = PDb_submission\main_query\base_query::get_instance( $action, $post, $record_id, $func_call, $context );
     /** @var \PDb_submission\main_query\base_query $main_query */
     
     /*
@@ -2331,7 +2334,7 @@ class Participants_Db extends PDb_Base {
           $id = false;
         }
 
-        $participant_id = self::process_form( $post_data, $post_input['action'], $id, $columns );
+        $participant_id = self::process_form( $post_data, $post_input['action'], $id, $columns, 'page submission ' . $post_input['action'] );
 
         if ( false === $participant_id ) {
 
@@ -2632,7 +2635,7 @@ class Participants_Db extends PDb_Base {
         }
 
         // submit the data
-        $post_data['id'] = self::process_form( $post_data, $submit_action, self::$session->record_id(), $columns );
+        $post_data['id'] = self::process_form( $post_data, $submit_action, self::$session->record_id(), $columns, 'signup form submission' );
 
         if ( false !== $post_data['id'] ) {
 
