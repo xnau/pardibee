@@ -136,9 +136,10 @@ class PDb_Base {
    * 
    * @param array $post associative array of data to store
    * @param int $id the record id to update, creates new record if omitted
+   * @param string $context optional label
    * @return  int the ID of the record added or updated
    */
-  public static function write_participant( Array $post, $id = '' )
+  public static function write_participant( Array $post, $id = '', $context = '' )
   {
     $action = 'update';
 
@@ -149,7 +150,7 @@ class PDb_Base {
       $id = false;
     }
 
-    return Participants_Db::process_form( $post, $action, $id, array_keys( $post ), true );
+    return Participants_Db::process_form( $post, $action, $id, array_keys( $post ), true, $context );
   }
 
   /**
@@ -424,7 +425,7 @@ class PDb_Base {
       $post = array_diff_assoc( $updated_record, $record );
 
       if ( !empty( $post ) ) {
-        Participants_Db::write_participant( $post, $record[ 'id' ] );
+        Participants_Db::write_participant( $post, $record[ 'id' ], 'dynamic db field update' );
 
         $tally++;
       }
@@ -2790,6 +2791,41 @@ return $field->name() === $fieldname;
     $href = 'https://xnau.com/participants-database-settings-help/';
     return '&nbsp;<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
   }
+  
+  
+ 
+/**
+ * Returns formatted string as 01:20:15 000
+ *
+ * @param float $seconds seconds
+ * @return string
+ */
+public static function format_seconds( $seconds ) 
+{
+    $timegroups      = array('miliseconds' => 0, 'seconds' => 0, 'minutes' => 0, 'hours' => 0);
+    $interval    = $seconds * 1000; // gives us the number of microseconds
+ 
+    $grouplengths       = array(
+        'hours'         => 60*60*1000,
+        'minutes'       => 60*1000,
+        'seconds'       => 1000,
+        'miliseconds'   => 1
+    );
+ 
+    foreach ($grouplengths as $group => $mS) 
+    {
+      $timegroups[$group] = floor($interval / $mS);
+      $interval = intval( $interval ) % $mS;
+    }
+ 
+    return sprintf(
+        '%02d:%02d:%02d %03d',
+        $timegroups['hours'],
+        $timegroups['minutes'],
+        $timegroups['seconds'],
+        $timegroups['miliseconds']
+    );
+}
 
   /**
    * gets the ID of a page given it's slug
