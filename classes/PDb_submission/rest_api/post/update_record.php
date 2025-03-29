@@ -34,7 +34,7 @@ class update_record extends \PDb_submission\rest_api\post_request {
       return new \WP_Error('no matching record', 'no record at this ID', ['status' => 404] );
     }
     
-    $result = \Participants_Db::write_participant( $this->filtered_data(), $this->params['id'] );
+    $result = \Participants_Db::write_participant( $this->filtered_data(), $this->params['id'], 'REST API update record' );
     
     if ( $result )
     {
