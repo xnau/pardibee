@@ -29,7 +29,7 @@ class add_record extends \PDb_submission\rest_api\post_request {
    */
   protected function response()
   {
-    $result = \Participants_Db::write_participant( $this->filtered_data() );
+    $result = \Participants_Db::write_participant( $this->filtered_data(), '', 'REST API add record' );
     
     $validation = \Participants_Db::$validation_errors;
     /** @var \PDb_FormValidation $validation */
