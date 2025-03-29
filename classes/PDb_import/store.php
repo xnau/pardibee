@@ -87,7 +87,7 @@ trait store {
     // get the record id to use in the query
     $record_id = $record_match->record_id();
     
-    $main_query = \PDb_submission\main_query\base_query::get_instance( $action, $post, $record_id, false );
+    $main_query = \PDb_submission\main_query\base_query::get_instance( $action, $post, $record_id, false, 'CSV import' );
     /** @var \PDb_submission\main_query\base_query $main_query */
     
     /*
@@ -131,7 +131,9 @@ trait store {
      * now that we're done adding the submitted data to the query, check for 
      * validation and abort the process if there are validation errors
      */
-    if ( $main_query->has_validation_errors() || ! $main_query->column_count() > 0 ) {
+    if ( $main_query->has_validation_errors() || ! $main_query->column_count() > 0 ) 
+    {
+      \Participants_Db::debug_log(__METHOD__.' no import for this record, validation error or no importable data ', 2);
       return false;
     }
     
