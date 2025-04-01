@@ -223,6 +223,11 @@ class tally {
     $count += $this->status_count( 'insert' );
     $count += $this->status_count( 'update' );
     
+    if ( \Participants_Db::plugin_setting_is_true( 'background_import' ) )
+    {
+      $count += $this->status_count( 'skip' );
+    }
+    
     return $count;
   }
   
