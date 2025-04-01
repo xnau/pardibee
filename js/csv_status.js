@@ -16,7 +16,7 @@ PDb_CSV_Status = (function ($) {
                 setTimeout(poll_updates, 0);
               }
             });
-  }
+  };
   var update_screen = function (data, status, jqXHR)
   {
     if (jqXHR.status == 200) {
@@ -24,11 +24,14 @@ PDb_CSV_Status = (function ($) {
         $('#message .import-tally-report').remove();
         if (messageFrame.find('#realtime').length === 0)
         {
-          messageFrame.append($('<p id="realtime"></p><p><progress id="realtime-progress" max="'+data.length+'" value="0" >0%</progress></p>'));
+          messageFrame.append($('<p id="realtime"></p><p class="progressbar"><progress id="realtime-progress" max="'+data.length+'" value="0" >0%</progress></p>'));
         }
         if (data.progress){
           $('#realtime-progress').val(data.progress).text(data.progress+"%");
           messageFrame.find('#realtime').html(data.html);
+          if(data.progress===data.length){
+            display_complete();
+          }
         }
         importing = data.length > data.progress;
         if(!importing){
@@ -37,7 +40,11 @@ PDb_CSV_Status = (function ($) {
         }
       }
     }
-  }
+  };
+  var display_complete = function(){
+    $('#realtime-progress').addClass('complete');
+    $('#realtime .import-tally-report').prepend($('<span class="dashicons dashicons-flag"></span>'));
+  };
   return {
     init: function () {
       messageFrame = $('#message');
