@@ -188,6 +188,16 @@ abstract class base_query {
   {
     return count( $this->column_clauses );
   }
+  
+  /**
+   * provides the current context label
+   * 
+   * @return string
+   */
+  public function context()
+  {
+    return $this->context;
+  }
 
   /**
    * provides the data body of the query
@@ -250,6 +260,7 @@ abstract class base_query {
       if ( !$this->is_import && !$this->is_func_call ) {
         $db_error_message = sprintf( PDB::$i18n[ 'zero_rows_error' ], $wpdb->last_query );
       }
+      
       PDB::$insert_status = 'skip';
     }
     elseif ( $result === false )
@@ -283,7 +294,7 @@ abstract class base_query {
      */
     if ( PDB::is_admin() )
     {
-      if ( !$this->is_import && !$this->is_func_call && $result )
+      if ( !$this->is_import && !$this->is_func_call && $result > 0 )
       {
         PDB::set_admin_message( ($this->query_mode() === 'insert' ? PDB::$i18n[ 'added' ] : PDB::$i18n[ 'updated' ] ), 'updated' );
       }
