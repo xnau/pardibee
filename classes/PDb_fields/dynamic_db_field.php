@@ -147,6 +147,20 @@ abstract class dynamic_db_field extends core {
      */
     return \Participants_Db::apply_filters('dynamic_db_internal_field_object',  $field_obj, $data  );
   }
+  
+  /**
+   * tells if a field in the template is valid
+   * 
+   * avoids checking for a Participant Log field if that plugin is disabled
+   * 
+   * @param string $fieldname
+   * @return bool true if the field is valid
+   */
+  protected function is_valid_field( $fieldname )
+  {
+    $log_active = in_array('pdb-participant_log/participant_log.php', apply_filters('active_plugins', get_option('active_plugins')));
+    return \PDb_Form_Field_Def::is_field( $fieldname, !$log_active );
+  }
 
   /**
    * gets the dynamic db field list for the type
@@ -575,8 +589,9 @@ abstract class dynamic_db_field extends core {
     $data['csv_file_upload'] = 1;
     
     add_filter( 'pdb-needs_date_updated_timestamp', function( $needs, $query ) {
+      
       /** @var \PDb_submission\main_query\base_query $query */
-      return false;
+      return $query->context() !== 'update dynamic db field on import';
     }, 10, 2 );
     
     if ( count( $data ) ) {
