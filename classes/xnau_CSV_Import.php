@@ -217,6 +217,7 @@ abstract class xnau_CSV_Import {
      */
     $this->CSV->delimiter = $this->_detect_delimiter($src_file);
     $this->CSV->enclosure = $this->_detect_enclosure($src_file);
+    
     $this->CSV->parseFile($src_file);
 
     if ( $this->CSV->error ) {
