@@ -184,6 +184,9 @@ class PDb_Tag_Template {
   /**
    * replaces the value tags in a template with data
    * 
+   * this works by replacing the value tags with printf placeholders and then 
+   * using vsprintf to place the values in the final text
+   * 
    * @param string $template
    * @param array $data as $name=>$value
    * @return string replaced text
@@ -221,7 +224,8 @@ class PDb_Tag_Template {
    */
   private static function escape_template( $template )
   {
-    return preg_replace( '/(%[a-zA-Z])/', '%$1', $template );
+    // replace all literal % with escaped %% #3171
+    return preg_replace( ['/(?<!%)%(?!%)/'], ['%%'], $template );
   }
 
   /**
