@@ -98,13 +98,21 @@ class process extends \WP_Background_Process {
    */
   protected function task( $line )
   {
+    $ts = microtime(true);
+    
     $this->import( $line, $this->settings() );
+    
+    $ms = round( ( microtime(true) - $ts ) * 1000 );
+    
+//    error_log(__METHOD__.' elapsed: ' . $ms . 'μs' );
     
     return false;
   }
   
   /**
    * adds the data to the queue
+   * 
+   * if background import is disabled, imports the data line immediately
    * 
    * @param array $line CSV data line
    */
