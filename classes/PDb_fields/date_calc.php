@@ -84,15 +84,18 @@ class date_calc extends calculated_field {
    */
   protected function template_field_list()
   {
-    $list = array();
+    $list = [];
     
-    foreach ( $this->template->field_list() as $fieldname ) {
-      if ( \PDb_Form_Field_Def::is_field( $fieldname ) ) {
+    foreach ( $this->template->field_list() as $fieldname ) 
+    {
+      if ( $this->is_valid_field( $fieldname ) ) 
+      {
         $field_def = \Participants_Db::$fields[ $fieldname ];
         /** @var \PDb_Form_Field_Def $field_def */
         
         // this field only works with date values from the db
-        if ( $field_def->is_date_field() || $field_def->form_element() === 'timestamp' ) {
+        if ( $field_def->is_date_field() || $field_def->form_element() === 'timestamp' ) 
+        {
           $list[] = $fieldname;
         }
       }
