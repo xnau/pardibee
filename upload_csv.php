@@ -265,13 +265,29 @@ foreach ( $preferences as $i => $preference ) {
     margin-left: 1em;
   }
   progress {
+    -webkit-appearance:none;
+    -moz-appearance:none;        
+    appearance: none;
     border-radius: 3px;
     border: 1px solid #1d232733;
-    appearance: none;
     width: 100%;
   }
   progress::-webkit-progress-value,
-  progress::-moz-progress-bar {
-    background-color: blue;
+  progress::-moz-progress-bar{
+    background-color: #2271b1;
+  }
+  progress.complete::-webkit-progress-value,
+  progress.complete::-moz-progress-bar{
+    background-color: #00a32a;
+  }
+  progress::-webkit-progress-value,
+  progress::-webkit-progress-bar {
+    border-radius: 3px;
+  }
+  #message .progressbar {
+    position: relative;
+  }
+  #message .dashicons.dashicons-flag {
+    color: #00a32a;
   }
 </style>
