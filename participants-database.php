@@ -821,7 +821,7 @@ class Participants_Db extends PDb_Base {
     if ( strpos( $hook, 'participants-database-upload_csv') !== false && self::plugin_setting_is_true( 'background_import' ) )
     {
       $handle = 'csv-status';
-      wp_register_script( $handle, self::asset_url( "js/csv_status$min.js" ), array('jquery'), '1.3' );
+      wp_register_script( $handle, self::asset_url( "js/csv_status$min.js" ), array('jquery'), '1.4' );
       
       if ( filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) ) )
       {
