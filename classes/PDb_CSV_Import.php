@@ -18,17 +18,11 @@ if ( !defined( 'ABSPATH' ) )
   die;
 
 class PDb_CSV_Import extends xnau_CSV_Import {
-
+  
   /**
-   * @var string name of the duplicate record match field
-   * 
+   * @var array of csv import preference values
    */
-  private $match_field;
-
-  /**
-   * @var int the current duplicate record preference
-   */
-  private $match_preference;
+  private $preferences = [];
   
   /**
    * @var \PDb_import\process instance
@@ -43,13 +37,17 @@ class PDb_CSV_Import extends xnau_CSV_Import {
   {
     $this->set_column_array();
 
-    $this->match_field = filter_input( INPUT_POST, 'match_field', FILTER_SANITIZE_SPECIAL_CHARS );
-    $this->match_preference = filter_input( INPUT_POST, 'match_preference', FILTER_SANITIZE_SPECIAL_CHARS);
+    $this->get_preferences();
 
     Participants_Db::$session->set( 'form_status', 'normal' ); // CSV import is a normal status
     
     // get the process instance from \PDb_import\controller
     $this->process = Participants_Db::apply_filters( 'get_import_process', false );
+    
+    if ( ! $this->is_background_import() )
+    {
+      add_filter( 'pdb-allow_imported_empty_value_overwrite', [$this,'blank_overwrite'], 5 );
+    }
 
     parent::__construct( $file_field_name );
     
@@ -140,6 +138,16 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     
     return $export_columns;
   }
+  
+  /**
+   * tells the blank overwrite mode
+   * 
+   * @return bool
+   */
+  public function blank_overwrite()
+  {
+    return (bool) filter_input( INPUT_POST, 'blank_overwrite', FILTER_SANITIZE_NUMBER_INT );
+  }
 
   /**
    * sets up the column name array
@@ -153,10 +161,25 @@ class PDb_CSV_Import extends xnau_CSV_Import {
 
     $this->column_count = count( $this->column_names );
   }
+  
+  /**
+   * sets up the import preferences from the import form submission
+   */
+  private function get_preferences()
+  {
+    $pref_names = [
+        'match_field' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'match_preference' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'blank_overwrite' => FILTER_SANITIZE_NUMBER_INT ];
+    
+    $this->preferences = filter_input_array( INPUT_POST, $pref_names );
+  }
 
   /**
    * takes a raw title row from the CSV and sets the column names array with it
    * if the imported row is different from the plugin's defined CSV columns
+   * 
+   * 
    *
    */
   protected function setup_import_columns()
@@ -172,7 +195,7 @@ class PDb_CSV_Import extends xnau_CSV_Import {
       $this->column_count = count( $this->column_names );
     }
     
-    $this->process->setup( $this->column_names, $this->match_preference, $this->match_field );
+    $this->process->setup( $this->column_names, $this->preferences );
   }
   
   /**
@@ -305,5 +328,17 @@ class PDb_CSV_Import extends xnau_CSV_Import {
     } else {
       return parent::_detect_delimiter( $csv_file );
     }
+  }
+  
+  /**
+   * provides a help link for an item on the the Import CSV page
+   * 
+   * @param string $anchor
+   * @return string help link
+   */
+  public function help_link( $anchor )
+  {
+    $href = 'https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/exporting-and-importing-records/';
+    return '&nbsp;<a class="settings-help-icon" href="' . $href . '#' . $anchor . '" target="_blank"><span class="dashicons dashicons-editor-help"></span></a>';
   }
 }
