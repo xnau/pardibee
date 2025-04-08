@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    2.3
+ * @version    2.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -52,16 +52,11 @@ class process extends \WP_Background_Process {
    * sets up the store class
    * 
    * @param array $column_names
-   * @param string $match_mode
-   * @param string $match_field
+   * @param array $preferences
    */
-  public function setup( $column_names, $match_mode, $match_field )
+  public function setup( $column_names, $preferences )
   {
-    set_transient( self::setting, array(
-        'column_names' => $column_names,
-        'match_mode' => $match_mode,
-        'match_field' => $match_field
-    ));
+    set_transient( self::setting, ['column_names' => $column_names] + $preferences );
   }
 
 	/**
@@ -100,7 +95,14 @@ class process extends \WP_Background_Process {
   {
     $ts = microtime(true);
     
-    $this->import( $line, $this->settings() );
+    $preferences = $this->settings();
+    
+    if ( $this->is_background_import() && isset($preferences['blank_overwrite']) && boolval( $preferences['blank_overwrite'] ) )
+    {
+      add_filter( 'pdb-allow_imported_empty_value_overwrite', '__return_true', 5 );
+    }
+    
+    $this->import( $line, $preferences );
     
     $ms = round( ( microtime(true) - $ts ) * 1000 );
     
@@ -118,7 +120,7 @@ class process extends \WP_Background_Process {
    */
   public function push_to_queue( $line )
   {
-    if ( \Participants_Db::plugin_setting_is_true( 'background_import', true ) ) 
+    if ( $this->is_background_import() ) 
     {
       parent::push_to_queue($line);
     } 
@@ -136,6 +138,16 @@ class process extends \WP_Background_Process {
   public function queue_count()
   {
     return count( $this->data );
+  }
+  
+  /**
+   * tells if beckground imports is enabled
+   * 
+   * @return bool
+   */
+  private function is_background_import()
+  {
+    return \Participants_Db::plugin_setting_is_true( 'background_import', true );
   }
   
   /**
