@@ -18,6 +18,13 @@ if ( !defined( 'ABSPATH' ) )
   die;
 
 class PDb_Settings extends xnau_Plugin_Settings {
+  
+
+  /**
+   * @var string type to use for text area settings; rich or plain text
+   */
+  private $textarea_type = 'text-area';
+  
 
   function __construct()
   {
@@ -2124,7 +2131,7 @@ ORDER BY g.order, v.order';
    * 
    * we define a number of validation tests for submitted settings
    * 
-   * @param array $settings an array of all the settings andtheir submitted values
+   * @param array $settings an array of all the settings and their submitted values
    * @return array the sanitized array
    */
   public function validate( $settings )
