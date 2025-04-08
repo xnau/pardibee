@@ -586,17 +586,38 @@ abstract class dynamic_db_field extends core {
       $data[ $dynamic_db_field->name() ] = $this->dynamic_value( $post );
     }
     
-    $data['csv_file_upload'] = 1;
+    $match_prefs['csv_file_upload'] = 1;
     
-    add_filter( 'pdb-needs_date_updated_timestamp', function( $needs, $query ) {
-      
+    add_filter( 'pdb-needs_date_updated_timestamp', function( $needs, $query ) 
+    {  
       /** @var \PDb_submission\main_query\base_query $query */
       return $query->context() !== 'update dynamic db field on import';
     }, 10, 2 );
     
-    if ( count( $data ) ) {
+    if ( $this->do_write($data) ) 
+    {
       \Participants_Db::write_participant( array_merge( $data, $match_prefs ), $record_id, 'update dynamic db field on import' );
     }
+  }
+  
+  /**
+   * tells if the data has valid values to add to the query
+   * 
+   * @param array $data
+   * @return bool true if we have valid data
+   */
+  protected function do_write( $data )
+  {
+    if ( apply_filters( 'pdb-allow_imported_empty_value_overwrite', 0 ) )
+    {
+      return true;
+    }
+    
+    $data_check = array_filter($data, function($v){
+      return ! is_null( $v ) && $v !== '';
+    });
+    
+    return count( $data_check ) > 0;
   }
 
   /**
