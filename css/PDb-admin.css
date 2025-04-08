@@ -78,6 +78,9 @@ fieldset.widefat.inline-controls label {
   margin: 0 5px;
   vertical-align: baseline;
 }
+fieldset.widefat.inline-controls input[type=checkbox] {
+  vertical-align: middle;
+}
 fieldset.widefat.inline-controls input:first-of-type,
 fieldset.widefat.inline-controls  select:first-of-type,
 fieldset.widefat.inline-controls label:first-of-type {
@@ -107,6 +110,13 @@ fieldset.widefat.inline-controls label {
 }
 #list_filter_count {
   width: 4em;
+}
+
+.pdb-csv-upload a.settings-help-icon .dashicons {
+  vertical-align: text-bottom;
+}
+.pdb-csv-upload a.settings-help-icon:focus {
+  box-shadow: none;
 }
 
 /* HORIZ SCROLL */
