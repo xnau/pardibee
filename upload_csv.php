@@ -109,7 +109,7 @@ echo str_repeat( '<td>&nbsp;</td>', $column_count );
           <form enctype="multipart/form-data" action="<?php esc_attr_e( $_SERVER["REQUEST_URI"] ) ?>" method="POST">
 <?php wp_nonce_field( PDb_CSV_Import::nonce ) ?>
             <input type="hidden" name="csv_file_upload" id="file_upload" value="true" />
-            <fieldset class="widefat inline-controls">
+            <fieldset class="widefat inline-controls settings-row">
               <p>
                 <label>
 <?php _e( 'Enclosure character', 'participants-database' ); ?>
@@ -147,6 +147,27 @@ PDb_FormElement::print_element( $parameters );
 PDb_FormElement::print_element( $parameters );
 ?>
                 </label>
+                
+                
+                                <label>
+<?php echo __( 'Allow blank value overwrite', 'participants-database' ) . ':'; ?>
+<?php $parameters = array(
+    'type' => 'checkbox',
+    'name' => 'blank_overwrite',
+    'value' => $csv_params['blank_overwrite'],
+    'options' => [1,0],
+);
+PDb_FormElement::print_element( $parameters );
+echo $CSV_import->help_link( 'overwriting' );
+?>
+                </label>
+                
+                
+                
+                
+                
+                
+                
               </p>
             </fieldset>
 
@@ -154,7 +175,7 @@ PDb_FormElement::print_element( $parameters );
               <p>
                 <label>
 <?php
-esc_html_e( 'Duplicate Record Preference', 'participants-database' ) . ': ';
+echo __( 'Duplicate Record Preference', 'participants-database' ) . ': ';
 $parameters = array(
     'type' => 'dropdown',
     'name' => 'match_preference',
