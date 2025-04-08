@@ -42,7 +42,7 @@ trait store {
     
     $post = array_combine( $this->column_names, $column_values );
     
-    $post['match_preference'] = $settings['match_mode'];
+    $post['match_preference'] = $settings['match_preference'];
     $post['match_field'] = $settings['match_field'];
     $post['csv_file_upload'] = true;
     
