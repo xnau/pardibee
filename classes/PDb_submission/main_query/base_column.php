@@ -141,7 +141,9 @@ abstract class base_column {
      * @param \PDb_Field_Item the current field
      * @return bool if true, skip importing the column
      */
-    $skip =  Participants_Db::apply_filters( 'allow_imported_empty_value_overwrite', false, $this->value, $this->field ) === false && $this->value === '';
+    $allow = Participants_Db::apply_filters( 'allow_imported_empty_value_overwrite', 0, $this->value, $this->field );
+    
+    $skip = !$allow && $this->value === '';
     
     /**
      * @filter pdb-skip_imported_value
