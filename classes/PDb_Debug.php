@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -145,10 +145,16 @@ class PDb_Debug {
    * attempts to format the message for the log
    * 
    * @param string $message
+   * @param bool $allow_html
    * @return string
    */
-  private function format_message( $message )
+  private function format_message( $message, $allow_html = false )
   {
+    if ( $allow_html )
+    {
+      return preg_replace( array('/[ ]{3}/'), array('&nbsp;'), wp_kses_post($message) );
+    }
+    
     return '<pre>' . preg_replace( array('/[ ]{3}/'), array('&nbsp;'), htmlspecialchars( $message ) ) . '</pre>';
   }
 
