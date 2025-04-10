@@ -746,7 +746,7 @@ class Participants_Db extends PDb_Base {
     wp_register_style( self::$prefix . 'global-admin', plugins_url( '/css/PDb-admin-global.css', __FILE__ ), false, self::$plugin_version );
     wp_register_style( self::$prefix . 'frontend', plugins_url( '/css/participants-database.css', __FILE__ ), null, self::$plugin_version . '.1' );
     
-    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), false, self::$plugin_version . '.1' );
+    wp_register_style( self::$prefix . 'admin', plugins_url( '/css/PDb-admin.css', __FILE__ ), false, self::$plugin_version . '1.2' );
     wp_register_style( $manage_fields_handle, plugins_url( '/css/PDb-manage-fields.css', __FILE__ ), array( self::$prefix . 'admin' ), self::$plugin_version . '.1' );
 
     if ( false !== stripos( $hook, 'participants-database' ) )
@@ -821,7 +821,7 @@ class Participants_Db extends PDb_Base {
     if ( strpos( $hook, 'participants-database-upload_csv') !== false && self::plugin_setting_is_true( 'background_import' ) )
     {
       $handle = 'csv-status';
-      wp_register_script( $handle, self::asset_url( "js/csv_status$min.js" ), array('jquery'), '1.4' );
+      wp_register_script( $handle, self::asset_url( "js/csv_status$min.js" ), array('jquery'), '1.5' );
       
       if ( filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) ) )
       {
@@ -832,6 +832,7 @@ class Participants_Db extends PDb_Base {
           '_wpnonce' => wp_create_nonce( \PDb_import\import_status_display::action ), 
           'action' => \PDb_import\import_status_display::action,
           'importing' => \PDb_import\import_status_display::is_importing(),
+          'dismiss' => \PDb_import\import_status_display::action . '-dismiss',
           ] ) );
       
       wp_enqueue_script($handle);
@@ -1224,7 +1225,10 @@ class Participants_Db extends PDb_Base {
     self::_setup_fields_prop( self::all_field_defs() );
     
     // add our modular fields
-    new \PDb_fields\initialize();
+    add_action('init', function(){
+      new \PDb_fields\initialize();
+    });
+    
   }
   
   /**
@@ -3354,8 +3358,6 @@ class Participants_Db extends PDb_Base {
   
   /**
    * sets up the plugin admin menus
-   * 
-   * fired on the admin_menu hook
    * 
    * fired on the admin_menu hook
    * 
