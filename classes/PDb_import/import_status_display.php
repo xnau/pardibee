@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2025  xnau webdesign
  * @license    GPL3
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -29,6 +29,7 @@ class import_status_display {
   public function __construct()
   {
     add_action( 'wp_ajax_' . self::action, [$this,'ajax_response'] );
+    add_action( 'wp_ajax_' . self::action . '-dismiss', [$this,'dismiss_report'] );
     
     add_action( 'pdb-csv_import_file_load', [$this,'reset'] );
   }
@@ -42,7 +43,21 @@ class import_status_display {
   {
     check_ajax_referer( self::action );
     
-    wp_send_json( self::status_report() );
+    wp_send_json( $this->status_report() );
+  }
+  
+  /**
+   * dismisses the report and forces the operation to complete
+   * 
+   * @return null
+   */
+  public function dismiss_report()
+  {
+    check_ajax_referer( self::action );
+    
+    $this->reset();
+    
+    wp_send_json( true );
   }
   
   /**
@@ -50,15 +65,21 @@ class import_status_display {
    * 
    * @return array
    */
-  private static function status_report()
+  private function status_report()
   {
     $tally = tally::get_instance();
     
-    $status = $tally->get_tally();
-    
-    $status_report = array_merge( $status, ['html' => $tally->realtime_report() ] );
-    
-    return $status_report;
+    return array_merge( $tally->get_tally(), ['html' => $tally->realtime_report() . self::dismiss_button() ] );
+  }
+  
+  /**
+   * provides the dismiss button
+   * 
+   * @return html
+   */
+  private static function dismiss_button()
+  {
+    return '<button type="button" class="notice-dismiss csv-status-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>';
   }
   
   /**
@@ -71,6 +92,18 @@ class import_status_display {
   }
   
   /**
+   * provides the status values
+   * 
+   * @return array
+   */
+  private static function tally_status()
+  {
+    $tally = tally::get_instance();
+    
+    return $tally->get_tally();
+  }
+  
+  /**
    * tells if there is an import in progress
    * 
    * @return bool
@@ -79,7 +112,7 @@ class import_status_display {
   {
     $post_import = (bool) filter_input( INPUT_POST, 'csv_file_upload', FILTER_DEFAULT, \Participants_Db::string_sanitize(FILTER_NULL_ON_FAILURE) );
     
-    $import_status = self::status_report();
+    $import_status = self::tally_status();
     
     $in_progress = isset( $import_status['length'] ) && isset( $import_status['progress'] );
     
