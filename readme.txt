@@ -293,6 +293,16 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.7 =
+* improved UI for CSV imports
+* background CSV import now has a realtime import status display
+* added option checkbox for allowing blank values to overwrite record values with CSV import
+* improved handling of incorrectly encoded CSV files
+* date fields now support showing time of day
+* updated Spanish translation
+* fixed issue with some elements in the plugin display not translated
+* several bug fixes
+
 = 2.6.2 =
 * last update user now shows correct user in email templates
 * ampersands in string combine fields are no longer encoded
@@ -609,7 +619,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.6.2 is a bugfix release
+2.7 is a feature and bugfix update
 
 == Plugin Support ==
 
