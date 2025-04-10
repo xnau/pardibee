@@ -94,7 +94,7 @@ abstract class calculated_field extends dynamic_db_field {
    * @return bool
    */
   abstract protected function is_numeric_field();
-
+  
   /**
    * display the field value in a read context
    * 
