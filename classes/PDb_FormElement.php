@@ -249,7 +249,7 @@ class PDb_FormElement extends xnau_FormElement {
 
     $in_optgroup = false;
 
-    foreach ( $this->_make_assoc( $this->options ) as $option_key => $option_value ) 
+    foreach ( $this->make_assoc( $this->options ) as $option_key => $option_value ) 
     {
       $option_key = Participants_Db::apply_filters( 'translate_string', stripslashes( $option_key ) );
 
