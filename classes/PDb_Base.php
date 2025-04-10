@@ -1476,7 +1476,7 @@ return $field->name() === $fieldname;
   {
     $textdomain = empty( $textdomain ) ? Participants_Db::PLUGIN_NAME : $textdomain;
 
-    load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages' );
+   load_plugin_textdomain( $textdomain, false, dirname( plugin_basename( $path ) ) . '/languages' );
   }
 
   /**
