@@ -225,7 +225,7 @@ foreach ( $preferences as $i => $preference ) {
 <p><input type="submit" id="csv-upload-submit" class="button button-primary" value="<?php esc_attr_e( 'Upload File', 'participants-database' ) ?>" />&emsp;
   <?php if (Participants_Db::plugin_setting_is_true( 'background_import', true ) )
   {
-    _e('Records will be imported in the background.','participants-database');
+    _e('Records will be imported in the background. You may leave this page and come back, the import will continue.','participants-database');
   } else {
     _e('Records will be imported as the file is uploaded, this may take some time if the file is large.', 'participants-database');
     echo '<span class="csv-import-spinner">' . Participants_Db::get_loading_spinner() . '</span>';
