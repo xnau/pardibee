@@ -2,12 +2,7 @@
 /**
  * plugin settings handler class
  *
- * uses the WP Settings API to manage settings, interactions with settings,
- * display and editing of settings for a plugin. It would normally be extended
- * by a plugin-specific subclass where the specific settings would be defined.
- * This class is designed to be a simple implementation, not suitable for
- * plugins requiring a more complex settings scheme, such as multiple pages. It
- * will work well with Javascript tabs, however.
+ * uses the WP Settings API to manage settings,
  *
  * @version 1.5
  *
@@ -128,9 +123,10 @@ class xnau_Plugin_Settings {
     // this will store an array of all the individual settings for the plugin
     register_setting( $this->WP_setting, $this->WP_setting, $this->register_setting_args() );
     
-    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG >= 2 )
+    add_filter('pre_update_option_' . $this->WP_setting, [$this,'check_option_update'], 10, 2);
+    
+    if ( defined( 'PDB_DEBUG' ) && PDB_DEBUG )
     {
-      add_filter('pre_update_option_' . $this->WP_setting, [$this,'check_option_update'], 10, 2);
       add_action('update_option_' . $this->WP_setting, [$this,'log_option_update'], 10, 2);
     }
   }
@@ -538,7 +534,7 @@ class xnau_Plugin_Settings {
       
       if ( empty( $changes ) )
       {
-        add_settings_error( $this->WP_setting, 'settings_updated', __( 'No settings changes were saved.', 'participants-database' ), 'error' );
+        add_settings_error( $this->WP_setting, 'settings_updated', __( 'No settings changes were saved.', 'participants-database' ), 'info' );
       }
       
       return $new_options;
@@ -546,6 +542,8 @@ class xnau_Plugin_Settings {
     
     /**
      * logs an update to the plugin settings
+     * 
+     * this is only called when plugin debugging is enabled
      * 
      * @global \wpdb $wpdb
      * @param array $previous_options
@@ -569,11 +567,20 @@ class xnau_Plugin_Settings {
       else
       {
         $pattern = 'option: "%s" old value: "%s"  new value: "%s"';
+        $log_messages = [];
 
         foreach ( $changes as $option => $new_value ) 
         {
-          $message = 'PDB setting update: ' . sprintf( $pattern, $option, $previous_options[$option], $new_value );
-          Participants_Db::debug_log( $message, 2 );
+          $log_messages[$option] = [$previous_options[$option], $new_value];
+        }
+        
+        // set up the settings array
+        $this->_define_settings();
+        
+        foreach( $log_messages as $option => $values )
+        {
+          $message = 'PDB setting update: ' . sprintf( $pattern, $this->get_option_title( $option ), $values[0], $values[1] );
+          Participants_Db::debug_log( $message );
         }
       }
     }
