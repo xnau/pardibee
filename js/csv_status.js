@@ -45,10 +45,19 @@ PDb_CSV_Status = (function ($) {
     $('#realtime-progress').addClass('complete');
     $('#realtime .import-tally-report').prepend($('<span class="dashicons dashicons-flag"></span>'));
   };
+  var dismiss = function(e){
+    $.post(ajaxurl, {
+      action: csvStatus.dismiss,
+      _wpnonce: csvStatus._wpnonce
+    },function(){
+      messageFrame.removeClass('updated').empty();
+    });
+  };
   return {
     init: function () {
       messageFrame = $('#message');
       poll_updates();
+      messageFrame.on('click','button.csv-status-dismiss', dismiss);
     },
   }
 }(jQuery));
