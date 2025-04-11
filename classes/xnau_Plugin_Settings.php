@@ -527,9 +527,16 @@ class xnau_Plugin_Settings {
      * 
      * @param array $new_options
      * @param array $previous_options
+     * @return array
      */
     public function check_option_update( $new_options, $previous_options )
     {
+      if ( ! is_array( $previous_options ) )
+      {
+        // this is a fresh install
+        return $new_options;
+      }
+      
       $changes = array_diff_assoc($new_options, $previous_options);
       
       if ( empty( $changes ) )
