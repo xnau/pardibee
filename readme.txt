@@ -293,6 +293,10 @@ You can define a "captcha" form element which will show a simple math question f
 
 == Changelog ==
 
+= 2.7.1 =
+* fixed issue with skipped validation in form submissions
+* fixed php TypeError error on new install
+
 = 2.7 =
 * improved UI for CSV imports
 * background CSV import now has a realtime import status display
@@ -619,6 +623,7 @@ Also:
 
 == Upgrade Notice ==
 
+2.7.1 is a bugfix update
 2.7 is a feature and bugfix update
 
 == Plugin Support ==
