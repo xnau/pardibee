@@ -1639,6 +1639,13 @@ class Participants_Db extends PDb_Base {
   {
     do_action( 'pdb-clear_page_cache', isset( $post['shortcode_page'] ) ? $post['shortcode_page'] : $_SERVER['REQUEST_URI'] );
     
+    // make sure we are getting the right arguments #3185
+    if ( is_string( $func_call ) )
+    {
+      $context = $func_call;
+      $func_call = false;
+    }
+    
     $record_match = \PDb_submission\matching\record::get_object( $post, $record_id );
     /** @var PDb_submission\matching\record $record_match */
 
@@ -1685,7 +1692,8 @@ class Participants_Db extends PDb_Base {
       
       $field = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
-      if ( $column_names === false || in_array( $column->name, $column_names ) ) { // only validate submitted values #2956 or all fields are submitted
+      if ( $column_names === false || in_array( $column->name, $column_names ) ) 
+      { // only validate submitted values #2956 or all fields are submitted
         $main_query->validate_column( $field, $column );
       }
       
@@ -2338,7 +2346,7 @@ class Participants_Db extends PDb_Base {
           $id = false;
         }
 
-        $participant_id = self::process_form( $post_data, $post_input['action'], $id, $columns, 'page submission ' . $post_input['action'] );
+        $participant_id = self::process_form( $post_data, $post_input['action'], $id, $columns, false, 'page submission ' . $post_input['action'] );
 
         if ( false === $participant_id ) {
 
@@ -2639,7 +2647,7 @@ class Participants_Db extends PDb_Base {
         }
 
         // submit the data
-        $post_data['id'] = self::process_form( $post_data, $submit_action, self::$session->record_id(), $columns, 'signup form submission' );
+        $post_data['id'] = self::process_form( $post_data, $submit_action, self::$session->record_id(), $columns, false, 'signup form submission' );
 
         if ( false !== $post_data['id'] ) {
 
