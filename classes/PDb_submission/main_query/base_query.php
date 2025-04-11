@@ -352,7 +352,7 @@ abstract class base_query {
    * @param object $column the column object
    */
   public function validate_column( $field, $column )
-  {
+  { 
     // validation is only performed on form submissions
     if ( is_object( PDB::$validation_errors ) && !$this->is_import() && !$this->is_func_call() ) 
     {
