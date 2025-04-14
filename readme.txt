@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.4
-Stable tag: 2.6.1
+Stable tag: 2.7.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,6 +292,9 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.2 =
+* fixed initialization error with some add-on plugins
 
 = 2.7.1 =
 * fixed issue with skipped validation in form submissions
@@ -623,7 +626,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.1 is a bugfix update
+2.7.2 is a bugfix update
 2.7 is a feature and bugfix update
 
 == Plugin Support ==
