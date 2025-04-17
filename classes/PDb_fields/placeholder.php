@@ -29,7 +29,17 @@ class placeholder extends utility {
    */
   public function __construct()
   {
-    parent::__construct( self::element_name, _x( 'Placeholder', 'name of a field type that shows placeholder text', 'participants-database' ) );
+    parent::__construct( self::element_name, 'Placeholder' );
+  }
+  
+  /**
+   * sets the translated title of the field
+   * 
+   * this is triggered in the 'init' hook to avoid a too-early translation load
+   */
+  public function set_translated_title()
+  {
+    $this->title = _x( 'Placeholder', 'name of a field type that shows placeholder text', 'participants-database' );
   }
 
   /**
