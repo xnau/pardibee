@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -29,7 +29,7 @@ class heading extends utility {
    */
   public function __construct()
   {
-    parent::__construct( self::element_name, _x( 'Heading', 'name of a field type that shows a text heading', 'participants-database' ) );
+    parent::__construct( self::element_name, 'Heading' );
 
     add_filter( 'pdb-add_field_to_iterator', array( $this, 'yes_show_field' ), 10, 2 );
     
@@ -38,6 +38,16 @@ class heading extends utility {
     $this->suppressed_shortcodes(array('list'));
     
     $this->is_mass_edit_field();
+  }
+  
+  /**
+   * sets the translated title of the field
+   * 
+   * this is triggered in the 'init' hook to avoid a too-early translation load
+   */
+  public function set_translated_title()
+  {
+    $this->title = _x( 'Heading', 'name of a field type that shows a text heading', 'participants-database' );
   }
 
   /**
