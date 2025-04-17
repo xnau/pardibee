@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    0.4
+ * @version    1.0
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -29,11 +29,21 @@ class media_embed extends core {
    */
   public function __construct()
   {
-    parent::__construct( self::element_name, _x( 'Media Embed', 'name of a field type that shows embedded media', 'participants-database' ) );
+    parent::__construct( self::element_name, 'Media Embed' );
     
     $this->is_dynamic_field();
     
     $this->is_mass_edit_field();
+  }
+  
+  /**
+   * sets the translated title of the field
+   * 
+   * this is triggered in the 'init' hook to avoid a too-early translation load
+   */
+  public function set_translated_title()
+  {
+    $this->title = _x( 'Media Embed', 'name of a field type that shows embedded media', 'participants-database' );
   }
 
   /**
