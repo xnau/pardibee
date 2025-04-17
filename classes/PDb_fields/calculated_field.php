@@ -52,9 +52,7 @@ abstract class calculated_field extends dynamic_db_field {
   public function __construct()
   {
     $class = get_class($this);
-    parent::__construct( $class::element_name, $this->field_title() );
-    
-    $this->customize_default_attribute( __( 'Template', 'participants-database' ), 'text-area' );
+    parent::__construct( $class::element_name, $class::element_name );
     
     $this->is_linkable();
     
@@ -66,6 +64,34 @@ abstract class calculated_field extends dynamic_db_field {
     add_filter( sprintf( 'pdb-%s_is_numeric', $class::element_name ), function(){
       return $this->is_numeric_field();
     });
+    
+    add_filter( 'pdb-field_default_attribute_edit_config', [$this,'set_default_attribute_name'], 10, 2 );
+  }
+  
+  /**
+   * customizes the name of the default attribute in the field editor
+   * 
+   * @param array $config configuration
+   * @param PDb_Form_field_Def $field
+   * @return array configuration
+   */
+  public function set_default_attribute_name($config, $field)
+  {
+    if ( $field->form_element() === $this->name )
+    {
+      $config[ 'label' ] = __( 'Template', 'participants-database' );
+      $config[ 'type' ] = 'text-area';
+    }
+    
+    return $config;
+  }
+  
+  /**
+   * sets the translated title property
+   */
+  public function set_translated_title()
+  {
+    $this->title = $this->field_title();
   }
   
   /**
