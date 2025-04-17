@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPLv3
- * @version    0.5
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -49,6 +49,8 @@ abstract class core {
   {
     $this->name = $name;
     $this->title = $title;
+    
+    add_action('init', [$this,'set_translated_title']);
 
     add_filter( 'pdb-form_element_build_' . $this->name, array( $this, 'form_element_build' ) );
     add_filter( 'pdb-before_display_form_element', array( $this, 'display_form_element' ), 10, 2 );
@@ -58,6 +60,17 @@ abstract class core {
     add_filter( "pdb-{$this->name}_form_element_def_att_switches", array( $this, 'editor_config' ) );
     
     add_filter( 'pdb-field_has_content_test_value', array( $this, 'test_content' ), 10, 2 );
+  }
+  
+  /**
+   * sets the translated title of the field
+   * 
+   * this is triggered in the 'init' hook to avoid a too-early translation load
+   * 
+   * this must be overridden in the add-on plugin so the textdomain is correct and the translation is inluded in the pot.
+   */
+  public function set_translated_title()
+  {
   }
 
   /**
