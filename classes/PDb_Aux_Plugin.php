@@ -1065,7 +1065,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     /**
      * advises the user to update their aux plugin
      */
-    private static function aux_plugin_update_notice()
+    private function aux_plugin_update_notice()
     {
       $notice = $this->aux_plugin_name . '-requres-update';
       $message = sprintf( __( 'The %s plugin must be updated to its latest version to continue to recieve updates.') );
