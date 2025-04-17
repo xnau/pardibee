@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -51,7 +51,8 @@ class PDb_Debug {
    */
   public function __construct()
   {
-    $this->log_title = __( 'Debugging Log', 'participants-database' );
+    add_action( 'init', [$this,'set_title'] );
+    
     $this->settings_page = Participants_Db::$plugin_page . '-' . self::name . '_settings';
 
     $this->logging_option = self::name . '-settings';
@@ -69,6 +70,14 @@ class PDb_Debug {
       set_error_handler( array($this, 'write_php_error') );
 
     add_action( 'wp_ajax_' . $this->action, array($this, 'handle_refresh') );
+  }
+  
+  /**
+   * sets the translated log title
+   */
+  public function set_title()
+  {
+    $this->log_title = __( 'Debugging Log', 'participants-database' );
   }
 
   /**
