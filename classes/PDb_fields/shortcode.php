@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    2.0
+ * @version    2.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -29,13 +29,23 @@ class shortcode extends core {
    */
   public function __construct()
   {
-    parent::__construct( self::element_name, _x( 'Shortcode', 'name of a field type that shows a shortcode', 'participants-database' ) );
+    parent::__construct( self::element_name, 'Shortcode' );
     
     add_filter( 'pdb-field_default_attribute_edit_config', array( $this, 'change_default_attribute_title' ), 10, 2 );
     
     $this->is_dynamic_field();
     
     $this->is_mass_edit_field();
+  }
+  
+  /**
+   * sets the translated title of the field
+   * 
+   * this is triggered in the 'init' hook to avoid a too-early translation load
+   */
+  public function set_translated_title()
+  {
+    $this->title = _x( 'Shortcode', 'name of a field type that shows a shortcode', 'participants-database' );
   }
 
   /**
