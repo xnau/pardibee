@@ -311,9 +311,7 @@ class Participants_Db extends PDb_Base {
     // set the WP hooks to finish setting up the plugin
     add_action( 'plugins_loaded', array(__CLASS__, 'setup_source_names'), 1 );
     add_action( 'plugins_loaded', array(__CLASS__, 'init'), 5 );
-    add_action('init', function(){
-      self::load_plugin_textdomain( __FILE__ );
-    });
+    add_action('init', [ __CLASS__,'setup_translations'] );
     add_action( 'wp', array(__CLASS__, 'check_for_shortcode'), 1 );
     add_action( 'wp', array(__CLASS__, 'remove_rel_link') );
 
@@ -554,9 +552,23 @@ class Participants_Db extends PDb_Base {
       new \PDb_import\import_status_display();
     }
   }
+  
+  /**
+   * sets up the initial translations
+   */
+  public static function setup_translations()
+  {
+    self::load_plugin_textdomain( __FILE__ );
+    
+    self::$plugin_title = self::apply_filters( 'plugin_title', __( 'Participants Database', 'participants-database' ) );
+
+    self::_set_i18n();
+  }
 
   /**
-   * initializes the plugin in the WP environment, fired on the 'plugins_loaded' hook
+   * initializes the plugin in the WP environment
+   * 
+   * fired on the 'plugins_loaded' hook
    * 
    * @return null
    */
@@ -585,9 +597,7 @@ class Participants_Db extends PDb_Base {
      */
     new \PDb_import\controller();
 
-    self::$plugin_title = self::apply_filters( 'plugin_title', __( 'Participants Database', 'participants-database' ) );
-
-    self::_set_i18n();
+    self::$plugin_title = 'Participants Database';
     /**
      * @version 1.6 filter pdb-private_id_length
      */
@@ -3281,9 +3291,13 @@ class Participants_Db extends PDb_Base {
   private static function _show_validation_error( $error, $name = '', $overwrite = true )
   {
     if ( is_object( self::$validation_errors ) )
+    {
       self::$validation_errors->add_error( $name, $error, $overwrite );
+    }
     else
+    {
       self::set_admin_message( $error );
+    }
   }
 
   /**
@@ -3291,7 +3305,7 @@ class Participants_Db extends PDb_Base {
    */
   private static function _set_i18n()
   {
-    self::$i18n = array(
+    self::$i18n = [
         'submit' => __( 'Submit', 'participants-database' ),
         'apply' => __( 'Apply', 'participants-database' ),
         'next' => __( 'Next', 'participants-database' ),
@@ -3301,7 +3315,7 @@ class Participants_Db extends PDb_Base {
         'added' => __( 'The new record has been added.', 'participants-database' ),
         'zero_rows_error' => __( 'No record was added on query: %s', 'participants-database' ),
         'database_error' => __( 'Database Error: %2$s on query: %1$s', 'participants-database' )
-    );
+    ];
   }
 
   /**
