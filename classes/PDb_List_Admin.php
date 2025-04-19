@@ -1040,6 +1040,27 @@ class PDb_List_Admin {
    */
   public static function register_admin_list_events( $list )
   {
+    add_filter( 'pdb-translate_event_titles', [ __CLASS__,'translate_admin_list_events'] );
+    
+    $prefix = 'PDb Admin List With Selected: ';
+    $admin_list_events = array(
+        'pdb-list_admin_with_selected_delete' => $prefix . 'delete',
+        'pdb-list_admin_with_selected_approve' => $prefix . 'approve',
+        'pdb-list_admin_with_selected_unapprove' => $prefix . 'unapprove',
+        'pdb-list_admin_with_selected_send_signup_email' => $prefix . 'send signup email',
+    );
+    return $list + $admin_list_events;
+  }
+  
+  /**
+   * registers admin list events
+   * 
+   * this is called on the pdb-translate_event_titles filter
+   * 
+   * @return array of event definitions
+   */
+  public static function translate_admin_list_events( $list )
+  {
     $prefix = esc_html__( 'PDb Admin List With Selected: ', 'participants-database' );
     $admin_list_events = array(
         'pdb-list_admin_with_selected_delete' => $prefix . esc_html__( 'delete', 'participants-database' ),
