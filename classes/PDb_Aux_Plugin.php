@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    5.4
+ * @version    6.0
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -280,7 +280,11 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
 //       $this->plugin_data = ( function_exists( 'get_plugin_data' ) ? Participants_Db::get_plugin_data( $this->plugin_path ) : array('Author' => 'Roland Barker, xnau webdesign') ) + $this->plugin_data;
       $this->plugin_data =  ['Author' => 'Roland Barker, xnau webdesign'] + Participants_Db::get_plugin_data( $this->plugin_path );
-      $this->set_attribution();
+      
+      add_action('init', function(){
+        $this->set_attribution();
+      });
+      
       $this->register_option_for_translations();
       /*
        * this sets up the setting verfication callback mechanism
@@ -309,6 +313,15 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
        * @param array $events as $tag => $title
        */
       $this->aux_plugin_events = Participants_Db::apply_filters( 'register_global_event', array() );
+      
+      /**
+       * @filter pdb-translate_event_titles
+       * @param array $aux_plugin_events
+       * @return array
+       */
+      add_action( 'init', function(){
+        $this->aux_plugin_events = Participants_Db::apply_filters( 'translate_event_titles', $this->aux_plugin_events );
+      });
     }
 
     /**
@@ -377,7 +390,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $data = $this->plugin_data;
       $name_pattern = _x( '%s version %s', 'displays the name and version of the plugin', 'participants-database' );
       $author_pattern = _x( 'Authored by %s', 'displays the plugin author name', 'participants-database' );
-      $this->attribution = sprintf( $name_pattern . '<br />' . $author_pattern, $data['Name'], $data['Version'], $data['Author'] );
+      $this->attribution = sprintf( $name_pattern . '<br />' . $author_pattern, $data['Name'], $data['Version'], $data['Author'] ); 
     }
 
     /**
