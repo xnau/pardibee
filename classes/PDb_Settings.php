@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.9.1
+ * @version    1.10
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -28,13 +28,52 @@ class PDb_Settings extends xnau_Plugin_Settings {
 
   function __construct()
   {
-
+    add_action( 'init', [$this,'load_translations'] );
+    
     $this->setup_plugin_options();
     $this->add_settings_filters();
+    
+    $this->sections = array(
+        'pdb-main' => 'General Settings',
+        'pdb-signup' => 'Signup Form Settings',
+        'pdb-record' => 'Record Form Settings',
+        'pdb-list' => 'List Display Settings',
+        'pdb-resend' => 'Resend Link Settings',
+        'pdb-admin' => 'Admin Settings',
+        'pdb-advanced' => 'Advanced Settings',
+        'pdb-css' => 'Custom CSS',
+    );
 
-    /*
-     * define the settings sections
-     */
+    // determine the type of text-area elements to use for email body settings
+    $this->textarea_type = Participants_Db::plugin_setting_is_true('html_email') ? 'rich-text' : 'text-area';
+
+    // run the parent class initialization to finish setting up the class 
+    parent::__construct( __CLASS__ );
+
+    $this->submit_button = 'Save Plugin Settings';
+    
+    
+    // this is waiting on more complete implementation. #1634
+//    add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
+    
+    // filters to condition saved values for display
+    add_filter( 'pdb-settings_page_setting_value', function( $value, $input ) {
+      switch ($input['name']) {
+        case 'image_upload_limit': 
+        $value = preg_replace( '/\D/', '', $value );
+        break;
+      }
+      return $value;
+    }, 10, 2 );
+  }
+  
+  /**
+   * sets up the translated strings
+   * 
+   * called on the 'init' hook #3190
+   */
+  public function load_translations()
+  {
     $this->sections = array(
         'pdb-main' => __( 'General Settings', 'participants-database' ),
         'pdb-signup' => __( 'Signup Form Settings', 'participants-database' ),
@@ -55,27 +94,8 @@ class PDb_Settings extends xnau_Plugin_Settings {
         'pdb-admin' => __( 'Settings for the plugin backend.', 'participants-database' ),
         'pdb-css' => sprintf( __( 'User CSS rules for styling plugin displays.</h4><p>If you\'re new to CSS, try this tutorial to help you get started: %s</p>', 'participants-database' ), '<a href="https://xnau.com/simple-css-techniques-for-wordpress-part-1/" target="_blank" >Simple CSS Techniques for WordPress</a>' ),
     );
-    // determine the type of text-area elements to use for email body settings
-    $this->textarea_type = Participants_Db::plugin_setting_is_true('html_email') ? 'rich-text' : 'text-area';
-
-    // run the parent class initialization to finish setting up the class 
-    parent::__construct( __CLASS__ );
 
     $this->submit_button = __( 'Save Plugin Settings', 'participants-database' );
-    
-    
-    // this is waiting on more complete implementation. #1634
-//    add_action( 'admin_init', array( $this, 'check_settings' ), 50 );
-    
-    // filters to condition saved values for display
-    add_filter( 'pdb-settings_page_setting_value', function( $value, $input ) {
-      switch ($input['name']) {
-        case 'image_upload_limit': 
-        $value = preg_replace( '/\D/', '', $value );
-        break;
-      }
-      return $value;
-    }, 10, 2 );
   }
   
   /**
