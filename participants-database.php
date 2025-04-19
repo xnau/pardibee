@@ -377,15 +377,7 @@ class Participants_Db extends PDb_Base {
     add_action( 'wp_ajax_' . PDb_Manage_List_Columns::action, 'PDb_Manage_List_Columns::process_request' );
     
     // register some plugin events
-    add_filter( 'pdb-register_global_event', function ($events){
-      
-      $events['pdb-view_single_record'] = __( 'View Single Record', 'participants-database' );
-      $events['pdb-open_record_edit'] = __( 'Open Edit Record Form', 'participants-database' );
-      $events['pdb-record_accessed_using_private_link'] = __( 'Record Accessed with Private Link', 'participants-database' );
-      $events['pdb-first_time_record_access_with_private_link'] = __( 'Record Accessed First Time with Private Link', 'participants-database' );
-      
-      return $events;
-    });
+    add_filter( 'pdb-register_global_event', [ __CLASS__,'register_events']);
     
     if ( ! function_exists( 'deactivate_plugins' ) ) {
       include_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -918,6 +910,40 @@ class Participants_Db extends PDb_Base {
 
       include $file;
     }
+  }
+  
+  /**
+   * registers this plugin's global events
+   * 
+   * @param array $events
+   * @return array
+   */
+  public static function register_events( $events )
+  {
+    add_filter( 'pdb-translate_event_titles', [ __CLASS__,'translate_event_titles'] );
+    
+    $events['pdb-view_single_record'] = 'View Single Record';
+    $events['pdb-open_record_edit'] = 'Open Edit Record Form';
+    $events['pdb-record_accessed_using_private_link'] = 'Record Accessed with Private Link';
+    $events['pdb-first_time_record_access_with_private_link'] = 'Record Accessed First Time with Private Link';
+
+    return $events;
+  }
+  
+  /**
+   * provides the translated titles for the registered events
+   * 
+   * @param array $events
+   * @return array
+   */
+  public static function translate_event_titles( $events )
+  {
+    $events['pdb-view_single_record'] = __( 'View Single Record', 'participants-database' );
+    $events['pdb-open_record_edit'] = __( 'Open Edit Record Form', 'participants-database' );
+    $events['pdb-record_accessed_using_private_link'] = __( 'Record Accessed with Private Link', 'participants-database' );
+    $events['pdb-first_time_record_access_with_private_link'] = __( 'Record Accessed First Time with Private Link', 'participants-database' );
+
+    return $events;
   }
 
   /**
