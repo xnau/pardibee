@@ -219,19 +219,20 @@ class PDb_Session {
   private function get_session_id()
   {
     $sessid = '';
+    $source = '';
 
     if ( $this->alt_session_setting() )
     {
       $sessid = $this->get_alt_session_id();
 
-      Participants_Db::debug_log( __METHOD__ . ' using alt method, got: ' . $sessid, 4 );
+      $source = ' using alt method';
     }
 
     if ( $sessid === '' )
     {
       $sessid = $this->get_php_session_id();
 
-      Participants_Db::debug_log( __METHOD__ . ' using php method, got: ' . $sessid, 4 );
+      $source = ' using php method';
     }
 
     // if we still don't have the session ID, switch to the alternate method
@@ -239,13 +240,15 @@ class PDb_Session {
     {
       $sessid = $this->use_alternate_method();
 
-      Participants_Db::debug_log( __METHOD__ . ' using fallback alt method, got: ' . $sessid, 4 );
+      $source = ' using fallback alt method';
     }
 
     if ( empty( $sessid ) ) 
     {
-      Participants_Db::debug_log( __METHOD__ . ' unable to get session id', 4 );
+      $source = ' unable to get session id';
     }
+    
+    Participants_Db::debug_log( __METHOD__ . ' session source: ' . $source, 2 );
 
     return $sessid;
   }
@@ -302,9 +305,7 @@ class PDb_Session {
    */
   public function alt_session_setting()
   {
-    $plugin_setting = get_option( Participants_Db::$participants_db_options );
-
-    return ( isset( $plugin_setting[ 'use_session_alternate_method' ] ) && $plugin_setting[ 'use_session_alternate_method' ] );
+    return boolval( PDb_Settings::get_setting_value('use_session_alternate_method') );
   }
 
   /**
@@ -364,8 +365,8 @@ class PDb_Session {
     // try the php cookie
     if ( !$sessid ) 
     {
-
       $sessid = filter_input( INPUT_COOKIE, self::php_cookie_name(), FILTER_VALIDATE_REGEXP, $validator );
+      
       $source = 'php cookie';
     }
 
@@ -378,21 +379,21 @@ class PDb_Session {
 
     if ( !$sessid )
     {
-      // now we have to create an id and use that
-      $sessid = $this->create_id();
-      
       // save it in our cookie
-      if ( ! headers_sent() ) // don't set the cookie if the headers have already been sent and we're not debugging
+      if ( boolval( PDb_Settings::get_setting_value( 'disable_session_cookie') ) === false && ! headers_sent() )
       { 
+        // now we have to create an id and use that
+        $sessid = $this->create_id();
         setcookie( $this->cookie_name(), $sessid, 0, '/' );
+        $source = 'create new PDB cookie';
       }
       else
       {
-        Participants_Db::debug_log(__METHOD__.' unable to set session cookie', 4 );
+        $source = ' unable to set session cookie';
       }
-      
-      $source = 'create new';
     }
+    
+    Participants_Db::debug_log(__METHOD__.' got session id: '. $sessid . ' by method: '. $source, 2 );
 
     return $sessid;
   }
