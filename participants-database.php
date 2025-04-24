@@ -119,7 +119,7 @@ class Participants_Db extends PDb_Base {
    * name of the WP plugin options
    * @var string
    */
-  public static $participants_db_options;
+  public static $participants_db_options = self::PLUGIN_NAME . '_options';
 
   /**
    * name of the default settings option
@@ -478,9 +478,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function setup_source_names()
   {
-//    if ( !is_null( self::$participants_table ) ) {
-//      return;
-//    }
     /*
      * these can be modified later with a filter hook
      * 
