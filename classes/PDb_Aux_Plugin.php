@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    6.0
+ * @version    6.1
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -93,7 +93,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      * 
      * @var array holds the plugin info fields as parsed from the main plugin file header
      */
-    public $plugin_data = array();
+    public $plugin_data = [];
 
     /**
      * the updater class instance for this plugin
@@ -116,7 +116,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     /**
      * @var array of registered aux_plugin events as $tag => $title
      */
-    public $aux_plugin_events = array();
+    public $aux_plugin_events = [];
 
     /**
      * @var string basename of the request throttling transient
@@ -138,10 +138,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         return;
       }
       // provides the fallback values for these plugin data fields
-      $this->plugin_data += array(
+      $this->plugin_data += [
           'PluginURI' => 'https://xnau.com/shop/',
           'SupportURI' => 'https://xnau.com/product_support/',
-      );
+      ];
       $this->plugin_path = $plugin_file;
       $this->parent_path = plugin_dir_path( $plugin_file );
 
@@ -150,13 +150,13 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $this->aux_plugin_settings = $this->aux_plugin_shortname . '_settings';
       $this->settings_page = Participants_Db::$plugin_page . '-' . $this->aux_plugin_name . '_settings';
 
-      add_action( 'admin_menu', array($this, 'add_settings_page') );
-      add_action( 'admin_init', array($this, 'settings_api_init') );
-      add_action( 'admin_enqueue_scripts', array($this, 'enqueues'), 1 );
-      add_action( 'plugins_loaded', array($this, 'set_plugin_options'), 1 );
-      add_action( 'init', array($this, 'load_textdomain'), 1 );
-      add_filter( 'plugin_row_meta', array($this, 'add_plugin_meta_links'), 10, 2 );
-      add_action( 'plugins_loaded', array($this, 'register_global_events'), -10 );
+      add_action( 'admin_menu', [$this, 'add_settings_page'] );
+      add_action( 'admin_init', [$this, 'settings_api_init'] );
+      add_action( 'admin_enqueue_scripts', [$this, 'enqueues'], 1 );
+      add_action( 'plugins_loaded', [$this, 'set_plugin_options'], 1 );
+      add_action( 'init', [$this, 'load_textdomain'], 1 );
+      add_filter( 'plugin_row_meta', [$this, 'add_plugin_meta_links'], 10, 2 );
+      add_action( 'plugins_loaded', [$this, 'register_global_events'], -10 );
 
       add_action( 'init', function() use ($plugin_file) {
         $this->setup_updates( $plugin_file );
@@ -278,7 +278,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function set_plugin_options()
     {
-//       $this->plugin_data = ( function_exists( 'get_plugin_data' ) ? Participants_Db::get_plugin_data( $this->plugin_path ) : array('Author' => 'Roland Barker, xnau webdesign') ) + $this->plugin_data;
+//       $this->plugin_data = ( function_exists( 'get_plugin_data' ) ? Participants_Db::get_plugin_data( $this->plugin_path ) : ['Author' => 'Roland Barker, xnau webdesign'] ) + $this->plugin_data;
       $this->plugin_data =  ['Author' => 'Roland Barker, xnau webdesign'] + Participants_Db::get_plugin_data( $this->plugin_path );
       
       add_action('init', function(){
@@ -293,12 +293,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
        * like this: setting_callback_for_{setting name} It passes in the new value 
        * and the previous value. The callback must return the value to save.
        */
-      if ( !has_filter( 'pre_update_option_' . $this->aux_plugin_settings, array($this, 'settings_callbacks') ) ) {
-        add_filter( 'pre_update_option_' . $this->aux_plugin_settings, array($this, 'settings_callbacks'), 10, 2 );
+      if ( !has_filter( 'pre_update_option_' . $this->aux_plugin_settings, [$this, 'settings_callbacks'] ) ) {
+        add_filter( 'pre_update_option_' . $this->aux_plugin_settings, [$this, 'settings_callbacks'], 10, 2 );
       }
       
       $options = get_option( $this->settings_name() );
-      $this->plugin_options = is_array( $options ) ? $options : array();
+      $this->plugin_options = is_array( $options ) ? $options : [];
     }
 
     /**
@@ -309,10 +309,13 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       /**
        * 
+       * initial registration without translated event titles. The translated 
+       * event titles are added later on the pdb-translate_event_titles filter
+       * 
        * @filter 'pdb-register_global_event'
        * @param array $events as $tag => $title
        */
-      $this->aux_plugin_events = Participants_Db::apply_filters( 'register_global_event', array() );
+      $this->aux_plugin_events = Participants_Db::apply_filters( 'register_global_event', [] );
       
       /**
        * @filter pdb-translate_event_titles
@@ -406,12 +409,12 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       register_setting( $this->aux_plugin_name . '_settings', $this->settings_name() );
 
-      $this->settings_sections = array(
-          array(
+      $this->settings_sections = [
+          [
               'title' => __( 'General Settings', 'participants-database' ),
               'slug' => $this->aux_plugin_shortname . '_setting_section',
-          )
-      );
+          ]
+      ];
       $this->_add_settings_sections();
     }
 
@@ -423,7 +426,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( $this->settings_API_status ) {
         // create the submenu page
         add_submenu_page(
-                Participants_Db::$plugin_page, $this->aux_plugin_title . ' Settings', $this->aux_plugin_title, Participants_Db::plugin_capability( 'plugin_admin_capability', $this->aux_plugin_name ), $this->settings_page, array($this, 'render_settings_parent_page')
+                Participants_Db::$plugin_page, $this->aux_plugin_title . ' Settings', $this->aux_plugin_title, Participants_Db::plugin_capability( 'plugin_admin_capability', $this->aux_plugin_name ), $this->settings_page, [$this, 'render_settings_parent_page']
         );
       }
     }
@@ -503,15 +506,15 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       
       foreach ( $this->settings_sections as $section )
       {
-        $args = array(
+        $args = [
             'before_section' => isset( $section['before_section'] ) ? $section['before_section'] : '',
             'after_section' => isset( $section['after_section'] ) ? $section['after_section'] : '',
             'section_class' => isset( $section['class'] ) ? $section['class'] : $section['slug'] . '-settings-section',
-        );
+        ];
         // Add the section to reading settings so we can add our
         // fields to it
         add_settings_section(
-                $section['slug'], $section['title'], array($this, 'setting_section_callback_function'), $this->aux_plugin_name, $args
+                $section['slug'], $section['title'], [$this, 'setting_section_callback_function'], $this->aux_plugin_name, $args
         );
       }
     }
@@ -526,7 +529,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     protected function add_setting( $atts )
     {
 
-      $default = array(
+      $default = [
           'type' => 'text',
           'name' => '',
           'title' => '',
@@ -535,16 +538,16 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           'options' => '',
           'style' => '',
           'class' => '',
-          'attributes' => array(),
+          'attributes' => [],
           'section' => $this->aux_plugin_shortname . '_setting_section'
-      );
+      ];
       $params = shortcode_atts( $default, $atts );
 
       // add the setting definition to the list of definition objects
       $this->setting_definitions[$params['name']] = (object) $params;
 
       add_settings_field(
-              $params['name'], $params['title'], array($this, 'setting_callback_function'), $this->aux_plugin_name, $params['section'], array(
+              $params['name'], $params['title'], [$this, 'setting_callback_function'], $this->aux_plugin_name, $params['section'], [
           'type' => $params['type'],
           'name' => $params['name'],
           'value' => isset( $this->plugin_options[$params['name']] ) ? $this->plugin_options[$params['name']] : $params['default'],
@@ -554,7 +557,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           'style' => $params['style'],
           'class' => $params['class'],
           'attributes' => $params['attributes'],
-              )
+              ]
       );
     }
 
@@ -615,7 +618,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     public function setting_callback_function( $atts )
     {
       $options = get_option( $this->settings_name() );
-      $defaults = array(
+      $defaults = [
           'name' => '', // 0
           'type' => 'text', // 1
           'value' => isset( $options[$atts['name']] ) ? $options[$atts['name']] : '', // 2
@@ -625,8 +628,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
           'help' => '', // 6
           'options' => '', // 7
           'select' => '', // 8
-          'attributes' => array(), // 9
-      );
+          'attributes' => [], // 9
+      ];
       $setting = shortcode_atts( $defaults, $atts );
       $setting['value'] = isset( $options[$atts['name']] ) ? $options[$atts['name']] : $atts['value'];
       // create an array of numeric keys
@@ -640,10 +643,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       $values[9] = $this->input_attributes( $setting['attributes'] );
 
       $build_function = '_build_' . $setting['type'];
-      if ( !is_callable( array($this, $build_function) ) ) {
+      if ( !is_callable( [$this, $build_function] ) ) {
         $build_function = '_build_text';
       }
-      $control_html = call_user_func( array($this, $build_function), $values );
+      $control_html = call_user_func( [$this, $build_function], $values );
       echo wp_kses( $control_html, Participants_Db::allowed_html('form') );
     }
 
@@ -693,10 +696,10 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     protected function _build_richtext( $values )
     {
-      $params = array(
+      $params = [
           'media_buttons' => FALSE,
           'textarea_name' => $this->settings_name() . '[' . $values[0] . ']',
-      );
+      ];
       ob_start();
       wp_editor( $values[2], 'richtext-' . str_replace( '-', '_', $values[0] ), $params );
       $html = vsprintf( '<div class="%5$s" style="%6$s" %10$s >', $values );
@@ -890,7 +893,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     protected function input_attributes( Array $attributes )
     {
       $atts_string = '';
-      $exclude = array('name', 'value', 'class', 'style', 'type', 'title'); // atts we don't set this way
+      $exclude = ['name', 'value', 'class', 'style', 'type', 'title']; // atts we don't set this way
       foreach ( $attributes as $name => $value ) {
         if ( !in_array( $name, $exclude ) ) {
           $atts_string .= $name . '="' . esc_attr( $value ) . '" ';
@@ -944,7 +947,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     protected function field_selector( $allowed )
     {
-      $available_fields = array();
+      $available_fields = [];
       foreach ( Participants_Db::field_defs() as $fieldname => $field ) {
         /* @var $field \PDB_Form_Field_Def */
         if (
@@ -967,7 +970,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     {
       $settings_values = $new_value;
       foreach ( $settings_values as $name => $value ) {
-        $callback = array($this, 'setting_callback_for_' . $name);
+        $callback = [$this, 'setting_callback_for_' . $name];
         if ( is_callable( $callback ) ) {
           $prev_value = isset( $old_value[$name] ) ? $old_value[$name] : '';
           $new_value[$name] = call_user_func( $callback, $value, $prev_value );
@@ -1042,7 +1045,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
       if ( !is_array($plugin_name_list) && $notice !== 'xnau-updater-7' )
       {
-        $plugin_name_list = array( $plugin_name );
+        $plugin_name_list = [ $plugin_name ];
 
         add_action( 'admin_notices', function() use ($notice,$message) {
 
@@ -1063,7 +1066,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       {
         if ( ! is_array( $plugin_name_list ) )
         {
-          $plugin_name_list = array( $plugin_name );
+          $plugin_name_list = [ $plugin_name ];
         }
         
         if ( ! in_array( $plugin_name, $plugin_name_list ) )
