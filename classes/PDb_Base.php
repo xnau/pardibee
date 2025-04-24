@@ -2954,15 +2954,25 @@ public static function format_seconds( $seconds )
   protected static function set_debug_mode()
   {
     global $PDb_Debugging;
-    if ( !defined( 'PDB_DEBUG' ) ) {
-      $settings = get_option( Participants_Db::PLUGIN_NAME . '_options' );
-      if ( isset( $settings[ 'pdb_debug' ] ) ) {
-        define( 'PDB_DEBUG', intval( $settings[ 'pdb_debug' ] ) );
-      } elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        define( 'PDB_DEBUG', 1 );
-      } else {
-        define( 'PDB_DEBUG', 0 );
+    
+    if ( !defined( 'PDB_DEBUG' ) ) 
+    {
+      $settings = get_option( Participants_Db::$participants_db_options );
+      
+      if ( isset( $settings[ 'pdb_debug' ] ) ) 
+      {
+        $debug_value = intval( $settings[ 'pdb_debug' ] );
+      } 
+      elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) 
+      {
+        $debug_value = 1;
+      } 
+      else 
+      {
+        $debug_value = 0;
       }
+      
+      define( 'PDB_DEBUG', $debug_value );
     }
 
     if ( PDB_DEBUG > 0 && !defined( 'WP_DEBUG' ) ) {
