@@ -107,21 +107,6 @@ class PDb_Settings extends xnau_Plugin_Settings {
    */
   public function check_settings()
   {
-    $settings = Participants_Db::$plugin_options;
-    
-
-    
-    /*
-     * check registration (particiant record) page settings
-     * unused at this point because not all users need to have this configured
-     */
-//    $post = get_post( $settings['registration_page'] );
-//    if ( $post->post_status !== 'publish' || !$post ) {
-//      $notices->warning( 'The Participant Record Page setting (Record Form Settings tab) does not point to a valid page.' );
-//    }
-//    if ( stripos( $post->post_content, '[pdb_record') === false ) {
-//      $notices->warning( 'The Participant Record Page must include the [pdb_record] shortcode to show the editable record.' );
-//    }
   }
 
   /**
@@ -1462,6 +1447,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
         ),
     );
 
+    $this->plugin_settings[] = array(
+        'name' => 'disable_session_cookie',
+        'title' => __( 'Disable Plugin Session Cookie', 'participants-database' ),
+        'group' => 'pdb-advanced',
+        'options' => array
+            (
+            'type' => 'checkbox',
+            'help_text' => __( 'check this if you need to avoid having the plugin create a session cookie', 'participants-database' ) . $this->settings_help( 'disablecookie'),
+            'value' => 0,
+            'options' => array(1, 0),
+        ),
+    );
+
 //    $this->plugin_settings[] = array(
 //        'name' => 'use_php_sessions',
 //        'title' => __( 'Use PHP Sessions', 'participants-database' ),
@@ -2225,8 +2223,22 @@ ORDER BY g.order, v.order';
     });
     add_filter( Participants_Db::$prefix . 'edit_record_timestamps', function(){
       return Participants_Db::plugin_setting('allow_record_timestamp_edit', '0' ) == '1';
-    });
-    
+    }); 
+  }
+  
+  /**
+   * gets a plugin setting value
+   * 
+   * this gets a value directly from the stored option
+   * 
+   * @param string $setting name of the setting
+   * @return mixed the setting value
+   */
+  public static function get_setting_value( $setting )
+  {
+    $plugin_setting = get_option( Participants_Db::$participants_db_options );
+
+    return isset( $plugin_setting[$setting] ) ? $plugin_setting[ $setting ] : '';
   }
   
   /**
