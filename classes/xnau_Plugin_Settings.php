@@ -207,10 +207,7 @@ class xnau_Plugin_Settings {
    */
   public function get_option( $option_name )
   {
-
     $options = get_option( $this->WP_setting );
-
-    //error_log( __METHOD__.' options='.print_r( $options, true ) );
 
     return isset( $options[$option_name] ) ? $options[$option_name] : false;
   }
@@ -578,7 +575,8 @@ class xnau_Plugin_Settings {
 
         foreach ( $changes as $option => $new_value ) 
         {
-          $log_messages[$option] = [$previous_options[$option], $new_value];
+          $previous_option_value = isset( $previous_options[$option] ) ? $previous_options[$option] : '';
+          $log_messages[$option] = [$previous_option_value, $new_value];
         }
         
         // set up the settings array
