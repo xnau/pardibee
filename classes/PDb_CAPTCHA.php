@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2011 xnau webdesign
  * @license    GPL2
- * @version    0.6
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -310,5 +310,34 @@ class PDb_CAPTCHA {
     }
     return $key;
   }
+  
+  /**
+   * checks a submission for a CAPTCHA value
+   * 
+   * @param array $submission
+   * @return string|bool name of the CAPTCHA field or false if none
+   */
+  public static function captcha_field_name( $submission )
+  {
+    $captcha_field = array_intersect( array_keys( $submission ), self::captcha_field_list() );
+    
+    return reset( $captcha_field );
+  }
+  
+  /**
+   * provides a list of all the CAPTCHA field names
+   * 
+   * @global \wpdb $wpdb
+   * @return array of field names
+   */
+  private static function captcha_field_list()
+  {
+    global $wpdb;
+    
+    $sql = 'SELECT f.name FROM ' . Participants_Db::$fields_table . ' f WHERE f.form_element = "captcha"';
+    
+    return $wpdb->get_col( $sql );
+  }
+  
   
 }
