@@ -1693,6 +1693,26 @@ class Participants_Db extends PDb_Base {
     
     // get the record id to use in the query
     $record_id = $record_match->record_id();
+    
+    // check the captcha if present before going any further
+    if ( PDb_CAPTCHA::captcha_field_name( $column_names ) )
+    {
+      $captcha_field = PDb_CAPTCHA::captcha_field_name( $post );
+
+      if ( false === $captcha_field )
+      {
+        // captcha field was expected but missing
+        return false;
+      }
+
+      self::$validation_errors->validate( self::deep_stripslashes( $post[$captcha_field] ), self::$fields[$captcha_field], $post, $record_id );
+
+      if ( self::$validation_errors->errors_exist() )
+      {
+        // captcha didn't validate
+        return false;
+      }
+    }
 
     /*
      * upload any files included in the form submission
@@ -1727,8 +1747,9 @@ class Participants_Db extends PDb_Base {
       
       $field = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
-      if ( $column_names === false || in_array( $column->name, $column_names ) ) 
-      { // only validate submitted values #2956 or all fields are submitted
+      if ( ( $column_names === false || in_array( $column->name, $column_names ) ) && $column->name !== $captcha_field ) 
+      { 
+        // only validate submitted values #2956 or all fields are submitted
         $main_query->validate_column( $field, $column );
       }
       
