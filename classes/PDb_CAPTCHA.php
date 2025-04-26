@@ -312,14 +312,14 @@ class PDb_CAPTCHA {
   }
   
   /**
-   * checks a submission for a CAPTCHA value
+   * checks a field name list for a CAPTCHA field
    * 
-   * @param array $submission
+   * @param array $field_names
    * @return string|bool name of the CAPTCHA field or false if none
    */
-  public static function captcha_field_name( $submission )
+  public static function captcha_field_name( $field_names )
   {
-    $captcha_field = array_intersect( array_keys( $submission ), self::captcha_field_list() );
+    $captcha_field = array_intersect( $field_names, self::captcha_field_list() );
     
     return reset( $captcha_field );
   }
