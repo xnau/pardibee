@@ -248,7 +248,11 @@ class PDb_Session {
       $source = ' unable to get session id';
     }
     
-    Participants_Db::debug_log( __METHOD__ . ' session source: ' . $source, 2 );
+    // don't log if doing a cron
+    if ( ! ( defined('DOING_CRON') && DOING_CRON ) )
+    {
+      Participants_Db::debug_log( __METHOD__ . ' session: ' . $sessid . ' source: ' . $source, 2 );
+    }
 
     return $sessid;
   }
@@ -379,11 +383,13 @@ class PDb_Session {
 
     if ( !$sessid )
     {
-      // save it in our cookie
-      if ( boolval( PDb_Settings::get_setting_value( 'disable_session_cookie') ) === false && ! headers_sent() )
+      // now we have to create an id and use that
+      $sessid = $this->create_id();
+      $cookie_setting = PDb_Settings::get_setting_value( 'disable_session_cookie');
+      
+      if ( $cookie_setting != '1' && ! headers_sent() )
       { 
-        // now we have to create an id and use that
-        $sessid = $this->create_id();
+        // save it in our cookie
         setcookie( $this->cookie_name(), $sessid, 0, '/' );
         $source = 'create new PDB cookie';
       }
@@ -393,7 +399,10 @@ class PDb_Session {
       }
     }
     
-    Participants_Db::debug_log(__METHOD__.' got session id: '. $sessid . ' by method: '. $source, 2 );
+    if ( ! ( defined('DOING_CRON') && DOING_CRON ) )
+    {
+      Participants_Db::debug_log(__METHOD__.' got session id: '. $sessid . ' by method: '. $source, 2 );
+    }
 
     return $sessid;
   }
