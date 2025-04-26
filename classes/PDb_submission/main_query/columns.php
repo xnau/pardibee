@@ -31,7 +31,8 @@ class columns {
    */
   private function __construct( $action, $columns )
   {
-    if ( is_array( $columns ) ) {
+    if ( is_array( $columns ) ) 
+    {
       // shortcode with "fields" attribute or function call
       
       $default_cols = array();
@@ -54,10 +55,10 @@ class columns {
         }
       }
       
-      $column_set = array_merge( $columns, $default_cols );
-      
-    } else {
-      
+      $column_set = array_merge( $columns, $default_cols ); 
+    } 
+    else 
+    {  
       $column_set = 'all';
       
       /**
@@ -69,39 +70,33 @@ class columns {
        * @param the current $_POST action value
        * @return the action value to use: either "signup" or "update"
        */
-      if ( Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) === 'signup' ) {
-
-        $column_set = 'signup';
-        
-      } elseif ( $action === 'update' ) {
-
+      if ( Participants_Db::apply_filters( 'post_action_override', filter_input( INPUT_POST, 'action', FILTER_DEFAULT, Participants_Db::string_sanitize() ) ) === 'signup' ) 
+      {
+        $column_set = 'signup'; 
+      } 
+      elseif ( $action === 'update' ) 
+      {
         $column_set = Participants_Db::is_admin() ? 'backend' : 'frontend' ;
-
-      } elseif ( $action === 'insert' ) {
-        
+      } 
+      elseif ( $action === 'insert' ) 
+      {  
         $column_set = 'new';
       }
     }
     
     $this->column_array = self::column_atts( $column_set, $action );
-      
-//    $array = [];
-//    foreach( $this->column_array as $column ) {
-//      $array[] = $column->name;
-//    }
-    
   }
   
   /**
    * provides the column array for use in the iterator
    * 
    * @param string $action
-   * @param array|bool $columns optional list of column names
+   * @param array|bool $column_list optional list of column names
    * @return array
    */
-  public static function column_array( $action, $columns = false )
+  public static function column_array( $action, $column_list = false )
   {
-    $columns = new self( $action, $columns );
+    $columns = new self( $action, $column_list );
     
     return $columns->column_array;
   }
@@ -138,7 +133,7 @@ class columns {
   /**
    * gets a set of field attributes as filtered by context
    *
-   * @global wpdb $wpdb
+   * @global \wpdb $wpdb
    * @param string|array $filter sets the context of the display and determines the 
    *                             set of columns to return, also accepts an array of 
    *                             column names
@@ -150,13 +145,14 @@ class columns {
   {
     global $wpdb;
     
-    if ( is_array( $filter ) ) {
-      
-      $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")';
-      
-    } else {
-      
+    if ( is_array( $filter ) ) 
+    {  
+      $where = 'WHERE v.name IN ("' . implode( '","', $filter ) . '")'; 
+    } 
+    else 
+    {  
       $where = 'WHERE g.mode IN ("' . implode( '","', array_keys( \PDb_Manage_Fields::group_display_modes() ) ) . '") ';
+      
       switch ( $filter ) {
 
         case 'signup':
