@@ -1695,9 +1695,11 @@ class Participants_Db extends PDb_Base {
     $record_id = $record_match->record_id();
     
     // check the captcha if present before going any further
+    $captcha_field = '';
+    
     if ( PDb_CAPTCHA::captcha_field_name( $column_names ) )
     {
-      $captcha_field = PDb_CAPTCHA::captcha_field_name( $post );
+      $captcha_field = PDb_CAPTCHA::captcha_field_name( array_keys( $post ) );
 
       if ( false === $captcha_field )
       {
@@ -1747,9 +1749,12 @@ class Participants_Db extends PDb_Base {
       
       $field = PDb_submission\main_query\columns::get_column_object( $column, $main_query->column_value( $column->name ) );
 
+      /*
+       * if $column_names is false, validate all fields except the captcha field which has already been validated
+       * if $column_nmaes is an array, only validate fields that are in that array except the captcha field
+       */
       if ( ( $column_names === false || in_array( $column->name, $column_names ) ) && $column->name !== $captcha_field ) 
       { 
-        // only validate submitted values #2956 or all fields are submitted
         $main_query->validate_column( $field, $column );
       }
       
