@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
-Tested up to: 6.7.2
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,6 +292,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.3 =
+* compatibility fixes for WP 6.8
+* added a setting to optionally prevent the plugin writing a session cookie
+* signup form CAPTCHA is now checked before uploading any files 
 
 = 2.7.2 =
 * fixed initialization error with some add-on plugins
@@ -626,8 +631,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.2 is a bugfix update
-2.7 is a feature and bugfix update
+2.7.3 is a compatibility update for WP 6.8
 
 == Plugin Support ==
 
