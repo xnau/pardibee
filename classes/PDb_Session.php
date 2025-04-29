@@ -251,7 +251,7 @@ class PDb_Session {
     // don't log if doing a cron
     if ( ! ( defined('DOING_CRON') && DOING_CRON ) )
     {
-      Participants_Db::debug_log( __METHOD__ . ' session: ' . $sessid . ' source: ' . $source, 2 );
+      Participants_Db::debug_log( __METHOD__ . ' session: ' . $sessid . ' source: ' . $source, 4 );
     }
 
     return $sessid;
@@ -401,7 +401,7 @@ class PDb_Session {
     
     if ( ! ( defined('DOING_CRON') && DOING_CRON ) )
     {
-      Participants_Db::debug_log(__METHOD__.' got session id: '. $sessid . ' by method: '. $source, 2 );
+      Participants_Db::debug_log(__METHOD__.' got session id: '. $sessid . ' by method: '. $source, 4 );
     }
 
     return $sessid;
