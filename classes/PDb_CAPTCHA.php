@@ -319,6 +319,11 @@ class PDb_CAPTCHA {
    */
   public static function captcha_field_name( $field_names )
   {
+    if ( ! is_array( $field_names ) )
+    {
+      return false;
+    }
+    
     $captcha_field = array_intersect( $field_names, self::captcha_field_list() );
     
     return reset( $captcha_field );
