@@ -120,6 +120,7 @@ class PDb_Pagination {
     $this->set_anchor_wrap($anchor_wrap);
     $this->current_page_class = $current_page_class;
     $this->disabled_class = $disabled_class;
+    
     $this->first_last = empty($first_last) ? ($total_records / ($size == 0 ? 1 : $size) > 5 ? true : false) : ($first_last == 'true' ? true : false);
   }
 
