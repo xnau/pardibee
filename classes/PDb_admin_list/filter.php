@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -192,6 +192,16 @@ class filter {
     
     return $filter['search_field'] !== '' && $filter['search_field'] !== 'none' && ( \Participants_Db::is_column( $filter['search_field'] ) || in_array( $filter['search_field'], search_field_group::group_list() ) );
   }
+  
+  /**
+   * provides an options list for the recent fields
+   * 
+   * @return array
+   */
+  public function recent_field_option_list()
+  {
+    return self::recent_field_option( $this->recents() );
+  }
 
   /**
    * updates the filter property
@@ -373,12 +383,12 @@ class filter {
           
           case \PDb_Form_Field_Def::is_field($fieldname):
             
-            $recents[ Participants_Db::$fields[$fieldname]->title() . ' ' ] = $fieldname;
+            $recents[ Participants_Db::$fields[$fieldname]->title() . '  ' ] = $fieldname;
             break;
           
           case isset( $group_fields[$fieldname] ):
             
-            $recents[ $group_fields[$fieldname] . ' ' ] = $fieldname;
+            $recents[ $group_fields[$fieldname] . '  ' ] = $fieldname;
         }
       }
     }
