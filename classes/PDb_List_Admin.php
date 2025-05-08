@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -101,36 +101,36 @@ class PDb_List_Admin {
      *                'plural' => $plural_message )
      * @return array
      */
-    $apply_confirm_messages = Participants_Db::apply_filters( 'admin_list_with_selected_action_conf_messages', array(
-                'delete' => array(
+    $apply_confirm_messages = Participants_Db::apply_filters( 'admin_list_with_selected_action_conf_messages', [
+                'delete' => [
                     "singular" => esc_html__( "Do you really want to delete the selected record?", 'participants-database' ),
                     "plural" => esc_html__( "Do you really want to delete the selected records?", 'participants-database' ),
-                ),
-                'approve' => array(
+                ],
+                'approve' => [
                     "singular" => esc_html__( "Approve the selected record?", 'participants-database' ),
                     "plural" => esc_html__( "Approve the selected records?", 'participants-database' ),
-                ),
-                'unapprove' => array(
+                ],
+                'unapprove' => [
                     "singular" => esc_html__( "Unapprove the selected record?", 'participants-database' ),
                     "plural" => esc_html__( "Unapprove the selected records?", 'participants-database' ),
-                ),
-                'export' => array(
+                ],
+                'export' => [
                     "singular" => esc_html__( "Export the selected record?", 'participants-database' ),
                     "plural" => esc_html__( "Export the selected records?", 'participants-database' ),
-                ),
-                'send_signup_email' => array(
+                ],
+                'send_signup_email' => [
                     "singular" => esc_html__( "Send the signup email to the selected record?", 'participants-database' ),
                     "plural" => esc_html__( "Send the signup email to the selected records?", 'participants-database' ),
-                ),
-                'send_resend_link_email' => array(
+                ],
+                'send_resend_link_email' => [
                     "singular" => esc_html__( 'Send the "resend link" email to the selected record?', 'participants-database' ),
                     "plural" => esc_html__( 'Send the "resend link" email to the selected records?', 'participants-database' ),
-                ),
+                ],
                 'recipient_count_exceeds_limit' => sprintf( esc_html__( 'The number of selected records exceeds the %s email send limit.%s Only the first %s will be sent.', 'participants-database' ), '<a href="https://xnau.com/product_support/email-expansion-kit/#email_session_send_limit" target="_blank" >', '</a>', '{limit}' ),
-                    )
+                    ]
     );
 
-    wp_add_inline_script('pdb-list-admin', Participants_Db::inline_js_data( 'list_adminL10n', array(
+    wp_add_inline_script('pdb-list-admin', Participants_Db::inline_js_data( 'list_adminL10n', [
         'delete' => self::$i18n[ 'delete_checked' ],
         'cancel' => self::$i18n[ 'change' ],
         'apply' => self::$i18n[ 'apply' ],
@@ -141,25 +141,25 @@ class PDb_List_Admin {
          * @param array of actions that are not quantity limited
          * @return array
          */
-        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', array( 'delete', 'approve', 'unapprove', 'export', PDb_admin_list\mass_edit::edit_action ) ),
+        'unlimited_actions' => Participants_Db::apply_filters( 'unlimited_with_selected_actions', [ 'delete', 'approve', 'unapprove', 'export', PDb_admin_list\mass_edit::edit_action ] ),
         'dupcheck' => PDb_admin_list\query::dupcheck,
-            ))
+            ])
     );
     
     
-    wp_add_inline_script( 'pdb-list-admin', Participants_Db::inline_js_data( 'mass_editL10n', array(
+    wp_add_inline_script( 'pdb-list-admin', Participants_Db::inline_js_data( 'mass_editL10n', [
         'edit_action' => PDb_admin_list\mass_edit::edit_action,
         'action' => PDb_admin_list\mass_edit::action,
         'selector' => PDb_admin_list\mass_edit::field_selector,
         'spinner' => Participants_Db::get_loading_spinner(),
-    ) ) );
+    ] ) );
     
     wp_enqueue_script( 'pdb-list-admin' );
     wp_enqueue_script( Participants_Db::$prefix . 'debounce' );
 
     // set up email error feedback
-    add_action( 'wp_mail_failed', array( __CLASS__, 'get_email_error_feedback' ) );
-    add_action( 'pdb-list_admin_head', array( __CLASS__, 'show_email_error_feedback' ) );
+    add_action( 'wp_mail_failed', [ __CLASS__, 'get_email_error_feedback' ] );
+    add_action( 'pdb-list_admin_head', [ __CLASS__, 'show_email_error_feedback' ] );
 
     $current_user = wp_get_current_user();
 
@@ -282,14 +282,14 @@ class PDb_List_Admin {
    */
   public static function prepare_page_link( $uri )
   {
-
     $URI_parts = explode( '?', $uri );
 
-    if ( empty( $URI_parts[ 1 ] ) ) {
-
+    if ( empty( $URI_parts[ 1 ] ) )
+    {
       $values = array();
-    } else {
-
+    } 
+    else 
+    {
       parse_str( $URI_parts[ 1 ], $values );
 
       // take out the list page number
@@ -306,7 +306,9 @@ class PDb_List_Admin {
           'column_sort',
       );
       foreach ( $filter_atts as $att )
+      {
         unset( $values[ $att ] );
+      }
     }
 
     return $URI_parts[ 0 ] . '?' . http_build_query( $values );
@@ -338,26 +340,8 @@ class PDb_List_Admin {
 
           global $post;
           $filter_count = self::$list_filter->list_fiter_count();
-
-          //build the list of columns available for filtering
-          $filter_columns = array();
-
-          foreach ( self::filter_columns() as $grouptitle => $field_group ) {
-            
-            $filter_columns[$grouptitle] = 'optgroup';
-            
-            foreach( $field_group as $column ) {
-              
-              $title = Participants_Db::apply_filters( 'translate_string', $column->title );
-              
-              $display_title = empty( $title ) ? $column->name . ' ' : $title . ' (' . $column->name . ')';
-
-              $filter_columns[ $display_title ] = $column->name;
-            }
-          }
-
-          // add the multi-field selection
-          $search_columns = array_merge( self::recent_field_option(), $filter_columns, PDb_admin_list\search_field_group::group_selector() );
+          $field_selector = new \PDb_admin_list\field_selector();
+          
           ?>
           <div class="pdb-searchform">
             <form method="post" id="sort_filter_form" action="<?php echo esc_attr( self::prepare_page_link( $_SERVER[ 'REQUEST_URI' ] ) ) ?>" >
@@ -378,7 +362,7 @@ class PDb_List_Admin {
                               'type' => 'dropdown',
                               'name' => 'search_field[' . $i . ']',
                               'value' => $filter_set[ 'search_field' ],
-                              'options' => $search_columns,
+                              'options' => $field_selector->options(),
                           );
                           PDb_FormElement::print_element( $element );
                           ?>
@@ -445,7 +429,7 @@ class PDb_List_Admin {
                             'type' => 'dropdown',
                             'name' => 'sortBy',
                             'value' => self::$list_filter->value( 'sortBy' ),
-                            'options' => $filter_columns,
+                            'options' => $field_selector->sort_options(),
                         );
                         PDb_FormElement::print_element( $element );
 
@@ -907,14 +891,17 @@ class PDb_List_Admin {
    */
   private static function set_list_limit()
   {
-    $limit_value = self::get_admin_user_setting( 'list_limit', Participants_Db::plugin_setting( 'list_limit' ) );
+    $limit_value = intval( self::get_admin_user_setting( 'list_limit', Participants_Db::plugin_setting( 'list_limit' ) ) ) ? : 20;
+    
     $input_limit = filter_input( INPUT_GET, 'list_limit', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     if ( empty( $input_limit ) ) {
       $input_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
     }
+    
     if ( !empty( $input_limit ) ) {
       $limit_value = $input_limit;
     }
+    
     self::$page_list_limit = $limit_value;
     self::set_admin_user_setting( 'list_limit', $limit_value );
   }
@@ -1089,75 +1076,7 @@ class PDb_List_Admin {
       self::$error_messages[ $code ] = sprintf( $pattern, esc_html( $message ) );
     }
   }
-
-  /**
-   * provides a list columns to use in the list filter and sort
-   * 
-   * @return array of column definitions
-   */
-  private static function filter_columns()
-  {
-    add_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ), 10, 2 );
-    $columns = self::search_field_list();
-    remove_filter( 'pdb-access_capability', array( __CLASS__, 'column_filter_user' ) );
-    return $columns;
-  }
   
-  /**
-   * provides the list of searchable fields
-   * 
-   * @global wpdb $wpdb
-   * @return array of data objects
-   */
-  private static function search_field_list()
-  {
-    $cachekey = 'pdb-search_field_list';
-    
-    $field_select = wp_cache_get( $cachekey );
-    
-    if ( $field_select !== false && !PDB_DEBUG )
-    {
-      return $field_select;
-    }
-    
-    global $wpdb;
-    
-    $log_list = array();
-    if ( is_plugin_active( 'pdb-participant_log/participant_log.php' ) ) {
-      $log_list = $wpdb->get_col('SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `form_element` = "participant-log" ORDER BY `order`' );
-    }
-    
-    $main_group_list = $wpdb->get_col( 'SELECT `name` FROM ' . Participants_Db::$groups_table . ' WHERE `mode` IN ("public", "private", "admin") ORDER BY CASE `mode` WHEN "public" THEN 1 WHEN "private" THEN 2 WHEN "admin" THEN 3 ELSE `id` END, `order`');
-    
-    $group_list = array_merge( $main_group_list, $log_list );
-    
-    $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', array('captcha','placeholder','heading') );
-    $where = 'WHERE f.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
-
-    if ( !PDb_submission\main_query\columns::editor_can_edit_admin_fields() ) {
-      // don't show non-displaying groups to non-admin users
-      // the approval field is an exception; it should always be visible to editor users
-      $where .= 'AND g.mode <> "admin" OR f.name = "' . \Participants_Db::apply_filters( 'approval_field', 'approved' ) . '"';
-    }
-    
-    $group_db = $wpdb->get_results('SELECT f.name,f.title,f.group,g.title AS grouptitle FROM ' . Participants_Db::$fields_table . ' f INNER JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name ' . $where . ' ORDER BY FIELD (f.group,"' . implode( '","',$group_list ) . '")' );
-    
-    $field_select = array();
-    $group = '';
-    foreach( $group_db as $field ) {
-      if ( $field->group !== $group ) {
-        $group = $field->group;
-        $grouptitle = empty($field->grouptitle) ? $field->group : $field->grouptitle;
-        $field_select[$grouptitle] = array();
-      }
-      $field_select[$field->grouptitle][] = $field;
-    }
-    
-    wp_cache_set( $cachekey, $field_select, '', HOUR_IN_SECONDS );
-    
-    return $field_select;
-  }
-
   /**
    * filters the available columns by user role
    * 
