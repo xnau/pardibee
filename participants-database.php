@@ -1775,7 +1775,7 @@ class Participants_Db extends PDb_Base {
     
     $updated_record_id = $main_query->execute_query();
     
-    PDb_Participant_Cache::is_now_stale( $updated_record_id );
+    PDb_Participant_Cache::clear_cache( $updated_record_id );
 
     return $updated_record_id;
   }
