@@ -44,7 +44,7 @@ class field_selector {
    */
   public function options()
   {
-    return array_merge( $this->list_filter->recent_field_option_list(), $this->options, search_field_group::group_selector() );;
+    return array_merge( $this->list_filter->recent_field_option_list(), $this->options, search_field_group::group_selector() );
   }
   
   /**
@@ -71,6 +71,11 @@ class field_selector {
     {
       $option_list[reset($field_group)->grouptitle] = 'optgroup';
 
+      /*
+       * since it is possible for there to be more than one field with the same 
+       * title, we handle the case of a duplicate title by also showing the name 
+       * of the field to differentiate them
+       */
       foreach( $field_group as $column ) 
       {
         $title = $title_list[$column->name];
@@ -79,7 +84,7 @@ class field_selector {
         switch (count($dupes))
         {
           case 1:
-            // we add a space at the end of the title to avoid matching the group title
+            // we add a space at the end of the field title to avoid possibly matching the group title
             $display_title = $title === '' ? $column->name . ' ' : $title . ' ';
             break;
           
@@ -130,7 +135,7 @@ class field_selector {
   /**
    * provides the list of searchable fields
    * 
-   * @global wpdb $wpdb
+   * @global \wpdb $wpdb
    * @return array of data objects
    */
   private function search_field_list()
@@ -146,18 +151,15 @@ class field_selector {
     
     global $wpdb;
     
-    $log_list = [];
-    if ( is_plugin_active( 'pdb-participant_log/participant_log.php' ) ) 
-    {
-      $log_list = $wpdb->get_col('SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `form_element` = "participant-log" ORDER BY `order`' );
-    }
-    
     $main_group_list = $wpdb->get_col( 'SELECT `name` FROM ' . Participants_Db::$groups_table . ' WHERE `mode` IN ("public", "private", "admin") ORDER BY CASE `mode` WHEN "public" THEN 1 WHEN "private" THEN 2 WHEN "admin" THEN 3 ELSE `id` END, `order`');
     
-    $group_list = array_merge( $main_group_list, $log_list );
+    $group_list = array_merge( $main_group_list, $this->additional_groups() );
+    
+    $where = 'WHERE f.group IN ("' . implode( '","', $group_list ) . '")';
     
     $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', ['captcha','placeholder','heading'] );
-    $where = 'WHERE f.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
+    
+    $where .= ' AND f.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
 
     if ( !\PDb_submission\main_query\columns::editor_can_edit_admin_fields() ) 
     {
@@ -185,5 +187,41 @@ class field_selector {
     wp_cache_set( $cachekey, $field_select, '', HOUR_IN_SECONDS );
     
     return $field_select;
+  }
+  
+  /**
+   * provides the list of additional groups
+   * 
+   * these are fields that are enabled and used by add-on plugins
+   * 
+   * @return array
+   */
+  private function additional_groups()
+  {
+    return array_merge( Participants_Db::apply_filters('addon_field_groups', [] ), $this->log_list() );
+  }
+  
+  /**
+   * provides the list of participant logs
+   * 
+   * this will be phased out when the participant log add-on is setting this
+   * 
+   * @global \wpdb $wpdb
+   * @return array
+   */
+  private function log_list()
+  {
+    $log_list = [];
+    
+    if ( ! is_plugin_active( 'pdb-participant_log/participant_log.php' ) )
+    {
+      return $log_list;
+    }
+    
+    global $wpdb;
+    
+    $log_list = $wpdb->get_col('SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `form_element` = "participant-log" ORDER BY `order`' );
+    
+    return $log_list;
   }
 }
