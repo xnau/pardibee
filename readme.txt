@@ -3,9 +3,9 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
-Tested up to: 6.8
+Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 2.7.3
+Stable tag: 2.7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,6 +292,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.5 =
+* improvements to the admin list filter field selectors
+* add-ons can now designate fields as undeletable
+* fixed initialization bug with the list pagination control
 
 = 2.7.4 =
 * fixed admin record save bug
@@ -634,7 +639,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.3 is a compatibility update for WP 6.8
+2.7.5 is a bugfix update
 
 == Plugin Support ==
 
