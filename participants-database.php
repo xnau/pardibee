@@ -708,10 +708,11 @@ class Participants_Db extends PDb_Base {
      * register admin scripts and stylesheets
      */
     $min = self::use_minified_assets() ? '.min' : '';
+    
     $manage_fields_handle = self::$prefix . 'manage_fields';
     
     wp_register_script( self::$prefix . 'cookie', plugins_url( 'js/js.cookie-2.2.1.min.js', __FILE__ ), array('jquery'), '2.2.1' );
-    wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.13', true );
+    wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.14', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version . '.1', true );
     
     wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
@@ -797,6 +798,7 @@ class Participants_Db extends PDb_Base {
           'delete_confirm' => '<h4>' . __( 'Delete the {name} {thing}?', 'participants-database' ) . '</h4>',
           'delete_confirm_field' => '<h4>' . __( 'Delete the selected field?', 'participants-database' ) . '</h4>',
           'delete_confirm_fields' => '<h4>' . __( 'Delete the selected fields?', 'participants-database' ) . '</h4>',
+          'no_fields' => '<h4>' . __( 'No valid fields for this operation', 'participants-database' ) . '</h4>',
           'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
           'datatype_confirm' => '<h4 class="dashicons-before dashicons-info warning">' . __( 'Changing the form element on a field that has stored data can result in data loss.', 'participants-database' ) .'</h4><p><a href="https://wp.me/p48Sj5-Zb" target="_blank">' . __( 'More information here…', 'participants-database' ) . '</a></p>',
           'datatype_confirm_button' => __( 'Yes, change the form element', 'participants-database' ),
