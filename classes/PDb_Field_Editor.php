@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -124,6 +124,9 @@ class PDb_Field_Editor {
       $this->definition_attributes['validation'] = false;
     }
     
+    // this is so the deletable config isn't filtered out in either case
+    $this->definition_attributes['deletable'] = $this->definition_attributes['deletable'] === false ? 2 : 1;
+    
     /**
      * @filter pdb-field_editor_switches
      * @param array of editor attribute enable/disable switches
@@ -166,7 +169,7 @@ class PDb_Field_Editor {
       case ( $attribute === 'deletable' ):
         $title = $this->field_def->title();
         $lines = array(
-            $this->field_def->is_internal_field() ? '' : $field_def_att->html(),
+            $this->yes_show_delete_button() ? $field_def_att->html() : '',
             '<h4>' . ( strlen( trim( $title ) ) === 0 ? $this->field_def->name() : $title ) . '</h4>',
             '</div>
               <div class="form-element-label" >' . $this->field_def->form_element_title() . '</div>',
@@ -207,6 +210,16 @@ class PDb_Field_Editor {
      * @return array
      */
     return implode( PHP_EOL, Participants_Db::apply_filters('field_editor_control_html', $lines, $field_def_att ) );
+  }
+  
+  /**
+   * tells if the delete button should be shown
+   * 
+   * @return bool
+   */
+  private function yes_show_delete_button()
+  {
+    return ! $this->field_def->is_internal_field() && $this->definition_attributes['deletable'] === 1;
   }
   
   /**
