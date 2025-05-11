@@ -3,7 +3,7 @@
  * 
  * Participants Database plugin
  * 
- * @version 2.13
+ * @version 2.14
  * @author Roland Barker <webdesign@xnau.com>
  */
 PDbManageFields = (function ($) {
@@ -18,6 +18,7 @@ PDbManageFields = (function ($) {
     effect: 'fadeToggle',
     duration: 100
   };
+  
   var tabCookie = function(){
     if ( typeof URLSearchParams !== 'function' ) {
       return 'pdb-manage-fields-tab';
@@ -55,6 +56,7 @@ PDbManageFields = (function ($) {
             }
           }]
       });
+      
     } else {
 
       var custom_message = PDb_L10n['delete_confirm_custom_' + parent.find('.name-attribute input').val()];
@@ -103,6 +105,7 @@ PDbManageFields = (function ($) {
     confirmationBox.dialog('open');
     return false;
   };
+  
   var form_element_change_confirm = function (e) {
     var target = $(this);
     var warning_name = target.prop('name').replace(/\[(.+)\]/, '[datatype_warning]');
@@ -139,6 +142,7 @@ PDbManageFields = (function ($) {
     confirmationBox.dialog('open');
     return false;
   };
+  
   var update_editor = function (el) {
     el = el.length ? el : $(el.target);
     var editor = el.closest('.def-fieldset');
@@ -165,6 +169,7 @@ PDbManageFields = (function ($) {
       }
     }); // ajax
   };
+  
   var captchaPreset = function () {
     var el = $(this);
     var row = el.closest('tr');
@@ -174,6 +179,7 @@ PDbManageFields = (function ($) {
       row.find('td.sortable input[type=checkbox], td.CSV input[type=checkbox], td.persistent input[type=checkbox]').prop('checked', false);
     }
   };
+  
   var saveState = function () {
     var el = $(this);
     if (el.is('[type=checkbox]')) {
@@ -182,6 +188,7 @@ PDbManageFields = (function ($) {
       el.data('initState', el.val());
     }
   };
+  
   var setChangedFlag = function () {
     var el = $(this);
     var flag;
@@ -200,6 +207,7 @@ PDbManageFields = (function ($) {
       setUnsavedChangesFlag(-1);
     }
   };
+  
   var setUnsavedChangesFlag = function (op) {
     var body = $('body');
     var unsavedChangesCount = body.data('unsavedChanges') || 0;
@@ -215,21 +223,26 @@ PDbManageFields = (function ($) {
       window.onbeforeunload = confirmOnPageExit; // set up the unsaved changes warning
     }
   };
+  
   var clearUnsavedChangesWarning = function () {
     window.onbeforeunload = null;
   };
+  
   var fixHelper = function (e, ui) {
     ui.children().each(function () {
       jQuery(this).width(jQuery(this).width());
     });
     return ui;
   };
+  
   var enableNew = function () {
     $(this).closest('.add-field-inputs, .add-group-inputs').find('[type=submit]').removeClass('disabled').addClass('enabled').prop('disabled', false);
   };
+  
   var disableNew = function (el) {
     el.find('[type=submit]').removeClass('enabled').addClass('disabled').prop('disabled', true);
   };
+  
   var serializeList = function (container) {
     var n = 0;
     var query = '';
@@ -244,6 +257,7 @@ PDbManageFields = (function ($) {
     });
     return query;
   };
+  
   var getUrlVars = function () {
     var vars = {};
     window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -251,11 +265,13 @@ PDbManageFields = (function ($) {
     });
     return vars;
   }
+  
   var cancelReturn = function (event) {
     $(this).attr("autocomplete", "off");
     if (event.keyCode === 13)
       return false;
   };
+  
   var getTabSettings = function () {
     if ($.versioncompare("1.9", $.ui.version) === 1) {
       return {
@@ -280,6 +296,7 @@ PDbManageFields = (function ($) {
       };
     }
   };
+  
   var confirmOnPageExit = function (e) {
     e = e || window.event;
     var message = PDb_L10n.unsaved_changes;
@@ -290,12 +307,15 @@ PDbManageFields = (function ($) {
     // For Chrome, Safari, IE8+ and Opera 12+
     return message;
   };
+  
   var open_field_editor = function () {
     switch_field_editor($(this), 'open');
   }
+  
   var close_field_editor = function () {
     switch_field_editor($(this), 'close');
   }
+  
   var switch_field_editor = function (el, action) {
     switch (action) {
       case 'close':
@@ -314,6 +334,7 @@ PDbManageFields = (function ($) {
       sess: PDb_L10n.sess
     });
   }
+  
   var open_close_all_field_editors = function (container, action) {
     switch (action) {
       case 'close':
@@ -336,6 +357,7 @@ PDbManageFields = (function ($) {
       sess: PDb_L10n.sess
     });
   }
+  
   var showhide_validation_message = function () {
     var message_control = $(this).closest('.attribute-control').next('.validation_message-attribute');
     switch ($(this).val()) {
@@ -346,6 +368,7 @@ PDbManageFields = (function ($) {
         message_control.show();
     }
   }
+  
   var is_field_selected = function (container) {
     var checked = false;
     container.find('[name*=selectable][type=checkbox]').each(function () {
@@ -356,6 +379,7 @@ PDbManageFields = (function ($) {
     });
     return checked;
   }
+  
   var handle_with_selected_action = function () {
     withSelected.container = $(this).closest('.general_fields_control_header');
     var fieldgroup = withSelected.container.next('form');
@@ -389,6 +413,7 @@ PDbManageFields = (function ($) {
     }
     return false;
   }
+  
   var set_flag = function (flag, set) {
     set_feedback(false);
     $.each(withSelected.list, function (index, value) {
@@ -410,11 +435,13 @@ PDbManageFields = (function ($) {
       }
     }, 'json');
   }
+  
   var assign_group = function (list, group) {
     $.each(list, function (index, id) {
       $('#row_' + id + '_group' + '-' + PDb_L10n.instance_index).val(group).trigger('change');
     });
   }
+  
   var get_selected_ids = function (container) {
     var list = [];
     container.find('[name*=selectable]:checked').each(function () {
@@ -422,9 +449,14 @@ PDbManageFields = (function ($) {
     });
     return list;
   }
-  var delete_selected_fields = function (list, group) {
-
-    var message = list.length > 1 ? PDb_L10n.delete_confirm_fields : PDb_L10n.delete_confirm_field;
+  
+  var delete_selected_fields = function (list, group) 
+  {
+    // remove any non-deletable fields
+    list = list.filter((value) => $('#db_row_'+value).find('a.delete').length );
+    
+    var message = list.length > 1 ? PDb_L10n.delete_confirm_fields : ( list.length === 1 ? PDb_L10n.delete_confirm_field : PDb_L10n.no_fields );
+    
     var titleList = [];
     $.each(list, function (index, value) {
       var row = $('#db_row_' + value);
@@ -432,10 +464,16 @@ PDbManageFields = (function ($) {
       var title = row.find('.title-attribute input').data('title');
       titleList.push(PDb_L10n['delete_confirm_custom_' + name]||title);
     });
-    confirmationBox.html(message+'<ul><li>'+titleList.join('</li><li>')+'</li></ul>');
-    // initialize the dialog action
-    confirmationBox.dialog(dialogOptions, {
-      buttons: [{
+    
+    var buttons = [{
+          icon: 'dashicons dashicons-no-alt',
+          click: function () {
+            $(this).dialog('close');
+            withSelected.spinner.remove();
+          } // cancel
+        }];
+    if (list.length){
+      buttons.push({
           icon: 'dashicons dashicons-yes',
           click: function () {
 
@@ -464,17 +502,18 @@ PDbManageFields = (function ($) {
                 set_feedback(response.feedback);
               }
             });
-          }}, {
-          icon: 'dashicons dashicons-no-alt',
-          click: function () {
-            $(this).dialog('close');
-            withSelected.spinner.remove();
-          } // cancel
-        }] // buttons
-    }); // dialog
+          }});
+    }
+    
+    confirmationBox.html(message+'<ul><li>'+titleList.join('</li><li>')+'</li></ul>');
+    confirmationBox.dialog(dialogOptions, {
+      buttons: buttons
+    });
     confirmationBox.dialog('open');
   };
-  var set_feedback = function (html) {
+  
+  var set_feedback = function (html) 
+  {
     $('[id^=pdb-manage_fields_]').slideUp(600, function () {
       $(this).remove();
     });
@@ -482,6 +521,7 @@ PDbManageFields = (function ($) {
       $('#fields-tabs .ui-tabs-nav').after(html);
     }
   };
+  
   var sortFields = {
     helper: fixHelper,
     handle: '.dragger',
@@ -494,6 +534,7 @@ PDbManageFields = (function ($) {
       });
     }
   };
+  
   var sortGroups = {
     helper: fixHelper,
     handle: '.dragger',
@@ -506,10 +547,12 @@ PDbManageFields = (function ($) {
       });
     }
   };
+  
   var setWithSelectedSelector = function () {
     $('input[name=with_selected]').val(withSelected.ws_action);
     $('select.with-selected-action-select').val(withSelected.ws_action);
   }
+  
   return {
     init: function () {
       var tabcontrols = $("#fields-tabs");
