@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2012 xnau webdesign
  * @license    GPL2
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    parseCSV class
  *
@@ -282,8 +282,8 @@ csv line= '.print_r( $csv_line, true ), 2 );
   {
     $this->CSV = new \ParseCsv\Csv();
     
-    // convert the encoding to UTF-8 #3161
-    $this->CSV->encoding( null, 'UTF-8');
+    // we're expecting the text to be encoded UTF-8
+    $this->CSV->encoding( 'UTF-8', 'UTF-8');
   }
 
   /**
