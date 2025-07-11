@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2025  xnau webdesign
  * @license    GPL3
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -21,12 +21,12 @@ class field_selector {
   /**
    * @var array of selector options
    */
-  private $options = [];
+  protected $options = [];
 
   /**
    * @var \PDb_admin_list\filter the current filter object
    */
-  private $list_filter;
+  protected $list_filter;
   
   /**
    * builds the options
@@ -44,17 +44,7 @@ class field_selector {
    */
   public function options()
   {
-    return array_merge( $this->list_filter->recent_field_option_list(), $this->options, search_field_group::group_selector() );
-  }
-  
-  /**
-   * provides the options for the sort field selector
-   * 
-   * @return array
-   */
-  public function sort_options()
-  {
-    return $this->options;
+    return array_merge( $this->list_filter->recent_field_option_list(), search_field_group::group_selector(), $this->options );
   }
   
   /**
@@ -67,16 +57,16 @@ class field_selector {
     $option_list = [];
     $title_list = $this->field_titles();
 
-    foreach ( $this->filter_columns() as $groupname => $field_group ) 
+    foreach ( $this->filter_columns() as $groupname => $group_field_list ) 
     {
-      $option_list[reset($field_group)->grouptitle] = 'optgroup';
+      $option_list[reset($group_field_list)->grouptitle] = 'optgroup';
 
       /*
        * since it is possible for there to be more than one field with the same 
        * title, we handle the case of a duplicate title by also showing the name 
        * of the field to differentiate them
        */
-      foreach( $field_group as $column ) 
+      foreach( $group_field_list as $column ) 
       {
         $title = $title_list[$column->name];
         $dupes = array_keys( $title_list, $title );
@@ -108,9 +98,9 @@ class field_selector {
   {
     $titles = [];
     
-    foreach( $this->filter_columns() as $field_group )
+    foreach( $this->filter_columns() as $group_field_list )
     {
-      foreach( $field_group as $column )
+      foreach( $group_field_list as $column )
       {
         $titles[$column->name] = Participants_Db::apply_filters( 'translate_string', $column->title );
       }
@@ -157,9 +147,7 @@ class field_selector {
     
     $where = 'WHERE f.group IN ("' . implode( '","', $group_list ) . '")';
     
-    $omit_element_types = Participants_Db::apply_filters('omit_backend_edit_form_element_type', ['captcha','placeholder','heading'] );
-    
-    $where .= ' AND f.form_element NOT IN ("' . implode('","', $omit_element_types) . '")';
+    $where .= ' AND f.form_element NOT IN ("' . implode('","', $this->omit_element_types() ) . '")';
 
     if ( !\PDb_submission\main_query\columns::editor_can_edit_admin_fields() ) 
     {
@@ -190,38 +178,31 @@ class field_selector {
   }
   
   /**
+   * provides a list of form element types to omit from the selector
+   * 
+   * @return array
+   */
+  protected function omit_element_types()
+  {
+    return Participants_Db::apply_filters('omit_backend_edit_form_element_type', ['captcha','placeholder','heading'] );
+  }
+  
+  /**
    * provides the list of additional groups
    * 
    * these are fields that are enabled and used by add-on plugins
    * 
    * @return array
    */
-  private function additional_groups()
+  protected function additional_groups()
   {
-    return array_merge( Participants_Db::apply_filters('addon_field_groups', [] ), $this->log_list() );
-  }
-  
-  /**
-   * provides the list of participant logs
-   * 
-   * this will be phased out when the participant log add-on is setting this
-   * 
-   * @global \wpdb $wpdb
-   * @return array
-   */
-  private function log_list()
-  {
-    $log_list = [];
-    
-    if ( ! is_plugin_active( 'pdb-participant_log/participant_log.php' ) )
-    {
-      return $log_list;
-    }
-    
-    global $wpdb;
-    
-    $log_list = $wpdb->get_col('SELECT `name` FROM ' . Participants_Db::$fields_table . ' WHERE `form_element` = "participant-log" ORDER BY `order`' );
-    
-    return $log_list;
+    /**
+     * adds field groups created by add-on plugins
+     * 
+     * @filter pdb-addon_field_groups
+     * @param array
+     * @return array
+     */
+    return Participants_Db::apply_filters('addon_field_groups', [] );
   }
 }
