@@ -11,7 +11,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.10
+ * @version    1.11
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -387,6 +387,19 @@ class PDb_Settings extends xnau_Plugin_Settings {
             'help_text' => __( 'html added to field title for required fields if selected above (the %s is replaced by the title of the field)', 'participants-database' ),
             'value' => '%s<span class="reqd">*</span>',
         )
+    );
+
+    $this->plugin_settings[] = array(
+        'name' => 'color_mode',
+        'title' => __( 'Color Mode', 'participants-database' ),
+        'group' => 'pdb-main',
+        'options' => array
+            (
+            'type' => 'radio',
+            'help_text' => __( 'select the color mode for certain plugin display elements', 'participants-database' ) . $this->settings_help( 'color-mode'),
+            'value' => 'default',
+            'options' => [__( 'Default', 'participants-database' ) => 'default',__( 'Light', 'participants-database' ) => 'light',__( 'Dark', 'participants-database' ) => 'dark'],
+        ),
     );
 
 //    $this->plugin_settings[] = array(
