@@ -643,7 +643,7 @@ class Participants_Db extends PDb_Base {
     /*
      * register frontend scripts and stylesheets
      */
-    wp_register_style( self::$prefix . 'frontend', plugins_url( "/css/participants-database$presuffix.css", __FILE__ ), array('dashicons'), '1.7.3' );
+    wp_register_style( self::$prefix . 'frontend', plugins_url( "/css/participants-database$presuffix.css", __FILE__ ), array('dashicons'), '1.8.2' );
     
     if ( self::_set_custom_css() ) {
       wp_register_style( 'custom_plugin_css', plugins_url( '/css/' . 'PDb-custom.css', __FILE__ ), null, self::$Settings->option_version() );
@@ -3252,9 +3252,96 @@ class Participants_Db extends PDb_Base {
 .pdb-list .image-field-wrap img {
    height:' . self::css_dimension_value( self::plugin_setting( 'list_default_image_size', '50px' ) ) . ';
    max-width: inherit;
-}';
+}
+'. self::inline_css_custom_props();
   }
+  
+  /**
+   * prints a custom CSS property value declaration
+   * 
+   * @param array $property_values
+   */
+  private static function inline_css_custom_props()
+  {
+    $inline = '';
+    $p_selector = "%s {\n%s\n}\n";
+    $p_rule = '   --PDb-%s: %s; ';
+    $css = [];
+    $rule_list = [];
 
+    foreach( self::css_custom_props() as $propname => $value )
+    {
+      if ( $value )
+      {
+        $rule_list[] = sprintf( $p_rule, $propname, $value );
+      }
+    }
+
+    if ( ! empty( $rule_list ) )
+    {
+      $css[] = sprintf( $p_selector, ':root', implode( PHP_EOL, $rule_list ) );
+    }
+    
+    if ( ! empty( $css ) )
+    {
+      $inline = implode( PHP_EOL, $css );
+    }
+    
+    return $inline;
+  }
+  
+  /**
+   * provides an array of custom CSS property values
+   * 
+   * @return array as $propname => $value
+   */
+  private static function css_custom_props()
+  {
+    $custom_props = [];
+    
+    $color_mode = [
+      'default' => [
+          'pagination-border-color' => 'rgba(204, 204, 204, 1)',
+          'pagination-hover-color' => '#CCC',
+          'pagination-bg'=> '#FAFAFA',
+          'pagination-current-bg' => 'rgba(204, 204, 204, 1)',
+          'pagination-current-color' => '#FFF',
+          'pagination-disabled-bg' => '#F3F3F3',
+          'pagination-disabled-color' => '#777',
+          'message-bg' => '#FFF',
+          'message-shadow' => '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
+          'flex-row-bg' => 'rgba(0,0,0,0.05)',
+      ],
+      'dark' => [
+          'pagination-border-color' => 'rgba(255,255,255,0.2)',
+          'pagination-hover-color' => 'rgba(255,255,255,0.5)',
+          'pagination-bg'=> 'rgba( 255,255,255,0.1)',
+          'pagination-current-bg' => 'rgba(255, 255, 255, 0.5)',
+          'pagination-current-color' => false,
+          'pagination-disabled-bg' => false,
+          'pagination-disabled-color' => 'rgba(255,255,255,0.4)',
+          'message-bg' => 'rgba(255,255,255,0.3)',
+          'message-shadow' => '1px 1px 3px 0 rgba(0, 0, 0, 0.3)',
+          'flex-row-bg' => 'rgba(255,255,255,0.05)',
+      ],
+      'light' => [
+          'pagination-border-color' => 'rgba(0,0,0,0.2)',
+          'pagination-hover-color' => 'rgba(0,0,0,0.5)',
+          'pagination-bg' => 'rgba( 0,0,0,0.1)',
+          'pagination-current-bg' => 'rgba(0,0,0, 0.2)',
+          'pagination-current-color' => false,
+          'pagination-disabled-bg' => false,
+          'pagination-disabled-color' => 'rgba(0,0,0,0.2)',
+          'message-bg' => 'rgba(0,0,0,0.1)',
+          'message-shadow' => '1px 1px 1px 0 rgba(255, 255, 255, 0.3)',
+          'flex-row-bg' => 'rgba(0,0,0,0.05)',
+      ]
+    ];
+    
+    $custom_props += $color_mode[ self::plugin_setting('color_mode', 'default')];
+    
+    return self::apply_filters('css_custom_properties', $custom_props );
+  }
   /**
    * provides the list output from an AJAX search
    * 
