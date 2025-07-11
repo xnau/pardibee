@@ -315,9 +315,9 @@ svg.ajax-loading image {
 }
 .pdb-list .pagination ul,
 .pdb-pagination ul {
-  margin:0;
+  padding: 0;
+  margin: 1em 0;
   list-style:none;
-  display: inline-block;
 }
 .pdb-list .pagination li,
 .pdb-pagination li {
@@ -330,37 +330,48 @@ svg.ajax-loading image {
 .pdb-list .pagination a,
 .pdb-pagination a {
   float:left;
-  margin: 0 -2px 0 0;
+  margin: 0;
   padding: 6px 12px;
   border-width: 1px;
   border-style: solid;
-  border-color: rgba(204, 204, 204, 1) rgba(204, 204, 204, 0.25);
-  border-radius: 2px;
-  background-color: #FAFAFA;
+  border-color: var(--PDb-pagination-border-color) var(--PDb-pagination-border-color) var(--PDb-pagination-border-color) transparent;
+  border-radius: 0;
+  background-color: var( --PDb-pagination-bg );
+  color: inherit;
 }
 .pdb-list .pagination li.disabled span,
 .pdb-pagination li.disabled span {
-  background-color: #F3F3F3;
-  color: #777777;
+  background-color: var(--PDb-pagination-disabled-bg, inherit);
+  color: var(--PDb-pagination-disabled-color, inherit);
+}
+.pdb-list .pagination li.disabled span,
+.pdb-pagination li.disabled span,
+.pdb-list .pagination li.nextpage span,
+.pdb-pagination li.nextpage span,
+.pdb-list .pagination li.firstpage span,
+.pdb-pagination li.firstpage span,
+.pdb-list .pagination li.lastpage span,
+.pdb-pagination li.lastpage span {
+  vertical-align: sub;
 }
 .pdb-list .pagination li.currentpage span, 
 .pdb-pagination li.currentpage span {
-  background-color: rgba(204, 204, 204, 1);
-  color: #fff;
+  background-color: var(--PDb-pagination-current-bg, inherit);
+  color: var(--PDb-pagination-current-color, inherit);
 }
 .pdb-list .pagination li:first-of-type > span,
 .pdb-pagination li:first-of-type > span,
 .pdb-list .pagination li:first-of-type a,
 .pdb-pagination li:first-of-type a  {
   margin-left:0;
-  border-left-color: rgba(204, 204, 204, 1);
+  border-left-color: var(--PDb-pagination-border-color);
 }
 .pdb-list .pagination li:last-of-type > span,
 .pdb-pagination  li:last-of-type > span,
 .pdb-list .pagination li:last-of-type a,
 .pdb-pagination li:last-of-type a  {
   margin-right:0;
-  border-right-color: rgba(204, 204, 204, 1);
+  border-right-color: var(--PDb-pagination-border-color);
 }
 .pdb-list .pagination li.currentpage:first-child,
 .pdb-pagination  li.currentpage:first-child,
@@ -373,10 +384,8 @@ svg.ajax-loading image {
   text-decoration:none;
 }
 .pdb-list .pagination a:hover,
-.pdb-pagination a:hover,
-.pdb-list .pagination li.currentpage,
-.pdb-pagination li.currentpage  {
-  background-color: #cccccc;
+.pdb-pagination a:hover  {
+  background-color: var(--PDb-pagination-hover-color);
 }
 .pdb-list .pagination label,
 .pdb-pagination label  {    
@@ -385,6 +394,10 @@ svg.ajax-loading image {
 }
 .pdb-pagination.csv-export-box label {
   float: none;
+}
+.pdb-list .pagination .ajax-loading, 
+.pdb-pagination .ajax-loading {
+  margin: 1em;
 }
 .wp-admin .pdb-list .pagination .dashicons, 
 .wp-admin.has-dashicons .pagination .dashicons.dashicons-last-page,
@@ -468,7 +481,7 @@ svg.ajax-loading image {
   font-size: 70%;
 }
 .pdb-flexbox-list.pdb-list .pagination ul, .pdb-pagination ul {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
   width: auto;
@@ -568,8 +581,7 @@ svg.ajax-loading image {
 .pdb-single-flex.flex-row .flex-field {
   margin: 0.5em 6px 0.5em 0;
   padding: 10px;
-  background-color: 
-    rgba(0,0,0,0.05);
+  background-color: var(--PDb-flex-row-bg, inherit);
 }
 .pdb-single-flex .flex-field {
   margin: 0.5em 0;
@@ -619,8 +631,8 @@ svg.ajax-loading image {
 
 .pdb-error, .pdb-message {
   display:inline-block;
-  background-color: #fff;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  background-color: var( --PDb-message-bg, #FFF );
+  box-shadow: var( --PDb-message-shadow, 0 1px 1px 0 rgba(0, 0, 0, 0.1) );
   padding: 10px 20px;
   margin: 2em 0;
 }
