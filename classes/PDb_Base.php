@@ -1013,24 +1013,24 @@ return $field->name() === $fieldname;
   /**
    * provides an array, safely unserializing if necessary
    * 
-   * @param string $string the string to unserialize
+   * @param string $serialization the string to unserialize
    * @param bool $return_array optionally don't convert the output to an array
    * @return array|mixed
    */
-  public static function unserialize_array( $string, $return_array = true )
+  public static function unserialize_array( $serialization, $return_array = true )
   {
-    if ( ! self::is_serialized_array( $string ) ) // make sure it is a serialized array with no objects
+    if ( ! self::is_serialized_array( $serialization ) ) // make sure it is a serialized array with no objects
     {
-      return $return_array ? (array) $string : $string;
+      return $return_array ? (array) $serialization : $serialization;
     }
     
     // this is to fix serializations that come in with single quotes enclosing the values
-    if ( preg_match( "/(:'.+';)/", $string ) === 1 )
+    if ( preg_match( "/(:'.+';)/", $serialization ) === 1 )
     {
-      $string = str_replace( [":'","';"], [':"','";'], $string );
+      $serialization = str_replace( [":'","';"], [':"','";'], $serialization );
     }
     
-    return maybe_unserialize( $string );
+    return maybe_unserialize( $serialization );
   }
   
   /**
