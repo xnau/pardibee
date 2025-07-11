@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.11
+ * @version    1.12
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 defined( 'ABSPATH' ) || exit;
@@ -173,6 +173,7 @@ class PDb_List_Admin {
     self::setup_display_columns();
 
     self::$list_filter = new \PDb_admin_list\filter();
+    self::$list_filter->update_filter();
 
     self::$query = new \PDb_admin_list\query( self::$list_filter );
 
@@ -425,11 +426,13 @@ class PDb_List_Admin {
                       <fieldset class="widefat inline-controls">
                         <legend><?php _e( 'Sort by', 'participants-database' ) ?>:</legend>
                         <?php
+                        $field_selector = new \PDb_admin_list\sort_field_selector();
+                        
                         $element = array(
                             'type' => 'dropdown',
                             'name' => 'sortBy',
                             'value' => self::$list_filter->value( 'sortBy' ),
-                            'options' => $field_selector->sort_options(),
+                            'options' => $field_selector->options(),
                         );
                         PDb_FormElement::print_element( $element );
 
