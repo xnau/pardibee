@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -38,6 +38,13 @@ class filter {
   {
     $current_user = wp_get_current_user();
     self::$filter_option = self::$filter_option . '-' . $current_user->ID;
+  }
+  
+  /**
+   * checks the submission for a filter change
+   */
+  public function update_filter()
+  {
     $this->_update_filter();
   }
 
@@ -96,9 +103,13 @@ class filter {
   public function get_set( $index )
   {
     $filter = $this->get_filter();
-    if ( isset( $filter['search'][$index] ) && is_array( $filter['search'][$index] ) ) {
+    
+    if ( isset( $filter['search'][$index] ) && is_array( $filter['search'][$index] ) ) 
+    {
       return $filter['search'][$index];
-    } else {
+    } 
+    else 
+    {
       return $this->default_filter()['search'][0];
     }
   }
@@ -122,8 +133,10 @@ class filter {
     $default_filter = $this->default_filter();
     
     // retain the recent fields set
-    $stored_filter = get_option( self::$filter_option, array() );
-    if ( isset( $stored_filter['recent_fields'] ) ) {
+    $stored_filter = get_option( self::$filter_option, [] );
+    
+    if ( isset( $stored_filter['recent_fields'] ) ) 
+    {
       $default_filter['recent_fields'] = $stored_filter['recent_fields'];
     }
     
@@ -159,7 +172,9 @@ class filter {
   public function __get( $name )
   {
     $filter = $this->get_filter();
-    if ( isset( $filter[$name] ) ) {
+    
+    if ( isset( $filter[$name] ) ) 
+    {
       return $filter[$name];
     }
     
@@ -177,7 +192,7 @@ class filter {
   public function recents()
   {
     $filter = $this->get_filter();
-    return isset( $filter['recent_fields'] ) ? $filter['recent_fields'] : array();
+    return isset( $filter['recent_fields'] ) ? $filter['recent_fields'] : [];
   }
   
   /**
@@ -215,37 +230,55 @@ class filter {
   {
     $filter = $this->get_filter();
 
-    if ( filter_input( INPUT_POST, 'action', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name') ) === 'admin_list_filter' ) {
-
+    if ( filter_input( INPUT_POST, 'action', FILTER_CALLBACK, [ 'options' => 'PDb_Manage_Fields_Updates::make_name'] ) === 'admin_list_filter' ) 
+    {
       $post = filter_input_array( INPUT_POST, $this->list_filter_sanitize() );
+      
+      switch ($post['submit-button'])
+      {
+        case 'filter':
 
-      $filter['search'] = array();
+          $filter['search'] = [];
 
-      for ( $i = $post['list_filter_count']; $i > 0; $i-- ) {
-        $filter['search'][] = current( $this->default_filter()['search'] );
-      }
+          for ( $i = $post['list_filter_count']; $i > 0; $i-- ) {
+            $filter['search'][] = current( $this->default_filter()['search'] );
+          }
 
-      foreach ( $post as $key => $postval ) {
-        
-        if ( is_array( $postval ) ) {
-          
-          foreach ( $postval as $index => $value ) {
-            if ( isset( $filter['search'][$index] ) && $value !== '' ) {
-              $filter['search'][$index][$key] = $value;
-              if ( $key === 'search_field' ) {
-                $filter['recent_fields'] = self::add_to_recents($value, $filter['recent_fields']);
+          foreach ( $post as $key => $postval ) {
+
+            if ( is_array( $postval ) ) 
+            {
+              foreach ( $postval as $index => $value ) {
+                if ( isset( $filter['search'][$index] ) && $value !== '' ) {
+                  $filter['search'][$index][$key] = $value;
+                  if ( $key === 'search_field' ) {
+                    $filter['recent_fields'] = self::add_to_recents($value, $filter['recent_fields']);
+                  }
+                }
               }
+            } 
+            elseif ( in_array( $key, ['list_filter_count', 'sortBy', 'ascdesc'] ) ) 
+            {
+              $filter[$key] = $post[$key];
             }
           }
-        } elseif ( in_array( $key, array('list_filter_count', 'sortBy', 'ascdesc') ) ) {
-          $filter[$key] = $post[$key];
-        }
+          break;
+          
+        case 'clear':
+          
+          $filter['search'] = [];
+          break;
       }
-    } elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name') ) ) {
-      if ( $filter['sortBy'] !== $column_sort ) {
+    } 
+    elseif ( $column_sort = filter_input( INPUT_GET, 'column_sort', FILTER_CALLBACK, [ 'options' => 'PDb_Manage_Fields_Updates::make_name'] ) ) 
+    {
+      if ( $filter['sortBy'] !== $column_sort ) 
+      {
         // if we're changing the sort column, set the sort to ASC
         $filter['ascdesc'] = 'ASC';
-      } else {
+      } 
+      else 
+      {
         $filter['ascdesc'] = $filter['ascdesc'] === 'ASC' ? 'DESC' : 'ASC';
       }
       $filter['sortBy'] = $column_sort;
@@ -280,7 +313,7 @@ class filter {
     }
     
     if ( ! isset( $filter['recent_fields'] ) ) {
-      $filter['recent_fields'] = array();
+      $filter['recent_fields'] = [];
     }
 
     return $filter;
@@ -293,15 +326,16 @@ class filter {
    */
   private function list_filter_sanitize()
   {
-    return array(
+    return [
         'list_filter_count' => FILTER_SANITIZE_NUMBER_INT,
-        'ascdesc' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(asc|desc)$/i')),
-        'sortBy' => array('filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'),
-        'search_field' => array('filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'),
-        'operator' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE|' . query::dupcheck . ')$/i'), 'flags' => FILTER_REQUIRE_ARRAY),
-        'value' => array('filter' => FILTER_DEFAULT, 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_REQUIRE_ARRAY),
-        'logic' => array('filter' => FILTER_VALIDATE_REGEXP, 'options' => array('regexp' => '/^(OR|AND)$/'), 'flags' => FILTER_REQUIRE_ARRAY),
-    );
+        'ascdesc' => ['filter' => FILTER_VALIDATE_REGEXP, 'options' => ['regexp' => '/^(asc|desc)$/i']],
+        'sortBy' => ['filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'],
+        'search_field' => ['filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'],
+        'submit-button' => ['filter' => FILTER_CALLBACK, 'options' => 'PDb_Manage_Fields_Updates::make_name'],
+        'operator' => ['filter' => FILTER_VALIDATE_REGEXP, 'options' => ['regexp' => '/^(gt|lt|=|!=|NOT LIKE|LIKE|' . query::dupcheck . ')$/i'], 'flags' => FILTER_REQUIRE_ARRAY],
+        'value' => ['filter' => FILTER_DEFAULT, 'flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_REQUIRE_ARRAY],
+        'logic' => ['filter' => FILTER_VALIDATE_REGEXP, 'options' => ['regexp' => '/^(OR|AND)$/'], 'flags' => FILTER_REQUIRE_ARRAY],
+    ];
   }
 
   /**
@@ -314,22 +348,22 @@ class filter {
     $cachekey = __CLASS__ . 'default';
     $filter = wp_cache_get( $cachekey );
 
-    if ( !$filter ) {
-      
-      $filter = array(
-          'search' => array(
-              0 => array(
+    if ( !$filter )
+    {  
+      $filter = [
+          'search' => [
+              0 => [
                   'search_field' => 'none',
                   'value' => '',
                   'operator' => 'LIKE',
                   'logic' => 'AND'
-              )
-          ),
+              ]
+          ],
           'sortBy' => Participants_Db::plugin_setting( 'admin_default_sort' ),
           'ascdesc' => Participants_Db::plugin_setting( 'admin_default_sort_order' ),
           'list_filter_count' => 1,
-          'recent_fields' => array(),
-      );
+          'recent_fields' => [],
+      ];
       
       wp_cache_set( $cachekey, $filter, '', \Participants_Db::cache_expire() );
     }
@@ -370,7 +404,7 @@ class filter {
    */
   public static function recent_field_option( $field_list )
   {
-    $recents = array();
+    $recents = [];
 
     if ( count( $field_list ) > 0 ) {
       $recents[ __('Recent Fields', 'participants-database' ) ] = 'optgroup';
