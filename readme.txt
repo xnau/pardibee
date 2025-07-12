@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 2.7.5
+Stable tag: 2.7.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,6 +292,10 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.6 =
+* added "dark mode" setting
+* fixed admin list search "clear" button
 
 = 2.7.5.1 =
 * fixed encoding issue with CSV imports
@@ -642,7 +646,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.5.1 is a bugfix update
+2.7.6 is a feature update and bugfix update
 
 == Plugin Support ==
 
