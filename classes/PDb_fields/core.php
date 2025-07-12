@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPLv3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -50,7 +50,14 @@ abstract class core {
     $this->name = $name;
     $this->title = $title;
     
-    add_action('init', [$this,'set_translated_title']);
+    if ( did_action( 'init' ) )
+    {
+      $this->set_translated_title();
+    }
+    else 
+    {
+      add_action('init', [$this,'set_translated_title']);
+    }
 
     add_filter( 'pdb-form_element_build_' . $this->name, array( $this, 'form_element_build' ) );
     add_filter( 'pdb-before_display_form_element', array( $this, 'display_form_element' ), 10, 2 );
@@ -69,9 +76,7 @@ abstract class core {
    * 
    * this must be overridden in the add-on plugin so the textdomain is correct and the translation is inluded in the pot.
    */
-  public function set_translated_title()
-  {
-  }
+  abstract public function set_translated_title();
 
   /**
    * provides the HTML for the form element in a write context
