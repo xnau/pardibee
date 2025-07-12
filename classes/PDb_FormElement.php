@@ -833,6 +833,15 @@ class PDb_FormElement extends xnau_FormElement {
    */
   public static function get_types()
   {
+    $cachekey = 'pdb-form_element_types';
+    
+    $types = wp_cache_get($cachekey);
+    
+    if ( is_array( $types ) )
+    {
+      return $types;
+    }
+    
     $types = array(
         'text-line' => __( 'Text-line', 'participants-database' ),
         'text-area' => __( 'Text Area', 'participants-database' ),
@@ -863,7 +872,11 @@ class PDb_FormElement extends xnau_FormElement {
      * @param array of core form element types
      * @return array of all form element types
      */
-    return Participants_Db::apply_filters( 'set_form_element_types', $types );
+    $all_types = Participants_Db::apply_filters( 'set_form_element_types', $types );
+    
+    wp_cache_set($cachekey, $all_types);
+    
+    return $all_types;
   }
   
   /**
