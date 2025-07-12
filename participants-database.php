@@ -3555,9 +3555,11 @@ class Participants_Db extends PDb_Base {
     );
     /**
      * this registers the edit participant page without adding it as a menu item
+     * 
+     * had to change how this is done for php 8.2
      */
     add_submenu_page(
-            '', null, null, self::plugin_capability( 'record_edit_capability', 'edit participant' ), self::$plugin_page . '-edit_participant', array(__CLASS__, 'include_admin_file')
+            self::$plugin_page . '-add_participant', '', '', self::plugin_capability( 'record_edit_capability', 'edit participant' ), self::$plugin_page . '-edit_participant', array(__CLASS__, 'include_admin_file')
     );
 
     add_submenu_page(
