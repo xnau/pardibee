@@ -398,6 +398,7 @@ class PDb_Manage_Fields {
                * @return array
                */
               $available_form_elements = array_flip( Participants_Db::apply_filters( 'create_field_form_element_options', PDb_FormElement::get_types() ) );
+              
               PDb_FormElement::print_element( array(
                   'type' => 'dropdown',
                   'options' => $available_form_elements + array( PDb_FormElement::null_select_key() => false ),
