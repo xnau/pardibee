@@ -189,7 +189,7 @@ if ( $participant_values ) :
                */
 
               // handle the persistent feature
-              if ( $column->is_persistent() && strlen( $participant_values[$column->name()] ) == 0 ) {
+              if ( $column->is_persistent() && isset( $participant_values[$column->name()] ) && strlen( $participant_values[$column->name()] ) == 0 ) {
                 $column->set_value(  $column->default  );
               }
 
