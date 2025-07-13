@@ -33,8 +33,6 @@ class heading extends utility {
 
     add_filter( 'pdb-add_field_to_iterator', array( $this, 'yes_show_field' ), 10, 2 );
     
-    $this->customize_default_attribute( __( 'Heading', 'participants-database' ), 'rich-text' );
-    
     $this->suppressed_shortcodes(array('list'));
     
     $this->is_mass_edit_field();
@@ -48,6 +46,14 @@ class heading extends utility {
   public function set_translated_title()
   {
     $this->title = _x( 'Heading', 'name of a field type that shows a text heading', 'participants-database' );
+  }
+  
+  /**
+   * sets the custom attribute UI name 
+   */
+  public function set_attributes_UI_name()
+  {
+    $this->customize_default_attribute( __( 'Heading', 'participants-database' ), 'rich-text' );
   }
 
   /**
