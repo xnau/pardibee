@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -32,7 +32,7 @@ abstract class utility extends core {
   {
     parent::__construct( $name, $title );
     
-    $this->customize_default_attribute( __( 'Display', 'participants-database' ), 'text-area' );
+    add_action( 'init', [$this,'set_attributes_UI_name'] );
     
     $this->is_linkable();
     
@@ -63,6 +63,14 @@ abstract class utility extends core {
   public function form_element_html()
   {
     return '';
+  }
+  
+  /**
+   * sets the custom attribute UI name 
+   */
+  public function set_attributes_UI_name()
+  {
+    $this->customize_default_attribute( __( 'Display', 'participants-database' ), 'text-area' );
   }
 
   /**
