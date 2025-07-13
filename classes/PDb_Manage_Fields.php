@@ -181,17 +181,17 @@ class PDb_Manage_Fields {
         
         $field_def = new PDb_Form_Field_Def( $name );
         
-        $field_definition_attributes = new PDb_Field_Editor( $field_def );
+        $field_editor = new PDb_Field_Editor( $field_def );
 
         ob_start();
         ?>
 
-        <div class="def-fieldset def-line <?php echo esc_attr( $field_definition_attributes->rowclass() ) ?>" id="db_row_<?php echo esc_attr( $field_def->id ) ?>" data-numid="<?php echo esc_attr( $field_def->id ) ?>" data-groupid="<?php echo esc_attr( $field_def->groupid ) ?>">
+        <div class="def-fieldset def-line <?php echo esc_attr( $field_editor->rowclass() ) ?>" id="db_row_<?php echo esc_attr( $field_def->id ) ?>" data-numid="<?php echo esc_attr( $field_def->id ) ?>" data-groupid="<?php echo esc_attr( $field_def->groupid ) ?>">
           
-          <?php echo wp_kses( $field_definition_attributes->get_hidden_inputs(), Participants_Db::allowed_html('form')); ?>
+          <?php echo wp_kses( $field_editor->get_hidden_inputs(), Participants_Db::allowed_html('form')); ?>
 
           <?php
-          while ( $control_html = $field_definition_attributes->get_next_control() ) {
+          while ( $control_html = $field_editor->get_next_control() ) {
             
             // this is so the comma entity will display literally
             echo str_replace( array('&#044;', '&#44;'), '&amp;#44;', wp_kses( $control_html, self::allowed_html() ) );
