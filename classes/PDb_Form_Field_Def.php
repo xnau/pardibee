@@ -511,6 +511,7 @@ class PDb_Form_Field_Def {
   public function form_element_title()
   {
     $types = PDb_FormElement::get_types();
+    
     return  isset( $types[$this->form_element] ) ? $types[$this->form_element] : $this->form_element;
   }
 
