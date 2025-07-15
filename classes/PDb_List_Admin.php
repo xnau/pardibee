@@ -416,8 +416,8 @@ class PDb_List_Admin {
                         </fieldset>
                       <?php endfor ?>
                       <fieldset class="widefat inline-controls">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo esc_attr( self::$i18n[ 'filter' ] ) ?>">
-                        <input class="button button-default" name="submit-button" type="submit" value="<?php echo esc_attr( self::$i18n[ 'clear' ] ) ?>">
+                        <button type="submit" name="submit-button" value="filter" class="button button-default"><?php echo esc_attr( self::$i18n[ 'filter' ] ) ?></button>
+                        <button class="button button-default" name="submit-button" type="submit" value="clear"><?php echo esc_attr( self::$i18n[ 'clear' ] ) ?></button>
                         <div class="widefat inline-controls filter-count">
                           <label for="list_filter_count"><?php _e( 'Number of filters to use: ', 'participants-database' ) ?><input id="list_filter_count" name="list_filter_count" class="number-entry single-digit" type="number" max="5" min="1" value="<?php echo esc_attr( $filter_count ) ?>"  /></label>
                         </div>
@@ -447,7 +447,7 @@ class PDb_List_Admin {
                         );
                         PDb_FormElement::print_element( $element );
                         ?>
-                        <input class="button button-default"  name="submit-button" type="submit" value="<?php echo esc_attr( self::$i18n[ 'sort' ] ) ?>">
+                        <button class="button button-default"  name="submit-button" type="submit" value="sort"><?php echo esc_attr( self::$i18n[ 'sort' ] ) ?></button>
                       </fieldset>
                     </td></tr></tbody></table>
             </form>
@@ -507,7 +507,7 @@ class PDb_List_Admin {
                               )
                       ?>
                       <?php printf( esc_html__( 'Show %s items per page.', 'participants-database' ), $list_limit ) ?>
-                      <?php PDb_FormElement::print_element( array( 'type' => 'submit', 'name' => 'submit-button', 'class' => 'button button-default', 'value' => self::$i18n[ 'change' ] ) ) ?>
+                      <button type="submit" name="submit-button" value="change" class="button button-default"><?php echo esc_attr( self::$i18n[ 'change' ] ) ?></button>
                     </fieldset>
                   </td>
                 </tr>
@@ -835,7 +835,7 @@ class PDb_List_Admin {
         '<span style="padding-right:20px" >',
         self::$i18n[ 'with_selected' ],
         PDb_FormElement::get_element( $selector ),
-        '<input type="submit" name="submit-button" class="button button-default" value="' . self::$i18n[ 'apply' ] . '" id="apply_button"  >',
+        '<button id="apply_button" type="submit" name="submit-button" value="apply" class="button button-default">' . esc_attr( self::$i18n[ 'apply' ] ) . '</button>',
         '</span>',
     );
 
