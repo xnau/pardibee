@@ -4,7 +4,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 1.5
+ * @version 1.5.1
  * 
  */
 /* global mass_editL10n */
@@ -110,7 +110,7 @@ var PDbListAdmin = (function ($) {
     buttons: [{
         icon: "dashicons dashicons-yes",
         click: function () {
-          listform.prepend(submitElement.clone().val(list_adminL10n.apply));
+          listform.prepend(submitElement.clone().val('apply'));
           armDeleteButton(true);
           checkState = false;
           performTask();
