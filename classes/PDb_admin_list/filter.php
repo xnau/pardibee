@@ -237,6 +237,7 @@ class filter {
       switch ($post['submit-button'])
       {
         case 'filter':
+        case 'sort':
 
           $filter['search'] = [];
 
