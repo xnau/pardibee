@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2025  xnau webdesign
  * @license    GPL3
- * @version    1.1
+ * @version    1.2
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -156,7 +156,7 @@ class field_selector {
       $where .= 'AND g.mode <> "admin" OR f.name = "' . \Participants_Db::apply_filters( 'approval_field', 'approved' ) . '"';
     }
     
-    $group_db = $wpdb->get_results('SELECT f.name,f.title,f.group,g.title AS grouptitle FROM ' . Participants_Db::$fields_table . ' f INNER JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name ' . $where . ' ORDER BY FIELD (f.group,"' . implode( '","',$group_list ) . '")' );
+    $group_db = $wpdb->get_results('SELECT f.name,f.title,f.group,g.title AS grouptitle FROM ' . Participants_Db::$fields_table . ' f INNER JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name ' . $where . ' ORDER BY FIELD (f.group,"' . implode( '","',$group_list ) . '"), f.order ASC' );
     
     $field_select = [];
     $group = '';
