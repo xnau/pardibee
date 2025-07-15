@@ -46,12 +46,14 @@ class process {
 
         // handles a "with selected" action
         case PDb_List_Admin::$i18n['apply']:
+        case 'apply':
 
           $this->handle_with_selected();
           break;
 
         // handles changing the number of items to show in the list
         case PDb_List_Admin::$i18n['change']:
+        case 'change':
 
           $list_limit = filter_input( INPUT_POST, 'list_limit', FILTER_VALIDATE_INT );
           if ( $list_limit > 0 ) {
