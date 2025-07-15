@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 2.7.6
+Stable tag: 2.7.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,6 +292,10 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.6.2 =
+* fixed broken admin list search for non-English sites
+* minor bug fixes
 
 = 2.7.6.1 =
 * fixed issue with some defined fields not appearing on the Manage Database Fields page
@@ -649,7 +653,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.6.1 is a feature update and bugfix update
+2.7.6.2 is a bugfix update
 
 == Plugin Support ==
 
