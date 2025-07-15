@@ -152,11 +152,15 @@ class query {
     switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
 
       case PDb_List_Admin::$i18n[ 'clear' ] :
+      case 'clear':
         $this->filter->reset();
 
       case PDb_List_Admin::$i18n[ 'sort' ]:
+      case 'sort':
       case PDb_List_Admin::$i18n[ 'filter' ]:
+      case 'filter':
       case PDb_List_Admin::$i18n[ 'search' ]:
+      case 'search':
         // go back to the first page to display the newly sorted/filtered list
         $_GET[ PDb_List_Admin::$list_page ] = 1;
 
