@@ -73,6 +73,7 @@ fieldset.widefat.inline-controls label {
   line-height: 2em;
 }
 fieldset.widefat.inline-controls input,
+fieldset.widefat.inline-controls button,
 fieldset.widefat.inline-controls  select,
 fieldset.widefat.inline-controls label {
   margin: 0 5px;
@@ -82,6 +83,7 @@ fieldset.widefat.inline-controls input[type=checkbox] {
   vertical-align: middle;
 }
 fieldset.widefat.inline-controls input:first-of-type,
+fieldset.widefat.inline-controls button:first-of-type,
 fieldset.widefat.inline-controls  select:first-of-type,
 fieldset.widefat.inline-controls label:first-of-type {
   margin-left: 0;
