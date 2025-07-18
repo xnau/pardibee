@@ -4,7 +4,7 @@
  * js for handling general list management functions
  * 
  * @author Roland Barker, xnau webdesign
- * @version 1.5.1
+ * @version 1.5.2
  * 
  */
 /* global mass_editL10n */
@@ -58,11 +58,11 @@ var PDbListAdmin = (function ($) {
     var el = e.target ? $(e.target) : $(e);
     var edit_control = el.closest('.list-controls').find('.mass-edit-control');
     var delete_control = el.closest('.list-controls').find('.file-delete-preference-selector');
-    var hide_all = function (){
-        edit_control.hide(speed);
-        delete_control.hide(speed);
-      };
-    switch(el.val()){
+    var hide_all = function () {
+      edit_control.hide(speed);
+      delete_control.hide(speed);
+    };
+    switch (el.val()) {
       case mass_editL10n.edit_action:
         delete_control.hide(speed);
         set_mass_edit_input(el);
@@ -81,22 +81,23 @@ var PDbListAdmin = (function ($) {
     var el = e.target ? $(e.target) : $(e);
     var control = el.closest('.list-controls');
     var input = control.find('.mass-edit-input');
-    input.find('.field-input-label, .field-input').fadeTo(speed,0,function(){
+    input.find('.field-input-label, .field-input').fadeTo(speed, 0, function () {
       input.addClass('changeout');
     });
     input.append(spinner);
     var data = {action: mass_editL10n.action};
     var editField = control.find('[name="' + mass_editL10n.selector + '"]').val();
     data[mass_editL10n.selector] = editField;
-    data[editField] = $('.mass-edit-input [name='+editField+']').val(); 
+    data[editField] = $('.mass-edit-input [name=' + editField + ']').val();
     $.post(ajaxurl,
             data,
             function (response) {
               input.html(response.input);
-              input.find('.field-input-label, .field-input').fadeTo(speed,1);
+              input.find('.field-input-label, .field-input').fadeTo(speed, 1);
               input.removeClass('changeout');
               PDbOtherSelect.init();
-              if (typeof PDbDatepicker!=='undefined') PDbDatepicker.init();
+              if (typeof PDbDatepicker !== 'undefined')
+                PDbDatepicker.init();
             }
     );
   };
@@ -124,16 +125,16 @@ var PDbListAdmin = (function ($) {
       }]
   });
   var performTask = function () {
-    if ( task_selector.val() === 'export' ) {
+    if (task_selector.val() === 'export') {
       var exportform = $('form.csv-export');
       var listformdata = new FormData(listform[0]);
-      if ( exportform.find('[name=export_selection]').length ) {
+      if (exportform.find('[name=export_selection]').length) {
         exportform.find('[name=export_selection]').val(listformdata.getAll('pid[]').toString());
       } else {
-        exportform.prepend($('<input>',{
-          type:'hidden',
-          name:'export_selection',
-          value:listformdata.getAll('pid[]').toString()
+        exportform.prepend($('<input>', {
+          type: 'hidden',
+          name: 'export_selection',
+          value: listformdata.getAll('pid[]').toString()
         }));
       }
       exportform.submit();
@@ -143,49 +144,56 @@ var PDbListAdmin = (function ($) {
       confirmDialog.dialog("destroy");
     }
   };
-  var op_selection = function(e){
+  var op_selection = function (e) {
     var el = e.target ? $(e.target) : $(e);
     var value_field = el.closest('.filter-search-term').find('input[name^=value]');
-    if ( el.val() === list_adminL10n.dupcheck) {
+    if (el.val() === list_adminL10n.dupcheck) {
       value_field.val('').hide();
     } else {
       value_field.show();
     }
   };
+  var changeCount = function (e)
+  {
+    $(e.target).closest('form').prepend($('<input type="hidden" name="submit-button" value="change"/>')).submit();
+  }
+  var applyAction = function (e)
+  {
+    e.preventDefault();
+    var send_count = parseInt(count_element.val(), 10);
+    var sense = (send_count > 1) ? 'plural' : 'singular';
+    var action = task_selector.val();
+    var overlimit = !list_adminL10n.unlimited_actions.includes(action) && send_count > parseInt(list_adminL10n.send_limit);
+    var limit_message = overlimit ? $('<h4 class="dashicons-before dashicons-warning"/>').append(list_adminL10n.apply_confirm.recipient_count_exceeds_limit.replace('{limit}', list_adminL10n.send_limit)) : '';
+    confirmDialog.append($('<h3/>').append(list_adminL10n.apply_confirm[action][sense])).append(limit_message).dialog('open').find('a').blur();
+  }
   return {
-    init: function () {
-      apply_button.on('click', function (e) {
-        e.preventDefault();
-        var send_count = parseInt(count_element.val(), 10);
-        var sense = (send_count > 1) ? 'plural' : 'singular';
-        var action = task_selector.val();
-        var overlimit = !list_adminL10n.unlimited_actions.includes(action) && send_count > parseInt(list_adminL10n.send_limit);
-        var limit_message = overlimit ? $('<h4 class="dashicons-before dashicons-warning"/>').append(list_adminL10n.apply_confirm.recipient_count_exceeds_limit.replace('{limit}', list_adminL10n.send_limit)) : '';
-        confirmDialog.append($('<h3/>').append(list_adminL10n.apply_confirm[action][sense])).append(limit_message).dialog('open').find('a').blur();
-      });
+    init: function () 
+    {
+      apply_button.on('click', applyAction);
 
       spinner = mass_editL10n.spinner;
-      
+
       task_selector.on('change', taskSelect);
       taskSelect(task_selector);
-      
-      op_selector.on('change',op_selection);
+
+      op_selector.on('change', op_selection);
       op_selection(op_selector);
-      
-      $('[name="' + mass_editL10n.selector + '"]').on('change',set_mass_edit_input);
+
+      $('[name="' + mass_editL10n.selector + '"]').on('change', set_mass_edit_input);
 
       checkall.click(checkAll);
 
       $('.delete-check').on('click', function () {
         addSelects($(this).prop('checked'));
       });
-      $('#list_filter_count').change($.debounce(500, function () {
-        $(this).closest('form').submit();
-      }));
+      $('#list_filter_count').on('input', $.debounce(500, changeCount));
     }
   };
 }(jQuery));
-jQuery(function () {
+
+jQuery(function () 
+{
   "use strict";
   PDbListAdmin.init();
 });
