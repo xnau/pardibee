@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2020  xnau webdesign
  * @license    GPL3
- * @version    1.4
+ * @version    1.5
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -238,6 +238,7 @@ class filter {
       {
         case 'filter':
         case 'sort':
+        case 'change':
 
           $filter['search'] = [];
 
