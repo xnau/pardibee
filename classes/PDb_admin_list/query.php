@@ -55,7 +55,7 @@ class query {
   public function __construct( $filter )
   {
     $this->filter = $filter;
-    $this->_process_search();
+    $this->_process_query();
   }
 
   /**
@@ -147,7 +147,7 @@ class query {
    *
    * @param string $submit the value of the submit field
    */
-  private function _process_search()
+  private function _process_query()
   {
     switch ( filter_input( INPUT_POST, 'submit-button', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
 
