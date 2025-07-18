@@ -209,7 +209,7 @@ class PDb_List_Admin {
 //        'wrap_tag_close' => '</div></div>',
                 'add_variables' => '#pdb-list-admin',
             ) ) );
-
+    
     // get the records for this page, adding the pagination limit clause
     self::$participants = $wpdb->get_results( self::$query->query() . ' ' . self::$pagination->getLimitSql(), ARRAY_A );
 
