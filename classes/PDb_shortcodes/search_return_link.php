@@ -78,7 +78,7 @@ class search_return_link {
     ob_start();
     ?>
 <div class="pdb-returnlink">
-  <p><a href="<?php echo $this->return_url() ?>"><?php echo $linktext ?></a></p>
+  <p><a href="<?php echo esc_attr( $this->return_url() ) ?>"><?php echo esc_html( $linktext ) ?></a></p>
 </div>
     <?php
     
