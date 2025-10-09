@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * @version 0.4
+ * @version 0.5
  * 
  * template for participants list shortcode output
  * 
@@ -59,7 +59,7 @@
 
   <?php // this is an example of a way to style the records, delete this or edit as needed ?>
   <style type="text/css">
-    section {
+    .pdb-list section {
       margin: 1.5em 0;
     }
     .pdb-field-title {
