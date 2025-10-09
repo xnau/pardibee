@@ -3,7 +3,7 @@ Contributors: xnau
 Donate link: https://xnau.com/wordpress-plugins/participants-database
 Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 Requires PHP: 7.4
 Stable tag: 2.7.6.2
 License: GPLv3 or later
@@ -285,6 +285,10 @@ There is also a form field type called "link" that lets people fill in a URL and
 
 You can define a "captcha" form element which will show a simple math question for the user to answer.
 
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the Participants Database plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/bfb9f090-be8f-4641-bd6b-431a1e4f45c7). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. Managing Database fields: this is where you set up your database fields and all attributes for each field
@@ -292,6 +296,11 @@ You can define a "captcha" form element which will show a simple math question f
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.7 =
+* fixed XSS vulnerability in the recover link form code
+* updated German Formal translation files
+* XSS vulnerability fix in upload_csv.php
 
 = 2.7.6.3 =
 * fixed admin list filter count control
@@ -656,7 +665,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.6.3 is a bugfix update
+2.7.7 is a security patch update
 
 == Plugin Support ==
 
