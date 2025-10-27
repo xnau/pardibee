@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.7.7
+ * Version: 2.7.8
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -715,7 +715,7 @@ class Participants_Db extends PDb_Base {
     wp_register_script( $manage_fields_handle, self::asset_url( "js/manage_fields$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-dialog', self::$prefix . 'cookie'), '2.14', true );
     wp_register_script( self::$prefix . 'settings_script', self::asset_url( "js/settings$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'),  self::$plugin_version . '.1', true );
     
-    wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version, true );
+    wp_register_script( self::$prefix . 'record_edit_script', self::asset_url( "js/record_edit$min.js" ), array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', self::$prefix . 'cookie'), self::$plugin_version.'-1.1', true );
     wp_add_inline_script(self::$prefix.'record_edit_script', Participants_Db::inline_js_data( 'PDb_L10n', array(
         'unsaved_changes' => __( "The changes you made will be lost if you navigate away from this page.", 'participants-database' ),
     ), 'record_edit' ));
@@ -1003,9 +1003,8 @@ class Participants_Db extends PDb_Base {
     // check for the ID in the shortcode first
     $record_id = PDb_Record::get_id_from_shortcode( $atts );
     
-    // if the record ID is set to 0, don't print #2635
-    if ( $record_id !== '0' && $record_id !== 0 ) {
-    
+    if ( $record_id === false )
+    {
       // get the pid from the get string if given
       $get_pid = filter_input( INPUT_GET, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS );
 
@@ -1020,7 +1019,6 @@ class Participants_Db extends PDb_Base {
       if ( $record_id === false ) {
         $record_id = self::$session->record_id( true );
       }
-      
     }
     
     $atts['record_id'] = $record_id;
@@ -2103,27 +2101,50 @@ class Participants_Db extends PDb_Base {
    * always returns a valid id.
    * 
    * @global \wpdb $wpdb
-   * @param string $id the current id
+   * @param string $current_id the current id
    * @param bool   $increment true for next higher, false for next lower
    * @return string the next valid id
    */
-  public static function next_id( $id, $increment = true )
+  public static function next_id( $current_id, $increment = true )
   {
-    $i = $increment ? 1 : -1;
+    $inc_value = $increment ? 1 : -1;
+    
+    /**
+     * @filter pdb-admin_edit_record_next_id
+     * @param bool false initial state
+     * @param int $current_id
+     * @param int $inc_value the increment value
+     * @return bool|int the next record ID, bool false if not
+     */
+    $id = Participants_Db::apply_filters( 'admin_edit_record_next_id', false, $current_id, $inc_value );
+    
+    if ( is_numeric( $id ) )
+    {
+      return $id;
+    }
+      
+    $id = $current_id;
     
     $query = get_transient( PDb_admin_list\query::query_store );
     
     if ( $query ) // get the ID from the last list filter
     {
-      $result_list = PDb_admin_list\query::result_list( $query );
+      $result_list = PDb_admin_list\record_list_cache::get();
+      
+      if ( false === $result_list )
+      {
+        $result_list = PDb_admin_list\query::result_list( $query );
+        
+        PDb_admin_list\record_list_cache::set( $result_list );
+      }
 
       $index = array_search( $id, $result_list );
       
-      $next_i = $index + $i;
+      $next_i = $index + $inc_value;
       
       if ( ! array_key_exists( $next_i, $result_list ) )
       {
-        $next_i = $i === 1 ? array_key_first( $result_list ) : array_key_last( $result_list );
+        $next_i = $inc_value === 1 ? array_key_first( $result_list ) : array_key_last( $result_list );
       }
 
       return $result_list[ $next_i ];
@@ -2133,13 +2154,20 @@ class Participants_Db extends PDb_Base {
       global $wpdb;
       $max = $wpdb->get_var( 'SELECT MAX(p.id) FROM ' . self::$participants_table . ' p' );
       $id = (int) $id;
-      $id = $id + $i;
-      while ( !self::_id_exists( $id ) ) {
-        $id = $id + $i;
+      $id = $id + $inc_value;
+      
+      while ( !self::_id_exists( $id ) ) 
+      {
+        $id = $id + $inc_value;
+        
         if ( $id > $max )
+        {
           $id = 1;
+        }
         elseif ( $id < 1 )
+        {
           $id = $max;
+        }
       }
       return $id;
     }
@@ -2153,7 +2181,6 @@ class Participants_Db extends PDb_Base {
    */
   public static function email_exists( $email )
   {
-
     if ( Participants_Db::plugin_setting_is_set('primary_email_address_field') ) {
       return self::_id_exists( $email, Participants_Db::plugin_setting('primary_email_address_field') );
     } else
@@ -2333,6 +2360,7 @@ class Participants_Db extends PDb_Base {
         'nocookie' => FILTER_VALIDATE_BOOLEAN,
         'previous_multipage' => FILTER_SANITIZE_SPECIAL_CHARS,
         'export_selection' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'pdb_modified' => FILTER_VALIDATE_INT,
     );
     /*
      * $post_input is used for control functions, not for the dataset
@@ -2399,15 +2427,28 @@ class Participants_Db extends PDb_Base {
          */
         $post_data = self::apply_filters( 'before_submit_' . ($post_input['action'] === 'insert' ? 'add' : 'update'), $_POST );
 
-        if ( isset( $_POST['id'] ) ) {
-          $id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
-        } elseif ( isset( $_GET['id'] ) ) {
-          $id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
-        } else {
-          $id = false;
+        if ( isset( $_POST['id'] ) ) 
+        {
+          $record_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+        } elseif ( isset( $_GET['id'] ) ) 
+        {
+          $record_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)) );
+        } else 
+        {
+          $record_id = false;
         }
+        
+        $submit_key = array_search( $post_input['submit_button'], self::$i18n );
+        
+        $modified = isset( $post_input['pdb_modified'] ) && $post_input['pdb_modified'] == 1;
 
-        $participant_id = self::process_form( $post_data, $post_input['action'], $id, $columns, false, 'page submission ' . $post_input['action'] );
+        if ( in_array( $submit_key, ['previous','next'] ) && ! $modified )
+        {
+          $participant_id = $record_id;
+          goto redirect; // skip processing the submission
+        }
+        
+        $participant_id = self::process_form( $post_data, $post_input['action'], $record_id, $columns, false, 'page submission ' . $post_input['action'] );
 
         if ( false === $participant_id ) {
 
@@ -2417,7 +2458,7 @@ class Participants_Db extends PDb_Base {
            * @param int|bool record id or bool false
            * @param PDb_Form_Validation object
            */
-          do_action('pdb-submission_not_verified', $post_data, $id, self::$validation_errors );
+          do_action('pdb-submission_not_verified', $post_data, $record_id, self::$validation_errors );
           // we have errors; go back to form and show errors
           return;
         }
@@ -2504,29 +2545,38 @@ class Participants_Db extends PDb_Base {
           return;
         }
 
+        redirect:
         // redirect according to which submit button was used
-        switch ( $post_input['submit_button'] ) {
-
-          case self::$i18n['apply'] :
+        switch ( $submit_key ) 
+        {
+          case'apply' :
             $redirect = get_admin_url() . 'admin.php?page=' . self::PLUGIN_NAME . '-edit_participant&id=' . $participant_id;
             break;
 
-          case self::$i18n['next'] :
-          case self::$i18n['new'] :
+          case 'next' :
+          case 'new' :
             $get_id = $post_input['action'] == 'update' ? '&id=' . self::next_id( $participant_id ) : '';
             $redirect = get_admin_url() . 'admin.php?page=' . self::PLUGIN_NAME . '-edit_participant' . $get_id;
             break;
 
-          case self::$i18n['previous'] :
+          case 'previous' :
             $get_id = $post_input['action'] == 'update' ? '&id=' . self::next_id( $participant_id, false ) : '';
             $redirect = get_admin_url() . 'admin.php?page=' . self::PLUGIN_NAME . '-edit_participant' . $get_id;
             break;
 
-          case self::$i18n['submit'] :
+          case 'submit' :
           default :
             $redirect = get_admin_url() . 'admin.php?page=' . self::PLUGIN_NAME;
+            \PDb_admin_list\record_list_cache::clear();
         }
-        wp_safe_redirect( $redirect );
+        
+        /**
+         * @filter pdb-admin_record_edit_submit_redirect
+         * @param string redirect URL
+         * @param string submit button key
+         * @return string redirect URL
+         */
+        wp_safe_redirect( Participants_Db::apply_filters( 'admin_record_edit_submit_redirect', $redirect, $submit_key ) );
         exit;
 
       case 'output CSV':
