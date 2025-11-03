@@ -91,7 +91,7 @@ if ( $participant_values ) :
         'class' => 'button button-default button-rightarrow',
         'value' => $action === 'update' ? self::$i18n['next'] : self::$i18n['new'],
     ],
-], $participant_values );
+  ], $participant_values );
 
   $section = '';
   
