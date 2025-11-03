@@ -7,7 +7,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -269,7 +269,13 @@ class rich_text_editor {
    */
   private function setup_config( $config )
   {
-    $this->config = array_merge( $this->default_config(), $config );
+    /**
+     * @filter pdb-rich_text_editor_config
+     * @param array $config
+     * @param string $fieldname
+     * @return array
+     */
+    $this->config = \Participants_Db::apply_filters( 'rich_text_editor_config', array_merge( $this->default_config(), $config ), $this->fieldname );
   }
 
   /**
