@@ -208,6 +208,9 @@ class query {
 
         // add the sorting
         $this->list_query .= $this->sort_clause();
+        
+        // clear the cached result list
+        record_list_cache::clear();
     }
   }
   

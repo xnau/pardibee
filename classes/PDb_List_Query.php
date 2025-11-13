@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    2.5
+ * @version    2.7
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Participants_Db class
  * 
@@ -163,8 +163,8 @@ class PDb_List_Query {
        * @param bool default value
        * @return bool true to allow
        */
-      if ( Participants_Db::apply_filters( 'allow_get_searches', true ) ) {
-        
+      if ( Participants_Db::apply_filters( 'allow_get_searches', true ) ) 
+      {  
         $this->_add_filter_from_get();
       }
       
@@ -446,9 +446,10 @@ class PDb_List_Query {
   private function _add_filter_from_get()
   {
     $get_input = new PDb_submission\list_search_get();
-
-    if ( $get_input->has_search() ) {
-      $this->_add_filter_from_input( $get_input->submission() );
+    
+    if ( $get_input->has_search() )
+    {
+      $this->_add_filter_from_input( $get_input->submission(), false );
     }
   }
 
@@ -484,56 +485,99 @@ class PDb_List_Query {
    * adds a filter statement from an input array
    * 
    * @param array $input from GET or POST array
+   * @param bool $override true to override the background clauses
    * @return null
    */
-  private function _add_filter_from_input( $input )
+  private function _add_filter_from_input( $input, $override = true )
   {
     $set_logic = Participants_Db::plugin_setting_is_true( 'strict_search' ) ? 'AND' : 'OR';
 
     $this->_reset_filters();
     
-    if ( $input[ 'target_instance' ] == $this->instance_index ) {
-
-      if ( is_array( $input[ 'search_field' ] ) ) {
-
+    if ( $input[ 'target_instance' ] == $this->instance_index ) 
+    {
+      if ( is_array( $input[ 'search_field' ] ) ) 
+      {
         $current_field = '';
 
-        foreach ( $input[ 'search_field' ] as $i => $search_field ) {
-
-          if ( $current_field === '' || $search_field !== $current_field ) {
-
+        foreach ( $input[ 'search_field' ] as $i => $search_field ) 
+        {
+          if ( $current_field === '' || $search_field !== $current_field ) 
+          {
             $current_field = $search_field;
-            $this->_remove_field_filters( $search_field );
+            if ( $override === true || ! $this->is_shortcode_filter_field( $input[ 'search_field' ][ $i ] ) )
+            {
+              $this->_remove_field_filters( $search_field );
+            }
           }
 
           if ( !$this->search_term_is_valid( $input[ 'value' ][ $i ] ) )
+          {
             continue;
+          }
 
           $logic = isset( $input[ 'logic' ][ $i ] ) ? $input[ 'logic' ][ $i ] : $set_logic;
           
-          $this->_add_search_field_filter( $input[ 'search_field' ][ $i ], $input[ 'operator' ][ $i ], $input[ 'value' ][ $i ], $logic );
+          if ( $override === true || ! $this->is_shortcode_filter_field( $input[ 'search_field' ][ $i ] ) )
+          {
+            $this->_add_search_field_filter( $input[ 'search_field' ][ $i ], $input[ 'operator' ][ $i ], $input[ 'value' ][ $i ], $logic );
+          }
         }
 
         $this->is_search_result = true;
-      } elseif ( !empty( $input[ 'search_field' ] ) && $this->search_term_is_valid( $input[ 'value' ] ) ) {
-
-        $this->_remove_field_filters( $input[ 'search_field' ] );
-
+      } 
+      elseif ( !empty( $input[ 'search_field' ] ) && $this->search_term_is_valid( $input[ 'value' ] ) ) 
+      {
         $logic = isset( $input[ 'logic' ] ) ? $input[ 'logic' ] : $set_logic;
-        $this->_add_search_field_filter( $input[ 'search_field' ], $input[ 'operator' ], $input[ 'value' ], $logic );
-      } elseif ( $input[ 'submit' ] !== 'clear' && empty( $input[ 'value' ] ) ) {
-
+        
+        if ( $override === true || ! $this->is_shortcode_filter_field( $input[ 'search_field' ] ) )
+        {
+          $this->_remove_field_filters( $input[ 'search_field' ] );
+          $this->_add_search_field_filter( $input[ 'search_field' ], $input[ 'operator' ], $input[ 'value' ], $logic );
+        }
+      } 
+      elseif ( $input[ 'submit' ] !== 'clear' && empty( $input[ 'value' ] ) ) 
+      {
         // we set this to true even for empty searches
         $this->is_search_result = true;
       }
 
-      if ( !empty( $input[ 'sortBy' ] ) ) {
-
+      if ( !empty( $input[ 'sortBy' ] ) ) 
+      {
         $this->set_sort( $input[ 'sortBy' ], $input[ 'ascdesc' ] );
       }
 
       $this->_save_query_session();
     }
+  }
+  
+  /**
+   * tells if the field is in the shortcode filter
+   * 
+   * this is to help avoid an incoming search from overriding the shortcode filter
+   * 
+   * @param string $fieldname
+   * @return bool true if the field is in the shortcode filter
+   */
+  protected function is_shortcode_filter_field( $fieldname )
+  {
+    $in_shortcode = false;
+
+    if ( array_key_exists( $fieldname, $this->subclauses ) )
+    {
+      $existing_subclause = $this->subclauses[ $fieldname ];
+      
+      foreach( $existing_subclause as $filter )
+      {
+        /** @var PDb_List_Query_Filter $filter */
+        if ( $filter->is_shortcode() )
+        {
+          $in_shortcode = true;
+        }
+      }
+    }
+    
+    return $in_shortcode;
   }
 
   /**
@@ -656,8 +700,10 @@ class PDb_List_Query {
   private function _build_clause_sequence()
   {
     $sequence = array();
-    foreach ( $this->subclauses as $field_clauses ) {
-      foreach ( $field_clauses as $clause ) {
+    foreach ( $this->subclauses as $field_clauses ) 
+    {
+      foreach ( $field_clauses as $clause ) 
+      {
         $sequence[ $clause->index() ] = $clause;
       }
     }
@@ -826,15 +872,18 @@ class PDb_List_Query {
   {
     $this->_reset_filters();
 
-    foreach ( $this->subclauses as $field_name => $filters ) {
-      foreach ( $filters as $filter ) {
+    foreach ( $this->subclauses as $field_name => $filters ) 
+    {
+      foreach ( $filters as $filter ) 
+      {
         /*
          * include the filter if it is a search filter
          * 
          * shortcode filter statements are not included here; that would expose 
          * them as these values are used to populate the search form
          */
-        if ( $filter->is_search() ) {
+        if ( $filter->is_search() ) 
+        {
           $this->_add_filter_value( $field_name, $filter->get_raw_term() );
         }
       }
@@ -1258,7 +1307,8 @@ class PDb_List_Query {
       $statement = sprintf( $clause_pattern, $field_def->name(), $operator, $delimiter[ 0 ], $filter->get_term(), $delimiter[ 1 ] );
     }
 
-    if ( $statement ) {
+    if ( $statement )
+    {
       $filter->update_parameters( array( 'statement' => $statement ) );
 
       $this->subclauses[ $field_def->name() ][] = $filter;

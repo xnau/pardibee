@@ -135,10 +135,13 @@ class PDb_Record extends PDb_Shortcode {
     $record_id = false;
     
     // checking 'id' atribute for backward compatibility
-    if ( (isset( $atts['id'] ) || isset( $atts['record_id'] ) ) ) {
-      if ( isset( $atts['id'] ) & !isset( $atts['record_id'] ) ) {
+    if ( (isset( $atts['id'] ) || isset( $atts['record_id'] ) ) ) 
+    {
+      if ( isset( $atts['id'] ) && !isset( $atts['record_id'] ) ) 
+      {
         $atts['record_id'] = $atts['id'];
       }
+      
       $record_id = Participants_Db::get_record_id_by_term( 'id', $atts['record_id'] );
     }
     

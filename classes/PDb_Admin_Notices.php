@@ -328,12 +328,17 @@ class PDb_Admin_Notices {
    */
   public function dismiss( $notice_id, $dismiss = true )
   {
-    if ( isset( $this->admin_notice_list[$notice_id] ) ) {
-      if ( $dismiss ) {
+    if ( isset( $this->admin_notice_list[$notice_id] ) ) 
+    {
+      if ( $dismiss ) 
+      {
         $this->admin_notice_list[$notice_id]->dismiss();
-      } else {
+      } 
+      else 
+      {
         unset($this->admin_notice_list[$notice_id]);
       }
+      
       $this->update_notices();
     }
   }

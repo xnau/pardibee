@@ -5,12 +5,10 @@
  * submission processing happens in Participants_Db::process_page_request on the
  * admin_init action
  * 
- * @version 1.7
+ * @version 1.8
  *
  */
-if ( !defined( 'ABSPATH' ) ) {
-  die;
-}
+defined( 'ABSPATH' ) || exit;
 
 wp_enqueue_editor();
 
@@ -23,13 +21,14 @@ if ( !Participants_Db::current_user_has_plugin_role( 'editor', ( $participant_id
   exit;
 }
 
-if ( ! $participant_id ) {
-
+if ( ! $participant_id )
+{
   $action = 'insert';
   $page_title = Participants_Db::plugin_label( 'add_record_title' );
   $participant_values = Participants_Db::get_default_record();
-} else {
-  
+} 
+else 
+{  
   PDb_Participant_Cache::is_now_stale($participant_id);
 
   $action = 'update';
@@ -41,8 +40,7 @@ if ( ! $participant_id ) {
  * if we have a valid ID or are creating a new record, show the form
  */
 if ( $participant_values ) :
-
-//error_log( basename( __FILE__).' record values:'.print_r( $participant_values,1));
+  
 //get the groups info
   $groups = Participants_Db::get_groups();
 
@@ -53,20 +51,67 @@ if ( $participant_values ) :
   $options = get_option( self::$participants_db_options );
 
 // set up the hidden fields
-  $hidden = array(
+  $hidden = [
       'action' => $action,
       'subsource' => Participants_Db::PLUGIN_NAME,
-  );
-  foreach ( array('id', 'private_id') as $i ) {
+      'pdb_modified' => 0,
+  ];
+  foreach ( ['id', 'private_id'] as $i ) 
+  {
     if ( isset( $participant_values[$i] ) )
+    {
       $hidden[$i] = $participant_values[$i];
+    }
   }
+  
+  /**
+   * @filter pdb-admin_record_edit_submit_button_config
+   * @param array $submit_button_config
+   * @param array $participant_values
+   * @return array
+   */
+  $submit_button_config = Participants_Db::apply_filters('admin_record_edit_submit_button_config', [
+    'previous' => [
+        'enable' => empty( $participant_id ) ? false : true,
+        'class' => 'button button-default button-leftarrow',
+        'value' => self::$i18n['previous'],
+    ],
+    'submit' => [
+        'enable' => true,
+        'class' => 'button button-primary',
+        'value' => self::$i18n['submit'],
+    ],
+    'apply' => [
+        'enable' => true,
+        'class' => 'button button-primary',
+        'value' => self::$i18n['apply'],
+    ],
+    'next' => [
+        'enable' => true,
+        'class' => 'button button-default button-rightarrow',
+        'value' => $action === 'update' ? self::$i18n['next'] : self::$i18n['new'],
+    ],
+  ], $participant_values );
 
   $section = '';
   
   do_action('pdb-before_edit_participant_body');
   
   $top_space = Participants_Db::apply_filters( 'show_edit_submit_top_bar', true ) ? 'top-bar-space' : '';
+  
+  function pdb_print_record_edit_submit_buttons($submit_button_config)
+  {
+    $pattern = '<input class="%s" type="submit" value="%s" name="submit_button">' . PHP_EOL;
+    
+    foreach( $submit_button_config as $config )
+    {
+      if ( $config['enable'] )
+      {
+        printf( $pattern, esc_attr( $config['class'] ), esc_attr( $config['value'] ) );
+      }
+    }
+  }
+  
   ?>
   <div class="wrap pdb-admin-edit-participant participants_db <?php esc_attr_e( $top_space ) ?>">
     <h2><?php echo esc_html( $page_title ) ?></h2>
@@ -85,12 +130,7 @@ if ( $participant_values ) :
         ?>
       <div class="top-bar-submit">
         <span class="field-group-title"><?php esc_html_e( 'Save the Record', 'participants-database' ) ?></span>
-            <?php if ( !empty( $participant_id ) ) : ?>
-              <input class="button button-default button-leftarrow" type="submit" value="<?php esc_attr_e( self::$i18n['previous'] ) ?>" name="submit_button">
-            <?php endif ?>
-              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['submit'] ) ?>" name="submit_button">
-              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['apply'] ) ?>" name="submit_button">
-              <input class="button button-default button-rightarrow" type="submit" value="<?php esc_attr_e( ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] ) ) ?>" name="submit_button">
+            <?php pdb_print_record_edit_submit_buttons($submit_button_config) ?>
       </div>
       <?php
       endif;
@@ -304,12 +344,7 @@ if ( $participant_values ) :
         <?php if ( is_admin() ) : ?>
           <tr>
             <td class="submit-buttons">
-              <?php if ( $action === 'update' ) : ?>
-                <input class="button button-default button-leftarrow" type="submit" value="<?php esc_attr_e( self::$i18n['previous'] ) ?>" name="submit_button">
-              <?php endif ?>
-              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['submit'] ) ?>" name="submit_button">
-              <input class="button button-primary" type="submit" value="<?php esc_attr_e( self::$i18n['apply'] ) ?>" name="submit_button">
-              <input class="button button-default button-rightarrow" type="submit" value="<?php esc_attr_e( ( $action === 'update' ? self::$i18n['next'] : self::$i18n['new'] ) ) ?>" name="submit_button">
+              <?php pdb_print_record_edit_submit_buttons($submit_button_config) ?>
             </td>
           </tr>
           <tr>

@@ -152,7 +152,7 @@ class PDb_Manage_List_Columns {
    */
   private function admin_field_list()
   {
-    $where = 'WHERE v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
+    $where = 'v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
     return $this->_field_list( $where );
   }
 
@@ -163,7 +163,7 @@ class PDb_Manage_List_Columns {
    */
   private function public_field_list()
   {
-    $where = 'WHERE v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
+    $where = 'v.form_element NOT IN ("' . implode( '","', $this->excluded_form_elements() ) . '")';
     return $this->_field_list( $where );
   }
 
@@ -193,20 +193,24 @@ class PDb_Manage_List_Columns {
     $column = $this->list_column( $type );
 
     $list = array();
-    foreach ( $this->{$type . '_field_list'}() as $field ) {
-      if ( $field->{$column} == '0' ) {
+    
+    foreach ( $this->{$type . '_field_list'}() as $field ) 
+    {
+      if ( $field->{$column} == '0' ) 
+      {
         $field->title = $field->title === '' ? $field->name : Participants_Db::apply_filters( 'translate_string', $field->title );
         
         $sortorder = $field->sortorder;
-        while ( isset( $list[$sortorder] ) ) {
+        
+        while ( isset( $list[$sortorder] ) ) 
+        {
           // make sure we don't lose fields that have the same sort order value
           $sortorder++;
         }
-        $list[$sortorder] = $field;
         
+        $list[$sortorder] = $field;
       }
     }
-    ksort( $list );
     
     return $list;
   }
@@ -222,13 +226,17 @@ class PDb_Manage_List_Columns {
     $column = $this->list_column( $type );
 
     $list = array();
-    foreach ( $this->{$type . '_field_list'}() as $field ) {
-      if ( $field->{$column} != '0' ) {
+    
+    foreach ( $this->{$type . '_field_list'}() as $field ) 
+    {
+      if ( $field->{$column} != '0' ) 
+      {
         $field->title = Participants_Db::apply_filters( 'translate_string', $field->title );
         $list[intval( $field->{$column} )] = $field;
       }
     }
     ksort( $list );
+    
     return $list;
   }
 
@@ -241,11 +249,28 @@ class PDb_Manage_List_Columns {
    */
   private function _field_list( $where )
   {
+    $cachekey = 'pdb-manage-columns-' . crc32( $where );
+    
+    $result = wp_cache_get( $cachekey );
+    
+    if ( $result !== false )
+    {
+      return $result;
+    }
+    
     global $wpdb;
 
-    $sql = 'SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element,v.group,g.title AS grouptitle,((g.order * 10000) + v.order) AS sortorder FROM ' . Participants_Db::$fields_table . ' v INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name ' . $where . ' AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") ORDER BY sortorder';
+    $sql = '
+SELECT v.id,v.name,v.title,v.display_column,v.admin_column,v.form_element,v.group,g.title AS grouptitle,((g.order * 10000) + v.order) AS sortorder 
+FROM ' . Participants_Db::$fields_table . ' v 
+  INNER JOIN ' . Participants_Db::$groups_table . ' g ON v.group = g.name 
+    WHERE ' . $where . ' 
+    AND g.mode IN ("' . implode( '","', array_keys( PDb_Manage_Fields::group_display_modes() ) ) . '") 
+      ORDER BY g.order, v.group, sortorder';
 
     $result = $wpdb->get_results( $sql, OBJECT_K );
+    
+    wp_cache_set( $cachekey, $result, '', Participants_Db::cache_expire() );
 
     return $result;
   }
@@ -281,11 +306,13 @@ class PDb_Manage_List_Columns {
           <ul id="pubfields-source" class='field-list fields-sortable'>
             <?php
             $group = '';
-            foreach ( $this->source_fields( 'public' ) as $field ) {
-              if ( $field->group !== $group ) {
+            foreach ( $this->source_fields( 'public' ) as $field ) 
+            {
+              if ( $field->group !== $group ) 
+              {
                 $group = $field->group;
                 $field->class = 'newgroup';
-                echo '<li class="break"></li>';
+                echo '<li class="break">' . Participants_Db::string_static_translation( $field->grouptitle ) . '</li>';
               }
               echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
@@ -296,7 +323,8 @@ class PDb_Manage_List_Columns {
           <h3><?php _e( 'List Columns', 'participants-database' ) ?></h3>
           <ul id="pubfields-chosen" class='field-list columnsetup fields-sortable'>
             <?php
-            foreach ( $this->configured_fields( 'public' ) as $field ) {
+            foreach ( $this->configured_fields( 'public' ) as $field ) 
+            {
               echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
             ?>
@@ -315,7 +343,7 @@ class PDb_Manage_List_Columns {
               if ( $field->group !== $group ) {
                 $group = $field->group;
                 $field->class = 'newgroup';
-                echo '<li class="break"></li>';
+                echo '<li class="break">' . Participants_Db::string_static_translation( $field->grouptitle ) . '</li>';
               }
               echo wp_kses( $this->field_item( $field ), $this->allowed_html() );
             }
@@ -439,7 +467,7 @@ class PDb_Manage_List_Columns {
       }
       .pdb-jquery-ui .field-list li.break {
         flex-basis: 100%;
-        height: 0;
+        height: 1em;
         padding: 0;
         border: none;
         border-top: 2px dashed rgba(0,0,0,0.1);

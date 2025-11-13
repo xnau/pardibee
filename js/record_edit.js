@@ -2,7 +2,7 @@
  * Participants Database Add/Edit Participant
  * 
  * sets up the unsaved changes warning functionality on the record edit page
- * @version 0.3
+ * @version 1.1
  * 
  */
 PDbRecordEdit = (function ($) {
@@ -11,7 +11,7 @@ PDbRecordEdit = (function ($) {
   var setChangedFlag = function () {
     var el = $(this);
     var initValue = el.data(initState);
-    var check = el.is('[type=checkbox]') ? el.is(':checked') : el.val();
+    var check = el.is('[type=checkbox]') || el.is('[type=radio]') ? el.is(':checked') : el.val();
     if (check !== initValue) {
       setUnsavedChangesFlag(1);
     } else {
@@ -20,6 +20,7 @@ PDbRecordEdit = (function ($) {
   };
   var setUnsavedChangesFlag = function (op) {
     var body = $('body');
+    var formflag = $('.pdb-admin-edit-participant form input[name=pdb_modified]');
     var unsavedChangesCount = body.data('unsavedChanges') || 0;
     if (op === 1) {
       unsavedChangesCount++;
@@ -29,8 +30,10 @@ PDbRecordEdit = (function ($) {
     body.data('unsavedChanges', unsavedChangesCount);
     if (unsavedChangesCount <= 0) {
       clearUnsavedChangesWarning();
+      formflag.val(0);
     } else {
       window.onbeforeunload = confirmOnPageExit; // set up the unsaved changes warning
+      formflag.val(1);
     }
   };
   var clearUnsavedChangesWarning = function () {
