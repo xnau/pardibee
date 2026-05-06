@@ -239,7 +239,6 @@ if ( $participant_values ) :
               
               if ( $post_column_value )
               {
-                Participants_Db::debug_log(__METHOD__.' record values in $_POST array', 2 );
                 if ( is_array( $post_column_value ) )
                 {
                   $column->value = filter_input_array( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS );
