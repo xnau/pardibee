@@ -2020,8 +2020,8 @@ return $field->name() === $fieldname;
    */
   public static function delete_file( $filename )
   {
-    // sanitize the value to only point to plugin upload assets #3286
-    $asset_filename = PDb_Path::asset_path( basename( $filename ) );
+    // remove path to prevent traversals here #3286
+    $asset_filename = basename( $filename );
 
     /**
      * provides a way to override the delete method: if the filter returns bool 
