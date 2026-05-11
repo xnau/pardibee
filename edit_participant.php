@@ -55,6 +55,7 @@ if ( $participant_values ) :
       'action' => $action,
       'subsource' => Participants_Db::PLUGIN_NAME,
       'pdb_modified' => 0,
+      'session_hash' => Participants_Db::nonce( Participants_Db::$main_submission_nonce_key ),
   ];
   foreach ( ['id', 'private_id'] as $i ) 
   {

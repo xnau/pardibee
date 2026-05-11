@@ -5,7 +5,7 @@ Tags: database, directory, listing, mailing list, signup
 Requires at least: 5.0
 Tested up to: 6.8.3
 Requires PHP: 7.4
-Stable tag: 2.7.7
+Stable tag: 2.7.8.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -296,6 +296,14 @@ Please report security bugs found in the source code of the Participants Databas
 3. Import CSV File: page where CSV files can be imported, includes detailed instructions and a blank spreadsheet download
 
 == Changelog ==
+
+= 2.7.8.3 =
+* security update to fix a reported vulnerability
+
+= 2.7.8.1 =
+* fields are now correctly organized by group on the Manage List Columns page
+* several optimizations of the "previous/next" submit buttons in the admin record edit page
+* in the frontend list display, prevented search terms in the URL from overriding the shortcode filter
 
 = 2.7.8 =
 * fields are now correctly organized by group on the Manage List Columns page
@@ -670,7 +678,7 @@ Also:
 
 == Upgrade Notice ==
 
-2.7.8 is a minor bugfix and feture update
+2.7.8.3 is a security update
 
 == Plugin Support ==
 
