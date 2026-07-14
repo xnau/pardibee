@@ -1303,7 +1303,7 @@ class PDb_List_Query {
           // invalid operator: don't add the statement
           return false;
       }
-
+      
       $statement = sprintf( $clause_pattern, $field_def->name(), $operator, $delimiter[ 0 ], $filter->get_term(), $delimiter[ 1 ] );
     }
 
@@ -1628,7 +1628,6 @@ class PDb_List_Query {
    * 
    * if the data comes in from an AJAX request, it will be url-encoded, so we decode it first
    * 
-   * we rely on $wpdb->prepare for sanitizing
    * 
    * @param string $field the name of a field
    * @return string the sanitized value
