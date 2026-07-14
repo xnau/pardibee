@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    0.10
+ * @version    0.11
  * @link       http://xnau.com/wordpress-plugins/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -198,7 +198,7 @@ class PDb_List_Query_Filter {
    */
   public function set_search_term( $term )
   {
-    if ( $term === 'null' || $term === '' || is_null( $term ) ) {
+      if ( $term === 'null' || $term === '' || is_null( $term ) ) {
       $this->term = '';
     } else {
       $wrap =  preg_match( '#^"[^"]+"$#', $term ) === 1 ? '"%s"' : '%s';
@@ -243,11 +243,16 @@ class PDb_List_Query_Filter {
    */
   public function get_term()
   {
-    if ( $this->is_regex ) {
+    if ( $this->is_regex ) 
+    {
       return str_replace( array('*', '?'), array('.*', '.'), esc_sql( $this->term ) ); // esc_sql( $this->term )
-    } elseif ( $this->wildcard_present() || $this->like_term === true ) {
-      return str_replace( array('*', '?'), array('%', '_'), self::_esc_like( $this->term ) );
-    } else {
+    } 
+    elseif ( $this->wildcard_present() || $this->like_term === true ) 
+    {
+      return str_replace( array('*', '?'), array('%', '_'), $this->_esc_like( $this->term ) );
+    } 
+    else 
+    {
       return esc_sql( $this->term );
     }
   }
@@ -302,24 +307,16 @@ class PDb_List_Query_Filter {
   /**
    * escapes a term used in a LIKE statement
    * 
-   * uses alternative to $wpdb->esc_like if not available
-   * 
    * @global object $wpdb
    * @param string $term
    * 
    * @return string escaped term
    */
-  private static function _esc_like( $term )
+  private function _esc_like( $term )
   {
     global $wpdb;
-    if ( method_exists( $wpdb, 'esc_like' ) ) {
-      return $wpdb->esc_like( $term );
-    }
-    /**
-     * @since 1.7.1.3
-     *  for forward compatibility: PHP 5.5 +
-     */
-    return mysqli_real_escape_string( addcslashes( $term, "%_" ) );
+    
+    return esc_sql($wpdb->esc_like($term));
   }
 
 }
