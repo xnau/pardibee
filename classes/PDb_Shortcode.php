@@ -1264,9 +1264,9 @@ abstract class PDb_Shortcode {
         'thanks_page' => $this->submission_page,
         'instance_index' => $this->instance_index,
         'pdb_data_keys' => $this->_form_data_keys(),
-        'session_hash' => Participants_Db::nonce( Participants_Db::$main_submission_nonce_key ),
+        'session_hash' => Participants_Db::nonce( Participants_Db::$main_submission_nonce_key . $this->module ),
     ];
-
+    
     if ( Participants_Db::is_multipage_form() ) {
       $default_hidden_fields['previous_multipage'] = $default_hidden_fields['shortcode_page'];
     }
