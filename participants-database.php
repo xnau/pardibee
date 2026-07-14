@@ -4,7 +4,7 @@
  * Plugin URI: https://xnau.com/wordpress-plugins/participants-database
  * Description: Plugin for managing a database of participants, members or volunteers
  * Author: Roland Barker, xnau webdesign
- * Version: 2.7.8
+ * Version: 2.7.8.4
  * Author URI: https://xnau.com
  * License: GPL3
  * Text Domain: participants-database
@@ -2410,6 +2410,12 @@ class Participants_Db extends PDb_Base {
 
       case 'update':
       case 'insert':
+          
+        // validate the request
+        if ( ! self::submission_is_secure( $post_input['action'] ) ) 
+        {
+          wp_die( 'invalid request', 400 );
+        }
 
         /*
          * we are here for one of these cases:
@@ -2726,14 +2732,14 @@ class Participants_Db extends PDb_Base {
 
       case 'retrieve' :
 
-        if ( self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key ) ) {
+        if ( self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key . $post_input['action'] ) ) {
           self::_process_retrieval();
         }
         return;
 
       case 'signup' :
 
-        if ( !self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key ) )
+        if ( !self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key . $post_input['action'] ) )
           return;
 
         $_POST['private_id'] = '';
@@ -2802,6 +2808,39 @@ class Participants_Db extends PDb_Base {
         return;
 
     endswitch; // $_POST['action']
+  }
+  
+  /**
+   * validates an update or insert submission
+   * 
+   * this is used for one of these three cases:
+   *    adding a new record in the admin
+   *    updating a record in the admin
+   *    a unauthenticated user is updating their record on the frontend
+   * 
+   * @param string $action the current submission action key
+   * @return bool true if the submission can be accepted
+   */
+  private static function submission_is_secure( $action )
+  {
+    $role_check = false;
+    
+    if ( Participants_Db::is_admin() )
+    {
+        $context = 'update/insert submission check';
+        $role_check = self::current_user_has_plugin_role( 'editor', $context ) || self::current_user_has_plugin_role( 'admin', $context );
+    }
+    else if ( $action === 'update' ) // the unauthenticated user
+    {
+        // make sure the private ID matches the submitted record id
+        $id_check = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT ) === self::get_participant_id( filter_input( INPUT_POST, Participants_Db::$record_query, FILTER_SANITIZE_SPECIAL_CHARS ) );
+        $role_check = $id_check;
+        $action = 'record'; // this is the action string used by the frontend record update form
+    }
+    
+    $nonce_check = self::nonce_check( filter_input( INPUT_POST, 'session_hash', FILTER_SANITIZE_SPECIAL_CHARS ), self::$main_submission_nonce_key . $action );
+    
+    return $nonce_check && $role_check;
   }
 
   /**
