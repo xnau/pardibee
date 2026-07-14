@@ -62,7 +62,7 @@ class xnau_strtotime {
     $this->european_order = $euro;
     $this->set_date_format( $date_format );
     
-    if ( is_null( $this->european_order ) ) {
+    if ( is_null( $this->european_order ) && is_string( $this->input ) ) {
       $this->detect_european_order();
     }
     
