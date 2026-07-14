@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    1.15
+ * @version    1.16
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -2020,6 +2020,9 @@ return $field->name() === $fieldname;
    */
   public static function delete_file( $filename )
   {
+    // sanitize the value to only point to plugin upload assets #3286
+    $asset_filename = PDb_Path::asset_path( basename( $filename ) );
+
     /**
      * provides a way to override the delete method: if the filter returns bool 
      * true or false, the normal delete method will be skipped. If the filter returns 
@@ -2030,12 +2033,12 @@ return $field->name() === $fieldname;
      * @param string filename
      * @return string|bool filename or bool false to skip deletion
      */
-    $result = self::apply_filters( 'delete_file', $filename );
+    $result = self::apply_filters( 'delete_file', $asset_filename );
 
     if ( !is_bool( $result ) ) {
       $current_dir = getcwd(); // save the current dir
       chdir( self::files_path() ); // set the plugin uploads dir
-      $result = @unlink( $filename ); // delete the file
+      $result = @unlink( $asset_filename ); // delete the file
       chdir( $current_dir ); // change back to the previous directory
     }
     return $result;
