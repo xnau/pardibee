@@ -364,6 +364,10 @@ class PDb_Date_Parse {
    */
   private function setup_input( $input )
   {
+    if ( is_null( $input ) )
+    {
+        $input = '';
+    }
     if ( PDb_Date_Display::is_valid_timestamp( $input ) ) {
       $this->timestamp = $input;
     } else {
