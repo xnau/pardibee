@@ -55,6 +55,7 @@ if ( $participant_values ) :
       'action' => $action,
       'subsource' => Participants_Db::PLUGIN_NAME,
       'pdb_modified' => 0,
+      'session_hash' => Participants_Db::nonce( Participants_Db::$main_submission_nonce_key . $action ),
   ];
   foreach ( ['id', 'private_id'] as $i ) 
   {
@@ -239,8 +240,6 @@ if ( $participant_values ) :
               
               if ( $post_column_value )
               {
-                Participants_Db::debug_log(__METHOD__.' record values in $_POST array', 2 );
-                
                 if ( is_array( $post_column_value ) )
                 {
                   $column->value = filter_input_array( INPUT_POST, $column->name(), FILTER_SANITIZE_SPECIAL_CHARS );
