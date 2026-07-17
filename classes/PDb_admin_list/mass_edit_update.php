@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    0.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -75,7 +75,8 @@ class mass_edit_update {
   private function operation_feedback()
   {
     if ( $this->is_plugin_action() ) {
-      $message[] = '<strong>' . __( 'Admin List Mass Edit', 'participant-database' ) . ':</strong> ';
+      $message[] = '<strong>' . __( 'Admin List Mass Edit', 'participants-database' ) . ':</strong> ';
+      /* translators: placeholder will show the number of records */
       $message[] = sprintf( _n( '%s Record was updated', '%s Records were updated', $this->updated_count, 'participants-database' ), $this->updated_count );
 
       return implode( PHP_EOL, $message );
@@ -121,6 +122,7 @@ class mass_edit_update {
     if ( $this->value !== false ) {
       global $wpdb;
 
+      // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --prepared on query build
       $result = $wpdb->query( $this->update_query( $id_list ) );
 
       \Participants_Db::debug_log( 'Mass edit query: '.$wpdb->last_query );
@@ -132,25 +134,27 @@ class mass_edit_update {
   /**
    * provides the list write query
    * 
+   * @global \wpdb $wpdb
    * @param array $id_list
    * @return string
    */
   private function update_query( $id_list )
   {
-    $sql[] = 'INSERT INTO ' . \Participants_Db::$participants_table . '(id,' . $this->field->name() . ')';
+    global $wpdb;
+    $sql[] = $wpdb->prepare( 'INSERT INTO %i(id,%i)', \Participants_Db::$participants_table, $this->field->name() );
     $sql[] = 'VALUES';
 
     $values = array();
 
     foreach ( $id_list as $record_id ) {
-      $values[] = sprintf( "('%s','%s')", $record_id, $this->value );
+      $values[] = $wpdb->prepare( "(%d,%s)", $record_id, $this->value );
     }
 
     $sql[] = implode( ',', $values );
 
     $sql[] = 'ON DUPLICATE KEY UPDATE';
 
-    $sql[] = $this->field->name() . ' = VALUES(' . $this->field->name() . ')';
+    $sql[] = $wpdb->prepare( '%i = VALUES(%i)', $this->field->name(), $this->field->name() );
 
     return implode( ' ', $sql );
   }

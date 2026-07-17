@@ -138,7 +138,8 @@ class field_input {
       
       case 'timestamp':
         
-        $datetime = date( get_option('date_format') . ' ' . get_option( 'time_format' ) );
+        $datetime = date( get_option('date_format') . ' ' . get_option( 'time_format' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date --need localized time here
+        /* translators: placeholder will show the date formatting string */
         $helptext = sprintf( __('Timestamp values must be entered using this format: %s', 'participants-database' ), $datetime );
         break;
       

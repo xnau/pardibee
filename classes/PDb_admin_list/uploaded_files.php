@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -81,7 +81,7 @@ class uploaded_files {
       if ( is_file( $filepath ) ) {
         
         \Participants_Db::debug_log(' On record delete, deleting file: '. $filepath, 1 );
-        unlink( $filepath );
+        wp_delete_file( $filepath );
       }
     }
   }
@@ -98,12 +98,12 @@ class uploaded_files {
 
     $sql = '
       SELECT f.name 
-      FROM ' . \Participants_Db::$fields_table . ' f 
-        JOIN ' . \Participants_Db::$groups_table . ' g 
+      FROM %i f 
+        JOIN %i g 
           ON f.group = g.name
         WHERE f.form_element IN ("image-upload","file-upload") AND g.mode IN ("admin","private","public")';
 
-    return $wpdb->get_col( $sql );
+    return $wpdb->get_col( $wpdb->prepare( $sql, \Participants_Db::$fields_table, \Participants_Db::$groups_table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
   }
 
   /**
@@ -116,13 +116,21 @@ class uploaded_files {
   {
     $file_list = array();
     global $wpdb;
+    
+    $placeholders = array_fill( 0, count( self::upload_fields() ), 'p.%i' );
+    $placeholder_string = implode( ', ', $placeholders );
+    
+    $id_placeholders = array_fill( 0, count( $record_ids ), '%s' );
+    $id_placeholder_string = implode( ', ', $id_placeholders );
 
     $sql = '
-      SELECT p.' . implode( ', p.', self::upload_fields() ) . ' 
-      FROM ' . \Participants_Db::$participants_table . ' p 
-        WHERE p.id IN (' . implode( ', ', array_fill( 0, count( $record_ids ), '%s' ) ) . ')';
+      SELECT ' . $placeholder_string . ' 
+      FROM %i p 
+        WHERE p.id IN (' . $id_placeholder_string . ')';
     
-    $result = $wpdb->get_results( $wpdb->prepare( $sql, $record_ids ), ARRAY_N );
+    $args = array_merge( self::upload_fields(), [\Participants_Db::$participants_table], $record_ids );
+    
+    $result = $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_N ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
     
     foreach( $result as $record ) {
       $file_list = array_merge( $file_list, array_filter( array_values($record) ) );
@@ -132,7 +140,7 @@ class uploaded_files {
   }
   
   /**
-   * delets all files that are not attached to a record
+   * deletes all files that are not attached to a record
    * 
    * @return int number of files deleted
    */
@@ -148,7 +156,7 @@ class uploaded_files {
         $filepath = $this->pdb_uploads_directory_path() . $filename;
         
         if ( is_file( $filepath ) ) {
-          $deleted = unlink( $filepath );
+          $deleted = wp_delete_file( $filepath );
           $tally += ( $deleted ? 1 : 0 ); 
           \Participants_Db::debug_log(__METHOD__.' deleting: ' . $filepath );
         }
@@ -168,11 +176,16 @@ class uploaded_files {
   {
     global $wpdb;
     
-    $sql = 'SELECT p.' . implode( ', p.', self::upload_fields() ) . ' 
-      FROM ' . \Participants_Db::$participants_table . ' p
-        WHERE CONCAT_WS( "|", p.' . implode( ', p.', self::upload_fields() ) . ') <> ""';
+    $placeholders = array_fill( 0, count( self::upload_fields() ), 'p.%i' );
+    $placeholder_string = implode( ', ', $placeholders );
     
-    $result = $wpdb->get_results($sql, ARRAY_N );
+    $sql = 'SELECT ' . $placeholder_string . ' 
+      FROM %i p
+        WHERE CONCAT_WS( "|", ' . $placeholder_string . ') <> ""';
+    
+    $args = array_merge( self::upload_fields(), [ \Participants_Db::$participants_table ], self::upload_fields() );
+    
+    $result = $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_N ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
     
     $file_list = array();
     

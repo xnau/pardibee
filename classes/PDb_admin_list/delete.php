@@ -46,6 +46,7 @@ class delete {
       {
         $count = uploaded_files::delete_orphaned_files( $delete_orphan_file_types );
         
+        /* translators: placeholder will show the number of files deleted */
         \Participants_Db::set_admin_message( sprintf( __( 'Orphan uploaded files cleared. %s files deleted', 'participants-database' ), $count ), 'updated' );
       }
     }
@@ -88,9 +89,15 @@ class delete {
   {
     global $wpdb;
 
-    $pattern = count( $id_list ) > 1 ? 'IN ( ' . trim( str_repeat( '%s,', count( $id_list ) ), ',' ) . ' )' : '= %s';
-    $sql = "DELETE FROM " . \Participants_Db::$participants_table . " WHERE id " . $pattern;
-    $result = $wpdb->query( $wpdb->prepare( $sql, $id_list ) );
+    $list_placeholder = array_fill( 0, count( $id_list ), '%s' );
+    $pattern = count( $id_list ) > 1 ? 'IN ( ' . implode( ',', $list_placeholder ) . ' )' : '= %s';
+    $sql = "DELETE FROM %i WHERE id " . $pattern;
+    
+    $args = array_merge( [\Participants_Db::$participants_table], $id_list );
+    
+    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
+    $result = $wpdb->query( $wpdb->prepare( $sql, $args ) );
+    
     $last_query = $wpdb->last_query;
 
     if ( $result > 0 ) {

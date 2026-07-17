@@ -128,6 +128,7 @@ class with_selected {
     }
 
     $message_type = $send_count > 0 ? 'success' : 'warning';
+    /* translators: placeholder will show the number of emails sent */
     $message = sprintf( _nx( '%d email was sent.', '%d emails were sent.', $send_count, 'number of emails sent', 'participants-database' ), $send_count );
     Participants_Db::set_admin_message( $message, $message_type );
   }
@@ -155,6 +156,7 @@ class with_selected {
     }
     
     $message_type = $send_count > 0 ? 'success' : 'warning';
+    /* translators: placeholder will show the number of emails sent */
     $message = sprintf( _nx( '%d email was sent.', '%d emails were sent.', $send_count, 'number of emails sent', 'participants-database' ), $send_count );
     Participants_Db::set_admin_message( $message, $message_type );
   }
@@ -182,13 +184,17 @@ class with_selected {
 
     $result = false;
     
-    if ( count( $ids_to_update ) > 0 ) {
+    if ( count( $ids_to_update ) > 0 ) 
+    {
       $pattern = count( $ids_to_update ) > 1 ? 'IN ( ' . trim( str_repeat( '%s,', count( $ids_to_update ) ), ',' ) . ' )' : '= "%s"';
 
-      $sql = "UPDATE " . Participants_Db::$participants_table . " SET `$approval_field_name` = '$set_value' WHERE id $pattern";
-      $result = $wpdb->query( $wpdb->prepare( $sql, $ids_to_update ) );
+      $sql = 'UPDATE %i SET %i = %s WHERE id ' . $pattern;
+      $args = array_merge( [Participants_Db::$participants_table, $approval_field_name, $set_value], $ids_to_update );
+      $result = $wpdb->query( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
       $last_query = $wpdb->last_query;
-    } else {
+    } 
+    else 
+    {
       $result = 0;
       $last_query = '';
     }
@@ -200,9 +206,11 @@ class with_selected {
       $unchanged = $this->id_count() - $result;
       $message = array();
       if ( $result > 0 ) {
+        /* translators: placeholder will show the number of records updated */
         $message[] = sprintf( _nx( 'Approval status for %d record has been updated.', 'Approval status for %d records has been updated.', $result, 'number of records with approval statuses set', 'participants-database' ), $result );
       }
       if ( $unchanged > 0 ) {
+        /* translators: placeholder will show the number of records unchanged */
         $message[] = ' ' . sprintf( _n( 'Approval status for %d record was unchanged.', 'Approval status for %d records was unchanged.', $unchanged, 'participants-database' ), $unchanged );
       }
       
@@ -235,9 +243,14 @@ class with_selected {
   {
     global $wpdb;
     
-    $sql = 'SELECT p.id FROM ' . Participants_Db::$participants_table . ' p WHERE p.id IN (' . implode( ', ', $set ) . ') AND p.' . $column . ' <> %s';
+    $placeholders = array_fill( 0, count( $set ), '%s' );
+    $placeholder_string = implode( ', ', $placeholders );
     
-    $result = $wpdb->get_col( $wpdb->prepare( $sql, $test_value ) );
+    $sql = 'SELECT p.id FROM %i p WHERE p.id IN (' . $placeholder_string . ') AND p.%i <> %s';
+    
+    $args = array_merge( [ Participants_Db::$participants_table ], $set, [ $column, $test_value ] );
+    
+    $result = $wpdb->get_col( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
     
     return $result;
   }

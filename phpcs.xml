@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+
+<ruleset
+  name="Participants Database"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd"
+>
+  <description>Participants Database Coding Standard</description>
+
+  <!-- Set the coding standard -->
+  <rule ref="WordPress">
+    <!-- Exclude specific rules -->
+    <!--        <exclude name="Generic.Commenting.DocComment"/>
+    <exclude name="Squiz.Commenting.ClassComment"/>
+    <exclude name="Squiz.Commenting.FileComment"/>
+    <exclude name="Universal.Operators.DisallowShortTernary"/>
+    <exclude name="WordPress.Files.FileName"/>
+    <exclude name="WordPress.PHP.YodaConditions"/>
+    <exclude name="WordPress.Security.NonceVerification"/>-->
+  </rule>
+
+  <!-- Add the text domain -->
+  <rule ref="WordPress.WP.I18n">
+    <properties>
+      <property name="text_domain" type="array">
+        <element value="participants-database"/>
+      </property>
+    </properties>
+  </rule>
+  <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+    <properties>
+      <property name="prefixes" type="array">
+        <element value="PDb_"/>
+      </property>
+    </properties>
+  </rule>
+
+  <!-- Add custom sanitization functions -->
+<!--  <rule ref="WordPress.Security.ValidatedSanitizedInput">
+    <properties>
+      <property name="customSanitizingFunctions" type="array">
+        <element value="my_plugin_clean_string"/>
+      </property>
+    </properties>
+  </rule>-->
+  
+  
+
+	<!-- Exclude the Composer Vendor directory. -->
+	<exclude-pattern>/vendor/*</exclude-pattern>
+
+	<!-- Exclude the blueprints directory. -->
+	<exclude-pattern>/blueprints/*</exclude-pattern>
+
+	<!-- Exclude minified Javascript files. -->
+	<exclude-pattern>*.min.js</exclude-pattern>
+
+  <!-- Set the options -->
+  <arg name="extensions" value="php,inc"/>
+  <arg name="parallel" value="8"/>
+  <arg name="cache" value=".phpcs.cache"/>
+</ruleset>

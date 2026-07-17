@@ -8,12 +8,14 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2025  xnau webdesign
  * @license    GPL3
- * @version    1.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
-
 namespace PDb_admin_list;
+
+defined( 'ABSPATH' ) || exit;
+
 use \Participants_Db;
 
 class field_selector {
@@ -139,28 +141,9 @@ class field_selector {
       return $field_select;
     }
     
-    global $wpdb;
-    
-    $main_group_list = $wpdb->get_col( 'SELECT `name` FROM ' . Participants_Db::$groups_table . ' WHERE `mode` IN ("public", "private", "admin") ORDER BY CASE `mode` WHEN "public" THEN 1 WHEN "private" THEN 2 WHEN "admin" THEN 3 ELSE `id` END, `order`');
-    
-    $group_list = array_merge( $main_group_list, $this->additional_groups() );
-    
-    $where = 'WHERE f.group IN ("' . implode( '","', $group_list ) . '")';
-    
-    $where .= ' AND f.form_element NOT IN ("' . implode('","', $this->omit_element_types() ) . '")';
-
-    if ( !\PDb_submission\main_query\columns::editor_can_edit_admin_fields() ) 
-    {
-      // don't show non-displaying groups to non-admin users
-      // the approval field is an exception; it should always be visible to editor users
-      $where .= 'AND g.mode <> "admin" OR f.name = "' . \Participants_Db::apply_filters( 'approval_field', 'approved' ) . '"';
-    }
-    
-    $group_db = $wpdb->get_results('SELECT f.name,f.title,f.group,g.title AS grouptitle FROM ' . Participants_Db::$fields_table . ' f INNER JOIN ' . Participants_Db::$groups_table . ' g ON f.group = g.name ' . $where . ' ORDER BY FIELD (f.group,"' . implode( '","',$group_list ) . '"), f.order ASC' );
-    
     $field_select = [];
     $group = '';
-    foreach( $group_db as $field ) 
+    foreach( $this->searchable_field_list() as $field ) 
     {
       if ( $field->group !== $group ) 
       {
@@ -175,6 +158,59 @@ class field_selector {
     wp_cache_set( $cachekey, $field_select, '', HOUR_IN_SECONDS );
     
     return $field_select;
+  }
+  
+  /**
+   * provides a list of searchable fields
+   * 
+   * @global $wpdb \wpdb
+   * @return array
+   */
+  private function searchable_field_list()
+  {
+    $cachekey = 'pdb-searchable_field_list';
+    
+    $group_db = wp_cache_get($cachekey);
+    
+    if ( $group_db !== false )
+    {
+      return $group_db;
+    }
+    
+    global $wpdb;
+    
+    $main_group_list = $wpdb->get_col( $wpdb->prepare( 'SELECT `name` FROM %i WHERE `mode` IN ("public", "private", "admin") ORDER BY CASE `mode` WHEN "public" THEN 1 WHEN "private" THEN 2 WHEN "admin" THEN 3 ELSE `id` END, `order`', Participants_Db::$groups_table ) );
+    
+    $group_list = array_merge( $main_group_list, $this->additional_groups() );
+    
+    $group_list_placeholder = array_fill( 0, count( $group_list ), '%s' );
+    
+    $where = 'WHERE f.group IN (' . implode( ',', $group_list_placeholder ) . ')';
+    
+    $omit_element_types = $this->omit_element_types();
+    $element_types_placeholder = array_fill( 0, count( $omit_element_types ), '%s' );
+    
+    $where .= ' AND f.form_element NOT IN (' . implode(',', $element_types_placeholder ) . ')';
+    
+    $args = array_merge( [Participants_Db::$fields_table,Participants_Db::$groups_table], $group_list, $omit_element_types );
+
+    if ( !\PDb_submission\main_query\columns::editor_can_edit_admin_fields() ) 
+    {
+      // don't show non-displaying groups to non-admin users
+      // the approval field is an exception; it should always be visible to editor users
+      $where .= 'AND g.mode <> "admin" OR f.name = %s';
+      $args = array_merge( $args, [\Participants_Db::apply_filters( 'approval_field', 'approved' )] );
+    }
+    
+    $args = array_merge( $args, $group_list );
+  
+    // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber 
+    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
+    $group_db = $wpdb->get_results( $wpdb->prepare( 'SELECT f.name,f.title,f.group,g.title AS grouptitle FROM %i f INNER JOIN %i g ON f.group = g.name ' . $where . ' ORDER BY FIELD (f.group,' . implode( ',',$group_list_placeholder ) . '), f.order ASC', $args ) ); 
+    
+    wp_cache_set( $cachekey, $group_db, '', \Participants_Db::cache_expire() );
+    
+    return $group_db;
   }
   
   /**

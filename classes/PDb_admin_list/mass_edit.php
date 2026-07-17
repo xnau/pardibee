@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.2
+ * @version    1.3
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -195,8 +195,8 @@ class mass_edit {
 
     $sql = "
           SELECT f.name, g.name AS groupname, REPLACE(f.title,'\\\','') AS fieldtitle, REPLACE(g.title,'\\\','') AS grouptitle
-          FROM " . \Participants_Db::$fields_table . " f
-            JOIN " . \Participants_Db::$groups_table . " g ON f.group = g.name
+          FROM %i f
+            JOIN %i g ON f.group = g.name
           WHERE 
             f.form_element IN (" . $this->included_types() . ") AND
             g.mode IN ('public','admin','private') AND 
@@ -204,15 +204,16 @@ class mass_edit {
             " . $this->internal_fields() . "
           ORDER BY g.order ASC, f.order ASC";
     
-    $result = $wpdb->get_results( $sql );
+    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared 
+    $result = $wpdb->get_results( $wpdb->prepare( $sql, \Participants_Db::$fields_table, \Participants_Db::$groups_table ) );
     
     $field_list = $this->recent_fields();
     $group = '';
     
-    foreach( $result as $field_data ) {
-      
-      if ( $field_data->groupname !== $group ) {
-        
+    foreach( $result as $field_data )
+    {  
+      if ( $field_data->groupname !== $group ) 
+      {  
         $label = $this->filter_title( $field_data->grouptitle );
         $field_list[ $label === '' ? $field_data->groupname : $label ] = 'optgroup';
         $group = $field_data->groupname;
@@ -220,12 +221,12 @@ class mass_edit {
       
       $label = $this->filter_title( $field_data->fieldtitle );
       
-      if ( isset( $field_list[ $label ] ) ) {
+      if ( isset( $field_list[ $label ] ) ) 
+      {
         $label = $label . ' (' . $field_data->name . ')';
       }
       
       $field_list[ $label === '' ? $field_data->name : $label  ] = $field_data->name;
-      
     }
 
     return \Participants_Db::apply_filters( 'with_selected_mass_edit_fields', $field_list );
@@ -273,10 +274,12 @@ class mass_edit {
    * 
    * if a custom field is defined that should be included, it will need to use the filter to add to this list
    * 
+   * @global \wpdb $wpdb
    * @return string
    */
   private function included_types()
   {
+    global $wpdb;
     $included = \Participants_Db::apply_filters( 'with_selected_mass_edit_included_field_types', array(
                 'text-line',
                 'text-area',
@@ -296,7 +299,11 @@ class mass_edit {
                 'hidden',
             ) );
     
-    return "'" . implode( "','", $included ) . "'";
+    $template = array_fill( 0, count( $included ), '%s' );
+    
+    // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    return $wpdb->prepare( implode( ',', $template ), $included );
   }
 
 }

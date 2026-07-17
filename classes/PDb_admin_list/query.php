@@ -89,6 +89,7 @@ class query {
 
       $count_query = str_replace( '*', 'COUNT(*)', $this->query() );
 
+      // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared --query is escaped as it is built
       $count = $wpdb->get_var( $count_query );
       
       wp_cache_set( $cachekey, $count, '', Participants_Db::cache_expire() );
@@ -116,6 +117,7 @@ class query {
       
       $sql = str_replace('SELECT * FROM', 'SELECT `id` FROM', $query );
       
+      // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared  --query is escaped as it is built
       $result_list = $wpdb->get_col( $sql );
       
       wp_cache_set( $cachekey, $result_list, Participants_Db::cache_expire() );

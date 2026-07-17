@@ -251,6 +251,7 @@ class tally {
   {
     $count = $this->import_count();
     
+    /* translators: placeholder will show the number of records imported */
     return sprintf( _n( '%s record imported.', '%s records imported', $count, 'participants-database' ), $count );
   }
   
@@ -314,18 +315,22 @@ class tally {
     
     switch( $status ){
       case 'insert':
+        /* translators: placeholder will show the number of records added */
         $phrase = sprintf(_n('%s record added', '%s records added', $count, 'participants-database'), $count);
         break;
       
       case 'update':
+        /* translators: placeholder will show the number of records updated */
         $phrase = sprintf(_n('%s matching record updated', '%s matching records updated', $count, 'participants-database'), $count);
         break;
       
       case 'skip':
+        /* translators: placeholder will show the number of records skipped */
         $phrase = sprintf(_n('%s duplicate record skipped', '%s duplicate records skipped', $count, 'participants-database'), $count);
         break;
       
       case 'error':
+        /* translators: placeholder will show the number of records with errors */
         $phrase = sprintf(_n('%s record skipped due to errors', '%s records skipped due to errors', $count, 'participants-database'), $count);
         break;
     }
