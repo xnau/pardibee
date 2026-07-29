@@ -683,6 +683,26 @@ return $field->name() === $fieldname;
   }
 
   /**
+   * sanitizes a table name
+   * 
+   * this prevents sql injection via table name by not allowing spaces or other 
+   * illegal characters in the string
+   * 
+   * @param string $table_name
+   * @return string
+   */
+  public static function sanitize_table_name( $table_name )
+  {
+    if ( preg_match( '/^[A-Za-z0-9_$]+$/', $table_name ) === 1 )
+    {
+      return $table_name;
+    }
+    
+    // value contains illegal characters, prevent its use
+    return '';
+  }
+
+  /**
    * provides the allowed HTML array for different contexts
    * 
    * @param string $type for now, will be either "post" or "form"
@@ -712,6 +732,7 @@ return $field->name() === $fieldname;
             'title' => 1,
             'target' => 1,
             'rel' => 1,
+            'name' => 1
           ] + $base_attributes,
           'break' => [],
           'br' => [],
@@ -2267,7 +2288,7 @@ return $field->name() === $fieldname;
       $messages = Participants_Db::$session->get( 'admin_message' );
 
       foreach ( $messages as $message ) {
-        printf( '<div class="notice notice-%s is-dismissible"><p>%s</p></div>', $message[ 1 ], $message[ 0 ] );
+        printf( wp_kses( '<div class="%s"><p>%s</p></div>', Participants_Db::allowed_html( 'form' )), esc_attr( 'notice notice-' . $message[ 1 ] . ' is-dismissible' ), wp_kses_post( $message[ 0 ] ) );
         self::clear_admin_message();
       }
     }
@@ -2333,6 +2354,7 @@ return $field->name() === $fieldname;
 
     if ( version_compare( PHP_VERSION, $target_version, '<' ) && !get_option( Participants_Db::one_time_notice_flag ) ) {
 
+      // translators: the first placeholder will show the target php version, the second placeholder will show the current php version
       PDb_Admin_Notices::post_warning( '<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'Participants Database will require PHP version %1$s in future releases, you have PHP version %2$s. Please update your php version, future versions of Participants Database may not run without minimum php version %1$s', 'participants-database' ), $target_version, PHP_VERSION ) . '</p>', '', false );
 
       // mark the option as shown
@@ -2712,6 +2734,7 @@ return $field->name() === $fieldname;
 
       if ( !Participants_Db::plugin_setting_is_set( 'upload_location_warning_disable', false ) ) {
 
+        // translators: the placeholder will show a directory path
         $message_id = PDb_Admin_Notices::post_warning( '<p><span class="dashicons dashicons-warning"></span>' . sprintf( __( 'The configured uploads directory "%s" for Participants Database is not writable. This means that plugins file uploads will fail, check the Participants Database "File Upload Location" setting for the correct path.', 'participants-database' ), Participants_Db::files_path() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-and-Image-Uploads-Use-WP-"><span class="dashicons dashicons-editor-help"></span></a>' . '</p>', '', false );
 
         PDb_Admin_Notices::store_message_key( $message_key, $message_id );
@@ -2770,6 +2793,7 @@ return $field->name() === $fieldname;
 
       if ( $pagenow === 'admin.php' && ( $page === 'participants-database-upload_csv' || $page === 'participants-database_settings_page') ) {
 
+        // translators: the placeholder will show the name of a php file
         $message_id = PDb_Admin_Notices::post_warning( '<p><span class="dashicons dashicons-warning"></span>' . sprintf( __('You current server configuration does not allow background processes. You can disable "CSV Imports in the Background" or attempt to fix the problem by making sure the WordPress application can access its own %s script.', 'participants-database'), 'admin-ajax.php' ) . self::settings_help('background-imports-fail') . '</p>', '', false );
 
         PDb_Admin_Notices::store_message_key( $message_key, $message_id );
