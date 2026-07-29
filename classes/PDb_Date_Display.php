@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2016  xnau webdesign
  * @license    GPL2
- * @version    1.0
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    Partcicipants_Db
  */
@@ -101,9 +101,8 @@ class PDb_Date_Display {
   public static function reassert_timezone()
   {
     if ( self::tz_sync_enabled() ) {
-      set_transient(__CLASS__.'-initial-tz', date_default_timezone_get());
-      // doing this will trigger a warning in Site Health
-      date_default_timezone_set( self::timezone() );
+      // we no longer use this function #3295
+      //date_default_timezone_set( self::timezone() );
     }
   }
   
@@ -112,9 +111,10 @@ class PDb_Date_Display {
    */
   public static function revert_timezone()
   {
-    if ( self::tz_sync_enabled() ) {
-      // doing this will trigger a warning in Site Health
-      date_default_timezone_set( get_transient(__CLASS__.'-initial-tz') );
+    if ( self::tz_sync_enabled() ) 
+    {
+      // we no longer use this function #3295
+      // date_default_timezone_set( get_transient(__CLASS__.'-initial-tz') );
     }
   }
   
@@ -203,10 +203,8 @@ class PDb_Date_Display {
    */
   public function output()
   {
-    self::reassert_timezone();
-    $date_func = function_exists('wp_date') ? 'wp_date' : 'date_i18n';
-    
-    return $this->timestamp ? $date_func( $this->format(), $this->timestamp ) : '';
+      // replaced the use of the date_i18n function #3295
+    return $this->timestamp ? wp_date( $this->format(), $this->timestamp ) : '';
   }
   
   /**
