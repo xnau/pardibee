@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2017  xnau webdesign
  * @license    GPL3
- * @version    1.5
+ * @version    1.6
  * @link       https://www.alexgeorgiou.gr/persistently-dismissible-notices-wordpress/
  * @depends    
  */
@@ -415,7 +415,7 @@ class PDb_Admin_Notices {
    */
   public function check_for_message_purge()
   {
-    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || ( array_key_exists( Participants_Db::$participants_db_options,$_POST ) && filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_SPECIAL_CHARS ) == '1' )  ) {
+    if ( array_key_exists( 'clear_pdb_notices', $_GET ) || ( array_key_exists( Participants_Db::$participants_db_options, $_POST ) && filter_var( $_POST[Participants_Db::$participants_db_options]['clear_pdb_notices'], FILTER_SANITIZE_SPECIAL_CHARS ) == '1' )  ) { // phpcs:ignore --nonce not needed here
       $this->purge_all_notices();
     }
   }
@@ -480,6 +480,7 @@ class PDb_Admin_Notices {
    */
   public static function error_handler( $errno, $errstr, $errfile, $errline, $errcontext )
   {
+    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting
     if ( !( error_reporting() & $errno ) ) {
       // This error code is not included in error_reporting
       return;
@@ -519,7 +520,8 @@ class PDb_Admin_Notices {
   public function uninstall()
   {
     global $wpdb;
-    $wpdb->query( 'DELETE FROM ' . $wpdb->prefix . 'options WHERE option_name LIKE "' . self::pdb_admin_notice . '%";' );
+    
+    $wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s', $wpdb->options, self::pdb_admin_notice . '%' ) );
   }
 
 }
