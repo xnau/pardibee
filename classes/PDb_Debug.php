@@ -8,11 +8,13 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2018  xnau webdesign
  * @license    GPL3
- * @version    1.3
+ * @version    1.4
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
 defined( 'ABSPATH' ) || exit;
+
+//phpcs:disable WordPress.WP.AlternativeFunctions,WordPress.PHP.DevelopmentFunctions
 
 class PDb_Debug {
 
@@ -67,7 +69,9 @@ class PDb_Debug {
     add_action( 'participants_database_uninstall', array(__CLASS__, 'uninstall') );
 
     if ( PDB_DEBUG > 1 )
+    {
       set_error_handler( array($this, 'write_php_error') );
+    }
 
     add_action( 'wp_ajax_' . $this->action, array($this, 'handle_refresh') );
   }
@@ -205,16 +209,19 @@ class PDb_Debug {
   private function get_log()
   {
     $buffer = array();
-    if ( $this->log_file_resource() ) {
+    if ( $this->log_file_resource() ) 
+    {
       rewind( $this->log_file );
       $line_limit = $this->line_limit();
-      while ( ($line = fgets( $this->log_file, 8192 )) !== false ) {
+      while ( ($line = fgets( $this->log_file, 8192 )) !== false ) 
+      {
         $buffer[] = $line;
         if ( count( $buffer ) >= $line_limit ) {
           $buffer = array(); // clear it if it gets too large
         }
       }
-      if ( !feof( $this->log_file ) ) {
+      if ( !feof( $this->log_file ) ) 
+      {
         error_log( __METHOD__ . ' file read fail' );
       }
     }
@@ -236,6 +243,7 @@ class PDb_Debug {
    */
   public function render_settings_page()
   {
+    $action = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
     ?>
     <div class="wrap pdb-admin-settings participants_db pdb-debugging" >
 
@@ -249,15 +257,18 @@ class PDb_Debug {
 
       </div>
       <div class="form-group">
-        <form id="pdb-debug-refresh" action="<?php echo esc_attr( $_SERVER['REQUEST_URI'] ) ?>">      
+        <form id="pdb-debug-refresh" action="<?php echo esc_attr( $action ) ?>">      
       <?php wp_nonce_field( $this->action ) ?>
           <div class="form-group">
-            <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php _e( 'Clear', 'participants-database' ) ?></button>
-            <button class="button-primary pdb-debugging-refresh" data-action="refresh" ><?php _e( 'Refresh', 'participants-database' ) ?></button>
+            <button class="button-secondary pdb-debugging-clear" data-action="clear" ><?php esc_html_e( 'Clear', 'participants-database' ) ?></button>
+            <button class="button-primary pdb-debugging-refresh" data-action="refresh" ><?php esc_html_e( 'Refresh', 'participants-database' ) ?></button>
           </div>
         </form>
 
-        <p><?php printf( __( 'Log file: %s', 'participants-database' ), '<br/>' . $this->log_filepath() ) ?></p>
+        <p><?php 
+        // translators: placeholder will show the filepath for the debugging log
+        echo wp_kses_post( sprintf( __( 'Log file: %s', 'participants-database' ), '<br/>' . $this->log_filepath() ) );
+        ?></p>
             
           </div>
     <?php
@@ -270,7 +281,7 @@ class PDb_Debug {
    */
   private function timestamp()
   {
-    return '[' . date( 'm/d/y g:ia T' ) . ']';
+    return '[' . gmdate( 'm/d/y g:ia T' ) . ']';
   }
 
   /**
@@ -296,6 +307,7 @@ class PDb_Debug {
       if ( !is_resource( $this->log_file ) ) {
      //   $this->clear_log_filename();
         Participants_Db::debug_log( __METHOD__ . ' unable to open file for logging: ' . $this->log_filepath() );
+        // translators: placeholder will show the filepath for the debugging log
         $msgid = PDb_Admin_Notices::post_admin_notice( sprintf( __( 'Unable to open the debugging log file: %s Check the "File Upload Location" setting.', 'participants-database' ), $this->log_filepath() ) . '<a href="https://xnau.com/work/wordpress-plugins/participants-database/participants-database-documentation/participants-database-settings-help/#File-Upload-Location"><span class="dashicons dashicons-editor-help"></span></a>', array(
             'type' => 'error',
             'context' => __( 'Debugging', 'participants-database' ),
@@ -485,7 +497,8 @@ class PDb_Debug {
    */
   private function log_header()
   {
-    return '<header class="loghead">' . sprintf( __( 'Log file initiated at: %s', 'participants-database' ), date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) . ' T' ) ) . '</header>';
+    // translators: placeholder will show the initial date for the debugging log
+    return '<header class="loghead">' . sprintf( __( 'Log file initiated at: %s', 'participants-database' ), gmdate( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) . ' T' ) ) . '</header>';
   }
 
   /**
@@ -495,7 +508,8 @@ class PDb_Debug {
   private static function delete_all_logs()
   {
     foreach ( scandir( Participants_Db::files_path() ) as $filename ) {
-      if ( strpos( $filename, self::name . '_' ) === 0 ) {
+      if ( strpos( $filename, self::name . '_' ) === 0 ) 
+      {
         unlink( Participants_Db::files_path() . $filename );
       }
     }
@@ -511,3 +525,4 @@ class PDb_Debug {
   }
 
 }
+// phpcs:enable WordPress.WP.AlternativeFunctions,WordPress.PHP.DevelopmentFunctions
