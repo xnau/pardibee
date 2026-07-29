@@ -9,7 +9,7 @@
  * @author     Roland Barker <webdeign@xnau.com>
  * @copyright  2018 xnau webdesign
  * @license    GPL2
- * @version    2.15
+ * @version    2.16
  * @link       http://xnau.com/wordpress-plugins/
  */
 defined( 'ABSPATH' ) || exit;
@@ -143,7 +143,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
   {
     global $wpdb;
     
-    return $wpdb->get_var( $wpdb->prepare( 'SELECT ' . esc_sql( $this->name() ) . ' FROM ' . \Participants_Db::participants_table() . ' WHERE id = %s', $this->record_id ) );
+    return $wpdb->get_var( $wpdb->prepare( 'SELECT %i FROM %i WHERE id = %s', $this->name(), \Participants_Db::participants_table(), $this->record_id ) );
   }
 
   /**
@@ -753,7 +753,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     $url = Participants_Db::single_record_url( $this->record_id );
     $clickable_text = strlen( $this->value ) === 0 ? $this->default : $this->value;
 
-    return wp_kses( sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ), esc_attr( strip_tags( $clickable_text ) ), $this->attributes_string() ), wp_kses_allowed_html('post') );
+    return wp_kses( sprintf( $pattern, $url, $this->anchor_tag_cleanup( $clickable_text ), esc_attr( wp_strip_all_tags( $clickable_text ) ), $this->attributes_string() ), wp_kses_allowed_html('post') );
   }
   
   /**
@@ -968,7 +968,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
    */
   public function print_help_text()
   {
-    echo $this->prepare_display_value( PDb_Template_Item::html_allowed( $this->help_text ) );
+    echo $this->prepare_display_value( PDb_Template_Item::html_allowed( $this->help_text ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --escaped in called functions
   }
 
   /**
@@ -1336,7 +1336,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
           if ( $this->html_output && ! $this->is_empty( $this->value() ) ) {
             $return = sprintf( '<span ' . PDb_FormElement::class_attribute( 'textarea richtext' ) . '>%s</span>', Participants_Db::process_rich_text( $this->value(), 'rich-text field' ) );
           } else {
-            $return = $this->is_empty( $this->value() ) ? '' : strip_tags( esc_textarea( $this->value() ) );
+            $return = $this->is_empty( $this->value() ) ? '' : wp_strip_all_tags( esc_textarea( $this->value() ) );
           }
 
           break;
@@ -1415,7 +1415,7 @@ class PDb_Field_Item extends PDb_Form_Field_Def {
     
     $return = is_null( $return ) ? '' : $return;
     
-    return $this->html_output ? $return : strip_tags( $return );
+    return $this->html_output ? $return : wp_strip_all_tags( $return );
   }
 
   /**
