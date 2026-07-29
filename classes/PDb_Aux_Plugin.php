@@ -10,7 +10,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2015 xnau webdesign
  * @license    GPL2
- * @version    6.1
+ * @version    6.2
  * @link       http://wordpress.org/extend/plugins/participants-database/
  */
 if ( !defined( 'ABSPATH' ) )
@@ -391,7 +391,9 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     protected function set_attribution()
     {
       $data = $this->plugin_data;
-      $name_pattern = _x( '%s version %s', 'displays the name and version of the plugin', 'participants-database' );
+      // translators: first placeholder shows the name of the plugins, second shows the version number
+      $name_pattern = _x( '%1$s version %2$s', 'displays the name and version of the plugin', 'participants-database' );
+      // translators: placeholder will show the plugin author's name
       $author_pattern = _x( 'Authored by %s', 'displays the plugin author name', 'participants-database' );
       $this->attribution = sprintf( $name_pattern . '<br />' . $author_pattern, $data['Name'], $data['Version'], $data['Author'] ); 
     }
@@ -470,7 +472,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
         <ul class="ui-tabs-nav">
           <?php
           foreach ( $this->settings_sections as $section )
-            printf( '<li><a href="#%s">%s</a></li>', Participants_Db::make_anchor( $section['slug'] ), $section['title'] );
+            printf( '<li><a href="#%s">%s</a></li>', esc_attr( Participants_Db::make_anchor( $section['slug'] ) ), esc_html( $section['title'] ) );
           ?>
         </ul>
         <?php
@@ -598,7 +600,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     public function setting_section_callback_function( $section )
     {
-      printf( '<a name="%s"></a>', $section['id'] );
+      printf( '<a name="%s"></a>', esc_attr( $section['id'] ) );
     }
 
     /**
@@ -984,12 +986,15 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
      */
     function _trigger_error( $message, $errno = E_USER_ERROR )
     {
-      if ( isset( $_GET['action'] ) and false !== stripos( $_GET['action'], 'error_scrape' ) ) {
-        Participants_Db::debug_log( 'Plugin Activation Failed: ' . $_GET['plugin'] );
-        echo($message);
+      if (array_key_exists( 'action', $_GET ) and false !== stripos( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), 'error_scrape' ) ) 
+      {
+        Participants_Db::debug_log( 'Plugin Activation Failed: ' . filter_input( INPUT_GET, 'plugin', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
+        echo wp_kses( $message, Participants_Db::allowed_html('post') );
         exit;
-      } else {
-        trigger_error( $message, $errno );
+      } 
+      else 
+      {
+        trigger_error( wp_kses( $message, Participants_Db::allowed_html('post') ), $errno );
       }
     }
     
@@ -1028,7 +1033,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
       if ( ! is_plugin_active( 'xnau-plugin-updates/xnau-plugin-updates.php' ) )
       {
         $notice .= 'post-remove-';
-        $message = sprintf( __('The <strong>xnau Plugin Updates</strong> plugin is not installed and activated. You must download and activate this free plugin to recieve updates to the following plugins. %sDownload now%s', 'participants-database' ), '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
+        // translators: first and second placeholders will wrap the enclosed string in a link
+        $message = sprintf( __('The <strong>xnau Plugin Updates</strong> plugin is not installed and activated. You must download and activate this free plugin to recieve updates to the following plugins. %1$sDownload now%2$s', 'participants-database' ), '<a href="https://xnau.com/the-xnau-plugin-updater/" target="_blank">', '</a>' );
       }
       
       $message .= '<ul>%s</ul>';
@@ -1055,7 +1061,7 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
 
             $plugin_message = sprintf( $message, '<li>' . implode( '</li><li>', (array) $plugin_names ) . '</li>' );
 
-            printf( '<div class="notice notice-warning is-dismissible" data-dismissible="%s"><p><span class="dashicons dashicons-warning"></span>%s</p></div>', $notice, $plugin_message );
+            printf( '<div class="notice notice-warning is-dismissible" data-dismissible="%s"><p><span class="dashicons dashicons-warning"></span>%s</p></div>', esc_attr( $notice ), esc_html( $plugin_message ) );
             
             delete_transient( 'xnau-updater-notice-plugins' );
           }
@@ -1084,7 +1090,8 @@ if ( !class_exists( 'PDb_Aux_Plugin' ) ) :
     private function aux_plugin_update_notice()
     {
       $notice = $this->aux_plugin_name . '-requres-update';
-      $message = sprintf( __( 'The %s plugin must be updated to its latest version to continue to recieve updates.') );
+      // translators: the placeholder will show the name of the plugin
+      $message = sprintf( __( 'The %s plugin must be updated to its latest version to continue to recieve updates.', 'participants-database') );
     }
 
   }
