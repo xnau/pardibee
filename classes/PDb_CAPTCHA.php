@@ -165,7 +165,7 @@ class PDb_CAPTCHA {
       $this->value = $this->value[1];
     }
     
-    $this->size = 3;
+    // $this->size = 3;
     $operators = array(
         '&times;'  => 'bcmul',
       /*'&divide;' => 'bcdiv',*/
@@ -184,16 +184,16 @@ class PDb_CAPTCHA {
       $o = array_rand($operators);
       switch ($o){
         case '&times;':
-          $a = rand( 1, 10 );
-          $b = rand( 1, 5 );
+          $a = wp_rand( 1, 10 );
+          $b = wp_rand( 1, 5 );
           break;
         case '&minus;':
-          $a = rand( 2, 10 );
-          do { $b = rand( 1, 9 ); } while($b>=$a);
+          $a = wp_rand( 2, 10 );
+          do { $b = wp_rand( 1, 9 ); } while($b>=$a);
           break;
         default:
-          $a = rand( 1, 10 );
-          $b = rand( 1, 10 );
+          $a = wp_rand( 1, 10 );
+          $b = wp_rand( 1, 10 );
       }
       Participants_Db::$session->set('captcha_vars', compact('a', 'o', 'b'));
     }
@@ -337,11 +337,22 @@ class PDb_CAPTCHA {
    */
   private static function captcha_field_list()
   {
-    global $wpdb;
+    $cachekey = 'pdb-captcha-field-list';
     
-    $sql = 'SELECT f.name FROM ' . Participants_Db::$fields_table . ' f WHERE f.form_element = "captcha"';
+    $captcha_field_list = wp_cache_get( $cachekey );
     
-    return $wpdb->get_col( $sql );
+    if ( ! $captcha_field_list )
+    {
+        global $wpdb;
+
+        $sql = 'SELECT f.name FROM %i f WHERE f.form_element = "captcha"';
+
+        $captcha_field_list = $wpdb->get_col( $wpdb->prepare( $sql, Participants_Db::$fields_table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        
+        wp_cache_set( $cachekey, $captcha_field_list );
+    }
+    
+    return $captcha_field_list;
   }
   
   
