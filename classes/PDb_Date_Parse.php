@@ -141,7 +141,8 @@ class PDb_Date_Parse {
   private function __construct( $input, $config, $context = '' )
   {
     $this->context = $context;
-    PDb_Date_Display::reassert_timezone();
+    // no longer using this function call #3295
+    // PDb_Date_Display::reassert_timezone();
     $this->setup_config( $config );
     $this->setup_input( $input );
   }
@@ -162,7 +163,8 @@ class PDb_Date_Parse {
       $this->parse_input();
     }
     
-    PDb_Date_Display::revert_timezone();
+    // no longer using this function call #3295
+    // PDb_Date_Display::revert_timezone();
     
     return $this->timestamp;
   }
@@ -279,7 +281,7 @@ class PDb_Date_Parse {
       
       if ( is_array( $errors ) && ( $errors['warning_count'] !== 0 || $errors['error_count'] !== 0 ) )
       {
-        Participants_Db::debug_log( __METHOD__ . ' value: ' . $this->input .' error: ' . print_r($errors,1) );
+        Participants_Db::debug_log( __METHOD__ . ' value: ' . $this->input .' error: ' . print_r($errors,1) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 
         return;
       }
