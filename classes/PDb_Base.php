@@ -2020,9 +2020,6 @@ return $field->name() === $fieldname;
    */
   public static function delete_file( $filename )
   {
-    // sanitize the value to only point to plugin upload assets #3286
-    $asset_filename = PDb_Path::asset_path( basename( $filename ) );
-
     /**
      * provides a way to override the delete method: if the filter returns bool 
      * true or false, the normal delete method will be skipped. If the filter returns 
@@ -2033,15 +2030,28 @@ return $field->name() === $fieldname;
      * @param string filename
      * @return string|bool filename or bool false to skip deletion
      */
-    $result = self::apply_filters( 'delete_file', $asset_filename );
+    $result = self::apply_filters( 'delete_file', $filename );
 
-    if ( !is_bool( $result ) ) {
-      $current_dir = getcwd(); // save the current dir
-      chdir( self::files_path() ); // set the plugin uploads dir
-      $result = @unlink( $asset_filename ); // delete the file
-      chdir( $current_dir ); // change back to the previous directory
+    if ( !is_bool( $result ) ) 
+    {
+        $filepath = self::pdb_uploads_directory_path() . $filename;
+      
+        // safe delete method won't allow directory traversal
+        $result = wp_delete_file_from_directory( $filepath, self::pdb_uploads_directory_path() );
     }
+    
     return $result;
+  }
+  
+  
+  /**
+   * provides the Participants Database uploads directory path
+   * 
+   * @return string path
+   */
+  public static function pdb_uploads_directory_path()
+  {
+    return trailingslashit( \Participants_Db::files_path() );
   }
 
   /**
