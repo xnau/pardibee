@@ -140,7 +140,7 @@ class user_column extends base_column {
 
       case 'image-upload':
       case 'file-upload':
-
+          
         $this->value = is_null( $initialvalue ) ? null : Participants_Db::_prepare_string_mysql( trim( $initialvalue ) );
 
         $participant_id = $this->main_query()->record_id();
