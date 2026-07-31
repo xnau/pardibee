@@ -164,7 +164,7 @@
 .attribute-control textarea {
   width: auto;
 }
-button .dashicons {
+.wp-core-ui button.button-secondary .dashicons {
   vertical-align: middle;
   width: 24px;
   height: 24px;
