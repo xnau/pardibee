@@ -8,7 +8,7 @@
  * @author     Roland Barker <webdesign@xnau.com>
  * @copyright  2021  xnau webdesign
  * @license    GPL3
- * @version    0.1
+ * @version    1.1
  * @link       http://xnau.com/wordpress-plugins/
  * @depends    
  */
@@ -76,13 +76,31 @@ class uploaded_files {
         continue;
       }
       
-      $filepath = $this->pdb_uploads_directory_path() . $filename;  
+      $filepath = \Participants_Db::pdb_uploads_directory_path() . $filename;
       
-      if ( is_file( $filepath ) ) {
-        
+      /**
+       *  safe delete method won't allow directory traversal 
+       * 
+       * @see https://developer.wordpress.org/reference/functions/wp_delete_file_from_directory/
+       */
+      $this->log_delete( wp_delete_file_from_directory( $filepath, \Participants_Db::pdb_uploads_directory_path() ), $filepath );
+    }
+  }
+  
+  /**
+   * logs the file deletion
+   * 
+   * @param bool $deleted true if file was deleted
+   * @param string $filepath the path to the file
+   */
+  private function log_delete( $deleted, $filepath )
+  {    
+    if ( $deleted )
+    {
         \Participants_Db::debug_log(' On record delete, deleting file: '. $filepath, 1 );
-        unlink( $filepath );
-      }
+    } else
+    {
+        \Participants_Db::debug_log(' File not deleted: '. $filepath, 1 );
     }
   }
 
@@ -193,7 +211,7 @@ class uploaded_files {
    */
   private function uploaded_file_list()
   {
-    $raw_scan = scandir( $this->pdb_uploads_directory_path() );
+    $raw_scan = scandir( \Participants_Db::pdb_uploads_directory_path() );
     
     if ( ! empty( $this->type_filter ) ) {
       
@@ -225,16 +243,6 @@ class uploaded_files {
   private function setup_type_filter( $type_filter )
   {
     $this->type_filter = explode( '|', $type_filter );
-  }
-  
-  /**
-   * provides the PArticipants Database uploads directory path
-   * 
-   * @return string path
-   */
-  private function pdb_uploads_directory_path()
-  {
-    return trailingslashit( \Participants_Db::files_path() );
   }
 
 }
