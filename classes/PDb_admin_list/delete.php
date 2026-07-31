@@ -69,7 +69,8 @@ class delete {
 
     do_action( 'pdb-list_admin_with_selected_delete', $id_list );
     
-    if ( $delete_files ) {
+    if ( $delete_files ) 
+    {
       uploaded_files::delete_record_files($id_list);
     }
     
@@ -93,7 +94,8 @@ class delete {
     $result = $wpdb->query( $wpdb->prepare( $sql, $id_list ) );
     $last_query = $wpdb->last_query;
 
-    if ( $result > 0 ) {
+    if ( $result > 0 ) 
+    {
       \Participants_Db::set_admin_message( __( 'Record delete successful.', 'participants-database' ), 'updated' );
     }
     
