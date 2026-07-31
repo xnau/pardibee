@@ -332,6 +332,11 @@ class PDb_Manage_Fields_Updates {
    */
   public function add_group()
   {
+    if ( ! check_admin_referer( self::action_key ) || ! Participants_Db::current_user_has_plugin_role( 'admin', __METHOD__ ) )
+    {
+      wp_die('unauthorized');
+    }
+    
     global $wpdb;
     $atts = array(
         'name' => filter_input( INPUT_POST, 'group_title', FILTER_CALLBACK, array( 'options' => 'PDb_Manage_Fields_Updates::make_name' ) ),
